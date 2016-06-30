@@ -12,6 +12,7 @@ ghostdriver.log
 node_modules
 selenium_tests/screenshot.png
 .cache
+.env
 .Python
 /bin
 /include
@@ -23,5 +24,6 @@ pip-selfcheck.json
 *credentials*.json
 *manifest*.yml
 docker-compose.override.yml
+.dockerignore
 
 .git

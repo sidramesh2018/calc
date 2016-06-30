@@ -24,3 +24,4 @@ pip-selfcheck.json
 *credentials*.json
 *manifest*.yml
 docker-compose.override.yml
+.dockerignore

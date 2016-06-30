@@ -1,4 +1,0 @@
-app:
-  command: waitress-serve --port=80 hourglass.wsgi:application
-  ports:
-    - "${DOCKER_EXPOSED_PORT}:80"

@@ -147,11 +147,20 @@ which involves provisioning a host on a cloud provider and setting up
 your local environment to make Docker's command-line tools use that
 host.
 
-Then run:
+Firstly, unlike local development, cloud deploys don't support an
+`.env` file. So you'll want to create a custom
+`docker-compose.override.yml` file that defines the app's
+environment variables:
 
+```yaml
+app:
+  environment:
+    - DEBUG=yup
 ```
-ln -sf docker-compose.cloud.yml docker-compose.override.yml
-```
+
+You'll also want to tell Docker Compose what port to listen on,
+which can be done in the terminal by running
+`export DOCKER_EXPOSED_PORT=8000`.
 
 At this point, you can use Docker's command-line tools, such as
 `docker-compose up`, and your actions will take effect on the remote
