@@ -178,8 +178,9 @@ need to re-run `docker-compose build`.
 Unlike traditional Django settings, we use environment variables
 for configuration to be compliant with [twelve-factor][] apps.
 
-You can define environment variables using your environment, or an `.env` file
-in the root directory of the repository. For more information on configuring
+You can define environment variables using your environment, or
+(if you're developing locally) an `.env` file in the root directory
+of the repository. For more information on configuring
 environment variables on cloud.gov, see [`deploy.md`][].
 
 **Note:** When an environment variable is described as representing a
