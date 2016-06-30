@@ -190,6 +190,10 @@ DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
 
 SECURE_SSL_REDIRECT = not DEBUG
+
+if 'FORCE_DISABLE_SECURE_SSL_REDIRECT' in os.environ:
+    SECURE_SSL_REDIRECT = False
+
 # Amazon ELBs pass on X-Forwarded-Proto.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
