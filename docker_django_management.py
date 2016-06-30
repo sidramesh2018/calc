@@ -76,7 +76,7 @@ HOST_UID = os.stat(MY_DIR).st_uid
 HOST_USER = os.environ.get('DDM_HOST_USER', 'docker_user')
 CONTAINER_NAME = os.environ.get('DDM_CONTAINER_NAME')
 IS_RUNNING_IN_DOCKER = 'DDM_IS_RUNNING_IN_DOCKER' in os.environ
-
+NON_DATABASE_COMMANDS = ['collectstatic']
 
 def warn(msg):
     '''
@@ -169,7 +169,8 @@ def execute_from_command_line(argv):
     if IS_RUNNING_IN_DOCKER:
         if is_runserver:
             setup_docker_sigterm_handler()
-        wait_for_db()
+        if len(argv) > 1 and argv[1] not in NON_DATABASE_COMMANDS:
+            wait_for_db()
 
         if not 'PYTHONUNBUFFERED' in os.environ:
             warn("PYTHONUNBUFFERED is not defined. Some output may "

@@ -1,6 +1,5 @@
 /static
 *.pyc
-local_settings.py
 *.swp
 *.swo
 *.DS_Store
@@ -24,3 +23,4 @@ pip-selfcheck.json
 .sass-cache/
 *credentials*.json
 *manifest*.yml
+docker-compose.override.yml

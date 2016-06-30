@@ -91,6 +91,8 @@ To use it, install [Docker][] and [Docker Compose][] and read the
 Then run:
 
 ```sh
+cp .env.sample .env
+ln -sf docker-compose.local.yml docker-compose.override.yml
 docker-compose build
 docker-compose run app python manage.py syncdb
 docker-compose run app python manage.py load_data
@@ -105,6 +107,11 @@ docker-compose up
 This will start up all required servers in containers and output their
 log information to stdout. You should be able to visit http://localhost:8000/
 directly to access the site.
+
+### Changing the exposed port
+
+If you don't want to serve your app on port 8000, you can change
+the value of `DOCKER_EXPOSED_PORT` in your `.env` file.
 
 ### Accessing the app container
 
@@ -129,6 +136,33 @@ if it detects that Django isn't installed.
 All the project's dependencies, such as those mentioned in `requirements.txt`,
 are contained in Docker container images.  Whenever these dependencies change,
 you'll want to re-run `docker-compose build` to rebuild the containers.
+
+### Deploying to cloud environments
+
+The Docker setup can also be used to deploy to cloud environments.
+
+To do this, you'll first need to
+[configure Docker Machine for the cloud][docker-machine-cloud],
+which involves provisioning a host on a cloud provider and setting up
+your local environment to make Docker's command-line tools use that
+host.
+
+Then run:
+
+```
+ln -sf docker-compose.cloud.yml docker-compose.override.yml
+```
+
+At this point, you can use Docker's command-line tools, such as
+`docker-compose up`, and your actions will take effect on the remote
+host instead of your local machine.
+
+**Note:** Docker Machine's cloud drivers intentionally don't support
+folder sharing, which means that you can't just edit a file on
+your local system and see the changes instantly on the remote host.
+Instead, your app's source code is part of the container image,
+which means that every time you make a source code change, you will
+need to re-run `docker-compose build`.
 
 ## Environment Variables
 
@@ -320,3 +354,4 @@ for other than small business.
 [`deploy.md`]: https://github.com/18F/calc/blob/master/deploy.md
 [DJ-Database-URL schema]: https://github.com/kennethreitz/dj-database-url#url-schema
 [pytest]: https://pytest.org/latest/usage.html
+[docker-machine-cloud]: https://docs.docker.com/machine/get-started-cloud/

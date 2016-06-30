@@ -18,3 +18,15 @@ RUN apt-get update && \
 COPY requirements.txt /calc/
 
 RUN pip install -r /calc/requirements.txt
+
+ENV DDM_IS_RUNNING_IN_DOCKER yup
+ENV PYTHONUNBUFFERED yup
+
+# The following lines set up our container for being run in a
+# cloud environment, where folder sharing is disabled. They're
+# irrelevant for a local development environment, where the /calc
+# directory will be superseded by a folder share.
+
+COPY . /calc/
+WORKDIR /calc
+RUN python manage.py collectstatic --noinput
