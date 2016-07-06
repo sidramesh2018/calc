@@ -156,6 +156,12 @@ string), the boolean is true; otherwise, it's false.
 * `ENABLE_SEO_INDEXING` is a boolean value that indicates whether to
   indicate to search engines that they can index the site.
 
+* `FORCE_DISABLE_SECURE_SSL_REDIRECT` is a boolean value that indicates
+  whether to disable redirection from http to https. Because such
+  redirection is enabled by default when `DEBUG` is false, this option
+  can be useful when you want to simulate *almost* everything about a
+  production environment without having to setup SSL.
+
 * `UAA_CLIENT_ID` is your cloud.gov/Cloud Foundry UAA client ID. It
   defaults to `calc-dev`.
 

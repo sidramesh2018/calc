@@ -6,6 +6,31 @@ from django.test import override_settings
 from .settings_utils import load_cups_from_vcap_services
 
 
+class ComplianceTests(DjangoTestCase):
+    '''
+    These tests ensure our site is configured with proper regulatory
+    compliance and security best practices.  For more information, see:
+
+    https://compliance-viewer.18f.gov/
+    '''
+
+    def test_nosniff_works(self):
+        res = self.client.get('/')
+        self.assertEqual(res['X-Content-Type-Options'], 'nosniff')
+
+    def test_nosniff_works_on_404s(self):
+        res = self.client.get('/i-am-a-nonexistent-page')
+        self.assertEqual(res['X-Content-Type-Options'], 'nosniff')
+
+    def test_xss_protection_works(self):
+        res = self.client.get('/')
+        self.assertEqual(res['X-XSS-Protection'], '1; mode=block')
+
+    def test_xss_protection_works_on_404s(self):
+        res = self.client.get('/i-am-a-nonexistent-page')
+        self.assertEqual(res['X-XSS-Protection'], '1; mode=block')
+
+
 class RobotsTests(DjangoTestCase):
     @override_settings(ENABLE_SEO_INDEXING=False)
     def test_disable_seo_indexing_works(self):
