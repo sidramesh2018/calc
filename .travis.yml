@@ -20,8 +20,6 @@ env:
   - PHANTOMJS_TIMEOUT=15
   - DEBUG=yup
   - DATABASE_URL=postgres://postgres@localhost/hourglass
-notifications:
-  email: false
 deploy:
   edge: true
   provider: cloudfoundry
