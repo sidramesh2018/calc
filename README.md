@@ -169,6 +169,16 @@ string), the boolean is true; otherwise, it's false.
   If this is undefined and `DEBUG` is true, then a built-in Fake UAA Provider
   will be used to "simulate" cloud.gov login.
 
+* `WHITELISTED_IPS` is a python-formatted array that specifies IPs that
+  the REST API will accept requests from. Any IPs not in the list attempting
+  to access the API will receive a 403 Forbidden response. Example:
+  `['127.0.0.1', '192.168.1.1']`.
+
+* `API_HOST` is the relative or absolute URL used to access the
+  API hosted by CALC. It defaults to `/api/` but may need to be changed
+  if the API has a proxy in front of it, as it likely will be if deployed
+  on government infrastructure. For more information, see [`deploy.md`][].
+
 ## Staff Login
 
 Staff can log in to CALC for administrative tasks, but accounts
