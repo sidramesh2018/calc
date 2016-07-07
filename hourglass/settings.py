@@ -13,7 +13,7 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 
-from .settings_utils import load_cups_from_vcap_services
+from .settings_utils import load_cups_from_vcap_services, get_whitelisted_ips
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -131,13 +131,13 @@ if not DEBUG:
                            'CompressedManifestStaticFilesStorage')
 
 PAGINATION = 200
+
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
-    'WHITELIST': eval(os.environ.get('WHITELISTED_IPS', 'False')),
+    'WHITELIST': get_whitelisted_ips(),
     'DEFAULT_PERMISSION_CLASSES': (
         'api.permissions.WhiteListPermission',
     ),
-
 }
 
 LOGGING = {

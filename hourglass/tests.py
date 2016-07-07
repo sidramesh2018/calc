@@ -3,7 +3,7 @@ import json
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
 
-from .settings_utils import load_cups_from_vcap_services
+from .settings_utils import load_cups_from_vcap_services, get_whitelisted_ips
 
 
 class ComplianceTests(DjangoTestCase):
@@ -94,3 +94,16 @@ class CupsTests(unittest.TestCase):
         load_cups_from_vcap_services('boop-env', env=env)
 
         self.assertEqual(env['boop'], 'jones')
+
+
+class GetWhitelistedIPsTest(unittest.TestCase):
+    def test_returns_none_when_not_in_env(self):
+        env = {}
+        self.assertIsNone(get_whitelisted_ips(env))
+
+    def test_returns_whitelisted_ips_list(self):
+        env = {
+            'WHITELISTED_IPS': '1.2.3.4,1.2.3.8, 1.2.3.16'
+        }
+        ips = get_whitelisted_ips(env)
+        self.assertListEqual(ips, ['1.2.3.4', '1.2.3.8', '1.2.3.16'])

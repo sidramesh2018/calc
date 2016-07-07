@@ -22,3 +22,15 @@ def load_cups_from_vcap_services(name, env=os.environ):
         if entry['name'] == name:
             for key, value in entry['credentials'].items():
                 env[key] = value
+
+
+def get_whitelisted_ips(env=os.environ):
+    '''
+    Detects if WHITELISTED_IPS is in the environment; if not,
+    returns None. if so, parses WHITELISTED_IPS as a comma-separated
+    string and returns a list of values.
+    '''
+    if 'WHITELISTED_IPS' not in env:
+        return None
+
+    return [s.strip() for s in env['WHITELISTED_IPS'].split(',')]
