@@ -3,7 +3,32 @@ import json
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
 
-from .settings_utils import load_cups_from_vcap_services
+from .settings_utils import load_cups_from_vcap_services, get_whitelisted_ips
+
+
+class ComplianceTests(DjangoTestCase):
+    '''
+    These tests ensure our site is configured with proper regulatory
+    compliance and security best practices.  For more information, see:
+
+    https://compliance-viewer.18f.gov/
+    '''
+
+    def test_nosniff_works(self):
+        res = self.client.get('/')
+        self.assertEqual(res['X-Content-Type-Options'], 'nosniff')
+
+    def test_nosniff_works_on_404s(self):
+        res = self.client.get('/i-am-a-nonexistent-page')
+        self.assertEqual(res['X-Content-Type-Options'], 'nosniff')
+
+    def test_xss_protection_works(self):
+        res = self.client.get('/')
+        self.assertEqual(res['X-XSS-Protection'], '1; mode=block')
+
+    def test_xss_protection_works_on_404s(self):
+        res = self.client.get('/i-am-a-nonexistent-page')
+        self.assertEqual(res['X-XSS-Protection'], '1; mode=block')
 
 
 class RobotsTests(DjangoTestCase):
@@ -69,3 +94,16 @@ class CupsTests(unittest.TestCase):
         load_cups_from_vcap_services('boop-env', env=env)
 
         self.assertEqual(env['boop'], 'jones')
+
+
+class GetWhitelistedIPsTest(unittest.TestCase):
+    def test_returns_none_when_not_in_env(self):
+        env = {}
+        self.assertIsNone(get_whitelisted_ips(env))
+
+    def test_returns_whitelisted_ips_list(self):
+        env = {
+            'WHITELISTED_IPS': '1.2.3.4,1.2.3.8, 1.2.3.16'
+        }
+        ips = get_whitelisted_ips(env)
+        self.assertListEqual(ips, ['1.2.3.4', '1.2.3.8', '1.2.3.16'])
