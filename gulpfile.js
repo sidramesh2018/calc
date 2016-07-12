@@ -4,6 +4,7 @@ const cleancss = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename');
+const eslint = require('gulp-eslint');
 
 const dirs = {
   src: {
@@ -72,7 +73,7 @@ gulp.task('sass', () => gulp.src(dirs.src.style + paths.sass)
   .pipe(gulp.dest(dirs.dest.style))
 );
 
-gulp.task('js', ['js:legacy']);
+gulp.task('js', ['lint', 'js:legacy']);
 
 gulp.task('js:legacy', ['js:data-explorer:index', 'js:common:base']);
 
@@ -96,6 +97,11 @@ gulp.task('js:common:base', () => concatAndMapSources(
     paths.common.base.map((p) => dirs.src.scripts + p),
     dirs.dest.scripts.common
   )
+);
+
+gulp.task('lint', () => gulp.src(dirs.src.scripts + paths.js)
+  .pipe(eslint())
+  .pipe(eslint.format())
 );
 
 // set up a SIGTERM handler for quick graceful exit from docker
