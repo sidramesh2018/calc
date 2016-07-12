@@ -19,7 +19,7 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "eslint": "eslint"
+    "eslint": "eslint . || true"
   },
   "repository": {
     "type": "git",
