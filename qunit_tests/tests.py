@@ -1,8 +1,10 @@
 import os
 import subprocess
 
-from django.core import management
 from django.test import LiveServerTestCase
+
+from selenium_tests.utils import build_static_assets
+
 
 # This file was taken from https://github.com/jonkemp/qunit-phantomjs-runner.
 RUNNER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -17,6 +19,5 @@ class QunitTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        management.call_command('collectstatic', '--noinput', '--link',
-                                verbosity=0)
+        build_static_assets()
         super(QunitTests, cls).setUpClass()
