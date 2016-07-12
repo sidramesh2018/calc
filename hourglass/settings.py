@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'djangosecure',
     'uaa_client',
+    'styleguide',
 )
 
 MIDDLEWARE_CLASSES = (

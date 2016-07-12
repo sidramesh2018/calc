@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Style Guide{% endblock %}
+
+{% block head %}
+<style>
+.styleguide-example {
+  border: 1px solid lightgray;
+}
+
+.styleguide-example .rendering {
+  padding: 8px;
+}
+
+.styleguide-example .rendering h3 {
+  font-size: 1em;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: gray;
+  letter-spacing: 1px;
+}
+
+.styleguide-example pre[class*="language-"] {
+  margin: 0;
+}
+
+.styleguide-example pre > code {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+</style>
+<link rel="stylesheet" href="{% static 'styleguide/vendor/prism.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h1>CALC Style Guide</h1>
+
+  <p>
+    CALC uses <a href="http://getskeleton.com/">Skeleton</a> as the foundation
+    for its styles, with alterations based on the
+    <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
+  </p>
+
+  <h2>Primary Buttons</h2>
+
+  <p>
+    The color of primary buttons matches the
+    <a href="https://standards.usa.gov/visual-style/#palette">primary colors</a>
+    of the USWDS.
+  </p>
+
+  <div class="styleguide-example">
+    <pre><code class="language-html">{% filter force_escape %}<a class="button button-primary" href="#">Link</a>
+<button class="button-primary">Button</button>
+<input class="button-primary" type="button" value="Input">
+<input class="button-primary" type="submit" value="Submit">{% endfilter %}</pre></code>
+  </div>
+</div>
+<script src="{% static 'styleguide/vendor/prism.js' %}"></script>
+<script>
+$(function() {
+  $('.styleguide-example').each(function() {
+    var header = $('<h3>Example</h3>');
+    var html = $('pre code', this).text();
+    var renderedDiv = $('<div class="rendering"></div>').html(html);
+
+    renderedDiv.prepend(header);
+    $(this).prepend(renderedDiv);
+  });
+});
+</script>
+{% endblock %}
