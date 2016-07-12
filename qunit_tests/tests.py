@@ -6,7 +6,6 @@ from django.test import LiveServerTestCase
 from selenium_tests.utils import build_static_assets
 
 
-# This file was taken from https://github.com/jonkemp/qunit-phantomjs-runner.
 RUNNER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                            'vendor', 'runner.js')
 
