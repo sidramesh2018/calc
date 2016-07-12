@@ -31,6 +31,7 @@ import re
 import time
 import os
 import socket
+import subprocess
 from datetime import datetime
 
 TESTING_KEY = 'REMOTE_TESTING'
@@ -98,6 +99,7 @@ class FunctionalTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
+        subprocess.check_call(['npm', 'run', 'gulp', '--', 'build'])
         management.call_command('collectstatic', '--noinput', '--link',
                                 verbosity=0)
         cls.driver = cls.get_driver()
