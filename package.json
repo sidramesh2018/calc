@@ -18,7 +18,8 @@
     "gulp-sourcemaps": "^1.6.0"
   },
   "scripts": {
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "eslint": "eslint"
   },
   "repository": {
     "type": "git",
