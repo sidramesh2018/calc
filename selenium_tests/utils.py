@@ -6,6 +6,7 @@ import subprocess
 
 _static_assets_built = False
 
+
 def build_static_assets():
     '''
     Sometimes we need static assets to be available before browser-based
