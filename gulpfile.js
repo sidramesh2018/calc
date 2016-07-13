@@ -1,27 +1,40 @@
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var watch = require('gulp-watch');
-var cleancss = require('gulp-clean-css');
-var concat = require('gulp-concat');
-var sourcemaps = require('gulp-sourcemaps');
-var rename = require('gulp-rename');
-var gutil = require('gulp-util');
+const gulp = require('gulp');
+const sass = require('gulp-sass');
+const cleancss = require('gulp-clean-css');
+const concat = require('gulp-concat');
+const sourcemaps = require('gulp-sourcemaps');
+const rename = require('gulp-rename');
+const eslint = require('gulp-eslint');
 
-var dirs = {
+const dirs = {
   src: {
     style: 'hourglass_site/static_source/style/',
     scripts: 'hourglass_site/static_source/js/',
   },
   dest: {
     style: 'hourglass_site/static/hourglass_site/style/built/',
-    scripts: 'hourglass_site/static/hourglass_site/js/built/',
-  }
+    scripts: {
+      dataExplorer: 'hourglass_site/static/hourglass_site/js/built/data-explorer',
+      common: 'hourglass_site/static/hourglass_site/js/built/common',
+    },
+  },
 };
 
-var paths = {
+const paths = {
   sass: '**/*.scss',
   js: '**/*.js',
-  jsLegacy: {
+  common: {
+    base: [
+      'vendor/d3.v3.min.js',
+      'vendor/jquery.min.js',
+      'vendor/query.xdomainrequest.min.js',
+      'vendor/formdb.min.js',
+      'common/hourglass.js',
+      'vendor/jquery.tooltipster.js',
+      'vendor/jquery.nouislider.all.min.js',
+    ],
+  },
+  dataExplorer: {
     index: [
       'vendor/rgbcolor.js',
       'vendor/StackBlur.js',
@@ -29,16 +42,7 @@ var paths = {
       'vendor/canvas-toBlob.js',
       'vendor/FileSaver.js',
       'vendor/jquery.auto-complete.min.js',
-      'index.js'
-    ],
-    base: [
-      'vendor/d3.v3.min.js',
-      'vendor/jquery.min.js',
-      'vendor/query.xdomainrequest.min.js',
-      'vendor/formdb.min.js',
-      'hourglass.js',
-      'vendor/jquery.tooltipster.js',
-      'vendor/jquery.nouislider.all.min.js',
+      'data-explorer/index.js',
     ],
   },
 };
@@ -53,52 +57,54 @@ gulp.task('default', ['watch']);
 gulp.task('build', ['sass', 'js']);
 
 // watch files for changes
-gulp.task('watch', ['sass', 'js'], function () {
-    gulp.watch(dirs.src.style + paths.sass, ['sass']);
-    gulp.watch(dirs.src.scripts + paths.js, ['js']);
+gulp.task('watch', ['sass', 'js'], () => {
+  gulp.watch(dirs.src.style + paths.sass, ['sass']);
+  gulp.watch(dirs.src.scripts + paths.js, ['js']);
 });
 
 // compile SASS sources
-gulp.task('sass', function () {
-    return gulp.src(dirs.src.style + paths.sass)
-      .pipe(sass())
-      .pipe(gulp.dest(dirs.dest.style))
-      .pipe(rename({suffix: '.min'}))
-      .pipe(sourcemaps.init())
-        .pipe(cleancss())
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(dirs.dest.style));
-});
+gulp.task('sass', () => gulp.src(dirs.src.style + paths.sass)
+  .pipe(sass())
+  .pipe(gulp.dest(dirs.dest.style))
+  .pipe(rename({ suffix: '.min' }))
+  .pipe(sourcemaps.init())
+    .pipe(cleancss())
+  .pipe(sourcemaps.write('./'))
+  .pipe(gulp.dest(dirs.dest.style))
+);
 
-gulp.task('js', ['js:legacy']);
+gulp.task('js', ['lint', 'js:legacy']);
 
-gulp.task('js:legacy', ['js:legacy:index', 'js:legacy:base']);
+gulp.task('js:legacy', ['js:data-explorer:index', 'js:common:base']);
 
-function concatAndMapSources(name, paths, dest) {
-  return gulp.src(paths)
+function concatAndMapSources(name, sources, dest) {
+  return gulp.src(sources)
     .pipe(sourcemaps.init())
       .pipe(concat(name))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(dest));
 }
 
-gulp.task('js:legacy:index', function () {
-  return concatAndMapSources(
+gulp.task('js:data-explorer:index', () => concatAndMapSources(
     'index.min.js',
-    paths.jsLegacy.index.map(function (p) { return dirs.src.scripts + p; }),
-    dirs.dest.scripts
-  );
-});
+    paths.dataExplorer.index.map((p) => dirs.src.scripts + p),
+    dirs.dest.scripts.dataExplorer
+  )
+);
 
-gulp.task('js:legacy:base', function () {
-  return concatAndMapSources(
+gulp.task('js:common:base', () => concatAndMapSources(
     'base.min.js',
-    paths.jsLegacy.base.map(function (p) { return dirs.src.scripts + p; }),
-    dirs.dest.scripts
-  );
-});
+    paths.common.base.map((p) => dirs.src.scripts + p),
+    dirs.dest.scripts.common
+  )
+);
+
+gulp.task('lint', () => gulp.src(dirs.src.scripts + paths.js)
+  .pipe(eslint())
+  .pipe(eslint.format())
+);
 
 // set up a SIGTERM handler for quick graceful exit from docker
-process.on('SIGTERM', function() {
+process.on('SIGTERM', () => {
   process.exit(1);
 });

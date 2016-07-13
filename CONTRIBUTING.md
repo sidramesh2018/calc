@@ -20,10 +20,19 @@ If you have any questions or want to read more, check out the
 
 ## Coding Standards
 
-We adhere to [PEP8](https://www.python.org/dev/peps/pep-0008/) for Python code
+We adhere to [PEP8][] for Python code
 formatting. Before committing, please use a linter to ensure that your changes
 do not introduce any PEP8 warnings or errors. Most major code editors have a PEP8
 integration, such as [linter-pep8](https://atom.io/packages/linter-pep8) for Atom.
+
+For front end JavaScript, we use [eslint][] to lint our source files.
+We recommend using an editor plugin (such as [linter-eslint][] for Atom)
+to automatically lint JavaScript files. If you do not with to use an editor plugin,
+you can run `npm run eslint` from the command line.
+
+[PEP8]: https://www.python.org/dev/peps/pep-0008/
+[eslint]: http://eslint.org/
+[linter-eslint]: https://github.com/AtomLinter/linter-eslint
 
 ## Pull request guidelines
 

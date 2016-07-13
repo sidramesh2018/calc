@@ -34,12 +34,16 @@ import socket
 import subprocess
 from datetime import datetime
 
+from .utils import build_static_assets
+
+
 TESTING_KEY = 'REMOTE_TESTING'
 REMOTE_TESTING = hasattr(settings, TESTING_KEY) and getattr(settings, TESTING_KEY) or {}
 TESTING_URL = os.environ.get('LOCAL_TUNNEL_URL', REMOTE_TESTING.get('url'))
 
 PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
+
 
 def _get_testing_config(key, default=None):
     return REMOTE_TESTING.get(key, os.environ.get('%s_%s' % (TESTING_KEY, key.upper()), default))
@@ -99,9 +103,7 @@ class FunctionalTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        subprocess.check_call(['npm', 'run', 'gulp', '--', 'build'])
-        management.call_command('collectstatic', '--noinput', '--link',
-                                verbosity=0)
+        build_static_assets()
         cls.driver = cls.get_driver()
         cls.longMessage = True
         cls.maxDiff = None
