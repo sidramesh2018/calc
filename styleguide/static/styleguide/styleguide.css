@@ -1,0 +1,25 @@
+.styleguide-example {
+  border: 1px solid lightgray;
+}
+
+.styleguide-example .rendering {
+  padding: 8px;
+}
+
+.styleguide-example .rendering h3 {
+  font-size: 1em;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: gray;
+  letter-spacing: 1px;
+}
+
+.styleguide-example pre[class*="language-"] {
+  margin: 0;
+}
+
+.styleguide-example pre > code {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
