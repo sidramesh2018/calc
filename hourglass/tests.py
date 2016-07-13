@@ -12,23 +12,40 @@ class ComplianceTests(DjangoTestCase):
     compliance and security best practices.  For more information, see:
 
     https://compliance-viewer.18f.gov/
+
+    Cloud.gov's nginx proxy adds the required headers to 200 responses, but
+    not to responses with error codes, so we need to add them at the app-level.
     '''
 
-    def test_nosniff_works(self):
+    headers = {
+        'X-Content-Type-Options': 'nosniff',
+        'X-XSS-Protection': '1; mode=block',
+    }
+
+    def assertHasHeaders(self, res):
+        for header, val in self.headers.items():
+            self.assertEqual(res[header], val)
+
+    @override_settings(SECURITY_HEADERS_ON_ERROR_ONLY=False)
+    def test_has_security_headers(self):
         res = self.client.get('/')
-        self.assertEqual(res['X-Content-Type-Options'], 'nosniff')
+        self.assertHasHeaders(res)
 
-    def test_nosniff_works_on_404s(self):
+    @override_settings(SECURITY_HEADERS_ON_ERROR_ONLY=False)
+    def test_has_security_headers_on_404(self):
         res = self.client.get('/i-am-a-nonexistent-page')
-        self.assertEqual(res['X-Content-Type-Options'], 'nosniff')
+        self.assertHasHeaders(res)
 
-    def test_xss_protection_works(self):
+    @override_settings(SECURITY_HEADERS_ON_ERROR_ONLY=True)
+    def test_no_security_headers_when_setting_enabled(self):
         res = self.client.get('/')
-        self.assertEqual(res['X-XSS-Protection'], '1; mode=block')
+        for header, val in self.headers.items():
+            self.assertNotIn(header, res)
 
-    def test_xss_protection_works_on_404s(self):
+    @override_settings(SECURITY_HEADERS_ON_ERROR_ONLY=True)
+    def test_has_security_headers_on_404_when_setting_enabled(self):
         res = self.client.get('/i-am-a-nonexistent-page')
-        self.assertEqual(res['X-XSS-Protection'], '1; mode=block')
+        self.assertHasHeaders(res)
 
 
 class RobotsTests(DjangoTestCase):

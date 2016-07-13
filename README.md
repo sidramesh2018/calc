@@ -171,6 +171,12 @@ string), the boolean is true; otherwise, it's false.
   if the API has a proxy in front of it, as it likely will be if deployed
   on government infrastructure. For more information, see [`deploy.md`][].
 
+* `SECURITY_HEADERS_ON_ERROR_ONLY` is a boolean value that indicates whether
+  security-related response headers (such as `X-XSS-Protection`)
+  should only be added on error (status code >= 400) responses. This setting
+  will likely only be used for cloud.gov deployments, where the built-in proxy
+  sets those security headers on 200 responses but not on others.
+
 ## Staff Login
 
 Staff can log in to CALC for administrative tasks, but accounts
