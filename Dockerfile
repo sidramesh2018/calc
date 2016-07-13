@@ -35,3 +35,9 @@ RUN pip install -r /calc/requirements.txt
 # directory will be superseded by a folder share.
 
 COPY . /calc/
+
+WORKDIR /calc
+
+RUN gulp build
+
+ENTRYPOINT ["python", "/calc/docker_django_management.py"]
