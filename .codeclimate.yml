@@ -9,6 +9,7 @@ exclude_paths:
 - "hourglass_site/static_source/js/vendor/*"
 - "hourglass_site/static_source/style/vendor/*"
 - "hourglass_site/static_source/style/skeleton/*"
+- "styleguide/static/styleguide/vendor/*"
 - "contracts/migrations/*"
 - "selenium_tests/*"
 engines:
