@@ -1,0 +1,49 @@
+ol.steps {
+  font-weight: 300;
+  padding: 0;
+  list-style-type: none;
+  list-style-position: inside;
+  display: flex;
+}
+
+ol.steps li {
+  border-top: 3px solid #0872B9;
+  padding-top: 30px;
+  flex-grow: 1;
+  position: relative;
+}
+
+ol.steps li:last-child {
+  border-color: transparent;
+}
+
+ol.steps svg {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: -15px;
+  left: 0px;
+}
+
+ol.steps li.steps-done svg circle {
+  fill: #0872B9;
+}
+
+ol.steps li.steps-done svg text {
+  fill: white;
+}
+
+ol.steps svg circle {
+  fill: white;
+  stroke-width: 3px;
+  stroke: #0872B9;
+}
+
+ol.steps svg text {
+  font-weight: 700;
+  font-family: 'Lato';
+  font-size: 80%;
+  text-anchor: middle;
+  fill: #0872B9;
+  stroke: none;
+}
