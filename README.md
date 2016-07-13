@@ -88,6 +88,7 @@ ln -sf docker-compose.local.yml docker-compose.override.yml
 docker-compose build
 docker-compose run app python manage.py syncdb
 docker-compose run app python manage.py load_data
+docker-compose run app python manage.py load_s70
 ```
 
 Once the above commands are successful, run:
