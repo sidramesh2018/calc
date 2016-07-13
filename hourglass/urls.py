@@ -21,6 +21,8 @@ urlpatterns = patterns(
     url(r'^api/', include('api.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^tests/$', TemplateView.as_view(template_name='tests.html')),
+    url(r'^styleguide/$',
+        TemplateView.as_view(template_name='styleguide.html')),
     url(r'^robots.txt$', robots_txt),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
 )

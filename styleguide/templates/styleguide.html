@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load styleguide %}
+
+{% block title %}Style Guide{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'styleguide/styleguide.css' %}">
+<link rel="stylesheet" href="{% static 'styleguide/vendor/prism.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h1>CALC Style Guide</h1>
+
+  <p>
+    CALC uses <a href="http://getskeleton.com/">Skeleton</a> as the foundation
+    for its styles, with alterations based on the
+    <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
+  </p>
+
+  <h2 id="primary-buttons">Primary Buttons</h2>
+
+  <p>
+    The color of primary buttons matches the
+    <a href="https://standards.usa.gov/visual-style/#palette">primary colors</a>
+    of the USWDS.
+  </p>
+
+  {% example %}
+  <a class="button button-primary" href="#">Link</a>
+  <button class="button-primary">Button</button>
+  <input class="button-primary" type="button" value="Input">
+  <input class="button-primary" type="submit" value="Submit">
+  {% endexample %}
+
+</div>
+<script src="{% static 'styleguide/vendor/prism.js' %}"></script>
+{% endblock %}
