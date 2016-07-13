@@ -19,6 +19,28 @@
     <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
   </p>
 
+  <h2 id="upload">Upload</h2>
+
+  <p>
+    Our upload widget is implemented using the techniques outlined in
+    <a href="http://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/">Styling &amp; Customizing File Inputs the Smart Way</a> by Osvaldas Valutis.
+  </p>
+
+  <p>
+    The upload widget's <code>&lt;input&gt;</code> element does not currently
+    support the <code>multiple</code> attribute, however&mdash;it is intended
+    for single-file uploads only.
+  </p>
+
+  {% example %}
+  <div class="upload">
+    <input type="file" name="file" id="file">
+    <label for="file">Choose file</label>
+    <span class="js-only">or drag and drop here.</span>
+    XLS, XLSX, or CSV format, please.
+  </div>
+  {% endexample %}
+
   <h2 id="primary-buttons">Primary Buttons</h2>
 
   <p>

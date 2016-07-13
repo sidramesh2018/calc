@@ -1,0 +1,47 @@
+.upload {
+  background: $off-white;
+
+  // TODO: We don't have a name for #AEB0B5 in _variables.scss--should we?
+
+  border: 2px dashed #AEB0B5;
+  color: #AEB0B5;
+  font-size: 2rem;
+  padding: 3em;
+
+  input + label {
+    // TODO: We don't have a name for #0872B9 in _variables.scss--should we?
+    color: #0872B9;
+    font-weight: bold;
+    display: inline;
+    cursor: pointer;
+  }
+
+  input:focus + label,
+  input + label:hover {
+    text-decoration: underline;
+  }
+}
+
+.js .upload:not(.degraded) {
+  input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+}
+
+.js .upload.degraded .js-only {
+  display: none;
+}
+
+.no-js .upload, .js .upload.degraded {
+  font-size: 1.5rem;
+  text-align: center;
+
+  label {
+    display: none;
+  }
+}
