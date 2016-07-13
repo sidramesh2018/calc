@@ -2,10 +2,10 @@ app:
   volumes:
     - .:/calc
   command: python manage.py runserver 0.0.0.0:${DOCKER_EXPOSED_PORT}
-sass:
+gulp:
   build: .
   volumes:
     - .:/calc
-  working_dir: /calc/hourglass_site/static/hourglass_site
+  working_dir: /calc
   entrypoint: python /calc/docker_django_management.py
-  command: make watch-style
+  command: gulp

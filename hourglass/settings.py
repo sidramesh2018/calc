@@ -62,12 +62,12 @@ INSTALLED_APPS = (
     'djorm_pgfulltext',
     'rest_framework',
     'corsheaders',
-    'djangosecure',
     'uaa_client',
+    'styleguide',
 )
 
 MIDDLEWARE_CLASSES = (
-    'djangosecure.middleware.SecurityMiddleware',
+    'hourglass.middleware.ComplianceMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -118,7 +118,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -129,6 +128,7 @@ STATICFILES_DIRS = (
 if not DEBUG:
     STATICFILES_STORAGE = ('whitenoise.storage.'
                            'CompressedManifestStaticFilesStorage')
+
 
 PAGINATION = 200
 
@@ -196,16 +196,14 @@ if 'FORCE_DISABLE_SECURE_SSL_REDIRECT' in os.environ:
 
 SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = SECURE_SSL_REDIRECT
 
-SECURE_BROWSER_XSS_FILTER = True
-
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
 # Amazon ELBs pass on X-Forwarded-Proto.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
 ENABLE_SEO_INDEXING = 'ENABLE_SEO_INDEXING' in os.environ
+
+SECURITY_HEADERS_ON_ERROR_ONLY = 'SECURITY_HEADERS_ON_ERROR_ONLY' in os.environ
 
 UAA_AUTH_URL = 'https://login.cloud.gov/oauth/authorize'
 

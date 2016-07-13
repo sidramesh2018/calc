@@ -1,0 +1,39 @@
+{
+  "name": "calc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An estimator for hourly rates on professional services contracts",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^3.0.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.10.2",
+    "eslint-plugin-jsx-a11y": "^1.5.5",
+    "eslint-plugin-react": "^5.2.2",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.11",
+    "gulp-concat": "^2.6.0",
+    "gulp-eslint": "^3.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "^1.6.0"
+  },
+  "scripts": {
+    "gulp": "gulp",
+    "eslint": "eslint . || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/18F/CALC.git"
+  },
+  "author": "18F",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/18F/CALC/issues"
+  },
+  "homepage": "https://github.com/18F/CALC#readme",
+  "engines": {
+    "node": ">=5.10.0 <7.0",
+    "npm": ">=3.8.0"
+  }
+}

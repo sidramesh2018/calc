@@ -2,12 +2,8 @@
 {% load staticfiles %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'hourglass_site/style/index.css' %}">
-<script src="{% static 'hourglass_site/js/vendor/rgbcolor.js' %}"></script>
-<script src="{% static 'hourglass_site/js/vendor/StackBlur.js' %}"></script>
-<script src="{% static 'hourglass_site/js/vendor/canvg.js' %}"></script>
-<script src="{% static 'hourglass_site/js/vendor/canvas-toBlob.js' %}"></script>
-<script src="{% static 'hourglass_site/js/vendor/FileSaver.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'hourglass_site/style/built/index.min.css' %}">
 
 <!--[if IE 9]>
   <script src="{% static 'hourglass_site/js/vendor/vex.combined.min.js' %}"></script>
@@ -25,7 +21,7 @@
 
   <section class="search">
     <div class="container">
-      <p class="help-text">Use a comma between words to search multiple terms. (For example: Engineer, Consultant)</p>      
+      <p class="help-text">Use a comma between words to search multiple terms. (For example: Engineer, Consultant)</p>
       <div class="row">
         <div class="six columns">
           <input id="labor_category" name="q" placeholder="Type a labor category" class="search u-full-width" type="text">
@@ -488,8 +484,8 @@
 </form>
 
 <![if gt IE 8]>
-<script src="{% static 'hourglass_site/js/vendor/jquery.auto-complete.min.js' %}"></script>
-<script src="{% static 'hourglass_site/js/index.js' %}"></script>
+{# For the list of files included in this built script, see gulpfile.js #}
+<script src= "{% static 'hourglass_site/js/built/data-explorer/index.min.js' %}"></script>
 <![endif]>
 
 {% endblock %}

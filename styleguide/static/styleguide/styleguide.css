@@ -1,0 +1,29 @@
+.styleguide-example {
+  border: 1px solid lightgray;
+  margin-bottom: 2.5rem;
+}
+
+.styleguide-example .rendering {
+  padding: 8px;
+}
+
+.styleguide-example .rendering .example-heading {
+  font-size: 1em;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: gray;
+  letter-spacing: 1px;
+}
+
+/* This selector looks weird because we're waging a war on
+ * two fronts between CodeClimate's CSS linter and
+ * Prism's default CSS. */
+html .styleguide-example pre {
+  margin: 0;
+}
+
+.styleguide-example pre > code {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
