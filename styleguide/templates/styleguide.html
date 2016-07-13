@@ -34,6 +34,47 @@
   <input class="button-primary" type="submit" value="Submit">
   {% endexample %}
 
+  <h2 id="steps">Steps</h2>
+
+  <p>
+    The steps widget can be used to visualize the user's progress through a
+    multi-step process.
+  </p>
+
+  <p>
+    The widget extends to the full width of its container, with each
+    step consuming an equal amount of horizontal space.
+  </p>
+
+  <p>
+    Use <code>li.steps-done</code> to identify a step as being completed.
+  </p>
+
+  {% example %}
+  <ol class="steps">
+    <li class="steps-done">
+      <svg viewBox="0 0 30 30">
+        <circle cx="15" cy="15" r="13.5"/>
+        <text x="15" y="20" text-anchor="middle">1</text>
+      </svg>
+      Upload price list
+    </li>
+    <li class="steps-done">
+      <svg viewBox="0 0 30 30">
+        <circle cx="15" cy="15" r="13.5"/>
+        <text x="15" y="20" text-anchor="middle">2</text>
+      </svg>
+      Validate data
+    </li>
+    <li>
+      <svg viewBox="0 0 30 30">
+        <circle cx="15" cy="15" r="13.5"/>
+        <text x="15" y="20" text-anchor="middle">3</text>
+      </svg>
+      Submit data
+    </li>
+  </ol>
+  {% endexample %}
 </div>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 {% endblock %}
