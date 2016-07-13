@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load styleguide %}
 
 {% block title %}Style Guide{% endblock %}
 
@@ -52,24 +53,13 @@
     of the USWDS.
   </p>
 
-  <div class="styleguide-example">
-    <pre><code class="language-html">{% filter force_escape %}<a class="button button-primary" href="#">Link</a>
-<button class="button-primary">Button</button>
-<input class="button-primary" type="button" value="Input">
-<input class="button-primary" type="submit" value="Submit">{% endfilter %}</pre></code>
-  </div>
+  {% example %}
+  <a class="button button-primary" href="#">Link</a>
+  <button class="button-primary">Button</button>
+  <input class="button-primary" type="button" value="Input">
+  <input class="button-primary" type="submit" value="Submit">
+  {% endexample %}
+
 </div>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
-<script>
-$(function() {
-  $('.styleguide-example').each(function() {
-    var header = $('<h3>Example</h3>');
-    var html = $('pre code', this).text();
-    var renderedDiv = $('<div class="rendering"></div>').html(html);
-
-    renderedDiv.prepend(header);
-    $(this).prepend(renderedDiv);
-  });
-});
-</script>
 {% endblock %}
