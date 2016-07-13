@@ -2,7 +2,6 @@
 /hourglass_site/static/hourglass_site/style/built
 /hourglass_site/static/hourglass_site/js/built
 *.pyc
-local_settings.py
 *.swp
 *.swo
 *.DS_Store
@@ -25,3 +24,4 @@ pip-selfcheck.json
 .ruby-version
 .sass-cache/
 *credentials*.json
+docker-compose.override.yml

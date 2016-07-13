@@ -1,29 +1,17 @@
 app:
   build: .
-  volumes:
-    - .:/calc
   links:
     - db
-  working_dir: /calc
-  entrypoint: python /calc/docker_django_management.py
   environment:
     - DDM_HOST_USER=calc_user
     - DDM_IS_RUNNING_IN_DOCKER=yup
     - PYTHONUNBUFFERED=yup
-    - DEBUG=yup
     - DATABASE_URL=postgres://calc_user@db/calc
-  command: python manage.py runserver 0.0.0.0:8000
+  command: sh -c "python manage.py collectstatic --noinput ; waitress-serve --port=${DOCKER_EXPOSED_PORT} hourglass.wsgi:application"
   ports:
-    - "8000:8000"
+    - "${DOCKER_EXPOSED_PORT}:${DOCKER_EXPOSED_PORT}"
 db:
   image: postgres:9.4
   environment:
     - POSTGRES_DB=calc
     - POSTGRES_USER=calc_user
-gulp:
-  build: .
-  volumes:
-    - .:/calc
-  working_dir: /calc/
-  entrypoint: python /calc/docker_django_management.py
-  command: gulp
