@@ -52,20 +52,22 @@
   <p>
     Note that the upload widget gracefully degrades to a standard HTML
     file input if either JS is disabled or any required HTML5 features
-    are unavailable. This behavior can also be forced via the
-    <code>data-force-degradation</code> attribute:
+    are unavailable:
   </p>
 
-  {% example %}
-  <div class="upload" data-force-degradation>
-    <input type="file" name="file2" id="file2">
-    <div class="upload-chooser">
-      <label for="file2">Choose file</label>
-      <span class="js-only">or drag and drop here.</span>
-      XLS, XLSX, or CSV format, please.
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example (no JavaScript)</h3>
+        <div class="upload" data-force-degradation>
+          <input type="file" name="file2" id="file2">
+          <div class="upload-chooser">
+            <label for="file2">Choose file</label>
+            <span class="js-only">or drag and drop here.</span>
+            XLS, XLSX, or CSV format, please.
+          </div>
+        </div>
     </div>
   </div>
-  {% endexample %}
 
   <h3>Form Submission</h3>
 
