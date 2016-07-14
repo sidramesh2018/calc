@@ -111,9 +111,12 @@
     this.each(function() {
       activateUploadWidget($(this));
     });
+    return this;
   };
 
   $(document).ready(function() {
     $('.upload').uploadify();
   });
+
+  $.support.advancedUpload = browserSupportsAdvancedUpload();
 })(jQuery);
