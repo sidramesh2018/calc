@@ -30,6 +30,22 @@ $(document).ready(function () {
   $('.upload').each(function () {
     var self = $(this);
 
+    function setCurrentFilename(filename) {
+      $('input', self).nextAll().remove();
+
+      var id = $('input', self).attr('id');
+      var current = $(
+        '<div class="upload-current">' +
+        '<div class="upload-filename"></div>' +
+        '<div class="upload-changer">Not right? ' +
+        '<label>Choose a different file</label> or drag and drop here.' +
+        '</div></div>'
+      );
+      $('label', current).attr('for', id);
+      $('.upload-filename', current).text(filename);
+      self.append(current);
+    }
+
     if (!browserSupportsAdvancedUpload()) {
       self.addClass('degraded');
       return;
@@ -55,9 +71,5 @@ $(document).ready(function () {
         self.trigger('changefile', selectedFile);
       }
     });
-  });
-
-  $('.upload').on('changefile', function(e, file) {
-    console.log("FILE CHANGED", file.name);
   });
 });
