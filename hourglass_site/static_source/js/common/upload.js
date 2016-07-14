@@ -32,6 +32,7 @@ $(document).ready(function () {
     var $el = $(this);
     var $input = $('input', $el);
     var self = {
+      input: $input[0],
       isDegraded: false,
       file: null
     };
@@ -70,7 +71,7 @@ $(document).ready(function () {
       var files = dt.files;
 
       if (files.length > 0) {
-        $el.trigger('changefile', files[0]);
+        $input.trigger('changefile', files[0]);
       }
     });
 
@@ -78,11 +79,11 @@ $(document).ready(function () {
       var selectedFile = this.files[0];
 
       if (selectedFile) {
-        $el.trigger('changefile', selectedFile);
+        $input.trigger('changefile', selectedFile);
       }
     });
 
-    $el.on('changefile', function (e, file) {
+    $input.on('changefile', function (e, file) {
       self.file = file;
       $input.val('');
       setCurrentFilename(file.name);

@@ -35,14 +35,16 @@
   </p>
 
   {% example %}
-  <div class="upload">
-    <input type="file" name="file" id="file">
-    <div class="upload-chooser">
-      <label for="file">Choose file</label>
-      <span class="js-only">or drag and drop here.</span>
-      XLS, XLSX, or CSV format, please.
+  <form>
+    <div class="upload">
+      <input type="file" name="file" id="file">
+      <div class="upload-chooser">
+        <label for="file">Choose file</label>
+        <span class="js-only">or drag and drop here.</span>
+        XLS, XLSX, or CSV format, please.
+      </div>
     </div>
-  </div>
+  </form>
   {% endexample %}
 
   <h3>Graceful Degradation</h3>
@@ -65,21 +67,35 @@
   </div>
   {% endexample %}
 
+  <h3>Form Submission</h3>
+
   <p>
-    You will also need to use the following code to detect whether a file has
-    been chosen:
+    Due to the technical limitations of HTML5, when the upload widget isn't
+    degraded, you can't rely on the <code>&lt;input&gt;</code> element to
+    contain the user's file; you need to obtain a
+    <code><a href="https://developer.mozilla.org/en-US/docs/Web/API/File">File</a></code>
+    object from the upload widget, attach it to
+    <code><a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData">FormData</a></code>,
+    and send the form via AJAX.
+  </p>
+
+  <p>
+    The following code can be used to accomplish this:
   </p>
 
   <div class="styleguide-example">
-  <pre><code class="language-js">var upload = $('#file').data('upload');
+  <pre><code class="language-js">var data, upload = $('#file').data('upload');
 
 if (upload.isDegraded) {
   // The upload widget is degraded; we should assume the browser has
   // minimal HTML5 support and just let the user submit the form manually.
 } else {
   if (upload.file) {
-    // `file` is a HTML5 File object. Upload it via an XMLHttpRequest with
-    // FormData attached.
+    data = new FormData(upload.input.form);
+    data.delete('file');
+    data.append('file', upload.file);
+
+    // Now we can send the data via ajax.
   } else {
     alert("You need to choose a file!");
   }
