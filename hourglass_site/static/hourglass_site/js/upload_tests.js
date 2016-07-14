@@ -37,4 +37,19 @@
 
     upload.remove();
   });
+
+  advancedTest("'changefile' event triggered on drop", function(assert) {
+    var upload = $(UPLOAD_HTML).appendTo(document.body);
+    var input = upload.uploadify().find('input');
+    var fakeFile = {name: "boop"};
+    var evt = jQuery.Event('drop', {
+      originalEvent: { dataTransfer: { files: [fakeFile] } }
+    });
+
+    upload.on('changefile', function(e, file) {
+      assert.strictEqual(file, fakeFile);
+    });
+    upload.trigger(evt);
+    upload.remove();
+  });
 })(QUnit, jQuery);
