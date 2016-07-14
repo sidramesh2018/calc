@@ -1,6 +1,4 @@
 (function(QUnit, $) {
-  QUnit.module("upload");
-
   var UPLOAD_HTML = (
     '<div class="upload">' +
     '<input type="file" name="file" id="file">' +
@@ -10,37 +8,51 @@
     '</div>'
   );
 
-  var advancedTest = $.support.advancedUpload ? QUnit.test : QUnit.skip;
+  var upload, input;
+
+  function advancedTest(name, cb) {
+    if (!$.support.advancedUpload) {
+      return QUnit.skip(name, cb);
+    }
+    return QUnit.test(name, function(assert) {
+      upload = $(UPLOAD_HTML).appendTo(document.body);
+      input = upload.uploadify().find('input');
+      return cb(assert);
+    });
+  }
+
+  QUnit.module("upload", {
+    afterEach: function() {
+      if (upload) {
+        upload.remove();
+      }
+      upload = null;
+      input = null;
+    }
+  });
+
+  test("$.support.advancedUpload is a boolean", function(assert) {
+    assert.equal(typeof($.support.advancedUpload), "boolean");
+  });
 
   test("degraded upload sets 'upload', data", function(assert) {
-    var upload = $(UPLOAD_HTML)
+    upload = $(UPLOAD_HTML)
       .attr('data-force-degradation', 'yup')
       .appendTo(document.body);
-
-    var input = upload.uploadify().find('input');
+    input = upload.uploadify().find('input');
 
     assert.strictEqual(input.data('upload').isDegraded, true);
     assert.strictEqual(input.data('upload').input, input[0]);
     assert.strictEqual(input.data('upload').file, null);
-
-    upload.remove();
   });
 
   advancedTest("advanced upload sets 'upload' data", function(assert) {
-    var upload = $(UPLOAD_HTML).appendTo(document.body);
-
-    var input = upload.uploadify().find('input');
-
     assert.strictEqual(input.data('upload').isDegraded, false);
     assert.strictEqual(input.data('upload').input, input[0]);
     assert.strictEqual(input.data('upload').file, null);
-
-    upload.remove();
   });
 
   advancedTest("'changefile' event triggered on drop", function(assert) {
-    var upload = $(UPLOAD_HTML).appendTo(document.body);
-    var input = upload.uploadify().find('input');
     var fakeFile = {name: "boop"};
     var evt = jQuery.Event('drop', {
       originalEvent: { dataTransfer: { files: [fakeFile] } }
@@ -50,6 +62,5 @@
       assert.strictEqual(file, fakeFile);
     });
     upload.trigger(evt);
-    upload.remove();
   });
 })(QUnit, jQuery);
