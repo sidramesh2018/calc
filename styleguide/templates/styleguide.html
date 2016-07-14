@@ -61,6 +61,28 @@
   </div>
   {% endexample %}
 
+  <p>
+    You will also need to use the following code to detect whether a file has
+    been chosen:
+  </p>
+
+  <div class="styleguide-example">
+  <pre><code class="language-js">var upload = $('.upload:first').data('upload');
+
+if (upload.isDegraded) {
+  // The upload widget is degraded; we should just let the user submit
+  // the form manually.
+} else {
+  if (upload.file) {
+    // `file` is a HTML5 File object. Upload it via an XMLHttpRequest with
+    // FormData attached.
+  } else {
+    alert("You need to choose a file!");
+  }
+}
+</code></pre>
+  </div>
+
   <h2 id="primary-buttons">Primary Buttons</h2>
 
   <p>

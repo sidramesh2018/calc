@@ -30,6 +30,10 @@ $(document).ready(function () {
   $('.upload').each(function () {
     var $el = $(this);
     var $input = $('input', $el);
+    var self = {
+      isDegraded: false,
+      file: null
+    };
 
     function setCurrentFilename(filename) {
       $('input', $el).nextAll().remove();
@@ -47,9 +51,12 @@ $(document).ready(function () {
       $el.append(current);
     }
 
+    $el.data('upload', self);
+
     if (!browserSupportsAdvancedUpload() ||
         this.hasAttribute('data-force-degradation')) {
       $el.addClass('degraded');
+      self.isDegraded = true;
       return;
     }
 
@@ -75,6 +82,7 @@ $(document).ready(function () {
     });
 
     $el.on('changefile', function (e, file) {
+      self.file = file;
       $input.val('');
       setCurrentFilename(file.name);
     });
