@@ -47,7 +47,8 @@ $(document).ready(function () {
       $el.append(current);
     }
 
-    if (!browserSupportsAdvancedUpload()) {
+    if (!browserSupportsAdvancedUpload() ||
+        this.hasAttribute('data-force-degradation')) {
       $el.addClass('degraded');
       return;
     }
