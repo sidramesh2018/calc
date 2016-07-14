@@ -51,7 +51,7 @@ $(document).ready(function () {
       $el.append(current);
     }
 
-    $el.data('upload', self);
+    $input.data('upload', self);
 
     if (!browserSupportsAdvancedUpload() ||
         this.hasAttribute('data-force-degradation')) {

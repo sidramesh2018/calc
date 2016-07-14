@@ -43,6 +43,8 @@
   </div>
   {% endexample %}
 
+  <h3>Graceful Degradation</h3>
+
   <p>
     Note that the upload widget gracefully degrades to a standard HTML
     file input if either JS is disabled or any required HTML5 features
@@ -67,11 +69,11 @@
   </p>
 
   <div class="styleguide-example">
-  <pre><code class="language-js">var upload = $('.upload:first').data('upload');
+  <pre><code class="language-js">var upload = $('#file').data('upload');
 
 if (upload.isDegraded) {
-  // The upload widget is degraded; we should just let the user submit
-  // the form manually.
+  // The upload widget is degraded; we should assume the browser has
+  // minimal HTML5 support and just let the user submit the form manually.
 } else {
   if (upload.file) {
     // `file` is a HTML5 File object. Upload it via an XMLHttpRequest with
