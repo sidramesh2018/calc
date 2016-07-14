@@ -1,5 +1,9 @@
 .upload {
+  display: flex;
+  height: 6em;
   position: relative;
+  align-items: center;
+  padding: 0 3em;
   background: $off-white;
 
   // TODO: We don't have a name for #AEB0B5 in _variables.scss--should we?
@@ -7,7 +11,6 @@
   border: 2px dashed #AEB0B5;
   color: #AEB0B5;
   font-size: 2rem;
-  padding: 3em;
 
   label {
     // TODO: We don't have a name for #0872B9 in _variables.scss--should we?
@@ -51,6 +54,12 @@
 
   .upload-chooser {
     display: inline;
+  }
+
+  input {
+    // TODO: This is just clearing out the margin-bottom from our standard
+    // CSS, which feels like a hack.
+    margin-bottom: 0;
   }
 
   label {
