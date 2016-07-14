@@ -4,7 +4,8 @@
   position: relative;
   align-items: center;
   padding: 0 3em;
-  background: $off-white;
+  background-color: $off-white;
+  transition: background-color 0.5s;
 
   // TODO: We don't have a name for #AEB0B5 in _variables.scss--should we?
 
@@ -30,6 +31,10 @@
     position: absolute;
     font-size: 1.25rem;
     bottom: 0.5rem;
+  }
+
+  &.dragged-over {
+    background-color: $white;
   }
 }
 
