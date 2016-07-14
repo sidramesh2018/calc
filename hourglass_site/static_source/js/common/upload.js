@@ -1,7 +1,7 @@
 /* global $ */
 /* eslint-disable prefer-arrow-callback, func-names */
 
-$(document).ready(function () {
+(function ($) {
   // The following feature detectors are ultimately pulled from Modernizr.
 
   function browserSupportsDragAndDrop() {
@@ -28,8 +28,7 @@ $(document).ready(function () {
     event.preventDefault();
   }
 
-  $('.upload').each(function () {
-    var $el = $(this);
+  function activateUploadWidget($el) {
     var $input = $('input', $el);
     var dragCounter = 0;
     var self = {
@@ -54,10 +53,15 @@ $(document).ready(function () {
       $el.append(current);
     }
 
+    if ($input.data('upload')) {
+      // We've already been uploadified!
+      return;
+    }
+
     $input.data('upload', self);
 
     if (!browserSupportsAdvancedUpload() ||
-        this.hasAttribute('data-force-degradation')) {
+        $el[0].hasAttribute('data-force-degradation')) {
       $el.addClass('degraded');
       self.isDegraded = true;
       return;
@@ -101,5 +105,15 @@ $(document).ready(function () {
       $input.val('');
       setCurrentFilename(file.name);
     });
+  }
+
+  $.fn.uploadify = function() {
+    this.each(function() {
+      activateUploadWidget($(this));
+    });
+  };
+
+  $(document).ready(function() {
+    $('.upload').uploadify();
   });
-});
+})(jQuery);

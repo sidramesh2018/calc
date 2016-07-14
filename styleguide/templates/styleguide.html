@@ -47,6 +47,17 @@
   </form>
   {% endexample %}
 
+  <p>
+    When the page is first loaded, all <code>.upload</code> elements are
+    automatically activated. However, if you dynamically inject content
+    into the page via Ajax, you'll want to manually activate them via
+    code like this:
+  </p>
+
+  <div class="styleguide-example">
+    <pre><code class="language-js">$('.my-new-content .upload').uploadify();</code></pre>
+  </div>
+
   <h3>Graceful Degradation</h3>
 
   <p>
