@@ -28,12 +28,13 @@ $(document).ready(function () {
   }
 
   $('.upload').each(function () {
-    var self = $(this);
+    var $el = $(this);
+    var $input = $('input', $el);
 
     function setCurrentFilename(filename) {
-      $('input', self).nextAll().remove();
+      $('input', $el).nextAll().remove();
 
-      var id = $('input', self).attr('id');
+      var id = $('input', $el).attr('id');
       var current = $(
         '<div class="upload-current">' +
         '<div class="upload-filename"></div>' +
@@ -43,33 +44,38 @@ $(document).ready(function () {
       );
       $('label', current).attr('for', id);
       $('.upload-filename', current).text(filename);
-      self.append(current);
+      $el.append(current);
     }
 
     if (!browserSupportsAdvancedUpload()) {
-      self.addClass('degraded');
+      $el.addClass('degraded');
       return;
     }
 
-    self.on('dragenter', stopAndPrevent);
-    self.on('dragover', stopAndPrevent);
-    self.on('drop', function (e) {
+    $el.on('dragenter', stopAndPrevent);
+    $el.on('dragover', stopAndPrevent);
+    $el.on('drop', function (e) {
       stopAndPrevent(e);
 
       var dt = e.originalEvent.dataTransfer;
       var files = dt.files;
 
       if (files.length > 0) {
-        self.trigger('changefile', files[0]);
+        $el.trigger('changefile', files[0]);
       }
     });
 
-    $('input').on('change', function () {
+    $input.on('change', function () {
       var selectedFile = this.files[0];
 
       if (selectedFile) {
-        self.trigger('changefile', selectedFile);
+        $el.trigger('changefile', selectedFile);
       }
+    });
+
+    $el.on('changefile', function (e, file) {
+      $input.val('');
+      setCurrentFilename(file.name);
     });
   });
 });
