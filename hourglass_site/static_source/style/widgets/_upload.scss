@@ -7,15 +7,12 @@
   background-color: $off-white;
   transition: background-color 0.5s;
 
-  // TODO: We don't have a name for #AEB0B5 in _variables.scss--should we?
-
-  border: 2px dashed #AEB0B5;
-  color: #AEB0B5;
+  border: 2px dashed $dark-gray;
+  color: $dark-gray;
   font-size: 2rem;
 
   label {
-    // TODO: We don't have a name for #0872B9 in _variables.scss--should we?
-    color: #0872B9;
+    color: $blue;
     font-weight: bold;
     display: inline;
     cursor: pointer;
