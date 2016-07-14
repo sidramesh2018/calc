@@ -53,6 +53,12 @@
       $el.append(current);
     }
 
+    function setFile(file) {
+      if (file) {
+        $input.trigger('changefile', file);
+      }
+    }
+
     if ($input.data('upload')) {
       // We've already been uploadified!
       return;
@@ -88,20 +94,11 @@
       stopAndPrevent(e);
       $el.removeClass('dragged-over');
 
-      var dt = e.originalEvent.dataTransfer;
-      var files = dt.files;
-
-      if (files.length > 0) {
-        $input.trigger('changefile', files[0]);
-      }
+      setFile(e.originalEvent.dataTransfer.files[0]);
     });
 
     $input.on('change', function () {
-      var selectedFile = this.files[0];
-
-      if (selectedFile) {
-        $input.trigger('changefile', selectedFile);
-      }
+      setFile(this.files[0]);
     });
 
     $input.on('changefile', function (e, file) {

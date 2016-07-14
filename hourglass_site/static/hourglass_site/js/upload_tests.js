@@ -41,9 +41,21 @@
       .appendTo(document.body);
     input = upload.uploadify().find('input');
 
+    assert.ok(upload.hasClass('degraded'));
+    assert.ok(!upload[0].hasAttribute('aria-live'));
     assert.strictEqual(input.data('upload').isDegraded, true);
     assert.strictEqual(input.data('upload').input, input[0]);
     assert.strictEqual(input.data('upload').file, null);
+  });
+
+  advancedTest("extra calls to uploadify() do nothing", function(assert) {
+    var data = input.data('upload');
+    upload.uploadify();
+    assert.strictEqual(input.data('upload'), data);
+  });
+
+  advancedTest("advanced upload sets aria-live", function(assert) {
+    assert.equal(upload.attr("aria-live"), "polite");
   });
 
   advancedTest("advanced upload sets 'upload' data", function(assert) {
@@ -62,5 +74,37 @@
       assert.strictEqual(file, fakeFile);
     });
     upload.trigger(evt);
+  });
+
+  advancedTest("input 'change' evt w/o files does nothing", function(assert) {
+    input.trigger('change');
+    assert.strictEqual(input.data('upload').file, null);
+  });
+
+  advancedTest("'changefile' sets current file", function(assert) {
+    var fakeFile = {name: "foo.txt"};
+    input.trigger('changefile', fakeFile);
+
+    assert.strictEqual(input.data('upload').file, fakeFile);
+    assert.equal(upload.find('.upload-filename').text(), 'foo.txt');
+  });
+
+  advancedTest("dragenter/dragleave affect .dragged-over", function(assert) {
+    var i;
+
+    assert.ok(!upload.hasClass('dragged-over'));
+
+    for (i = 0; i < 3; i++) {
+      upload.trigger('dragenter');
+      assert.ok(upload.hasClass('dragged-over'));
+    }
+
+    for (i = 0; i < 2; i++) {
+      upload.trigger('dragleave');
+      assert.ok(upload.hasClass('dragged-over'));
+    }
+
+    upload.trigger('dragleave');
+    assert.ok(!upload.hasClass('dragged-over'));
   });
 })(QUnit, jQuery);
