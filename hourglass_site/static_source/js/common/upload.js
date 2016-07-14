@@ -2,7 +2,8 @@
 /* eslint-disable prefer-arrow-callback, func-names */
 
 $(document).ready(function () {
-  // https://css-tricks.com/drag-and-drop-file-uploading/
+  // The following feature detectors are ultimately pulled from Modernizr.
+
   function browserSupportsDragAndDrop() {
     var div = document.createElement('div');
     return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
