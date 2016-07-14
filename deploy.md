@@ -57,6 +57,23 @@ cf uups calc-env -p credentials-staging.json
 cf restage calc-dev
 ```
 
+##### New Relic Environment Variables
+
+To enable integrated New Relic monitoring, cloud.gov-deployed versions of the
+the application are launched with `newrelic-admin` (see [`cf.sh`](/cf.sh)).
+Basic New Relic configuration is done in [`newrelic.ini`](/newrelic.ini), but
+additional settings need to be provided as "real" environment variables, i.e.,
+not through the user provided service. This is because UPS parsing is done in
+the application, but `newrelic-admin` runs outside of the application.
+
+Non-secret environment variables are specified in each deployment's
+associated `manifest-<ENV>.yml` file (see [`manifest-staging.yml`](/manifests/manifest-staging.yml) as an example).
+
+The only secret New Relic environment variable that you will need to manually
+set for each deployment is `NEW_RELIC_LICENSE_KEY`:
+
+`cf set-env <APP_NAME> NEW_RELIC_LICENSE_KEY <LICENSE_KEY>`
+
 #### Staging Server
 
 The staging server updates automatically when changes are merged into the
