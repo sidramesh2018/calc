@@ -18,10 +18,14 @@
     cursor: pointer;
   }
 
-  input:focus + div.upload-chooser label,
-  input:focus + div.upload-current label,
   label:hover {
     text-decoration: underline;
+  }
+
+  input:focus + div.upload-chooser label,
+  input:focus + div.upload-current label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
   }
 
   .upload-changer {
