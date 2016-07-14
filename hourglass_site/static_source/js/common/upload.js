@@ -67,6 +67,10 @@
       return;
     }
 
+    // The content of the upload widget will change when the user chooses
+    // a file, so let's make sure screen readers let users know about it.
+    $el.attr('aria-live', 'polite');
+
     $el.on('dragenter', function (e) {
       stopAndPrevent(e);
 
