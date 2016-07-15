@@ -13,13 +13,14 @@
 <div class="container">
   <h1>CALC Style Guide</h1>
 
+  {% guide %}
   <p>
     CALC uses <a href="http://getskeleton.com/">Skeleton</a> as the foundation
     for its styles, with alterations based on the
     <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
   </p>
 
-  <h2 id="upload">Upload</h2>
+  {% guide_section "Upload Widget" %}
 
   <p>
     Our upload widget is implemented using the techniques outlined in
@@ -122,7 +123,7 @@ if (upload.isDegraded) {
     to the <code>&lt;input&gt;</code> element either.
   </p>
 
-  <h2 id="primary-buttons">Primary Buttons</h2>
+  {% guide_section "Primary Buttons" %}
 
   <p>
     The color of primary buttons matches the
@@ -137,7 +138,7 @@ if (upload.isDegraded) {
   <input class="button-primary" type="submit" value="Submit">
   {% endexample %}
 
-  <h2 id="steps">Steps</h2>
+  {% guide_section "Steps Widget" %}
 
   <p>
     The steps widget can be used to visualize the user's progress through a
@@ -175,6 +176,7 @@ if (upload.isDegraded) {
     </li>
   </ol>
   {% endexample %}
+  {% endguide %}
 </div>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,7 @@
+<ol class="styleguide-toc">
+  {% for section in sections %}
+    <li><a href="#{{ section.id }}">{{ section.name }}</a></li>
+  {% endfor %}
+</ol>
+
+{{ html }}
