@@ -1,0 +1,73 @@
+@import 'variables';
+
+body {
+  font-family: Lato, Helvetica, Arial, sans-serif;
+}
+
+* {
+          box-sizing: border-box;
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+main {
+  margin: 2rem 0;
+}
+
+h1 {
+  letter-spacing: 0;
+  .site-title {
+    display: block;
+    line-height: 1em;
+  }
+  .site-subtitle {
+    font-size: 2rem;
+    display: block;
+  }
+}
+
+h4 {
+  margin-bottom:.5rem;
+}
+
+
+a {
+  color: $blue;
+  &:hover {
+    color: $dark-blue;
+  }
+}
+
+.button.button-primary,
+button.button-primary,
+input.button-primary[type="submit"],
+input.button-primary[type="reset"],
+input.button-primary[type="button"] {
+  background-color: $blue;
+  border-color: $blue;
+  &:hover,
+  &:focus {
+    background-color: $dark-blue;
+    border-color: $dark-blue;
+  }
+}
+
+::-webkit-input-placeholder {
+   color: $dark-gray;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: $dark-gray;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: $dark-gray;
+}
+
+:-ms-input-placeholder {
+   color: $dark-gray;
+}
+
+fieldset {
+  margin: 0;
+}

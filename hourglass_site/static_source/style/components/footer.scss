@@ -1,0 +1,60 @@
+@import '../base/variables';
+
+footer {
+  color: $white;
+  background: $off-black;
+  padding: 2rem 0;
+  line-height: 1.4;
+  font-weight: 300;
+  background-image: url(../../images/footer_bg.png);
+  background-repeat: repeat;
+  background-size: auto 100%;
+
+  a,
+  a:hover {
+    color: $white;
+  }
+
+  h3 {
+    color: $yellow;
+    font-size: 3rem;
+    letter-spacing: 0;
+    font-weight: 600;
+    margin-bottom: .1em;
+  }
+}
+
+#footer_nav {
+  padding-top: 15px;
+  color: $white;
+  list-style-type: none;
+  float: left;
+  a {
+    color: $white;
+    list-style-type: none;
+  }
+  ul {
+    color: $white;
+    list-style-type: none;
+    font-weight: 300;
+    padding-left: 0;
+  }
+}
+
+.email_us {
+    margin-top: 15px;
+    color: $light-gray;
+    font-size: 1.5em;
+ }
+
+#logos {
+  text-align: right;
+  a {
+    display: inline-block;
+    margin-left: 1rem;
+    img {
+      width: 85px;
+      height: 85px;
+    }
+  }
+}
