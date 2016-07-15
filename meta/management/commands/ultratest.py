@@ -4,5 +4,6 @@ import subprocess
 
 @click.command()
 def command():
-    click.secho('Running ALL THE TESTS')
-    subprocess.call("py.test")
+    click.echo('Running ALL THE TESTS')
+    subprocess.call('py.test')
+    subprocess.call('npm run eslint', shell=True)
