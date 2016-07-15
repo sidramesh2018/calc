@@ -1,3 +1,7 @@
+'use strict'; // eslint-disable-line
+
+const path = require('path');
+
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const cleancss = require('gulp-clean-css');
@@ -5,6 +9,14 @@ const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename');
 const eslint = require('gulp-eslint');
+const gutil = require('gulp-util');
+const uglify = require('gulp-uglify');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const browserify = require('browserify');
+const watchify = require('watchify');
+const babelify = require('babelify');
+const del = require('del');
 
 const dirs = {
   src: {
@@ -12,10 +24,16 @@ const dirs = {
     scripts: 'hourglass_site/static_source/js/',
   },
   dest: {
-    style: 'hourglass_site/static/hourglass_site/style/built/',
+    style: {
+      all: 'hourglass_site/static/hourglass_site/style/built',
+    },
     scripts: {
-      dataExplorer: 'hourglass_site/static/hourglass_site/js/built/data-explorer',
+      // Scripts (vendor libs) common to CALC 1 and 2
       common: 'hourglass_site/static/hourglass_site/js/built/common',
+      // CALC 1.0 scripts
+      dataExplorer: 'hourglass_site/static/hourglass_site/js/built/data-explorer',
+      // CALC 2.0/ Data Capture scripts
+      dataCapture: 'hourglass_site/static/hourglass_site/js/built/data-capture',
     },
   },
 };
@@ -23,6 +41,11 @@ const dirs = {
 const paths = {
   sass: '**/*.scss',
   js: '**/*.js',
+  dataCaptureEntry: 'data-capture/index.js',
+  dataCaptureOutfile: 'index.min.js',
+};
+
+const bundles = {
   common: {
     base: [
       'vendor/d3.v3.min.js',
@@ -48,6 +71,8 @@ const paths = {
   },
 };
 
+let isWatching = false;
+
 // default task
 // running `gulp` will default to watching and dist'ing files
 gulp.task('default', ['watch']);
@@ -59,22 +84,35 @@ gulp.task('build', ['sass', 'js']);
 
 // watch files for changes
 gulp.task('watch', ['sass', 'js'], () => {
-  gulp.watch(dirs.src.style + paths.sass, ['sass']);
-  gulp.watch(dirs.src.scripts + paths.js, ['js']);
+  isWatching = true;
+  gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
+  gulp.watch(path.join(dirs.src.scripts, paths.js), ['js']);
+});
+
+gulp.task('clean', () => {
+  function getPaths(obj) {
+    return Object.keys(obj).map((k) => path.join(obj[k], '**/*'));
+  }
+
+  const styleDirs = getPaths(dirs.dest.style);
+  const scriptDirs = getPaths(dirs.dest.scripts);
+
+  del([].concat(styleDirs, scriptDirs));
 });
 
 // compile SASS sources
-gulp.task('sass', () => gulp.src(dirs.src.style + paths.sass)
+gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sass())
-  .pipe(gulp.dest(dirs.dest.style))
+  .pipe(gulp.dest(dirs.dest.style.all))
   .pipe(rename({ suffix: '.min' }))
   .pipe(sourcemaps.init())
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest(dirs.dest.style))
+  .pipe(gulp.dest(dirs.dest.style.all))
 );
 
-gulp.task('js', ['lint', 'js:legacy']);
+// Compile and lint JavaScript sources
+gulp.task('js', ['lint', 'js:data-capture', 'js:legacy']);
 
 gulp.task('js:legacy', ['js:data-explorer:index', 'js:common:base']);
 
@@ -88,19 +126,65 @@ function concatAndMapSources(name, sources, dest) {
 
 gulp.task('js:data-explorer:index', () => concatAndMapSources(
     'index.min.js',
-    paths.dataExplorer.index.map((p) => dirs.src.scripts + p),
+    bundles.dataExplorer.index.map((p) => dirs.src.scripts + p),
     dirs.dest.scripts.dataExplorer
   )
 );
 
 gulp.task('js:common:base', () => concatAndMapSources(
     'base.min.js',
-    paths.common.base.map((p) => dirs.src.scripts + p),
+    bundles.common.base.map((p) => dirs.src.scripts + p),
     dirs.dest.scripts.common
   )
 );
 
-gulp.task('lint', () => gulp.src(dirs.src.scripts + paths.js)
+
+function browserifyBundle(entryPath, outputPath, outputFile) {
+  // ref: https://gist.github.com/danharper/3ca2273125f500429945
+  let bundler = browserify(entryPath, { debug: true })
+    .transform(babelify.configure({ presets: ['es2015'] }));
+
+  if (isWatching) {
+    bundler = watchify(bundler);
+  }
+
+  function rebundle() {
+    bundler.bundle()
+      .on('error', (err) => {
+        gutil.beep();
+        gutil.log(gutil.colors.red(`Error (browserify):\n${err.toString()}`));
+        if (!isWatching) {
+          throw err;
+        }
+      })
+      .pipe(source(outputFile))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({ loadMaps: true }))
+        .pipe(uglify())
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest(outputPath));
+  }
+
+  if (isWatching) {
+    bundler.on('update', () => {
+      gutil.log(`-> Rebundling ${entryPath}`);
+      rebundle();
+    });
+  }
+
+  rebundle();
+  return bundler;
+}
+
+gulp.task('js:data-capture', () =>
+  browserifyBundle(
+    path.join(dirs.src.scripts, paths.dataCaptureEntry),
+    dirs.dest.scripts.dataCapture,
+    paths.dataCaptureOutfile
+  )
+);
+
+gulp.task('lint', () => gulp.src(path.join(dirs.src.scripts, paths.js))
   .pipe(eslint())
   .pipe(eslint.format())
 );
