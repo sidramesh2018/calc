@@ -19,7 +19,7 @@ def command(verbose):
         out = open(os.devnull, 'w')
 
     for entry in tests:
-        click.echo('-> %s ' % entry['name'], nl=(out is None))
+        click.echo('-> {} '.format(entry['name']), nl=(out is None))
         entry['result'] = subprocess.call(
             entry['cmd'], stdout=out, stderr=subprocess.STDOUT, shell=True
         )
