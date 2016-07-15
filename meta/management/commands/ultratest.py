@@ -6,6 +6,9 @@ import djclick as click
 @click.command()
 @click.option('--verbose', is_flag=True)
 def command(verbose):
+    '''
+    Management command to test and lint everything
+    '''
     click.echo('Running ALL THE TESTS')
 
     tests = [
