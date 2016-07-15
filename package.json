@@ -20,7 +20,8 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "eslint": "eslint . || true"
+    "eslint": "eslint . || true",
+    "failable-eslint": "eslint ."
   },
   "repository": {
     "type": "git",
