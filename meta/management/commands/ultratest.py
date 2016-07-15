@@ -1,10 +1,6 @@
-from django.core.management.base import BaseCommand
+import djclick as click
 
 
-class Command(BaseCommand):
-    '''
-    Test and lint everything all at once.
-    '''
-
-    def handle(self, *args, **options):
-        print("THIS IS THE ULTRATEST")
+@click.command()
+def command():
+    click.secho('Running ALL THE TESTS')
