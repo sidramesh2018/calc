@@ -1,0 +1,74 @@
+.upload {
+  display: flex;
+  height: 6em;
+  position: relative;
+  align-items: center;
+  padding: 0 3em;
+  background-color: $off-white;
+  transition: background-color 0.5s;
+
+  border: 2px dashed $dark-gray;
+  color: $dark-gray;
+  font-size: 2rem;
+
+  label {
+    color: $blue;
+    font-weight: bold;
+    display: inline;
+    cursor: pointer;
+  }
+
+  label:hover {
+    text-decoration: underline;
+  }
+
+  input:focus + div.upload-chooser label,
+  input:focus + div.upload-current label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+  }
+
+  .upload-changer {
+    position: absolute;
+    font-size: 1.25rem;
+    bottom: 0.5rem;
+  }
+
+  &.dragged-over {
+    background-color: $white;
+  }
+}
+
+.js .upload:not(.degraded) {
+  input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+}
+
+.js .upload.degraded .js-only {
+  display: none;
+}
+
+.no-js .upload, .js .upload.degraded {
+  font-size: 1.5rem;
+  text-align: center;
+
+  .upload-chooser {
+    display: inline;
+  }
+
+  input {
+    // TODO: This is just clearing out the margin-bottom from our standard
+    // CSS, which feels like a hack.
+    margin-bottom: 0;
+  }
+
+  label {
+    display: none;
+  }
+}

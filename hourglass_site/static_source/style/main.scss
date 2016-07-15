@@ -3,6 +3,7 @@
 @import 'skeleton/normalize';
 @import 'skeleton/skeleton';
 @import 'widgets/steps';
+@import 'widgets/upload';
 
 body {
   font-family: Lato, Helvetica, Arial, sans-serif;
@@ -342,4 +343,8 @@ footer {
 
 fieldset {
   margin: 0;
+}
+
+.no-js .js-only {
+  display: none;
 }

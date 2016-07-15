@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <title>CALC / {% block title %}Home{% endblock %}</title>
     <meta charset="utf-8">
@@ -10,6 +10,7 @@
     <script src="{% static 'hourglass_site/js/vendor/aight.v2.min.js' %}"></script>
     <script src="{% static 'hourglass_site/js/vendor/history.min.js' %}"></script>
     <![endif]-->
+    <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
     <link rel="stylesheet" href="{% static 'hourglass_site/style/built/main.min.css' %}"/>
 
     <![if gt IE 8]>
