@@ -1,3 +1,34 @@
+.styleguide-toc {
+  background-color: #f0f0f0;
+  padding: 1em;
+}
+
+.styleguide-toc li:last-child {
+  margin-bottom: 0;
+}
+
+h3.styleguide-section {
+  border-bottom: 1px solid lightgray;
+}
+
+.styleguide-section a {
+  color: lightgray;
+  text-decoration: none;
+  margin-left: -32px;
+  padding-right: 2px;
+  display: inline-block;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.styleguide-section:hover a {
+  opacity: 1;
+}
+
+.styleguide-section a:before {
+  content: '#';
+}
+
 .styleguide-example {
   border: 1px solid lightgray;
   margin-bottom: 2.5rem;

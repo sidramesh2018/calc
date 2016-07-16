@@ -1,9 +1,9 @@
 static/
 htmlcov/
+vendor/
+
 hourglass_site/static/hourglass_site/js/built
-hourglass_site/static/hourglass_site/js/vendor
 hourglass_site/static/hourglass_site/tests
-hourglass_site/static_source/js/vendor
 
 # Ignoring legacy (CALC 1.0) JS files for now
 hourglass_site/static_source/js/common/hourglass.js
