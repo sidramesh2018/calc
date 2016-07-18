@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 import djclick as click
 
@@ -29,17 +30,25 @@ def command(verbosity):
     if not is_verbose:
         out = open(os.devnull, 'w')
 
+    failing_tests = []
     for entry in tests:
         echo('-> {} '.format(entry['name']), 1, nl=is_verbose)
 
         echo('Running "{}"'.format(entry['cmd']), 2)
 
-        entry['result'] = subprocess.call(
+        result = subprocess.call(
             entry['cmd'], stdout=out, stderr=subprocess.STDOUT, shell=True
         )
 
+        if result is not 0:
+            failing_tests.append(entry['name'])
+
         if not is_verbose:
-            if entry['result'] is 0:
+            if result is 0:
                 echo('OK', 1, fg='green')
             else:
                 echo('FAIL', 1, fg='red')
+
+    if len(failing_tests) > 0:
+        echo('Failing tests: {}'.format(', '.join(failing_tests)), 0)
+        sys.exit(1)
