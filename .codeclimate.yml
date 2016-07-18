@@ -15,6 +15,7 @@ exclude_paths:
 engines:
   eslint:
     enabled: true
+    channel: "eslint-2"
   csslint:
     enabled: true
   pep8:
