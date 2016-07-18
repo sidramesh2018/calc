@@ -53,7 +53,6 @@ const bundles = {
       'vendor/query.xdomainrequest.min.js',
       'vendor/formdb.min.js',
       'common/hourglass.js',
-      'common/upload.js',
       'vendor/jquery.tooltipster.js',
       'vendor/jquery.nouislider.all.min.js',
     ],
