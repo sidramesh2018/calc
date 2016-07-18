@@ -22,7 +22,11 @@ def command(verbose):
         out = open(os.devnull, 'w')
 
     for entry in tests:
-        click.echo('-> {} '.format(entry['name']), nl=(out is None))
+        click.echo('-> {} '.format(entry['name']), nl=verbose)
+
+        if verbose:
+            click.echo('Running "{}"'.format(entry['cmd']))
+
         entry['result'] = subprocess.call(
             entry['cmd'], stdout=out, stderr=subprocess.STDOUT, shell=True
         )
