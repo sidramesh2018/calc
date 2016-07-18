@@ -22,6 +22,7 @@ const dirs = {
 
 const paths = {
   sass: '**/*.scss',
+  css: '**/*.css',
   js: '**/*.js',
   common: {
     base: [
@@ -70,6 +71,10 @@ gulp.task('sass', () => gulp.src(dirs.src.style + paths.sass)
   .pipe(sourcemaps.init())
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
+  .pipe(gulp.dest(dirs.dest.style))
+);
+
+gulp.task('css', () => gulp.src(dirs.src.style + paths.css)
   .pipe(gulp.dest(dirs.dest.style))
 );
 
