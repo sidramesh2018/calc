@@ -1,19 +1,130 @@
-td, th, caption {
+@import '../base/variables';
+table {
+  width: 100%;
+  margin-top: 2rem;
+  caption {
+    color: $dark-gray;
+  color: inherit;
+    text-align: left;
+    font-weight: bold;
+  font-weight: normal;
+    padding-bottom: 1.5em;
+    vertical-align: bottom;
+  }
+}
+
+td,
+td:first-child,
+td:last-child,
+th,
+th:first-child,
+th:last-child {
   position: relative;
   padding: .25em .5em;
   vertical-align: top;
 }
 
 thead th {
+  position: relative;
   vertical-align: bottom;
+  color: $dark-gray;
+  border-bottom: 1px solid;
+
 }
 
-tbody tr:nth-child(odd) td {
-  background: #f9f9f9;
+tbody {
+  tr {
+    &:hover > * {
+      background: $light-yellow !important;
+    }
+    &:nth-child(odd) {
+      background: #f9f9f9;
+      td.sorted {
+        background: #f0f0f0;
+      }
+    }
+  }
+  th {
+    font-weight: normal;
+  }
 }
 
-table caption {
-  color: #666;
-  text-align: left;
+td.sorted {
+  background: #fafafa;
+}
+
+th.sortable {
+  text-decoration: underline;
+  cursor: pointer;
+  padding-right: 1.5em;
+  &:after {
+    display: inline-block;
+    line-height: 1em;
+    height: 1em;
+    position: absolute;
+    bottom: .4em;
+    right: 0;
+    margin-top: -.5em;
+    margin-right: .25em;
+    content: "▽";
+    font-weight: normal;
+    font-size: .9em;
+  }
+}
+
+th.sorted {
+  color: $black;
+  background: #f8f8f8;
+  position: relative;
+  &:after {
+    content: "▲";
+    font-size: 1em;
+  }
+  &.descending:after {
+    content: "▼";
+  }
+}
+
+th.collapsible {
+  position: relative;
+  &.collapsed {
+    width: 0;
+    font-size: 0;
+  }
+  &:last-child a.toggle-collapse {
+    left: auto;
+    right: 0;
+    text-align: right;
+  }
+}
+
+th.collapsible a.toggle-collapse,
+th.exclude a.restore {
+  position: absolute;
+  font-size: 1rem;
+  padding: 2px 0;
+  text-transform: uppercase;
+  text-decoration: underline;
+  color: $dark-gray;
+  white-space: nowrap;
+  vertical-align: bottom;
+  bottom: 100%;
+  left: 0;
+}
+
+th.collapsed,
+td.collapsed {
+  width: 1.5em !important;
+  border-left: 1px dotted $off-white;
+}
+
+td.column-exclude a {
+  color: $dark-gray;
+  font-size: 1.2em;
+  line-height: 1rem;
   font-weight: bold;
+  text-decoration: none;
+  &:hover {
+    color: $black;
+  }
 }
