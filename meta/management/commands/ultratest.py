@@ -6,32 +6,51 @@ import djclick as click
 
 @click.command()
 @click.pass_verbosity
-def command(verbosity):
+@click.option('--lintonly', help='Run linters only (no tests)', is_flag=True)
+def command(verbosity, lintonly):
     '''
     Management command to test and lint everything
     '''
+    linters = [
+        {
+            'name': 'flake8',
+            'cmd': 'flake8 --exclude=node_modules .'
+        },
+        {
+            'name': 'eslint',
+            'cmd': 'npm run failable-eslint'
+        },
+    ]
+
+    tests = [
+        {
+            'name': 'py.test',
+            'cmd': 'py.test'
+        },
+    ]
 
     def echo(msg, v_level, **kwargs):
         if verbosity < v_level:
             return
         click.secho(msg, **kwargs)
 
-    echo('Running ALL THE TESTS', 1)
-
-    tests = [
-        {'name': 'flake8',  'cmd': 'flake8 --exclude=node_modules .'},
-        {'name': 'eslint',  'cmd': 'npm run failable-eslint'},
-        {'name': 'py.test', 'cmd': 'py.test'},
-    ]
-
     is_verbose = verbosity > 1
+
+    if lintonly:
+        echo('Running linters only', 1)
+    else:
+        echo('Running ALL THE TESTS', 1)
 
     out = None
     if not is_verbose:
         out = open(os.devnull, 'w')
 
-    failing_tests = []
-    for entry in tests:
+    to_run = linters
+    if not lintonly:
+        to_run += tests
+
+    failures = []
+    for entry in to_run:
         echo('-> {} '.format(entry['name']), 1, nl=is_verbose)
 
         echo('Running "{}"'.format(entry['cmd']), 2)
@@ -41,7 +60,7 @@ def command(verbosity):
         )
 
         if result is not 0:
-            failing_tests.append(entry['name'])
+            failures.append(entry['name'])
 
         if not is_verbose:
             if result is 0:
@@ -49,6 +68,6 @@ def command(verbosity):
             else:
                 echo('FAIL', 1, fg='red')
 
-    if len(failing_tests) > 0:
-        echo('Failing tests: {}'.format(', '.join(failing_tests)), 0)
+    if len(failures) > 0:
+        echo('Failing tests: {}'.format(', '.join(failures)), 0)
         sys.exit(1)
