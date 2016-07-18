@@ -18,9 +18,9 @@ def command(verbosity):
     echo('Running ALL THE TESTS', 1)
 
     tests = [
-        {'name': 'py.test', 'cmd': 'py.test'},
         {'name': 'flake8',  'cmd': 'flake8 --exclude=node_modules .'},
         {'name': 'eslint',  'cmd': 'npm run failable-eslint'},
+        {'name': 'py.test', 'cmd': 'py.test'},
     ]
 
     is_verbose = verbosity > 1
