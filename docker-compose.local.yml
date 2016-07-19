@@ -1,9 +1,12 @@
 app:
   volumes:
     - .:/calc
+    # http://stackoverflow.com/a/37898591
+    - /calc/node_modules/
   command: python manage.py runserver 0.0.0.0:${DOCKER_EXPOSED_PORT}
 gulp:
   build: .
   volumes:
     - .:/calc
+    - /calc/node_modules/
   command: gulp
