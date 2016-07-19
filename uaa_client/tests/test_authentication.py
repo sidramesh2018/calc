@@ -1,7 +1,7 @@
 from unittest import mock
 import urllib.parse
 import jwt
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.test.utils import override_settings
 from django.contrib.auth.models import User
 import httmock
@@ -16,6 +16,7 @@ from .. import authentication as auth
     UAA_TOKEN_URL='https://example.org/token'
 )
 class AuthenticationTests(TestCase):
+
     def test_get_auth_url_works(self):
         self.assertEqual(auth.get_auth_url(None), 'https://example.org/auth')
 

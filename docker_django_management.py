@@ -171,7 +171,7 @@ def execute_from_command_line(argv):
             setup_docker_sigterm_handler()
         wait_for_db()
 
-        if not 'PYTHONUNBUFFERED' in os.environ:
+        if 'PYTHONUNBUFFERED' not in os.environ:
             warn("PYTHONUNBUFFERED is not defined. Some output may "
                  "not be visible.")
 

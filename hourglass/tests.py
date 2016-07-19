@@ -49,6 +49,7 @@ class ComplianceTests(DjangoTestCase):
 
 
 class RobotsTests(DjangoTestCase):
+
     @override_settings(ENABLE_SEO_INDEXING=False)
     def test_disable_seo_indexing_works(self):
         res = self.client.get('/robots.txt')
@@ -63,6 +64,7 @@ class RobotsTests(DjangoTestCase):
 
 
 class CupsTests(unittest.TestCase):
+
     @staticmethod
     def make_vcap_services_env(vcap_services):
         return {
@@ -76,17 +78,17 @@ class CupsTests(unittest.TestCase):
 
     def test_irrelevant_cups_are_ignored(self):
         env = self.make_vcap_services_env({
-          "user-provided": [
-            {
-              "label": "user-provided",
-              "name": "NOT-boop-env",
-              "syslog_drain_url": "",
-              "credentials": {
-                "boop": "jones"
-              },
-              "tags": []
-            }
-          ]
+            "user-provided": [
+                {
+                    "label": "user-provided",
+                    "name": "NOT-boop-env",
+                    "syslog_drain_url": "",
+                    "credentials": {
+                        "boop": "jones"
+                    },
+                    "tags": []
+                }
+            ]
         })
 
         load_cups_from_vcap_services('boop-env', env=env)
@@ -95,17 +97,17 @@ class CupsTests(unittest.TestCase):
 
     def test_credentials_are_loaded(self):
         env = self.make_vcap_services_env({
-          "user-provided": [
-            {
-              "label": "user-provided",
-              "name": "boop-env",
-              "syslog_drain_url": "",
-              "credentials": {
-                "boop": "jones"
-              },
-              "tags": []
-            }
-          ]
+            "user-provided": [
+                {
+                    "label": "user-provided",
+                    "name": "boop-env",
+                    "syslog_drain_url": "",
+                    "credentials": {
+                        "boop": "jones"
+                    },
+                    "tags": []
+                }
+            ]
         })
 
         load_cups_from_vcap_services('boop-env', env=env)
@@ -114,6 +116,7 @@ class CupsTests(unittest.TestCase):
 
 
 class GetWhitelistedIPsTest(unittest.TestCase):
+
     def test_returns_none_when_not_in_env(self):
         env = {}
         self.assertIsNone(get_whitelisted_ips(env))

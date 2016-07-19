@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'uaa_client',
     'styleguide',
+    'meta',
 )
 
 MIDDLEWARE_CLASSES = (

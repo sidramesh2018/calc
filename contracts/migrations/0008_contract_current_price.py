@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contract',
             name='current_price',
-            field=models.DecimalField(max_digits=10, null=True, blank=True, decimal_places=2),
+            field=models.DecimalField(
+                max_digits=10, null=True, blank=True, decimal_places=2),
             preserve_default=True,
         ),
     ]

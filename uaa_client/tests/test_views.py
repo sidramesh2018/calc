@@ -16,6 +16,7 @@ def get_query(urlinfo):
     UAA_TOKEN_URL='https://example.org/token'
 )
 class ViewTests(TestCase):
+
     def assertErrorCode(self, response, error_code):
         self.assertEqual(response.context['error_code'],
                          error_code)

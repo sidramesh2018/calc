@@ -58,13 +58,13 @@ If you are managing https://calc.gsa.gov or any other cloud.gov-based deployment
 
 ## Testing
 
-To run all tests:
+To run unit tests:
 
 ```sh
 py.test
 ```
 
-To run all tests and generate a coverage report:
+To run unit tests and generate a coverage report:
 
 ```sh
 py.test --cov
@@ -72,6 +72,12 @@ py.test --cov
 
 For more information on running only specific tests, see
 [`py.test` Usage and Invocations][pytest].
+
+CALC also provides a custom Django management command to run all linters and unit tests:
+
+```sh
+python manage.py ultratest
+```
 
 ## Using Docker (optional)
 

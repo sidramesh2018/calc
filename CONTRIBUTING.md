@@ -27,8 +27,14 @@ integration, such as [linter-pep8](https://atom.io/packages/linter-pep8) for Ato
 
 For front end JavaScript, we use [eslint][] to lint our source files.
 We recommend using an editor plugin (such as [linter-eslint][] for Atom)
-to automatically lint JavaScript files. If you do not with to use an editor plugin,
+to automatically lint JavaScript files. If you do not wish to use an editor plugin,
 you can run `npm run eslint` from the command line.
+
+CALC also provides a custom Django management command to run all linters and unit tests:
+
+```sh
+python manage.py ultratest
+```
 
 [PEP8]: https://www.python.org/dev/peps/pep-0008/
 [eslint]: http://eslint.org/

@@ -5,6 +5,7 @@ from django.conf import settings
 
 
 class ContractPagination(pagination.PageNumberPagination):
+
     def __init__(self, context):
         super().__init__()
         self.context = context

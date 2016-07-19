@@ -2,15 +2,74 @@ from textwrap import dedent
 
 from django import template
 from django.utils.safestring import SafeString
+from django.utils.text import slugify
 
 
 register = template.Library()
 
 
 @register.tag
+def guide(parser, token):
+    '''
+    A {% guide %} represents an HTML document composed into sections with a
+    table of contents linking to them.
+    '''
+
+    nodelist = parser.parse(('endguide',))
+    parser.delete_first_token()
+    return GuideNode(nodelist)
+
+
+class GuideNode(template.Node):
+
+    def __init__(self, nodelist):
+        self.nodelist = nodelist
+
+    def render(self, context):
+        context['_sections'] = []
+
+        html = self.nodelist.render(context)
+
+        t = context.template.engine.get_template('styleguide_with_toc.html')
+
+        result = t.render(template.Context({
+            'html': html,
+            'sections': context['_sections']
+        }))
+
+        del context['_sections']
+
+        return result
+
+
+@register.simple_tag(takes_context=True)
+def guide_section(context, name):
+    '''
+    A section in a guide. It must be used within a {% guide %} tag.
+    '''
+
+    if '_sections' not in context:
+        raise Exception(r'{% guide_section %} tags should only be used '
+                        r'within {% guide%} tags!')
+    section = Section(name)
+    context['_sections'].append(section)
+    t = context.template.engine.get_template('styleguide_section.html')
+
+    return t.render(template.Context({'section': section}))
+
+
+class Section:
+
+    def __init__(self, name):
+        self.name = name
+        self.id = slugify(name)
+
+
+@register.tag
 def example(parser, token):
     '''
-    An an HTML code snippet example to a style guide.
+    An HTML code snippet example in a style guide. Includes both the
+    rendered version of the example and the source code.
     '''
 
     nodelist = parser.parse(('endexample',))
@@ -19,6 +78,7 @@ def example(parser, token):
 
 
 class ExampleNode(template.Node):
+
     def __init__(self, nodelist):
         self.nodelist = nodelist
 

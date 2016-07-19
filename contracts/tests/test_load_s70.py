@@ -41,7 +41,7 @@ class LoadS70TestCase(TestCase):
         self.assertEquals(Contract.objects.count(), 20)
 
     def test_loads_bad_sample_and_warns(self):
-        output = self.load(self.bad_filename)
+        self.load(self.bad_filename)
         self.assertEquals(Contract.objects.count(), 18)
 
     def test_strict_mode_fails(self):
