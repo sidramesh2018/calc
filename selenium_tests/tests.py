@@ -72,14 +72,16 @@ class FunctionalTests(LiveServerTestCase):
             driver.command_executor.set_timeout(PHANTOMJS_TIMEOUT)
             return driver
 
-        if REMOTE_TESTING.get('enabled') == False:
+        if REMOTE_TESTING.get('enabled') is False:
             pass
 
         username = _get_testing_config('username')
         access_key = _get_testing_config('access_key')
         hub_url = _get_testing_config('hub_url')
         if None in (username, access_key, hub_url):
-            raise Error('You must provide a username, access_key and hub URL!')
+            raise Exception(
+                'You must provide a username, access_key and hub URL!'
+            )
 
         desired_cap = webdriver.DesiredCapabilities.CHROME
         # these are the standard Selenium capabilities
