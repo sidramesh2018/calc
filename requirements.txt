@@ -1,6 +1,6 @@
 dj-database-url==0.3.0
-Django==1.8.13
 django-click==1.2.0
+Django==1.8.14
 django-cors-headers==1.1.0
 django-nose==1.4.3
 djangorestframework==3.3.3

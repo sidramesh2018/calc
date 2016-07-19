@@ -8,6 +8,7 @@ from api.utils import get_histogram, stdev
 
 
 class HistogramTests(unittest.TestCase):
+
     def test_returns_bins_on_empty_input(self):
         bins = get_histogram([], 10)
         self.assertEqual(len(bins), 10)
@@ -61,6 +62,7 @@ class HistogramTests(unittest.TestCase):
 
 
 class StandardDeviationTests(unittest.TestCase):
+
     def test_returns_nan_on_empty_input(self):
         values = []
         self.assertTrue(math.isnan(stdev(values)))

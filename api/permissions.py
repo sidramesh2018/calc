@@ -1,10 +1,12 @@
 from rest_framework import permissions
 from django.conf import settings
 
+
 class WhiteListPermission(permissions.BasePermission):
     """
         Global permission check for api.data.gov IPs
     """
+
     def has_permission(self, request, view):
         ip_addr = None
         forwarded = request.META.get('HTTP_X_FORWARDED_FOR')
