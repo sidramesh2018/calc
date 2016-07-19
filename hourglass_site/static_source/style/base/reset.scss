@@ -42,6 +42,12 @@ a {
   }
 }
 
+input,
+select {
+  line-height: normal;
+  font-size: inherit;
+}
+
 .button.button-primary,
 button.button-primary,
 input.button-primary[type="submit"],
@@ -49,6 +55,7 @@ input.button-primary[type="reset"],
 input.button-primary[type="button"] {
   background-color: $blue;
   border-color: $blue;
+  text-transform: uppercase;
   &:hover,
   &:focus {
     background-color: $dark-blue;
