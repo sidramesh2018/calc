@@ -16,6 +16,7 @@ from .. import authentication as auth
     UAA_TOKEN_URL='https://example.org/token'
 )
 class AuthenticationTests(TestCase):
+
     def test_get_auth_url_works(self):
         self.assertEqual(auth.get_auth_url(None), 'https://example.org/auth')
 

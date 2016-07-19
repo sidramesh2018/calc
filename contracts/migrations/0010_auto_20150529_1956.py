@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contract',
             name='contract_year',
-            field=models.DecimalField(null=True, max_digits=1, decimal_places=0, blank=True),
+            field=models.DecimalField(
+                null=True, max_digits=1, decimal_places=0, blank=True),
             preserve_default=True,
         ),
         migrations.AlterField(

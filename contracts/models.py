@@ -13,11 +13,13 @@ EDUCATION_CHOICES = (
 
 
 class CurrentContractManager(SearchManager):
-    # need to subclass the SearchManager we were using for postgres full text search instead of default
+    # need to subclass the SearchManager we were using for postgres full text
+    # search instead of default
+
     def get_queryset(self):
         return ContractsQuerySet(self.model, using=self._db)\
-                .filter(current_price__gt=0)\
-                .exclude(current_price__isnull=True)
+            .filter(current_price__gt=0)\
+            .exclude(current_price__isnull=True)
 
 
 class ContractsQuerySet(SearchQuerySet):
@@ -44,7 +46,8 @@ class ContractsQuerySet(SearchQuerySet):
             edu_index = sort_params.index('-education_level')
 
         if edu_index is not None:
-            sort_params[edu_index] = 'edu_sort' if not args[edu_index].startswith('-') else '-edu_sort'
+            sort_params[edu_index] = 'edu_sort' if not args[
+                edu_index].startswith('-') else '-edu_sort'
             queryset = super(ContractsQuerySet, self)\
                 .extra(select={'edu_sort': edu_sort_sql}, order_by=sort_params)
         else:
@@ -56,36 +59,48 @@ class ContractsQuerySet(SearchQuerySet):
 
 class Contract(models.Model):
 
-    idv_piid = models.CharField(max_length=128) #index this field
-    piid = models.CharField(max_length=128) #index this field
+    idv_piid = models.CharField(max_length=128)  # index this field
+    piid = models.CharField(max_length=128)  # index this field
     contract_start = models.DateField(null=True, blank=True)
     contract_end = models.DateField(null=True, blank=True)
     contract_year = models.IntegerField(null=True, blank=True)
     vendor_name = models.CharField(max_length=128)
     labor_category = models.TextField(db_index=True)
-    education_level = models.CharField(db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True, blank=True)
+    education_level = models.CharField(
+        db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True, blank=True)
     min_years_experience = models.IntegerField(db_index=True)
     hourly_rate_year1 = models.DecimalField(max_digits=10, decimal_places=2)
-    hourly_rate_year2 = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year3 = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year4 = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year5 = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    current_price = models.DecimalField(db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
-    next_year_price = models.DecimalField(db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
-    second_year_price = models.DecimalField(db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
-    contractor_site = models.CharField(db_index=True, max_length=128, null=True, blank=True)
-    schedule = models.CharField(db_index=True, max_length=128, null=True, blank=True)
-    business_size = models.CharField(db_index=True, max_length=128, null=True, blank=True)
+    hourly_rate_year2 = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True)
+    hourly_rate_year3 = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True)
+    hourly_rate_year4 = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True)
+    hourly_rate_year5 = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True)
+    current_price = models.DecimalField(
+        db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
+    next_year_price = models.DecimalField(
+        db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
+    second_year_price = models.DecimalField(
+        db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
+    contractor_site = models.CharField(
+        db_index=True, max_length=128, null=True, blank=True)
+    schedule = models.CharField(
+        db_index=True, max_length=128, null=True, blank=True)
+    business_size = models.CharField(
+        db_index=True, max_length=128, null=True, blank=True)
     sin = models.TextField(null=True, blank=True)
 
     search_index = VectorField()
 
-    #use a manager that filters by current contracts with a valid current_price
+    # use a manager that filters by current contracts with a valid
+    # current_price
     objects = CurrentContractManager(
         fields=('labor_category',),
-        config = 'pg_catalog.english',
+        config='pg_catalog.english',
         search_field='search_index',
-        auto_update_search_field = True
+        auto_update_search_field=True
     )
 
     def get_readable_business_size(self):

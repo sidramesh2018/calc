@@ -11,6 +11,7 @@ RUNNER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 
 
 class QunitTests(LiveServerTestCase):
+
     def test_qunit(self):
         subprocess.check_call([
             'phantomjs', RUNNER_PATH, self.live_server_url + '/tests/'

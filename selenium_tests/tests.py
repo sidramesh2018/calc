@@ -38,7 +38,8 @@ from .utils import build_static_assets
 
 
 TESTING_KEY = 'REMOTE_TESTING'
-REMOTE_TESTING = hasattr(settings, TESTING_KEY) and getattr(settings, TESTING_KEY) or {}
+REMOTE_TESTING = hasattr(settings, TESTING_KEY) and getattr(
+    settings, TESTING_KEY) or {}
 TESTING_URL = os.environ.get('LOCAL_TUNNEL_URL', REMOTE_TESTING.get('url'))
 
 PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
@@ -47,6 +48,7 @@ WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
 
 def _get_testing_config(key, default=None):
     return REMOTE_TESTING.get(key, os.environ.get('%s_%s' % (TESTING_KEY, key.upper()), default))
+
 
 def _get_webdriver(name):
     name = name.lower()
@@ -57,6 +59,7 @@ def _get_webdriver(name):
     elif name == 'phantomjs':
         return webdriver.PhantomJS()
     raise 'No such webdriver: "%s"' % name
+
 
 class FunctionalTests(LiveServerTestCase):
     connect = None
@@ -84,7 +87,8 @@ class FunctionalTests(LiveServerTestCase):
         desired_cap = webdriver.DesiredCapabilities.CHROME
         # these are the standard Selenium capabilities
         desired_cap['platform'] = _get_testing_config('platform', 'Windows 7')
-        desired_cap['browserName'] = _get_testing_config('browser', 'internet explorer')
+        desired_cap['browserName'] = _get_testing_config(
+            'browser', 'internet explorer')
         desired_cap['version'] = _get_testing_config('browser_version', '9.0')
         desired_cap['name'] = 'CALC'
         other_caps = REMOTE_TESTING.get('capabilities')
@@ -208,14 +212,16 @@ class FunctionalTests(LiveServerTestCase):
     def test_titles_are_correct(self):
         get_contract_recipe().make(_quantity=1, labor_category=seq("Architect"))
         driver = self.load_and_wait()
-        self.assertTrue(driver.title.startswith('CALC'), 'Title mismatch, {} does not start with CALC'.format(driver.title))
+        self.assertTrue(driver.title.startswith(
+            'CALC'), 'Title mismatch, {} does not start with CALC'.format(driver.title))
 
     def xtest_filter_order_is_correct(self):
         get_contract_recipe().make(_quantity=1, labor_category=seq("Architect"))
         driver = self.load()
         form = self.get_form()
 
-        inputs = form.find_elements_by_css_selector("input:not([type='hidden'])")
+        inputs = form.find_elements_by_css_selector(
+            "input:not([type='hidden'])")
 
         # the last visible form inputs should be the price filters
         self.assertEqual(inputs[-2].get_attribute('name'), 'price__gte')
@@ -228,34 +234,43 @@ class FunctionalTests(LiveServerTestCase):
     # we're transitioning off the project, so I can't dig in now.
     # I suspect there is a thread of fragility through these tests, and I have
     # not managed to get them working dependably in my time on the project. I think they
-    # need looking at by someone very experienced in Selenium testing. 8/25/15 [TS]
+    # need looking at by someone very experienced in Selenium testing. 8/25/15
+    # [TS]
     def xtest_form_submit_loading(self):
         get_contract_recipe().make(_quantity=1, labor_category=seq("Architect"))
         self.load()
         self.search_for('Architect')
         form = self.submit_form()
         # print(self.driver.execute_script('document.querySelector("#search").className'))
-        self.assertTrue(has_class(form, 'loading'), "Form doesn't have 'loading' class")
+        self.assertTrue(has_class(form, 'loading'),
+                        "Form doesn't have 'loading' class")
         self.wait_for(self.data_is_loaded)
-        self.assertTrue(has_class(form, 'loaded'), "Form doesn't have 'loaded' class")
-        self.assertFalse(has_class(form, 'loading'), "Form shouldn't have 'loading' class after loading")
+        self.assertTrue(has_class(form, 'loaded'),
+                        "Form doesn't have 'loaded' class")
+        self.assertFalse(has_class(form, 'loading'),
+                         "Form shouldn't have 'loading' class after loading")
 
     def xtest_search_input(self):
-        get_contract_recipe().make(_quantity=9, labor_category=cycle(["Engineer", "Architect", "Writer"]))
+        get_contract_recipe().make(_quantity=9, labor_category=cycle(
+            ["Engineer", "Architect", "Writer"]))
         driver = self.load()
         self.search_for('Engineer')
         self.submit_form()
-        self.assertTrue('q=Engineer' in driver.current_url, 'Missing "q=Engineer" in query string')
+        self.assertTrue('q=Engineer' in driver.current_url,
+                        'Missing "q=Engineer" in query string')
         self.wait_for(self.data_is_loaded)
 
         self.assert_results_count(driver, 3)
-        labor_cell = driver.find_element_by_css_selector('tbody tr .column-labor_category')
-        self.assertTrue('Engineer' in labor_cell.text, 'Labor category cell text mismatch')
+        labor_cell = driver.find_element_by_css_selector(
+            'tbody tr .column-labor_category')
+        self.assertTrue('Engineer' in labor_cell.text,
+                        'Labor category cell text mismatch')
 
     def xtest_price_gte(self):
         # note: the hourly rates here will actually start at 80-- this seems
         # like a bug, but whatever
-        get_contract_recipe().make(_quantity=10, labor_category=seq("Contractor"), hourly_rate_year1=seq(70, 10), current_price=seq(70, 10))
+        get_contract_recipe().make(_quantity=10, labor_category=seq("Contractor"),
+                                   hourly_rate_year1=seq(70, 10), current_price=seq(70, 10))
         driver = self.load()
         form = self.get_form()
         self.search_for('Contractor')
@@ -264,13 +279,15 @@ class FunctionalTests(LiveServerTestCase):
         # add results count check
         self.set_form_value(form, 'price__gte', minimum)
         self.submit_form_and_wait()
-        self.assertTrue(('price__gte=%d' % minimum) in driver.current_url, 'Missing "price__gte={0}" in query string: {1}'.format(minimum, driver.current_url))
+        self.assertTrue(('price__gte=%d' % minimum) in driver.current_url,
+                        'Missing "price__gte={0}" in query string: {1}'.format(minimum, driver.current_url))
         self.assert_results_count(driver, 8)
 
     def xtest_price_lte(self):
         # note: the hourly rates here will actually start at 80-- this seems
         # like a bug, but whatever
-        get_contract_recipe().make(_quantity=10, labor_category=seq("Contractor"), hourly_rate_year1=seq(70, 10), current_price=seq(70, 10))
+        get_contract_recipe().make(_quantity=10, labor_category=seq("Contractor"),
+                                   hourly_rate_year1=seq(70, 10), current_price=seq(70, 10))
         driver = self.load()
         form = self.get_form()
         self.search_for('Contractor')
@@ -279,13 +296,15 @@ class FunctionalTests(LiveServerTestCase):
         # add results count check
         self.set_form_value(form, 'price__lte', maximum)
         self.submit_form_and_wait()
-        self.assertTrue(('price__lte=%d' % maximum) in driver.current_url, 'Missing "price__lte=%d" in query string' % maximum)
+        self.assertTrue(('price__lte=%d' % maximum) in driver.current_url,
+                        'Missing "price__lte=%d" in query string' % maximum)
         self.assert_results_count(driver, 3)
 
     def xtest_price_range(self):
         # note: the hourly rates here will actually start at 80-- this seems
         # like a bug, but whatever
-        get_contract_recipe().make(_quantity=10, labor_category=seq("Contractor"), hourly_rate_year1=seq(70, 10), current_price=seq(70, 10))
+        get_contract_recipe().make(_quantity=10, labor_category=seq("Contractor"),
+                                   hourly_rate_year1=seq(70, 10), current_price=seq(70, 10))
         driver = self.load()
         form = self.get_form()
         self.search_for('Contractor')
@@ -296,12 +315,16 @@ class FunctionalTests(LiveServerTestCase):
         self.set_form_value(form, 'price__lte', maximum)
         self.submit_form_and_wait()
         self.assert_results_count(driver, 4)
-        self.assertTrue(('price__gte=%d' % minimum) in driver.current_url, 'Missing "price__gte=%d" in query string' % minimum)
-        self.assertTrue(('price__lte=%d' % maximum) in driver.current_url, 'Missing "price__lte=%d" in query string' % maximum)
+        self.assertTrue(('price__gte=%d' % minimum) in driver.current_url,
+                        'Missing "price__gte=%d" in query string' % minimum)
+        self.assertTrue(('price__lte=%d' % maximum) in driver.current_url,
+                        'Missing "price__lte=%d" in query string' % maximum)
 
     def xtest_filter_experience_range(self):
-        get_contract_recipe().make(_quantity=5, vendor_name=seq("4 years of experience"), min_years_experience='4')
-        get_contract_recipe().make(_quantity=5, vendor_name=seq("5 years of experience"), min_years_experience='5')
+        get_contract_recipe().make(_quantity=5, vendor_name=seq(
+            "4 years of experience"), min_years_experience='4')
+        get_contract_recipe().make(_quantity=5, vendor_name=seq(
+            "5 years of experience"), min_years_experience='5')
         driver = self.load_and_wait()
         form = self.get_form()
 
@@ -314,8 +337,10 @@ class FunctionalTests(LiveServerTestCase):
 
         self.assert_results_count(driver, 5)
 
-        self.assertIsNone(re.search(r'4 years of experience\d+', driver.page_source))
-        self.assertIsNotNone(re.search(r'5 years of experience\d+', driver.page_source))
+        self.assertIsNone(
+            re.search(r'4 years of experience\d+', driver.page_source))
+        self.assertIsNotNone(
+            re.search(r'5 years of experience\d+', driver.page_source))
 
     def xtest_filter_year_out(self):
         get_contract_recipe().make(_quantity=1, second_year_price=23.45)
@@ -326,7 +351,8 @@ class FunctionalTests(LiveServerTestCase):
         self.submit_form_and_wait()
         self.assert_results_count(driver, 1)
 
-        rate = driver.find_element_by_xpath('//*[@id="results-table"]/tbody/tr[1]/td[4]')
+        rate = driver.find_element_by_xpath(
+            '//*[@id="results-table"]/tbody/tr[1]/td[4]')
         self.assertEqual(rate.text, '$23.45')
 
     def test_contract_link(self):
@@ -334,7 +360,8 @@ class FunctionalTests(LiveServerTestCase):
         driver = self.load_and_wait()
         form = self.get_form()
 
-        contract_link = driver.find_element_by_xpath('//*[@id="results-table"]/tbody/tr[1]/td[5]/a')
+        contract_link = driver.find_element_by_xpath(
+            '//*[@id="results-table"]/tbody/tr[1]/td[5]/a')
         redirect_url = 'https://www.gsaadvantage.gov/ref_text/GS23F0062P/GS23F0062P_online.htm'
         self.assertEqual(contract_link.get_attribute('href'), redirect_url)
 
@@ -346,7 +373,8 @@ class FunctionalTests(LiveServerTestCase):
         col_headers = get_column_headers(driver)
 
         for head in col_headers:
-            self.assertFalse(has_matching_class(head, 'column-business[_-]size'))
+            self.assertFalse(has_matching_class(
+                head, 'column-business[_-]size'))
 
     def xtest_filter_to_only_small_businesses(self):
         get_contract_recipe().make(_quantity=5, vendor_name=seq("Large Biz"), business_size='o')
@@ -441,11 +469,15 @@ class FunctionalTests(LiveServerTestCase):
         driver = self.load_and_wait()
         col_header = find_column_header(driver, 'current_price')
         # current_price should be sorted ascending by default
-        self.assertTrue(has_class(col_header, 'sorted'), "current_price is not the default sort")
-        self.assertTrue(has_class(col_header, 'sortable'), "current_price column is not sortable")
-        self.assertFalse(has_class(col_header, 'descending'), "current_price column is descending by default")
+        self.assertTrue(has_class(col_header, 'sorted'),
+                        "current_price is not the default sort")
+        self.assertTrue(has_class(col_header, 'sortable'),
+                        "current_price column is not sortable")
+        self.assertFalse(has_class(col_header, 'descending'),
+                         "current_price column is descending by default")
         col_header.click()
-        self.assertTrue(has_class(col_header, 'sorted'), "current_price is still sorted after clicking")
+        self.assertTrue(has_class(col_header, 'sorted'),
+                        "current_price is still sorted after clicking")
 
     def test_one_column_is_sortable_at_a_time(self):
         get_contract_recipe().make(_quantity=5)
@@ -455,17 +487,21 @@ class FunctionalTests(LiveServerTestCase):
 
         header1.click()
         self.assertTrue(has_class(header1, 'sorted'), "column 1 is not sorted")
-        self.assertFalse(has_class(header2, 'sorted'), "column 2 is still sorted (but should not be)")
+        self.assertFalse(has_class(header2, 'sorted'),
+                         "column 2 is still sorted (but should not be)")
 
         header2.click()
         self.assertTrue(has_class(header2, 'sorted'), "column 2 is not sorted")
-        self.assertFalse(has_class(header1, 'sorted'), "column 1 is still sorted (but should not be)")
+        self.assertFalse(has_class(header1, 'sorted'),
+                         "column 1 is still sorted (but should not be)")
 
     def test_histogram_is_shown(self):
         get_contract_recipe().make(_quantity=5)
         driver = self.load_and_wait()
-        rect_count = len(driver.find_elements_by_css_selector('.histogram rect'))
-        self.assertTrue(rect_count > 0, "No histogram rectangles found (selector: '.histogram rect')")
+        rect_count = len(
+            driver.find_elements_by_css_selector('.histogram rect'))
+        self.assertTrue(
+            rect_count > 0, "No histogram rectangles found (selector: '.histogram rect')")
 
     def xtest_histogram_shows_min_max(self):
         get_contract_recipe().make(_quantity=5)
@@ -473,16 +509,19 @@ class FunctionalTests(LiveServerTestCase):
         histogram = driver.find_element_by_css_selector('.histogram')
         for metric in ('min', 'max', 'average'):
             node = histogram.find_element_by_class_name(metric)
-            self.assertTrue(node.text.startswith(u'$'), "histogram '.%s' node does not start with '$': '%s'" % (metric, node.text))
+            self.assertTrue(node.text.startswith(
+                u'$'), "histogram '.%s' node does not start with '$': '%s'" % (metric, node.text))
 
     # XXX this test is deprecated because it's too brittle.
     # We shouldn't really care about the number of x-axis ticks.
     def xtest_histogram_shows_intevals(self):
         get_contract_recipe().make(_quantity=5)
         driver = self.load_and_wait()
-        ticks = driver.find_elements_by_css_selector('.histogram .x.axis .tick')
+        ticks = driver.find_elements_by_css_selector(
+            '.histogram .x.axis .tick')
         # XXX there should be 10 bins, but 11 labels (one for each bin edge)
-        self.assertEqual(len(ticks), 11, "Found wrong number of x-axis ticks: %d" % len(ticks))
+        self.assertEqual(
+            len(ticks), 11, "Found wrong number of x-axis ticks: %d" % len(ticks))
 
     def test_histogram_shows_tooltips(self):
         get_contract_recipe().make(_quantity=5)
@@ -491,12 +530,14 @@ class FunctionalTests(LiveServerTestCase):
         # TODO: check for "real" tooltips?
         for i, bar in enumerate(bars):
             title = bar.find_element_by_css_selector('title')
-            self.assertIsNotNone(title.text, "Histogram bar #%d has no text" % i)
+            self.assertIsNotNone(
+                title.text, "Histogram bar #%d has no text" % i)
 
     def test_download_graph_button_shown(self):
         get_contract_recipe().make(_quantity=1)
         driver = self.load_and_wait()
-        self.assertTrue(driver.find_element_by_id('download-histogram').is_displayed())
+        self.assertTrue(driver.find_element_by_id(
+            'download-histogram').is_displayed())
 
     def test_histogram_download_canvas_hidden(self):
         get_contract_recipe().make(_quantity=1)
@@ -504,31 +545,40 @@ class FunctionalTests(LiveServerTestCase):
         self.assertFalse(driver.find_element_by_id('graph').is_displayed())
 
     def test_query_type_matches_words(self):
-        get_contract_recipe().make(_quantity=3, labor_category=cycle(['Systems Engineer', 'Software Engineer', 'Consultant']))
+        get_contract_recipe().make(_quantity=3, labor_category=cycle(
+            ['Systems Engineer', 'Software Engineer', 'Consultant']))
         driver = self.load()
         self.wait_for(self.data_is_loaded)
         form = self.get_form()
         self.search_for('engineer')
         self.submit_form_and_wait()
-        cells = driver.find_elements_by_css_selector('table.results tbody .column-labor_category')
-        self.assertEqual(len(cells), 2, 'wrong cell count: %d (expected 2)' % len(cells))
+        cells = driver.find_elements_by_css_selector(
+            'table.results tbody .column-labor_category')
+        self.assertEqual(
+            len(cells), 2, 'wrong cell count: %d (expected 2)' % len(cells))
         for cell in cells:
-            self.assertTrue('Engineer' in cell.text, 'found cell without "Engineer": "%s"' % cell.text)
+            self.assertTrue('Engineer' in cell.text,
+                            'found cell without "Engineer": "%s"' % cell.text)
 
     def test_query_type_matches_phrase(self):
-        get_contract_recipe().make(_quantity=3, labor_category=cycle(['Systems Engineer I', 'Software Engineer II', 'Consultant II']))
+        get_contract_recipe().make(_quantity=3, labor_category=cycle(
+            ['Systems Engineer I', 'Software Engineer II', 'Consultant II']))
         driver = self.load()
         self.wait_for(self.data_is_loaded)
         form = self.get_form()
         self.search_for('software engineer')
         self.set_form_values(form, query_type='match_phrase')
         self.submit_form_and_wait()
-        cells = driver.find_elements_by_css_selector('table.results tbody .column-labor_category')
-        self.assertEqual(len(cells), 1, 'wrong cell count: %d (expected 1)' % len(cells))
-        self.assertEqual(cells[0].text, 'Software Engineer II', 'bad cell text: "%s"' % cells[0].text)
+        cells = driver.find_elements_by_css_selector(
+            'table.results tbody .column-labor_category')
+        self.assertEqual(
+            len(cells), 1, 'wrong cell count: %d (expected 1)' % len(cells))
+        self.assertEqual(cells[0].text, 'Software Engineer II',
+                         'bad cell text: "%s"' % cells[0].text)
 
     def test_query_type_matches_exact(self):
-        get_contract_recipe().make(_quantity=3, labor_category=cycle(['Software Engineer I', 'Software Engineer', 'Senior Software Engineer']))
+        get_contract_recipe().make(_quantity=3, labor_category=cycle(
+            ['Software Engineer I', 'Software Engineer', 'Senior Software Engineer']))
         driver = self.load()
         self.wait_for(self.data_is_loaded)
         form = self.get_form()
@@ -536,24 +586,31 @@ class FunctionalTests(LiveServerTestCase):
         self.set_form_values(form, query_type='match_exact')
         # self.assertEqual(driver.execute_script('document.querySelector("input[value=\'match_exact\']").checked'), True, 'match_exact not checked!')
         self.submit_form_and_wait()
-        cells = driver.find_elements_by_css_selector('table.results tbody .column-labor_category')
-        self.assertEqual(len(cells), 1, 'wrong cell count: %d (expected 1)' % len(cells))
-        self.assertEqual(cells[0].text, 'Software Engineer', 'bad cell text: "%s"' % cells[0].text)
+        cells = driver.find_elements_by_css_selector(
+            'table.results tbody .column-labor_category')
+        self.assertEqual(
+            len(cells), 1, 'wrong cell count: %d (expected 1)' % len(cells))
+        self.assertEqual(cells[0].text, 'Software Engineer',
+                         'bad cell text: "%s"' % cells[0].text)
 
     def _test_column_is_sortable(self, driver, colname):
         col_header = find_column_header(driver, colname)
-        self.assertTrue(has_class(col_header, 'sortable'), "{} column is not sortable".format(colname))
+        self.assertTrue(has_class(col_header, 'sortable'),
+                        "{} column is not sortable".format(colname))
         # NOT sorted by default
-        self.assertFalse(has_class(col_header, 'sorted'), "{} column is sorted by default".format(colname))
+        self.assertFalse(has_class(col_header, 'sorted'),
+                         "{} column is sorted by default".format(colname))
         col_header.click()
-        self.assertTrue(has_class(col_header, 'sorted'), "{} column is not sorted after clicking".format(colname))
+        self.assertTrue(has_class(col_header, 'sorted'),
+                        "{} column is not sorted after clicking".format(colname))
 
     def assert_results_count(self, driver, num):
         results_count = driver.find_element_by_id('results-count').text
         # remove commas from big numbers (e.g. "1,000" -> "1000")
         results_count = results_count.replace(',', '')
         self.assertNotEqual(results_count, u'', "No results count")
-        self.assertEqual(results_count, str(num), "Results count mismatch: '%s' != %d" % (results_count, num))
+        self.assertEqual(results_count, str(
+            num), "Results count mismatch: '%s' != %d" % (results_count, num))
 
     def set_form_value(self, form, key, value):
         fields = form.find_elements_by_name(key)
@@ -570,7 +627,6 @@ class FunctionalTests(LiveServerTestCase):
                 field.send_keys(str(value))
         return field
 
-
     def set_form_values(self, form, **values):
         for key, value in values.items():
             self.set_form_value(form, key, value)
@@ -585,14 +641,18 @@ def wait_for(condition, timeout=3):
             time.sleep(0.01)
     raise Exception('Timeout waiting for {}'.format(condition.__name__))
 
+
 def has_class(element, klass):
     return klass in element.get_attribute('class').split(' ')
+
 
 def has_matching_class(element, regex):
     return re.search(regex, element.get_attribute('class'))
 
+
 def find_column_header(driver, col_name):
     return driver.find_element_by_css_selector('th.column-{}'.format(col_name))
+
 
 def get_column_headers(driver):
     return driver.find_elements_by_xpath('//thead/tr/th')
