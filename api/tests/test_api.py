@@ -221,7 +221,8 @@ class ContractsTest(TestCase):
 
     def test_filter_by_min_education(self):
         get_contract_recipe().make(
-            _quantity=5, education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
+            _quantity=5,
+            education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
         resp = self.c.get(
             self.path, {'min_education': 'AA', 'sort': 'education_level'})
         self.assertEqual(resp.status_code, 200)
@@ -240,7 +241,8 @@ class ContractsTest(TestCase):
 
     def test_filter_by_education_single(self):
         get_contract_recipe().make(
-            _quantity=5, education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
+            _quantity=5,
+            education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
         resp = self.c.get(
             self.path, {'education': 'AA', 'sort': 'education_level'})
         self.assertEqual(resp.status_code, 200)
@@ -252,7 +254,8 @@ class ContractsTest(TestCase):
 
     def test_filter_by_education_multiple(self):
         get_contract_recipe().make(
-            _quantity=5, education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
+            _quantity=5,
+            education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
         resp = self.c.get(
             self.path, {'education': 'AA,MA,PHD', 'sort': 'education_level'})
         self.assertEqual(resp.status_code, 200)
@@ -267,11 +270,12 @@ class ContractsTest(TestCase):
         ], True)
 
     def test_sort_by_education_level(self):
-        # deliberately placing education level cycle out of order so that proper ordering cannot be
-        # a side-effect of ordering by idv_piid or another serially-generated
-        # field
+        # deliberately placing education level cycle out of order so that
+        # proper ordering cannot be a side-effect of ordering by idv_piid or
+        # another serially-generated field
         get_contract_recipe().make(
-            _quantity=5, education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
+            _quantity=5,
+            education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
 
         resp = self.c.get(self.path, {'sort': 'education_level'})
         self.assertEqual(resp.status_code, 200)
@@ -330,11 +334,13 @@ class ContractsTest(TestCase):
         ])
 
     def test_sort_by_education_level__asc(self):
-        # deliberately placing education level cycle out of order so that proper ordering cannot be
-        # a side-effect of ordering by idv_piid or another serially-generated
-        # field
+        # deliberately placing education level cycle out of order so that
+        # proper ordering cannot be a side-effect of ordering by idv_piid or
+        # another serially-generated field
+
         get_contract_recipe().make(
-            _quantity=5, education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
+            _quantity=5,
+            education_level=cycle(['MA', 'HS', 'BA', 'AA', 'PHD']))
 
         resp = self.c.get(self.path, {'sort': '-education_level'})
         self.assertEqual(resp.status_code, 200)
@@ -395,8 +401,11 @@ class ContractsTest(TestCase):
     def test_sort_by_education_level__retains_all_sort_params(self):
         # placing education level and price cycles out of phase so that sort
         # precedence matters
-        get_contract_recipe().make(_quantity=9, vendor_name='ServicesRUs',
-                                   current_price=cycle([15.0, 10.0]), education_level=cycle(['BA', 'HS', 'AA']))
+        get_contract_recipe().make(
+            _quantity=9, vendor_name='ServicesRUs',
+            current_price=cycle([15.0, 10.0]),
+            education_level=cycle(['BA', 'HS', 'AA'])
+        )
 
         resp = self.c.get(
             self.path, {'sort': 'current_price,education_level,-idv_piid'})
@@ -568,7 +577,10 @@ class ContractsTest(TestCase):
                                     'business_size': None}])
 
     def test_filter_by_business_size(self):
-        get_contract_recipe().make(_quantity=3, business_size=cycle(self.BUSINESS_SIZES))
+        get_contract_recipe().make(
+            _quantity=3,
+            business_size=cycle(self.BUSINESS_SIZES)
+        )
         resp = self.c.get(self.path, {'business_size': 's'})
         self.assertEqual(resp.status_code, 200)
 
@@ -607,7 +619,8 @@ class ContractsTest(TestCase):
                                   'current_price': 22.0,
                                   'schedule': 'PES',
                                   'contractor_site': None,
-                                  'business_size': 'other than small business'}]
+                                  'business_size': ('other than small '
+                                                    'business')}]
                                 )
 
         resp = self.c.get(
@@ -736,7 +749,10 @@ class ContractsTest(TestCase):
 
     def test_query_type__match_phrase(self):
         self.make_test_set()
-        get_contract_recipe().make(_quantity=1, labor_category='Professional Legal Services I')
+        get_contract_recipe().make(
+            _quantity=1,
+            labor_category='Professional Legal Services I'
+        )
         resp = self.c.get(
             self.path, {'q': 'legal services', 'query_type': 'match_phrase'})
         self.assertEqual(resp.status_code, 200)
@@ -754,7 +770,8 @@ class ContractsTest(TestCase):
                                   'business_size': None},
                                  {'idv_piid': 'ABC1231',
                                     'vendor_name': 'CompanyName1',
-                                    'labor_category': 'Professional Legal Services I',
+                                    'labor_category': ('Professional '
+                                                       'Legal Services I'),
                                     'education_level': None,
                                     'min_years_experience': 6,
                                     'hourly_rate_year1': 21.0,
@@ -765,7 +782,10 @@ class ContractsTest(TestCase):
 
     def test_query_type__match_exact(self):
         self.make_test_set()
-        get_contract_recipe().make(_quantity=1, labor_category='Professional Legal Services I')
+        get_contract_recipe().make(
+                _quantity=1,
+                labor_category='Professional Legal Services I'
+        )
         resp = self.c.get(
             self.path, {'q': 'legal services', 'query_type': 'match_exact'})
         self.assertEqual(resp.status_code, 200)
@@ -912,9 +932,9 @@ class ContractsTest(TestCase):
 
             # test the sort order
             # if the set of IDs returned are as expected,
-            # then if the order is different, we can assume sorting is not working right
-            # the resulting error message will actually show us how the
-            # ordering is wrong
+            # then if the order is different, we can assume sorting is not
+            # working right the resulting error message will actually
+            # show us how the ordering is wrong
             if set(result_ids) == set(expected_ids):
                 self.assertEqual(result_ids, expected_ids,
                                  "The sort order is wrong!")
@@ -924,5 +944,7 @@ class ContractsTest(TestCase):
                             for x in dict_results]
 
         for i, result in enumerate(dict_results):
-            self.assertEqual(result, expected[
-                             i], "\n===== Object at index {} failed. =====".format(i))
+            self.assertEqual(
+                result, expected[i],
+                "\n===== Object at index {} failed. =====".format(i)
+            )

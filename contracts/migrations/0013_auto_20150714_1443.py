@@ -29,14 +29,21 @@ class Migration(migrations.Migration):
             model_name='contract',
             name='current_price',
             field=models.DecimalField(
-                max_digits=10, blank=True, null=True, db_index=True, decimal_places=2),
+                max_digits=10, blank=True, null=True, db_index=True,
+                decimal_places=2),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='contract',
             name='education_level',
-            field=models.CharField(db_index=True, blank=True, null=True, choices=[('HS', 'High School'), (
-                'AA', 'Associates'), ('BA', 'Bachelors'), ('MA', 'Masters'), ('PHD', 'Ph.D.')], max_length=5),
+            field=models.CharField(
+                db_index=True, blank=True, null=True,
+                choices=[
+                    ('HS', 'High School'), ('AA', 'Associates'),
+                    ('BA', 'Bachelors'), ('MA', 'Masters'),
+                    ('PHD', 'Ph.D.')
+                ], max_length=5
+            ),
             preserve_default=True,
         ),
         migrations.AlterField(

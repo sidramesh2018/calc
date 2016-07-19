@@ -21,7 +21,8 @@ class Command(BaseCommand):
         Contract.objects.all().delete()
 
         data_file = csv.reader(
-            open(os.path.join(settings.BASE_DIR, 'contracts/docs/hourly_prices.csv'), 'r'))
+            open(os.path.join(settings.BASE_DIR,
+                              'contracts/docs/hourly_prices.csv'), 'r'))
 
         # skip header row
         next(data_file)
@@ -51,8 +52,9 @@ class Command(BaseCommand):
                     contract.labor_category = labor_category
                     contract.vendor_name = vendor_name
 
-                    contract.education_level = contract.get_education_code(line[
-                                                                           6])
+                    contract.education_level = contract.get_education_code(
+                        line[6]
+                    )
                     contract.schedule = line[12]
                     contract.business_size = line[8]
                     contract.contract_year = line[14]
@@ -71,8 +73,9 @@ class Command(BaseCommand):
                         contract.min_years_experience = 0
 
                     if line[1] and line[1] != '':
-                        contract.hourly_rate_year1 = contract.normalize_rate(line[
-                                                                             1])
+                        contract.hourly_rate_year1 = contract.normalize_rate(
+                            line[1]
+                        )
                     else:
                         # there's no pricing info
                         continue
@@ -80,23 +83,30 @@ class Command(BaseCommand):
                     for count, rate in enumerate(line[2:6]):
                         if rate and rate.strip() != '':
                             setattr(contract, 'hourly_rate_year' +
-                                    str(count + 2), contract.normalize_rate(rate))
+                                    str(count + 2),
+                                    contract.normalize_rate(rate))
 
                     if line[14] and line[14] != '':
                         price_fields = {
-                            'current_price': getattr(contract, 'hourly_rate_year' + str(line[14]), 0)
+                            'current_price': getattr(contract,
+                                                     'hourly_rate_year' +
+                                                     str(line[14]), 0)
                         }
                         current_year = int(line[14])
                         # we have up to five years of rate data
                         if current_year < 5:
                             price_fields['next_year_price'] = getattr(
-                                contract, 'hourly_rate_year' + str(current_year + 1), 0)
+                                contract, 'hourly_rate_year' +
+                                str(current_year + 1), 0
+                            )
                             if current_year < 4:
                                 price_fields['second_year_price'] = getattr(
-                                    contract, 'hourly_rate_year' + str(current_year + 2), 0)
+                                    contract, 'hourly_rate_year' +
+                                    str(current_year + 2), 0
+                                )
 
-                        # don't create display prices for records where the rate
-                        # is under the federal minimum contract rate
+                        # don't create display prices for records where the
+                        # rate is under the federal minimum contract rate
                         for field in price_fields:
                             price = price_fields.get(field)
                             if price and price >= FEDERAL_MIN_CONTRACT_RATE:

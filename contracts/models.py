@@ -67,7 +67,8 @@ class Contract(models.Model):
     vendor_name = models.CharField(max_length=128)
     labor_category = models.TextField(db_index=True)
     education_level = models.CharField(
-        db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True, blank=True)
+        db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True,
+        blank=True)
     min_years_experience = models.IntegerField(db_index=True)
     hourly_rate_year1 = models.DecimalField(max_digits=10, decimal_places=2)
     hourly_rate_year2 = models.DecimalField(
