@@ -15,12 +15,8 @@ test_contract_link
 """
 from django.conf import settings
 from django.test import LiveServerTestCase
-from django.core import management
 
 from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 from contracts.mommy_recipes import get_contract_recipe
@@ -31,7 +27,6 @@ import re
 import time
 import os
 import socket
-import subprocess
 from datetime import datetime
 
 from .utils import build_static_assets
@@ -227,7 +222,7 @@ class FunctionalTests(LiveServerTestCase):
     def xtest_filter_order_is_correct(self):
         get_contract_recipe().make(_quantity=1,
                                    labor_category=seq("Architect"))
-        driver = self.load()
+        self.load()
         form = self.get_form()
 
         inputs = form.find_elements_by_css_selector(
@@ -380,7 +375,7 @@ class FunctionalTests(LiveServerTestCase):
     def test_contract_link(self):
         get_contract_recipe().make(_quantity=1, idv_piid='GS-23F-0062P')
         driver = self.load_and_wait()
-        form = self.get_form()
+        self.get_form()
 
         contract_link = driver.find_element_by_xpath(
             '//*[@id="results-table"]/tbody/tr[1]/td[5]/a')
@@ -392,7 +387,7 @@ class FunctionalTests(LiveServerTestCase):
         get_contract_recipe().make(_quantity=5, vendor_name=seq("Large Biz"),
                                    business_size='o')
         driver = self.load()
-        form = self.get_form()
+        self.get_form()
 
         col_headers = get_column_headers(driver)
 
@@ -591,7 +586,7 @@ class FunctionalTests(LiveServerTestCase):
             ['Systems Engineer', 'Software Engineer', 'Consultant']))
         driver = self.load()
         self.wait_for(self.data_is_loaded)
-        form = self.get_form()
+        self.get_form()
         self.search_for('engineer')
         self.submit_form_and_wait()
         cells = driver.find_elements_by_css_selector(

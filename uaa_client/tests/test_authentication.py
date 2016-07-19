@@ -1,7 +1,7 @@
 from unittest import mock
 import urllib.parse
 import jwt
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.test.utils import override_settings
 from django.contrib.auth.models import User
 import httmock

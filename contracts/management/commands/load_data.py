@@ -1,11 +1,11 @@
 from django.core.management import call_command
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
 from contracts.models import Contract
 import csv
 import os
 import logging
-from datetime import datetime, date
+from datetime import datetime
 
 FEDERAL_MIN_CONTRACT_RATE = 10.10
 
@@ -26,9 +26,6 @@ class Command(BaseCommand):
 
         # skip header row
         next(data_file)
-
-        # used for removing expired contracts
-        today = date.today()
 
         contracts = []
 

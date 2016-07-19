@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Count, Q
 from decimal import Decimal
 
