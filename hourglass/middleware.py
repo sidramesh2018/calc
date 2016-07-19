@@ -12,9 +12,10 @@ class ComplianceMiddleware:
 
     Otherwise, the headers will be added to all responses.
     '''
+
     def process_response(self, request, response):
         if (not settings.SECURITY_HEADERS_ON_ERROR_ONLY or
-           response.status_code >= 400):
+                response.status_code >= 400):
 
             response["X-Content-Type-Options"] = "nosniff"
             response["X-XSS-Protection"] = "1; mode=block"

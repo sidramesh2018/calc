@@ -21,6 +21,7 @@ def guide(parser, token):
 
 
 class GuideNode(template.Node):
+
     def __init__(self, nodelist):
         self.nodelist = nodelist
 
@@ -58,6 +59,7 @@ def guide_section(context, name):
 
 
 class Section:
+
     def __init__(self, name):
         self.name = name
         self.id = slugify(name)
@@ -76,6 +78,7 @@ def example(parser, token):
 
 
 class ExampleNode(template.Node):
+
     def __init__(self, nodelist):
         self.nodelist = nodelist
 

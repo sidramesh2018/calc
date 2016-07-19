@@ -7,9 +7,12 @@ class ContractTestCase(TestCase):
 
     def test_readable_business_size(self):
         business_sizes = ('O', 'S')
-        contract1, contract2 = get_contract_recipe().make(_quantity=2, business_size=cycle(business_sizes))
-        self.assertEqual(contract1.get_readable_business_size(), 'other than small business')
-        self.assertEqual(contract2.get_readable_business_size(), 'small business')
+        contract1, contract2 = get_contract_recipe().make(
+            _quantity=2, business_size=cycle(business_sizes))
+        self.assertEqual(contract1.get_readable_business_size(),
+                         'other than small business')
+        self.assertEqual(
+            contract2.get_readable_business_size(), 'small business')
 
     def test_get_education_code(self):
         c = get_contract_recipe().make()
