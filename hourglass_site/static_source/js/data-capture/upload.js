@@ -53,6 +53,20 @@ function activateUploadWidget($el) {
     $el.append(current);
   }
 
+  function showInvalidFileMessage() {
+    $('input', $el).nextAll().remove();
+
+    const id = $('input', $el).attr('id');
+    const err = $(
+      '<div class="upload-error">' +
+      '<div class="upload-error-message">Sorry, that type of file is not allowed.</div>' +
+      'Please <label>choose a different file</label> or drag and drop one here.' +
+      '</div></div>'
+    );
+    $('label', err).attr('for', id);
+    $el.append(err);
+  }
+
   function isFileValid(file) {
     const accepts = $input.attr('accept');
     if (!accepts || !accepts.length) {
@@ -73,9 +87,13 @@ function activateUploadWidget($el) {
   }
 
   function setFile(file) {
-    if (file && isFileValid(file)) {
-      $input.trigger('changefile', file);
+    if (!file) { return; }
+    if (!isFileValid(file)) {
+      showInvalidFileMessage();
+      return;
     }
+    // else
+    $input.trigger('changefile', file);
   }
 
   if ($input.data('upload')) {

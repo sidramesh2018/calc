@@ -72,6 +72,7 @@
 
     upload.trigger(evt);
     assert.strictEqual(input.data('upload').file, null);
+    assert.ok(upload.find('.upload-error').length);
   });
 
   advancedTest("advanced upload allows accepted file types", function(assert) {
