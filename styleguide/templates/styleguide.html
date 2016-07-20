@@ -35,10 +35,18 @@
     for single-file uploads only.
   </p>
 
+  <p>
+    If the <code>accept</code> attribute on the <code>&lt;input&gt;</code>
+    element is set, then simple file type validation will be done when a file
+    is dropped, or when the user initiates their file chooser via a click.
+    The upload widget's file data will not be set when an invalid file type
+    is dropped.
+  </p>
+
   {% example %}
   <form enctype="multipart/form-data">
     <div class="upload">
-      <input type="file" name="file" id="file" accept=".xlsx,.xls, text/csv">
+      <input type="file" name="file" id="file" accept=".xlsx,.xls,.csv">
       <div class="upload-chooser">
         <label for="file">Choose file</label>
         <span class="js-only" aria-hidden="true">or drag and drop here.</span>
