@@ -1,7 +1,7 @@
 (function(QUnit, $) {
   var UPLOAD_HTML = (
     '<div class="upload">' +
-    '<input type="file" name="file" id="file">' +
+    '<input type="file" name="file" id="file" accept=".csv, application/test">' +
     '<div class="upload-chooser">' +
     '<label for="file">Choose file or drag and drop here</label>' +
     '</div>' +
@@ -64,8 +64,46 @@
     assert.strictEqual(input.data('upload').file, null);
   });
 
-  advancedTest("'changefile' event triggered on drop", function(assert) {
+  advancedTest("advanced upload does not allow non-accepted file types", function(assert) {
+    var badFakeFile = {name: "boop", type: "application/badtest"};
+    var evt = jQuery.Event('drop', {
+      originalEvent: { dataTransfer: { files: [badFakeFile] } }
+    });
+
+    upload.trigger(evt);
+    assert.strictEqual(input.data('upload').file, null);
+    assert.ok(upload.find('.upload-error').length);
+  });
+
+  advancedTest("advanced upload allows accepted file types", function(assert) {
+    var goodFileMime = {name: "boop", type: "application/test"};
+    var evt = jQuery.Event('drop', {
+      originalEvent: { dataTransfer: { files: [goodFileMime] } }
+    });
+
+    upload.trigger(evt);
+    assert.strictEqual(input.data('upload').file, goodFileMime);
+
+    var goodFileExt = {name: "boop.csv", type: "whatever"};
+    evt = jQuery.Event('drop', {
+     originalEvent: { dataTransfer: { files: [goodFileExt] } }
+    });
+    upload.trigger(evt);
+    assert.strictEqual(input.data('upload').file, goodFileExt);
+  });
+
+  advancedTest("advanced upload allows any file when 'accept' not specified", function(assert) {
+    input.attr('accept', null);
     var fakeFile = {name: "boop"};
+    var evt = jQuery.Event('drop', {
+     originalEvent: { dataTransfer: { files: [fakeFile] } }
+    });
+    upload.trigger(evt);
+    assert.strictEqual(input.data('upload').file, fakeFile);
+  });
+
+  advancedTest("'changefile' event triggered on drop", function(assert) {
+    var fakeFile = {name: "boop", type: "application/test"};
     var evt = jQuery.Event('drop', {
       originalEvent: { dataTransfer: { files: [fakeFile] } }
     });
@@ -82,7 +120,7 @@
   });
 
   advancedTest("'changefile' sets current file", function(assert) {
-    var fakeFile = {name: "foo.txt"};
+    var fakeFile = {name: "foo.txt", type: "application/test"};
     input.trigger('changefile', fakeFile);
 
     assert.strictEqual(input.data('upload').file, fakeFile);

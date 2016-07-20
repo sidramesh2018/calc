@@ -3,6 +3,53 @@ import sys
 import subprocess
 import djclick as click
 
+# This is based on:
+#
+# https://gist.github.com/danielrehn/d2e6f2129e5f853c3166
+
+RAINBOW_COLORS = [
+    "\x1b[38;5;" + color
+    for color in [
+        "160;01m",
+        "196;01m",
+        "202;01m",
+        "208;01m",
+        "214;01m",
+        "220;01m",
+        "226;01m",
+        "190;01m",
+        "154;01m",
+        "118;01m",
+        "046;01m",
+        "047;01m",
+        "048;01m",
+        "049;01m",
+        "051;01m",
+        "039;01m",
+        "027;01m",
+        "021;01m",
+        "021;01m",
+        "057;01m",
+        "093;01m",
+    ]
+]
+
+RESET_COLORS = "\033[m"
+
+ASCII_ART_LOGO = """\
+  _    _ _ _          _______        _
+ | |  | | | |        |__   __|      | |
+ | |  | | | |_ _ __ __ _| | ___  ___| |_
+ | |  | | | __| '__/ _` | |/ _ \/ __| __|
+ | |__| | | |_| | | (_| | |  __/\__ \ |_
+  \____/|_|\__|_|  \__,_|_|\___||___/\__|"""
+
+
+def print_with_rainbow_colors(ascii_art):
+    for color, line in zip(RAINBOW_COLORS, ascii_art.splitlines()):
+        print(color + line)
+    print(RESET_COLORS)
+
 
 @click.command()
 @click.pass_verbosity
@@ -28,6 +75,8 @@ def command(verbosity, lintonly):
             'cmd': 'py.test'
         },
     ]
+
+    print_with_rainbow_colors(ASCII_ART_LOGO)
 
     def echo(msg, v_level, **kwargs):
         if verbosity < v_level:
