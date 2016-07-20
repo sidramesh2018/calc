@@ -38,7 +38,7 @@
   {% example %}
   <form enctype="multipart/form-data">
     <div class="upload">
-      <input type="file" name="file" id="file">
+      <input type="file" name="file" id="file" accept=".xlsx,.xls, text/csv">
       <div class="upload-chooser">
         <label for="file">Choose file</label>
         <span class="js-only" aria-hidden="true">or drag and drop here.</span>
@@ -71,7 +71,7 @@
     <div class="rendering">
       <h3 class="example-heading">Example (no JavaScript)</h3>
         <div class="upload" data-force-degradation>
-          <input type="file" name="file2" id="file2">
+          <input type="file" name="file2" id="file2" accept=".xlsx,.xls,.csv">
           <div class="upload-chooser">
             <label for="file2">Choose file</label>
             <span class="js-only" aria-hidden="true">or drag and drop here.</span>

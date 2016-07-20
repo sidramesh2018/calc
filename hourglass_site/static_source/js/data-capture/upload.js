@@ -53,8 +53,29 @@ function activateUploadWidget($el) {
     $el.append(current);
   }
 
+  function fileIsValid(file) {
+    const accepts = $input.attr('accept');
+    if (!accepts || !accepts.length) {
+      // nothing specified, so just return true
+      return true;
+    }
+    const acceptsList = accepts.split(',').map((s) => s.trim().toLowerCase());
+    for (const extOrType of acceptsList) {
+      const fileType = file.type.toLowerCase();
+      const fileName = file.name.toLowerCase();
+
+      // test that either the file type or file extension meets
+      // the list of accepted values
+      if (fileType === extOrType || fileName.lastIndexOf(extOrType,
+        fileName.length - extOrType.length) !== -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function setFile(file) {
-    if (file) {
+    if (file && fileIsValid(file)) {
       $input.trigger('changefile', file);
     }
   }
