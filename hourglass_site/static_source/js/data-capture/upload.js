@@ -53,7 +53,7 @@ function activateUploadWidget($el) {
     $el.append(current);
   }
 
-  function fileIsValid(file) {
+  function isFileValid(file) {
     const accepts = $input.attr('accept');
     if (!accepts || !accepts.length) {
       // nothing specified, so just return true
@@ -73,7 +73,7 @@ function activateUploadWidget($el) {
   }
 
   function setFile(file) {
-    if (file && fileIsValid(file)) {
+    if (file && isFileValid(file)) {
       $input.trigger('changefile', file);
     }
   }
