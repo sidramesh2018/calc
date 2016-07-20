@@ -59,13 +59,11 @@ function activateUploadWidget($el) {
       // nothing specified, so just return true
       return true;
     }
+    const fileType = file.type.toLowerCase();
+    const fileName = file.name.toLowerCase();
     const acceptsList = accepts.split(',').map((s) => s.trim().toLowerCase());
-    for (const extOrType of acceptsList) {
-      const fileType = file.type.toLowerCase();
-      const fileName = file.name.toLowerCase();
-
-      // test that either the file type or file extension meets
-      // the list of accepted values
+    for (let i = 0; i < acceptsList.length; i++) {
+      const extOrType = acceptsList[i];
       if (fileType === extOrType || fileName.lastIndexOf(extOrType,
         fileName.length - extOrType.length) !== -1) {
         return true;
