@@ -7,7 +7,7 @@ exclude_paths:
 - "hourglass_site/static/hourglass_site/js/vendor/*"
 - "hourglass_site/static/hourglass_site/style/vendor/*"
 - "hourglass_site/static_source/js/vendor/*"
-- "hourglass_site/static_source/style/lib/*"
+- "hourglass_site/static_source/style/libs/*"
 - "hourglass_site/static_source/style/skeleton/*"
 - "styleguide/static/styleguide/vendor/*"
 - "contracts/migrations/*"
