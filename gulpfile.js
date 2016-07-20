@@ -26,7 +26,6 @@ const dirs = {
   dest: {
     style: {
       built: 'hourglass_site/static/hourglass_site/style/built',
-      vendor: 'hourglass_site/static/hourglass_site/style/vendor',
     },
     scripts: {
       // Scripts (vendor libs) common to CALC 1 and 2
@@ -41,7 +40,6 @@ const dirs = {
 
 const paths = {
   sass: '**/*.scss',
-  css: '**/*.css',
   js: '**/*.js',
   dataCaptureEntry: 'data-capture/index.js',
   dataCaptureOutfile: 'index.min.js',
@@ -104,16 +102,11 @@ gulp.task('clean', () => {
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sass())
-  .pipe(gulp.dest(dirs.dest.style.built))
   .pipe(rename({ suffix: '.min' }))
   .pipe(sourcemaps.init())
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
   .pipe(gulp.dest(dirs.dest.style.built))
-);
-
-gulp.task('css', () => gulp.src(dirs.src.style + paths.css)
-  .pipe(gulp.dest(dirs.dest.style.vendor))
 );
 
 // Compile and lint JavaScript sources
