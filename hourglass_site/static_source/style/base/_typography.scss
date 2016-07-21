@@ -1,0 +1,31 @@
+h1 {
+  letter-spacing: 0;
+  .site-title {
+    display: block;
+    line-height: 1em;
+  }
+  .site-subtitle {
+    font-size: 2rem;
+    display: block;
+  }
+}
+
+h4 {
+  margin-bottom:.5rem;
+}
+
+main h5 {
+  margin: 0 !important;
+}
+
+.help-text {
+  clear: both;
+  color: $dark-gray;
+  margin-bottom: 1em;
+}
+
+.schedule {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0;
+}

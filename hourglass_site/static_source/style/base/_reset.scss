@@ -14,27 +14,6 @@ main {
   margin: 2rem 0;
 }
 
-h1 {
-  letter-spacing: 0;
-  .site-title {
-    display: block;
-    line-height: 1em;
-  }
-  .site-subtitle {
-    font-size: 2rem;
-    display: block;
-  }
-}
-
-h4 {
-  margin-bottom:.5rem;
-}
-
-main h5 {
-  margin: 0 !important;
-}
-
-
 a {
   color: $blue;
   &:hover {
