@@ -76,8 +76,7 @@ function activateUploadWidget($el) {
     const fileType = file.type.toLowerCase();
     const fileName = file.name.toLowerCase();
     const acceptsList = accepts.split(',').map((s) => s.trim().toLowerCase());
-    for (let i = 0; i < acceptsList.length; i++) {
-      const extOrType = acceptsList[i];
+    for (const extOrType of acceptsList) {
       if (fileType === extOrType || fileName.lastIndexOf(extOrType,
         fileName.length - extOrType.length) !== -1) {
         return true;
