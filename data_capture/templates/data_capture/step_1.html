@@ -7,8 +7,5 @@
 {% endblock %}
 
 {% block step_body %}
-<p>TODO: Add content here.</p>
-
-<!-- TODO: This should be a submit button, not a link. -->
-<a style="float: right" href="{% url 'data_capture:step_2' %}" class="button button-primary">Next</a>
+{% include 'data_capture/step_1_form.html' %}
 {% endblock %}
