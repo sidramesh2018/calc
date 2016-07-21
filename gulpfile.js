@@ -25,7 +25,7 @@ const dirs = {
   },
   dest: {
     style: {
-      all: 'hourglass_site/static/hourglass_site/style/built',
+      built: 'hourglass_site/static/hourglass_site/style/built',
     },
     scripts: {
       // Scripts (vendor libs) common to CALC 1 and 2
@@ -102,12 +102,11 @@ gulp.task('clean', () => {
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sass())
-  .pipe(gulp.dest(dirs.dest.style.all))
   .pipe(rename({ suffix: '.min' }))
   .pipe(sourcemaps.init())
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest(dirs.dest.style.all))
+  .pipe(gulp.dest(dirs.dest.style.built))
 );
 
 // Compile and lint JavaScript sources
