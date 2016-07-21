@@ -3,6 +3,9 @@ import tempfile
 import subprocess
 import djclick as click
 
+from docker_django_management import IS_RUNNING_IN_DOCKER
+
+
 # This is based on:
 #
 # https://gist.github.com/danielrehn/d2e6f2129e5f853c3166
@@ -58,6 +61,14 @@ def command(verbosity, lintonly):
     '''
     Management command to test and lint everything
     '''
+
+    ESLINT_CMD = 'npm run failable-eslint'
+
+    if IS_RUNNING_IN_DOCKER:
+        # Until https://github.com/benmosher/eslint-plugin-import/issues/142
+        # is fixed, we need to disable the following rule for Docker support.
+        ESLINT_CMD = 'eslint --rule "import/no-unresolved: off" .'
+
     linters = [
         {
             'name': 'flake8',
@@ -65,7 +76,7 @@ def command(verbosity, lintonly):
         },
         {
             'name': 'eslint',
-            'cmd': 'npm run failable-eslint'
+            'cmd': ESLINT_CMD
         },
     ]
 
