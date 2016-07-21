@@ -16,6 +16,9 @@ engines:
   eslint:
     enabled: true
     channel: "eslint-2"
+    checks:
+      import/no-unresolved:
+        enabled: false
   csslint:
     enabled: true
   pep8:
