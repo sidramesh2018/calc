@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     'hourglass_site',
 
     'contracts',
+    'data_capture',
     'api',
     'djorm_pgfulltext',
     'rest_framework',

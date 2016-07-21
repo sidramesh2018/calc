@@ -45,6 +45,7 @@
           <ul>
             <li><a href="{% url 'about' %}">About this tool</a></li>
             {% if user.is_authenticated %}
+              <li><a href="{% url 'data_capture:step_1' %}">Add price data</a></li>
               {% if user.is_staff %}
               <li><a href="{% url 'admin:index' %}">Site administration</a></li>
               {% endif %}

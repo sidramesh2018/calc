@@ -1,0 +1,14 @@
+{% extends 'data_capture/step.html' %}
+
+{% block subtitle %}Enter contract details{% endblock %}
+
+{% block step_body %}
+<h2>Enter contract details</h2>
+
+<p>TODO: Add content here.</p>
+
+<a href="{% url 'data_capture:step_2' %}" class="button">Previous</a>
+
+<!-- TODO: This should be a submit button, not a link. -->
+<a style="float: right" href="{% url 'data_capture:step_4' %}" class="button button-primary">Submit</a>
+{% endblock %}

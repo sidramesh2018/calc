@@ -1,0 +1,14 @@
+{% extends 'data_capture/step.html' %}
+
+{% block subtitle %}Upload price list{% endblock %}
+
+{% block step_heading %}
+<p>Your price lists help make CALC a more robust tool. Uploading them is easy and quick. Once you upload a price list, we’ll make sure we understand your data, ask you for a few details, and send your price list to a CALC admin. The admin will check the data and publish it on CALC for all to use.</p>
+{% endblock %}
+
+{% block step_body %}
+<p>TODO: Add content here.</p>
+
+<!-- TODO: This should be a submit button, not a link. -->
+<a style="float: right" href="{% url 'data_capture:step_2' %}" class="button button-primary">Next</a>
+{% endblock %}

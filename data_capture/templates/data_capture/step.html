@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add price data to CALC / {% block subtitle %}{% endblock %}{% endblock %}
+
+{% block head %}
+<script src="{% static 'hourglass_site/js/built/data-capture/index.min.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+<h1>Add price data to CALC</h1>
+
+{% block step_heading %}{% endblock %}
+
+<ol class="steps">
+  <li class="steps-done">
+    <svg viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="13.5"/><text x="15" y="20">1</text>
+    </svg>
+    Upload price list
+  </li>
+  <li {% if step_number >= 2 %}class="steps-done"{% endif %}>
+    <svg viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="13.5"/><text x="15" y="20">2</text>
+    </svg>
+    Validate data
+  </li>
+  <li {% if step_number >= 3 %}class="steps-done"{% endif %}>
+    <svg viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="13.5"/><text x="15" y="20">3</text>
+    </svg>
+    Contract details
+  </li>
+  <li {% if step_number >= 4 %}class="steps-done"{% endif %}>
+    <svg viewBox="0 0 30 30">
+      <circle cx="15" cy="15" r="13.5"/><text x="15" y="20">4</text>
+    </svg>
+    Submit data
+  </li>
+</ol>
+
+{% block step_body %}{% endblock %}
+
+</div>
+
+{% endblock %}
