@@ -32,8 +32,10 @@ const dirs = {
       common: 'hourglass_site/static/hourglass_site/js/built/common',
       // CALC 1.0 scripts
       dataExplorer: 'hourglass_site/static/hourglass_site/js/built/data-explorer',
-      // CALC 2.0/ Data Capture scripts
+      // CALC 2.0 Data Capture scripts
       dataCapture: 'hourglass_site/static/hourglass_site/js/built/data-capture',
+      // CALC 2.0 Tests
+      tests: 'hourglass_site/static/hourglass_site/js/built/tests',
     },
   },
 };
@@ -43,6 +45,8 @@ const paths = {
   js: '**/*.js',
   dataCaptureEntry: 'data-capture/index.js',
   dataCaptureOutfile: 'index.min.js',
+  testEntry: 'tests/index.js',
+  testOutfile: 'index.min.js',
 };
 
 const bundles = {
@@ -110,7 +114,7 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 );
 
 // Compile and lint JavaScript sources
-gulp.task('js', ['lint', 'js:data-capture', 'js:legacy']);
+gulp.task('js', ['lint', 'js:data-capture', 'js:tests', 'js:legacy']);
 
 gulp.task('js:legacy', ['js:data-explorer:index', 'js:common:base']);
 
@@ -186,6 +190,14 @@ gulp.task('js:data-capture', () =>
     path.join(dirs.src.scripts, paths.dataCaptureEntry),
     dirs.dest.scripts.dataCapture,
     paths.dataCaptureOutfile
+  )
+);
+
+gulp.task('js:tests', () =>
+  browserifyBundle(
+    path.join(dirs.src.scripts, paths.testEntry),
+    dirs.dest.scripts.tests,
+    paths.testOutfile
   )
 );
 
