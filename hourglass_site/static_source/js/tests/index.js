@@ -1,0 +1,2 @@
+
+require('./upload_tests');
