@@ -10,6 +10,7 @@ omit =
   */tests.py
   */tests/*
   hourglass/wsgi.py
+  meta/management/commands/*
 [report]
 exclude_lines =
     pragma: no cover
