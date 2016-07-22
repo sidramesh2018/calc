@@ -1,0 +1,117 @@
+@import '../base/variables';
+
+#banner {
+  color: $light-gray;
+  font-size: 85%;
+  background: #323A45;
+  padding: .2rem 0;
+  text-align: center;
+  p {
+    margin: 0;
+  }
+  #usa img {
+    vertical-align: baseline;
+    position: relative;
+    top: 1px;
+    margin-right: .3rem;
+  }
+  @include breakpoint(medium) {
+    text-align: left;
+    #usa {
+      float: left;
+    }
+    #site-status {
+      float: right;
+    }
+  }
+}
+
+header {
+  padding-top: 2rem;
+  color: $white;
+  background: $dark-blue;
+  background-image: url(../../images/background-header.png);
+  background-repeat: repeat;
+  background-size: auto 100%;
+}
+.logo {
+  display: inline-block;
+  width:140px;
+}
+.description-main {
+  color: $white;
+  font-size: 2.2em;
+  font-weight: 400;
+  margin-bottom: .3em;
+  margin-top: .6em;
+}
+.description-secondary {
+  color: rgba(255,255,255,.6);
+  font-size: 1.25em;
+  letter-spacing: normal;
+  margin-bottom: 2em;
+}
+
+.price-callout {
+  p {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-bottom: 0.5em;
+    &:last-child {
+      color: rgba(255,255,255,.6);
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+  }
+  img {
+    float: left;
+    margin-right: 10px;
+    max-width: 28px;
+    opacity: 0.6;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .ceiling-icon {
+    max-width: 40px;
+  }
+  .fully-burdened-icon {
+    max-width: 33px;
+  }
+}
+
+nav ul {
+  list-style: none;
+  margin: -5.5rem 0 1rem 0;
+  padding: 0;
+  float: right;
+  display: inline-block;
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;
+  }
+  li {
+    list-style: none;
+    float: left;
+    margin: 0;
+    :first-child {
+      margin-left: -1.5rem;
+    }
+    a {
+      background: none repeat scroll 0 0 rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      color: $white;
+      display: inline-block;
+      font-size: 0.9em;
+      font-weight: bold;
+      padding: 0.5rem 1.5rem;
+      text-decoration: none;
+      &:hover {
+        background: none repeat scroll 0 0 rgba(255, 255, 255, 0.25);
+        color: $white;
+      }
+    }
+  }
+}

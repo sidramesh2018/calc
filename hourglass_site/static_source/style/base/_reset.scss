@@ -1,0 +1,63 @@
+@import 'variables';
+
+body {
+  font-family: Lato, Helvetica, Arial, sans-serif;
+}
+
+* {
+          box-sizing: border-box;
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+main {
+  margin: 2rem 0;
+}
+
+a {
+  color: $blue;
+  &:hover {
+    color: $dark-blue;
+  }
+}
+
+input,
+select {
+  line-height: normal;
+  font-size: inherit;
+}
+
+.button.button-primary,
+button.button-primary,
+input.button-primary[type="submit"],
+input.button-primary[type="reset"],
+input.button-primary[type="button"] {
+  background-color: $blue;
+  border-color: $blue;
+  text-transform: uppercase;
+  &:hover,
+  &:focus {
+    background-color: $dark-blue;
+    border-color: $dark-blue;
+  }
+}
+
+::-webkit-input-placeholder {
+   color: $dark-gray;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: $dark-gray;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: $dark-gray;
+}
+
+:-ms-input-placeholder {
+   color: $dark-gray;
+}
+
+fieldset {
+  margin: 0;
+}
