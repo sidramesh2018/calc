@@ -3,6 +3,8 @@ from io import StringIO
 from django import forms
 from django.core.exceptions import ValidationError
 
+from .base import BasePriceList
+
 
 # TODO: Ideally this should pull from contracts.models.EDUCATION_CHOICES.
 EDU_LEVELS = {
@@ -33,13 +35,13 @@ class FakeScheduleRow(forms.Form):
     price = forms.DecimalField(label="Price")
 
 
-class FakeSchedulePriceList:
+class FakeSchedulePriceList(BasePriceList):
     title = 'Fake Schedule (for dev/debugging only)'
 
     def __init__(self, rows):
+        super().__init__()
+
         self.rows = rows
-        self.valid_rows = []
-        self.invalid_rows = []
 
         for row in self.rows:
             form = FakeScheduleRow(row)
@@ -48,11 +50,12 @@ class FakeSchedulePriceList:
             else:
                 self.invalid_rows.append(form)
 
-    def is_empty(self):
-        return not self.rows
-
     def serialize(self):
         return self.rows
+
+    @classmethod
+    def deserialize(cls, rows):
+        return cls(rows)
 
     @classmethod
     def load_from_upload(cls, f):
@@ -64,7 +67,3 @@ class FakeSchedulePriceList:
             raise ValidationError(
                 'Weird problems occurred when reading your file.'
             )
-
-    @classmethod
-    def deserialize(cls, rows):
-        return cls(rows)

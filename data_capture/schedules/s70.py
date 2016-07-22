@@ -1,7 +1,9 @@
 from django.core.exceptions import ValidationError
 
+from .base import BasePriceList
 
-class Schedule70PriceList:
+
+class Schedule70PriceList(BasePriceList):
     title = 'IT Schedule 70'
 
     @classmethod
