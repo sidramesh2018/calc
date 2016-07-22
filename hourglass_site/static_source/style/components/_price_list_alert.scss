@@ -1,0 +1,45 @@
+
+// requires _alerts.scss
+.price-list-alert {
+  background-color: $light-red;
+  background-image: url(../../images/alerts/warning.png);
+  background-image: url(../../images/alerts/warning.svg);
+
+  .price-list-alert-body {
+    padding-right: 3rem;
+    background-repeat: no-repeat;
+    background-size: 13px;
+    background-image: url(../../images/plus.png);
+    background-image: url(../../images/plus.svg);
+    background-position: right 1rem top 2rem;
+
+    &.collapsed {
+      background-image: url(../../images/plus.png);
+      background-image: url(../../images/plus.svg);
+      background-position: right 1rem center;
+    }
+
+  }
+
+
+  td, th {
+    border-color: $dark-gray;
+    border-right: 1px solid $dark-gray;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  td.error {
+    border: 2px solid $dark-red;
+  }
+
+  thead th {
+    color: $black;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: inherit;
+  }
+}

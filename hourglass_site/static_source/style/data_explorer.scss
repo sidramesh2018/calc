@@ -1,7 +1,8 @@
 @import 'libs/no-ui';
+@import 'base/variables';
 @import 'components/tables';
 @import 'components/alerts';
-@import 'base/variables';
+@import 'components/price_list_alert';
 
 .loading-indicator,
 .has-data {

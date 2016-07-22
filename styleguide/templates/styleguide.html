@@ -192,38 +192,42 @@ if (upload.isDegraded) {
 
   {% example %}
   <div class="usa-alert price-list-alert" role="alert">
-    <div class="usa-alert-body">
-      <h3 class="usa-alert-heading">2 rows have errors</h3>
-      <p class="usa-alert-text">The affected rows will be discarded and not uploaded to CALC.</p>
-      <div class="collapse">
-        <p class="usa-alert-text">The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and try uploading it again.</p>
-        <table>
-          <thead>
-            <tr>
-              <th>SIN</th>
-              <th>Service proposed</th>
-              <th>Minimum education</th>
-              <th>Minimum years of experience</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>132-51</td>
-              <td>Project Manager</td>
-              <td class="error"><div>BA</div></td>
-              <td>5</td>
-              <td><span class="currency">$</span>115.99</td>
-            </tr>
-            <tr>
-              <td class="error">32-17</td>
-              <td>Software Programmer, Associate</td>
-              <td>Bachelors</td>
-              <td>0</td>
-              <td><span class="currency">$</span>37.59</td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="price-list-alert-body collapsed">
+      <div class="usa-alert-body">
+        <h3 class="usa-alert-heading">2 rows have errors</h3>
+        <p class="usa-alert-text">The affected rows will be discarded and not uploaded to CALC. Expand this alert to see details.</p>
+
+        <div class="hidden">
+          <p class="usa-alert-text">The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and try uploading it again.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>SIN</th>
+                <th>Service proposed</th>
+                <th>Minimum education</th>
+                <th>Minimum years of experience</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>132-51</td>
+                <td>Project Manager</td>
+                <td class="error">BA</td>
+                <td>5</td>
+                <td><span class="currency">$</span>115.99</td>
+              </tr>
+              <tr>
+                <td class="error">32-17</td>
+                <td>Software Programmer, Associate</td>
+                <td>Bachelors</td>
+                <td>0</td>
+                <td><span class="currency">$</span>37.59</td>
+              </tr>
+            </tbody>
+          </table>
+          <button>Upload revised list</button>
+        </div>
       </div>
     </div>
   </div>
