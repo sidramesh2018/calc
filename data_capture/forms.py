@@ -16,7 +16,7 @@ class Step1Form(forms.Form):
         file = cleaned_data.get('file')
 
         if schedule and file:
-            gleaned_data = registry.load_from_upload(schedule, file)
+            gleaned_data = registry.smart_load_from_upload(schedule, file)
 
             if gleaned_data.is_empty():
                 raise forms.ValidationError(

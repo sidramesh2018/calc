@@ -19,6 +19,8 @@ def step_1(request):
         form = forms.Step1Form(request.POST, request.FILES)
 
         if form.is_valid():
+            request.session['data_capture:schedule'] = \
+                form.cleaned_data['schedule']
             request.session['data_capture:gleaned_data'] = \
                 registry.serialize(form.cleaned_data['gleaned_data'])
 
@@ -59,9 +61,15 @@ def gleaned_data_required(f):
 @login_required
 @gleaned_data_required
 def step_2(request, gleaned_data):
+    preferred_schedule = registry.get_class(
+        request.session['data_capture:schedule']
+    )
+
     return render(request, 'data_capture/step_2.html', {
         'step_number': 2,
-        'gleaned_data': gleaned_data
+        'gleaned_data': gleaned_data,
+        'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
+        'preferred_schedule': preferred_schedule,
     })
 
 

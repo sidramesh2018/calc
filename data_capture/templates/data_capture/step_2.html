@@ -5,6 +5,15 @@
 {% block step_body %}
 <h2>Validate data</h2>
 
+{% if not is_preferred_schedule %}
+<p>
+  <strong>Note:</strong> You specified that the price list you were
+  uploading was for <em>{{ preferred_schedule.title }}</em>, but it
+  appears to be for <em>{{ gleaned_data.title }}</em>. If this is
+  incorrect, please upload a different file.
+</p>
+{% endif %}
+
 {% if gleaned_data.invalid_rows %}
 
 <div style="background: #F9DEDE; padding: 1em; margin-bottom: 1em">
