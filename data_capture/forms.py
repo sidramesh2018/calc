@@ -1,14 +1,11 @@
 from django import forms
 
-
-SCHEDULE_CHOICES = [
-    ('s70', 'IT Schedule 70'),
-]
+from .schedules import registry
 
 
 class Step1Form(forms.Form):
     schedule = forms.ChoiceField(
-        choices=SCHEDULE_CHOICES
+        choices=registry.CHOICES
     )
 
     file = forms.FileField()
@@ -19,10 +16,14 @@ class Step1Form(forms.Form):
         file = cleaned_data.get('file')
 
         if schedule and file:
-            # TODO: Extract data from file and ensure there's some
-            # data in it.
+            gleaned_data = registry.load(schedule, file)
 
-            raise forms.ValidationError(
-                "The file you uploaded doesn't have any data we can "
-                "glean from it."
-            )
+            if gleaned_data.is_empty():
+                raise forms.ValidationError(
+                    "The file you uploaded doesn't have any data we can "
+                    "glean from it."
+                )
+
+            cleaned_data['gleaned_data'] = gleaned_data
+
+        return cleaned_data
