@@ -1,5 +1,6 @@
-(function(QUnit, $) {
-  var UPLOAD_HTML = (
+/* global QUnit jQuery document test */
+(function uploadTests(QUnit, $) {
+  const UPLOAD_HTML = (
     '<div class="upload">' +
     '<input type="file" name="file" id="file" accept=".csv, application/test">' +
     '<div class="upload-chooser">' +
@@ -8,34 +9,35 @@
     '</div>'
   );
 
-  var upload, input;
+  let upload;
+  let input;
 
   function advancedTest(name, cb) {
     if (!$.support.advancedUpload) {
       return QUnit.skip(name, cb);
     }
-    return QUnit.test(name, function(assert) {
+    return QUnit.test(name, (assert) => {
       upload = $(UPLOAD_HTML).appendTo(document.body);
       input = upload.uploadify().find('input');
       return cb(assert);
     });
   }
 
-  QUnit.module("upload", {
-    afterEach: function() {
+  QUnit.module('upload', {
+    afterEach() {
       if (upload) {
         upload.remove();
       }
       upload = null;
       input = null;
-    }
+    },
   });
 
-  test("$.support.advancedUpload is a boolean", function(assert) {
-    assert.equal(typeof($.support.advancedUpload), "boolean");
+  test('$.support.advancedUpload is a boolean', (assert) => {
+    assert.equal(typeof($.support.advancedUpload), 'boolean');
   });
 
-  test("degraded upload sets 'upload', data", function(assert) {
+  test('degraded upload sets "upload" data', (assert) => {
     upload = $(UPLOAD_HTML)
       .attr('data-force-degradation', 'yup')
       .appendTo(document.body);
@@ -48,26 +50,26 @@
     assert.strictEqual(input.data('upload').file, null);
   });
 
-  advancedTest("extra calls to uploadify() do nothing", function(assert) {
-    var data = input.data('upload');
+  advancedTest('extra calls to uploadify() do nothing', (assert) => {
+    const data = input.data('upload');
     upload.uploadify();
     assert.strictEqual(input.data('upload'), data);
   });
 
-  advancedTest("advanced upload sets aria-live", function(assert) {
-    assert.equal(upload.attr("aria-live"), "polite");
+  advancedTest('advanced upload sets aria-live', (assert) => {
+    assert.equal(upload.attr('aria-live'), 'polite');
   });
 
-  advancedTest("advanced upload sets 'upload' data", function(assert) {
+  advancedTest('advanced upload sets "upload" data', (assert) => {
     assert.strictEqual(input.data('upload').isDegraded, false);
     assert.strictEqual(input.data('upload').input, input[0]);
     assert.strictEqual(input.data('upload').file, null);
   });
 
-  advancedTest("advanced upload does not allow non-accepted file types", function(assert) {
-    var badFakeFile = {name: "boop", type: "application/badtest"};
-    var evt = jQuery.Event('drop', {
-      originalEvent: { dataTransfer: { files: [badFakeFile] } }
+  advancedTest('advanced upload does not allow non-accepted file types', (assert) => {
+    const badFakeFile = { name: 'boop', type: 'application/badtest' };
+    const evt = jQuery.Event('drop', { // eslint-disable-line new-cap
+      originalEvent: { dataTransfer: { files: [badFakeFile] } },
     });
 
     upload.trigger(evt);
@@ -75,69 +77,67 @@
     assert.ok(upload.find('.upload-error').length);
   });
 
-  advancedTest("advanced upload allows accepted file types", function(assert) {
-    var goodFileMime = {name: "boop", type: "application/test"};
-    var evt = jQuery.Event('drop', {
-      originalEvent: { dataTransfer: { files: [goodFileMime] } }
+  advancedTest('advanced upload allows accepted file types', (assert) => {
+    const goodFileMime = { name: 'boop', type: 'application/test' };
+    const mimeDropEvt = jQuery.Event('drop', { // eslint-disable-line new-cap
+      originalEvent: { dataTransfer: { files: [goodFileMime] } },
     });
 
-    upload.trigger(evt);
+    upload.trigger(mimeDropEvt);
     assert.strictEqual(input.data('upload').file, goodFileMime);
 
-    var goodFileExt = {name: "boop.csv", type: "whatever"};
-    evt = jQuery.Event('drop', {
-     originalEvent: { dataTransfer: { files: [goodFileExt] } }
+    const goodFileExt = { name: 'boop.csv', type: 'whatever' };
+    const extDropEvt = jQuery.Event('drop', { // eslint-disable-line new-cap
+      originalEvent: { dataTransfer: { files: [goodFileExt] } },
     });
-    upload.trigger(evt);
+    upload.trigger(extDropEvt);
     assert.strictEqual(input.data('upload').file, goodFileExt);
   });
 
-  advancedTest("advanced upload allows any file when 'accept' not specified", function(assert) {
+  advancedTest('advanced upload allows any file when "accept" not specified', (assert) => {
     input.attr('accept', null);
-    var fakeFile = {name: "boop"};
-    var evt = jQuery.Event('drop', {
-     originalEvent: { dataTransfer: { files: [fakeFile] } }
+    const fakeFile = { name: 'boop' };
+    const evt = jQuery.Event('drop', { // eslint-disable-line new-cap
+      originalEvent: { dataTransfer: { files: [fakeFile] } },
     });
     upload.trigger(evt);
     assert.strictEqual(input.data('upload').file, fakeFile);
   });
 
-  advancedTest("'changefile' event triggered on drop", function(assert) {
-    var fakeFile = {name: "boop", type: "application/test"};
-    var evt = jQuery.Event('drop', {
-      originalEvent: { dataTransfer: { files: [fakeFile] } }
+  advancedTest('"changefile" event triggered on drop', (assert) => {
+    const fakeFile = { name: 'boop', type: 'application/test' };
+    const evt = jQuery.Event('drop', { // eslint-disable-line new-cap
+      originalEvent: { dataTransfer: { files: [fakeFile] } },
     });
 
-    upload.on('changefile', function(e, file) {
+    upload.on('changefile', (e, file) => {
       assert.strictEqual(file, fakeFile);
     });
     upload.trigger(evt);
   });
 
-  advancedTest("input 'change' evt w/o files does nothing", function(assert) {
+  advancedTest('input "change" evt w/o files does nothing', (assert) => {
     input.trigger('change');
     assert.strictEqual(input.data('upload').file, null);
   });
 
-  advancedTest("'changefile' sets current file", function(assert) {
-    var fakeFile = {name: "foo.txt", type: "application/test"};
+  advancedTest('"changefile" sets current file', (assert) => {
+    const fakeFile = { name: 'foo.txt', type: 'application/test' };
     input.trigger('changefile', fakeFile);
 
     assert.strictEqual(input.data('upload').file, fakeFile);
     assert.equal(upload.find('.upload-filename').text(), 'foo.txt');
   });
 
-  advancedTest("dragenter/dragleave affect .dragged-over", function(assert) {
-    var i;
-
+  advancedTest('dragenter/dragleave affect .dragged-over', (assert) => {
     assert.ok(!upload.hasClass('dragged-over'));
 
-    for (i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       upload.trigger('dragenter');
       assert.ok(upload.hasClass('dragged-over'));
     }
 
-    for (i = 0; i < 2; i++) {
+    for (let i = 0; i < 2; i++) {
       upload.trigger('dragleave');
       assert.ok(upload.hasClass('dragged-over'));
     }
@@ -145,4 +145,4 @@
     upload.trigger('dragleave');
     assert.ok(!upload.hasClass('dragged-over'));
   });
-})(QUnit, jQuery);
+}(QUnit, jQuery));
