@@ -70,8 +70,6 @@ const bundles = {
   },
 };
 
-let isWatching = false;
-
 // default task
 // running `gulp` will default to watching and dist'ing files
 gulp.task('default', ['watch']);
@@ -82,10 +80,12 @@ gulp.task('default', ['watch']);
 gulp.task('build', ['sass', 'js']);
 
 // watch files for changes
-gulp.task('watch', ['sass', 'js'], () => {
-  isWatching = true;
+gulp.task('watch', ['set-watching', 'sass', 'js'], () => {
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
-  gulp.watch(path.join(dirs.src.scripts, paths.js), ['js']);
+
+  // js:data-capture sets up its own watch handling (via watchify)
+  // so we don't want to re-trigger it here, ref #437
+  gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint', 'js:legacy']);
 });
 
 gulp.task('clean', () => {
@@ -136,6 +136,13 @@ gulp.task('js:common:base', () => concatAndMapSources(
   )
 );
 
+// boolean flag to indicate to watchify/browserify that it should set up
+// its rebundling
+let isWatching = false;
+gulp.task('set-watching', () => {
+  isWatching = true;
+  return;
+});
 
 function browserifyBundle(entryPath, outputPath, outputFile) {
   // ref: https://gist.github.com/danharper/3ca2273125f500429945
