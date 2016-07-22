@@ -32,8 +32,10 @@ const dirs = {
       common: 'hourglass_site/static/hourglass_site/js/built/common',
       // CALC 1.0 scripts
       dataExplorer: 'hourglass_site/static/hourglass_site/js/built/data-explorer',
-      // CALC 2.0/ Data Capture scripts
+      // CALC 2.0 Data Capture scripts
       dataCapture: 'hourglass_site/static/hourglass_site/js/built/data-capture',
+      // CALC 2.0 Tests
+      tests: 'hourglass_site/static/hourglass_site/js/built/tests',
     },
   },
 };
@@ -43,6 +45,8 @@ const paths = {
   js: '**/*.js',
   dataCaptureEntry: 'data-capture/index.js',
   dataCaptureOutfile: 'index.min.js',
+  testEntry: 'tests/index.js',
+  testOutfile: 'index.min.js',
 };
 
 const bundles = {
@@ -70,8 +74,6 @@ const bundles = {
   },
 };
 
-let isWatching = false;
-
 // default task
 // running `gulp` will default to watching and dist'ing files
 gulp.task('default', ['watch']);
@@ -82,10 +84,12 @@ gulp.task('default', ['watch']);
 gulp.task('build', ['sass', 'js']);
 
 // watch files for changes
-gulp.task('watch', ['sass', 'js'], () => {
-  isWatching = true;
+gulp.task('watch', ['set-watching', 'sass', 'js'], () => {
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
-  gulp.watch(path.join(dirs.src.scripts, paths.js), ['js']);
+
+  // js:data-capture sets up its own watch handling (via watchify)
+  // so we don't want to re-trigger it here, ref #437
+  gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint', 'js:legacy']);
 });
 
 gulp.task('clean', () => {
@@ -101,16 +105,16 @@ gulp.task('clean', () => {
 
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
-  .pipe(sass())
-  .pipe(rename({ suffix: '.min' }))
   .pipe(sourcemaps.init())
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename({ suffix: '.min' }))
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
   .pipe(gulp.dest(dirs.dest.style.built))
 );
 
 // Compile and lint JavaScript sources
-gulp.task('js', ['lint', 'js:data-capture', 'js:legacy']);
+gulp.task('js', ['lint', 'js:data-capture', 'js:tests', 'js:legacy']);
 
 gulp.task('js:legacy', ['js:data-explorer:index', 'js:common:base']);
 
@@ -136,6 +140,13 @@ gulp.task('js:common:base', () => concatAndMapSources(
   )
 );
 
+// boolean flag to indicate to watchify/browserify that it should set up
+// its rebundling
+let isWatching = false;
+gulp.task('set-watching', () => {
+  isWatching = true;
+  return;
+});
 
 function browserifyBundle(entryPath, outputPath, outputFile) {
   // ref: https://gist.github.com/danharper/3ca2273125f500429945
@@ -179,6 +190,14 @@ gulp.task('js:data-capture', () =>
     path.join(dirs.src.scripts, paths.dataCaptureEntry),
     dirs.dest.scripts.dataCapture,
     paths.dataCaptureOutfile
+  )
+);
+
+gulp.task('js:tests', () =>
+  browserifyBundle(
+    path.join(dirs.src.scripts, paths.testEntry),
+    dirs.dest.scripts.tests,
+    paths.testOutfile
   )
 );
 
