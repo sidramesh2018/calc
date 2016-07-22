@@ -70,6 +70,7 @@ const bundles = {
   },
 };
 
+const isInDocker = ('IS_IN_DOCKER' in process.env);
 let isWatching = false;
 
 // default task
@@ -182,10 +183,18 @@ gulp.task('js:data-capture', () =>
   )
 );
 
-gulp.task('lint', () => gulp.src(path.join(dirs.src.scripts, paths.js))
-  .pipe(eslint())
-  .pipe(eslint.format())
-);
+gulp.task('lint', () => {
+  const opts = {};
+  if (isInDocker) {
+    opts.rules = {
+      'import/no-unresolved': 0,
+    };
+  }
+
+  return gulp.src(path.join(dirs.src.scripts, paths.js))
+    .pipe(eslint(opts))
+    .pipe(eslint.format());
+});
 
 // set up a SIGTERM handler for quick graceful exit from docker
 process.on('SIGTERM', () => {

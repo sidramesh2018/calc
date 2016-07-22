@@ -24,6 +24,7 @@ RUN npm install
 
 ENV PATH /node/node_modules/.bin:$PATH
 ENV NODE_PATH /node/node_modules
+ENV IS_IN_DOCKER yup
 
 COPY requirements.txt /calc/
 
