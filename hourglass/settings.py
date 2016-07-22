@@ -209,6 +209,15 @@ ENABLE_SEO_INDEXING = 'ENABLE_SEO_INDEXING' in os.environ
 
 SECURITY_HEADERS_ON_ERROR_ONLY = 'SECURITY_HEADERS_ON_ERROR_ONLY' in os.environ
 
+DATA_CAPTURE_SCHEDULES = (
+    'data_capture.schedules.s70.Schedule70PriceList',
+)
+
+if DEBUG:
+    DATA_CAPTURE_SCHEDULES += (
+        'data_capture.schedules.fake_schedule.FakeSchedulePriceList',
+    )
+
 UAA_AUTH_URL = 'https://login.cloud.gov/oauth/authorize'
 
 UAA_TOKEN_URL = 'https://uaa.cloud.gov/oauth/token'

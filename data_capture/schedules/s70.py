@@ -1,10 +1,11 @@
 from django.core.exceptions import ValidationError
 
 
-TITLE = 'IT Schedule 70'
+class Schedule70PriceList:
+    title = 'IT Schedule 70'
 
-
-def load(f):
-    raise ValidationError(
-        "TODO: Implement schedule 70 functionality!"
-    )
+    @classmethod
+    def load_from_upload(cls, f):
+        raise ValidationError(
+            "TODO: Implement schedule 70 functionality!"
+        )

@@ -4,8 +4,6 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 
-TITLE = 'Fake Schedule (for dev/debugging only)'
-
 # TODO: Ideally this should pull from contracts.models.EDUCATION_CHOICES.
 EDU_LEVELS = {
     'Associates': 'AA',
@@ -36,6 +34,8 @@ class FakeScheduleRow(forms.Form):
 
 
 class FakeSchedulePriceList:
+    title = 'Fake Schedule (for dev/debugging only)'
+
     def __init__(self, rows):
         self.rows = rows
         self.valid_rows = []
@@ -54,17 +54,17 @@ class FakeSchedulePriceList:
     def serialize(self):
         return self.rows
 
+    @classmethod
+    def load_from_upload(cls, f):
+        try:
+            reader = csv.DictReader(StringIO(f.read().decode('utf-8')))
+            return cls([row for row in reader])
+        except Exception:
+            # TODO: Log the exception somewhere?
+            raise ValidationError(
+                'Weird problems occurred when reading your file.'
+            )
 
-def load(f):
-    try:
-        reader = csv.DictReader(StringIO(f.read().decode('utf-8')))
-        return FakeSchedulePriceList([row for row in reader])
-    except Exception:
-        # TODO: Log the exception somewhere?
-        raise ValidationError(
-            'Weird problems occurred when reading your file.'
-        )
-
-
-def deserialize(rows):
-    return FakeSchedulePriceList(rows)
+    @classmethod
+    def deserialize(cls, rows):
+        return cls(rows)

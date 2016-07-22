@@ -1,35 +1,38 @@
 from django.conf import settings
-
-from . import s70, fake_schedule
-
-
-CHOICES = []
-
-MODULES = {}
+from django.utils.module_loading import import_string
 
 
-def register(module):
-    CHOICES.append((module.__name__, module.TITLE))
-    MODULES[module.__name__] = module
+def _classname(cls):
+    return '%s.%s' % (cls.__module__, cls.__name__)
 
 
-def load(choice, f):
-    return MODULES[choice].load(f)
+def _init():
+    global CHOICES, CLASSES
+
+    CHOICES = []
+    CLASSES = {}
+
+    for classname in settings.DATA_CAPTURE_SCHEDULES:
+        cls = import_string(classname)
+        CHOICES.append((classname, cls.title))
+        CLASSES[classname] = cls
+
+
+def load_from_upload(classname, f):
+    return CLASSES[classname].load_from_upload(f)
 
 
 def serialize(pricelist):
-    assert pricelist.__module__ in MODULES
+    classname = _classname(pricelist.__class__)
+    assert classname in CLASSES
 
-    return (pricelist.__module__, pricelist.serialize())
+    return (classname, pricelist.serialize())
 
 
 def deserialize(data):
-    module, d = data
+    classname, d = data
 
-    return MODULES[module].deserialize(d)
+    return CLASSES[classname].deserialize(d)
 
 
-register(s70)
-
-if settings.DEBUG:
-    register(fake_schedule)
+_init()
