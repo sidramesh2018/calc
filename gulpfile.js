@@ -101,9 +101,9 @@ gulp.task('clean', () => {
 
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
-  .pipe(sass())
-  .pipe(rename({ suffix: '.min' }))
   .pipe(sourcemaps.init())
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename({ suffix: '.min' }))
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
   .pipe(gulp.dest(dirs.dest.style.built))
