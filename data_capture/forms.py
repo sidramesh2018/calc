@@ -1,5 +1,6 @@
 from django import forms
 
+from .models import SubmittedPriceList
 from .schedules import registry
 
 
@@ -27,3 +28,17 @@ class Step1Form(forms.Form):
             cleaned_data['gleaned_data'] = gleaned_data
 
         return cleaned_data
+
+
+class Step3Form(forms.ModelForm):
+    class Meta:
+        model = SubmittedPriceList
+        fields = [
+            'contract_number',
+            'vendor_name',
+            'is_small_business',
+            'contractor_site',
+            'contract_year',
+            'contract_start',
+            'contract_end',
+        ]

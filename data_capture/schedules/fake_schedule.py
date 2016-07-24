@@ -50,6 +50,18 @@ class FakeSchedulePriceList(BasePriceList):
             else:
                 self.invalid_rows.append(form)
 
+    def add_to_price_list(self, price_list):
+        for row in self.valid_rows:
+            print("UM %s" % row['service'].value())
+            price_list.add_row(
+                labor_category=row['service'].value(),
+                education_level=EDU_LEVELS[row['education'].value()],
+                min_years_experience=row['years_experience'].value(),
+                hourly_rate_year1=row['price'].value(),
+                current_price=row['price'].value(),
+                sin=row['sin'].value()
+            )
+
     def serialize(self):
         return self.rows
 

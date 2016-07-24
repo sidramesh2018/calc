@@ -23,6 +23,14 @@ class BasePriceList:
 
         return not (self.valid_rows or self.invalid_rows)
 
+    def add_to_price_list(self, price_list):
+        '''
+        Adds the price list's valid rows to the given
+        data_capture.models.SubmittedPriceList model.
+        '''
+
+        raise NotImplementedError()
+
     def serialize(self):
         '''
         Returns a JSON-serializable representation of the

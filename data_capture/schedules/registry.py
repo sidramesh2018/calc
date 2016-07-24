@@ -23,6 +23,12 @@ def get_class(classname):
     return CLASSES[classname]
 
 
+def get_classname(instance):
+    classname = _classname(instance.__class__)
+    assert classname in CLASSES
+    return classname
+
+
 def load_from_upload(classname, f):
     return CLASSES[classname].load_from_upload(f)
 

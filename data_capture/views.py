@@ -76,11 +76,33 @@ def step_2(request, gleaned_data):
 @login_required
 @gleaned_data_required
 def step_3(request, gleaned_data):
-    # TODO: Create the form for the user to input information about the
-    # contract details.
+    if not gleaned_data.valid_rows:
+        # The user may have manually changed the URL or something to
+        # get here. Push them back to the last step.
+        return redirect('data_capture:step_2')
+
+    if request.method == 'GET':
+        form = forms.Step3Form()
+    elif request.method == 'POST':
+        form = forms.Step3Form(request.POST)
+        if form.is_valid():
+            price_list = form.save(commit=False)
+            price_list.schedule = registry.get_classname(gleaned_data)
+            price_list.submitter = request.user
+            price_list.serialized_gleaned_data = request.session.get(
+                'data_capture:gleaned_data'
+            )
+            price_list.save()
+            gleaned_data.add_to_price_list(price_list)
+
+            # TODO: Delete gleaned data from session (keeping it in for
+            # now b/c it makes debugging easier).
+
+            return redirect('data_capture:step_4')
 
     return render(request, 'data_capture/step_3.html', {
-        'step_number': 3
+        'step_number': 3,
+        'form': form
     })
 
 
