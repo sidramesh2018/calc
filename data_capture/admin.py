@@ -9,6 +9,8 @@ from .models import SubmittedPriceList, SubmittedPriceListRow
 class SubmittedPriceListRowInline(admin.TabularInline):
     model = SubmittedPriceListRow
 
+    can_delete = False
+
     exclude = ('contract_model_id',)
 
     formfield_overrides = {
@@ -18,12 +20,12 @@ class SubmittedPriceListRowInline(admin.TabularInline):
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
-
 
 @admin.register(SubmittedPriceList)
 class SubmittedPriceListAdmin(admin.ModelAdmin):
+    list_display = ('contract_number', 'vendor_name', 'submitter',
+                    'is_approved')
+
     exclude = ('serialized_gleaned_data', 'schedule')
 
     readonly_fields = ('schedule_title',)
@@ -36,3 +38,6 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
         return registry.get_class(instance.schedule).title
 
     schedule_title.short_description = 'Schedule'
+
+    def has_add_permission(self, request):
+        return False

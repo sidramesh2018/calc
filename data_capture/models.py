@@ -75,3 +75,6 @@ class SubmittedPriceListRow(models.Model):
         null=True,
         blank=True
     )
+
+    def __str__(self):
+        return 'Submitted price list row'
