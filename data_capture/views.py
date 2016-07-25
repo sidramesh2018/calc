@@ -106,9 +106,7 @@ def step_3(request, gleaned_data):
     })
 
 
-@login_required
-@gleaned_data_required
-def step_4(request, gleaned_data):
+def step_4(request):
     return render(request, 'data_capture/step_4.html', {
         'step_number': 4
     })
