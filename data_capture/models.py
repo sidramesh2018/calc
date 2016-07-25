@@ -51,6 +51,63 @@ class SubmittedPriceList(models.Model):
         row.save()
         return row
 
+    def get_schedule_title(self):
+        from .schedules.registry import get_class
+
+        return get_class(self.schedule).title
+
+    def get_business_size_string(self):
+        # TODO: Based on contracts/docs/s70/s70_data.csv, it seems
+        # business size is either 'S' or 'O'. Assuming here that
+        # 'S' means 'Small Business' and 'O' means 'Not Small Business'
+        # but WE REALLY, REALLY NEED TO VERIFY THIS.
+
+        if self.is_small_business:
+            return 'S'
+        return 'O'
+
+    def approve(self):
+        self.is_approved = True
+        for row in self.rows.all():
+            if row.contract_model_id is not None:
+                raise AssertionError()
+            contract = Contract(
+                idv_piid=self.contract_number,
+                contract_start=self.contract_start,
+                contract_end=self.contract_end,
+                contract_year=self.contract_year,
+                vendor_name=self.vendor_name,
+                labor_category=row.labor_category,
+                education_level=row.education_level,
+                min_years_experience=row.min_years_experience,
+                hourly_rate_year1=row.hourly_rate_year1,
+                hourly_rate_year2=None,
+                hourly_rate_year3=None,
+                hourly_rate_year4=None,
+                hourly_rate_year5=None,
+                current_price=row.hourly_rate_year1,
+                next_year_price=None,
+                second_year_price=None,
+                contractor_site=self.contractor_site,
+                schedule=self.get_schedule_title(),
+                business_size=self.get_business_size_string(),
+                sin=row.sin,
+            )
+            contract.full_clean(exclude=['piid'])
+            contract.save()
+            row.contract_model_id = contract
+            row.save()
+
+        self.save()
+
+    def unapprove(self):
+        self.is_approved = False
+
+        for row in self.rows.all():
+            row.contract_model_id.delete()
+
+        self.save()
+
 
 class SubmittedPriceListRow(models.Model):
     labor_category = models.TextField()
@@ -65,15 +122,17 @@ class SubmittedPriceListRow(models.Model):
 
     price_list = models.ForeignKey(
         SubmittedPriceList,
+        on_delete=models.CASCADE,
         related_name='rows'
     )
 
     # If this row is represented in the contracts table, this will be
     # non-null.
-    contract_model_id = models.ForeignKey(
+    contract_model_id = models.OneToOneField(
         Contract,
+        on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
     )
 
     def __str__(self):
