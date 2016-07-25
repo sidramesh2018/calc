@@ -6,7 +6,7 @@ from .schedules import registry
 
 class Step1Form(forms.Form):
     schedule = forms.ChoiceField(
-        choices=registry.CHOICES
+        choices=registry.get_choices
     )
 
     file = forms.FileField()

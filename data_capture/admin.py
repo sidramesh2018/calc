@@ -2,7 +2,23 @@ from django.contrib import admin
 from django.db import models
 from django import forms
 
+from .schedules import registry
 from .models import SubmittedPriceList, SubmittedPriceListRow
+
+
+class SubmittedPriceListRowForm(forms.ModelForm):
+    class Meta:
+        model = SubmittedPriceListRow
+
+        exclude = ('serialized_gleaned_data',)
+
+        widgets = {
+            'schedule': forms.widgets.Select()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['schedule'].widget.choices = registry.get_choices()
 
 
 class SubmittedPriceListRowInline(admin.TabularInline):
@@ -17,7 +33,7 @@ class SubmittedPriceListRowInline(admin.TabularInline):
 
 @admin.register(SubmittedPriceList)
 class SubmittedPriceListAdmin(admin.ModelAdmin):
-    exclude = ('serialized_gleaned_data',)
+    form = SubmittedPriceListRowForm
 
     inlines = [
         SubmittedPriceListRowInline

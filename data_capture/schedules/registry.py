@@ -19,6 +19,11 @@ def _init():
         CLASSES[classname] = cls
 
 
+def get_choices():
+    for choice in CHOICES:
+        yield choice
+
+
 def get_class(classname):
     return CLASSES[classname]
 

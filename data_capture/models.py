@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from contracts.models import Contract, EDUCATION_CHOICES
-from .schedules import registry
 
 
 class SubmittedPriceList(models.Model):
@@ -14,7 +13,6 @@ class SubmittedPriceList(models.Model):
     vendor_name = models.CharField(max_length=128)
     is_small_business = models.BooleanField()
     schedule = models.CharField(
-        choices=registry.CHOICES,
         max_length=128
     )
     contractor_site = models.CharField(
