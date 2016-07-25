@@ -1,26 +1,21 @@
 
-// requires _alerts.scss
 .price-list-alert {
   background-color: $light-red;
-  background-image: url(../../images/alerts/warning.png);
-  background-image: url(../../images/alerts/warning.svg);
+}
 
-  .price-list-alert-body {
-    padding-right: 3rem;
-    background-repeat: no-repeat;
-    background-size: 13px;
-    background-image: url(../../images/plus.png);
-    background-image: url(../../images/plus.svg);
-    background-position: right 1rem top 2rem;
+.price-list-alert-heading {
+  font-weight: bold;
+  font-size: 2rem;
+  margin-bottom: 0;
+}
 
-    &.collapsed {
-      background-image: url(../../images/plus.png);
-      background-image: url(../../images/plus.svg);
-      background-position: right 1rem center;
-    }
+.price-list-alert-text {
+  margin-bottom: 0;
+}
 
-  }
-
+.price-list-alert-body {
+  padding: 1rem 6rem 1rem 2rem;
+  position: relative;
 
   td, th {
     border-color: $dark-gray;
