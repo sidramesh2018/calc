@@ -3,16 +3,16 @@ import json
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 
-from .models import SubmittedPriceList
-from .schedules.fake_schedule import FakeSchedulePriceList
-from .schedules import registry
+from ..models import SubmittedPriceList
+from ..schedules.fake_schedule import FakeSchedulePriceList
+from ..schedules import registry
 
 
 FAKE_SCHEDULE = 'data_capture.schedules.fake_schedule.FakeSchedulePriceList'
 
 
 def path(*paths):
-    root_dir = os.path.abspath(os.path.dirname(__file__))
+    root_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     return os.path.join(root_dir, *paths)
 
 
