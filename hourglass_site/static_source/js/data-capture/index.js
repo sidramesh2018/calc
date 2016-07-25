@@ -3,4 +3,3 @@
 // this is where modules should be `require(...)`'d
 
 require('./upload');
-require('./price_list_alert');
