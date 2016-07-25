@@ -58,6 +58,9 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
     def save_model(self, request, obj, form, change):
         original = SubmittedPriceList.objects.get(pk=obj.id)
         if original.is_approved != obj.is_approved:
