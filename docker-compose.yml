@@ -4,7 +4,6 @@ app:
     - db
   environment:
     - DDM_HOST_USER=calc_user
-    - DDM_IS_RUNNING_IN_DOCKER=yup
     - PYTHONUNBUFFERED=yup
     - DATABASE_URL=postgres://calc_user@db/calc
   command: sh -c "python manage.py collectstatic --noinput ; waitress-serve --port=${DOCKER_EXPOSED_PORT} hourglass.wsgi:application"

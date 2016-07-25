@@ -74,7 +74,7 @@ const bundles = {
   },
 };
 
-const isInDocker = ('IS_IN_DOCKER' in process.env);
+const isInDocker = ('DDM_IS_RUNNING_IN_DOCKER' in process.env);
 
 // default task
 // running `gulp` will default to watching and dist'ing files
