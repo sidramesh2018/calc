@@ -72,7 +72,7 @@ def command(verbosity, lintonly):
     linters = [
         {
             'name': 'flake8',
-            'cmd': 'flake8 --exclude=node_modules .'
+            'cmd': 'flake8 --exclude=node_modules,migrations .'
         },
         {
             'name': 'eslint',
