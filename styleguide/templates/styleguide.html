@@ -6,6 +6,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'hourglass_site/style/built/data_explorer.min.css' %}">
+<link rel="stylesheet" href="{% static 'hourglass_site/style/built/data_capture.min.css' %}">
 <link rel="stylesheet" href="{% static 'styleguide/styleguide.css' %}">
 <link rel="stylesheet" href="{% static 'styleguide/vendor/prism.css' %}">
 {% endblock %}
@@ -186,46 +187,42 @@ if (upload.isDegraded) {
   </ol>
   {% endexample %}
 
-  {% guide_section "Price List Alert" %}
+  {% guide_section "Alerts" %}
 
-  <p>Part of <code>data_explorer.min.css</code></p>
-
-  <p>The Price List Alert is used to display a table of upload price list rows that have validation errors.</p>
+  <p>Part of <code>data_capture.min.css</code></p>
 
   {% example %}
-  <div class="price-list-alert" role="alert">
-    <div class="price-list-alert-body">
-      <h3 class="price-list-alert-heading">2 rows have errors</h3>
-      <p class="price-list-alert-text">The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and try uploading it again.</p>
-      <table>
-        <thead>
-          <tr>
-            <th>SIN</th>
-            <th>Service proposed</th>
-            <th>Minimum education</th>
-            <th>Minimum years of experience</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>132-51</td>
-            <td>Project Manager</td>
-            <td class="error">BA</td>
-            <td>5</td>
-            <td>$115.99</td>
-          </tr>
-          <tr>
-            <td class="error">32-17</td>
-            <td>Software Programmer, Associate</td>
-            <td>Bachelors</td>
-            <td>0</td>
-            <td>$37.59</td>
-          </tr>
-        </tbody>
-      </table>
-      <button>Upload revised list</button>
-    </div>
+  <div class="alert alert-error" role="alert">
+    <h3>2 rows have errors</h3>
+    <p>The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and try uploading it again.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>SIN</th>
+          <th>Service proposed</th>
+          <th>Minimum education</th>
+          <th>Minimum years of experience</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>132-51</td>
+          <td>Project Manager</td>
+          <td class="error">BA</td>
+          <td>5</td>
+          <td>$115.99</td>
+        </tr>
+        <tr>
+          <td class="error">32-17</td>
+          <td>Software Programmer, Associate</td>
+          <td>Bachelors</td>
+          <td>0</td>
+          <td>$37.59</td>
+        </tr>
+      </tbody>
+    </table>
+    <button>Upload revised list</button>
   </div>
   {% endexample %}
 

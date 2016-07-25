@@ -1,21 +1,17 @@
 
-.price-list-alert {
-  background-color: $light-red;
-}
 
-.price-list-alert-heading {
-  font-weight: bold;
-  font-size: 2rem;
-  margin-bottom: 0;
-}
-
-.price-list-alert-text {
-  margin-bottom: 0;
-}
-
-.price-list-alert-body {
+.alert {
   padding: 1rem 6rem 1rem 2rem;
-  position: relative;
+
+  h3 {
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
 
   td, th {
     border-color: $dark-gray;
@@ -37,4 +33,8 @@
   tbody tr:nth-child(odd) {
     background-color: inherit;
   }
+}
+
+.alert-error {
+  background-color: $light-red;
 }
