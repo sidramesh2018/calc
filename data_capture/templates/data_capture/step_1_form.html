@@ -4,25 +4,7 @@
 
 {% csrf_token %}
 
-{# TODO: Django renders a <ul class="errorlist nonfield"> here. We should either style it properly, or render our own markup. #}
-<style>
-.errorlist {
-  list-style-type: none;
-  background: crimson;
-  color: white;
-  font-size: smaller;
-  padding: 1em;
-  margin: 0;
-}
-
-.errorlist li {
-  margin-bottom: 0;
-}
-</style>
-
 {{ form.non_field_errors }}
-
-{# TODO: Django renders a <ul class="errorlist"> here. We should either style it properly, or render our own markup. #}
 
 {{ form.schedule.errors }}
 

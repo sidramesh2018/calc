@@ -42,21 +42,6 @@
   <tr style="background: inherit">
   {% for field in row %}
     <td style="vertical-align: bottom">
-      {# TODO: Django renders a <ul class="errorlist"> here. We should either style it properly, or render our own markup. #}
-      <style>
-      .errorlist {
-        list-style-type: none;
-        background: crimson;
-        color: white;
-        font-size: smaller;
-        padding: 1em;
-        margin: 0;
-      }
-
-      .errorlist li {
-        margin-bottom: 0;
-      }
-      </style>
       {{ field.errors }}
 
       {{ field.value }}
