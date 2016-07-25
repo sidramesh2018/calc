@@ -1,6 +1,9 @@
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 
+from .schedules.fake_schedule import FakeSchedulePriceList
+from .schedules import registry
+
 
 @override_settings(
     # This will make tests run faster.
@@ -17,6 +20,16 @@ class StepTestCase(TestCase):
         user = User.objects.create_user(username='foo', password='bar')
         assert self.client.login(username='foo', password='bar')
         return user
+
+    def set_fake_gleaned_data(self, rows):
+        session = self.client.session
+        pricelist = FakeSchedulePriceList(rows)
+        session['data_capture:schedule'] = registry.get_classname(pricelist)
+        session['data_capture:gleaned_data'] = registry.serialize(pricelist)
+        session.save()
+
+    def setUp(self):
+        registry._init()
 
     def assertRedirectsToLogin(self, url):
         res = self.client.get(url)
@@ -61,6 +74,12 @@ class Step3Tests(StepTestCase):
         self.login()
         res = self.client.get(self.url)
         self.assertRedirects(res, Step1Tests.url)
+
+    def test_gleaned_data_with_valid_rows_is_required(self):
+        self.login()
+        self.set_fake_gleaned_data([])
+        res = self.client.get(self.url)
+        self.assertRedirects(res, Step2Tests.url)
 
 
 class Step4Tests(StepTestCase):

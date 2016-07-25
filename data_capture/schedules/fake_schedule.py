@@ -52,7 +52,6 @@ class FakeSchedulePriceList(BasePriceList):
 
     def add_to_price_list(self, price_list):
         for row in self.valid_rows:
-            print("UM %s" % row['service'].value())
             price_list.add_row(
                 labor_category=row['service'].value(),
                 education_level=EDU_LEVELS[row['education'].value()],
