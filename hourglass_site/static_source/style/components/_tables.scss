@@ -4,12 +4,65 @@ table {
   margin-top: 2rem;
   caption {
     color: $dark-gray;
-  color: inherit;
     text-align: left;
     font-weight: bold;
-  font-weight: normal;
     padding-bottom: 1.5em;
     vertical-align: bottom;
+  }
+
+  thead {
+    th {
+      position: relative;
+      vertical-align: bottom;
+      color: $dark-gray;
+      border-bottom: 1px solid;
+      &.sortable {
+        text-decoration: underline;
+        cursor: pointer;
+        padding-right: 1.5em;
+        &:after {
+          display: inline-block;
+          line-height: 1em;
+          height: 1em;
+          position: absolute;
+          bottom: .4em;
+          right: 0;
+          margin-top: -.5em;
+          margin-right: .25em;
+          content: "▽";
+          font-weight: normal;
+          font-size: .9em;
+        }
+      }
+      &.sorted {
+        color: $black;
+        background: #f8f8f8;
+        position: relative;
+        &:after {
+          content: "▲";
+          font-size: 1em;
+        }
+        &.descending:after {
+          content: "▼";
+        }
+      }
+    }
+  }
+  tbody {
+    tr {
+      &:hover > * {
+        background: $light-yellow !important;
+      }
+      &:nth-child(odd) {
+        background: #f9f9f9;
+        td.sorted {
+          background: #f0f0f0;
+        }
+      }
+    }
+    th {
+      font-weight: normal;
+    }
   }
 }
 
@@ -24,81 +77,11 @@ th:last-child {
   vertical-align: top;
 }
 
-thead th {
-  position: relative;
-  vertical-align: bottom;
-  color: $dark-gray;
-  border-bottom: 1px solid;
-
-}
-
-tbody {
-  tr {
-    &:hover > * {
-      background: $light-yellow !important;
-    }
-    &:nth-child(odd) {
-      background: #f9f9f9;
-      td.sorted {
-        background: #f0f0f0;
-      }
-    }
-  }
-  th {
-    font-weight: normal;
-  }
-}
-
 td.sorted {
   background: #fafafa;
 }
 
-th.sortable {
-  text-decoration: underline;
-  cursor: pointer;
-  padding-right: 1.5em;
-  &:after {
-    display: inline-block;
-    line-height: 1em;
-    height: 1em;
-    position: absolute;
-    bottom: .4em;
-    right: 0;
-    margin-top: -.5em;
-    margin-right: .25em;
-    content: "▽";
-    font-weight: normal;
-    font-size: .9em;
-  }
-}
-
-th.sorted {
-  color: $black;
-  background: #f8f8f8;
-  position: relative;
-  &:after {
-    content: "▲";
-    font-size: 1em;
-  }
-  &.descending:after {
-    content: "▼";
-  }
-}
-
-th.collapsible {
-  position: relative;
-  &.collapsed {
-    width: 0;
-    font-size: 0;
-  }
-  &:last-child a.toggle-collapse {
-    left: auto;
-    right: 0;
-    text-align: right;
-  }
-}
-
-th.collapsible a.toggle-collapse,
+/*th.collapsible a.toggle-collapse,*/
 th.exclude a.restore {
   position: absolute;
   font-size: 1rem;
@@ -112,12 +95,6 @@ th.exclude a.restore {
   left: 0;
 }
 
-th.collapsed,
-td.collapsed {
-  width: 1.5em !important;
-  border-left: 1px dotted $off-white;
-}
-
 td.column-exclude a {
   color: $dark-gray;
   font-size: 1.2em;
@@ -128,3 +105,23 @@ td.column-exclude a {
     color: $black;
   }
 }
+
+/* Not used because the corresponding JS conflicts with the tooltips. Only here for future reference. */
+th.collapsible {
+  position: relative;
+  &.collapsed {
+    width: 0;
+    font-size: 0;
+  }
+  &:last-child a.toggle-collapse {
+    left: auto;
+    right: 0;
+    text-align: right;
+  }
+}
+th.collapsed,
+td.collapsed {
+  width: 1.5em !important;
+  border-left: 1px dotted $off-white;
+}
+
