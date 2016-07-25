@@ -3,6 +3,7 @@ import json
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 
+from .models import SubmittedPriceList
 from .schedules.fake_schedule import FakeSchedulePriceList
 from .schedules import registry
 
@@ -139,6 +140,20 @@ class Step2Tests(StepTestCase):
 class Step3Tests(StepTestCase):
     url = '/data-capture/step/3'
 
+    rows = [{
+        'education': 'Bachelors',
+        'price': '15.00',
+        'service': 'Project Manager',
+        'sin': '132-40',
+        'years_experience': '7'
+    }]
+
+    valid_form = {
+        'contract_number': 'GS-123-4567',
+        'vendor_name': 'foo',
+        'contractor_site': 'Customer',
+    }
+
     def test_login_is_required(self):
         self.assertRedirectsToLogin(self.url)
 
@@ -152,6 +167,47 @@ class Step3Tests(StepTestCase):
         self.set_fake_gleaned_data([])
         res = self.client.get(self.url)
         self.assertRedirects(res, Step2Tests.url)
+
+    def test_get_is_ok(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        res = self.client.get(self.url)
+        self.assertEqual(res.status_code, 200)
+
+    def test_valid_post_creates_models(self):
+        user = self.login()
+        self.set_fake_gleaned_data(self.rows)
+        self.client.post(self.url, self.valid_form)
+        p = SubmittedPriceList.objects.filter(
+            contract_number='GS-123-4567'
+        )[0]
+        self.assertEqual(p.vendor_name, 'foo')
+        self.assertEqual(p.contractor_site, 'Customer')
+        self.assertEqual(p.submitter, user)
+        self.assertEqual(p.schedule, FAKE_SCHEDULE)
+
+        gleaned_data = registry.deserialize(
+            json.loads(p.serialized_gleaned_data)
+        )
+        assert isinstance(gleaned_data, FakeSchedulePriceList)
+        self.assertEqual(gleaned_data.rows, self.rows)
+
+        self.assertEqual(p.rows.count(), 1)
+        row = p.rows.all()[0]
+        self.assertEqual(row.current_price, 15)
+
+    def test_valid_post_redirects_to_step_4(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        res = self.client.post(self.url, self.valid_form)
+        self.assertRedirects(res, Step4Tests.url)
+
+    def test_invalid_post_returns_html(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        res = self.client.post(self.url, {})
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'This field is required')
 
 
 class Step4Tests(StepTestCase):

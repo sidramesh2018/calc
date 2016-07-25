@@ -1,3 +1,4 @@
+import json
 from functools import wraps
 from django.conf import settings
 from django.shortcuts import render, redirect
@@ -89,8 +90,8 @@ def step_3(request, gleaned_data):
             price_list = form.save(commit=False)
             price_list.schedule = registry.get_classname(gleaned_data)
             price_list.submitter = request.user
-            price_list.serialized_gleaned_data = request.session.get(
-                'data_capture:gleaned_data'
+            price_list.serialized_gleaned_data = json.dumps(
+                request.session.get('data_capture:gleaned_data')
             )
             price_list.save()
             gleaned_data.add_to_price_list(price_list)
