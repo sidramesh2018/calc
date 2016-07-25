@@ -6,21 +6,6 @@ from .schedules import registry
 from .models import SubmittedPriceList, SubmittedPriceListRow
 
 
-class SubmittedPriceListRowForm(forms.ModelForm):
-    class Meta:
-        model = SubmittedPriceListRow
-
-        exclude = ('serialized_gleaned_data',)
-
-        widgets = {
-            'schedule': forms.widgets.Select()
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['schedule'].widget.choices = registry.get_choices()
-
-
 class SubmittedPriceListRowInline(admin.TabularInline):
     model = SubmittedPriceListRow
 
@@ -33,8 +18,15 @@ class SubmittedPriceListRowInline(admin.TabularInline):
 
 @admin.register(SubmittedPriceList)
 class SubmittedPriceListAdmin(admin.ModelAdmin):
-    form = SubmittedPriceListRowForm
+    exclude = ('serialized_gleaned_data', 'schedule')
+
+    readonly_fields = ('schedule_title',)
 
     inlines = [
         SubmittedPriceListRowInline
     ]
+
+    def schedule_title(self, instance):
+        return registry.get_class(instance.schedule).title
+
+    schedule_title.short_description = 'Schedule'
