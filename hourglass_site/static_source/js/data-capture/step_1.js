@@ -38,6 +38,11 @@ function bindForm() {
       const formData = new window.FormData(form);
 
       if (upload.file) {
+        // It's possible that the user may have dragged-and-dropped a
+        // file to our upload widget, in which case the actual
+        // file <input> element won't contain what we want. So we'll remove
+        // whatever may have come from that <input> and replace it
+        // with the file the upload widget says we need to upload.
         formData.delete($uploadInput.attr('name'));
         formData.append($uploadInput.attr('name'), upload.file);
       }
