@@ -1,4 +1,5 @@
 import csv
+import logging
 from io import StringIO
 from django import forms
 from django.core.exceptions import ValidationError
@@ -14,6 +15,8 @@ for _code, _name in _EDUCATION_CHOICES:
 
 del _code
 del _name
+
+logger = logging.getLogger(__name__)
 
 
 def validate_education_level(value):
@@ -74,8 +77,8 @@ class FakeSchedulePriceList(BasePriceList):
         try:
             reader = csv.DictReader(StringIO(f.read().decode('utf-8')))
             return cls([row for row in reader])
-        except Exception:
-            # TODO: Log the exception somewhere?
+        except Exception as e:
+            logger.info('Failed to glean data from %s: %s' % (f.name, e))
             raise ValidationError(
                 'Weird problems occurred when reading your file.'
             )
