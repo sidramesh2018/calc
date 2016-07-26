@@ -27,7 +27,7 @@
   "scripts": {
     "gulp": "gulp",
     "eslint": "eslint . || true",
-    "failable-eslint": "eslint ."
+    "failable-eslint": "eslint --max-warnings 0 ."
   },
   "repository": {
     "type": "git",
