@@ -66,13 +66,17 @@ function bindForm() {
           window.location = data.redirect_url;
         } else {
           // TODO: Be more user-friendly here.
-          window.alert(`Invalid server response: ${data}`);
+          window.alert( // eslint-disable-line no-alert
+            `Invalid server response: ${data}`
+          );
         }
       });
 
       req.fail(() => {
         // TODO: Be more user-friendly here.
-        window.alert('An error occurred when submitting your data.');
+        window.alert( // eslint-disable-line no-alert
+          'An error occurred when submitting your data.'
+        );
       });
     }
   });
