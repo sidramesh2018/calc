@@ -60,7 +60,7 @@ class SubmittedPriceList(models.Model):
     def get_business_size_string(self):
         # TODO: Based on contracts/docs/s70/s70_data.csv, it seems
         # business size is either 'S' or 'O'. Assuming here that
-        # 'S' means 'Small Business' and 'O' means 'Not Small Business'
+        # 'S' means 'Small Business' and 'O' means 'Other'
         # but WE REALLY, REALLY NEED TO VERIFY THIS.
 
         if self.is_small_business:
@@ -70,7 +70,7 @@ class SubmittedPriceList(models.Model):
     def approve(self):
         self.is_approved = True
         for row in self.rows.all():
-            if row.contract_model_id is not None:
+            if row.contract_model is not None:
                 raise AssertionError()
             contract = Contract(
                 idv_piid=self.contract_number,
@@ -96,7 +96,7 @@ class SubmittedPriceList(models.Model):
             )
             contract.full_clean(exclude=['piid'])
             contract.save()
-            row.contract_model_id = contract
+            row.contract_model = contract
             row.save()
 
         self.save()
@@ -105,7 +105,7 @@ class SubmittedPriceList(models.Model):
         self.is_approved = False
 
         for row in self.rows.all():
-            row.contract_model_id.delete()
+            row.contract_model.delete()
 
         self.save()
 
@@ -127,9 +127,12 @@ class SubmittedPriceListRow(models.Model):
         related_name='rows'
     )
 
-    # If this row is represented in the contracts table, this will be
-    # non-null.
-    contract_model_id = models.OneToOneField(
+    # If this row is represented in the Contract model objects, this will be
+    # non-null. Note that we're explicitly calling it "contract model" here
+    # because the Contract model isn't named very accurately: it doesn't
+    # really represent a contract, but rather *part* of a contract, so
+    # to avoid confusion, we're referring to it as the "contract model".
+    contract_model = models.OneToOneField(
         Contract,
         on_delete=models.SET_NULL,
         null=True,

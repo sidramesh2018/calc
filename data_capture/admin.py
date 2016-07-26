@@ -12,7 +12,7 @@ class SubmittedPriceListRowInline(admin.TabularInline):
 
     can_delete = False
 
-    exclude = ('contract_model_id',)
+    exclude = ('contract_model',)
 
     formfield_overrides = {
         models.TextField: {'widget': forms.TextInput}

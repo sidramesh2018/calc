@@ -73,7 +73,7 @@ class ModelsTests(TestCase):
         self.assertEqual(Contract.objects.all().count(), 1)
         self.assertTrue(p.is_approved)
 
-        contract = p.rows.all()[0].contract_model_id
+        contract = p.rows.all()[0].contract_model
         self.assertEqual(contract.idv_piid, 'GS-123-4568')
         self.assertEqual(contract.labor_category, 'Software Engineer')
         self.assertEqual(contract.schedule, FakeSchedulePriceList.title)
@@ -87,7 +87,7 @@ class ModelsTests(TestCase):
         p.unapprove()
 
         self.assertFalse(p.is_approved)
-        self.assertEqual(p.rows.all()[0].contract_model_id, None)
+        self.assertEqual(p.rows.all()[0].contract_model, None)
         self.assertEqual(Contract.objects.all().count(), 0)
 
     def test_row_stringify_works(self):
