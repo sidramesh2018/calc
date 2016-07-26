@@ -67,7 +67,8 @@ def command(verbosity, lintonly):
     if IS_RUNNING_IN_DOCKER:
         # Until https://github.com/benmosher/eslint-plugin-import/issues/142
         # is fixed, we need to disable the following rule for Docker support.
-        ESLINT_CMD = 'eslint --rule "import/no-unresolved: off" .'
+        ESLINT_CMD = ('eslint --rule "import/no-unresolved: off" '
+                      '--max-warnings 0 .')
 
     linters = [
         {
