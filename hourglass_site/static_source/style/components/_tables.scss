@@ -3,7 +3,7 @@ table {
   width: 100%;
   margin-top: 2rem;
   caption {
-    color: $dark-gray;
+    color: $color-gray;
     text-align: left;
     font-weight: bold;
     padding-bottom: 1.5em;
@@ -14,7 +14,7 @@ table {
     th {
       position: relative;
       vertical-align: bottom;
-      color: $dark-gray;
+      color: $color-gray;
       border-bottom: 1px solid;
       &.sortable {
         text-decoration: underline;
@@ -35,7 +35,7 @@ table {
         }
       }
       &.sorted {
-        color: $black;
+        color: $color-black;
         background: #f8f8f8;
         position: relative;
         &:after {
@@ -51,7 +51,7 @@ table {
   tbody {
     tr {
       &:hover > * {
-        background: $light-yellow !important;
+        background: $color-gold-lightest !important;
       }
       &:nth-child(odd) {
         background: #f9f9f9;
@@ -88,7 +88,7 @@ th.exclude a.restore {
   padding: 2px 0;
   text-transform: uppercase;
   text-decoration: underline;
-  color: $dark-gray;
+  color: $color-gray;
   white-space: nowrap;
   vertical-align: bottom;
   bottom: 100%;
@@ -96,13 +96,13 @@ th.exclude a.restore {
 }
 
 td.column-exclude a {
-  color: $dark-gray;
+  color: $color-gray;
   font-size: 1.2em;
   line-height: 1rem;
   font-weight: bold;
   text-decoration: none;
   &:hover {
-    color: $black;
+    color: $color-black;
   }
 }
 
@@ -122,6 +122,6 @@ th.collapsible {
 th.collapsed,
 td.collapsed {
   width: 1.5em !important;
-  border-left: 1px dotted $off-white;
+  border-left: 1px dotted $color-gray-lightest;
 }
 

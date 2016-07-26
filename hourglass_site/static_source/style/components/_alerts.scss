@@ -1,5 +1,4 @@
-
-
+@import '../base/variables';
 .alert {
   padding: 1rem 6rem 1rem 2rem;
 
@@ -14,8 +13,7 @@
   }
 
   td, th {
-    border-color: $dark-gray;
-    border-right: 1px solid $dark-gray;
+    border-color: $color-gray-dark;
 
     &:last-child {
       border-right: none;
@@ -23,18 +21,23 @@
   }
 
   td.error {
-    border: 2px solid $dark-red;
+    border: 2px solid $color-secondary-dark;
   }
 
   thead th {
-    color: $black;
+    color: $color-black;
   }
 
-  tbody tr:nth-child(odd) {
-    background-color: inherit;
+  tbody tr {
+    &:nth-child(odd) {
+      background-color: inherit;
+    }
+    &:hover > * {
+      background: inherit !important;
+    }
   }
 }
 
 .alert-error {
-  background-color: $light-red;
+  background-color: $color-secondary-lightest;
 }

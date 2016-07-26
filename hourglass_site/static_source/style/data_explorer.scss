@@ -15,19 +15,19 @@
   display: none;
   z-index: 9999;
   overflow: hidden;
-  background: $white;
+  background: $color-white;
   max-height: 29.4rem;
   overflow: hidden;
   overflow-y: auto;
-  border: 1px solid $light-gray;
+  border: 1px solid $color-gray-lighter;
 }
 
 .autocomplete-suggestion {
   position: relative;
   padding: .25em .5em;
   &.selected {
-    color: $white;
-    background: $light-blue;
+    color: $color-white;
+    background: $color-primary-alt;
   }
   .count {
     position: absolute;
@@ -59,17 +59,17 @@
 }
 
 .filter_active  {
-  border: 2px solid $yellow !important;
+  border: 2px solid $color-gold-light !important;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus,
 select:focus {
-  box-shadow: 0 0 0 1px $light-blue, 0 0 10px $light-blue;
+  box-shadow: 0 0 0 1px $color-primary-alt, 0 0 10px $color-primary-alt;
 }
 
 .filter_focus {
-  border: 2px solid $light-blue !important;
+  border: 2px solid $color-primary-alt !important;
 }
 
 input.price,
@@ -83,7 +83,7 @@ input.price {
 }
 
 span.dollars {
-  color: $dark-gray;
+  color: $color-gray;
 }
 
 .filter-more-info {
@@ -100,7 +100,7 @@ span.dollars {
 }
 
 .filter-block {
-  background: $off-white;
+  background: $color-gray-lightest;
   border-radius: 4px;
   margin-bottom: 2em;
   padding: 1rem 2rem;
@@ -125,7 +125,7 @@ span.dollars {
   dd {
     position:relative;
     ul {
-      background-color: $white;
+      background-color: $color-white;
       border:0;
       color:#000;
       display:none;
@@ -145,7 +145,7 @@ span.dollars {
           display:block;
           margin-bottom: 0;
           &:hover {
-            background-color:$white;
+            background-color:$color-white;
           }
         }
       }
@@ -162,8 +162,8 @@ span.dollars {
     font-size: 14px;
   }
   dt a {
-    background-color: $white;
-    border: 1px solid $light-gray;
+    background-color: $color-white;
+    border: 1px solid $color-gray-lighter;
     border-radius: 4px;
     box-shadow: none;
     box-sizing: border-box;
@@ -173,8 +173,8 @@ span.dollars {
     overflow: hidden;
     padding: 6px 10px;
     &:focus {
-      border: 1px solid $light-blue !important;
-      box-shadow: 0 0 0 1px $light-blue, 0 0 10px $light-blue;
+      border: 1px solid $color-primary-alt !important;
+      box-shadow: 0 0 0 1px $color-primary-alt, 0 0 10px $color-primary-alt;
     }
   }
   span.value {
@@ -224,8 +224,8 @@ input[type="checkbox"]:checked ~ label {
 }
 
 .price-block {
-  background: $off-white;
-  border: 1px solid $light-gray;
+  background: $color-gray-lightest;
+  border: 1px solid $color-gray-lighter;
   border-radius: 4px;
 }
 
@@ -236,8 +236,8 @@ input[type="checkbox"]:checked ~ label {
 }
 
 .avg-price-block {
-  border-left: 1px solid $light-gray;
-  border-right: 1px solid $light-gray;
+  border-left: 1px solid $color-gray-lighter;
+  border-right: 1px solid $color-gray-lighter;
 }
 
 .avg-price-block,
@@ -250,8 +250,8 @@ input[type="checkbox"]:checked ~ label {
 }
 
 .proposed-price-block {
-  background: $off-white;
-  border: 1px solid $light-gray;
+  background: $color-gray-lightest;
+  border: 1px solid $color-gray-lighter;
   border-radius: 4px;
   padding: 1.1em 2em .5em 2em;
   margin: 0 20px 0 0;
@@ -282,7 +282,7 @@ input[type="checkbox"]:checked ~ label {
 #avg-price-highlight,
 .sd-highlight,
 .proposed-price-highlight {
-  color: $blue;
+  color: $color-primary;
   font-weight: 400;
 }
 
@@ -359,27 +359,27 @@ th.column-vendor_name {           width: 25%; }
 th.column-schedule {              width: 10%; }
 
 th.column-education_level {
-  white-space: nowrap;
+  color-white-space: nowrap;
 }
 
 td.column-idv_piid {
-  white-space: nowrap;
+  color-white-space: nowrap;
 }
 
 td.column-min_years_experience .years {
   font-style: italic;
-  color: $dark-gray;
+  color: $color-gray;
 }
 
 .document-icon {
-  fill: $blue;
+  fill: $color-primary;
   height: 12px;
   margin-left: 3px;
   width: 12px;
 }
 
 .column-idv_piid:hover .document-icon {
-  fill: $dark-blue;
+  fill: $color-primary-darker;
 }
 
 a.focus-input {
@@ -401,14 +401,14 @@ a.focus-input {
 }
 
 .contract-year-block {
-  background-color: $white;
-  border: 1px solid $light-gray;
+  background-color: $color-white;
+  border: 1px solid $color-gray-lighter;
   border-radius: 4px;
   display: inline-block;
 }
 
 .contract-year-item {
-  border-right: 1px solid $light-gray;
+  border-right: 1px solid $color-gray-lighter;
   margin-bottom: 0;
   padding: 1px 8px;
 }
@@ -418,12 +418,12 @@ a.focus-input {
 }
 
 .contract-year-selected {
-  background-color: $blue;
-  color: $white;
+  background-color: $color-primary;
+  color: $color-white;
 }
 
 #reset-button {
-  background: $white;
+  background: $color-white;
 }
 
 #export-data {
@@ -431,7 +431,7 @@ a.focus-input {
 }
 
 #description {
-  color: $off-black;
+  color: $color-gray-dark;
   font-weight: normal;
   font-size: 2rem;
   .total {
@@ -516,11 +516,11 @@ label.radio {
 }
 
 label.checkbox :checked + span {
-  background-color: $blue;
-  box-shadow: 0 0 0 0 $white;
+  background-color: $color-primary;
+  box-shadow: 0 0 0 0 $color-white;
   position: relative;
   &:after {
-    color: $white;
+    color: $color-white;
     font-family: "FontAwesome";
     content: x;
     position: relative;
@@ -530,8 +530,8 @@ label.checkbox :checked + span {
 }
 
 label.radio :checked + span {
-  background-color: $blue;
-  color: $white;
+  background-color: $color-primary;
+  color: $color-white;
   position: relative;
 }
 
@@ -569,13 +569,13 @@ input[type="radio"]:focus + .checkbox-focus {
 }
 
 .checkbox-focus {
-  background-color: $white;
+  background-color: $color-white;
   padding: 1px 8px;
 }
 
 .contract-list-item {
   margin-bottom: 0;
-  border-right: 1px solid $light-gray;
+  border-right: 1px solid $color-gray-lighter;
   &:last-of-type {
     border: none;
     margin-right: -1px;

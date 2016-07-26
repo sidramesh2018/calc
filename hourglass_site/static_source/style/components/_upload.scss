@@ -5,15 +5,15 @@
   position: relative;
   align-items: center;
   padding: 0 3em;
-  background-color: $off-white;
+  background-color: $color-gray-lightest;
   transition: background-color 0.5s;
 
-  border: 2px dashed $dark-gray;
-  color: $dark-gray;
+  border: 2px dashed $color-gray;
+  color: $color-gray;
   font-size: 2rem;
 
   label {
-    color: $blue;
+    color: $color-primary;
     font-weight: bold;
     display: inline;
     cursor: pointer;
@@ -25,7 +25,7 @@
 
   input:focus + div.upload-chooser label,
   input:focus + div.upload-current label {
-    outline: 1px dotted #000;
+    outline: 1px dotted $color-black;
     outline: -webkit-focus-ring-color auto 5px;
   }
 
@@ -36,7 +36,7 @@
   }
 
   &.dragged-over {
-    background-color: $white;
+    background-color: $color-white;
   }
 }
 
