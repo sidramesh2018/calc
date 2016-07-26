@@ -1,4 +1,3 @@
-import os
 import json
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
@@ -6,12 +5,7 @@ from django.contrib.auth.models import User
 from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
-from .common import FAKE_SCHEDULE
-
-
-def path(*paths):
-    root_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    return os.path.join(root_dir, *paths)
+from .common import FAKE_SCHEDULE, FAKE_SCHEDULE_EXAMPLE_PATH
 
 
 @override_settings(
@@ -50,7 +44,7 @@ class StepTestCase(TestCase):
 class Step1Tests(StepTestCase):
     url = '/data-capture/step/1'
 
-    csvpath = path('static', 'data_capture', 'fake_schedule_example.csv')
+    csvpath = FAKE_SCHEDULE_EXAMPLE_PATH
 
     def ajax_post(self, data):
         res = self.client.post(self.url, data,
