@@ -3,16 +3,17 @@ from io import StringIO
 from django import forms
 from django.core.exceptions import ValidationError
 
+from contracts.models import EDUCATION_CHOICES as _EDUCATION_CHOICES
 from .base import BasePriceList
 
 
-# TODO: Ideally this should pull from contracts.models.EDUCATION_CHOICES.
-EDU_LEVELS = {
-    'Associates': 'AA',
-    'Bachelors': 'BA',
-    'Masters': 'MA',
-    'Ph.D': 'PHD'
-}
+EDU_LEVELS = {}
+
+for _code, _name in _EDUCATION_CHOICES:
+    EDU_LEVELS[_name] = _code
+
+del _code
+del _name
 
 
 def validate_education_level(value):
