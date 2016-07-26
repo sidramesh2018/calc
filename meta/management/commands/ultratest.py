@@ -82,6 +82,10 @@ def command(verbosity, lintonly):
 
     tests = [
         {
+            'name': 'bandit',
+            'cmd': 'bandit -r .'
+        },
+        {
             'name': 'py.test',
             'cmd': 'py.test'
         },
