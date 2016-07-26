@@ -1,4 +1,5 @@
 import os
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 def path(*paths):
@@ -12,3 +13,15 @@ FAKE_SCHEDULE = 'data_capture.schedules.fake_schedule.FakeSchedulePriceList'
 FAKE_SCHEDULE_EXAMPLE_PATH = path(
     'static', 'data_capture', 'fake_schedule_example.csv'
 )
+
+
+def uploaded_csv_file(content=None):
+    if content is None:
+        with open(FAKE_SCHEDULE_EXAMPLE_PATH, 'rb') as f:
+            content = f.read()
+
+    return SimpleUploadedFile(
+        'foo.csv',
+        content,
+        content_type='text/csv'
+    )

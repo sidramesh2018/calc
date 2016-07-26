@@ -1,7 +1,6 @@
 from django.test import TestCase, override_settings
-from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .common import FAKE_SCHEDULE, FAKE_SCHEDULE_EXAMPLE_PATH
+from .common import FAKE_SCHEDULE, uploaded_csv_file
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
 from ..forms import Step1Form
@@ -11,13 +10,6 @@ from ..forms import Step1Form
 class Step1FormTests(TestCase):
     def setUp(self):
         registry._init()
-
-    def create_csv_file(self, content):
-        return SimpleUploadedFile(
-            'foo.csv',
-            content,
-            content_type='text/csv'
-        )
 
     def test_invalid_when_schedule_is_missing(self):
         form = Step1Form({})
@@ -41,7 +33,7 @@ class Step1FormTests(TestCase):
         form = Step1Form({
             'schedule': FAKE_SCHEDULE,
         }, {
-            'file': self.create_csv_file(b'i cannot be gleaned')
+            'file': uploaded_csv_file(b'i cannot be gleaned')
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
@@ -52,12 +44,11 @@ class Step1FormTests(TestCase):
         })
 
     def test_clean_sets_gleaned_data(self):
-        with open(FAKE_SCHEDULE_EXAMPLE_PATH, 'rb') as f:
-            form = Step1Form({
-                'schedule': FAKE_SCHEDULE,
-            }, {
-                'file': self.create_csv_file(f.read())
-            })
-            self.assertTrue(form.is_valid())
-            self.assertEqual(form.cleaned_data['gleaned_data'].title,
-                             FakeSchedulePriceList.title)
+        form = Step1Form({
+            'schedule': FAKE_SCHEDULE,
+        }, {
+            'file': uploaded_csv_file()
+        })
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['gleaned_data'].title,
+                         FakeSchedulePriceList.title)
