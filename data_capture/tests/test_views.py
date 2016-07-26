@@ -6,9 +6,7 @@ from django.contrib.auth.models import User
 from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
-
-
-FAKE_SCHEDULE = 'data_capture.schedules.fake_schedule.FakeSchedulePriceList'
+from .common import FAKE_SCHEDULE
 
 
 def path(*paths):

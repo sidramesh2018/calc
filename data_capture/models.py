@@ -52,6 +52,7 @@ class SubmittedPriceList(models.Model):
         return row
 
     def get_schedule_title(self):
+        # We're importing here to avoid a circular import. Kinda icky.
         from .schedules.registry import get_class
 
         return get_class(self.schedule).title
@@ -136,4 +137,7 @@ class SubmittedPriceListRow(models.Model):
     )
 
     def __str__(self):
+        # This is really just so price list rows don't appear as
+        # 'SubmittedPriceListRow object' in Django admin.
+
         return 'Submitted price list row'
