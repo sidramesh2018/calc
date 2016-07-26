@@ -30,7 +30,8 @@ def get_class(classname):
 
 def get_classname(instance):
     classname = _classname(instance.__class__)
-    assert classname in CLASSES
+    if classname not in CLASSES:
+        raise KeyError(classname)
     return classname
 
 
@@ -84,7 +85,9 @@ def smart_load_from_upload(classname, f):
 
 def serialize(pricelist):
     classname = _classname(pricelist.__class__)
-    assert classname in CLASSES
+
+    if classname not in CLASSES:
+        raise KeyError(classname)
 
     return (classname, pricelist.serialize())
 
