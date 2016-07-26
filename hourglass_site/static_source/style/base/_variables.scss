@@ -1,5 +1,4 @@
 /* #0443645: used for header background fallback */
-/* #323A45: used for official US site banner */
 
 // Color
 $color-primary:              #0071bc;
@@ -53,8 +52,9 @@ $color-visited:              #4c2c92;
 
 // Fonts
 $font-family-main: 'Lato', 'Helvetica', 'Arial', sans-serif;
+$font-weight-bold: 700;
 
-@mixin breakpoint($breakpoint){
+@mixin breakpoint($breakpoint) {
   @if ($breakpoint == medium) {
     @media (min-width: 600px) { @content }
   }
@@ -63,12 +63,15 @@ $font-family-main: 'Lato', 'Helvetica', 'Arial', sans-serif;
 @mixin link ($link, $visit, $hover, $active) {
   a {
     color: $link;
+
     &:visited {
       color: $visit;
     }
+
     &:hover {
       color: $hover;
     }
+
     &:active {
       color: $active;
     }

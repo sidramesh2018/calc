@@ -3,8 +3,7 @@
   padding: 1rem 6rem 1rem 2rem;
 
   h3 {
-    font-weight: bold;
-    font-size: 2rem;
+    font-weight: $font-weight-bold;
     margin-bottom: 0;
   }
 
@@ -22,6 +21,8 @@
 
   td.error {
     border: 2px solid $color-secondary-dark;
+    color: $color-secondary-dark;
+    font-weight: $font-weight-bold;
   }
 
   thead th {
@@ -39,5 +40,8 @@
 }
 
 .alert-error {
-  background-color: $color-secondary-lightest;
+  border: 2px solid $color-secondary-dark;
+  h3 {
+    color: $color-secondary-dark;
+  }
 }
