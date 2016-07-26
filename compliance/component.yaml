@@ -8,7 +8,7 @@ references:
 - name: Repository's Github
   path: https://github.com/18F/calc
   type: URL
-- name: Custom User Provided Service Documentation
+- name: User Provided Service Documentation
   path: https://docs.cloudfoundry.org/devguide/services/user-provided.html
   type: URL
 - name: Flake8, Python Linting Tool
@@ -16,6 +16,9 @@ references:
   type: URL
 - name: OWASP's ZAP
   path: https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project
+  type: URL
+- name: Bandit, Static Security Analysis
+  path: https://wiki.openstack.org/wiki/Security/Projects/Bandit
   type: URL
 satisfies:
 - standard_key: NIST-800-53
@@ -38,16 +41,16 @@ satisfies:
         Information about approved price list data is meant to be accessed
         by the general public. Submitted price lists that have not yet
         been reviewed, or which have been rejected, are visible only to
-        data administrators and the COs who uploaded them.
+        data administrators and the Contract Officers who uploaded them.
 - standard_key: NIST-800-53
   control_key: AC-6   # Least Privilege
   narrative:
     - text: >
-        At the application level (see cloud.gov for lower-level controls), 
+        At the application level (see cloud.gov for lower-level controls),
         only data administrators have the ability to modify approved price
-        list data. Any data modifications made by COs must be reviewed by
-        a data administrator before they can be made available to the
-        general public.
+        list data. Any data modifications made by Contract Officers must be
+        reviewed by a data administrator before they can be made available to
+        the general public.
 - standard_key: NIST-800-53
   control_key: AU-2   # Audit Events
   narrative:
@@ -99,10 +102,10 @@ satisfies:
         hourglass/settings.py. Configurations which are
         specific to one cloud.gov environment (i.e. either the staging or
         production environment) are located in the appropriate manifest-*.yml
-        file or stored in and provided by a cloud.gov "custom user provided
+        file or stored in and provided by a cloud.gov "user provided
         service".
   references:
-    - verification_key: cups
+    - verification_key: ups
 - standard_key: NIST-800-53
   control_key: CM-8   # Information System Component Inventory
   narrative:
@@ -142,25 +145,28 @@ satisfies:
   narrative:
     - text: >
         In addition to cloud.gov controls, all data in the system comes from
-        contract officers and must be approved by a data administrator to
+        Contract Officers and must be approved by a data administrator to
         be visible to the general public.
 - standard_key: NIST-800-53
   control_key: RA-5   # Vulnerability Scanning
   narrative:
     - text: >
         In addition to cloud.gov controls, the application layer is scanned with
-        both static and dynamic tooling.  Before being merged into "master", all
+        both static and dynamic tooling. Before being merged into "master", all
         custom code is automatically analyzed by "flake8" (a linting tool to
-        catch syntactic errors) and a handful of custom, security-centric unit
+        catch syntactic errors), "bandit" (a security-focused static analysis
+        tool), and a handful of custom, security-centric unit
         tests. Code which does not meet these standards is generally not
-        merged. We also employ Code Climate to warn of potentially concerning
-        style, and Quantified Code to warn about security and style
-        issues.
+        merged. We also employ Gemnasium to track our dependencies,
+        Code Climate to warn of potentially concerning style, and
+        Quantified Code to warn about security and style issues.
 
         For static analysis, we've addressed all critical issues raised by
         evaluating the application with OWASP ZAP.
   references:
     - verification_key: flake8
+    - verification_key: bandit
+    - verification_key: gemnasium
     - verification_key: code-climate
     - verification_key: quantified-code
     - verification_key: owasp-zap
@@ -170,15 +176,18 @@ satisfies:
   narrative:
     - text: >
         In addition to cloud.gov controls, the application layer is scanned with
-        both static and dynamic tooling.  Before being merged into "master", all
+        both static and dynamic tooling. Before being merged into "master", all
         custom code is automatically analyzed by "flake8" (a linting tool to
-        catch syntactic errors) and a handful of custom, security-centric unit
+        catch syntactic errors), "bandit" (a security-focused static analysis
+        tool), and a handful of custom, security-centric unit
         tests. Code which does not meet these standards is generally not
-        merged. We also employ Code Climate to warn of potentially concerning
-        style, and Quantified Code to warn about security and style
-        issues.
+        merged. We also employ Gemnasium to track our dependencies,
+        Code Climate to warn of potentially concerning style, and
+        Quantified Code to warn about security and style issues.
   references:
     - verification_key: flake8
+    - verification_key: bandit
+    - verification_key: gemnasium
     - verification_key: code-climate
     - verification_key: quantified-code
 - standard_key: NIST-800-53
@@ -217,13 +226,15 @@ satisfies:
     - text: >
         At the application layer (see cloud.gov controls for lower), all custom
         code passes through a set of automated unit and integration tests via
-        Travis CI. Production errors are captured via New Relic and emailed to
+        Travis CI. Library dependencies are verified up to date via Gemnasium.
+        Production errors are captured via New Relic and emailed to
         relevant parties. Further, code is first deployed (automatically) to
         our staging environment, where we may discover errors before appearing
         in production.
   references:
     - verification_key: travis
     - verification_key: new-relic
+    - verification_key: gemnasium
 - standard_key: NIST-800-53
   control_key: SI-4   # Information System Monitoring
   narrative:
@@ -244,4 +255,8 @@ verifications:
 - key: quantified-code
   name: Project's Quantified Code Results
   path: https://www.quantifiedcode.com/app/project/68ae46ef5bd84f7db471f67ba3ca7f03
+  type: URL
+- key: gemnasium
+  name: Project's Gemnasium Results
+  path: https://gemnasium.com/github.com/18F/calc
   type: URL
