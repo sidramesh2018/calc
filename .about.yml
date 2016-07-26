@@ -48,7 +48,10 @@ services:
   category: Code Review
   url: https://www.quantifiedcode.com/app/project/68ae46ef5bd84f7db471f67ba3ca7f03/snapshot/origin:develop:HEAD
   badge: https://www.quantifiedcode.com/api/v1/project/68ae46ef5bd84f7db471f67ba3ca7f03/snapshot/origin:develop:HEAD/badge.svg
-
+- name: Gemnasium
+  category: Code Review
+  url: https://gemnasium.com/github.com/18F/calc
+  badge: https://gemnasium.com/badges/github.com/18F/calc.svg
 
 licenses:
   mirage:

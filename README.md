@@ -4,6 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/18F/calc/badges/gpa.svg)](https://codeclimate.com/github/18F/calc)
 [![Test Coverage](https://codeclimate.com/github/18F/calc/badges/coverage.svg)](https://codeclimate.com/github/18F/calc/coverage)
 [![Code Issues](https://www.quantifiedcode.com/api/v1/project/68ae46ef5bd84f7db471f67ba3ca7f03/snapshot/origin:develop:HEAD/badge.svg)](https://www.quantifiedcode.com/app/project/68ae46ef5bd84f7db471f67ba3ca7f03/snapshot/origin:develop:HEAD)
+[![Dependency Status](https://gemnasium.com/badges/github.com/18F/calc.svg)](https://gemnasium.com/github.com/18F/calc)
 
 CALC (formerly known as "Hourglass"), which stands for Contracts Awarded Labor Category, is a tool to help contracting personnel estimate their per-hour labor costs for a contract, based on historical pricing information. The tool is live at [https://calc.gsa.gov](https://calc.gsa.gov). You can track our progress on our [trello board](https://trello.com/b/LjXJaVbZ/prices) or file an issue on this repo.
 
@@ -58,6 +59,13 @@ If you are managing https://calc.gsa.gov or any other cloud.gov-based deployment
 
 ## Testing
 
+CALC provides a custom Django management command to run all linters and tests:
+
+```sh
+python manage.py ultratest
+```
+
+### Unit Tests
 To run unit tests:
 
 ```sh
@@ -73,11 +81,17 @@ py.test --cov
 For more information on running only specific tests, see
 [`py.test` Usage and Invocations][pytest].
 
-CALC also provides a custom Django management command to run all linters and unit tests:
+### Security Scans
+
+We use [bandit](https://github.com/openstack/bandit) for security-related static analysis.
+
+To run bandit:
 
 ```sh
-python manage.py ultratest
+bandit -r .
 ```
+
+bandit's configuration is in the [.bandit](/.bandit) file.
 
 ## Using Docker (optional)
 
