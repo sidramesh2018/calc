@@ -96,8 +96,7 @@ def step_3(request, gleaned_data):
             price_list.save()
             gleaned_data.add_to_price_list(price_list)
 
-            # TODO: Delete gleaned data from session (keeping it in for
-            # now b/c it makes debugging easier).
+            del request.session['data_capture:gleaned_data']
 
             return redirect('data_capture:step_4')
 

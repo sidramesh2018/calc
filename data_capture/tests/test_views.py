@@ -166,6 +166,12 @@ class Step3Tests(StepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
+    def test_valid_post_clears_gleaned_data(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        self.client.post(self.url, self.valid_form)
+        assert 'data_capture:gleaned_data' not in self.client.session
+
     def test_valid_post_creates_models(self):
         user = self.login()
         self.set_fake_gleaned_data(self.rows)
