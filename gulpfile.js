@@ -199,6 +199,8 @@ gulp.task('lint', () => {
   const opts = {};
   if (isInDocker) {
     opts.rules = {
+      // Until https://github.com/benmosher/eslint-plugin-import/issues/142
+      // is fixed, we need to disable the following rule for Docker support.
       'import/no-unresolved': 0,
     };
   }
