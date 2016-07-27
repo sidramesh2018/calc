@@ -7,6 +7,8 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.template.defaultfilters import pluralize
 
 from . import forms
 from .schedules import registry
@@ -29,6 +31,11 @@ def step_1(request):
             if request.is_ajax():
                 return JsonResponse({'redirect_url': redirect_url})
             return HttpResponseRedirect(redirect_url)
+        else:
+            messages.add_message(
+                request, messages.ERROR,
+                'Sorry, that file could not be processed. Try another?'
+            )
 
     ctx = {
         'step_number': 1,
@@ -99,6 +106,12 @@ def step_3(request, gleaned_data):
             del request.session['data_capture:gleaned_data']
 
             return redirect('data_capture:step_4')
+        else:
+            messages.add_message(
+                request, messages.ERROR,
+                'Oops, please correct the error{} below and resubmit.'
+                    .format(pluralize(form.errors))
+            )
 
     return render(request, 'data_capture/step_3.html', {
         'step_number': 3,

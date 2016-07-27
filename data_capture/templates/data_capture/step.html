@@ -56,6 +56,16 @@
   </li>
 </ol>
 
+{% if messages %}
+<div class="alerts">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 {% block step_body %}{% endblock %}
 
 </div>
