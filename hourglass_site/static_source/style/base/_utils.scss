@@ -1,5 +1,29 @@
 @import 'variables';
 
+@mixin breakpoint($breakpoint) {
+  @if ($breakpoint == medium) {
+    @media (min-width: 600px) { @content }
+  }
+}
+
+@mixin link ($link, $visit, $hover, $active) {
+  a {
+    color: $link;
+
+    &:visited {
+      color: $visit;
+    }
+
+    &:hover {
+      color: $hover;
+    }
+
+    &:active {
+      color: $active;
+    }
+  }
+}
+
 .container {
   width: 100%;
   padding-left: 20px;
