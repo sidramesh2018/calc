@@ -1,0 +1,102 @@
+{% extends 'data_capture/step.html' %}
+
+{% block subtitle %}Validate data{% endblock %}
+
+{% block step_body %}
+<h2>Validate data</h2>
+
+{% if not is_preferred_schedule %}
+<p>
+  <strong>Note:</strong> You specified that the price list you were
+  uploading was for <em>{{ preferred_schedule.title }}</em>, but it
+  appears to be for <em>{{ gleaned_data.title }}</em>. If this is
+  incorrect, please upload a different file.
+</p>
+{% endif %}
+
+{% if gleaned_data.invalid_rows %}
+
+<div style="background: #F9DEDE; padding: 1em; margin-bottom: 1em">
+
+{% with rows=gleaned_data.invalid_rows %}
+
+{% with total=rows|length %}
+<h3>{{ total }} row{{ total|pluralize:" has,s have" }} errors</h3>
+
+<p>
+  The affected row{{ total|pluralize }} will be discarded and
+  not uploaded to CALC.
+</p>
+{% endwith %}
+
+<table>
+  <tr style="background: inherit">
+  {% for field in rows.0 %}
+    <th style="font-weight: bold">{{ field.label }}</th>
+  {% endfor %}
+  </tr>
+  {% for row in rows %}
+
+  {# TODO: Should we print out non-field errors here? #}
+
+  <tr style="background: inherit">
+  {% for field in row %}
+    <td style="vertical-align: bottom">
+      {{ field.errors }}
+
+      {{ field.value }}
+    </td>
+  {% endfor %}
+  </tr>
+
+  {% endfor %}
+</table>
+
+{% endwith %}
+
+</div>
+{% endif %}
+
+{% if gleaned_data.valid_rows %}
+
+{% with rows=gleaned_data.valid_rows %}
+
+{% with total=rows|length %}
+<h3>{{ total }} row{{ total|pluralize }} ready to add to CALC</h3>
+
+<p>Please double-check the data below to make sure all looks right.</p>
+{% endwith %}
+
+<table>
+  <tr>
+  {% for field in rows.0 %}
+    <th style="font-weight: bold">{{ field.label }}</th>
+  {% endfor %}
+  </tr>
+  {% for row in rows %}
+  <tr>
+  {% for field in row %}
+    <td>{{ field.value }}</td>
+  {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+
+{% endwith %}
+
+{% else %}
+
+<p>
+  Your uploaded data contains no valid rows! Please fix your validation
+  errors and re-upload.
+</p>
+
+{% endif %}
+
+<a href="{% url 'data_capture:step_1' %}" class="button">Previous</a>
+
+{% if gleaned_data.valid_rows %}
+<a style="float: right" href="{% url 'data_capture:step_3' %}" class="button button-primary">Next</a>
+{% endif %}
+
+{% endblock %}

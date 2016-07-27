@@ -1,0 +1,20 @@
+{% extends 'data_capture/step.html' %}
+
+{% block subtitle %}Upload price list{% endblock %}
+
+{% block step_heading %}
+<p>Your price lists help make CALC a more robust tool. Uploading them is easy and quick. Once you upload a price list, we’ll make sure we understand your data, ask you for a few details, and send your price list to a CALC admin. The admin will check the data and publish it on CALC for all to use.</p>
+{% endblock %}
+
+{% block step_body %}
+{% include 'data_capture/step_1_form.html' %}
+
+{% if DEBUG %}
+{% load static %}
+<p style="color: gray">
+  <strong>Developers:</strong>
+  Download <a href="{% static 'data_capture/fake_schedule_example.csv' %}"><code>fake_schedule_example.csv</code></a>
+  and choose "Fake Schedule" from the drop-down to get started.
+</p>
+{% endif %}
+{% endblock %}

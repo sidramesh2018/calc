@@ -1,0 +1,31 @@
+<form enctype="multipart/form-data" method="post"
+      data-step1-form
+      action="{% url 'data_capture:step_1' %}">
+
+{% csrf_token %}
+
+{{ form.non_field_errors }}
+
+{{ form.schedule.errors }}
+
+<label for="{{ form.schedule.id_for_label }}">Which schedule is associated with this price list?</label>
+
+<p>Don't see your schedule? <a href="javascript:alert('TODO IMPLEMENT THIS')">Tell us</a> you'd like it added!</p>
+
+{{ form.schedule }}
+
+{{ form.file.errors }}
+
+<div class="upload">
+  <input type="file" name="{{ form.file.html_name }}"
+         id="{{ form.file.id_for_label }}" accept=".xlsx,.xls,.csv">
+  <div class="upload-chooser">
+    <label for="{{ form.file.id_for_label }}">Choose file</label>
+    <span class="js-only" aria-hidden="true">or drag and drop here.</span>
+    XLS, XLSX, or CSV format, please.
+  </div>
+</div>
+
+<button type="submit" style="float: right; margin-top: 2em" class="button-primary">Next</button>
+
+</form>
