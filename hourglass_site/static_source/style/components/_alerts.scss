@@ -39,9 +39,25 @@
   }
 }
 
+.alert-success {
+  background-color: $color-green-lightest;
+  border: 2px solid $color-green;
+}
+
+.alert-warning {
+  background-color: $color-gold-lightest;
+  border: 2px solid $color-gold-dark;
+}
+
 .alert-error {
   border: 2px solid $color-secondary-dark;
+
   h3 {
     color: $color-secondary-dark;
   }
+}
+
+.alert-info {
+  background-color: $color-primary-alt-lightest;
+  border: 2px solid $color-primary-alt;
 }
