@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import Mock, MagicMock, patch
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
@@ -25,6 +25,38 @@ def uploaded_xlsx_file(content=None):
     )
 
 
+class SafeCellStrValueTests(TestCase):
+    def test_cell_value_index_errors_are_ignored(self):
+        s = MagicMock()
+        s.cell_value.side_effect = IndexError()
+
+        self.assertEqual(s70.safe_cell_str_value(s, 99, 99), '')
+        self.assertEqual(s.cell_value.call_count, 1)
+
+    def test_coercer_value_errors_are_ignored(self):
+        s = MagicMock()
+        s.cell_value.return_value = 'blah'
+
+        c = Mock()
+        c.side_effect = ValueError()
+
+        self.assertEqual(s70.safe_cell_str_value(s, 99, 99, c), 'blah')
+        self.assertEqual(s.cell_value.call_count, 1)
+        self.assertEqual(c.call_count, 1)
+
+    def test_result_is_stringified(self):
+        s = MagicMock()
+        s.cell_value.return_value = 5
+
+        self.assertEqual(s70.safe_cell_str_value(s, 1, 1), '5')
+
+    def test_coercer_is_used(self):
+        s = MagicMock()
+        s.cell_value.return_value = 5.0
+
+        self.assertEqual(s70.safe_cell_str_value(s, 1, 1, int), '5')
+
+
 class GleanLaborCategoriesTests(TestCase):
     def test_rows_are_returned(self):
         rows = s70.glean_labor_categories_from_file(uploaded_xlsx_file())
@@ -32,16 +64,16 @@ class GleanLaborCategoriesTests(TestCase):
             'sin': '132-51',
             'labor_category': 'Project Manager',
             'education_level': 'Bachelors',
-            'min_years_experience': 5.0,
-            'commercial_list_price': 125.0,
+            'min_years_experience': '5',
+            'commercial_list_price': '125.0',
             'unit_of_issue': 'Hour',
             'most_favored_customer': 'All Commercial Customers',
-            'best_discount': 0.07,
-            'mfc_price': 123.99,
-            'gsa_discount': 0.1,
-            'price_excluding_iff': 110.99,
-            'price_including_iff': 115.99,
-            'volume_discount': 0.15,
+            'best_discount': '0.07',
+            'mfc_price': '123.99',
+            'gsa_discount': '0.1',
+            'price_excluding_iff': '110.99',
+            'price_including_iff': '115.99',
+            'volume_discount': '0.15',
         }])
 
     def test_validation_error_raised_when_sheet_not_present(self):

@@ -1,5 +1,5 @@
+import functools
 import logging
-from collections import OrderedDict
 from django.core.exceptions import ValidationError
 import xlrd
 
@@ -7,6 +7,23 @@ from .base import BasePriceList
 
 
 logger = logging.getLogger(__name__)
+
+
+def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
+    val = ''
+
+    try:
+        val = sheet.cell_value(rownum, colnum)
+    except IndexError:
+        pass
+
+    if coercer is not None:
+        try:
+            val = coercer(val)
+        except ValueError:
+            pass
+
+    return str(val)
 
 
 def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
@@ -40,20 +57,22 @@ def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
         if not sin.strip():
             break
 
-        cat = OrderedDict()
+        cval = functools.partial(safe_cell_str_value, sheet, rownum)
+
+        cat = {}
         cat['sin'] = sin
-        cat['labor_category'] = sheet.cell_value(rownum, 1)
-        cat['education_level'] = sheet.cell_value(rownum, 2)
-        cat['min_years_experience'] = sheet.cell_value(rownum, 3)
-        cat['commercial_list_price'] = sheet.cell_value(rownum, 4)
-        cat['unit_of_issue'] = sheet.cell_value(rownum, 5)
-        cat['most_favored_customer'] = sheet.cell_value(rownum, 6)
-        cat['best_discount'] = sheet.cell_value(rownum, 7)
-        cat['mfc_price'] = sheet.cell_value(rownum, 8)
-        cat['gsa_discount'] = sheet.cell_value(rownum, 9)
-        cat['price_excluding_iff'] = sheet.cell_value(rownum, 10)
-        cat['price_including_iff'] = sheet.cell_value(rownum, 11)
-        cat['volume_discount'] = sheet.cell_value(rownum, 12)
+        cat['labor_category'] = cval(1)
+        cat['education_level'] = cval(2)
+        cat['min_years_experience'] = cval(3, coercer=int)
+        cat['commercial_list_price'] = cval(4)
+        cat['unit_of_issue'] = cval(5)
+        cat['most_favored_customer'] = cval(6)
+        cat['best_discount'] = cval(7)
+        cat['mfc_price'] = cval(8)
+        cat['gsa_discount'] = cval(9)
+        cat['price_excluding_iff'] = cval(10)
+        cat['price_including_iff'] = cval(11)
+        cat['volume_discount'] = cval(12)
         cats.append(cat)
 
         rownum += 1
