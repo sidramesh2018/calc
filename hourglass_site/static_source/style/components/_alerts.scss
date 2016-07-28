@@ -1,6 +1,7 @@
 @import '../base/variables';
 .alert {
   padding: 1rem 6rem 1rem 2rem;
+  border-radius: $border-radius;
 
   h3 {
     font-weight: $font-weight-bold;
