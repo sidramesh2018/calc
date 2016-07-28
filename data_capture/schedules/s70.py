@@ -1,12 +1,30 @@
 import functools
 import logging
+from django import forms
 from django.core.exceptions import ValidationError
 import xlrd
 
 from .base import BasePriceList
+from contracts.management.commands.load_data import FEDERAL_MIN_CONTRACT_RATE
+
+
+# TODO: Pull choice values from contracts.models.
+EDU_LEVELS = {
+    'Associates': 'AA',
+    'Bachelors': 'BA',
+    'Masters': 'MA',
+    'Ph.D': 'PHD'
+}
 
 
 logger = logging.getLogger(__name__)
+
+
+def validate_education_level(value):
+    values = EDU_LEVELS.keys()
+    if value not in values:
+        raise ValidationError('This field must contain one of the '
+                              'following values: %s' % (', '.join(values)))
 
 
 def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
@@ -80,13 +98,71 @@ def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
     return cats
 
 
+class Schedule70Row(forms.Form):
+    sin = forms.CharField(label="SIN(s) proposed")
+    labor_category = forms.CharField(
+        label="Service proposed (e.g. job title/task)"
+    )
+    education_level = forms.CharField(
+        label="Minimum education / certification level",
+        validators=[validate_education_level]
+    )
+    min_years_experience = forms.IntegerField(
+        label="Minimum years of experience"
+    )
+    price_including_iff = forms.DecimalField(
+        label="Price offered to GSA (including IFF)"
+    )
+
+    def contract_model_education_level(self):
+        return EDU_LEVELS[self.cleaned_data['education_level']]
+
+    def contract_model_hourly_rate_year1(self):
+        return self.cleaned_data['price_including_iff']
+
+    def contract_model_current_price(self):
+        price = self.contract_model_hourly_rate_year1()
+        return price if price >= FEDERAL_MIN_CONTRACT_RATE else None
+
+
 class Schedule70PriceList(BasePriceList):
     title = 'IT Schedule 70'
+
+    def __init__(self, rows):
+        super().__init__()
+
+        self.rows = rows
+
+        for row in self.rows:
+            form = Schedule70Row(row)
+            if form.is_valid():
+                self.valid_rows.append(form)
+            else:
+                self.invalid_rows.append(form)
+
+    def add_to_price_list(self, price_list):
+        for row in self.valid_rows:
+            price_list.add_row(
+                labor_category=row.cleaned_data['labor_category'],
+                education_level=row.contract_model_education_level(),
+                min_years_experience=row.cleaned_data['min_years_experience'],
+                hourly_rate_year1=row.contract_model_hourly_rate_year1(),
+                current_price=row.contract_model_current_price(),
+                sin=row.cleaned_data['sin']
+            )
+
+    def serialize(self):
+        return self.rows
+
+    @classmethod
+    def deserialize(cls, rows):
+        return cls(rows)
 
     @classmethod
     def load_from_upload(cls, f):
         try:
-            cats = glean_labor_categories_from_file(f)
+            rows = glean_labor_categories_from_file(f)
+            return Schedule70PriceList(rows)
         except ValidationError:
             raise
         except Exception as e:

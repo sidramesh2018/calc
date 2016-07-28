@@ -1,11 +1,16 @@
+import json
+from decimal import Decimal
 from unittest.mock import Mock, MagicMock, patch
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
 
 from .common import path
-from ..schedules import s70
+from .test_models import ModelTestCase
+from ..schedules import s70, registry
 
+
+S70 = '%s.Schedule70PriceList' % s70.__name__
 
 S70_XLSX_PATH = path('static', 'data_capture', 's70_example.xlsx')
 
@@ -87,15 +92,15 @@ class GleanLaborCategoriesTests(TestCase):
             )
 
 
-class S70Tests(TestCase):
+class LoadFromUploadValidationErrorTests(TestCase):
     @patch.object(s70, 'glean_labor_categories_from_file')
-    def test_load_from_upload_reraises_validation_errors(self, m):
+    def test_reraises_validation_errors(self, m):
         m.side_effect = ValidationError('foo')
 
         with self.assertRaisesRegexp(ValidationError, r'foo'):
             s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
 
-    def test_load_from_upload_raises_validation_error_on_corrupt_files(self):
+    def test_raises_validation_error_on_corrupt_files(self):
         f = uploaded_xlsx_file(b'foo')
 
         with self.assertRaisesRegexp(
@@ -103,3 +108,64 @@ class S70Tests(TestCase):
             r'An error occurred when reading your Excel data.'
         ):
             s70.Schedule70PriceList.load_from_upload(f)
+
+
+@override_settings(DATA_CAPTURE_SCHEDULES=[S70])
+class S70Tests(ModelTestCase):
+    DEFAULT_SCHEDULE = S70
+
+    def test_valid_rows_are_populated(self):
+        p = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+
+        self.assertEqual(len(p.valid_rows), 1)
+        self.assertEqual(p.invalid_rows, [])
+
+        self.assertEqual(p.valid_rows[0].cleaned_data, {
+            'education_level': 'Bachelors',
+            'labor_category': 'Project Manager',
+            'min_years_experience': 5,
+            'price_including_iff': Decimal('115.99'),
+            'sin': '132-51'
+        })
+
+    def test_education_level_is_validated(self):
+        p = s70.Schedule70PriceList(rows=[{'education_level': 'Batchelorz'}])
+
+        self.assertRegexpMatches(
+            p.invalid_rows[0].errors['education_level'][0],
+            r'This field must contain one of the following values'
+        )
+
+    def test_min_years_experience_is_validated(self):
+        p = s70.Schedule70PriceList(rows=[{'min_years_experience': ''}])
+
+        self.assertEqual(p.invalid_rows[0].errors['min_years_experience'],
+                         ['This field is required.'])
+
+    def test_add_to_price_list_works(self):
+        s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+
+        p = self.create_price_list()
+        p.save()
+
+        s.add_to_price_list(p)
+
+        row = p.rows.all()[0]
+
+        self.assertEqual(row.labor_category, 'Project Manager')
+        self.assertEqual(row.education_level, 'BA')
+        self.assertEqual(row.min_years_experience, 5)
+        self.assertEqual(row.hourly_rate_year1, Decimal('115.99'))
+        self.assertEqual(row.current_price, Decimal('115.99'))
+        self.assertEqual(row.sin, '132-51')
+
+        row.full_clean()
+
+    def test_serialize_and_deserialize_work(self):
+        s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+
+        saved = json.dumps(registry.serialize(s))
+        restored = registry.deserialize(json.loads(saved))
+
+        self.assertTrue(isinstance(restored, s70.Schedule70PriceList))
+        self.assertEqual(s.rows, restored.rows)
