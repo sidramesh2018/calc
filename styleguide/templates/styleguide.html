@@ -22,6 +22,8 @@
     <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
   </p>
 
+  {% guide_section "Typography" %}
+
   {% guide_section "Upload Widget" %}
 
   <p>
@@ -146,6 +148,7 @@ if (upload.isDegraded) {
   <button class="button-primary">Button</button>
   <input class="button-primary" type="button" value="Input">
   <input class="button-primary" type="submit" value="Submit">
+  <button class="button-disabled">Disabled button</button>
   {% endexample %}
 
   {% guide_section "Steps Widget" %}
@@ -180,7 +183,13 @@ if (upload.isDegraded) {
 
   {% guide_section "Alerts" %}
 
-  <p>Part of <code>data_capture.min.css</code></p>
+  <p>
+    Part of <code>data_capture.min.css</code>. These are similar to the
+    <a href="https://standards.usa.gov/alerts/">US Web Design Standards</a>,
+    but add a stroke and the CALC standard border radius. We do not color the
+    background of the error alert because the red background would make it
+    difficult to examine the amount of information being displayed.
+  </p>
 
   {% example %}
   <div class="alert alert-error" role="alert">
@@ -213,12 +222,142 @@ if (upload.isDegraded) {
         </tr>
       </tbody>
     </table>
-    <button>Upload revised list</button>
+    <button class="button-primary">Upload revised list</button>
   </div>
   {% endexample %}
 
+  {% example %}
+  <div class="alert alert-success" role="alert">
+    <h3>Success alert</h3>
+    <p>Success!</p>
+  </div>
+  {% endexample %}
+
+  {% example %}
+  <div class="alert alert-warning" role="alert">
+    <h3>Warning alert</h3>
+    <p>Danger, danger, Will Robinson!</p>
+  </div>
+  {% endexample %}
+
+  {% example %}
+  <div class="alert alert-info" role="alert">
+    <h3>Info alert</h3>
+    <p>Now you have The Information!</p>
+  </div>
+  {% endexample %}
+
+  {% guide_section "Tables" %}
+  <p>There are two tables, sortable and non-sortable, both with rows that highlight on hover.</p>
+  <p>Static tables look like this:</p>
+  {% example %}
+    <table>
+      <thead>
+        <tr>
+          <th>SIN</th>
+          <th>Service proposed</th>
+          <th>Minimum education</th>
+          <th>Minimum years of experience</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>132-51</td>
+          <td>Project Manager</td>
+          <td>Bachelors</td>
+          <td>5</td>
+          <td>$115.99</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer, Associate</td>
+          <td>Bachelors</td>
+          <td>0</td>
+          <td>$37.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer I</td>
+          <td>Bachelors</td>
+          <td>3</td>
+          <td>$41.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer II</td>
+          <td>Bachelors</td>
+          <td>5</td>
+          <td>$52.03</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer III</td>
+          <td>Bachelors</td>
+          <td>7</td>
+          <td>$65.72</td>
+        </tr>
+      </tbody>
+    </table>
+  {% endexample %}
+  <p>Sortable tables are used for displaying large quantities of data and are usually sorted by default on the price column. You'll need to include <a href="https://github.com/joequery/Stupid-Table-Plugin">the Stupid Table plugin</a> for this. (The exception is on the CALC homepage, where sorting is built into the table with D3.) Sortable tables look like this:</p>
+  {% example %}
+    <table class="table-sortable">
+      <thead>
+        <tr>
+          <th data-sort="int">SIN</th>
+          <th data-sort="string">Service proposed</th>
+          <th>Minimum education</th>
+          <th data-sort="string">Minimum years of experience</th>
+          <th data-sort="float">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>132-51</td>
+          <td>Project Manager</td>
+          <td>Bachelors</td>
+          <td>5</td>
+          <td>115.99</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer, Associate</td>
+          <td>Bachelors</td>
+          <td>0</td>
+          <td>37.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer I</td>
+          <td>Bachelors</td>
+          <td>3</td>
+          <td>41.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer II</td>
+          <td>Bachelors</td>
+          <td>5</td>
+          <td>52.03</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer III</td>
+          <td>Bachelors</td>
+          <td>7</td>
+          <td>65.72</td>
+        </tr>
+      </tbody>
+    </table>
+
+    {% endexample %}
+
+  {% guide_section "Forms" %}
+
   {% endguide %}
 </div>
+<script src="{% static 'hourglass_site/js/vendor/stupidtable.min.js' %}"></script>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 <script src="{% static 'hourglass_site/js/built/data-capture/index.min.js' %}"></script>
 {% endblock %}
