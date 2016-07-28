@@ -36,6 +36,8 @@ def step_1(request):
                 request, messages.ERROR,
                 'Sorry, that file could not be processed. Try another?'
             )
+            if request.is_ajax():
+                return JsonResponse({'status': 'validation_error'})
 
     ctx = {
         'step_number': 1,

@@ -4,7 +4,11 @@
 
 {% csrf_token %}
 
-{{ form.non_field_errors }}
+{% for error in form.non_field_errors %}
+  <div class="alert alert-error">
+    <p>{{error}}</p>
+  </div>
+{% endfor %}
 
 {{ form.schedule.errors }}
 
