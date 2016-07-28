@@ -53,14 +53,14 @@ def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
     cats = []
 
     while True:
-        sin = sheet.cell_value(rownum, 0)
+        cval = functools.partial(safe_cell_str_value, sheet, rownum)
+
+        sin = cval(0)
 
         # We basically just keep going until we run into a row that
         # doesn't have a SIN.
         if not sin.strip():
             break
-
-        cval = functools.partial(safe_cell_str_value, sheet, rownum)
 
         cat = {}
         cat['sin'] = sin
