@@ -19,6 +19,8 @@ urlpatterns = patterns(
     url(r'^about/$', TemplateView.as_view(template_name='about.html'),
         name='about'),
     url(r'^api/', include('api.urls')),
+    url(r'^data-capture/',
+        include('data_capture.urls', namespace='data_capture')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^tests/$', TemplateView.as_view(template_name='tests.html')),
     url(r'^styleguide/$',

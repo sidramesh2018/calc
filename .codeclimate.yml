@@ -9,12 +9,15 @@ exclude_paths:
 - "hourglass_site/static_source/js/vendor/*"
 - "hourglass_site/static_source/style/libs/*"
 - "styleguide/static/styleguide/vendor/*"
-- "contracts/migrations/*"
+- "**/migrations/*"
 - "selenium_tests/*"
 engines:
   eslint:
     enabled: true
     channel: "eslint-2"
+    checks:
+      import/no-unresolved:
+        enabled: false
   csslint:
     enabled: true
   pep8:

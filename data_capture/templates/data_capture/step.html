@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add price data to CALC / {% block subtitle %}{% endblock %}{% endblock %}
+
+{% block head %}
+<script src="{% static 'hourglass_site/js/built/data-capture/index.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'hourglass_site/style/built/data_capture.min.css' %}">
+
+<style>
+/* TODO: Django's default form rendering uses a <ul class="errorlist">
+   for errors, and <span class="helptext"> for help text. We should either
+   style them properly, or render our own markup. The following are some
+   temporary styles to make us not look confusing, at least. */
+
+.errorlist {
+  list-style-type: none;
+  background: crimson;
+  color: white;
+  font-size: smaller;
+  padding: 1em;
+  margin: 0;
+}
+
+.errorlist li {
+  margin-bottom: 0;
+}
+
+.helptext {
+  display: block;
+  color: darkgray;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+<h1>Add price data to CALC</h1>
+
+{% block step_heading %}{% endblock %}
+
+<ol class="steps">
+  <li {% if step_number == 1 %}class="current"{% endif %}>
+    <label>Upload price list</label>
+  </li>
+  <li {% if step_number == 2 %}class="current"{% endif %}>
+    <label>Validate data</label>
+  </li>
+  <li {% if step_number == 3 %}class="current"{% endif %}>
+    <label>Contract details</label>
+  </li>
+  <li {% if step_number == 4 %}class="current"{% endif %}>
+    <label>Submit data</label>
+  </li>
+</ol>
+
+{% block step_body %}{% endblock %}
+
+</div>
+
+{% endblock %}

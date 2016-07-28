@@ -1,0 +1,29 @@
+schema_version: "1.0.0"
+name: CALC
+metadata:
+  description: >
+    The Contract Awarded Labor Category (CALC) tool helps the federal
+    contracting community make smarter, faster buying decisions by allowing
+    them to search for hourly labor rates across numerous government contracts.
+    The CALC tool is helping contracting officers move from paper-based
+    research to simple, efficient online search.
+  maintainers:
+    - james.seppi@gsa.gov
+    - atul.varma@gsa.gov
+components:
+  - ./compliance
+certifications:
+  # paths
+standards:
+  # paths
+dependencies:
+  certifications:
+    # LATO
+    - url: https://github.com/18F/GSA-Certifications
+      revision: master
+  systems:
+    # Cloud.gov
+    - url: https://github.com/18F/cg-compliance
+      revision: master
+  standards:
+    # data

@@ -1,3 +1,4 @@
+bandit>=1.0,<2.0
 dj-database-url==0.3.0
 django-click==1.2.0
 Django==1.8.14

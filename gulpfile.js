@@ -74,6 +74,8 @@ const bundles = {
   },
 };
 
+const isInDocker = ('DDM_IS_RUNNING_IN_DOCKER' in process.env);
+
 // default task
 // running `gulp` will default to watching and dist'ing files
 gulp.task('default', ['watch']);
@@ -193,17 +195,27 @@ gulp.task('js:data-capture', () =>
   )
 );
 
+gulp.task('lint', () => {
+  const opts = {};
+  if (isInDocker) {
+    opts.rules = {
+      // Until https://github.com/benmosher/eslint-plugin-import/issues/142
+      // is fixed, we need to disable the following rule for Docker support.
+      'import/no-unresolved': 0,
+    };
+  }
+
+  return gulp.src(path.join(dirs.src.scripts, paths.js))
+    .pipe(eslint(opts))
+    .pipe(eslint.format());
+});
+
 gulp.task('js:tests', () =>
   browserifyBundle(
     path.join(dirs.src.scripts, paths.testEntry),
     dirs.dest.scripts.tests,
     paths.testOutfile
   )
-);
-
-gulp.task('lint', () => gulp.src(path.join(dirs.src.scripts, paths.js))
-  .pipe(eslint())
-  .pipe(eslint.format())
 );
 
 // set up a SIGTERM handler for quick graceful exit from docker
