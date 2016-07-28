@@ -5,23 +5,15 @@ from django.core.exceptions import ValidationError
 import xlrd
 
 from .base import BasePriceList
+from contracts.models import EDUCATION_CHOICES
 from contracts.management.commands.load_data import FEDERAL_MIN_CONTRACT_RATE
-
-
-# TODO: Pull choice values from contracts.models.
-EDU_LEVELS = {
-    'Associates': 'AA',
-    'Bachelors': 'BA',
-    'Masters': 'MA',
-    'Ph.D': 'PHD'
-}
 
 
 logger = logging.getLogger(__name__)
 
 
 def validate_education_level(value):
-    values = EDU_LEVELS.keys()
+    values = [choice[1] for choice in EDUCATION_CHOICES]
     if value not in values:
         raise ValidationError('This field must contain one of the '
                               'following values: %s' % (', '.join(values)))
@@ -115,7 +107,13 @@ class Schedule70Row(forms.Form):
     )
 
     def contract_model_education_level(self):
-        return EDU_LEVELS[self.cleaned_data['education_level']]
+        for choice in EDUCATION_CHOICES:
+            if choice[1] == self.cleaned_data['education_level']:
+                return choice[0]
+
+        raise ValueError('{} is not a valid education level'.format(
+            self.cleaned_data['education_level']
+        ))
 
     def contract_model_hourly_rate_year1(self):
         return self.cleaned_data['price_including_iff']
