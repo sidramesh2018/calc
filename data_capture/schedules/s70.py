@@ -12,13 +12,6 @@ from contracts.management.commands.load_data import FEDERAL_MIN_CONTRACT_RATE
 logger = logging.getLogger(__name__)
 
 
-def validate_education_level(value):
-    values = [choice[1] for choice in EDUCATION_CHOICES]
-    if value not in values:
-        raise ValidationError('This field must contain one of the '
-                              'following values: %s' % (', '.join(values)))
-
-
 def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
     val = ''
 
@@ -97,7 +90,6 @@ class Schedule70Row(forms.Form):
     )
     education_level = forms.CharField(
         label="Minimum education / certification level",
-        validators=[validate_education_level]
     )
     min_years_experience = forms.IntegerField(
         label="Minimum years of experience"
@@ -106,14 +98,25 @@ class Schedule70Row(forms.Form):
         label="Price offered to GSA (including IFF)"
     )
 
-    def contract_model_education_level(self):
-        for choice in EDUCATION_CHOICES:
-            if choice[1] == self.cleaned_data['education_level']:
-                return choice[0]
+    def clean_education_level(self):
+        value = self.cleaned_data['education_level']
 
-        raise ValueError('{} is not a valid education level'.format(
-            self.cleaned_data['education_level']
-        ))
+        values = [choice[1] for choice in EDUCATION_CHOICES]
+
+        if value not in values:
+            raise ValidationError('This field must contain one of the '
+                                  'following values: %s' % (', '.join(values)))
+
+        return value
+
+    def contract_model_education_level(self):
+        # Note that due to the way we've cleaned education_level, this
+        # code is guaranteed to work.
+
+        return [
+            code for code, name in EDUCATION_CHOICES
+            if name == self.cleaned_data['education_level']
+        ][0]
 
     def contract_model_hourly_rate_year1(self):
         return self.cleaned_data['price_including_iff']
