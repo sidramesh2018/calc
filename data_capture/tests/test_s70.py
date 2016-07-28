@@ -162,7 +162,7 @@ class S70Tests(ModelTestCase):
 
         row.full_clean()
 
-    def test_price_is_None_when_below_min_rate(self):
+    def test_price_is_none_when_below_min_rate(self):
         price = FEDERAL_MIN_CONTRACT_RATE - 1.0
         s = s70.Schedule70PriceList(rows=[{
             'sin': '132-51',
