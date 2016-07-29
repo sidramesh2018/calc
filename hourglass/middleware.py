@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.core.exceptions import MiddlewareNotUsed
+from debug_toolbar.middleware import DebugToolbarMiddleware
 
 
 class ComplianceMiddleware:
@@ -21,3 +23,32 @@ class ComplianceMiddleware:
             response["X-XSS-Protection"] = "1; mode=block"
 
         return response
+
+
+def show_toolbar(request):
+    '''
+    Like debug_toolbar.middleware.show_toolbar, but without the
+    INTERNAL_IPS consultation, since the developer may be using
+    Docker or accessing their development instance over a mobile/tablet
+    device.
+    '''
+
+    if not settings.DEBUG:
+        raise AssertionError("I should not be used when DEBUG is False!")
+
+    if request.is_ajax():
+        return False
+
+    return True
+
+
+class DebugOnlyDebugToolbarMiddleware(DebugToolbarMiddleware):
+    '''
+    Like DebugToolbarMiddleware, but tells Django it's unused if
+    DEBUG is False.
+    '''
+
+    def __init__(self):
+        if not settings.DEBUG:
+            raise MiddlewareNotUsed()
+        super().__init__()

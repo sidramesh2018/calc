@@ -30,9 +30,12 @@ urlpatterns = patterns(
 )
 
 if settings.DEBUG:
+    import debug_toolbar
     import fake_uaa_provider.urls
 
-    urlpatterns += patterns('',
-                            url(r'^', include(fake_uaa_provider.urls,
-                                              namespace='fake_uaa_provider')),
-                            )
+    urlpatterns += patterns(
+        '',
+        url(r'^', include(fake_uaa_provider.urls,
+            namespace='fake_uaa_provider')),
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )
