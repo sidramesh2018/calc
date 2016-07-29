@@ -15,7 +15,7 @@
     top: 1px;
     margin-right: .3rem;
   }
-  @include breakpoint(medium) {
+  @include media($medium-screen) {
     text-align: left;
     #usa {
       float: left;
