@@ -7,9 +7,19 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.template.defaultfilters import pluralize
 
 from . import forms
 from .schedules import registry
+
+
+def add_generic_form_error(request, form):
+    messages.add_message(
+        request, messages.ERROR,
+        'Oops, please correct the error{} below and try again.'
+            .format(pluralize(form.errors))
+    )
 
 
 @login_required
@@ -29,6 +39,8 @@ def step_1(request):
             if request.is_ajax():
                 return JsonResponse({'redirect_url': redirect_url})
             return HttpResponseRedirect(redirect_url)
+        else:
+            add_generic_form_error(request, form)
 
     ctx = {
         'step_number': 1,
@@ -99,6 +111,8 @@ def step_3(request, gleaned_data):
             del request.session['data_capture:gleaned_data']
 
             return redirect('data_capture:step_4')
+        else:
+            add_generic_form_error(request, form)
 
     return render(request, 'data_capture/step_3.html', {
         'step_number': 3,
