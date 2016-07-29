@@ -15,7 +15,18 @@ import csv
 
 
 def convert_to_tsquery(query):
-    """ converts multi-word phrases into AND boolean queries for postgresql """
+    """
+    Converts multi-word phrases into AND boolean queries for postgresql.
+
+    Examples:
+
+        >>> convert_to_tsquery('interpretation')
+        'interpretation:*'
+
+        >>> convert_to_tsquery('interpretation services')
+        'interpretation:* & services:*'
+    """
+
     # remove all non-alphanumeric or whitespace chars
     pattern = re.compile('[^a-zA-Z\s]')
     query = pattern.sub('', query)
