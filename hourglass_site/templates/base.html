@@ -40,6 +40,7 @@
 
     <header>
       <div class="container">
+        <div class="base-header">
         <a href="{% url 'index' %}"><img class="logo" src="{% static 'hourglass_site/images/calc_logo.png' %}" alt="CALC: Contract Awarded Labor Category Tool"></a>
         <nav>
           <ul>
@@ -53,7 +54,9 @@
             {% endif %}
           </ul>
         </nav>
+        </div>
 
+{% block header_extension %}
       <div class="row">
         <div class="twelve columns">
           <h1 class="description-main">Search awarded ceiling rates for labor categories</h1>
@@ -84,6 +87,7 @@
         </div>
       </div>
 
+{% endblock %}
 
       </div>
     </header>
