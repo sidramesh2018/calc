@@ -6,6 +6,15 @@ function getForm() {
   return $('[data-step1-form]')[0];
 }
 
+function replaceForm(html) {
+  // Replace the form and bind it.
+  $(getForm()).replaceWith(html);
+
+  // Animate the new form so the user notices it.
+  // TODO: Consider using a CSS class w/ a transition or animation instead.
+  $(getForm()).hide().fadeIn();
+}
+
 function bindForm() {
   const form = getForm();
   const $upload = $('.upload', form);
@@ -50,14 +59,15 @@ function bindForm() {
       $(form).css({ opacity: 0.25, 'pointer-events': 'none' });
 
       req.done((data) => {
-        if (data.status === 'validation_error') {
-          window.location.reload();
+        if (data.form_html) {
+          replaceForm(data.form_html);
+          bindForm();
         } else if (data.redirect_url) {
           window.location = data.redirect_url;
         } else {
           // TODO: Be more user-friendly here.
           window.alert( // eslint-disable-line no-alert
-            `Invalid server response: ${JSON.stringify(data)}`
+            `Invalid server response: ${data}`
           );
         }
       });
