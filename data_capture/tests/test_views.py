@@ -118,7 +118,7 @@ class Step1Tests(StepTestCase):
         self.assertHasMessage(
             res,
             'error',
-            'Sorry, that file could not be processed. Try another?'
+            'Oops, please correct the error below and try again.'
         )
 
     def test_invalid_post_via_xhr_returns_json(self):
@@ -130,7 +130,7 @@ class Step1Tests(StepTestCase):
         self.assertHasMessage(
             res,
             'error',
-            'Sorry, that file could not be processed. Try another?'
+            'Oops, please correct the error below and try again.'
         )
 
 
@@ -226,7 +226,7 @@ class Step3Tests(StepTestCase):
         self.assertHasMessage(
             res,
             'error',
-            'Oops, please correct the errors below and resubmit.'
+            'Oops, please correct the errors below and try again.'
         )
 
 

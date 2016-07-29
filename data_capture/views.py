@@ -14,6 +14,14 @@ from . import forms
 from .schedules import registry
 
 
+def add_generic_form_error(request, form):
+    messages.add_message(
+        request, messages.ERROR,
+        'Oops, please correct the error{} below and try again.'
+            .format(pluralize(form.errors))
+    )
+
+
 @login_required
 def step_1(request):
     if request.method == 'GET':
@@ -32,10 +40,7 @@ def step_1(request):
                 return JsonResponse({'redirect_url': redirect_url})
             return HttpResponseRedirect(redirect_url)
         else:
-            messages.add_message(
-                request, messages.ERROR,
-                'Sorry, that file could not be processed. Try another?'
-            )
+            add_generic_form_error(request, form)
 
     ctx = {
         'step_number': 1,
@@ -107,11 +112,7 @@ def step_3(request, gleaned_data):
 
             return redirect('data_capture:step_4')
         else:
-            messages.add_message(
-                request, messages.ERROR,
-                'Oops, please correct the error{} below and resubmit.'
-                    .format(pluralize(form.errors))
-            )
+            add_generic_form_error(request, form)
 
     return render(request, 'data_capture/step_3.html', {
         'step_number': 3,
