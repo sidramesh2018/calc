@@ -390,8 +390,8 @@ if (upload.isDegraded) {
     });
   }
 
-  function sortFloats(){
-    $('.js-float').data('sortBy', function(th, td, tablesort) {
+  function sortFloats(floatCol){
+    $(floatCol).data('sortBy', function(th, td, tablesort) {
       return parseFloat(td.text());
     });
   }
