@@ -13,6 +13,15 @@
   left: -999em;
 }
 
+// legacy sr-only class
+.sr-only {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
 // link styles
 @mixin link ($link, $visit, $hover, $active) {
   a {
@@ -30,6 +39,12 @@
       color: $active;
     }
   }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .container {
@@ -62,13 +77,6 @@
     display: none;
 }
 
-.sr-only {
-  position: absolute !important;
-  height: 1px; width: 1px;
-  overflow: hidden;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px);
-}
 
 /* tooltips */
 .tooltips {
