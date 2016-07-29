@@ -56,15 +56,7 @@
   </li>
 </ol>
 
-{% if messages %}
-<div class="alerts">
-  {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-      <p>{{ message }}</p>
-    </div>
-  {% endfor %}
-</div>
-{% endif %}
+{% include 'data_capture/messages.html' %}
 
 {% block step_body %}{% endblock %}
 

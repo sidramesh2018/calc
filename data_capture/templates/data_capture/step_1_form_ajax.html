@@ -1,2 +1,6 @@
 
-{% include step_1_form.html %}
+{# Include alert messages here so that when this content is AJAX'd in, any #}
+{# new messages will be rendered #}
+{% include 'data_capture/messages.html' %}
+
+{% include 'data_capture/step_1_form.html' %}
