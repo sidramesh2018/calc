@@ -56,10 +56,11 @@ def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
         cval = functools.partial(safe_cell_str_value, sheet, rownum)
 
         sin = cval(0)
+        price_including_iff = cval(11)
 
         # We basically just keep going until we run into a row that
-        # doesn't have a SIN.
-        if not sin.strip():
+        # doesn't have a SIN or price including IFF.
+        if not sin.strip() and not price_including_iff.strip():
             break
 
         cat = {}
@@ -74,7 +75,7 @@ def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
         cat['mfc_price'] = cval(8)
         cat['gsa_discount'] = cval(9)
         cat['price_excluding_iff'] = cval(10)
-        cat['price_including_iff'] = cval(11)
+        cat['price_including_iff'] = price_including_iff
         cat['volume_discount'] = cval(12)
         cats.append(cat)
 
