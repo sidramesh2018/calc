@@ -1,10 +1,158 @@
 @import '../base/variables';
 
-$usa-form-width: 32rem;
+$form-width: 32rem;
+$input-max-width: 46rem;
+
+// from USWDS _inputs.scss. Excludes checkboxes and range slider.
+input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+input[type="file"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+textarea,
+select  {
+  appearance: none;
+  border: 1px solid $color-gray;
+  border-radius: 0;
+  box-sizing: border-box;
+  color: $color-base; // standardize on firefox
+  display: block;
+  font-size: $base-font-size;
+  margin: 0.2em 0;
+  max-width: $input-max-width;
+  outline: none;
+  padding: 1rem 0.7em;
+  width: 100%;
+
+  &:focus,
+  &.input-has_focus {
+    box-shadow: $focus-shadow;
+  }
+
+  &.input-has_success {
+    border: 3px solid $color-green-light;
+  }
+}
+
+.input-has_error {
+  border-left: 4px solid $color-secondary-dark;
+  margin-top: 3rem;
+  padding-bottom: 0.8rem;
+  padding-left: 1.5rem;
+  padding-top: 0.8rem;
+  position: relative;
+  right: 1.9rem;
+
+  input {
+    border: 3px solid $color-secondary-dark;
+    width: calc(100% + 1.5rem);
+  }
+
+  label {
+    margin-top: 0;
+  }
+}
+
+.input-error-label {
+  display: block;
+  font-size: $base-font-size;
+  font-weight: $font-weight-bold;
+}
+
+.input-error-message {
+  color: $color-secondary-dark;
+  display: block;
+  font-size: $base-font-size;
+  font-weight: $font-weight-bold;
+  padding-bottom: 3px;
+  padding-top: 3px;
+}
+
+label {
+  display: block;
+  margin-top: 3rem;
+  max-width: $input-max-width;
+}
+
+textarea {
+  height: 16rem;
+}
+
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  line-height: normal;
+  padding: 0.65em;
+  background-color: $color-white;
+  background-image: url('../../images/uswds/arrow-down.png');
+  background-image: url('../../images/uswds/arrow-down.svg');
+  background-position: right 1.3rem center;
+  background-repeat: no-repeat;
+  background-size: 1.3rem;
+}
+
+legend {
+  font-size: $h2-font-size;
+  font-weight: $font-weight-bold;
+}
+
+.fieldset-inputs {
+  label {
+    margin-top: 0;
+  }
+}
+
+.form-hint {
+  color: $color-gray-medium;
+  font-family: $font-family-main;
+  margin-bottom: 0;
+}
+
+.date-mm-dd-yy {
+  label {
+    margin-top: 0;
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+}
+
+.form-group-day,
+.form-group-month,
+.form-group-year {
+  clear: none;
+  float: left;
+  margin-right: 1.5rem;
+  width: 5rem;
+}
+
+.form-group-year {
+  width: 7rem;
+}
+
+//from USWDS _forms.scss
 
 form {
   @include media($medium-screen) {
-    max-width: $usa-form-width;
+    max-width: $form-width;
   }
 
   a {
@@ -31,7 +179,7 @@ form {
 
 .form-note {
   float: right;
-  font-family: $font-sans;
+  font-family: $font-family-main;
   font-size: $h5-font-size;
   margin: 0 0 1.5rem;
 
