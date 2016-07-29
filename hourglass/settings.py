@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'debug_toolbar',
 
     'hourglass_site',
 
@@ -69,6 +70,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'hourglass.middleware.DebugOnlyDebugToolbarMiddleware',
     'hourglass.middleware.ComplianceMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -240,3 +242,9 @@ if not UAA_CLIENT_SECRET:
         UAA_AUTH_URL = UAA_TOKEN_URL = 'fake:'
     else:
         raise Exception('UAA_CLIENT_SECRET must be defined in production.')
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': 'hourglass.middleware.show_toolbar',
+}
