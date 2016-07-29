@@ -300,7 +300,7 @@ if (upload.isDegraded) {
       </tbody>
     </table>
   {% endexample %}
-  <p>Sortable tables are used for displaying large quantities of data and are usually sorted by default on the price column. We use <a href="https://www.npmjs.com/package/jquery-tablesort">jQuery Tablesort</a> for this. (The exception is on the CALC homepage, where sorting is built into the table with D3.) Sortable tables look like this:</p>
+  <p>Sortable tables are used for displaying large quantities of data and are usually sorted by default on the price column. <strong>Make sure to include the correct classes on columns containing numbers, or they will be sorted as strings.</strong> We use <a href="https://www.npmjs.com/package/jquery-tablesort">jQuery Tablesort</a> for this. (The exception is on the CALC homepage, where sorting is built into the table with D3.) Sortable tables look like this:</p>
   {% example %}
     <table class="table-sortable">
       <thead>
@@ -308,8 +308,8 @@ if (upload.isDegraded) {
           <th class="sortable">SIN</th>
           <th class="sortable">Service proposed</th>
           <th class="no-sort">Minimum education</th>
-          <th class="sortable js-int js-default-sort">Minimum years of experience</th>
-          <th class="sortable sorted js-float">Price</th>
+          <th class="sortable js-int">Minimum years of experience</th>
+          <th class="sortable sorted js-float js-default-sort">Price</th>
         </tr>
       </thead>
       <tbody>
