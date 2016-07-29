@@ -4,6 +4,10 @@
 
 {% csrf_token %}
 
+{% if request.is_ajax %}
+{% include 'data_capture/messages.html' %}
+{% endif %}
+
 {{ form.non_field_errors }}
 
 {{ form.schedule.errors }}
