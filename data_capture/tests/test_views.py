@@ -40,6 +40,13 @@ class StepTestCase(TestCase):
             'http://testserver/auth/login?next=%s' % url
         )
 
+    def assertHasMessage(self, res, tag, content):
+        msgs = list(res.context['messages'])
+        self.assertEqual(len(msgs), 1)
+        m = msgs[0]
+        self.assertEqual(m.tags, tag)
+        self.assertEqual(str(m), content)
+
 
 class Step1Tests(StepTestCase):
     url = '/data-capture/step/1'
@@ -108,6 +115,11 @@ class Step1Tests(StepTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertContains(res, r'<!DOCTYPE html>')
         self.assertContains(res, r'This field is required')
+        self.assertHasMessage(
+            res,
+            'error',
+            'Sorry, that file could not be processed. Try another?'
+        )
 
     def test_invalid_post_via_xhr_returns_json(self):
         self.login()
@@ -115,6 +127,11 @@ class Step1Tests(StepTestCase):
         assert '<!DOCTYPE html>' not in json_data['form_html']
         self.assertRegexpMatches(json_data['form_html'],
                                  r'This field is required')
+        self.assertHasMessage(
+            res,
+            'error',
+            'Sorry, that file could not be processed. Try another?'
+        )
 
 
 class Step2Tests(StepTestCase):
@@ -206,6 +223,11 @@ class Step3Tests(StepTestCase):
         res = self.client.post(self.url, {})
         self.assertEqual(res.status_code, 200)
         self.assertContains(res, 'This field is required')
+        self.assertHasMessage(
+            res,
+            'error',
+            'Oops, please correct the errors below and resubmit.'
+        )
 
 
 class Step4Tests(StepTestCase):
