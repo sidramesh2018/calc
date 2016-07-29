@@ -300,16 +300,16 @@ if (upload.isDegraded) {
       </tbody>
     </table>
   {% endexample %}
-  <p>Sortable tables are used for displaying large quantities of data and are usually sorted by default on the price column. You'll need to include <a href="https://github.com/joequery/Stupid-Table-Plugin">the Stupid Table plugin</a> for this. (The exception is on the CALC homepage, where sorting is built into the table with D3.) Sortable tables look like this:</p>
+  <p>Sortable tables are used for displaying large quantities of data and are usually sorted by default on the price column. We use <a href="https://www.npmjs.com/package/jquery-tablesort">jQuery Tablesort</a> for this. (The exception is on the CALC homepage, where sorting is built into the table with D3.) Sortable tables look like this:</p>
   {% example %}
     <table class="table-sortable">
       <thead>
         <tr>
-          <th data-sort="int">SIN</th>
-          <th data-sort="string">Service proposed</th>
-          <th>Minimum education</th>
-          <th data-sort="string">Minimum years of experience</th>
-          <th data-sort="float">Price</th>
+          <th class="sortable">SIN</th>
+          <th class="sortable">Service proposed</th>
+          <th class="no-sort">Minimum education</th>
+          <th class="sortable js-int js-default-sort">Minimum years of experience</th>
+          <th class="sortable sorted js-float">Price</th>
         </tr>
       </thead>
       <tbody>
@@ -359,4 +359,42 @@ if (upload.isDegraded) {
 </div>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 <script src="{% static 'hourglass_site/js/built/data-capture/index.min.js' %}"></script>
+<script>
+  //TODO: Figure out where this should actually live
+  var $ = jQuery;
+  var sortableTables = document.querySelectorAll('.table-sortable');
+
+  for (var table of sortableTables) {
+    $(table).tablesort();
+
+    // Floats should be sorted as numbers, not strings
+    [].forEach.call(table.getElementsByClassName('js-float'), function(el) {
+      sortFloats(this);
+    });
+
+    // Don't sort ints as strings, either
+    [].forEach.call(table.getElementsByClassName('js-int'), function(el) {
+      sortInts(this);
+    });
+
+    // Sort by default column, if present
+    [].forEach.call(table.getElementsByClassName('js-default-sort'), function(el) {
+      $(table).data('tablesort').sort($('.js-default-sort'));
+    });
+
+  }
+
+  function sortInts(intCol) {
+    $(intCol).data('sortBy', function(th, td, tablesort) {
+      return parseInt(td.text());
+    });
+  }
+
+  function sortFloats(){
+    $('.js-float').data('sortBy', function(th, td, tablesort) {
+      return parseFloat(td.text());
+    });
+  }
+
+</script>
 {% endblock %}
