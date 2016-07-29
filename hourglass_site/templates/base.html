@@ -41,19 +41,19 @@
     <header>
       <div class="container">
         <div class="base-header">
-        <a href="{% url 'index' %}"><img class="logo" src="{% static 'hourglass_site/images/calc_logo.png' %}" alt="CALC: Contract Awarded Labor Category Tool"></a>
-        <nav>
-          <ul>
-            <li><a href="{% url 'about' %}">About this tool</a></li>
-            {% if user.is_authenticated %}
-              <li><a href="{% url 'data_capture:step_1' %}">Add price data</a></li>
-              {% if user.is_staff %}
-              <li><a href="{% url 'admin:index' %}">Site administration</a></li>
+          <a href="{% url 'index' %}"><img class="logo" src="{% static 'hourglass_site/images/calc_logo.png' %}" alt="CALC: Contract Awarded Labor Category Tool"></a>
+          <nav>
+            <ul>
+              <li><a href="{% url 'about' %}">About this tool</a></li>
+              {% if user.is_authenticated %}
+                <li><a href="{% url 'data_capture:step_1' %}">Add price data</a></li>
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin:index' %}">Site administration</a></li>
+                {% endif %}
+                <li><a href="{% url 'uaa_client:logout' %}">Log out {{ user.email }}</a></li>
               {% endif %}
-              <li><a href="{% url 'uaa_client:logout' %}">Log out {{ user.email }}</a></li>
-            {% endif %}
-          </ul>
-        </nav>
+            </ul>
+          </nav>
         </div>
 
 {% block header_extension %}
