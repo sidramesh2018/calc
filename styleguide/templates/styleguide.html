@@ -178,6 +178,27 @@ if (upload.isDegraded) {
   </ol>
   {% endexample %}
 
+  {% guide_section "Form Button Row" %}
+
+  <p>Part of <code>data_capture.min.css</code></p>
+
+  <p>The form-button-row widget is used to add common buttons to the bottom of forms in a multi-step process, such as the Data Capture Upload flow.</p>
+
+  {% example %}
+  <div class="form-button-row clearfix">
+    <a href="#" class="button button-previous">Previous</a>
+
+    <a href="#" class="button button-cancel">Cancel</a>
+
+    <div class="submit-group">
+      <span class="submit-label">
+        Provide details about the contract.
+      </span>
+      <button type="submit" class="button button-primary">Next</button>
+    </div>
+  </div>
+  {% endexample %}
+
   {% guide_section "Alerts" %}
 
   <p>Part of <code>data_capture.min.css</code></p>

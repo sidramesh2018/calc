@@ -1,0 +1,28 @@
+
+.form-button-row {
+  position: relative;
+  margin-top: 2em;
+
+  .button {
+    margin-right: 2em;
+  }
+
+  .submit-group {
+    float: right;
+
+    button, .button {
+      float: right;
+      margin-right: 0;
+    }
+  }
+
+  .submit-label {
+    display: inline-block;
+    height: 38px;
+    color: $dark-gray;
+    text-align: right;
+    margin-right: 1em;
+    max-width: 160px;
+    font-size: smaller;
+  }
+}
