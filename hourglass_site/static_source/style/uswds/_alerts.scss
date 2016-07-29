@@ -1,4 +1,5 @@
 @import '../base/variables';
+// This has been heavily modified from the original. It should probably be restored and any modifications made in a file in the components directory.
 .alert {
   padding: 1rem 6rem 1rem 2rem;
   border-radius: $border-radius;
@@ -42,16 +43,16 @@
 
 .alert-success {
   background-color: $color-green-lightest;
-  border: 2px solid $color-green;
+  border: 2px solid $color-green; //borders added for consistency with error style
 }
 
 .alert-warning {
   background-color: $color-gold-lightest;
-  border: 2px solid $color-gold;
+  border: 2px solid $color-gold; //borders added for consistency with error style
 }
 
 .alert-error {
-  border: 2px solid $color-secondary-dark;
+  border: 2px solid $color-secondary-dark; //error alerts have only borders, no background color
 
   h3 {
     color: $color-secondary-dark;
@@ -60,5 +61,5 @@
 
 .alert-info {
   background-color: $color-primary-alt-lightest;
-  border: 2px solid $color-primary-alt;
+  border: 2px solid $color-primary-alt; //borders added for consistency with error style
 }
