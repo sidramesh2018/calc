@@ -46,7 +46,7 @@ def step_1(request):
     if request.is_ajax():
         return JsonResponse({
             'form_html': render_to_string(
-                'data_capture/step_1_form.html',
+                'data_capture/step_1_form_ajax.html',
                 RequestContext(request, ctx)
             )
         })
