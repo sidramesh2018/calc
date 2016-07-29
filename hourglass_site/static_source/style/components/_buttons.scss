@@ -1,12 +1,17 @@
 @import '../base/variables.scss';
-
+@import '../uswds/_buttons.scss';
+// Need to override Skeleton's default button styling
 .button.button-primary,
 button.button-primary,
 input.button-primary[type="submit"],
 input.button-primary[type="reset"],
 input.button-primary[type="button"] {
   background-color: $color-primary;
-  border-color: $color-primary;
+  border: 0;
+  //necessary here to override Skeleton's input width
+  @include media($small-screen) {
+    width: auto;
+  }
 
   &:hover,
   &.button-hover {
@@ -27,21 +32,37 @@ input.button-primary[type="button"] {
   }
 }
 
-[type="submit"]:disabled,
-.button-disabled {
-  background-color: $color-gray-lighter;
-  color: $color-gray-dark;
-  cursor: default;
+// More Skeleton overrides
+.button.button-secondary,
+button.button-secondary,
+input.button-secondary[type="submit"],
+input.button-secondary[type="reset"],
+input.button-secondary[type="button"] {
   border: 0;
 
   &:hover,
-  &.button-hover,
-  &:active,
-  &.button-active,
-  &:focus  {
-    background-color: $color-gray-lighter;
-    border: 0;
-    box-shadow: none;
-    color: $color-gray-dark;
+  &.button-hover {
+    background-color: $color-secondary-dark;
+    border-color: $color-secondary-dark;
   }
+
+  &:focus,
+  &.button-focus {
+    background-color: $color-secondary-dark;
+    border-color: $color-secondary-dark;
+    box-shadow: $focus-shadow;
+  }
+
+  &:active,
+  &.button-active {
+    background-color: $color-secondary-darkest;
+  }
+}
+
+.button-gray,
+.button-gray:hover,
+.button-gray:active,
+.button-gray:focus {
+  color: $color-white;
+  border: 0;
 }
