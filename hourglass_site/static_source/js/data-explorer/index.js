@@ -128,7 +128,7 @@
         // save inputted search terms for display later
         searchTerms = term;
 
-        terms = hourglass.getLastCommaSeparatedTerm(term);
+        term = hourglass.getLastCommaSeparatedTerm(term);
 
         if (autoCompReq) {autoCompReq.abort();}
         var data = form.getData();
