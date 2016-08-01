@@ -73,18 +73,22 @@
 {% endwith %}
 
 <table>
-  <tr>
-  {% for field in rows.0 %}
-    <th style="font-weight: bold">{{ field.label }}</th>
-  {% endfor %}
-  </tr>
+  <thead>
+    <tr>
+    {% for field in rows.0 %}
+      <th>{{ field.label }}</th>
+    {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
   {% for row in rows %}
-  <tr>
-  {% for field in row %}
-    <td>{{ field.value }}</td>
+    <tr>
+    {% for field in row %}
+      <td>{{ field.value }}</td>
+    {% endfor %}
+    </tr>
   {% endfor %}
-  </tr>
-  {% endfor %}
+  </tbody>
 </table>
 
 {% endwith %}
