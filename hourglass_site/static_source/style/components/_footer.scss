@@ -1,8 +1,8 @@
 @import '../base/variables';
 
 footer {
-  color: $white;
-  background: $off-black;
+  color: $color-white;
+  background: $color-gray-dark;
   padding: 2rem 0;
   line-height: 1.4;
   font-weight: 300;
@@ -12,11 +12,11 @@ footer {
 
   a,
   a:hover {
-    color: $white;
+    color: $color-white;
   }
 
   h3 {
-    color: $yellow;
+    color: $color-gold-light;
     font-size: 3rem;
     letter-spacing: 0;
     font-weight: 600;
@@ -26,15 +26,15 @@ footer {
 
 #footer_nav {
   padding-top: 15px;
-  color: $white;
+  color: $color-white;
   list-style-type: none;
   float: left;
   a {
-    color: $white;
+    color: $color-white;
     list-style-type: none;
   }
   ul {
-    color: $white;
+    color: $color-white;
     list-style-type: none;
     font-weight: 300;
     padding-left: 0;
@@ -43,7 +43,7 @@ footer {
 
 .email_us {
     margin-top: 15px;
-    color: $light-gray;
+    color: $color-gray-lighter;
     font-size: 1.5em;
  }
 

@@ -22,6 +22,8 @@
     <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
   </p>
 
+  {% guide_section "Typography" %}
+
   {% guide_section "Upload Widget" %}
 
   <p>
@@ -133,19 +135,27 @@ if (upload.isDegraded) {
     to the <code>&lt;input&gt;</code> element either.
   </p>
 
-  {% guide_section "Primary Buttons" %}
+  {% guide_section "Buttons" %}
 
   <p>
-    The color of primary buttons matches the
-    <a href="https://standards.usa.gov/visual-style/#palette">primary colors</a>
-    of the USWDS.
+    Unless otherwise specified buttons take after Skeleton's default, which is
+    white with a gray border and uppercase text. The color of primary, secondary,
+    disabled and gray buttons matches the
+    <a href="https://standards.usa.gov/buttons/">primary colors</a>
+    of the USWDS. Use primary buttons to indicate primary actions, default to
+    indicate less important actions, and secondary to indicate actions such as
+    cancelling a process or deleting information.
   </p>
 
   {% example %}
+  <button>Default button</button>
   <a class="button button-primary" href="#">Link</a>
   <button class="button-primary">Button</button>
   <input class="button-primary" type="button" value="Input">
   <input class="button-primary" type="submit" value="Submit">
+  <button class="button-disabled">Disabled button</button>
+  <button class="button-secondary">Secondary button</button>
+  <button class="button-gray">Gray button</button>
   {% endexample %}
 
   {% guide_section "Steps Widget" %}
@@ -201,7 +211,13 @@ if (upload.isDegraded) {
 
   {% guide_section "Alerts" %}
 
-  <p>Part of <code>data_capture.min.css</code></p>
+  <p>
+    Part of <code>data_capture.min.css</code>. These are similar to the
+    <a href="https://standards.usa.gov/alerts/">US Web Design Standards</a>,
+    but add a stroke and the CALC standard border radius. We do not color the
+    background of the error alert because the red background would make it
+    difficult to examine the amount of information being displayed.
+  </p>
 
   {% example %}
   <div class="alert alert-error" role="alert">
@@ -234,8 +250,187 @@ if (upload.isDegraded) {
         </tr>
       </tbody>
     </table>
-    <button>Upload revised list</button>
+    <button class="button-primary">Upload revised list</button>
   </div>
+  {% endexample %}
+
+  {% example %}
+  <div class="alert alert-success" role="alert">
+    <h3>Success alert</h3>
+    <p>Success!</p>
+  </div>
+  {% endexample %}
+
+  {% example %}
+  <div class="alert alert-warning" role="alert">
+    <h3>Warning alert</h3>
+    <p>Danger, danger, Will Robinson!</p>
+  </div>
+  {% endexample %}
+
+  {% example %}
+  <div class="alert alert-info" role="alert">
+    <h3>Info alert</h3>
+    <p>Now you have The Information!</p>
+  </div>
+  {% endexample %}
+
+  {% guide_section "Tables" %}
+  <p>There are two tables, sortable and non-sortable, both with rows that highlight on hover.</p>
+  <p>Static tables look like this:</p>
+  {% example %}
+    <table>
+      <thead>
+        <tr>
+          <th>SIN</th>
+          <th>Service proposed</th>
+          <th>Minimum education</th>
+          <th>Minimum years of experience</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>132-51</td>
+          <td>Project Manager</td>
+          <td>Bachelors</td>
+          <td>5</td>
+          <td>$115.99</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer, Associate</td>
+          <td>Bachelors</td>
+          <td>0</td>
+          <td>$37.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer I</td>
+          <td>Bachelors</td>
+          <td>3</td>
+          <td>$41.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer II</td>
+          <td>Bachelors</td>
+          <td>5</td>
+          <td>$52.03</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer III</td>
+          <td>Bachelors</td>
+          <td>7</td>
+          <td>$65.72</td>
+        </tr>
+      </tbody>
+    </table>
+  {% endexample %}
+  <p>Sortable tables are used for displaying large quantities of data and are usually sorted by default on the price column. <strong>Make sure to include the correct classes on columns containing numbers, or they will be sorted as strings.</strong> We use <a href="https://www.npmjs.com/package/jquery-tablesort">jQuery Tablesort</a> for this. (The exception is on the CALC homepage, where sorting is built into the table with D3.) Sortable tables look like this:</p>
+  {% example %}
+    <table class="table-sortable">
+      <thead>
+        <tr>
+          <th class="sortable">SIN</th>
+          <th class="sortable">Service proposed</th>
+          <th class="no-sort">Minimum education</th>
+          <th class="sortable js-int">Minimum years of experience</th>
+          <th class="sortable sorted js-float js-default-sort">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>132-51</td>
+          <td>Project Manager</td>
+          <td>Bachelors</td>
+          <td>5</td>
+          <td>115.99</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer, Associate</td>
+          <td>Bachelors</td>
+          <td>0</td>
+          <td>37.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer I</td>
+          <td>Bachelors</td>
+          <td>3</td>
+          <td>41.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer II</td>
+          <td>Bachelors</td>
+          <td>5</td>
+          <td>52.03</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer III</td>
+          <td>Bachelors</td>
+          <td>7</td>
+          <td>65.72</td>
+        </tr>
+      </tbody>
+    </table>
+
+    {% endexample %}
+
+  {% guide_section "Forms" %}
+  {% example %}
+  <label for="input-type-text">Text input label</label>
+  <input id="input-type-text" name="input-type-text" type="text">
+
+  <label for="input-has_focus">Text input focused</label>
+  <input class="input-focus" id="input-focus" name="input-focus" type="text">
+
+  <div class="input-has_error">
+    <label class="input-error-label" for="input-error">Text input error</label>
+    <span class="input-error-message" id="input-error-message" role="alert">Helpful error message</span>
+    <input id="input-error" name="input-error" type="text" aria-describedby="input-error-message">
+  </div>
+
+  <label for="input-has_success">Text input success</label>
+  <input class="input-has_success" id="input-success" name="input-success" type="text">
+
+  <label for="input-type-textarea">Text area label</label>
+  <textarea id="input-type-textarea" name="input-type-textarea"></textarea>
+  {% endexample %}
+
+  {% example %}
+  <label for="options">Dropdown label</label>
+  <select name="options" id="options">
+    <option value="value1">Option A</option>
+    <option value="value2">Option B</option>
+    <option value="value3">Option C</option>
+  </select>
+  {% endexample %}
+
+  {% example %}
+  <fieldset>
+    <legend>Date of birth</legend>
+    <span class="form-hint" id="dobHint">For example: 04 28 1986</span>
+
+    <div class="date-mm-dd-yy">
+      <div class="form-group form-group-month">
+        <label for="date_of_birth_1">Month</label>
+        <input class="input-inline" aria-describedby="dobHint" id="date_of_birth_1" name="date_of_birth_1" pattern="0?[1-9]|1[012]" type="number" min="1" max="12" value="">
+      </div>
+      <div class="form-group form-group-day">
+        <label for="date_of_birth_2">Day</label>
+        <input class="input-inline" aria-describedby="dobHint" id="date_of_birth_2" name="date_of_birth_2" pattern="0?[1-9]|1[0-9]|2[0-9]|3[01]" type="number" min="1" max="31" value="">
+      </div>
+      <div class="form-group form-group-year">
+        <label for="date_of_birth_3">Year</label>
+        <input class="input-inline" aria-describedby="dobHint" id="date_of_birth_3" name="date_of_birth_3" pattern="[0-9]{4}" type="number" min="1900" max="2000" value="">
+      </div>
+    </div>
+  </fieldset>
   {% endexample %}
 
   {% endguide %}

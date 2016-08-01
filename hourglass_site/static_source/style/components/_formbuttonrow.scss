@@ -1,3 +1,4 @@
+@import '../base/variables';
 
 .form-button-row {
   position: relative;
@@ -23,6 +24,6 @@
     text-align: right;
     margin-right: 1em;
     max-width: 160px;
-    font-size: smaller;
+    font-size: $small-font-size;
   }
 }

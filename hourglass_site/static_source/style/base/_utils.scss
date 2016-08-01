@@ -1,4 +1,39 @@
 @import 'variables';
+@import '../uswds/utilities';
+
+// legacy sr-only class
+.sr-only {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+// link styles
+@mixin link ($link, $visit, $hover, $active) {
+  a {
+    color: $link;
+
+    &:visited {
+      color: $visit;
+    }
+
+    &:hover {
+      color: $hover;
+    }
+
+    &:active {
+      color: $active;
+    }
+  }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 
 .container {
   width: 100%;
@@ -30,13 +65,6 @@
     display: none;
 }
 
-.sr-only {
-  position: absolute !important;
-  height: 1px; width: 1px;
-  overflow: hidden;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px);
-}
 
 /* tooltips */
 .tooltips {
@@ -45,8 +73,8 @@
   span {
     position: absolute;
     width:140px;
-    color: $white;
-    background: #000000;
+    color: $color-white;
+    background: i$color-black;
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -59,7 +87,7 @@
       left: 50%;
       margin-left: -8px;
       width: 0; height: 0;
-      border-top: 8px solid #000000;
+      border-top: 8px solid $color-black;
       border-right: 8px solid transparent;
       border-left: 8px solid transparent;
     }
@@ -79,5 +107,5 @@ th:hover.tooltips span {
  * no-UI overrides
  **/
 .noUi-connect {
-  background: $blue;
+  background: $color-primary;
 }

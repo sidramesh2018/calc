@@ -1,17 +1,15 @@
 @import '../base/variables';
 ol.steps {
   counter-reset: li;
-
   font-weight: 300;
   padding: 0;
   list-style-type: none;
   list-style-position: inside;
   display: flex;
+
   li {
     list-style: none;
-    font-family: 'Lato';
-
-    border-top: 3px solid $blue;
+    border-top: 3px solid $color-primary;
     padding-top: 20px;
     flex-grow: 1;
     position: relative;
@@ -25,21 +23,24 @@ ol.steps {
       position: absolute;
       top: -15px;
       left: 0px;
-      background-color: $blue;
-      color: $white;
+      background-color: $color-primary;
+      color: $color-white;
       border-radius: 30px;
-      border: 3px solid $blue;
+      border: 3px solid $color-primary;
       text-align: center;
       font-size: 80%;
       font-weight: 700;
     }
-    &.current ~ li:before {
-      background-color: $white;
-      color: $blue;
+
+    &.current ~ li::before {
+      background-color: $color-white;
+      color: $color-primary;
     }
+
     &:last-child {
-      border: none;
+      border: 0;
     }
+
     label {
       font-weight: 100;
     }
