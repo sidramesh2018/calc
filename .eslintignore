@@ -6,6 +6,6 @@ hourglass_site/static/hourglass_site/js/built
 hourglass_site/static/hourglass_site/tests
 
 # Ignoring legacy (CALC 1.0) JS files for now
-hourglass_site/static_source/js/common/hourglass.js
-hourglass_site/static_source/js/data-explorer/index.js
+static_source/js/common/hourglass.js
+static_source/js/data-explorer/index.js
 hourglass_site/static/hourglass_site/js/hourglass_tests.js

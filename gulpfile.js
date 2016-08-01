@@ -20,8 +20,8 @@ const del = require('del');
 
 const dirs = {
   src: {
-    style: 'hourglass_site/static_source/style/',
-    scripts: 'hourglass_site/static_source/js/',
+    style: 'static_source/style/',
+    scripts: 'static_source/js/',
   },
   dest: {
     style: {
