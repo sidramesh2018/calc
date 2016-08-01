@@ -43,7 +43,7 @@ From there, you're just a hop, skip and a jump away from your own dev server:
 ```
 
 In another terminal, you will also need to run `gulp` to watch and rebuild static assets.
-All the static assets (SASS for CSS and ES6 JavaScript) are located in the [static_source](static_source/) directory. Outputs from the gulp build are placed in various destinations within [hourglass_site/static/hourglass_site/](hourglass_site/static/hourglass_site). Examine [gulpfile.js](gulpfile.js) for details into our gulp asset pipeline.
+All the static assets (SASS for CSS and ES6 JavaScript) are located in the [static_source](static_source/) directory. Outputs from the gulp build are placed in various destinations within [hourglass_site/static/hourglass_site/](hourglass_site/static/hourglass_site). Examine [gulpfile.js](gulpfile.js) for details of our gulp asset pipeline.
 
 Note that if you are using our [Docker setup](#using-docker-optional), running gulp will be handled for you.
 
