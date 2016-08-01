@@ -416,42 +416,4 @@ if (upload.isDegraded) {
 </div>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 <script src="{% static 'hourglass_site/js/built/data-capture/index.min.js' %}"></script>
-<script>
-  //TODO: Figure out where this should actually live
-  var $ = jQuery;
-  var sortableTables = document.querySelectorAll('.table-sortable');
-
-  for (var table of sortableTables) {
-    $(table).tablesort();
-
-    // Floats should be sorted as numbers, not strings
-    [].forEach.call(table.getElementsByClassName('js-float'), function(el) {
-      sortFloats(this);
-    });
-
-    // Don't sort ints as strings, either
-    [].forEach.call(table.getElementsByClassName('js-int'), function(el) {
-      sortInts(this);
-    });
-
-    // Sort by default column, if present
-    [].forEach.call(table.getElementsByClassName('js-default-sort'), function(el) {
-      $(table).data('tablesort').sort($('.js-default-sort'));
-    });
-
-  }
-
-  function sortInts(intCol) {
-    $(intCol).data('sortBy', function(th, td, tablesort) {
-      return parseInt(td.text());
-    });
-  }
-
-  function sortFloats(floatCol){
-    $(floatCol).data('sortBy', function(th, td, tablesort) {
-      return parseFloat(td.text());
-    });
-  }
-
-</script>
 {% endblock %}
