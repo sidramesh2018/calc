@@ -33,6 +33,9 @@
 </style>
 {% endblock %}
 
+{# Eliminate the header extension so we have a "slim" header. #}
+{% block header_extension %}{% endblock %}
+
 {% block body %}
 
 <div class="container">
@@ -55,6 +58,8 @@
     <label>Submit data</label>
   </li>
 </ol>
+
+{% include 'data_capture/messages.html' %}
 
 {% block step_body %}{% endblock %}
 

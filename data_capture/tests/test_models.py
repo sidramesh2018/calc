@@ -8,8 +8,27 @@ from ..models import SubmittedPriceList, SubmittedPriceListRow
 from .common import FAKE_SCHEDULE
 
 
+class ModelTestCase(TestCase):
+    DEFAULT_SCHEDULE = FAKE_SCHEDULE
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='foo')
+        registry._init()
+
+    def create_price_list(self, **kwargs):
+        final_kwargs = dict(
+            submitter=self.user,
+            is_small_business=False,
+            contract_number='GS-123-4567',
+            vendor_name='UltraCorp',
+            schedule=self.DEFAULT_SCHEDULE
+        )
+        final_kwargs.update(kwargs)
+        return SubmittedPriceList(**final_kwargs)
+
+
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
-class ModelsTests(TestCase):
+class ModelsTests(ModelTestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='foo')
         registry._init()

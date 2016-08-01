@@ -98,10 +98,19 @@
 
 {% endif %}
 
-<a href="{% url 'data_capture:step_1' %}" class="button">Previous</a>
+<div class="form-button-row clearfix">
+  <a href="{% url 'data_capture:step_1' %}" class="button button-previous">Previous</a>
 
-{% if gleaned_data.valid_rows %}
-<a style="float: right" href="{% url 'data_capture:step_3' %}" class="button button-primary">Next</a>
-{% endif %}
+  <a href="{% url 'index' %}" class="button button-cancel">Cancel</a>
+
+  {% if gleaned_data.valid_rows %}
+  <div class="submit-group">
+    <span class="submit-label">
+      Provide details about the contract.
+    </span>
+    <a href="{% url 'data_capture:step_3' %}" class="button button-primary">Next</a>
+  </div>
+  {% endif %}
+</div>
 
 {% endblock %}

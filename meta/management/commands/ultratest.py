@@ -2,6 +2,7 @@ import sys
 import tempfile
 import subprocess
 import djclick as click
+import xml.etree.ElementTree as etree
 
 from docker_django_management import IS_RUNNING_IN_DOCKER
 
@@ -54,6 +55,20 @@ def print_with_rainbow_colors(ascii_art):
     print(RESET_COLORS)
 
 
+def get_coverage():
+    COVERAGE_FILE = 'coverage.xml'
+
+    try:
+        tree = etree.parse(COVERAGE_FILE)
+        root = tree.getroot()
+        package = root.find('packages/package')
+        return float(package.attrib['branch-rate'])
+    except Exception as e:
+        return None
+
+    return None
+
+
 @click.command()
 @click.pass_verbosity
 @click.option('--lintonly', help='Run linters only (no tests)', is_flag=True)
@@ -61,8 +76,12 @@ def command(verbosity, lintonly):
     '''
     Management command to test and lint everything
     '''
+    is_verbose = verbosity > 1
 
     ESLINT_CMD = 'npm run failable-eslint'
+    PYTEST_CMD = 'py.test --cov-report xml {} --cov'.format(
+        ('--cov-report term' if is_verbose else '')
+    )
 
     if IS_RUNNING_IN_DOCKER:
         # Until https://github.com/benmosher/eslint-plugin-import/issues/142
@@ -88,7 +107,7 @@ def command(verbosity, lintonly):
         },
         {
             'name': 'py.test',
-            'cmd': 'py.test'
+            'cmd': PYTEST_CMD
         },
     ]
 
@@ -99,12 +118,12 @@ def command(verbosity, lintonly):
             return
         click.secho(msg, **kwargs)
 
-    is_verbose = verbosity > 1
-
     if lintonly:
         echo('Running linters only', 1)
     else:
         echo('Running ALL THE TESTS', 1)
+        # get coverage from the last run, before it is overwritten
+        coverage_before = get_coverage()
 
     to_run = linters
     if not lintonly:
@@ -151,5 +170,18 @@ def command(verbosity, lintonly):
     if len(failures) > 0:
         echo('Failing tests: {}'.format(', '.join(failures)), 0)
         exit_code = 1
+
+    if not lintonly:
+        coverage_after = get_coverage()
+        echo('Coverage: {:.2%}'.format(coverage_after), 1,
+             nl=(not coverage_before))
+        if coverage_before:
+            diff = coverage_after - coverage_before
+            if diff < 0:
+                echo(' ({:.2%} from last run)'.format(diff), 1, fg='red')
+            elif diff > 0:
+                echo(' (+{:.2%} from last run)'.format(diff), 1, fg='green')
+            else:
+                echo(' (same as last run)', 1)
 
     sys.exit(exit_code)

@@ -128,9 +128,7 @@
         // save inputted search terms for display later
         searchTerms = term;
 
-        // search only last comma separated term
-        var pieces = term.split(/[\s,]+/);
-        term = pieces[pieces.length-1];
+        term = hourglass.getLastCommaSeparatedTerm(term);
 
         if (autoCompReq) {autoCompReq.abort();}
         var data = form.getData();

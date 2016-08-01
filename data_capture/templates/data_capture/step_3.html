@@ -10,9 +10,18 @@
 
 {{ form.as_p }}
 
-<a href="{% url 'data_capture:step_2' %}" class="button">Previous</a>
+<div class="form-button-row clearfix">
+  <a href="{% url 'data_capture:step_2' %}" class="button button-previous">Previous</a>
 
-<button style="float: right" class="button-primary" type="submit">Submit</button>
+  <a href="{% url 'index' %}" class="button button-cancel">Cancel</a>
+
+  <div class="submit-group">
+    <span class="submit-label">
+      Send data to admin for inclusion in CALC.
+    </span>
+    <button class="button-primary" type="submit">Submit</button>
+  </div>
+</div>
 
 </form>
 {% endblock %}

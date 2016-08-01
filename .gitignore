@@ -6,6 +6,7 @@
 *.swo
 *.DS_Store
 .coverage
+coverage.xml
 htmlcov
 *,cover
 venv

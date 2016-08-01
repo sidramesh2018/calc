@@ -18,8 +18,6 @@ engines:
     checks:
       import/no-unresolved:
         enabled: false
-  csslint:
-    enabled: true
   pep8:
     enabled: true
 ratings:

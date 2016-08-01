@@ -18,6 +18,8 @@ function replaceForm(html) {
 function bindForm() {
   const form = getForm();
   const $upload = $('.upload', form);
+  const $fileInput = $('input[type=file]', form);
+  const $submit = $('button[type=submit]', form);
 
   if (!form) {
     // We're not on step 1.
@@ -25,9 +27,21 @@ function bindForm() {
   }
 
   $upload.uploadify();
+
+  // Disable the submit button until a file is selected.
+  $submit.prop('disabled', true);
+
+  // In the case of a degraded upload, only the 'change' event is fired.
+  // When we have a fully functional drag-n-drop upload, 'changefile' is
+  // fired on drop, while 'change' is fired on normal file browser selection.
+  // So, we need to listen to both events and reenable the submit button
+  // on either.
+  const enableSubmit = () => $submit.prop('disabled', false);
+  $fileInput.on('changefile', enableSubmit);
+  $fileInput.on('change', enableSubmit);
+
   $(form).on('submit', (e) => {
-    const $uploadInput = $('input', $upload);
-    const upload = $uploadInput.data('upload');
+    const upload = $fileInput.data('upload');
 
     if (upload.isDegraded) {
       // The upload widget is degraded; we should assume the browser has
@@ -43,8 +57,8 @@ function bindForm() {
         // file <input> element won't contain what we want. So we'll remove
         // whatever may have come from that <input> and replace it
         // with the file the upload widget says we need to upload.
-        formData.delete($uploadInput.attr('name'));
-        formData.append($uploadInput.attr('name'), upload.file);
+        formData.delete($fileInput.attr('name'));
+        formData.append($fileInput.attr('name'), upload.file);
       }
 
       const req = $.ajax(form.action, {
