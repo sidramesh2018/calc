@@ -1,5 +1,13 @@
 @import '../base/variables';
 @import '../uswds/buttons';
+
+button,
+.button,
+.button:visited {
+  // WDS override
+  margin-bottom: 0;
+  margin-top: 0;
+}
 // Need to override Skeleton's default button styling
 .button.button-primary,
 button.button-primary,
