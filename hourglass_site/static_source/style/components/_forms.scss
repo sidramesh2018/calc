@@ -1,4 +1,7 @@
 @import '../uswds/forms';
 @import '../uswds/inputs';
 
-//Custom form styles go here
+select.select-small {
+  padding: 0.34em;
+  background-position: right 1rem center;
+}
