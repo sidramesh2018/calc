@@ -4,5 +4,7 @@
 
 require('babel-polyfill/dist/polyfill.js');
 require('jquery-tablesort');
+
+require('./tablesort');
 require('./upload');
 require('./step_1');
