@@ -67,6 +67,7 @@ INSTALLED_APPS = (
     'uaa_client',
     'styleguide',
     'meta',
+    'frontend',
 )
 
 MIDDLEWARE_CLASSES = (

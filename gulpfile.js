@@ -20,7 +20,7 @@ const del = require('del');
 
 const dirs = {
   src: {
-    style: 'frontend/source/style/',
+    style: 'frontend/source/sass/',
     scripts: 'frontend/source/js/',
   },
   dest: {

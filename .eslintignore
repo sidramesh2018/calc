@@ -1,8 +1,7 @@
 static/
 htmlcov/
 vendor/
-
-frontend/static/built
+frontend/static/frontend/built/
 
 # Ignoring legacy (CALC 1.0) JS files for now
 frontend/source/js/common/hourglass.js
