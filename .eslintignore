@@ -2,8 +2,7 @@ static/
 htmlcov/
 vendor/
 
-hourglass_site/static/hourglass_site/js/built
-hourglass_site/static/hourglass_site/tests
+frontend/static/built
 
 # Ignoring legacy (CALC 1.0) JS files for now
 frontend/source/js/common/hourglass.js

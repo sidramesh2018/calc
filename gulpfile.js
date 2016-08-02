@@ -25,17 +25,17 @@ const dirs = {
   },
   dest: {
     style: {
-      built: 'hourglass_site/static/hourglass_site/style/built',
+      built: 'frontend/static/built/style',
     },
     scripts: {
       // Scripts (vendor libs) common to CALC 1 and 2
-      common: 'hourglass_site/static/hourglass_site/js/built/common',
+      common: 'frontend/static/built/js/common',
       // CALC 1.0 scripts
-      dataExplorer: 'hourglass_site/static/hourglass_site/js/built/data-explorer',
+      dataExplorer: 'frontend/static/built/js/data-explorer',
       // CALC 2.0 Data Capture scripts
-      dataCapture: 'hourglass_site/static/hourglass_site/js/built/data-capture',
+      dataCapture: 'frontend/static/built/js/data-capture',
       // CALC 2.0 Tests
-      tests: 'hourglass_site/static/hourglass_site/js/built/tests',
+      tests: 'frontend/static/built/js/tests',
     },
   },
 };
