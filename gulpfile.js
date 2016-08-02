@@ -25,17 +25,17 @@ const dirs = {
   },
   dest: {
     style: {
-      built: 'frontend/static/built/style',
+      built: 'frontend/static/frontend/built/style',
     },
     scripts: {
       // Scripts (vendor libs) common to CALC 1 and 2
-      common: 'frontend/static/built/js/common',
+      common: 'frontend/static/frontend/built/js/common',
       // CALC 1.0 scripts
-      dataExplorer: 'frontend/static/built/js/data-explorer',
+      dataExplorer: 'frontend/static/frontend/built/js/data-explorer',
       // CALC 2.0 Data Capture scripts
-      dataCapture: 'frontend/static/built/js/data-capture',
+      dataCapture: 'frontend/static/frontend/built/js/data-capture',
       // CALC 2.0 Tests
-      tests: 'frontend/static/built/js/tests',
+      tests: 'frontend/static/frontend/built/js/tests',
     },
   },
 };
