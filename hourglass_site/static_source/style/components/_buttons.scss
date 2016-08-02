@@ -59,6 +59,10 @@ input.button-secondary[type="button"] {
     border-color: $color-secondary-dark;
   }
 
+  &:visited {
+    color: $color-white;
+  }
+
   &:focus,
   &.button-focus {
     background-color: $color-secondary-dark;
