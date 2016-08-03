@@ -38,7 +38,7 @@ API_HOST = os.environ.get('API_HOST', '/api/')
 TEMPLATE_DEBUG = DEBUG
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'hourglass/templates'),
-    os.path.join(BASE_DIR, 'hourglass_site/templates'),
+    os.path.join(BASE_DIR, 'data_explorer/templates'),
 )
 
 ALLOWED_HOSTS = ['*']
@@ -56,8 +56,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'debug_toolbar',
 
-    'hourglass_site',
-
+    'data_explorer',
     'contracts',
     'data_capture',
     'api',
