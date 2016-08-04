@@ -10,10 +10,7 @@ function browserSupportsDragAndDrop() {
 }
 
 function browserSupportsFormData() {
-  // Just testing for FormData isn't enough! Apparently IE11 doesn't
-  // support FormData.prototype.delete(), so we need to check for that too.
-  return ('FormData' in window) &&
-         (typeof(window.FormData.prototype.delete) === 'function');
+  return 'FormData' in window;
 }
 
 function browserSupportsDataTransfer() {
