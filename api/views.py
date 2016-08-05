@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 
 from api.pagination import ContractPagination
 from api.serializers import ContractSerializer
-from api.utils import get_histogram, stdev
+from api.utils import get_histogram
 from contracts.models import Contract, EDUCATION_CHOICES
 
 import re
@@ -188,21 +188,6 @@ class GetRates(APIView):
                 stats[wage_field + '__stddev']
             )
         }
-
-        # TODO: Remove this manual std_dev calculation in favor
-        # of the the aggregate method above
-        # current_rates = []
-        # for rate in contracts_all.values(wage_field):
-        #     # its common for the wage_field to have an empty value
-        #     if rate.get(wage_field):
-        #         current_rates.append(rate[wage_field])
-        #
-        # if current_rates:
-        #     std_dev = stdev(current_rates)
-        # else:
-        #     std_dev = None
-        #
-        # page_stats['first_standard_deviation'] = std_dev
 
         if bins and bins.isnumeric():
             values = contracts_all.values_list(wage_field, flat=True)
