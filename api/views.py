@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.db.models import Avg, Max, Min, Count, Q
+from django.db.models import Avg, Max, Min, Count, Q, StdDev
 from decimal import Decimal
 
 from rest_framework.response import Response
@@ -177,7 +177,6 @@ class GetRates(APIView):
         contracts_all = self.get_queryset(request.query_params, wage_field)
 
         page_stats = {}
-        current_rates = []
 
         page_stats['minimum'] = contracts_all.aggregate(Min(wage_field))[
             wage_field + '__min']
@@ -185,18 +184,24 @@ class GetRates(APIView):
             wage_field + '__max']
         page_stats['average'] = quantize(
             contracts_all.aggregate(Avg(wage_field))[wage_field + '__avg'])
+        page_stats['first_standard_deviation'] = \
+            quantize(contracts_all.aggregate(
+                StdDev(wage_field))[wage_field + '__stddev'])
 
-        for rate in contracts_all.values(wage_field):
-            # its common for the wage_field to have an empty value
-            if rate.get(wage_field):
-                current_rates.append(rate[wage_field])
-
-        if current_rates:
-            std_dev = stdev(current_rates)
-        else:
-            std_dev = None
-
-        page_stats['first_standard_deviation'] = std_dev
+        # TODO: Remove this manual std_dev calculation in favor
+        # of the the aggregate method above
+        # current_rates = []
+        # for rate in contracts_all.values(wage_field):
+        #     # its common for the wage_field to have an empty value
+        #     if rate.get(wage_field):
+        #         current_rates.append(rate[wage_field])
+        #
+        # if current_rates:
+        #     std_dev = stdev(current_rates)
+        # else:
+        #     std_dev = None
+        #
+        # page_stats['first_standard_deviation'] = std_dev
 
         if bins and bins.isnumeric():
             values = contracts_all.values_list(wage_field, flat=True)
