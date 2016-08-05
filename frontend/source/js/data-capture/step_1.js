@@ -2,6 +2,16 @@
 
 const $ = jQuery;
 
+let delegate = {
+  redirect(url) {
+    window.location = url;
+  },
+  alert(msg) {
+    // TODO: Be more user-friendly here.
+    window.alert(msg);   // eslint-disable-line no-alert
+  },
+};
+
 function getForm() {
   return $('[data-step1-form]')[0];
 }
@@ -88,20 +98,14 @@ function bindForm() {
           replaceForm(data.form_html);
           bindForm();
         } else if (data.redirect_url) {
-          window.location = data.redirect_url;
+          delegate.redirect(data.redirect_url);
         } else {
-          // TODO: Be more user-friendly here.
-          window.alert( // eslint-disable-line no-alert
-            `Invalid server response: ${data}`
-          );
+          delegate.alert(`Invalid server response: ${data}`);
         }
       });
 
       req.fail(() => {
-        // TODO: Be more user-friendly here.
-        window.alert( // eslint-disable-line no-alert
-          'An error occurred when submitting your data.'
-        );
+        delegate.alert('An error occurred when submitting your data.');
       });
     }
   });
@@ -111,6 +115,10 @@ function bindForm() {
 
 $(bindForm);
 
+exports.setDelegate = newDelegate => {
+  delegate = newDelegate;
+  return delegate;
+};
 exports.getForm = getForm;
 exports.bindForm = bindForm;
 

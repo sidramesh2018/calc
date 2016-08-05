@@ -147,3 +147,52 @@ advancedTest('form_html replaces form & rebinds it', assert => {
   assert.ok(sNew.form !== s.form);
   assert.equal($('input[name="foo"]', sNew.form).val(), 'blargyblarg');
 });
+
+advancedTest('redirect_url redirects browser', assert => {
+  const s = addForm();
+
+  s.upload.file = createBlob('blah');
+  $(s.form).submit();
+
+  const delegate = step1.setDelegate({ redirect: sinon.spy() });
+
+  server.requests[0].respond(
+    200,
+    { 'Content-Type': 'application/json' },
+    JSON.stringify({
+      redirect_url: 'http://boop',
+    })
+  );
+
+  assert.ok(delegate.redirect.calledWith('http://boop'));
+});
+
+advancedTest('500 results in alert', assert => {
+  const s = addForm();
+
+  s.upload.file = createBlob('blah');
+  $(s.form).submit();
+
+  const delegate = step1.setDelegate({ alert: sinon.spy() });
+
+  server.requests[0].respond(500);
+
+  assert.ok(delegate.alert.calledWith(
+    'An error occurred when submitting your data.'
+  ));
+});
+
+advancedTest('unrecognized 200 results in alert', assert => {
+  const s = addForm();
+
+  s.upload.file = createBlob('blah');
+  $(s.form).submit();
+
+  const delegate = step1.setDelegate({ alert: sinon.spy() });
+
+  server.requests[0].respond(200);
+
+  assert.ok(delegate.alert.calledWith(
+    'Invalid server response: '
+  ));
+});
