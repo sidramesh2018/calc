@@ -36,16 +36,17 @@ function advancedTest(name, cb) {
   return QUnit.test(name, cb);
 }
 
-function addForm(extraOptions) {
+function makeFormHtml(extraOptions) {
   const options = Object.assign({
     uploadAttrs: '',
+    fooValue: 'bar',
   }, extraOptions || {});
 
-  const FORM_HTML = `
+  return `
     <form enctype="multipart/form-data" method="post"
           data-step1-form
           action="/post-stuff">
-      <input type="text" name="foo" value="bar">
+      <input type="text" name="foo" value="${options.fooValue}">
       <div class="upload" ${options.uploadAttrs}>
         <input type="file" name="file"
                id="id_file" accept=".xlsx,.xls,.csv">
@@ -58,8 +59,10 @@ function addForm(extraOptions) {
       <button type="submit">submit</button>
     </form>
   `;
+}
 
-  $('<div></div>').html(FORM_HTML).appendTo('body').hide();
+function addForm(extraOptions) {
+  $('<div></div>').html(makeFormHtml(extraOptions)).appendTo('body').hide();
   return step1.bindForm();
 }
 
@@ -119,4 +122,28 @@ advancedTest('submit triggers ajax w/ form data', assert => {
   s.upload.file = createBlob('hello there');
 
   $(s.form).submit();
+});
+
+advancedTest('form_html replaces form & rebinds it', assert => {
+  const s = addForm({ fooValue: 'hello' });
+
+  assert.equal($('input[name="foo"]', s.form).val(), 'hello');
+
+  s.upload.file = createBlob('blah');
+  $(s.form).submit();
+
+  server.requests[0].respond(
+    200,
+    { 'Content-Type': 'application/json' },
+    JSON.stringify({
+      form_html: makeFormHtml({ fooValue: 'blargyblarg' }),
+    })
+  );
+
+  const sNew = $(step1.getForm()).data('step1-form');
+
+  assert.ok(sNew);
+  assert.ok(sNew !== s);
+  assert.ok(sNew.form !== s.form);
+  assert.equal($('input[name="foo"]', sNew.form).val(), 'blargyblarg');
 });

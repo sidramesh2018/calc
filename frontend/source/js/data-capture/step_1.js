@@ -29,6 +29,10 @@ function bindForm() {
   $upload.uploadify();
 
   const upload = $fileInput.data('upload');
+  const self = { form, upload, $upload, $fileInput, $submit };
+
+  // This is mostly just for test suites to use.
+  $('form').data('step1-form', self);
 
   // Disable the submit button until a file is selected.
   $submit.prop('disabled', true);
@@ -102,11 +106,12 @@ function bindForm() {
     }
   });
 
-  return { form, upload, $upload, $fileInput, $submit };
+  return self;
 }
 
 $(bindForm);
 
+exports.getForm = getForm;
 exports.bindForm = bindForm;
 
 window.testingExports__step_1 = exports;
