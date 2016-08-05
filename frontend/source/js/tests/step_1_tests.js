@@ -62,7 +62,10 @@ function makeFormHtml(extraOptions) {
 }
 
 function addForm(extraOptions) {
-  $('<div></div>').html(makeFormHtml(extraOptions)).appendTo('body').hide();
+  $('<div></div>')
+    .html(makeFormHtml(extraOptions))
+    .appendTo('body')
+    .hide();
   return step1.bindForm();
 }
 
