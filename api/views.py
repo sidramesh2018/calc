@@ -176,17 +176,18 @@ class GetRates(APIView):
             request.query_params.get('contract-year'))
         contracts_all = self.get_queryset(request.query_params, wage_field)
 
-        page_stats = {}
+        stats = contracts_all.aggregate(
+            Min(wage_field), Max(wage_field),
+            Avg(wage_field), StdDev(wage_field))
 
-        page_stats['minimum'] = contracts_all.aggregate(Min(wage_field))[
-            wage_field + '__min']
-        page_stats['maximum'] = contracts_all.aggregate(Max(wage_field))[
-            wage_field + '__max']
-        page_stats['average'] = quantize(
-            contracts_all.aggregate(Avg(wage_field))[wage_field + '__avg'])
-        page_stats['first_standard_deviation'] = \
-            quantize(contracts_all.aggregate(
-                StdDev(wage_field))[wage_field + '__stddev'])
+        page_stats = {
+            'minimum': stats[wage_field + '__min'],
+            'maximum': stats[wage_field + '__max'],
+            'average': quantize(stats[wage_field + '__avg']),
+            'first_standard_deviation': quantize(
+                stats[wage_field + '__stddev']
+            )
+        }
 
         # TODO: Remove this manual std_dev calculation in favor
         # of the the aggregate method above
