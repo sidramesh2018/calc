@@ -23,10 +23,12 @@ function bindForm() {
 
   if (!form) {
     // We're not on step 1.
-    return;
+    return null;
   }
 
   $upload.uploadify();
+
+  const upload = $fileInput.data('upload');
 
   // Disable the submit button until a file is selected.
   $submit.prop('disabled', true);
@@ -41,8 +43,6 @@ function bindForm() {
   $fileInput.on('change', enableSubmit);
 
   $(form).on('submit', (e) => {
-    const upload = $fileInput.data('upload');
-
     if (upload.isDegraded) {
       // The upload widget is degraded; we should assume the browser has
       // minimal HTML5 support and just let the user submit the form manually.
@@ -101,6 +101,12 @@ function bindForm() {
       });
     }
   });
+
+  return { form, upload, $upload, $fileInput, $submit };
 }
 
 $(bindForm);
+
+exports.bindForm = bindForm;
+
+window.testingExports__step_1 = exports;
