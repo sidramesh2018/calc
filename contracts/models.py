@@ -37,9 +37,37 @@ def convert_to_tsquery(query):
     return tsquery
 
 
+def convert_to_tsquery_union(queries):
+    '''
+    Converts a list of multi-word phrases into OR boolean queries for
+    postgresql.
+
+    Examples:
+
+        >>> convert_to_tsquery_union(['foo', 'bar'])
+        'foo:* | bar:*'
+
+        >>> convert_to_tsquery_union(['foo', 'bar baz'])
+        'foo:* | bar:* & baz:*'
+
+    Also, unrecognizable/garbage phrases will be removed:
+
+        >>> convert_to_tsquery_union(['foo', '$@#%#@!', 'bar'])
+        'foo:* | bar:*'
+    '''
+
+    queries = [convert_to_tsquery(query) for query in queries]
+    # remove empty strings
+    queries = filter(None, queries)
+    return " | ".join(queries)
+
+
 class CurrentContractManager(SearchManager):
     # need to subclass the SearchManager we were using for postgres full text
     # search instead of default
+
+    def multi_phrase_search(self, *args, **kwargs):
+        return self.get_queryset().multi_phrase_search(*args, **kwargs)
 
     def get_queryset(self):
         return ContractsQuerySet(self.model, using=self._db)\
@@ -48,6 +76,11 @@ class CurrentContractManager(SearchManager):
 
 
 class ContractsQuerySet(SearchQuerySet):
+
+    def multi_phrase_search(self, queries):
+        if isinstance(queries, str):
+            queries = [queries]
+        return self.search(convert_to_tsquery_union(queries), raw=True)
 
     def order_by(self, *args, **kwargs):
         edu_sort_sql = """

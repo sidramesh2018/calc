@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from api.pagination import ContractPagination
 from api.serializers import ContractSerializer
 from api.utils import get_histogram, stdev
-from contracts.models import Contract, EDUCATION_CHOICES, convert_to_tsquery
+from contracts.models import Contract, EDUCATION_CHOICES
 
 import csv
 
@@ -75,10 +75,7 @@ def get_contracts_queryset(request_params, wage_field):
         qs = query.split(',')
 
         if query_type not in ('match_phrase', 'match_exact'):
-            queries = [convert_to_tsquery(q) for q in qs]
-            # remove empty strings, most commonly from trailing commas
-            queries = filter(None, queries)
-            contracts = contracts.search(" | ".join(queries), raw=True)
+            contracts = contracts.multi_phrase_search(qs)
         else:
             q_objs = Q()
             for q in qs:
@@ -270,7 +267,7 @@ class GetAutocomplete(APIView):
             if query_type == 'match_phrase':
                 data = Contract.objects.filter(labor_category__icontains=q)
             else:
-                data = Contract.objects.search(convert_to_tsquery(q), raw=True)
+                data = Contract.objects.multi_phrase_search(q)
             data = data.values('labor_category').annotate(
                 count=Count('labor_category')).order_by('-count')
             return Response(data)

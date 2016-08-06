@@ -57,6 +57,38 @@ class ContractSearchTestCase(TestCase):
             _quantity=len(self.CATEGORIES)
         )
 
+    def test_multi_phrase_search_works_with_single_word_phrase(self):
+        results = Contract.objects.multi_phrase_search('interpretation')
+        self.assertCategoriesEqual(results, [
+            u'Sign Language Interpreter',
+            u'Foreign Language Staff Interpreter (Spanish sign language)',
+            u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
+            u'Interpretation Services Class 1: Spanish',
+            u'Interpretation Services Class 2: French, German, Italian'
+        ])
+
+    def test_multi_phrase_search_works_with_multi_word_phrase(self):
+        results = Contract.objects.multi_phrase_search([
+            'interpretation services'
+        ])
+        self.assertCategoriesEqual(results, [
+            u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
+            u'Interpretation Services Class 1: Spanish',
+            u'Interpretation Services Class 2: French, German, Italian'
+        ])
+
+    def test_multi_phrase_search_works_with_multiple_phrases(self):
+        results = Contract.objects.multi_phrase_search([
+            'interpretation services',
+            'disposal'
+        ])
+        self.assertCategoriesEqual(results, [
+            u'Disposal Services',
+            u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
+            u'Interpretation Services Class 1: Spanish',
+            u'Interpretation Services Class 2: French, German, Italian'
+        ])
+
     def test_search_index_works_via_raw_sql(self):
         results = Contract.objects.raw(
             '''
