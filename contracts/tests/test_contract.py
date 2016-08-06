@@ -2,7 +2,7 @@ from django.test import TestCase
 from contracts.mommy_recipes import get_contract_recipe
 from itertools import cycle
 
-from ..models import Contract
+from ..models import Contract, convert_to_tsquery
 
 
 class ContractTestCase(TestCase):
@@ -24,6 +24,13 @@ class ContractTestCase(TestCase):
     def test_normalize_rate(self):
         c = get_contract_recipe().make()
         self.assertEqual(c.normalize_rate('$1,000.00,'), 1000.0)
+
+    def test_convert_to_tsquery(self):
+        self.assertEqual(convert_to_tsquery(
+            'staff  consultant'), 'staff:* & consultant:*')
+        self.assertEqual(convert_to_tsquery(
+            'senior typist (st)'), 'senior:* & typist:* & st:*')
+        self.assertEqual(convert_to_tsquery('@$(#)%&**#'), '')
 
 
 class ContractSearchTestCase(TestCase):
@@ -56,6 +63,7 @@ class ContractSearchTestCase(TestCase):
             SELECT id, labor_category
             FROM contracts_contract
             WHERE search_index @@ to_tsquery('Interpretation')
+            ORDER BY id
             '''
         )
         self.assertCategoriesEqual(results, [

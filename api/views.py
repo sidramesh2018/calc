@@ -8,34 +8,9 @@ from rest_framework.views import APIView
 from api.pagination import ContractPagination
 from api.serializers import ContractSerializer
 from api.utils import get_histogram, stdev
-from contracts.models import Contract, EDUCATION_CHOICES
+from contracts.models import Contract, EDUCATION_CHOICES, convert_to_tsquery
 
-import re
 import csv
-
-
-def convert_to_tsquery(query):
-    """
-    Converts multi-word phrases into AND boolean queries for postgresql.
-
-    Examples:
-
-        >>> convert_to_tsquery('interpretation')
-        'interpretation:*'
-
-        >>> convert_to_tsquery('interpretation services')
-        'interpretation:* & services:*'
-    """
-
-    # remove all non-alphanumeric or whitespace chars
-    pattern = re.compile('[^a-zA-Z\s]')
-    query = pattern.sub('', query)
-    query_parts = query.split()
-    # remove empty strings and add :* to use prefix matching on each chunk
-    query_parts = ["%s:*" % s for s in query_parts if s]
-    tsquery = ' & '.join(query_parts)
-
-    return tsquery
 
 
 def get_contracts_queryset(request_params, wage_field):

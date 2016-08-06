@@ -1,3 +1,4 @@
+import re
 from django.db import models
 from djorm_pgfulltext.models import SearchManager, SearchQuerySet
 from djorm_pgfulltext.fields import VectorField
@@ -10,6 +11,30 @@ EDUCATION_CHOICES = (
     ('MA', 'Masters'),
     ('PHD', 'Ph.D.'),
 )
+
+
+def convert_to_tsquery(query):
+    """
+    Converts multi-word phrases into AND boolean queries for postgresql.
+
+    Examples:
+
+        >>> convert_to_tsquery('interpretation')
+        'interpretation:*'
+
+        >>> convert_to_tsquery('interpretation services')
+        'interpretation:* & services:*'
+    """
+
+    # remove all non-alphanumeric or whitespace chars
+    pattern = re.compile('[^a-zA-Z\s]')
+    query = pattern.sub('', query)
+    query_parts = query.split()
+    # remove empty strings and add :* to use prefix matching on each chunk
+    query_parts = ["%s:*" % s for s in query_parts if s]
+    tsquery = ' & '.join(query_parts)
+
+    return tsquery
 
 
 class CurrentContractManager(SearchManager):
