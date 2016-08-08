@@ -222,7 +222,7 @@ if (upload.isDegraded) {
   {% example %}
   <div class="alert alert-error" role="alert">
     <h3>2 rows have errors</h3>
-    <p>The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and try uploading it again.</p>
+    <p>The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and <a href="foo">try uploading it again</a>.</p>
     <table>
       <thead>
         <tr>
@@ -237,12 +237,12 @@ if (upload.isDegraded) {
         <tr>
           <td>132-51</td>
           <td>Project Manager</td>
-          <td class="error">BA</td>
+          <td class="error tooltip" title="Value not expected. Expected one of the following: High School, Associate, Bachelors, Masters, Ph.D, N/A."><span>BA</span></td>
           <td>5</td>
           <td>$115.99</td>
         </tr>
         <tr>
-          <td class="error">32-17</td>
+          <td class="error"><span>32-17</span></td>
           <td>Software Programmer, Associate</td>
           <td>Bachelors</td>
           <td>0</td>
@@ -250,7 +250,6 @@ if (upload.isDegraded) {
         </tr>
       </tbody>
     </table>
-    <button class="button-primary">Upload revised list</button>
   </div>
   {% endexample %}
 
