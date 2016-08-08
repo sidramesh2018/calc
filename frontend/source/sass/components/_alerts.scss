@@ -1,6 +1,7 @@
 @import '../uswds/alerts';
 //TODO: rewrite alerts so the new styles are here
-$color-error-bg: #f9f0f0;
+/*$color-error-bg: #f9f0f0;*/
+$color-error-bg: #fef5f5;
 .alert {
   margin: 1rem 0;
 
@@ -49,7 +50,7 @@ $color-error-bg: #f9f0f0;
 }
 
 .alert-error {
-  border: 2px solid $color-secondary-light;
+  border: 2px solid $color-secondary-dark;
   background-color: $color-error-bg;
   h3 {
     color: $color-secondary-dark;
