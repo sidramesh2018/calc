@@ -68,18 +68,24 @@
   display: none;
 }
 
-.no-js .upload, .js .upload.degraded {
-  font-size: 1.5rem;
-  text-align: center;
-
-  .upload-chooser {
-    display: inline;
-  }
+.no-js .upload,
+.js .upload.degraded {
+  font-size: 1.3rem;
+  display: block;
+  border: none;
 
   input {
+    border: none;
+    font-size: 1.3rem;
+    color: $color-primary;
+    font-weight: $font-weight-bold;
+    padding: 1.5rem 0 1rem;
     // TODO: This is just clearing out the margin-bottom from our standard
     // CSS, which feels like a hack.
     margin-bottom: 0;
+    &:focus {
+      box-shadow: none;
+    }
   }
 
   label {
