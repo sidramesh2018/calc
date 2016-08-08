@@ -237,12 +237,20 @@ if (upload.isDegraded) {
         <tr>
           <td>132-51</td>
           <td>Project Manager</td>
-          <td class="error tooltip" title="Value not expected. Expected one of the following: High School, Associate, Bachelors, Masters, Ph.D, N/A."><span>BA</span></td>
+          <td class="error">BA
+            <ul class="errorlist">
+              <li>This field must contain one of the following values: Bachelors, Masters, Associates, Ph.D., High School.</li>
+            </ul>
+          </td>
           <td>5</td>
           <td>$115.99</td>
         </tr>
         <tr>
-          <td class="error"><span>32-17</span></td>
+          <td class="error">32-17
+            <ul class="errorlist">
+              <li>SIN not recognized.</li>
+            </ul>
+          </td>
           <td>Software Programmer, Associate</td>
           <td>Bachelors</td>
           <td>0</td>
