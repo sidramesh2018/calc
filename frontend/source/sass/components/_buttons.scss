@@ -1,12 +1,15 @@
 @import '../base/variables';
 @import '../uswds/buttons';
 
+$font-size-button: rem(11px); // with the all-caps, even the small font size is overly large
+
 button,
 .button,
 .button:visited {
   // WDS override
   margin-bottom: 0;
   margin-top: 0;
+  font-size: $font-size-button;
 }
 // Need to override Skeleton's default button styling
 .button.button-primary,
