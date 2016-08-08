@@ -7,6 +7,24 @@ select.select-small {
   padding: 0.34em;
 }
 
+legend {
+  font-size: $base-font-size;
+}
+
+
+.filter-block {
+  .dropdown {
+    margin-bottom: 0;
+  }
+  .filter {
+    padding-top: 2rem;
+  }
+  label {
+    margin-top: 0; //WDS override
+    font-weight: $font-weight-bold;
+  }
+}
+
 /* TODO: Django's default form rendering uses a <ul class="errorlist">
    for errors, and <span class="helptext"> for help text. We should either
    style them properly, or render our own markup. The following are some
