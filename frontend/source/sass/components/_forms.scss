@@ -2,9 +2,13 @@
 @import '../uswds/forms';
 @import '../uswds/inputs';
 
-select.select-small {
-  background-position: right 1rem center;
-  padding: 0.34em;
+select {
+  padding: 0.5rem 0.8rem;
+  border-radius: $border-radius;
+  &.select-small {
+    background-position: right 1rem center;
+    padding: 0.34em;
+  }
 }
 
 legend {
