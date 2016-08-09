@@ -1,6 +1,58 @@
 @import '../uswds/alerts';
 //TODO: rewrite alerts so the new styles are here
-
+/*$color-error-bg: #f9f0f0;*/
+$color-error-bg: #fef5f5;
 .alert {
   margin: 1rem 0;
+
+  td, th {
+    border-color: $color-gray-dark;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  td.error {
+    border: 2px solid $color-secondary-dark;
+    color: $color-secondary-dark;
+    font-weight: $font-weight-bold;
+    padding-left: 2.5rem;
+
+    .errorlist {
+      color: $color-base;
+      font-weight: $font-weight-normal;
+      font-size: $small-font-size;
+      border: none;
+      background-image: url('../../images/uswds/alerts/error.png');
+      background-image: url('../../images/uswds/alerts/error.svg');
+      background-size: 2.5rem;
+      background-repeat: no-repeat;
+      background-position: top 3px left;
+      padding-left: 2.5rem;
+      margin-left: -2.5rem;
+      max-width: 220px;
+    }
+  }
+
+  thead th {
+    color: $color-black;
+  }
+
+  tbody tr {
+    &:nth-child(odd) {
+      background-color: inherit;
+    }
+    &:hover > * {
+      background: inherit !important;
+    }
+  }
+}
+
+.alert-error {
+  border: 2px solid $color-secondary-dark;
+  background-color: $color-error-bg;
+  h3 {
+    color: $color-secondary-dark;
+  }
 }
