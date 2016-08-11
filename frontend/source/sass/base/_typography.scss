@@ -1,29 +1,18 @@
 @import 'variables';
 
-h1 {
-  letter-spacing: 0;
+h2, h4, h6 {
+  font-weight: $font-weight-bold;
+}
 
+h1 {
   .site-title {
     display: block;
-    line-height: 1em;
   }
 
   .site-subtitle {
     display: block;
     font-size: 2rem;
   }
-}
-
-h3 {
-  font-size: 2rem;
-}
-
-h4 {
-  margin-bottom: 0.5rem;
-}
-
-main h5 {
-  margin: 0 !important;
 }
 
 p {
