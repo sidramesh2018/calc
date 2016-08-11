@@ -1,8 +1,8 @@
 import doctest
 
-from .. import views
+from .. import models
 
 
 def load_tests(loader, tests, ignore):
-    tests.addTests(doctest.DocTestSuite(views))
+    tests.addTests(doctest.DocTestSuite(models))
     return tests

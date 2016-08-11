@@ -2,6 +2,16 @@
 
 const $ = jQuery;
 
+let delegate = {
+  redirect(url) {
+    window.location = url;
+  },
+  alert(msg) {
+    // TODO: Be more user-friendly here.
+    window.alert(msg);   // eslint-disable-line no-alert
+  },
+};
+
 function getForm() {
   return $('[data-step1-form]')[0];
 }
@@ -23,10 +33,16 @@ function bindForm() {
 
   if (!form) {
     // We're not on step 1.
-    return;
+    return null;
   }
 
   $upload.uploadify();
+
+  const upload = $fileInput.data('upload');
+  const self = { form, upload, $upload, $fileInput, $submit };
+
+  // This is mostly just for test suites to use.
+  $('form').data('step1-form', self);
 
   // Disable the submit button until a file is selected.
   $submit.prop('disabled', true);
@@ -41,8 +57,6 @@ function bindForm() {
   $fileInput.on('change', enableSubmit);
 
   $(form).on('submit', (e) => {
-    const upload = $fileInput.data('upload');
-
     if (upload.isDegraded) {
       // The upload widget is degraded; we should assume the browser has
       // minimal HTML5 support and just let the user submit the form manually.
@@ -84,23 +98,28 @@ function bindForm() {
           replaceForm(data.form_html);
           bindForm();
         } else if (data.redirect_url) {
-          window.location = data.redirect_url;
+          delegate.redirect(data.redirect_url);
         } else {
-          // TODO: Be more user-friendly here.
-          window.alert( // eslint-disable-line no-alert
-            `Invalid server response: ${data}`
-          );
+          delegate.alert(`Invalid server response: ${data}`);
         }
       });
 
       req.fail(() => {
-        // TODO: Be more user-friendly here.
-        window.alert( // eslint-disable-line no-alert
-          'An error occurred when submitting your data.'
-        );
+        delegate.alert('An error occurred when submitting your data.');
       });
     }
   });
+
+  return self;
 }
 
 $(bindForm);
+
+exports.setDelegate = newDelegate => {
+  delegate = newDelegate;
+  return delegate;
+};
+exports.getForm = getForm;
+exports.bindForm = bindForm;
+
+window.testingExports__step_1 = exports;
