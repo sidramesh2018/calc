@@ -34,7 +34,7 @@
   });
 
   test('$.support.advancedUpload is a boolean', (assert) => {
-    assert.equal(typeof($.support.advancedUpload), 'boolean');
+    assert.equal(typeof $.support.advancedUpload, 'boolean');
   });
 
   test('degraded upload sets "upload" data', (assert) => {
