@@ -2,9 +2,35 @@
 @import '../uswds/forms';
 @import '../uswds/inputs';
 
-select.select-small {
-  background-position: right 1rem center;
-  padding: 0.34em;
+select {
+  padding: 0.5rem 0.8rem;
+  border-radius: $border-radius;
+  &.select-small {
+    background-position: right 1rem center;
+    padding: 0.34em;
+  }
+}
+
+legend {
+  font-size: $base-font-size;
+}
+
+
+.filter-block {
+  .dropdown {
+    margin-bottom: 0;
+  }
+  .filter {
+    padding-top: 2rem;
+  }
+  label {
+    margin-top: 0; //WDS override
+    font-weight: $font-weight-bold;
+  }
+}
+
+label input[type="radio"] {
+  width: auto; // WDS override for width: 100%;
 }
 
 /* TODO: Django's default form rendering uses a <ul class="errorlist">

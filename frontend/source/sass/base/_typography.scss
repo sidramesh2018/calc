@@ -1,11 +1,8 @@
 @import 'variables';
 
 h1 {
-  letter-spacing: 0;
-
   .site-title {
     display: block;
-    line-height: 1em;
   }
 
   .site-subtitle {
@@ -14,16 +11,17 @@ h1 {
   }
 }
 
-h3 {
-  font-size: 2rem;
+h4, h5 {
+  font-weight: $font-weight-bold;
 }
 
-h4 {
-  margin-bottom: 0.5rem;
+h6 {
+  text-transform: uppercase;
 }
 
-main h5 {
-  margin: 0 !important;
+p {
+  font-size: $base-font-size;
+  line-height: $base-line-height;
 }
 
 .help-text {
@@ -40,4 +38,9 @@ main h5 {
 
 ol.steps li {
   font-family: $font-family-main;
+}
+
+//the buttons that download a graph on the main page
+.download-buttons p {
+  margin-top: 2rem;
 }
