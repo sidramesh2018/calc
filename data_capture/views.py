@@ -2,15 +2,11 @@ import json
 from functools import wraps
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.template import RequestContext
-from django.template.loader import render_to_string
-from django.http import JsonResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.template.defaultfilters import pluralize
 
-from . import forms
+from . import forms, ajaxform
 from .schedules import registry
 
 
@@ -20,25 +16,6 @@ def add_generic_form_error(request, form):
         'Oops, please correct the error{} below and try again.'
             .format(pluralize(form.errors))
     )
-
-
-def ajaxform_redirect(request, target):
-    redirect_url = reverse(target)
-    if request.is_ajax():
-        return JsonResponse({'redirect_url': redirect_url})
-    return HttpResponseRedirect(redirect_url)
-
-
-def ajaxform_render(request, context, template_name, ajax_template_name):
-    if request.is_ajax():
-        return JsonResponse({
-            'form_html': render_to_string(
-                ajax_template_name,
-                RequestContext(request, context)
-            )
-        })
-
-    return render(request, template_name, context)
 
 
 @login_required
@@ -54,11 +31,11 @@ def step_1(request):
             request.session['data_capture:gleaned_data'] = \
                 registry.serialize(form.cleaned_data['gleaned_data'])
 
-            return ajaxform_redirect(request, 'data_capture:step_2')
+            return ajaxform.redirect(request, 'data_capture:step_2')
         else:
             add_generic_form_error(request, form)
 
-    return ajaxform_render(
+    return ajaxform.render(
         request,
         context={
             'step_number': 1,
