@@ -24,6 +24,21 @@
 
   {% guide_section "Typography" %}
 
+  {% example %}
+  <h1>Heading 1</h1>
+  <h2>Heading 2</h2>
+  <h3>Heading 3</h3>
+  <h4>Heading 4</h4>
+  <h5>Heading 5</h5>
+  <h6>Heading 6</h6>
+  <p>Paragraph body text go paragraph body text go. Paragraph body text go. Paragraph body text go paragraph body text go. Paragraph body text go. Paragraph body text go paragraph body text go. Paragraph body text go. Paragraph body text go paragraph body text go. Paragraph body text go.Paragraph body text go paragraph body text go. Paragraph body text go.</p>
+  <ul>
+    <li>An unordered list</li>
+    <li>Organizing many things</li>
+    <li>Order from chaos</li>
+  </ul>
+  {% endexample %}
+
   {% guide_section "Upload Widget" %}
 
   <p>
@@ -54,7 +69,7 @@
       <div class="upload-chooser">
         <label for="file">Choose file</label>
         <span class="js-only" aria-hidden="true">or drag and drop here.</span>
-        XLS, XLSX, or CSV format, please.
+        <span>XLS, XLSX, or CSV format, please.</span>
       </div>
     </div>
   </form>
@@ -87,7 +102,7 @@
           <div class="upload-chooser">
             <label for="file2">Choose file</label>
             <span class="js-only" aria-hidden="true">or drag and drop here.</span>
-            XLS, XLSX, or CSV format, please.
+            <span>XLS, XLSX, or CSV format, please.</span>
           </div>
         </div>
     </div>
@@ -222,7 +237,7 @@ if (upload.isDegraded) {
   {% example %}
   <div class="alert alert-error" role="alert">
     <h3>2 rows have errors</h3>
-    <p>The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and try uploading it again.</p>
+    <p>The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and <a href="foo">try uploading it again</a>.</p>
     <table>
       <thead>
         <tr>
@@ -237,12 +252,20 @@ if (upload.isDegraded) {
         <tr>
           <td>132-51</td>
           <td>Project Manager</td>
-          <td class="error">BA</td>
+          <td class="error">BA
+            <ul class="errorlist">
+              <li>This field must contain one of the following values: Bachelors, Masters, Associates, Ph.D., High School.</li>
+            </ul>
+          </td>
           <td>5</td>
           <td>$115.99</td>
         </tr>
         <tr>
-          <td class="error">32-17</td>
+          <td class="error">32-17
+            <ul class="errorlist">
+              <li>SIN not recognized.</li>
+            </ul>
+          </td>
           <td>Software Programmer, Associate</td>
           <td>Bachelors</td>
           <td>0</td>
@@ -250,7 +273,6 @@ if (upload.isDegraded) {
         </tr>
       </tbody>
     </table>
-    <button class="button-primary">Upload revised list</button>
   </div>
   {% endexample %}
 

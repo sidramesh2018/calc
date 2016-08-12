@@ -3,7 +3,6 @@ from model_mommy import mommy
 from model_mommy.recipe import seq
 from contracts.models import Contract
 from contracts.mommy_recipes import get_contract_recipe
-from api.views import convert_to_tsquery
 
 from itertools import cycle
 
@@ -53,13 +52,6 @@ class ContractsTest(TestCase):
 
         self.c = Client()
         self.path = RATES_API_PATH
-
-    def test_convert_to_tsquery(self):
-        self.assertEqual(convert_to_tsquery(
-            'staff  consultant'), 'staff:* & consultant:*')
-        self.assertEqual(convert_to_tsquery(
-            'senior typist (st)'), 'senior:* & typist:* & st:*')
-        self.assertEqual(convert_to_tsquery('@$(#)%&**#'), '')
 
     def test_empty_results(self):
         self.make_test_set()

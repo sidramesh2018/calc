@@ -27,10 +27,9 @@
     invalid and <strong>will be discarded</strong> when you upload your
     price list.
     If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
-    in your original spreadsheet and try uploading it again.
+    in your original spreadsheet and <a href="{% url 'data_capture:step_1' %}">try uploading it again</a>.
   </p>
   {% endwith %}
-
   <table>
     <thead>
       <tr>
@@ -46,10 +45,9 @@
 
         <tr>
         {% for field in row %}
-          <td class="{% if field.errors %} error {% endif %}">
+          <td{% if field.errors %} class="error"{% endif %}>
+            <span>{{ field.value }}</span>
             {{ field.errors }}
-
-            {{ field.value }}
           </td>
         {% endfor %}
         </tr>
@@ -57,7 +55,6 @@
       {% endfor %}
     </tbody>
   </table>
-  <a href="{% url 'data_capture:step_1' %}" class="button">Upload revised list</a>
   {% endwith %}
 </div>
 {% endif %}
