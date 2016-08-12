@@ -69,4 +69,4 @@ user-types:
     - deployment
     - engineering
 controls:
-- <links to your security documentation>
+- https://github.com/18F/calc/blob/develop/compliance/component.yaml
