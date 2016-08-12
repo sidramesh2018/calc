@@ -40,6 +40,14 @@ function bindForm() {
   const upload = $fileInput.data('upload');
   const self = { form, upload, $upload, $fileInput, $submit };
 
+  if (!upload) {
+    throw new Error('ajaxform must contain an upload widget');
+  }
+
+  if (!$submit.length) {
+    throw new Error('ajaxform must contain a <button type="submit">');
+  }
+
   // This is mostly just for test suites to use.
   $('form').data('ajaxform', self);
 
