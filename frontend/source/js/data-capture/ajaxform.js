@@ -13,7 +13,7 @@ let delegate = {
 };
 
 function getForm() {
-  return $('[data-step1-form]')[0];
+  return $('[data-ajaxform]')[0];
 }
 
 function replaceForm(html) {
@@ -32,7 +32,6 @@ function bindForm() {
   const $submit = $('button[type=submit]', form);
 
   if (!form) {
-    // We're not on step 1.
     return null;
   }
 
@@ -42,7 +41,7 @@ function bindForm() {
   const self = { form, upload, $upload, $fileInput, $submit };
 
   // This is mostly just for test suites to use.
-  $('form').data('step1-form', self);
+  $('form').data('ajaxform', self);
 
   // Disable the submit button until a file is selected.
   $submit.prop('disabled', true);
@@ -122,4 +121,4 @@ exports.setDelegate = newDelegate => {
 exports.getForm = getForm;
 exports.bindForm = bindForm;
 
-window.testingExports__step_1 = exports;
+window.testingExports__ajaxform = exports;
