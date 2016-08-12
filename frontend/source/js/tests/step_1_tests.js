@@ -1,4 +1,4 @@
-/* global QUnit $ test window */
+/* global QUnit $ test window QUNIT_FIXTURE_DATA */
 
 const urlParse = require('url').parse;
 const sinon = require('sinon');
@@ -38,27 +38,18 @@ function advancedTest(name, cb) {
 
 function makeFormHtml(extraOptions) {
   const options = Object.assign({
-    uploadAttrs: '',
+    isDegraded: false,
     fooValue: 'bar',
   }, extraOptions || {});
+  const $form = $('<div></div>').html(QUNIT_FIXTURE_DATA.STEP_1_TESTS_HTML);
 
-  return `
-    <form enctype="multipart/form-data" method="post"
-          data-step1-form
-          action="/post-stuff">
-      <input type="text" name="foo" value="${options.fooValue}">
-      <div class="upload" ${options.uploadAttrs}>
-        <input type="file" name="file"
-               id="id_file" accept=".xlsx,.xls,.csv">
-        <div class="upload-chooser">
-          <label for="id_file">Choose file</label>
-          <span class="js-only" aria-hidden="true">or drag+drop here.</span>
-          XLS, XLSX, or CSV format, please.
-        </div>
-      </div>
-      <button type="submit">submit</button>
-    </form>
-  `;
+  if (options.isDegraded) {
+    $form.find('.upload').attr('data-force-degradation', '');
+  }
+
+  $form.find('input[name="foo"]').attr('value', options.fooValue);
+
+  return $form.html();
 }
 
 function addForm(extraOptions) {
@@ -92,7 +83,7 @@ test('submit btn enabled on upload widget changefile', assert => {
 });
 
 test('degraded input does not cancel form submission', assert => {
-  const s = addForm({ uploadAttrs: 'data-force-degradation' });
+  const s = addForm({ isDegraded: true });
 
   $(s.form).on('submit', e => {
     assert.ok(!e.isDefaultPrevented());
