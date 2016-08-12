@@ -22,6 +22,25 @@ def add_generic_form_error(request, form):
     )
 
 
+def ajaxform_redirect(request, target):
+    redirect_url = reverse(target)
+    if request.is_ajax():
+        return JsonResponse({'redirect_url': redirect_url})
+    return HttpResponseRedirect(redirect_url)
+
+
+def ajaxform_render(request, context, template_name, ajax_template_name):
+    if request.is_ajax():
+        return JsonResponse({
+            'form_html': render_to_string(
+                ajax_template_name,
+                RequestContext(request, context)
+            )
+        })
+
+    return render(request, template_name, context)
+
+
 @login_required
 def step_1(request):
     if request.method == 'GET':
@@ -35,28 +54,20 @@ def step_1(request):
             request.session['data_capture:gleaned_data'] = \
                 registry.serialize(form.cleaned_data['gleaned_data'])
 
-            redirect_url = reverse('data_capture:step_2')
-            if request.is_ajax():
-                return JsonResponse({'redirect_url': redirect_url})
-            return HttpResponseRedirect(redirect_url)
+            return ajaxform_redirect(request, 'data_capture:step_2')
         else:
             add_generic_form_error(request, form)
 
-    ctx = {
-        'step_number': 1,
-        'form': form,
-        'show_debug_ui': settings.DEBUG and not settings.HIDE_DEBUG_UI
-    }
-
-    if request.is_ajax():
-        return JsonResponse({
-            'form_html': render_to_string(
-                'data_capture/step_1_form.html',
-                RequestContext(request, ctx)
-            )
-        })
-
-    return render(request, 'data_capture/step_1.html', ctx)
+    return ajaxform_render(
+        request,
+        context={
+            'step_number': 1,
+            'form': form,
+            'show_debug_ui': settings.DEBUG and not settings.HIDE_DEBUG_UI
+        },
+        template_name='data_capture/step_1.html',
+        ajax_template_name='data_capture/step_1_form.html',
+    )
 
 
 def gleaned_data_required(f):
