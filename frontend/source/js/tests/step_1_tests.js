@@ -19,7 +19,7 @@ QUnit.module('step_1', {
 });
 
 function createBlob(content) {
-  if (typeof(window.Blob) === 'function') {
+  if (typeof window.Blob === 'function') {
     return new window.Blob([content]);
   }
 
@@ -116,7 +116,7 @@ advancedTest('submit triggers ajax w/ form data', assert => {
     assert.equal(urlParse(req.url).path, '/post-stuff');
 
     // Ugh, only newer browsers support FormData.prototype.get().
-    if (typeof(formData.get) === 'function') {
+    if (typeof formData.get === 'function') {
       assert.equal(formData.get('foo'), 'bar');
       assert.equal(formData.get('file').size, 'hello there'.length);
     }
