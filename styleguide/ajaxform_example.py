@@ -1,11 +1,26 @@
 from django import forms
+from django.http import HttpResponse
 
 from data_capture import ajaxform
 from data_capture.forms import UploadWidget
 
 
+CHOICE_REDIRECT = 'redirect'
+CHOICE_500 = '500'
+CHOICE_WEIRD = 'weird'
+
+
 class ExampleForm(forms.Form):
     question = forms.IntegerField(label='What is 2+2?')
+
+    on_valid_submit = forms.ChoiceField(
+        label='When submitted without validation errors, I should:',
+        choices=[
+            (CHOICE_REDIRECT, 'Redirect to the style guide'),
+            (CHOICE_500, 'Explode in a 500 Internal Server Error'),
+            (CHOICE_WEIRD, 'Return an unexpected response')
+        ]
+    )
 
     file = forms.FileField(widget=UploadWidget(
         accept=('.csv',),
@@ -33,7 +48,13 @@ def view(request):
         form = ExampleForm(request.POST, request.FILES)
 
         if form.is_valid():
-            return ajaxform.redirect(request, 'styleguide:index')
+            choice = form.cleaned_data['on_valid_submit']
+            if choice == CHOICE_REDIRECT:
+                return ajaxform.redirect(request, 'styleguide:index')
+            elif choice == CHOICE_500:
+                raise Exception('Here is the 500 your ordered.')
+            else:
+                return HttpResponse('Here is an unexpected response.')
 
     return ajaxform.render(
         request,
