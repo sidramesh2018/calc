@@ -96,9 +96,7 @@ function bindForm() {
         method: form.method,
       });
 
-      // TODO: Use a CSS class to do this. Add a throbber or progress
-      // bar or something.
-      $(form).css({ opacity: 0.25, 'pointer-events': 'none' });
+      $(form).addClass('submit-in-progress');
 
       req.done((data) => {
         if (data.form_html) {
@@ -108,11 +106,13 @@ function bindForm() {
           delegate.redirect(data.redirect_url);
         } else {
           delegate.alert(`Invalid server response: ${data}`);
+          $(form).removeClass('submit-in-progress');
         }
       });
 
       req.fail(() => {
         delegate.alert('An error occurred when submitting your data.');
+        $(form).removeClass('submit-in-progress');
       });
     }
   });

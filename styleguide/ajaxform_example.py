@@ -1,3 +1,4 @@
+import time
 from django import forms
 from django.http import HttpResponse
 
@@ -16,7 +17,7 @@ class ExampleForm(forms.Form):
     on_valid_submit = forms.ChoiceField(
         label='When submitted without validation errors, I should:',
         choices=[
-            (CHOICE_REDIRECT, 'Redirect to the style guide'),
+            (CHOICE_REDIRECT, 'Redirect to the style guide after 3 seconds'),
             (CHOICE_500, 'Explode in a 500 Internal Server Error'),
             (CHOICE_WEIRD, 'Return an unexpected response')
         ]
@@ -50,6 +51,7 @@ def view(request):
         if form.is_valid():
             choice = form.cleaned_data['on_valid_submit']
             if choice == CHOICE_REDIRECT:
+                time.sleep(3)
                 return ajaxform.redirect(request, 'styleguide:index')
             elif choice == CHOICE_500:
                 raise Exception('Here is the 500 your ordered.')
