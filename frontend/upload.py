@@ -2,6 +2,13 @@ from django import forms
 
 
 class UploadWidget(forms.widgets.FileInput):
+    '''
+    This widget represents an upload widget that the user can
+    easily drag-and-drop files into.
+
+    It is tightly coupled to upload.js.
+    '''
+
     def __init__(self, attrs=None, degraded=False,
                  accept=(".xlsx", ".xls", ".csv"),
                  extra_instructions='XLS, XLSX, or CSV format, please.'):
