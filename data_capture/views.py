@@ -6,8 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.template.defaultfilters import pluralize
 
-from . import forms, ajaxform
+from . import forms
 from .schedules import registry
+from frontend import ajaxform
 
 
 def add_generic_form_error(request, form):

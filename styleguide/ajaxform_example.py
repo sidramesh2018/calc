@@ -2,8 +2,8 @@ import time
 from django import forms
 from django.http import HttpResponse
 
-from data_capture import ajaxform
-from data_capture.forms import UploadWidget
+from frontend import ajaxform
+from frontend.upload import UploadWidget
 
 
 CHOICE_REDIRECT = 'redirect'
