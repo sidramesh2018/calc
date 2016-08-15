@@ -72,7 +72,6 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'hourglass.middleware.DebugOnlyDebugToolbarMiddleware',
     'hourglass.middleware.ComplianceMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -83,6 +82,11 @@ MIDDLEWARE_CLASSES = (
     # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # DjDT needs to be at the end of the middleware stack or else it can
+    # cause issues with other middlewares' process_view methods
+    # when the ProfilingPanel is enabled
+    # http://django-debug-toolbar.readthedocs.io/en/stable/panels.html#profiling
+    'hourglass.middleware.DebugOnlyDebugToolbarMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
