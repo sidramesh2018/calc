@@ -19,14 +19,19 @@ QUnit.module('step_1', {
 });
 
 function createBlob(content) {
-  if (typeof window.Blob === 'function') {
+  // If in PhantomJS 1.x
+  if (window.WebKitBlobBuilder) {
+    const builder = new window.WebKitBlobBuilder();
+    builder.append(content);
+    return builder.getBlob();
+  }
+
+  // In a more modern enginge with Blob support
+  if (window.Blob) {
     return new window.Blob([content]);
   }
 
-  // We're in PhantomJS.
-  const builder = new window.WebKitBlobBuilder();
-  builder.append(content);
-  return builder.getBlob();
+  throw new Error('Unable to determine how to create Blob');
 }
 
 function advancedTest(name, cb) {
