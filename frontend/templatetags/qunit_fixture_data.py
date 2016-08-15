@@ -2,7 +2,7 @@ import json
 from django import template
 from django import forms
 
-from data_capture.forms import UploadWidget
+from ..upload import UploadWidget
 
 
 register = template.Library()
