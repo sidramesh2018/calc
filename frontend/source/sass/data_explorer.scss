@@ -290,6 +290,11 @@ input[type="checkbox"]:checked ~ label {
   font-size: 16px;
 }
 
+.avg-price-block h5,
+.standard-deviation-block h5 {
+    margin-bottom: 0;
+}
+
 #avg-price-highlight,
 .sd-highlight,
 .proposed-price-highlight {
