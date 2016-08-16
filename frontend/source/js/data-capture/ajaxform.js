@@ -41,6 +41,9 @@ function bindForm() {
   const self = { form, upload, $upload, $fileInput, $submit };
 
   if (!upload) {
+    // Presently we require an ajaxform to contain exactly one
+    // upload widget; we'd like to change this at some point in the
+    // future, but for now we'll make our expectations explicit.
     throw new Error('ajaxform must contain an upload widget');
   }
 
