@@ -3,6 +3,7 @@ from django import forms
 from .models import SubmittedPriceList
 from .schedules import registry
 from frontend.upload import UploadWidget
+from frontend.date import SplitDateField
 
 
 class Step1Form(forms.Form):
@@ -32,6 +33,9 @@ class Step1Form(forms.Form):
 
 
 class Step3Form(forms.ModelForm):
+    contract_start = SplitDateField(required=False)
+    contract_end = SplitDateField(required=False)
+
     class Meta:
         model = SubmittedPriceList
         fields = [

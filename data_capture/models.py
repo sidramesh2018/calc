@@ -28,12 +28,10 @@ class SubmittedPriceList(models.Model):
     contract_start = models.DateField(
         null=True,
         blank=True,
-        help_text='Use MM/DD/YY format, e.g. "10/25/06".'
     )
     contract_end = models.DateField(
         null=True,
         blank=True,
-        help_text='Use MM/DD/YY format, e.g. "10/25/06".'
     )
 
     submitter = models.ForeignKey(User)
