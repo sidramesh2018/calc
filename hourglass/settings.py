@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import dj_database_url
+import dj_email_url
 from dotenv import load_dotenv
 
 from .settings_utils import load_cups_from_vcap_services, get_whitelisted_ips
@@ -34,6 +35,19 @@ if DEBUG:
         'SECRET_KEY',
         'I am an insecure secret key intended ONLY for dev/testing.'
     )
+    os.environ.setdefault('EMAIL_URL', 'console:')
+
+
+email_config = dj_email_url.config()
+
+EMAIL_FILE_PATH = email_config['EMAIL_FILE_PATH']
+EMAIL_HOST_USER = email_config['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = email_config['EMAIL_HOST_PASSWORD']
+EMAIL_HOST = email_config['EMAIL_HOST']
+EMAIL_PORT = email_config['EMAIL_PORT']
+EMAIL_BACKEND = email_config['EMAIL_BACKEND']
+EMAIL_USE_TLS = email_config['EMAIL_USE_TLS']
+EMAIL_USE_SSL = email_config['EMAIL_USE_SSL']
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 
