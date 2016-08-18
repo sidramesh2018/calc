@@ -21,18 +21,22 @@ urlpatterns = [
     url(r'^data-capture/',
         include('data_capture.urls', namespace='data_capture')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^tests/$', TemplateView.as_view(template_name='tests.html')),
-    url(r'^styleguide/', include('styleguide.urls', namespace='styleguide')),
     url(r'^robots.txt$', robots_txt),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
 ]
 
+tests_url = url(r'^tests/$', TemplateView.as_view(template_name='tests.html'))
+
+styleguide_url = url(r'^styleguide/', include('styleguide.urls',
+                                              namespace='styleguide'))
+
 if settings.DEBUG:
     import debug_toolbar
-    import fake_uaa_provider.urls
 
     urlpatterns += [
-        url(r'^', include(fake_uaa_provider.urls,
-            namespace='fake_uaa_provider')),
+        url(r'^', include('fake_uaa_provider.urls',
+                          namespace='fake_uaa_provider')),
         url(r'^__debug__/', include(debug_toolbar.urls)),
+        tests_url,
+        styleguide_url,
     ]
