@@ -33,9 +33,9 @@ label input[type="radio"] {
   width: auto; // WDS override for width: 100%;
 }
 
-/* A <ul> with an id attribute is a Django-rendered radio widget. */
+/* A <ul> holds a Django-rendered list of radio buttons. */
 
-form ul[id] {
+form ul {
   list-style-type: none;
 }
 
