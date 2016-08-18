@@ -33,6 +33,15 @@ class Step1Form(forms.Form):
 
 
 class Step3Form(forms.ModelForm):
+    is_small_business = forms.ChoiceField(
+        label='Business size',
+        choices=[
+            (True, 'Small business'),
+            (False, 'Not a small business'),
+        ],
+        widget=forms.widgets.RadioSelect,
+    )
+
     contract_start = SplitDateField(required=False)
     contract_end = SplitDateField(required=False)
 
