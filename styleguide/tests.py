@@ -1,12 +1,6 @@
-from django.test import TestCase, override_settings
-
-from hourglass.urls import urlpatterns, styleguide_url
+from django.test import TestCase
 
 
-urlpatterns += [styleguide_url]
-
-
-@override_settings(ROOT_URLCONF=__name__)
 class StyleguideTests(TestCase):
 
     def test_styleguide_returns_200(self):
