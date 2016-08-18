@@ -47,7 +47,7 @@ class SubmittedPriceList(models.Model):
 
     def add_row(self, **kwargs):
         row = SubmittedPriceListRow(**kwargs)
-        self.rows.add(row)
+        row.price_list = self
         row.save()
         return row
 
