@@ -52,7 +52,7 @@ function bindForm() {
   }
 
   // This is mostly just for test suites to use.
-  $('form').data('ajaxform', self);
+  $(form).data('ajaxform', self);
 
   // Disable the submit button until a file is selected.
   $submit.prop('disabled', true);
