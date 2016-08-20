@@ -33,13 +33,7 @@ function replaceForm(form, html) {
 }
 
 function bindForm(form) {
-  const $submit = $('button[type=submit]', form);
-
-  const self = { form, $submit };
-
-  if (!$submit.length) {
-    throw new Error('ajaxform must contain a <button type="submit">');
-  }
+  const self = { form };
 
   // This is mostly just for test suites to use.
   $(form).data('ajaxform', self);
