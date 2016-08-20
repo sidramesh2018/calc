@@ -1,4 +1,6 @@
-/* global jQuery, window */
+/* global jQuery, document, window */
+
+import 'document-register-element';
 
 const $ = jQuery;
 
@@ -19,26 +21,19 @@ function browserSupportsFormData() {
   return 'FormData' in window;
 }
 
-function getForm() {
-  return $('[data-ajaxform]')[0];
-}
+function replaceForm(form, html) {
+  const newForm = $(html)[0];
 
-function replaceForm(html) {
   // Replace the form and bind it.
-  $(getForm()).replaceWith(html);
+  $(form).replaceWith(newForm);
 
   // Animate the new form so the user notices it.
   // TODO: Consider using a CSS class w/ a transition or animation instead.
-  $(getForm()).hide().fadeIn();
+  $(newForm).hide().fadeIn();
 }
 
-function bindForm() {
-  const form = getForm();
+function bindForm(form) {
   const $submit = $('button[type=submit]', form);
-
-  if (!form) {
-    return null;
-  }
 
   const self = { form, $submit };
 
@@ -87,8 +82,7 @@ function bindForm() {
 
       req.done((data) => {
         if (data.form_html) {
-          replaceForm(data.form_html);
-          bindForm();
+          replaceForm(form, data.form_html);
         } else if (data.redirect_url) {
           delegate.redirect(data.redirect_url);
         } else {
@@ -107,14 +101,22 @@ function bindForm() {
   return self;
 }
 
-$(bindForm);
-
 exports.setDelegate = newDelegate => {
   delegate = newDelegate;
   return delegate;
 };
 exports.MISC_ERROR = MISC_ERROR;
-exports.getForm = getForm;
 exports.bindForm = bindForm;
 
 window.testingExports__ajaxform = exports;
+
+class AjaxForm extends window.HTMLFormElement {
+  createdCallback() {
+    bindForm(this);
+  }
+}
+
+document.registerElement('ajax-form', {
+  extends: 'form',
+  prototype: AjaxForm.prototype,
+});
