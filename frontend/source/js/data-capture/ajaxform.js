@@ -15,6 +15,10 @@ let delegate = {
   },
 };
 
+function browserSupportsFormData() {
+  return 'FormData' in window;
+}
+
 function getForm() {
   return $('[data-ajaxform]')[0];
 }
@@ -30,25 +34,13 @@ function replaceForm(html) {
 
 function bindForm() {
   const form = getForm();
-  const $upload = $('.upload', form);
-  const $fileInput = $('input[type=file]', form);
   const $submit = $('button[type=submit]', form);
 
   if (!form) {
     return null;
   }
 
-  $upload.uploadify();
-
-  const upload = $fileInput.data('upload');
-  const self = { form, upload, $upload, $fileInput, $submit };
-
-  if (!upload) {
-    // Presently we require an ajaxform to contain exactly one
-    // upload widget; we'd like to change this at some point in the
-    // future, but for now we'll make our expectations explicit.
-    throw new Error('ajaxform must contain an upload widget');
-  }
+  const self = { form, $submit };
 
   if (!$submit.length) {
     throw new Error('ajaxform must contain a <button type="submit">');
@@ -57,21 +49,9 @@ function bindForm() {
   // This is mostly just for test suites to use.
   $(form).data('ajaxform', self);
 
-  // Disable the submit button until a file is selected.
-  $submit.prop('disabled', true);
-
-  // In the case of a degraded upload, only the 'change' event is fired.
-  // When we have a fully functional drag-n-drop upload, 'changefile' is
-  // fired on drop, while 'change' is fired on normal file browser selection.
-  // So, we need to listen to both events and reenable the submit button
-  // on either.
-  const enableSubmit = () => $submit.prop('disabled', false);
-  $fileInput.on('changefile', enableSubmit);
-  $fileInput.on('change', enableSubmit);
-
   $(form).on('submit', (e) => {
-    if (upload.isDegraded) {
-      // The upload widget is degraded; we should assume the browser has
+    if (!browserSupportsFormData()) {
+      // Assume the browser has
       // minimal HTML5 support and just let the user submit the form manually.
     } else {
       e.preventDefault();
@@ -84,13 +64,14 @@ function bindForm() {
       for (let i = 0; i < form.elements.length; i++) {
         const el = form.elements[i];
 
-        if (el.name === $fileInput.attr('name') && upload.file) {
-          // It's possible that the user may have dragged-and-dropped a
-          // file to our upload widget, in which case the actual
-          // file <input> element won't contain what we want. So we'll
-          // add what the file the upload widget says we need to upload.
-          formData.append($fileInput.attr('name'), upload.file);
+        if (typeof el.getUpgradedValue === 'function') {
+          formData.append(el.name, el.getUpgradedValue());
         } else {
+          const elType = el.getAttribute('type');
+          if (elType === 'radio' || elType === 'checked') {
+            // https://github.com/18F/calc/issues/570
+            throw new Error(`unsupported input type: ${elType}`);
+          }
           formData.append(el.name, el.value);
         }
       }

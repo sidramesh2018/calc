@@ -1,5 +1,7 @@
 /* global jQuery, window, document */
 
+import 'document-register-element';
+
 const $ = jQuery;
 
 // The following feature detectors are ultimately pulled from Modernizr.
@@ -144,15 +146,37 @@ function activateUploadWidget($el) {
   });
 }
 
-$.fn.uploadify = function uploadify() {
-  this.each(function activate() {
-    activateUploadWidget($(this));
-  });
-  return this;
-};
+$.support.advancedUpload = browserSupportsAdvancedUpload();
 
-$(document).ready(() => {
-  $('.upload').uploadify();
+class UploadInput extends window.HTMLInputElement {
+  createdCallback() {
+    if (this.getAttribute('type') !== 'file') {
+      throw new Error('<input is="upload-input"> must have type "file".');
+    }
+  }
+
+  getUpgradedValue() {
+    const upload = $(this).data('upload');
+
+    if (upload && !upload.isDegraded) {
+      return upload.file;
+    }
+
+    return this.files[0];
+  }
+}
+
+class UploadWidget extends window.HTMLElement {
+  createdCallback() {
+    activateUploadWidget($(this));
+  }
+}
+
+document.registerElement('upload-widget', {
+  prototype: UploadWidget.prototype,
 });
 
-$.support.advancedUpload = browserSupportsAdvancedUpload();
+document.registerElement('upload-input', {
+  extends: 'input',
+  prototype: UploadInput.prototype,
+});

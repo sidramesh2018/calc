@@ -23,11 +23,12 @@ class UploadWidget(forms.widgets.FileInput):
         if attrs:
             final_attrs.update(attrs)
         final_attrs['accept'] = ",".join(self.accept)
+        final_attrs['is'] = 'upload-input'
 
         id_for_label = final_attrs.get('id', '')
 
         return "\n".join([
-            '<div class="upload"%s>' % degraded_str,
+            '<upload-widget%s>' % degraded_str,
             '  %s' % super().render(name, value, final_attrs),
             '  <div class="upload-chooser">',
             '    <label for="%s">Choose file</label>' % id_for_label,
@@ -36,5 +37,5 @@ class UploadWidget(forms.widgets.FileInput):
             '    </span>',
             '    <span>%s</span>' % self.extra_instructions,
             '  </div>',
-            '</div>'
+            '</upload-widget>'
         ])

@@ -37,6 +37,8 @@ COPY requirements.txt /calc/
 
 RUN pip install -r /calc/requirements.txt
 
+RUN npm install document-register-element
+
 # The following lines set up our container for being run in a
 # cloud environment, where folder sharing is disabled. They're
 # irrelevant for a local development environment, where the /calc
