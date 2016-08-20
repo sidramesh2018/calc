@@ -97,11 +97,6 @@ function activateUploadWidget($el) {
     $input.trigger('changefile', file);
   }
 
-  if ($input.data('upload')) {
-    // We've already been uploadified!
-    return;
-  }
-
   $input.data('upload', self);
 
   if (!browserSupportsAdvancedUpload() ||
@@ -110,6 +105,9 @@ function activateUploadWidget($el) {
     self.isDegraded = true;
     return;
   }
+
+  $('label', $el)
+    .after('<span aria-hidden="true"> or drag and drop here.</span>');
 
   // The content of the upload widget will change when the user chooses
   // a file, so let's make sure screen readers let users know about it.

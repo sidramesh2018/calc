@@ -32,9 +32,6 @@ class UploadWidget(forms.widgets.FileInput):
             '  %s' % super().render(name, value, final_attrs),
             '  <div class="upload-chooser">',
             '    <label for="%s">Choose file</label>' % id_for_label,
-            '    <span class="js-only" aria-hidden="true">',
-            '      or drag and drop here.',
-            '    </span>',
             '    <span>%s</span>' % self.extra_instructions,
             '  </div>',
             '</upload-widget>'
