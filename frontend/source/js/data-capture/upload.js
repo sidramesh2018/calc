@@ -153,14 +153,16 @@ class UploadInput extends window.HTMLInputElement {
     }
   }
 
-  getUpgradedValue() {
+  get isUpgraded() {
     const upload = $(this).data('upload');
 
-    if (upload && !upload.isDegraded) {
-      return upload.file;
-    }
+    return upload && !upload.isDegraded;
+  }
 
-    return this.files[0];
+  get upgradedValue() {
+    const upload = $(this).data('upload');
+
+    return upload && upload.file;
   }
 }
 

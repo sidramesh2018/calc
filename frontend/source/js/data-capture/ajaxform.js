@@ -53,15 +53,21 @@ function bindForm(form) {
       for (let i = 0; i < form.elements.length; i++) {
         const el = form.elements[i];
 
-        if (typeof el.getUpgradedValue === 'function') {
-          formData.append(el.name, el.getUpgradedValue());
+        if (el.isUpgraded) {
+          formData.append(el.name, el.upgradedValue);
         } else {
           const elType = el.getAttribute('type');
+
           if (elType === 'radio' || elType === 'checked') {
             // https://github.com/18F/calc/issues/570
             throw new Error(`unsupported input type: ${elType}`);
+          } else if (elType === 'file') {
+            for (let j = 0; j < el.files.length; j++) {
+              formData.append(el.name, el.files[j]);
+            }
+          } else {
+            formData.append(el.name, el.value);
           }
-          formData.append(el.name, el.value);
         }
       }
 
