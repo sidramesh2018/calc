@@ -4,13 +4,9 @@ import 'document-register-element';
 
 import * as supports from './feature-detection';
 
-const $ = jQuery;
+import { dispatchBubbly } from './custom-event';
 
-function dispatchBubbly(el, eventType) {
-  el.dispatchEvent(new window.CustomEvent(eventType, {
-    bubbles: true,
-  }));
-}
+const $ = jQuery;
 
 class UploadInput extends window.HTMLInputElement {
   createdCallback() {

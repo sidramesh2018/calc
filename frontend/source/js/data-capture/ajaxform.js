@@ -4,6 +4,8 @@ import 'document-register-element';
 
 import * as supports from './feature-detection';
 
+import { dispatchBubbly } from './custom-event';
+
 const $ = jQuery;
 
 const MISC_ERROR = 'Sorry, we’re having trouble. ' +
@@ -113,9 +115,7 @@ window.testingExports__ajaxform = exports;
 class AjaxForm extends window.HTMLFormElement {
   createdCallback() {
     bindForm(this);
-    this.dispatchEvent(new window.CustomEvent('ajaxformready', {
-      bubbles: true,
-    }));
+    dispatchBubbly(this, 'ajaxformready');
   }
 }
 
