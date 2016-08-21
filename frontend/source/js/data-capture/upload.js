@@ -6,6 +6,33 @@ import * as supports from './feature-detection';
 
 const $ = jQuery;
 
+function dispatchBubbly(el, eventType) {
+  el.dispatchEvent(new window.CustomEvent(eventType, {
+    bubbles: true,
+  }));
+}
+
+class UploadInput extends window.HTMLInputElement {
+  createdCallback() {
+    if (this.getAttribute('type') !== 'file') {
+      throw new Error('<input is="upload-input"> must have type "file".');
+    }
+    dispatchBubbly(this, 'uploadinputready');
+  }
+
+  get isUpgraded() {
+    const upload = $(this).data('upload');
+
+    return upload && !upload.isDegraded;
+  }
+
+  get upgradedValue() {
+    const upload = $(this).data('upload');
+
+    return upload && upload.file;
+  }
+}
+
 function browserSupportsAdvancedUpload() {
   return supports.dragAndDrop() && supports.formData() &&
          supports.dataTransfer();
@@ -24,6 +51,14 @@ function activateUploadWidget($el) {
     file: null,
   };
   let dragCounter = 0;
+
+  function dispatchReadyEvent() {
+    if (self.input instanceof UploadInput) {
+      dispatchBubbly($el[0], 'uploadwidgetready');
+    } else {
+      $el.one('uploadinputready', dispatchReadyEvent);
+    }
+  }
 
   function setCurrentFilename(filename) {
     $('input', $el).nextAll().remove();
@@ -86,10 +121,10 @@ function activateUploadWidget($el) {
   $input.data('upload', self);
 
   if (!browserSupportsAdvancedUpload() ||
-      $el[0].hasAttribute('data-force-degradation')) {
+      $el.closest('[data-force-degradation]').length) {
     $el.addClass('degraded');
     self.isDegraded = true;
-    return;
+    return dispatchReadyEvent();
   }
 
   $('label', $el)
@@ -128,29 +163,11 @@ function activateUploadWidget($el) {
     $input.val('');
     setCurrentFilename(file.name);
   });
+
+  return dispatchReadyEvent();
 }
 
 $.support.advancedUpload = browserSupportsAdvancedUpload();
-
-class UploadInput extends window.HTMLInputElement {
-  createdCallback() {
-    if (this.getAttribute('type') !== 'file') {
-      throw new Error('<input is="upload-input"> must have type "file".');
-    }
-  }
-
-  get isUpgraded() {
-    const upload = $(this).data('upload');
-
-    return upload && !upload.isDegraded;
-  }
-
-  get upgradedValue() {
-    const upload = $(this).data('upload');
-
-    return upload && upload.file;
-  }
-}
 
 class UploadWidget extends window.HTMLElement {
   createdCallback() {

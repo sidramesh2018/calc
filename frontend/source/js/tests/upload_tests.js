@@ -5,14 +5,44 @@
   let upload;
   let input;
 
+  function makeWidget(isDegraded, cb) {
+    const div = document.createElement('div');
+
+    if (isDegraded) {
+      div.setAttribute('data-force-degradation', '');
+    }
+
+    div.addEventListener('uploadwidgetready', e => {
+      upload = $(e.target);
+      input = upload.find('input');
+      cb();
+    });
+    document.body.appendChild(div);
+    div.innerHTML = UPLOAD_HTML;
+  }
+
+  function degradedTest(name, cb) {
+    return QUnit.test(name, (assert) => {
+      const done = assert.async();
+
+      makeWidget(true, () => {
+        cb(assert);
+        done();
+      });
+    });
+  }
+
   function advancedTest(name, cb) {
     if (!$.support.advancedUpload) {
       return QUnit.skip(name, cb);
     }
     return QUnit.test(name, (assert) => {
-      upload = $(UPLOAD_HTML).appendTo(document.body);
-      input = upload.uploadify().find('input');
-      return cb(assert);
+      const done = assert.async();
+
+      makeWidget(false, () => {
+        cb(assert);
+        done();
+      });
     });
   }
 
@@ -30,23 +60,12 @@
     assert.equal(typeof $.support.advancedUpload, 'boolean');
   });
 
-  test('degraded upload sets "upload" data', (assert) => {
-    upload = $(UPLOAD_HTML)
-      .attr('data-force-degradation', 'yup')
-      .appendTo(document.body);
-    input = upload.uploadify().find('input');
-
+  degradedTest('degraded upload sets "upload" data', (assert) => {
     assert.ok(upload.hasClass('degraded'));
     assert.ok(!upload[0].hasAttribute('aria-live'));
     assert.strictEqual(input.data('upload').isDegraded, true);
     assert.strictEqual(input.data('upload').input, input[0]);
     assert.strictEqual(input.data('upload').file, null);
-  });
-
-  advancedTest('extra calls to uploadify() do nothing', (assert) => {
-    const data = input.data('upload');
-    upload.uploadify();
-    assert.strictEqual(input.data('upload'), data);
   });
 
   advancedTest('advanced upload sets aria-live', (assert) => {
