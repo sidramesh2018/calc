@@ -2,11 +2,14 @@
 (function uploadTests(QUnit, $) {
   const UPLOAD_HTML = QUNIT_FIXTURE_DATA.UPLOAD_TESTS_HTML;
 
+  let $parentDiv;
   let upload;
   let input;
 
   function makeWidget(isDegraded, cb) {
     const div = document.createElement('div');
+
+    $parentDiv = $(div);
 
     if (isDegraded) {
       div.setAttribute('data-force-degradation', '');
@@ -48,8 +51,9 @@
 
   QUnit.module('upload', {
     afterEach() {
-      if (upload) {
-        upload.remove();
+      if ($parentDiv) {
+        $parentDiv.remove();
+        $parentDiv = null;
       }
       upload = null;
       input = null;
