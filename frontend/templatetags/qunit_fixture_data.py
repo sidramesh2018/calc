@@ -22,9 +22,9 @@ class AjaxformTestsForm(forms.Form):
     def render(self):
         return ''.join([
             '<form enctype="multipart/form-data" method="post"',
-            ' data-ajaxform',
+            ' is="ajax-form"',
             ' action="/post-stuff">',
-            '  %s' % str(self.as_p()),
+            '  %s' % str(self.as_ul()),
             '  <button type="submit">submit</button>',
             '</form>'
         ])

@@ -1,4 +1,4 @@
-/* global QUnit $ test window QUNIT_FIXTURE_DATA */
+/* global QUnit $ test document window QUNIT_FIXTURE_DATA */
 
 const urlParse = require('url').parse;
 const sinon = require('sinon');
@@ -6,15 +6,18 @@ const sinon = require('sinon');
 const ajaxform = window.testingExports__ajaxform;
 
 let server;
+let $parentDiv;
 
 QUnit.module('ajaxform', {
   beforeEach() {
     server = sinon.fakeServer.create();
-    $('[data-ajaxform]').remove();
   },
   afterEach() {
-    $('[data-ajaxform]').remove();
     server.restore();
+    if ($parentDiv) {
+      $parentDiv.remove();
+      $parentDiv = null;
+    }
   },
 });
 
@@ -34,75 +37,95 @@ function createBlob(content) {
   throw new Error('Unable to determine how to create Blob');
 }
 
-function advancedTest(name, cb) {
-  if (!$.support.advancedUpload) {
-    return QUnit.skip(name, cb);
-  }
-  return QUnit.test(name, cb);
-}
-
 function makeFormHtml(extraOptions) {
   const options = Object.assign({
     isDegraded: false,
     fooValue: 'bar',
   }, extraOptions || {});
-  const $form = $('<div></div>')
+
+  const iframe = document.createElement('iframe');
+
+  document.body.appendChild(iframe);
+
+  const $form = $(iframe.contentDocument.body)
     .html(QUNIT_FIXTURE_DATA.AJAXFORM_TESTS_HTML);
 
   if (options.isDegraded) {
-    $form.find('.upload').attr('data-force-degradation', '');
+    $form.find('form').attr('data-force-degradation', '');
   }
 
   $form.find('input[name="foo"]').attr('value', options.fooValue);
 
+  $(iframe).remove();
+
   return $form.html();
 }
 
-function addForm(extraOptions) {
-  $('<div></div>')
-    .html(makeFormHtml(extraOptions))
-    .appendTo('body')
-    .hide();
-  return ajaxform.bindForm();
+function addForm(extraOptions, cb) {
+  const div = $('<div></div>').appendTo('body').hide();
+  const s = {
+    setFile(file) {
+      this.uploadwidget.file = file;
+    },
+  };
+
+  $parentDiv = div;
+
+  function update() {
+    if (s.ajaxform && s.uploadwidget) {
+      cb(s);
+    }
+  }
+
+  div.one('uploadwidgetready', e => {
+    s.uploadwidget = $('input', e.target).data('upload');
+    update();
+  });
+  div.one('ajaxformready', e => {
+    s.ajaxform = $(e.target).data('ajaxform');
+    update();
+  });
+  div.html(makeFormHtml(extraOptions));
 }
 
-test('bindForm() returns null when data-ajaxform not on page', assert => {
-  assert.strictEqual(ajaxform.bindForm(), null);
-});
+function formTest(name, options, originalCb) {
+  let cb = originalCb;
+  let extraOptions = options;
 
-test('submit btn disabled on startup', assert => {
-  assert.ok(addForm().$submit.prop('disabled'));
-});
+  if (!cb) {
+    cb = extraOptions;
+    extraOptions = undefined;
+  }
+  return QUnit.test(name, assert => {
+    const done = assert.async();
+    addForm(extraOptions, s => {
+      cb(assert, s);
+      done();
+    });
+  });
+}
 
-test('submit btn enabled on file input change', assert => {
-  const s = addForm();
+function advancedTest(name, extraOptions, cb) {
+  if (!$.support.advancedUpload) {
+    return QUnit.skip(name, cb);
+  }
+  return formTest(name, extraOptions, cb);
+}
 
-  s.$fileInput.trigger('change');
-  assert.ok(!s.$submit.prop('disabled'), 'submit button is enabled');
-});
-
-test('submit btn enabled on upload widget changefile', assert => {
-  const s = addForm();
-
-  s.$fileInput.trigger('changefile', { name: 'baz' });
-  assert.ok(!s.$submit.prop('disabled'), 'submit button is enabled');
-});
-
-test('degraded input does not cancel form submission', assert => {
-  const s = addForm({ isDegraded: true });
-
-  $(s.form).on('submit', e => {
+formTest('degraded form does not cancel form submission', {
+  isDegraded: true,
+}, (assert, s) => {
+  $(s.ajaxform.form).on('submit', e => {
+    assert.ok(s.ajaxform.isDegraded);
     assert.ok(!e.isDefaultPrevented());
     e.preventDefault();
   });
 
-  $(s.form).submit();
+  $(s.ajaxform.form).submit();
 });
 
-advancedTest('submit triggers ajax w/ form data', assert => {
-  const s = addForm();
-
-  $(s.form).on('submit', e => {
+advancedTest('submit triggers ajax w/ form data', (assert, s) => {
+  $(s.ajaxform.form).on('submit', e => {
     assert.ok(e.isDefaultPrevented());
     assert.equal(server.requests.length, 1);
 
@@ -119,18 +142,26 @@ advancedTest('submit triggers ajax w/ form data', assert => {
     }
   });
 
-  s.upload.file = createBlob('hello there');
+  s.setFile(createBlob('hello there'));
 
-  $(s.form).submit();
+  $(s.ajaxform.form).submit();
 });
 
-advancedTest('form_html replaces form & rebinds it', assert => {
-  const s = addForm({ fooValue: 'hello' });
+advancedTest('form_html replaces form & rebinds it', {
+  fooValue: 'hello',
+}, (assert, s) => {
+  function getForm() {
+    const $form = $('form', $parentDiv);
+    assert.equal($form.length, 1);
+    return $form[0];
+  }
 
-  assert.equal($('input[name="foo"]', s.form).val(), 'hello');
+  const origForm = getForm();
 
-  s.upload.file = createBlob('blah');
-  $(s.form).submit();
+  assert.equal($('input[name="foo"]', origForm).val(), 'hello');
+
+  s.setFile(createBlob('blah'));
+  $(origForm).submit();
 
   server.requests[0].respond(
     200,
@@ -140,19 +171,15 @@ advancedTest('form_html replaces form & rebinds it', assert => {
     })
   );
 
-  const sNew = $(ajaxform.getForm()).data('ajaxform');
+  const newForm = getForm();
 
-  assert.ok(sNew);
-  assert.ok(sNew !== s);
-  assert.ok(sNew.form !== s.form);
-  assert.equal($('input[name="foo"]', sNew.form).val(), 'blargyblarg');
+  assert.ok(newForm !== origForm);
+  assert.equal($('input[name="foo"]', newForm).val(), 'blargyblarg');
 });
 
-advancedTest('redirect_url redirects browser', assert => {
-  const s = addForm();
-
-  s.upload.file = createBlob('blah');
-  $(s.form).submit();
+advancedTest('redirect_url redirects browser', (assert, s) => {
+  s.setFile(createBlob('blah'));
+  $(s.ajaxform.form).submit();
 
   const delegate = ajaxform.setDelegate({ redirect: sinon.spy() });
 
@@ -167,11 +194,9 @@ advancedTest('redirect_url redirects browser', assert => {
   assert.ok(delegate.redirect.calledWith('http://boop'));
 });
 
-advancedTest('500 results in alert', assert => {
-  const s = addForm();
-
-  s.upload.file = createBlob('blah');
-  $(s.form).submit();
+advancedTest('500 results in alert', (assert, s) => {
+  s.setFile(createBlob('blah'));
+  $(s.ajaxform.form).submit();
 
   const delegate = ajaxform.setDelegate({ alert: sinon.spy() });
 
@@ -180,11 +205,9 @@ advancedTest('500 results in alert', assert => {
   assert.ok(delegate.alert.calledWith(ajaxform.MISC_ERROR));
 });
 
-advancedTest('unrecognized 200 results in alert', assert => {
-  const s = addForm();
-
-  s.upload.file = createBlob('blah');
-  $(s.form).submit();
+advancedTest('unrecognized 200 results in alert', (assert, s) => {
+  s.setFile(createBlob('blah'));
+  $(s.ajaxform.form).submit();
 
   const delegate = ajaxform.setDelegate({ alert: sinon.spy() });
 
