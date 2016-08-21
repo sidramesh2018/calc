@@ -2,27 +2,13 @@
 
 import 'document-register-element';
 
+import * as supports from './feature-detection';
+
 const $ = jQuery;
 
-// The following feature detectors are ultimately pulled from Modernizr.
-
-function browserSupportsDragAndDrop() {
-  const div = document.createElement('div');
-  return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
-}
-
-function browserSupportsFormData() {
-  return 'FormData' in window;
-}
-
-function browserSupportsDataTransfer() {
-  // Browsers that support FileReader support DataTransfer too.
-  return 'FileReader' in window;
-}
-
 function browserSupportsAdvancedUpload() {
-  return browserSupportsDragAndDrop() && browserSupportsFormData() &&
-         browserSupportsDataTransfer();
+  return supports.dragAndDrop() && supports.formData() &&
+         supports.dataTransfer();
 }
 
 function stopAndPrevent(event) {

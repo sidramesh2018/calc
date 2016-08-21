@@ -2,6 +2,8 @@
 
 import 'document-register-element';
 
+import * as supports from './feature-detection';
+
 const $ = jQuery;
 
 const MISC_ERROR = 'Sorry, we’re having trouble. ' +
@@ -16,10 +18,6 @@ let delegate = {
     window.alert(msg);   // eslint-disable-line no-alert
   },
 };
-
-function browserSupportsFormData() {
-  return 'FormData' in window;
-}
 
 function replaceForm(form, html) {
   const newForm = $(html)[0];
@@ -39,7 +37,7 @@ function bindForm(form) {
   $(form).data('ajaxform', self);
 
   $(form).on('submit', (e) => {
-    if (!browserSupportsFormData()) {
+    if (!supports.formData()) {
       // Assume the browser has
       // minimal HTML5 support and just let the user submit the form manually.
     } else {
