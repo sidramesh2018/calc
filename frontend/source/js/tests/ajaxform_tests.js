@@ -65,20 +65,20 @@ function addForm(extraOptions, cb) {
   const div = $('<div></div>').appendTo('body').hide();
   const s = {
     setFile(file) {
-      this.uploadwidget.file = file;
+      this.uploadinput.upgradedValue = file;
     },
   };
 
   $parentDiv = div;
 
   function update() {
-    if (s.ajaxform && s.uploadwidget) {
+    if (s.ajaxform && s.uploadinput) {
       cb(s);
     }
   }
 
   div.one('uploadwidgetready', e => {
-    s.uploadwidget = $('input', e.target).data('upload');
+    s.uploadinput = $('input', e.target)[0];
     update();
   });
   div.one('ajaxformready', e => {

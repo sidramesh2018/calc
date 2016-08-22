@@ -27,6 +27,10 @@ class UploadInput extends window.HTMLInputElement {
 
     return upload && upload.file;
   }
+
+  set upgradedValue(value) {
+    $(this).data('upload').file = value;
+  }
 }
 
 function browserSupportsAdvancedUpload() {
