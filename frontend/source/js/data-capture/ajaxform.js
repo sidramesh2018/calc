@@ -32,6 +32,30 @@ function replaceForm(form, html) {
   $(newForm).hide().fadeIn();
 }
 
+function populateFormData(form, formData) {
+  // IE11 doesn't support FormData.prototype.delete(), so we need to
+  // manually construct the FormData ourselves (we used to have
+  // the browser construct it for us, and then replace the file).
+  for (let i = 0; i < form.elements.length; i++) {
+    const el = form.elements[i];
+
+    if (el.isUpgraded) {
+      formData.append(el.name, el.upgradedValue);
+    } else if (el.type === 'radio' || el.type === 'checked') {
+      // https://github.com/18F/calc/issues/570
+      throw new Error(`unsupported input type: ${el.type}`);
+    } else if (el.type === 'file') {
+      for (let j = 0; j < el.files.length; j++) {
+        formData.append(el.name, el.files[j]);
+      }
+    } else {
+      formData.append(el.name, el.value);
+    }
+  }
+
+  return formData;
+}
+
 function bindForm(form) {
   const isDegraded = !supports.formData() ||
                      $(form).closest('[data-force-degradation]').length;
@@ -49,29 +73,7 @@ function bindForm(form) {
 
       const formData = new window.FormData();
 
-      // IE11 doesn't support FormData.prototype.delete(), so we need to
-      // manually construct the FormData ourselves (we used to have
-      // the browser construct it for us, and then replace the file).
-      for (let i = 0; i < form.elements.length; i++) {
-        const el = form.elements[i];
-
-        if (el.isUpgraded) {
-          formData.append(el.name, el.upgradedValue);
-        } else {
-          const elType = el.getAttribute('type');
-
-          if (elType === 'radio' || elType === 'checked') {
-            // https://github.com/18F/calc/issues/570
-            throw new Error(`unsupported input type: ${elType}`);
-          } else if (elType === 'file') {
-            for (let j = 0; j < el.files.length; j++) {
-              formData.append(el.name, el.files[j]);
-            }
-          } else {
-            formData.append(el.name, el.value);
-          }
-        }
-      }
+      populateFormData(form, formData);
 
       const req = $.ajax(form.action, {
         processData: false,
@@ -109,6 +111,7 @@ exports.setDelegate = newDelegate => {
 };
 exports.MISC_ERROR = MISC_ERROR;
 exports.bindForm = bindForm;
+exports.populateFormData = populateFormData;
 
 window.testingExports__ajaxform = exports;
 

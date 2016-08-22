@@ -112,6 +112,16 @@ function advancedTest(name, extraOptions, cb) {
   return formTest(name, extraOptions, cb);
 }
 
+class FakeFormData {
+  constructor() {
+    this.appended = [];
+  }
+
+  append(name, value) {
+    this.appended.push([name, value]);
+  }
+}
+
 formTest('degraded form does not cancel form submission', {
   isDegraded: true,
 }, (assert, s) => {
@@ -122,6 +132,18 @@ formTest('degraded form does not cancel form submission', {
   });
 
   $(s.ajaxform.form).submit();
+});
+
+test('populateFormData() works w/ non-upgraded file inputs', assert => {
+  const formData = ajaxform.populateFormData({
+    elements: [{
+      type: 'file',
+      name: 'boop',
+      files: ['fakeFile'],
+    }],
+  }, new FakeFormData());
+
+  assert.deepEqual(formData.appended, [['boop', 'fakeFile']]);
 });
 
 advancedTest('submit triggers ajax w/ form data', (assert, s) => {
