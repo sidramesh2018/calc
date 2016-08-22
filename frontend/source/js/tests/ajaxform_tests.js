@@ -82,7 +82,7 @@ function addForm(extraOptions, cb) {
     update();
   });
   div.one('ajaxformready', e => {
-    s.ajaxform = $(e.target).data('ajaxform');
+    s.ajaxform = e.target;
     update();
   });
   div.html(makeFormHtml(extraOptions));
@@ -122,16 +122,21 @@ class FakeFormData {
   }
 }
 
+formTest('degraded form has truthy .isDegraded', {
+  isDegraded: true,
+}, (assert, s) => {
+  assert.ok(s.ajaxform.isDegraded);
+});
+
 formTest('degraded form does not cancel form submission', {
   isDegraded: true,
 }, (assert, s) => {
-  $(s.ajaxform.form).on('submit', e => {
-    assert.ok(s.ajaxform.isDegraded);
+  $(s.ajaxform).on('submit', e => {
     assert.ok(!e.isDefaultPrevented());
     e.preventDefault();
   });
 
-  $(s.ajaxform.form).submit();
+  $(s.ajaxform).submit();
 });
 
 test('populateFormData() works w/ non-upgraded file inputs', assert => {
@@ -146,8 +151,12 @@ test('populateFormData() works w/ non-upgraded file inputs', assert => {
   assert.deepEqual(formData.appended, [['boop', 'fakeFile']]);
 });
 
+advancedTest('upgraded form has falsy .isDegraded', (assert, s) => {
+  assert.ok(!s.ajaxform.isDegraded);
+});
+
 advancedTest('submit triggers ajax w/ form data', (assert, s) => {
-  $(s.ajaxform.form).on('submit', e => {
+  $(s.ajaxform).on('submit', e => {
     assert.ok(e.isDefaultPrevented());
     assert.equal(server.requests.length, 1);
 
@@ -166,7 +175,7 @@ advancedTest('submit triggers ajax w/ form data', (assert, s) => {
 
   s.setFile(createBlob('hello there'));
 
-  $(s.ajaxform.form).submit();
+  $(s.ajaxform).submit();
 });
 
 advancedTest('form_html replaces form & rebinds it', {
@@ -201,7 +210,7 @@ advancedTest('form_html replaces form & rebinds it', {
 
 advancedTest('redirect_url redirects browser', (assert, s) => {
   s.setFile(createBlob('blah'));
-  $(s.ajaxform.form).submit();
+  $(s.ajaxform).submit();
 
   const delegate = ajaxform.setDelegate({ redirect: sinon.spy() });
 
@@ -218,7 +227,7 @@ advancedTest('redirect_url redirects browser', (assert, s) => {
 
 advancedTest('500 results in alert', (assert, s) => {
   s.setFile(createBlob('blah'));
-  $(s.ajaxform.form).submit();
+  $(s.ajaxform).submit();
 
   const delegate = ajaxform.setDelegate({ alert: sinon.spy() });
 
@@ -229,7 +238,7 @@ advancedTest('500 results in alert', (assert, s) => {
 
 advancedTest('unrecognized 200 results in alert', (assert, s) => {
   s.setFile(createBlob('blah'));
-  $(s.ajaxform.form).submit();
+  $(s.ajaxform).submit();
 
   const delegate = ajaxform.setDelegate({ alert: sinon.spy() });
 

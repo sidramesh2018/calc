@@ -57,15 +57,8 @@ function populateFormData(form, formData) {
 }
 
 function bindForm(form) {
-  const isDegraded = !supports.formData() ||
-                     $(form).closest('[data-force-degradation]').length;
-  const self = { form, isDegraded };
-
-  // This is mostly just for test suites to use.
-  $(form).data('ajaxform', self);
-
   $(form).on('submit', (e) => {
-    if (isDegraded) {
+    if (form.isDegraded) {
       // Assume the browser has
       // minimal HTML5 support and just let the user submit the form manually.
     } else {
@@ -101,8 +94,6 @@ function bindForm(form) {
       });
     }
   });
-
-  return self;
 }
 
 exports.setDelegate = newDelegate => {
@@ -117,6 +108,8 @@ window.testingExports__ajaxform = exports;
 
 class AjaxForm extends window.HTMLFormElement {
   createdCallback() {
+    this.isDegraded = !supports.formData() ||
+                      $(this).closest('[data-force-degradation]').length;
     bindForm(this);
     dispatchBubbly(this, 'ajaxformready');
   }
