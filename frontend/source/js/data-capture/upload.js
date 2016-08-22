@@ -1,4 +1,5 @@
 /* global jQuery, window, document */
+/* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
 
 import 'document-register-element';
 
@@ -28,26 +29,42 @@ function isFileValid(file, input) {
 
 class UploadInput extends window.HTMLInputElement {
   createdCallback() {
+    this.uploadWidget = null;
+    this._upgradedValue = null;
     if (this.getAttribute('type') !== 'file') {
       throw new Error('<input is="upload-input"> must have type "file".');
     }
+    $(this).on('change', () => {
+      this.upgradedValue = this.files[0];
+    });
     dispatchBubbly(this, 'uploadinputready');
   }
 
   get isUpgraded() {
-    const upload = $(this).data('upload');
+    if (!this.uploadWidget) {
+      return false;
+    }
 
-    return upload && !upload.isDegraded;
+    return !this.uploadWidget.isDegraded;
   }
 
   get upgradedValue() {
-    const upload = $(this).data('upload');
-
-    return upload && upload.file;
+    return this._upgradedValue;
   }
 
-  set upgradedValue(value) {
-    $(this).data('upload').file = value;
+  set upgradedValue(file) {
+    if (!file) {
+      return;
+    }
+
+    if (!isFileValid(file, this)) {
+      $(this).trigger('invalidfile');
+      return;
+    }
+
+    this._upgradedValue = file;
+    $(this).val('');
+    $(this).trigger('changefile', file);
   }
 }
 
@@ -61,22 +78,23 @@ function stopAndPrevent(event) {
   event.preventDefault();
 }
 
-function activateUploadWidget($el) {
+function activateUploadWidget() {
+  const $el = $(this);
   const $input = $('input', $el);
-  const self = {
-    input: $input[0],
-    isDegraded: false,
-    file: null,
-  };
+
+  this.uploadInput = $input[0];
+  this.isDegraded = false;
+
   let dragCounter = 0;
 
-  function dispatchReadyEvent() {
-    if (self.input instanceof UploadInput) {
+  const finishInitialization = () => {
+    if (this.uploadInput instanceof UploadInput) {
+      this.uploadInput.uploadWidget = this;
       dispatchBubbly($el[0], 'uploadwidgetready');
     } else {
-      $el.one('uploadinputready', dispatchReadyEvent);
+      $el.one('uploadinputready', finishInitialization);
     }
-  }
+  };
 
   function setCurrentFilename(filename) {
     $('input', $el).nextAll().remove();
@@ -108,23 +126,11 @@ function activateUploadWidget($el) {
     $el.append(err);
   }
 
-  function setFile(file) {
-    if (!file) { return; }
-    if (!isFileValid(file, self.input)) {
-      showInvalidFileMessage();
-      return;
-    }
-    // else
-    $input.trigger('changefile', file);
-  }
-
-  $input.data('upload', self);
-
   if (!browserSupportsAdvancedUpload() ||
       $el.closest('[data-force-degradation]').length) {
     $el.addClass('degraded');
-    self.isDegraded = true;
-    return dispatchReadyEvent();
+    this.isDegraded = true;
+    return finishInitialization();
   }
 
   $('label', $el)
@@ -151,27 +157,23 @@ function activateUploadWidget($el) {
     stopAndPrevent(e);
     $el.removeClass('dragged-over');
 
-    setFile(e.originalEvent.dataTransfer.files[0]);
+    this.uploadInput.upgradedValue = e.originalEvent.dataTransfer.files[0];
   });
 
-  $input.on('change', () => {
-    setFile($input[0].files[0]);
-  });
+  $input.on('invalidfile', showInvalidFileMessage);
 
   $input.on('changefile', (e, file) => {
-    self.file = file;
-    $input.val('');
     setCurrentFilename(file.name);
   });
 
-  return dispatchReadyEvent();
+  return finishInitialization();
 }
 
 $.support.advancedUpload = browserSupportsAdvancedUpload();
 
 class UploadWidget extends window.HTMLElement {
   createdCallback() {
-    activateUploadWidget($(this));
+    activateUploadWidget.call(this);
   }
 }
 

@@ -137,12 +137,15 @@
     assert.strictEqual(input[0].upgradedValue, null);
   });
 
-  advancedTest('"changefile" sets current file', (assert) => {
+  advancedTest('changing .upgradedValue sets current file', (assert) => {
     const fakeFile = { name: 'foo.txt', type: 'application/test' };
-    input.trigger('changefile', fakeFile);
 
-    assert.strictEqual(input[0].upgradedValue, fakeFile);
-    assert.equal(upload.find('.upload-filename').text(), 'foo.txt');
+    input.on('changefile', (e, file) => {
+      assert.strictEqual(file, fakeFile);
+      assert.equal(upload.find('.upload-filename').text(), 'foo.txt');
+    });
+
+    input[0].upgradedValue = fakeFile;
   });
 
   advancedTest('dragenter/dragleave affect .dragged-over', (assert) => {

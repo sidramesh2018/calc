@@ -17,7 +17,9 @@ class UploadTestsForm(forms.Form):
 
 class AjaxformTestsForm(forms.Form):
     foo = forms.CharField()
-    file = forms.FileField(widget=UploadWidget)
+    file = forms.FileField(widget=UploadWidget(
+        accept=''
+    ))
 
     def render(self):
         return ''.join([
