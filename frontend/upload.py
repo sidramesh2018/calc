@@ -9,10 +9,11 @@ class UploadWidget(forms.widgets.FileInput):
     It is tightly coupled to upload.js.
     '''
 
-    def __init__(self, attrs=None, degraded=False,
+    def __init__(self, attrs=None, degraded=False, required=True,
                  accept=(".xlsx", ".xls", ".csv"),
                  extra_instructions='XLS, XLSX, or CSV format, please.'):
         super().__init__(attrs=attrs)
+        self.required = required
         self.degraded = degraded
         self.accept = accept
         self.extra_instructions = extra_instructions
@@ -22,6 +23,13 @@ class UploadWidget(forms.widgets.FileInput):
         final_attrs = {}
         if attrs:
             final_attrs.update(attrs)
+
+        if self.required:
+            # TODO: Django 1.10 automatically adds this attribute as needed
+            # based on the form field, so we should remove this once we
+            # upgrade.
+            final_attrs['required'] = ''
+
         final_attrs['accept'] = ",".join(self.accept)
         final_attrs['is'] = 'upload-input'
 
