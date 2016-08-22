@@ -63,28 +63,22 @@ function makeFormHtml(extraOptions) {
 
 function addForm(extraOptions, cb) {
   const div = $('<div></div>').appendTo('body').hide();
-  const s = {
-    setFile(file) {
-      this.uploadinput.upgradedValue = file;
-    },
-  };
 
   $parentDiv = div;
 
-  function update() {
-    if (s.ajaxform && s.uploadinput) {
-      cb(s);
-    }
-  }
+  Promise.all([
+    new Promise(resolve => div.one('uploadwidgetready', resolve)),
+    new Promise(resolve => div.one('ajaxformready', resolve)),
+  ]).then(results => {
+    cb({
+      uploadinput: results[0].target.uploadInput,
+      ajaxform: results[1].target,
+      setFile(file) {
+        this.uploadinput.upgradedValue = file;
+      },
+    });
+  });
 
-  div.one('uploadwidgetready', e => {
-    s.uploadinput = $('input', e.target)[0];
-    update();
-  });
-  div.one('ajaxformready', e => {
-    s.ajaxform = e.target;
-    update();
-  });
   div.html(makeFormHtml(extraOptions));
 }
 
