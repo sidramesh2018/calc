@@ -1,5 +1,4 @@
 /* global jQuery, window, document */
-/* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
 
 import 'document-register-element';
 
