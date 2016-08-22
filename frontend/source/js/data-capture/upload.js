@@ -133,8 +133,7 @@ function activateUploadWidget() {
     $el.append(err);
   }
 
-  if (!browserSupportsAdvancedUpload() ||
-      $el.closest('[data-force-degradation]').length) {
+  if (!browserSupportsAdvancedUpload() || supports.isForciblyDegraded(this)) {
     $el.addClass('degraded');
     this.isDegraded = true;
     return finishInitialization();

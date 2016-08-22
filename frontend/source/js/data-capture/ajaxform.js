@@ -109,7 +109,7 @@ window.testingExports__ajaxform = exports;
 class AjaxForm extends window.HTMLFormElement {
   createdCallback() {
     this.isDegraded = !supports.formData() ||
-                      $(this).closest('[data-force-degradation]').length;
+                      supports.isForciblyDegraded(this);
     bindForm(this);
     dispatchBubbly(this, 'ajaxformready');
   }

@@ -1,4 +1,4 @@
-/* global window, document */
+/* global $, window, document */
 
 // The following feature detectors are ultimately pulled from Modernizr.
 
@@ -15,5 +15,15 @@ module.exports = {
   dataTransfer() {
     // Browsers that support FileReader support DataTransfer too.
     return 'FileReader' in window;
+  },
+
+  // We'd like to make it possible to forcibly degrade components that have
+  // a `data-force-degradation` attribute on them or one of their
+  // ancestors. This makes it easier to test degraded functionality and
+  // also allows us to (potentially) provide a "safe mode" that users
+  // who are experiencing browser compatibility issues can opt into.
+
+  isForciblyDegraded(el) {
+    return !!$(el).closest('[data-force-degradation]').length;
   },
 };
