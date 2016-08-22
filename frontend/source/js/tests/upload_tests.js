@@ -68,12 +68,9 @@
     assert.ok(!input[0].isUpgraded);
   });
 
-  degradedTest('degraded upload sets "upload" data', (assert) => {
+  degradedTest('degraded upload sets attributes properly', (assert) => {
     assert.ok(upload.hasClass('degraded'));
     assert.ok(!upload[0].hasAttribute('aria-live'));
-    assert.strictEqual(input.data('upload').isDegraded, true);
-    assert.strictEqual(input.data('upload').input, input[0]);
-    assert.strictEqual(input.data('upload').file, null);
   });
 
   advancedTest('advanced upload has truthy .isUpgraded', (assert) => {
@@ -85,12 +82,6 @@
     assert.equal(upload.attr('aria-live'), 'polite');
   });
 
-  advancedTest('advanced upload sets "upload" data', (assert) => {
-    assert.strictEqual(input.data('upload').isDegraded, false);
-    assert.strictEqual(input.data('upload').input, input[0]);
-    assert.strictEqual(input.data('upload').file, null);
-  });
-
   advancedTest('advanced upload does not allow non-accepted file types', (assert) => {
     const badFakeFile = { name: 'boop', type: 'application/badtest' };
     const evt = jQuery.Event('drop', { // eslint-disable-line new-cap
@@ -98,7 +89,7 @@
     });
 
     upload.trigger(evt);
-    assert.strictEqual(input.data('upload').file, null);
+    assert.strictEqual(input[0].upgradedValue, null);
     assert.ok(upload.find('.upload-error').length);
   });
 
@@ -109,14 +100,14 @@
     });
 
     upload.trigger(mimeDropEvt);
-    assert.strictEqual(input.data('upload').file, goodFileMime);
+    assert.strictEqual(input[0].upgradedValue, goodFileMime);
 
     const goodFileExt = { name: 'boop.csv', type: 'whatever' };
     const extDropEvt = jQuery.Event('drop', { // eslint-disable-line new-cap
       originalEvent: { dataTransfer: { files: [goodFileExt] } },
     });
     upload.trigger(extDropEvt);
-    assert.strictEqual(input.data('upload').file, goodFileExt);
+    assert.strictEqual(input[0].upgradedValue, goodFileExt);
   });
 
   advancedTest('advanced upload allows any file when "accept" not specified', (assert) => {
@@ -126,7 +117,7 @@
       originalEvent: { dataTransfer: { files: [fakeFile] } },
     });
     upload.trigger(evt);
-    assert.strictEqual(input.data('upload').file, fakeFile);
+    assert.strictEqual(input[0].upgradedValue, fakeFile);
   });
 
   advancedTest('"changefile" event triggered on drop', (assert) => {
@@ -143,14 +134,13 @@
 
   advancedTest('input "change" evt w/o files does nothing', (assert) => {
     input.trigger('change');
-    assert.strictEqual(input.data('upload').file, null);
+    assert.strictEqual(input[0].upgradedValue, null);
   });
 
   advancedTest('"changefile" sets current file', (assert) => {
     const fakeFile = { name: 'foo.txt', type: 'application/test' };
     input.trigger('changefile', fakeFile);
 
-    assert.strictEqual(input.data('upload').file, fakeFile);
     assert.strictEqual(input[0].upgradedValue, fakeFile);
     assert.equal(upload.find('.upload-filename').text(), 'foo.txt');
   });
