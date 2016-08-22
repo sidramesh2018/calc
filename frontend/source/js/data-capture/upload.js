@@ -29,23 +29,23 @@ function isFileValid(file, input) {
 
 class UploadInput extends window.HTMLInputElement {
   createdCallback() {
-    this.uploadWidget = null;
+    this.isUpgraded = false;
     this._upgradedValue = null;
     if (this.getAttribute('type') !== 'file') {
       throw new Error('<input is="upload-input"> must have type "file".');
     }
-    $(this).on('change', () => {
-      this.upgradedValue = this.files[0];
-    });
+    if (this.hasAttribute('multiple')) {
+      throw new Error('<input is="upload-input"> does not currently ' +
+                      'support the "multiple" attribute.');
+    }
     dispatchBubbly(this, 'uploadinputready');
   }
 
-  get isUpgraded() {
-    if (!this.uploadWidget) {
-      return false;
-    }
-
-    return !this.uploadWidget.isDegraded;
+  upgrade() {
+    this.isUpgraded = true;
+    $(this).on('change', () => {
+      this.upgradedValue = this.files[0];
+    });
   }
 
   get upgradedValue() {
@@ -82,6 +82,11 @@ function activateUploadWidget() {
   const $el = $(this);
   const $input = $('input', $el);
 
+  if ($input.length !== 1 || $input.attr('is') !== 'upload-input') {
+    throw new Error('<upload-widget> must contain exactly one ' +
+                    '<input is="upload-input">.');
+  }
+
   this.uploadInput = $input[0];
   this.isDegraded = false;
 
@@ -89,7 +94,9 @@ function activateUploadWidget() {
 
   const finishInitialization = () => {
     if (this.uploadInput instanceof UploadInput) {
-      this.uploadInput.uploadWidget = this;
+      if (!this.isDegraded) {
+        this.uploadInput.upgrade();
+      }
       dispatchBubbly($el[0], 'uploadwidgetready');
     } else {
       $el.one('uploadinputready', finishInitialization);
