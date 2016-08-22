@@ -64,12 +64,21 @@
     assert.equal(typeof $.support.advancedUpload, 'boolean');
   });
 
+  degradedTest('degraded upload has falsy .isUpgraded', (assert) => {
+    assert.ok(!input[0].isUpgraded);
+  });
+
   degradedTest('degraded upload sets "upload" data', (assert) => {
     assert.ok(upload.hasClass('degraded'));
     assert.ok(!upload[0].hasAttribute('aria-live'));
     assert.strictEqual(input.data('upload').isDegraded, true);
     assert.strictEqual(input.data('upload').input, input[0]);
     assert.strictEqual(input.data('upload').file, null);
+  });
+
+  advancedTest('advanced upload has truthy .isUpgraded', (assert) => {
+    assert.ok(input[0].isUpgraded);
+    assert.strictEqual(input[0].upgradedValue, null);
   });
 
   advancedTest('advanced upload sets aria-live', (assert) => {
@@ -142,6 +151,7 @@
     input.trigger('changefile', fakeFile);
 
     assert.strictEqual(input.data('upload').file, fakeFile);
+    assert.strictEqual(input[0].upgradedValue, fakeFile);
     assert.equal(upload.find('.upload-filename').text(), 'foo.txt');
   });
 
