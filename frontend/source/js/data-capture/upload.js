@@ -8,6 +8,24 @@ import { dispatchBubbly } from './custom-event';
 
 const $ = jQuery;
 
+function isFileValid(file, input) {
+  const accepts = $(input).attr('accept');
+  if (!accepts || !accepts.length) {
+    // nothing specified, so just return true
+    return true;
+  }
+  const fileType = file.type.toLowerCase();
+  const fileName = file.name.toLowerCase();
+  const acceptsList = accepts.split(',').map((s) => s.trim().toLowerCase());
+  for (const extOrType of acceptsList) {
+    if (fileType === extOrType || fileName.lastIndexOf(extOrType,
+      fileName.length - extOrType.length) !== -1) {
+      return true;
+    }
+  }
+  return false;
+}
+
 class UploadInput extends window.HTMLInputElement {
   createdCallback() {
     if (this.getAttribute('type') !== 'file') {
@@ -90,27 +108,9 @@ function activateUploadWidget($el) {
     $el.append(err);
   }
 
-  function isFileValid(file) {
-    const accepts = $input.attr('accept');
-    if (!accepts || !accepts.length) {
-      // nothing specified, so just return true
-      return true;
-    }
-    const fileType = file.type.toLowerCase();
-    const fileName = file.name.toLowerCase();
-    const acceptsList = accepts.split(',').map((s) => s.trim().toLowerCase());
-    for (const extOrType of acceptsList) {
-      if (fileType === extOrType || fileName.lastIndexOf(extOrType,
-        fileName.length - extOrType.length) !== -1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   function setFile(file) {
     if (!file) { return; }
-    if (!isFileValid(file)) {
+    if (!isFileValid(file, self.input)) {
       showInvalidFileMessage();
       return;
     }
