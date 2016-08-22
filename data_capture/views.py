@@ -18,9 +18,29 @@ def add_generic_form_error(request, form):
             .format(pluralize(form.errors))
     )
 
-
 @login_required
 def step_1(request):
+    if request.method == 'GET':
+        form = forms.ContractAndVendorForm()
+    elif request.method == 'POST':
+        form = forms.ContractAndVendorForm(request.POST)
+        if form.is_valid():
+            price_list = form.save(commit=False)
+            request.session['data_capture:schedule'] = \
+                form.cleaned_data['schedule']
+            price_list.save()
+            print('yay')
+
+        else:
+            add_generic_form_error(request, form)
+            print('boo')
+    return render(request, 'data_capture/step_1.html', {
+            'step_number': 1,
+            'form': form,
+        })
+
+@login_required
+def old_step_1(request):
     if request.method == 'GET':
         form = forms.Step1Form()
     elif request.method == 'POST':

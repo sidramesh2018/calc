@@ -6,6 +6,18 @@ from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
 
 
+class ContractAndVendorForm(forms.ModelForm):
+    schedule = forms.ChoiceField(
+        choices=registry.get_choices
+    )
+    class Meta:
+        model = SubmittedPriceList
+        fields = [
+            'contract_number',
+            'vendor_name',
+        ]
+
+
 class Step1Form(forms.Form):
     schedule = forms.ChoiceField(
         choices=registry.get_choices
