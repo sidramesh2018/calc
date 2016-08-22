@@ -126,8 +126,8 @@
       originalEvent: { dataTransfer: { files: [fakeFile] } },
     });
 
-    upload.on('changefile', (e, file) => {
-      assert.strictEqual(file, fakeFile);
+    upload.on('changefile', e => {
+      assert.strictEqual(e.originalEvent.detail, fakeFile);
     });
     upload.trigger(evt);
   });
@@ -140,8 +140,8 @@
   advancedTest('changing .upgradedValue sets current file', (assert) => {
     const fakeFile = { name: 'foo.txt', type: 'application/test' };
 
-    input.on('changefile', (e, file) => {
-      assert.strictEqual(file, fakeFile);
+    input.on('changefile', (e) => {
+      assert.strictEqual(e.originalEvent.detail, fakeFile);
       assert.equal(upload.find('.upload-filename').text(), 'foo.txt');
     });
 

@@ -25,8 +25,8 @@ try {
   window.CustomEvent = CustomEvent; // expose definition to window
 }
 
-exports.dispatchBubbly = (el, eventType) => {
-  el.dispatchEvent(new window.CustomEvent(eventType, {
+exports.dispatchBubbly = (el, eventType, params) => {
+  el.dispatchEvent(new window.CustomEvent(eventType, Object.assign({
     bubbles: true,
-  }));
+  }, params || {})));
 };

@@ -57,13 +57,15 @@ class UploadInput extends window.HTMLInputElement {
     }
 
     if (!isFileValid(file, this)) {
-      $(this).trigger('invalidfile');
+      dispatchBubbly(this, 'invalidfile');
       return;
     }
 
     this._upgradedValue = file;
     $(this).val('');
-    $(this).trigger('changefile', file);
+    dispatchBubbly(this, 'changefile', {
+      detail: file,
+    });
   }
 }
 
@@ -167,8 +169,8 @@ function activateUploadWidget() {
 
   $input.on('invalidfile', showInvalidFileMessage);
 
-  $input.on('changefile', (e, file) => {
-    setCurrentFilename(file.name);
+  $input.on('changefile', e => {
+    setCurrentFilename(e.originalEvent.detail.name);
   });
 
   return finishInitialization();
