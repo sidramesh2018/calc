@@ -27,7 +27,7 @@ function isFileValid(file, input) {
 }
 
 class UploadInput extends window.HTMLInputElement {
-  createdCallback() {
+  attachedCallback() {
     this.isUpgraded = false;
     this._upgradedValue = null;
     if (this.getAttribute('type') !== 'file') {
@@ -198,7 +198,7 @@ function activateUploadWidget() {
 $.support.advancedUpload = browserSupportsAdvancedUpload();
 
 class UploadWidget extends window.HTMLElement {
-  createdCallback() {
+  attachedCallback() {
     activateUploadWidget.call(this);
   }
 }

@@ -107,7 +107,7 @@ exports.populateFormData = populateFormData;
 window.testingExports__ajaxform = exports;
 
 class AjaxForm extends window.HTMLFormElement {
-  createdCallback() {
+  attachedCallback() {
     this.isDegraded = !supports.formData() ||
                       supports.isForciblyDegraded(this);
     bindForm(this);

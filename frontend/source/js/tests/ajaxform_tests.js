@@ -43,11 +43,7 @@ function makeFormHtml(extraOptions) {
     fooValue: 'bar',
   }, extraOptions || {});
 
-  const iframe = document.createElement('iframe');
-
-  document.body.appendChild(iframe);
-
-  const $form = $(iframe.contentDocument.body)
+  const $form = $('<div></div>')
     .html(QUNIT_FIXTURE_DATA.AJAXFORM_TESTS_HTML);
 
   if (options.isDegraded) {
@@ -55,8 +51,6 @@ function makeFormHtml(extraOptions) {
   }
 
   $form.find('input[name="foo"]').attr('value', options.fooValue);
-
-  $(iframe).remove();
 
   return $form.html();
 }
