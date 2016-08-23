@@ -40,8 +40,10 @@ def step_1(request):
         if form.is_valid():
             if request.session:
                 del request.session
-            # TODO: instead of writing to the model, grab the posted values
-            # and use request.session to write them to the session
+
+            request.session['data_capture:contract_number'] = request.POST['contract_number']
+            request.session['data_capture:vendor_name'] = request.POST['vendor_name']
+            request.session['data_capture:schedule'] = request.POST['schedule']
 
             return redirect('data_capture:step_2')
 
@@ -61,7 +63,6 @@ def step_2(request):
     elif request.method == 'POST':
         form = forms.Step2Form(request.POST)
         if form.is_valid():
-            # TODO: Figure out how to pass the previously created price_list
             price_list = form.save(commit=False)
             price_list.schedule = registry.get_classname(gleaned_data)
             price_list.submitter = request.user
