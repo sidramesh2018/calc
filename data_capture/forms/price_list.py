@@ -1,7 +1,7 @@
 from django import forms
 
-from .models import SubmittedPriceList
-from .schedules import registry
+from ..models import SubmittedPriceList
+from ..schedules import registry
 from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
 

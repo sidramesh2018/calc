@@ -1,22 +1,12 @@
 import json
 from functools import wraps
-from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.template.defaultfilters import pluralize
 
-from . import forms
-from .schedules import registry
+from .. import forms
+from ..schedules import registry
+from .common import add_generic_form_error
 from frontend import ajaxform
-
-
-def add_generic_form_error(request, form):
-    messages.add_message(
-        request, messages.ERROR,
-        'Oops, please correct the error{} below and try again.'
-            .format(pluralize(form.errors))
-    )
 
 
 @login_required
@@ -40,11 +30,10 @@ def step_1(request):
         request,
         context={
             'step_number': 1,
-            'form': form,
-            'show_debug_ui': settings.DEBUG and not settings.HIDE_DEBUG_UI
+            'form': form
         },
-        template_name='data_capture/step_1.html',
-        ajax_template_name='data_capture/step_1_form.html',
+        template_name='data_capture/price_list/step_1.html',
+        ajax_template_name='data_capture/price_list/step_1_form.html',
     )
 
 
@@ -67,7 +56,7 @@ def step_2(request, gleaned_data):
         request.session['data_capture:schedule']
     )
 
-    return render(request, 'data_capture/step_2.html', {
+    return render(request, 'data_capture/price_list/step_2.html', {
         'step_number': 2,
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
@@ -103,13 +92,13 @@ def step_3(request, gleaned_data):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/step_3.html', {
+    return render(request, 'data_capture/price_list/step_3.html', {
         'step_number': 3,
         'form': form
     })
 
 
 def step_4(request):
-    return render(request, 'data_capture/step_4.html', {
+    return render(request, 'data_capture/price_list/step_4.html', {
         'step_number': 4
     })

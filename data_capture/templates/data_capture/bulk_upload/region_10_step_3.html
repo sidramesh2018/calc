@@ -1,0 +1,22 @@
+{% extends 'data_capture/bulk_upload/region_10_step.html' %}
+{% load humanize %}
+
+{% block subtitle %}View Results{% endblock subtitle %}
+
+{% block step_body %}
+
+  <p>Finished!</p>
+
+  <p>
+    {{ num_contracts|intcomma }} rows of rate information have been loaded and
+    previous Region 10 data has been removed from the CALC database.
+  </p>
+
+  {% if bad_rows %}
+    <p>{{ bad_rows|length|intcomma }} were not parsed and could not be loaded.</p>
+    {# TODO: Add download of bad rows #}
+  {% endif %}
+
+  <p>Return to the <a href="/" title="CALC home page">CALC home page</a> to see your new data live.</p>
+
+{% endblock step_body %}
