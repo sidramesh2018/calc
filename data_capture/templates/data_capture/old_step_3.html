@@ -10,6 +10,15 @@
 
 {{ form.non_field_errors }}
 
+{{ form.contract_number.errors }}
+{{ form.contract_number.label_tag }}
+{{ form.contract_number }}
+<span class="helptext">{{ form.contract_number.help_text }}</span>
+
+{{ form.vendor_name.errors }}
+{{ form.vendor_name.label_tag }}
+{{ form.vendor_name }}
+
 {{ form.is_small_business.errors }}
 {{ form.is_small_business.label_tag }}
 {{ form.is_small_business }}
@@ -17,6 +26,10 @@
 {{ form.contractor_site.errors }}
 {{ form.contractor_site.label_tag }}
 {{ form.contractor_site }}
+
+{{ form.contract_year.errors }}
+{{ form.contract_year.label_tag }}
+{{ form.contract_year }}
 
 <p>
   <fieldset>
@@ -34,20 +47,16 @@
   </fieldset>
 </p>
 
-{{ form.contract_year.errors }}
-{{ form.contract_year.label_tag }}
-{{ form.contract_year }}
-
 <div class="form-button-row clearfix">
-  <a href="{% url 'data_capture:step_1' %}" class="button button-previous">Previous</a>
+  <a href="{% url 'data_capture:step_2' %}" class="button button-previous">Previous</a>
 
   <a href="{% url 'index' %}" class="button button-cancel">Cancel</a>
 
   <div class="submit-group">
     <span class="submit-label">
-      Choose the awarded price list to upload.
+      Send data to admin for inclusion in CALC.
     </span>
-    <a href="{% url 'data_capture:step_3' %}" class="button button-primary">Next</a>
+    <button class="button-primary" type="submit">Submit</button>
   </div>
 </div>
 

@@ -21,15 +21,18 @@
 
 <ol class="steps">
   <li {% if step_number == 1 %}class="current"{% endif %}>
-    <label>Upload price list</label>
+    <label>Choose schedule</label>
   </li>
   <li {% if step_number == 2 %}class="current"{% endif %}>
-    <label>Validate data</label>
+    <label>Enter contract details</label>
   </li>
   <li {% if step_number == 3 %}class="current"{% endif %}>
-    <label>Contract details</label>
+    <label>Upload price list</label>
   </li>
   <li {% if step_number == 4 %}class="current"{% endif %}>
+    <label>Validate data</label>
+  </li>
+  <li {% if step_number == 5 %}class="current"{% endif %}>
     <label>Submit data</label>
   </li>
 </ol>
