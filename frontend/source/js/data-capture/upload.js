@@ -45,6 +45,20 @@ class UploadInput extends window.HTMLInputElement {
     $(this).on('change', () => {
       this.upgradedValue = this.files[0];
     });
+    if (this.hasAttribute('required')) {
+      // We don't want the browser to enforce the required attribute, because
+      // if we programmatically set our file (e.g. via a drag-and-drop)
+      // the browser will still think the file input is empty.
+
+      this.removeAttribute('required');
+
+      // Instead, we'll set our own custom validity manually, assuming the
+      // user's browser supports HTML5 form validation.
+
+      if (this.setCustomValidity) {
+        this.setCustomValidity('Please choose a file.');
+      }
+    }
   }
 
   get upgradedValue() {
@@ -63,6 +77,11 @@ class UploadInput extends window.HTMLInputElement {
 
     this._upgradedValue = file;
     $(this).val('');
+
+    if (this.setCustomValidity) {
+      this.setCustomValidity('');
+    }
+
     dispatchBubbly(this, 'changefile', {
       detail: file,
     });
