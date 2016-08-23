@@ -1,6 +1,6 @@
 <form enctype="multipart/form-data" method="post"
       data-ajaxform
-      action="{% url 'data_capture:step_1' %}">
+      action="{% url 'data_capture:step_3' %}">
 
 {% csrf_token %}
 
@@ -9,12 +9,6 @@
 {% endif %}
 
 {{ form.non_field_errors }}
-
-{{ form.schedule.errors }}
-
-<label for="{{ form.schedule.id_for_label }}">Which schedule is associated with this price list?</label>
-
-{{ form.schedule }}
 
 {{ form.file.errors }}
 
