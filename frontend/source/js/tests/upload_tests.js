@@ -1,4 +1,7 @@
 /* global QUnit jQuery document test QUNIT_FIXTURE_DATA */
+
+const sinon = require('sinon');
+
 (function uploadTests(QUnit, $) {
   const UPLOAD_HTML = QUNIT_FIXTURE_DATA.UPLOAD_TESTS_HTML;
 
@@ -62,6 +65,38 @@
 
   test('$.support.advancedUpload is a boolean', (assert) => {
     assert.equal(typeof $.support.advancedUpload, 'boolean');
+  });
+
+  test('upload-input removes "required" attr on upgrade', assert => {
+    upload = document.createElement('input', { is: 'upload-input' });
+    upload.setAttribute('required', '');
+    upload.upgrade();
+    assert.ok(!upload.hasAttribute('required'));
+  });
+
+  test('upload-input calls setCustomValidity() if required', assert => {
+    upload = document.createElement('input', { is: 'upload-input' });
+    upload.setAttribute('required', '');
+    upload.setCustomValidity = sinon.spy();
+    upload.upgrade();
+    assert.deepEqual(upload.setCustomValidity.args, [
+      ['Please choose a file.'],
+    ]);
+    upload.upgradedValue = 'fakefile';
+    assert.deepEqual(upload.setCustomValidity.args, [
+      ['Please choose a file.'],
+      [''],
+    ]);
+    assert.ok(upload.upgradedValue, 'fakefile');
+  });
+
+  test('upload-input works when setCustomValidity is undefined', assert => {
+    upload = document.createElement('input', { is: 'upload-input' });
+    upload.setAttribute('required', '');
+    upload.setCustomValidity = undefined;
+    upload.upgrade();
+    upload.upgradedValue = 'fakefile';
+    assert.ok(upload.upgradedValue, 'fakefile');
   });
 
   degradedTest('degraded upload has falsy .isUpgraded', (assert) => {
