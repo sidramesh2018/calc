@@ -60,6 +60,7 @@ TEMPLATES = [{
     'OPTIONS': {
         'context_processors': [
             'hourglass.context_processors.api_host',
+            'hourglass.context_processors.show_debug_ui',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",
             "django.template.context_processors.i18n",
@@ -84,6 +85,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.humanize',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
