@@ -173,8 +173,9 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
       .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(uglify())
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(outputPath)).on('data', function(e) {
-        const pathname = path.relative(__dirname, e.path);
+      .pipe(gulp.dest(outputPath))
+      .on('data', file => {
+        const pathname = path.relative(__dirname, file.path);
 
         gutil.log(`Wrote ${pathname}.`);
       });
