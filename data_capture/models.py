@@ -3,18 +3,26 @@ from django.contrib.auth.models import User
 
 from contracts.models import Contract, EDUCATION_CHOICES
 
-
-class SubmittedPriceList(models.Model):
+class NewPriceList(models.Model):
     # This is the equivalent of Contract.idv_piid.
     contract_number = models.CharField(
         max_length=128,
         help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
     )
     vendor_name = models.CharField(max_length=128)
-    is_small_business = models.BooleanField()
     schedule = models.CharField(
         max_length=128
     )
+
+class SubmittedPriceList(models.Model):
+    contract_number = models.CharField(
+        max_length=128,
+    )
+    vendor_name = models.CharField(max_length=128)
+    schedule = models.CharField(
+        max_length=128
+    )
+    is_small_business = models.BooleanField()
     contractor_site = models.CharField(
         verbose_name='Worksite',
         choices=[

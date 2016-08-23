@@ -38,9 +38,7 @@ def step_1(request):
     elif request.method == 'POST':
         form = forms.Step1Form(request.POST)
         if form.is_valid():
-            if request.session:
-                del request.session
-
+            # TODO: Check for session and delete it if found
             request.session['data_capture:contract_number'] = request.POST['contract_number']
             request.session['data_capture:vendor_name'] = request.POST['vendor_name']
             request.session['data_capture:schedule'] = request.POST['schedule']
@@ -57,19 +55,21 @@ def step_1(request):
 
 @login_required
 def step_2(request):
-    # TODO: Add redirect to step 1 if the price_data var doesn't exist
+    # TODO: Add redirect to step 1 if request.session['contract_number'] doesn't exist
     if request.method == 'GET':
         form = forms.Step2Form()
+        print(request.session.get('data_capture:vendor_name'))
     elif request.method == 'POST':
+        print('POST')
         form = forms.Step2Form(request.POST)
         if form.is_valid():
             price_list = form.save(commit=False)
-            price_list.schedule = registry.get_classname(gleaned_data)
+            price_list.schedule = request.session.get('data_capture:schedule')
+            price_list.contract_number = request.session.get('data_capture:contract_number')
+            price_list.vendor_name = request.session.get('data_capture:vendor_name')
             price_list.submitter = request.user
-            price_list.serialized_gleaned_data = json.dumps(
-                request.session.get('data_capture:gleaned_data')
-            )
             price_list.save()
+            print(price_list)
 
             return redirect('data_capture:step_3')
         else:

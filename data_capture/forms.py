@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import SubmittedPriceList
+from .models import NewPriceList, SubmittedPriceList
 from .schedules import registry
 from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
@@ -11,7 +11,7 @@ class Step1Form(forms.ModelForm):
         choices=registry.get_choices
     )
     class Meta:
-        model = SubmittedPriceList
+        model = NewPriceList
         fields = [
             'contract_number',
             'vendor_name',
@@ -39,3 +39,8 @@ class Step2Form(forms.ModelForm):
             'contract_end',
             'contract_year',
         ]
+        widgets = {
+            'contract_number': forms.HiddenInput(),
+            'vendor_name': forms.HiddenInput(),
+            'schedule': forms.HiddenInput(),
+        }
