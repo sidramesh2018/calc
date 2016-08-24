@@ -48,6 +48,7 @@ approve.short_description = (
     'Approve selected price lists (add their data to CALC)'
 )
 
+
 def unapprove(modeladmin, request, queryset):
     for obj in queryset.filter(is_approved=True):
         obj.unapprove()
