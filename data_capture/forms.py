@@ -54,12 +54,10 @@ class Step3Form(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        print(cleaned_data)
         schedule = cleaned_data.get('schedule')
         file = cleaned_data.get('file')
 
         if schedule and file:
-            print(schedule, file)
             gleaned_data = registry.smart_load_from_upload(schedule, file)
 
             if gleaned_data.is_empty():
