@@ -1,4 +1,4 @@
-form[data-ajaxform].submit-in-progress {
+form[is="ajax-form"].submit-in-progress {
   opacity: 0.25;
   pointer-events: none;
 }

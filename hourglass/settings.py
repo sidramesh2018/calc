@@ -37,17 +37,10 @@ if DEBUG:
     )
     os.environ.setdefault('EMAIL_URL', 'console:')
 
-
 email_config = dj_email_url.config()
-
-EMAIL_FILE_PATH = email_config['EMAIL_FILE_PATH']
-EMAIL_HOST_USER = email_config['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = email_config['EMAIL_HOST_PASSWORD']
-EMAIL_HOST = email_config['EMAIL_HOST']
-EMAIL_PORT = email_config['EMAIL_PORT']
-EMAIL_BACKEND = email_config['EMAIL_BACKEND']
-EMAIL_USE_TLS = email_config['EMAIL_USE_TLS']
-EMAIL_USE_SSL = email_config['EMAIL_USE_SSL']
+# Sets a number of settings values, as described at
+# https://github.com/migonzalvar/dj-email-url
+vars().update(email_config)
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 
@@ -60,6 +53,7 @@ TEMPLATES = [{
     'OPTIONS': {
         'context_processors': [
             'hourglass.context_processors.api_host',
+            'hourglass.context_processors.show_debug_ui',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",
             "django.template.context_processors.i18n",
@@ -84,6 +78,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.humanize',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',

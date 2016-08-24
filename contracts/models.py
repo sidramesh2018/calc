@@ -1,8 +1,8 @@
 import re
 from django.db import models
+from django.contrib.auth.models import User
 from djorm_pgfulltext.models import SearchManager, SearchQuerySet
 from djorm_pgfulltext.fields import VectorField
-
 
 EDUCATION_CHOICES = (
     ('HS', 'High School'),
@@ -115,6 +115,25 @@ class ContractsQuerySet(SearchQuerySet):
         return queryset
 
 
+class BulkUploadContractSource(models.Model):
+    '''
+    Model to store provenance of bulk-uploaded contract data
+    '''
+    REGION_10 = 'R10'
+
+    PROCUREMENT_CENTER_CHOICES = (
+        (REGION_10, 'Region 10'),
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    submitter = models.ForeignKey(User, null=True, blank=True)
+    has_been_loaded = models.BooleanField(default=False)
+    original_file = models.BinaryField()
+    procurement_center = models.CharField(
+        db_index=True, max_length=5, choices=PROCUREMENT_CENTER_CHOICES)
+
+
 class Contract(models.Model):
 
     idv_piid = models.CharField(max_length=128)  # index this field
@@ -152,6 +171,13 @@ class Contract(models.Model):
     sin = models.TextField(null=True, blank=True)
 
     search_index = VectorField()
+
+    upload_source = models.ForeignKey(
+        BulkUploadContractSource,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+    )
 
     # use a manager that filters by current contracts with a valid
     # current_price

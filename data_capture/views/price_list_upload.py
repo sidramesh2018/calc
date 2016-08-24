@@ -3,11 +3,10 @@ from .models import SubmittedPriceList
 from functools import wraps
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.template.defaultfilters import pluralize
 
-from . import forms
-from .schedules import registry
+from .. import forms
+from ..schedules import registry
+from .common import add_generic_form_error
 from frontend import ajaxform
 
 
@@ -84,7 +83,7 @@ def step_2(request):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/step_2.html', {
+    return render(request, 'data_capture/price_list/step_2.html', {
         'step_number': 2,
         'form': form
     })
