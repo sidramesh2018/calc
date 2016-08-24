@@ -17,14 +17,16 @@ class UploadTestsForm(forms.Form):
 
 class AjaxformTestsForm(forms.Form):
     foo = forms.CharField()
-    file = forms.FileField(widget=UploadWidget)
+    file = forms.FileField(widget=UploadWidget(
+        accept=''
+    ))
 
     def render(self):
         return ''.join([
             '<form enctype="multipart/form-data" method="post"',
-            ' data-ajaxform',
+            ' is="ajax-form"',
             ' action="/post-stuff">',
-            '  %s' % str(self.as_p()),
+            '  %s' % str(self.as_ul()),
             '  <button type="submit">submit</button>',
             '</form>'
         ])
