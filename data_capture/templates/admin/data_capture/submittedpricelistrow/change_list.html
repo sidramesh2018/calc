@@ -1,0 +1,18 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+<p>
+  The following rows are <em>only</em> for unapproved price lists that
+  haven't yet made their way into CALC.
+</p>
+<p>
+  For rows that are somehow out-of-the-ordinary, you can click the
+  <strong>Is muted</strong> checkbox to prevent it from being included in
+  CALC's data once you approve the price list.
+</p>
+<p>
+  Remember to click the <strong>Save</strong> button to submit your
+  changes.
+</p>
+{{ block.super }}
+{% endblock %}

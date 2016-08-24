@@ -67,7 +67,7 @@ class SubmittedPriceList(models.Model):
 
     def approve(self):
         self.is_approved = True
-        for row in self.rows.all():
+        for row in self.rows.filter(is_muted=False):
             if row.contract_model is not None:
                 raise AssertionError()
             contract = Contract(
@@ -102,7 +102,7 @@ class SubmittedPriceList(models.Model):
     def unapprove(self):
         self.is_approved = False
 
-        for row in self.rows.all():
+        for row in self.rows.filter(is_muted=False):
             row.contract_model.delete()
 
         self.save()
@@ -118,6 +118,14 @@ class SubmittedPriceListRow(models.Model):
     current_price = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
     sin = models.TextField(null=True, blank=True)
+
+    is_muted = models.BooleanField(
+        help_text=(
+            "Whether to include this row in CALC data once its "
+            "price list has been approved"
+        ),
+        default=False
+    )
 
     price_list = models.ForeignKey(
         SubmittedPriceList,
