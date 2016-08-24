@@ -114,5 +114,3 @@ document.registerElement('ajax-form', {
 });
 
 exports.AjaxForm = AjaxForm;
-
-window.testingExports__ajaxform = exports;

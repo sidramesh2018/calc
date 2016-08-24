@@ -1,6 +1,6 @@
 /* global QUnit jQuery document test QUNIT_FIXTURE_DATA */
 
-const sinon = require('sinon');
+import * as sinon from 'sinon';
 
 (function uploadTests(QUnit, $) {
   const UPLOAD_HTML = QUNIT_FIXTURE_DATA.UPLOAD_TESTS_HTML;

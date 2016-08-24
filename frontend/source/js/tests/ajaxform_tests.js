@@ -1,9 +1,10 @@
 /* global QUnit $ test document window QUNIT_FIXTURE_DATA */
 
-const urlParse = require('url').parse;
-const sinon = require('sinon');
+import { parse as urlParse } from 'url';
 
-const ajaxform = window.testingExports__ajaxform;
+import * as sinon from 'sinon';
+
+import * as ajaxform from '../data-capture/ajaxform';
 
 let server;
 let $parentDiv;
