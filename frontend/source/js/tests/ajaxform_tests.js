@@ -128,7 +128,7 @@ formTest('degraded form does not cancel form submission', {
 });
 
 test('populateFormData() works w/ non-upgraded file inputs', assert => {
-  const formData = ajaxform.populateFormData({
+  const formData = ajaxform.AjaxForm.prototype.populateFormData.call({
     elements: [{
       type: 'file',
       name: 'boop',
