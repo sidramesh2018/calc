@@ -100,7 +100,9 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
                 "This price list has been approved, so its data is now "
                 "in CALC. To unapprove it, you will need to use the "
                 "'Unapprove selected price lists' action from the "
-                "<a href=\"..\">list view</a>."
+                "<a href=\"..\">list view</a>. Note also that in order "
+                "to edit the fields in this price list, you will first "
+                "need to unapprove it."
             )
         return mark_safe(
             "<span style=\"color: red\">"
