@@ -85,13 +85,12 @@ def step_3(request):
     if request.method == 'GET':
         form = forms.Step3Form()
     elif request.method == 'POST':
-        data = dict(request.POST, schedule=request.session['data_capture:schedule'])
-        form = forms.Step3Form(data, request.FILES)
+        posted_data = dict(request.POST, schedule=request.session['data_capture:schedule'])
+        form = forms.Step3Form(posted_data, request.FILES)
 
         if form.is_valid():
-            current_price_list = SubmittedPriceList.objects.get(id=request.session['price_list_id'])
-            current_price_list.serialized_gleaned_data = registry.serialize(form.cleaned_data['gleaned_data'])
-            current_price_list.save()
+            request.session['data_capture:gleaned_data'] = \
+                registry.serialize(form.cleaned_data['gleaned_data'])
 
             return ajaxform.redirect(request, 'data_capture:step_4')
         else:
@@ -113,10 +112,30 @@ def step_4(request, gleaned_data):
     preferred_schedule = registry.get_class(
         request.session['data_capture:schedule']
     )
-
     return render(request, 'data_capture/step_4.html', {
         'step_number': 4,
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
         'preferred_schedule': preferred_schedule,
+    })
+
+@login_required
+@gleaned_data_required
+def step_5(request, gleaned_data):
+    if gleaned_data.valid_rows:
+        current_price_list = SubmittedPriceList.objects.get(id=request.session['price_list_id'])
+        current_price_list.serialized_gleaned_data = json.dumps(
+            request.session.get('data_capture:gleaned_data')
+        )
+        current_price_list.save()
+        gleaned_data.add_to_price_list(current_price_list)
+
+        del request.session['data_capture:gleaned_data']
+    else:
+        # The user may have manually changed the URL or something to
+        # get here. Push them back to the last step.
+        return redirect('data_capture:step_4')
+
+    return render(request, 'data_capture/step_5.html', {
+        'step_number': 5
     })
