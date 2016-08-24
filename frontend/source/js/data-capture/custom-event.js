@@ -1,12 +1,16 @@
 /* global document, window */
 
-// The following polyfill is based off the code at:
-//
-// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
-//
-// The polyfill is by Mozilla Contributors and licensed under CC-BY-SA 2.5:
-//
-// https://creativecommons.org/licenses/by-sa/2.5/
+/**
+ * @license
+ *
+ * The following polyfill is based off the code at:
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
+ *
+ * The polyfill is by Mozilla Contributors and licensed under CC-BY-SA 2.5:
+ *
+ * https://creativecommons.org/licenses/by-sa/2.5/
+ */
 
 if (typeof window.CustomEvent !== 'function') {
   const CustomEvent = (event, originalParams) => {
@@ -23,7 +27,7 @@ if (typeof window.CustomEvent !== 'function') {
   };
 
   CustomEvent.prototype = window.Event.prototype;
-  window.CustomEvent = CustomEvent; // expose definition to window
+  window.CustomEvent = CustomEvent;
 }
 
 exports.dispatchBubbly = (el, eventType, params) => {
