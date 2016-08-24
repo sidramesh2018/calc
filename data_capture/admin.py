@@ -85,6 +85,10 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
         'current_status'
     )
 
+    list_filter = (
+        'is_approved',
+    )
+
     inlines = [
         SubmittedPriceListRowInline
     ]
