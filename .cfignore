@@ -26,3 +26,5 @@ pip-selfcheck.json
 docker-compose.override.yml
 .dockerignore
 /manifests
+cf-ssh.yml
+
