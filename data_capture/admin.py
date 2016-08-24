@@ -24,10 +24,7 @@ class SubmittedPriceListRowInline(admin.TabularInline):
         'is_muted',
     )
 
-    # Because of the fact that inline formsets are saved
-    # *after* their parent model, it's safest to not allow
-    # any of our fields to be editable.
-    readonly_fields = fields
+    readonly_fields = ()
 
     formfield_overrides = {
         models.TextField: {'widget': forms.TextInput}
@@ -36,11 +33,37 @@ class SubmittedPriceListRowInline(admin.TabularInline):
     def has_add_permission(self, request):
         return False
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.is_approved:
+            return self.fields
+        return self.readonly_fields
+
+
+def approve(modeladmin, request, queryset):
+    for obj in queryset.filter(is_approved=False):
+        obj.approve()
+
+
+approve.short_description = (
+    'Approve selected price lists (add their data to CALC)'
+)
+
+def unapprove(modeladmin, request, queryset):
+    for obj in queryset.filter(is_approved=True):
+        obj.unapprove()
+
+
+unapprove.short_description = (
+    'Unapprove selected price lists (remove their data from CALC)'
+)
+
 
 @admin.register(SubmittedPriceList)
 class SubmittedPriceListAdmin(admin.ModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
                     'is_approved')
+
+    actions = [approve, unapprove]
 
     fields = (
         'contract_number',
@@ -58,6 +81,7 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
 
     readonly_fields = (
         'schedule_title',
+        'is_approved',
         'current_status'
     )
 
@@ -70,14 +94,16 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
             return mark_safe(
                 "<span style=\"color: green\">"
                 "This price list has been approved, so its data is now "
-                "in CALC. Uncheck the <strong>Is approved</strong> box to "
-                "remove its data from CALC.</span>"
+                "in CALC. To unapprove it, you will need to use the "
+                "'Unapprove selected price lists' action from the "
+                "<a href=\"..\">list view</a>."
             )
         return mark_safe(
             "<span style=\"color: red\">"
             "This price list is not currently approved, so its data is "
-            "not in CALC. Check the <strong>Is approved</strong> box to "
-            "add its data to CALC."
+            "not in CALC. To approve it, you will need to use the "
+            "'Approve selected price lists' action from the "
+            "<a href=\"..\">list view</a>."
         )
 
     def schedule_title(self, instance):
@@ -91,24 +117,10 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    def save_model(self, request, obj, form, change):
-        original = SubmittedPriceList.objects.get(pk=obj.id)
-        if original.is_approved != obj.is_approved:
-            if obj.is_approved:
-                obj.approve()
-            else:
-                obj.unapprove()
-        obj.save()
-
-
     def get_readonly_fields(self, request, obj=None):
-        readonly_fields = self.readonly_fields
         if obj and obj.is_approved:
-            readonly_fields = tuple([
-                field for field in self.fields
-                if field != 'is_approved'
-            ])
-        return readonly_fields
+            return self.fields
+        return self.readonly_fields
 
 
 @admin.register(SubmittedPriceListRow)
