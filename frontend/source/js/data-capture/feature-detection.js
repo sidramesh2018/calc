@@ -1,6 +1,9 @@
 /* global $, window, document */
 
-// The following feature detectors are ultimately pulled from Modernizr.
+// Many of the following feature detectors are ultimately pulled from
+// Modernizr. Its license can be found here:
+//
+// https://github.com/Modernizr/Modernizr/blob/master/LICENSE
 
 module.exports = {
   dragAndDrop() {
