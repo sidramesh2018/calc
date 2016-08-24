@@ -2,6 +2,8 @@
 
 import * as sinon from 'sinon';
 
+import { UploadWidget } from '../data-capture/upload';
+
 (function uploadTests(QUnit, $) {
   const UPLOAD_HTML = QUNIT_FIXTURE_DATA.UPLOAD_TESTS_HTML;
 
@@ -39,7 +41,7 @@ import * as sinon from 'sinon';
   }
 
   function advancedTest(name, cb) {
-    if (!$.support.advancedUpload) {
+    if (!UploadWidget.HAS_BROWSER_SUPPORT) {
       return QUnit.skip(name, cb);
     }
     return QUnit.test(name, (assert) => {
@@ -63,8 +65,8 @@ import * as sinon from 'sinon';
     },
   });
 
-  test('$.support.advancedUpload is a boolean', (assert) => {
-    assert.equal(typeof $.support.advancedUpload, 'boolean');
+  test('HAS_BROWSER_SUPPORT is a boolean', (assert) => {
+    assert.equal(typeof UploadWidget.HAS_BROWSER_SUPPORT, 'boolean');
   });
 
   test('upload-input removes "required" attr on upgrade', assert => {

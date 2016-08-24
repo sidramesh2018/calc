@@ -1,4 +1,4 @@
-/* global jQuery, window, document */
+/* global $, window, document */
 
 import 'document-register-element';
 
@@ -6,25 +6,8 @@ import * as supports from './feature-detection';
 
 import { dispatchBubbly } from './custom-event';
 
-const $ = jQuery;
-
-function isFileValid(file, input) {
-  const accepts = $(input).attr('accept');
-  if (!accepts || !accepts.length) {
-    // nothing specified, so just return true
-    return true;
-  }
-  const fileType = file.type.toLowerCase();
-  const fileName = file.name.toLowerCase();
-  const acceptsList = accepts.split(',').map((s) => s.trim().toLowerCase());
-  for (const extOrType of acceptsList) {
-    if (fileType === extOrType || fileName.lastIndexOf(extOrType,
-      fileName.length - extOrType.length) !== -1) {
-      return true;
-    }
-  }
-  return false;
-}
+const HAS_BROWSER_SUPPORT = supports.dragAndDrop() && supports.formData() &&
+                            supports.dataTransfer();
 
 class UploadInput extends window.HTMLInputElement {
   attachedCallback() {
@@ -70,7 +53,7 @@ class UploadInput extends window.HTMLInputElement {
       return;
     }
 
-    if (!isFileValid(file, this)) {
+    if (!this.isFileValid(file)) {
       dispatchBubbly(this, 'invalidfile');
       return;
     }
@@ -86,128 +69,140 @@ class UploadInput extends window.HTMLInputElement {
       detail: file,
     });
   }
-}
 
-function browserSupportsAdvancedUpload() {
-  return supports.dragAndDrop() && supports.formData() &&
-         supports.dataTransfer();
-}
-
-function stopAndPrevent(event) {
-  event.stopPropagation();
-  event.preventDefault();
-}
-
-function activateUploadWidget() {
-  const $el = $(this);
-  const $input = $('input', $el);
-
-  if ($input.length !== 1 || $input.attr('is') !== 'upload-input') {
-    throw new Error('<upload-widget> must contain exactly one ' +
-                    '<input is="upload-input">.');
-  }
-
-  this.uploadInput = $input[0];
-  this.isDegraded = false;
-
-  let dragCounter = 0;
-
-  const finishInitialization = () => {
-    if (this.uploadInput instanceof UploadInput) {
-      if (!this.isDegraded) {
-        this.uploadInput.upgrade();
+  isFileValid(file) {
+    const accepts = $(this).attr('accept');
+    if (!accepts || !accepts.length) {
+      // nothing specified, so just return true
+      return true;
+    }
+    const fileType = file.type.toLowerCase();
+    const fileName = file.name.toLowerCase();
+    const acceptsList = accepts.split(',').map((s) => s.trim().toLowerCase());
+    for (const extOrType of acceptsList) {
+      if (fileType === extOrType || fileName.lastIndexOf(extOrType,
+        fileName.length - extOrType.length) !== -1) {
+        return true;
       }
-      dispatchBubbly($el[0], 'uploadwidgetready');
-    } else {
-      $el.one('uploadinputready', finishInitialization);
     }
-  };
-
-  function setCurrentFilename(filename) {
-    $('input', $el).nextAll().remove();
-
-    const id = $('input', $el).attr('id');
-    const current = $(
-      '<div class="upload-current">' +
-      '<div class="upload-filename"></div>' +
-      '<div class="upload-changer">Not right? ' +
-      '<label>Choose a different file</label> or drag and drop here.' +
-      '</div></div>'
-    );
-    $('label', current).attr('for', id);
-    $('.upload-filename', current).text(filename);
-    $el.append(current);
-  }
-
-  function showInvalidFileMessage() {
-    $('input', $el).nextAll().remove();
-
-    const id = $('input', $el).attr('id');
-    const err = $(
-      '<div class="upload-error">' +
-      '<div class="upload-error-message">Sorry, that type of file is not allowed.</div>' +
-      'Please <label>choose a different file</label> or drag and drop one here.' +
-      '</div></div>'
-    );
-    $('label', err).attr('for', id);
-    $el.append(err);
-  }
-
-  if (!browserSupportsAdvancedUpload() || supports.isForciblyDegraded(this)) {
-    $el.addClass('degraded');
-    this.isDegraded = true;
-    return finishInitialization();
-  }
-
-  $('label', $el)
-    .after('<span aria-hidden="true"> or drag and drop here.</span>');
-
-  // The content of the upload widget will change when the user chooses
-  // a file, so let's make sure screen readers let users know about it.
-  $el.attr('aria-live', 'polite');
-
-  $el.on('dragenter', e => {
-    stopAndPrevent(e);
-
-    dragCounter++;
-    $el.addClass('dragged-over');
-  });
-  $el.on('dragleave', () => {
-    // http://stackoverflow.com/a/21002544/2422398
-    if (--dragCounter === 0) {
-      $el.removeClass('dragged-over');
-    }
-  });
-  $el.on('dragover', stopAndPrevent);
-  $el.on('drop', e => {
-    stopAndPrevent(e);
-    $el.removeClass('dragged-over');
-
-    this.uploadInput.upgradedValue = e.originalEvent.dataTransfer.files[0];
-  });
-
-  $input.on('invalidfile', showInvalidFileMessage);
-
-  $input.on('changefile', e => {
-    setCurrentFilename(e.originalEvent.detail.name);
-  });
-
-  return finishInitialization();
-}
-
-$.support.advancedUpload = browserSupportsAdvancedUpload();
-
-class UploadWidget extends window.HTMLElement {
-  attachedCallback() {
-    activateUploadWidget.call(this);
+    return false;
   }
 }
-
-document.registerElement('upload-widget', {
-  prototype: UploadWidget.prototype,
-});
 
 document.registerElement('upload-input', {
   extends: 'input',
   prototype: UploadInput.prototype,
 });
+
+class UploadWidget extends window.HTMLElement {
+  _stopAndPrevent(event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  attachedCallback() {
+    const $el = $(this);
+    const $input = $('input', $el);
+
+    if ($input.length !== 1 || $input.attr('is') !== 'upload-input') {
+      throw new Error('<upload-widget> must contain exactly one ' +
+                      '<input is="upload-input">.');
+    }
+
+    this.uploadInput = $input[0];
+    this.isDegraded = false;
+
+    let dragCounter = 0;
+
+    const finishInitialization = () => {
+      if (this.uploadInput instanceof UploadInput) {
+        if (!this.isDegraded) {
+          this.uploadInput.upgrade();
+        }
+        dispatchBubbly($el[0], 'uploadwidgetready');
+      } else {
+        $el.one('uploadinputready', finishInitialization);
+      }
+    };
+
+    function setCurrentFilename(filename) {
+      $('input', $el).nextAll().remove();
+
+      const id = $('input', $el).attr('id');
+      const current = $(
+        '<div class="upload-current">' +
+        '<div class="upload-filename"></div>' +
+        '<div class="upload-changer">Not right? ' +
+        '<label>Choose a different file</label> or drag and drop here.' +
+        '</div></div>'
+      );
+      $('label', current).attr('for', id);
+      $('.upload-filename', current).text(filename);
+      $el.append(current);
+    }
+
+    function showInvalidFileMessage() {
+      $('input', $el).nextAll().remove();
+
+      const id = $('input', $el).attr('id');
+      const err = $(
+        '<div class="upload-error">' +
+        '<div class="upload-error-message">Sorry, that type of file is not allowed.</div>' +
+        'Please <label>choose a different file</label> or drag and drop one here.' +
+        '</div></div>'
+      );
+      $('label', err).attr('for', id);
+      $el.append(err);
+    }
+
+    if (!HAS_BROWSER_SUPPORT || supports.isForciblyDegraded(this)) {
+      $el.addClass('degraded');
+      this.isDegraded = true;
+      return finishInitialization();
+    }
+
+    $('label', $el)
+      .after('<span aria-hidden="true"> or drag and drop here.</span>');
+
+    // The content of the upload widget will change when the user chooses
+    // a file, so let's make sure screen readers let users know about it.
+    $el.attr('aria-live', 'polite');
+
+    $el.on('dragenter', e => {
+      this._stopAndPrevent(e);
+
+      dragCounter++;
+      $el.addClass('dragged-over');
+    });
+    $el.on('dragleave', () => {
+      // http://stackoverflow.com/a/21002544/2422398
+      if (--dragCounter === 0) {
+        $el.removeClass('dragged-over');
+      }
+    });
+    $el.on('dragover', this._stopAndPrevent.bind(this));
+    $el.on('drop', e => {
+      this._stopAndPrevent(e);
+      $el.removeClass('dragged-over');
+
+      this.uploadInput.upgradedValue = e.originalEvent.dataTransfer.files[0];
+    });
+
+    $input.on('invalidfile', showInvalidFileMessage);
+
+    $input.on('changefile', e => {
+      setCurrentFilename(e.originalEvent.detail.name);
+    });
+
+    return finishInitialization();
+  }
+}
+
+UploadWidget.HAS_BROWSER_SUPPORT = HAS_BROWSER_SUPPORT;
+
+document.registerElement('upload-widget', {
+  prototype: UploadWidget.prototype,
+});
+
+exports.UploadInput = UploadInput;
+exports.UploadWidget = UploadWidget;

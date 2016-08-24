@@ -6,6 +6,8 @@ import * as sinon from 'sinon';
 
 import * as ajaxform from '../data-capture/ajaxform';
 
+import { UploadWidget } from '../data-capture/upload';
+
 let server;
 let $parentDiv;
 
@@ -95,7 +97,10 @@ function formTest(name, options, originalCb) {
 }
 
 function advancedTest(name, extraOptions, cb) {
-  if (!$.support.advancedUpload) {
+  // Our advanced tests embed an upload widget in them, which has a
+  // superset of the features required for ajaxform, so we'll test
+  // against that.
+  if (!UploadWidget.HAS_BROWSER_SUPPORT) {
     return QUnit.skip(name, cb);
   }
   return formTest(name, extraOptions, cb);
