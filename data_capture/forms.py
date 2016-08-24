@@ -1,21 +1,21 @@
 from django import forms
 
-from .models import NewPriceList, SubmittedPriceList
+from .models import SubmittedPriceList
 from .schedules import registry
 from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
 
 
-class Step1Form(forms.ModelForm):
+class Step1Form(forms.Form):
     schedule = forms.ChoiceField(
         choices=registry.get_choices
     )
-    class Meta:
-        model = NewPriceList
-        fields = [
-            'contract_number',
-            'vendor_name',
-        ]
+    contract_number = forms.CharField(
+        max_length=128,
+        help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
+    )
+    vendor_name = forms.CharField(max_length=128)
+
 
 class Step2Form(forms.ModelForm):
     is_small_business = forms.ChoiceField(
