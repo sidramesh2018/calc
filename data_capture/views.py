@@ -1,4 +1,5 @@
 import json
+from .models import SubmittedPriceList
 from functools import wraps
 from django.conf import settings
 from django.shortcuts import render, redirect
@@ -58,9 +59,7 @@ def step_2(request):
     # TODO: Add redirect to step 1 if request.session['contract_number'] doesn't exist
     if request.method == 'GET':
         form = forms.Step2Form()
-        print(request.session.get('data_capture:vendor_name'))
     elif request.method == 'POST':
-        print('POST')
         form = forms.Step2Form(request.POST)
         if form.is_valid():
             price_list = form.save(commit=False)
@@ -69,7 +68,7 @@ def step_2(request):
             price_list.vendor_name = request.session.get('data_capture:vendor_name')
             price_list.submitter = request.user
             price_list.save()
-            print(price_list)
+            request.session['price_list_id'] = price_list.id
 
             return redirect('data_capture:step_3')
         else:
@@ -83,9 +82,30 @@ def step_2(request):
 
 @login_required
 def step_3(request):
-    return render(request, 'data_capture/step_3.html', {
-        'step_number': 3,
-    })
+    if request.method == 'GET':
+        form = forms.Step3Form()
+    elif request.method == 'POST':
+        data = dict(request.POST, schedule=request.session['data_capture:schedule'])
+        form = forms.Step3Form(data, request.FILES)
+
+        if form.is_valid():
+            current_price_list = SubmittedPriceList.objects.get(id=request.session['price_list_id'])
+            current_price_list.serialized_gleaned_data = registry.serialize(form.cleaned_data['gleaned_data'])
+            current_price_list.save()
+
+            return ajaxform.redirect(request, 'data_capture:step_4')
+        else:
+            add_generic_form_error(request, form)
+
+    return ajaxform.render(
+        request,
+        context={
+            'step_number': 3,
+            'form': form
+        },
+        template_name='data_capture/step_3.html',
+        ajax_template_name='data_capture/upload_form.html',
+    )
 
 @login_required
 @gleaned_data_required
