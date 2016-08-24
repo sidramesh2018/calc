@@ -1,13 +1,14 @@
 /* global document, window */
 
-// The following code is based off:
-// https://github.com/d4tocchini/customevent-polyfill
+// The following polyfill is based off the code at:
+//
+// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
+//
+// The polyfill is by Mozilla Contributors and licensed under CC-BY-SA 2.5:
+//
+// https://creativecommons.org/licenses/by-sa/2.5/
 
-try {
-  /* eslint-disable no-new */
-  new window.CustomEvent('test');
-  /* eslint-enable no-new */
-} catch (e) {
+if (typeof window.CustomEvent !== 'function') {
   const CustomEvent = (event, originalParams) => {
     const params = Object.assign({
       bubbles: false,
