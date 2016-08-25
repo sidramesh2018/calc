@@ -64,6 +64,9 @@ If you just want to build the assets once without watching for changes, run
 npm run gulp -- build
 ```
 
+Also, in yet another terminal, you will want to run
+`python manage.py rqworker` to process all the tasks in the task queue.
+
 If you are managing https://calc.gsa.gov or any other cloud.gov-based deployment, see [`deploy.md`][].
 
 ## Testing
