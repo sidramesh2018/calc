@@ -1,5 +1,4 @@
 import logging
-import threading
 import traceback
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
@@ -8,6 +7,7 @@ from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction
+import django_rq
 
 from .. import forms
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
@@ -128,45 +128,42 @@ def process_bulk_upload(upload_source):
     return len(contracts), len(bad_rows)
 
 
-def process_bulk_upload_in_separate_thread(upload_source_id):
-    def run():
-        contracts_logger.info(
-            "Starting bulk upload processing (pk=%d)." % upload_source_id
+@django_rq.job
+def process_bulk_upload_and_send_email(upload_source_id):
+    contracts_logger.info(
+        "Starting bulk upload processing (pk=%d)." % upload_source_id
+    )
+    upload_source = BulkUploadContractSource.objects.get(
+        pk=upload_source_id
+    )
+    ctx = {'upload_source': upload_source}
+    successful = False
+    try:
+        num_contracts, num_bad_rows = process_bulk_upload(upload_source)
+        ctx['num_contracts'] = num_contracts
+        ctx['num_bad_rows'] = num_bad_rows
+        successful = True
+    except:
+        contracts_logger.exception(
+            'An exception occurred during bulk upload processing '
+            '(pk=%d).' % upload_source_id
         )
-        upload_source = BulkUploadContractSource.objects.get(
-            pk=upload_source_id
-        )
-        ctx = {'upload_source': upload_source}
-        successful = False
-        try:
-            num_contracts, num_bad_rows = process_bulk_upload(upload_source)
-            ctx['num_contracts'] = num_contracts
-            ctx['num_bad_rows'] = num_bad_rows
-            successful = True
-        except:
-            contracts_logger.exception(
-                'An exception occurred during bulk upload processing '
-                '(pk=%d).' % upload_source_id
-            )
-            ctx['traceback'] = traceback.format_exc()
-        ctx['successful'] = successful
-        send_mail(
-            subject='CALC Region 10 bulk data results - upload #%d' % (
-                upload_source.id,
-            ),
-            message=render_to_string(
-                'data_capture/bulk_upload/region_10_email.txt',
-                ctx
-            ),
-            from_email=None,
-            recipient_list=[upload_source.submitter.email]
-        )
-        contracts_logger.info(
-            "Ending bulk upload processing (pk=%d)." % upload_source_id
-        )
-
-    thread = threading.Thread(target=run)
-    thread.start()
+        ctx['traceback'] = traceback.format_exc()
+    ctx['successful'] = successful
+    send_mail(
+        subject='CALC Region 10 bulk data results - upload #%d' % (
+            upload_source.id,
+        ),
+        message=render_to_string(
+            'data_capture/bulk_upload/region_10_email.txt',
+            ctx
+        ),
+        from_email=None,
+        recipient_list=[upload_source.submitter.email]
+    )
+    contracts_logger.info(
+        "Ending bulk upload processing (pk=%d)." % upload_source_id
+    )
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -176,7 +173,7 @@ def region_10_step_3(request):
     if upload_source_id is None:
         return redirect('data_capture:bulk_region_10_step_1')
 
-    process_bulk_upload_in_separate_thread(upload_source_id)
+    process_bulk_upload_and_send_email.delay(upload_source_id)
 
     # remove the upload_source_id from session
     del request.session['data_capture:upload_source_id']

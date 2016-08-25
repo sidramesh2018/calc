@@ -82,6 +82,7 @@ INSTALLED_APPS = (
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'django_rq',
 
     'data_explorer',
     'contracts',
@@ -151,6 +152,11 @@ if not DEBUG:
     STATICFILES_STORAGE = ('whitenoise.storage.'
                            'CompressedManifestStaticFilesStorage')
 
+RQ_QUEUES = {
+    'default': {
+        'URL': os.environ['REDIS_URL'],
+    }
+}
 
 PAGINATION = 200
 
