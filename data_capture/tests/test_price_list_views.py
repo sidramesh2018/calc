@@ -10,8 +10,8 @@ class PriceListStepTestCase(StepTestCase):
     def set_fake_gleaned_data(self, rows):
         session = self.client.session
         pricelist = FakeSchedulePriceList(rows)
-        session['data_capture:schedule'] = registry.get_classname(pricelist)
-        session['data_capture:gleaned_data'] = registry.serialize(pricelist)
+        session['data_capture']['schedule'] = registry.get_classname(pricelist)
+        session['data_capture']['gleaned_data'] = registry.serialize(pricelist)
         session.save()
 
     def setUp(self):
@@ -55,19 +55,74 @@ class Step1Tests(PriceListStepTestCase):
 class Step2Tests(PriceListStepTestCase):
     url = '/data-capture/step/2'
 
+    valid_form = {
+        'contractor_site': 'Customer',
+        'is_small_business': False
+    }
+
+    def setUp(self):
+        session = self.client.session
+        session['data_capture'] = {
+            'schedule': FAKE_SCHEDULE,
+            'contract_number': 'GS-123-4567',
+            'vendor_name': 'foo'
+        }
+        session.save()
+
     def test_login_is_required(self):
         self.assertRedirectsToLogin(self.url)
 
-    def test_gleaned_data_is_required(self):
+    def test_get_is_ok(self):
         self.login()
         res = self.client.get(self.url)
-        self.assertRedirects(res, Step1Tests.url)
+        self.assertEqual(res.status_code, 200)
 
+    def test_valid_post_creates_models(self):
+        user = self.login()
+        self.client.post(self.url, self.valid_form)
+        p = SubmittedPriceList.objects.filter(
+            contract_number='GS-123-4567'
+        )[0]
+        self.assertEqual(p.schedule, FAKE_SCHEDULE)
+        self.assertEqual(p.vendor_name, 'foo')
+        self.assertEqual(p.contractor_site, 'Customer')
+        self.assertEqual(p.is_small_business, False)
+        self.assertEqual(p.submitter, user)
+
+    def test_valid_post_redirects_to_step_3(self):
+        self.login()
+        res = self.client.post(self.url, self.valid_form)
+        self.assertRedirects(res, Step3Tests.url)
+
+    def test_invalid_post_returns_html(self):
+        self.login()
+        res = self.client.post(self.url, {})
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'This field is required')
+        self.assertHasMessage(
+            res,
+            'error',
+            'Oops, please correct the errors below and try again.'
+        )
 
 class Step3Tests(PriceListStepTestCase):
     url = '/data-capture/step/3'
     csvpath = FAKE_SCHEDULE_EXAMPLE_PATH
 
+    def test_valid_data_does_something(self):
+        self.set_fake_gleaned_data(self.rows)
+
+        gleaned_data = registry.deserialize(
+            json.loads(p.serialized_gleaned_data)
+        )
+        assert isinstance(gleaned_data, FakeSchedulePriceList)
+        self.assertEqual(gleaned_data.rows, self.rows)
+
+        self.assertEqual(p.rows.count(), 1)
+        row = p.rows.all()[0]
+        self.assertEqual(row.current_price, 15)
+
+    #old stuff
     def ajax_post(self, data):
         res = self.client.post(self.url, data,
                                HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -94,6 +149,8 @@ class Step3Tests(PriceListStepTestCase):
                 'years_experience': '7'
             }])
 
+    def test_valid_post_updates_models(self):
+        pass
 
     # old stuff
     rows = [{
