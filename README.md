@@ -222,6 +222,9 @@ string), the boolean is true; otherwise, it's false.
   this defaults to `console:`. The setting can easily be manually
   tested via the `manage.py sendtestemail` command.
 
+* `REDIS_URL` is the URL for redis, which is used by the task queue.
+  When `DEBUG` is true, it defaults to `redis://localhost:6379/0`.
+
 * `ENABLE_SEO_INDEXING` is a boolean value that indicates whether to
   indicate to search engines that they can index the site.
 

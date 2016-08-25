@@ -36,6 +36,7 @@ if DEBUG:
         'I am an insecure secret key intended ONLY for dev/testing.'
     )
     os.environ.setdefault('EMAIL_URL', 'console:')
+    os.environ.setdefault('REDIS_URL', 'redis://localhost:6379/0')
 
 email_config = dj_email_url.config()
 # Sets a number of settings values, as described at
