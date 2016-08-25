@@ -86,7 +86,9 @@ def step_3(request):
     if request.method == 'GET':
         form = forms.Step3Form()
     elif request.method == 'POST':
-        posted_data = dict(request.POST, schedule=request.session['data_capture']['schedule'])
+        posted_data = dict(
+                request.POST,
+                schedule=request.session['data_capture']['schedule'])
         form = forms.Step3Form(posted_data, request.FILES)
 
         if form.is_valid():

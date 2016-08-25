@@ -45,6 +45,7 @@ class Step2Form(forms.ModelForm):
             'schedule': forms.HiddenInput(),
         }
 
+
 class Step3Form(forms.Form):
     schedule = forms.ChoiceField(
         choices=registry.get_choices
