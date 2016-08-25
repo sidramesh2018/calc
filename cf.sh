@@ -7,4 +7,4 @@ if [ $CF_INSTANCE_INDEX = "0" ]; then
     python manage.py load_data
     python manage.py load_s70
 fi
-newrelic-admin run-program waitress-serve --port=$VCAP_APP_PORT hourglass.wsgi:application
+newrelic-admin run-program gunicorn hourglass.wsgi:application
