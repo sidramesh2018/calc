@@ -23,7 +23,14 @@ CALC is a [Django] project. You can configure everything by running:
 cp .env.sample .env
 ```
 
-Edit the `.env` file to contain your local database configuration, and run:
+Edit the `.env` file to contain your local database configuration. Note
+that you need to use postgres as a backend, since CALC uses its full-text
+search functionality.
+
+You'll also want to make sure you have a local instance of redis running,
+on its default port, as we use it for CALC's task queue.
+
+Now run:
 
 ```sh
 ./manage.py syncdb
