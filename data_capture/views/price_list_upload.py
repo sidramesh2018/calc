@@ -1,21 +1,13 @@
 import json
-from .models import SubmittedPriceList
+from ..models import SubmittedPriceList
 from functools import wraps
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .. import forms
+from ..forms import price_list as forms
 from ..schedules import registry
 from .common import add_generic_form_error
 from frontend import ajaxform
-
-
-def add_generic_form_error(request, form):
-    messages.add_message(
-        request, messages.ERROR,
-        'Oops, please correct the error{} below and try again.'
-            .format(pluralize(form.errors))
-    )
 
 
 def gleaned_data_required(f):
@@ -52,7 +44,7 @@ def step_1(request):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/step_1.html', {
+    return render(request, 'data_capture/price_list/step_1.html', {
             'step_number': 1,
             'form': form,
         })
@@ -115,7 +107,7 @@ def step_3(request):
             'step_number': 3,
             'form': form
         },
-        template_name='data_capture/step_3.html',
+        template_name='data_capture/price_list/step_3.html',
         ajax_template_name='data_capture/upload_form.html',
     )
 
@@ -126,7 +118,7 @@ def step_4(request, gleaned_data):
     preferred_schedule = registry.get_class(
         request.session['data_capture']['schedule']
     )
-    return render(request, 'data_capture/step_4.html', {
+    return render(request, 'data_capture/price_list/step_4.html', {
         'step_number': 4,
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
@@ -151,6 +143,6 @@ def step_5(request, gleaned_data):
         # get here. Push them back to the last step.
         return redirect('data_capture:step_4')
 
-    return render(request, 'data_capture/step_5.html', {
+    return render(request, 'data_capture/price_list/step_5.html', {
         'step_number': 5
     })

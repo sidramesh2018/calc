@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 from contracts.models import Contract, EDUCATION_CHOICES
 
+
 class SubmittedPriceList(models.Model):
     contract_number = models.CharField(
         max_length=128,
