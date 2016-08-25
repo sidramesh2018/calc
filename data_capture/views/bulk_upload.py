@@ -142,7 +142,6 @@ def process_bulk_upload_in_separate_thread(upload_source_id):
             num_contracts, num_bad_rows = process_bulk_upload(upload_source)
             ctx['num_contracts'] = num_contracts
             ctx['num_bad_rows'] = num_bad_rows
-            kablooey
             successful = True
         except:
             contracts_logger.exception(
