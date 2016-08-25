@@ -1,0 +1,7 @@
+base_app:
+  build: .
+  environment:
+    - DDM_HOST_USER=calc_user
+    - PYTHONUNBUFFERED=yup
+    - DATABASE_URL=postgres://calc_user@db/calc
+    - REDIS_URL=redis://redis:6379/0
