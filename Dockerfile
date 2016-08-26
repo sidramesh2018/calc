@@ -37,9 +37,6 @@ COPY requirements.txt /calc/
 
 RUN pip install -r /calc/requirements.txt
 
-RUN pip install rq
-RUN pip install django-rq
-
 # The following lines set up our container for being run in a
 # cloud environment, where folder sharing is disabled. They're
 # irrelevant for a local development environment, where the /calc
