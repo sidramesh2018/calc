@@ -2,6 +2,7 @@
 services:
 - db-calc-sandbox
 - calc-env
+- calc-redis
 applications:
 - name: calc-sandbox
   instances: 1
@@ -13,3 +14,5 @@ applications:
   command: bash cf.sh
   stack: cflinuxfs2
   timeout: 180
+  env:
+    EMAIL_URL: 'console:'

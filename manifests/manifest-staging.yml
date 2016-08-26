@@ -2,6 +2,7 @@
 services:
 - db-calc-dev
 - calc-env
+- calc-redis
 applications:
 - name: calc-dev
   instances: 1
