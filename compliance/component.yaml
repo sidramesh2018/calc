@@ -157,9 +157,8 @@ satisfies:
         catch syntactic errors), "bandit" (a security-focused static analysis
         tool), and a handful of custom, security-centric unit
         tests. Code which does not meet these standards is generally not
-        merged. We also employ Gemnasium to track our dependencies,
-        Code Climate to warn of potentially concerning style, and
-        Quantified Code to warn about security and style issues.
+        merged. We also employ Gemnasium to track our dependencies and
+        Code Climate to warn of potentially concerning style.
 
         For static analysis, we've addressed all critical issues raised by
         evaluating the application with OWASP ZAP.
@@ -168,7 +167,6 @@ satisfies:
     - verification_key: bandit
     - verification_key: gemnasium
     - verification_key: code-climate
-    - verification_key: quantified-code
     - verification_key: owasp-zap
 - standard_key: NIST-800-53
   control_key: SA-11 (1)   # Developer Security Testing and Evaluation
@@ -181,15 +179,13 @@ satisfies:
         catch syntactic errors), "bandit" (a security-focused static analysis
         tool), and a handful of custom, security-centric unit
         tests. Code which does not meet these standards is generally not
-        merged. We also employ Gemnasium to track our dependencies,
-        Code Climate to warn of potentially concerning style, and
-        Quantified Code to warn about security and style issues.
+        merged. We also employ Gemnasium to track our dependencies and
+        Code Climate to warn of potentially concerning style.
   references:
     - verification_key: flake8
     - verification_key: bandit
     - verification_key: gemnasium
     - verification_key: code-climate
-    - verification_key: quantified-code
 - standard_key: NIST-800-53
   control_key: SA-22 (1)   # Unsupported System Components
                            # Alternative Sources for Continued Support
@@ -251,10 +247,6 @@ verifications:
 - key: code-climate
   name: Project's Code Climate Results
   path: https://codeclimate.com/github/18F/calc
-  type: URL
-- key: quantified-code
-  name: Project's Quantified Code Results
-  path: https://www.quantifiedcode.com/app/project/68ae46ef5bd84f7db471f67ba3ca7f03
   type: URL
 - key: gemnasium
   name: Project's Gemnasium Results
