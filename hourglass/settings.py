@@ -212,6 +212,10 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'rq.worker': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        }
     },
 }
 
