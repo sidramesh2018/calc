@@ -4,6 +4,8 @@ from django import forms
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
+from django.contrib import messages
+
 
 from .schedules import registry
 from .models import SubmittedPriceList, SubmittedPriceListRow
@@ -40,8 +42,17 @@ class SubmittedPriceListRowInline(admin.TabularInline):
 
 
 def approve(modeladmin, request, queryset):
-    for obj in queryset.filter(is_approved=False):
+    unapproved = queryset.filter(is_approved=False)
+    count = unapproved.count()
+    for obj in unapproved:
         obj.approve()
+    messages.add_message(
+        request,
+        messages.INFO,
+        '{} price list(s) have been approved and added to CALC.'.format(
+            count
+        )
+    )
 
 
 approve.short_description = (
@@ -50,8 +61,17 @@ approve.short_description = (
 
 
 def unapprove(modeladmin, request, queryset):
-    for obj in queryset.filter(is_approved=True):
+    approved = queryset.filter(is_approved=True)
+    count = approved.count()
+    for obj in approved:
         obj.unapprove()
+    messages.add_message(
+        request,
+        messages.INFO,
+        '{} price list(s) have been unapproved and removed from CALC.'.format(
+            count
+        )
+    )
 
 
 unapprove.short_description = (
