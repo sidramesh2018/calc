@@ -5,6 +5,9 @@ from contracts.models import Contract, EDUCATION_CHOICES
 
 
 class SubmittedPriceList(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     # This is the equivalent of Contract.idv_piid.
     contract_number = models.CharField(
         max_length=128,

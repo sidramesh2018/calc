@@ -82,7 +82,7 @@ unapprove.short_description = (
 @admin.register(SubmittedPriceList)
 class SubmittedPriceListAdmin(admin.ModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
-                    'is_approved')
+                    'created_at', 'is_approved')
 
     actions = [approve, unapprove]
 
@@ -96,12 +96,16 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
         'contract_start',
         'contract_end',
         'submitter',
+        'created_at',
+        'updated_at',
         'is_approved',
         'current_status',
     )
 
     readonly_fields = (
         'schedule_title',
+        'created_at',
+        'updated_at',
         'is_approved',
         'current_status'
     )
