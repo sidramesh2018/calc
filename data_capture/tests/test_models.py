@@ -87,6 +87,7 @@ class ModelsTests(ModelTestCase):
         row = self.create_row(labor_category='Software Engineer',
                               price_list=p)
         row.save()
+        self.create_row(price_list=p, is_muted=True).save()
         p.approve()
 
         self.assertEqual(Contract.objects.all().count(), 1)
@@ -101,8 +102,8 @@ class ModelsTests(ModelTestCase):
     def test_unapprove_works(self):
         p = self.create_price_list()
         p.save()
-        row = self.create_row(price_list=p)
-        row.save()
+        self.create_row(price_list=p).save()
+        self.create_row(price_list=p, is_muted=True).save()
         p.approve()
         p.unapprove()
 
