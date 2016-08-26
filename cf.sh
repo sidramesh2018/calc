@@ -7,4 +7,4 @@ if [ $CF_INSTANCE_INDEX = "0" ]; then
     python manage.py load_data -f contracts/docs/hourly_prices_sample.csv
     python manage.py load_s70 -f contracts/docs/s70/s70_data_sample.csv
 fi
-newrelic-admin run-program waitress-serve --port=$VCAP_APP_PORT hourglass.wsgi:application
+newrelic-admin run-program gunicorn hourglass.wsgi:application
