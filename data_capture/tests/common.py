@@ -52,20 +52,35 @@ def r10_file(content=None, name='r10.xlsx'):
     # Ignore our custom auth backend so we can log the user in via
     # Django 1.8's login helpers.
     AUTHENTICATION_BACKENDS=['django.contrib.auth.backends.ModelBackend'],
-    DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE],
 )
-class StepTestCase(TestCase):
-    def login(self, is_staff=False):
+class BaseTestCase(TestCase):
+    def create_user(self, username, password=None, is_staff=False,
+                    is_superuser=False):
         user = User.objects.create_user(
-            username='foo',
-            password='bar'
+            username=username,
+            password=password
         )
         if is_staff:
             user.is_staff = True
             user.save()
-        assert self.client.login(username='foo', password='bar')
+        if is_superuser:
+            user.is_staff = True
+            user.is_superuser = True
+            user.save()
         return user
 
+    def login(self, username='foo', is_staff=False, is_superuser=False):
+        user = self.create_user(username=username, password='bar',
+                                is_staff=is_staff,
+                                is_superuser=is_superuser)
+        assert self.client.login(username=username, password='bar')
+        return user
+
+
+@override_settings(
+    DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE],
+)
+class StepTestCase(BaseTestCase):
     def assertRedirectsToLogin(self, url):
         res = self.client.get(url)
         self.assertEqual(res.status_code, 302)
