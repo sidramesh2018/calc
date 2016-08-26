@@ -5,6 +5,8 @@ addons:
   postgresql: 9.3
 matrix:
   fast_finish: true
+services:
+- redis-server
 before_install:
 - pip install codeclimate-test-reporter
 - npm install -g gulp-cli
