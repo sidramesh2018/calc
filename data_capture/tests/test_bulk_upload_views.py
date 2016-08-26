@@ -1,7 +1,26 @@
 import json
-from .common import StepTestCase, R10_XLSX_PATH
+from unittest.mock import patch
+from django.contrib.auth.models import User
+from django.core import mail
+from django.test import TestCase
+import django_rq
 
+from ..views import bulk_upload
+from .common import StepTestCase, R10_XLSX_PATH
 from contracts.models import Contract, BulkUploadContractSource
+
+
+def create_bulk_upload_contract_source(user):
+    if isinstance(user, str):
+        user = User.objects.create_user('testuser', email=user)
+    with open(R10_XLSX_PATH, 'rb') as f:
+        src = BulkUploadContractSource.objects.create(
+            submitter=user,
+            has_been_loaded=False,
+            original_file=f.read(),
+            procurement_center=BulkUploadContractSource.REGION_10,
+        )
+    return src
 
 
 class R10StepTestCase(StepTestCase):
@@ -10,17 +29,11 @@ class R10StepTestCase(StepTestCase):
         session.clear()
 
     def setup_upload_source(self, user):
-        with open(R10_XLSX_PATH, 'rb') as f:
-            src = BulkUploadContractSource.objects.create(
-                submitter=user,
-                has_been_loaded=False,
-                original_file=f.read(),
-                procurement_center=BulkUploadContractSource.REGION_10,
-            )
-            session = self.client.session
-            session['data_capture:upload_source_id'] = src.pk
-            session.save()
-            return src
+        src = create_bulk_upload_contract_source(user)
+        session = self.client.session
+        session['data_capture:upload_source_id'] = src.pk
+        session.save()
+        return src
 
 
 class Region10UploadStep1Tests(R10StepTestCase):
@@ -152,12 +165,11 @@ class Region10UploadStep3Tests(R10StepTestCase):
         self.setup_upload_source(user)
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
+
+        django_rq.get_worker().work(burst=True)
+
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
-        self.assertIn('num_contracts', res.context)
-        self.assertIn('num_bad_rows', res.context)
-        self.assertEqual(res.context['num_contracts'], 3)
-        self.assertEqual(res.context['num_bad_rows'], 1)
         upload_source = BulkUploadContractSource.objects.all()[0]
         self.assertTrue(upload_source.has_been_loaded)
         for c in contracts:
@@ -180,5 +192,33 @@ class Region10UploadStep3Tests(R10StepTestCase):
         self.setup_upload_source(user)
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
+
+        django_rq.get_worker().work(burst=True)
+
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
+
+
+class ProcessBulkUploadTests(TestCase):
+    @patch.object(bulk_upload, 'process_bulk_upload')
+    def test_sends_email_on_failure(self, mock):
+        mock.side_effect = Exception('KABLOOEY')
+        src = create_bulk_upload_contract_source(user='foo@example.org')
+        ctx = bulk_upload.process_bulk_upload_and_send_email(src.id)
+        self.assertEqual(len(mail.outbox), 1)
+
+        message = mail.outbox[0]
+        self.assertEqual(message.recipients(), ['foo@example.org'])
+        self.assertEqual(ctx['successful'], False)
+        self.assertRegexpMatches(message.body, 'KABLOOEY')
+
+    def test_sends_email_on_success(self):
+        src = create_bulk_upload_contract_source(user='foo@example.org')
+        ctx = bulk_upload.process_bulk_upload_and_send_email(src.id)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].recipients(), ['foo@example.org'])
+        self.assertEqual(ctx['successful'], True)
+        self.assertIn('num_contracts', ctx)
+        self.assertIn('num_bad_rows', ctx)
+        self.assertEqual(ctx['num_contracts'], 3)
+        self.assertEqual(ctx['num_bad_rows'], 1)

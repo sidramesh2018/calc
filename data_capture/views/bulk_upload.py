@@ -128,7 +128,6 @@ def process_bulk_upload(upload_source):
     return len(contracts), len(bad_rows)
 
 
-@django_rq.job
 def process_bulk_upload_and_send_email(upload_source_id):
     contracts_logger.info(
         "Starting bulk upload processing (pk=%d)." % upload_source_id
@@ -164,6 +163,12 @@ def process_bulk_upload_and_send_email(upload_source_id):
     contracts_logger.info(
         "Ending bulk upload processing (pk=%d)." % upload_source_id
     )
+    return ctx
+
+
+process_bulk_upload_and_send_email_job = django_rq.job(
+    process_bulk_upload_and_send_email
+)
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -173,7 +178,7 @@ def region_10_step_3(request):
     if upload_source_id is None:
         return redirect('data_capture:bulk_region_10_step_1')
 
-    process_bulk_upload_and_send_email.delay(upload_source_id)
+    process_bulk_upload_and_send_email_job.delay(upload_source_id)
 
     # remove the upload_source_id from session
     del request.session['data_capture:upload_source_id']
