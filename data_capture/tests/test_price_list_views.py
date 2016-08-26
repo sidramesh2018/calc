@@ -35,6 +35,14 @@ class Step1Tests(PriceListStepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
+    def test_valid_post_sets_session_data(self):
+        self.login()
+        self.client.post(self.url, self.valid_form)
+        self.assertEqual(self.client.session['data_capture']['schedule'],
+             FAKE_SCHEDULE)
+        self.assertEqual(self.client.session['data_capture']['contract_number'], 'GS-123-4567')
+        self.assertEqual(self.client.session['data_capture']['vendor_name'], 'foo')
+
     def test_valid_post_redirects_to_step_2(self):
         self.login()
         res = self.client.post(self.url, self.valid_form)
