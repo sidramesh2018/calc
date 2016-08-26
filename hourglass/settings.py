@@ -14,7 +14,9 @@ import dj_database_url
 import dj_email_url
 from dotenv import load_dotenv
 
-from .settings_utils import load_cups_from_vcap_services, get_whitelisted_ips
+from .settings_utils import (load_cups_from_vcap_services,
+                             load_redis_url_from_vcap_services,
+                             get_whitelisted_ips)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -24,6 +26,7 @@ if os.path.exists(DOTENV_PATH):
     load_dotenv(DOTENV_PATH)
 
 load_cups_from_vcap_services('calc-env')
+load_redis_url_from_vcap_services('calc-redis')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
