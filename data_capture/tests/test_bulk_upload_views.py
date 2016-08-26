@@ -3,11 +3,25 @@ from unittest.mock import patch
 from django.contrib.auth.models import User
 from django.core import mail
 from django.test import TestCase
+from rq import SimpleWorker
 import django_rq
 
 from ..views import bulk_upload
 from .common import StepTestCase, R10_XLSX_PATH
 from contracts.models import Contract, BulkUploadContractSource
+
+
+def process_worker_jobs():
+    # We need to do this while testing to avoid strange errors on Travis.
+    #
+    # See:
+    #
+    #   http://python-rq.org/docs/testing/
+    #   https://github.com/ui/django-rq/issues/123
+
+    queue = django_rq.get_queue()
+    worker = SimpleWorker([queue], connection=queue.connection)
+    worker.work(burst=True)
 
 
 def create_bulk_upload_contract_source(user):
@@ -166,7 +180,7 @@ class Region10UploadStep3Tests(R10StepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
-        django_rq.get_worker().work(burst=True)
+        process_worker_jobs()
 
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
@@ -193,7 +207,7 @@ class Region10UploadStep3Tests(R10StepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
-        django_rq.get_worker().work(burst=True)
+        process_worker_jobs()
 
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
