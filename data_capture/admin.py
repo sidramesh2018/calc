@@ -118,6 +118,12 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
 
     schedule_title.short_description = 'Schedule'
 
+    # http://stackoverflow.com/a/25813184/2422398
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        del actions['delete_selected']
+        return actions
+
     def has_add_permission(self, request):
         return False
 
