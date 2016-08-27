@@ -188,33 +188,40 @@ class Step3Tests(PriceListStepTestCase):
 
 class Step4Tests(StepTestCase):
     url = '/data-capture/step/4'
+    valid_rows = [{
+        'education': 'Bachelors',
+        'price': '15.00',
+        'service': 'Project Manager',
+        'sin': '132-40',
+        'years_experience': '7'
+    }]
+    invalid_rows = [{
+        'education': 'BA',
+        'price': '15.00',
+        'service': 'Project Manager',
+        'sin': '12-40',
+        'years_experience': '7'
+    }]
 
     def test_get_is_ok(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
+    def test_valid_post_discards_invalid_rows(self):
+        pass
+
     def test_valid_post_updates_models(self):
         pass
 
-    # old stuff from step 3
-    def test_valid_post_creates_models(self):
-        user = self.login()
-        self.set_fake_gleaned_data(self.rows)
-        self.client.post(self.url, self.valid_form)
-        p = SubmittedPriceList.objects.filter(
-            contract_number='GS-123-4567'
-        )[0]
-        self.assertEqual(p.vendor_name, 'foo')
-        self.assertEqual(p.contractor_site, 'Customer')
-        self.assertEqual(p.submitter, user)
-        self.assertEqual(p.schedule, FAKE_SCHEDULE)
+    def test_valid_post_redirects_to_step_5(self):
+        pass
 
-        gleaned_data = registry.deserialize(
-            json.loads(p.serialized_gleaned_data)
-        )
-        assert isinstance(gleaned_data, FakeSchedulePriceList)
-        self.assertEqual(gleaned_data.rows, self.rows)
+class Step5Tests(StepTestCase):
+    url = '/data-capture/step/5'
 
-        self.assertEqual(p.rows.count(), 1)
-        row = p.rows.all()[0]
-        self.assertEqual(row.current_price, 15)
+    def test_get_is_ok(self):
+        res = self.client.get(self.url)
+        self.assertEqual(res.status_code, 200)
+
+    def test_session_is_deleted(self):
+        pass
