@@ -117,9 +117,21 @@ def step_3(request):
 @login_required
 @gleaned_data_required
 def step_4(request, gleaned_data):
-    preferred_schedule = registry.get_class(
-        request.session['data_capture']['schedule']
-    )
+    if request.method == 'GET':
+        preferred_schedule = registry.get_class(
+            request.session['data_capture']['schedule']
+        )
+    elif request.method == 'POST':
+        if gleaned_data.valid_rows:
+            current_price_list = \
+                SubmittedPriceList.objects.get(id=request.session['price_list_id'])
+            current_price_list.serialized_gleaned_data = json.dumps(
+                request.session['data_capture']['gleaned_data'])
+            current_price_list.save()
+            gleaned_data.add_to_price_list(current_price_list)
+        else:
+            add_generic_form_error(request, form)
+
     return render(request, 'data_capture/price_list/step_4.html', {
         'step_number': 4,
         'gleaned_data': gleaned_data,
@@ -132,13 +144,6 @@ def step_4(request, gleaned_data):
 @gleaned_data_required
 def step_5(request, gleaned_data):
     if gleaned_data.valid_rows:
-        current_price_list = \
-            SubmittedPriceList.objects.get(id=request.session['price_list_id'])
-        current_price_list.serialized_gleaned_data = json.dumps(
-            request.session['data_capture']['gleaned_data'])
-        current_price_list.save()
-        gleaned_data.add_to_price_list(current_price_list)
-
         del request.session['data_capture']
     else:
         # The user may have manually changed the URL or something to
