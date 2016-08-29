@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.core.files.base import ContentFile
+from django.views.decorators.http import require_POST
 
 from .. import forms, jobs
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
@@ -76,8 +77,10 @@ def region_10_step_2(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
+@require_POST
 def region_10_step_3(request):
     '''Load data and show success screen'''
+
     upload_source_id = request.session.get('data_capture:upload_source_id')
     if upload_source_id is None:
         return redirect('data_capture:bulk_region_10_step_1')

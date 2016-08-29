@@ -129,24 +129,20 @@ class Region10UploadStep3Tests(R10StepTestCase):
     def test_login_is_required(self):
         self.assertRedirectsToLogin(self.url)
 
-    def test_session_source_id_is_required(self):
+    def test_not_available_via_get(self):
         self.login(is_staff=True)
         res = self.client.get(self.url)
+        self.assertEquals(res.status_code, 405)
+
+    def test_session_source_id_is_required(self):
+        self.login(is_staff=True)
+        res = self.client.post(self.url)
         self.assertRedirects(res, Region10UploadStep1Tests.url)
 
-    def test_non_staff_login_errors(self):
-        self.login()
-        res = self.client.get(self.url)
-        self.assertEqual(res.status_code, 302)
-        self.assertEqual(
-            res['Location'],
-            'http://testserver/auth/login?next={}'.format(self.url)
-        )
-
-    def test_get_is_ok_and_contracts_are_created_properly(self):
+    def test_post_is_ok_and_contracts_are_created_properly(self):
         user = self.login(is_staff=True)
         self.setup_upload_source(user)
-        res = self.client.get(self.url)
+        res = self.client.post(self.url)
         self.assertEqual(res.status_code, 200)
 
         process_worker_jobs()
@@ -173,7 +169,7 @@ class Region10UploadStep3Tests(R10StepTestCase):
             upload_source=other_source
         )
         self.setup_upload_source(user)
-        res = self.client.get(self.url)
+        res = self.client.post(self.url)
         self.assertEqual(res.status_code, 200)
 
         process_worker_jobs()
