@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class Schedule70Loader(object):
     model = Contract
     schedule_name = 'IT Schedule 70'
-    header_rows = 2
+    header_rows = 1
 
     def load(self, filename, replace=True, strict=False):
         logger.info('begin load_s70 task')
