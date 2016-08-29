@@ -16,7 +16,7 @@ def gleaned_data_required(f):
         try:
             d = request.session['data_capture']['gleaned_data']
         except:
-            return redirect('data_capture:step_1')
+            return redirect('data_capture:step_3')
 
         return f(request, registry.deserialize(d))
     return wrapper
