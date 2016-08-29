@@ -178,6 +178,9 @@ def region_10_step_3(request):
     if upload_source_id is None:
         return redirect('data_capture:bulk_region_10_step_1')
 
+    contracts_logger.info(
+        'Queuing bulk upload job (pk={})'.format(upload_source_id))
+
     process_bulk_upload_and_send_email_job.delay(upload_source_id)
 
     # remove the upload_source_id from session
