@@ -79,8 +79,25 @@ unapprove.short_description = (
 )
 
 
+class UndeletableModelAdmin(admin.ModelAdmin):
+    '''
+    Represents a model admin UI that offers no way of deleting
+    instances. This is useful to ensure accidental data loss, especially
+    when we want to keep it around for historical/data provenance purposes.
+    '''
+
+    # http://stackoverflow.com/a/25813184/2422398
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        del actions['delete_selected']
+        return actions
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(SubmittedPriceList)
-class SubmittedPriceListAdmin(admin.ModelAdmin):
+class SubmittedPriceListAdmin(UndeletableModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
                     'created_at', 'is_approved')
 
@@ -142,16 +159,7 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
 
     schedule_title.short_description = 'Schedule'
 
-    # http://stackoverflow.com/a/25813184/2422398
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        del actions['delete_selected']
-        return actions
-
     def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
         return False
 
     def get_readonly_fields(self, request, obj=None):
@@ -161,7 +169,7 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
 
 
 @admin.register(SubmittedPriceListRow)
-class SubmittedPriceListRowAdmin(admin.ModelAdmin):
+class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
     list_display = (
         'contract_number',
         'vendor_name',
@@ -177,12 +185,6 @@ class SubmittedPriceListRowAdmin(admin.ModelAdmin):
     list_editable = (
         'is_muted',
     )
-
-    # http://stackoverflow.com/a/25813184/2422398
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        del actions['delete_selected']
-        return actions
 
     def contract_number(self, obj):
         url = reverse('admin:data_capture_submittedpricelist_change',
@@ -201,7 +203,4 @@ class SubmittedPriceListRowAdmin(admin.ModelAdmin):
         return obj.price_list.vendor_name
 
     def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
         return False
