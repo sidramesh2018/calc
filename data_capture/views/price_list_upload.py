@@ -60,6 +60,7 @@ def step_2(request):
         form = forms.Step2Form()
     elif request.method == 'POST':
         form = forms.Step2Form(request.POST)
+        print(request.POST.dict())
         if form.is_valid():
             price_list = form.save(commit=False)
             price_list.schedule = request.session['data_capture']['schedule']
@@ -83,35 +84,38 @@ def step_2(request):
 
 @login_required
 def step_3(request):
-    if request.method == 'GET':
-        form = forms.Step3Form()
-    elif request.method == 'POST':
-        posted_data = dict(
-                request.POST,
-                schedule=request.session['data_capture']['schedule'])
-        form = forms.Step3Form(posted_data, request.FILES)
+    if 'data_capture' not in request.session:
+        return redirect('data_capture:step_1')
+    else:
+        if request.method == 'GET':
+            form = forms.Step3Form()
+        elif request.method == 'POST':
+            posted_data = dict(
+                    request.POST,
+                    schedule=request.session['data_capture']['schedule'])
+            form = forms.Step3Form(posted_data, request.FILES)
 
-        if form.is_valid():
-            request.session['data_capture']['gleaned_data'] = \
-                registry.serialize(form.cleaned_data['gleaned_data'])
+            if form.is_valid():
+                request.session['data_capture']['gleaned_data'] = \
+                    registry.serialize(form.cleaned_data['gleaned_data'])
 
-            # Changing the value of a subkey doesn't cause the session to save,
-            # so do it manually
-            request.session.modified = True
+                # Changing the value of a subkey doesn't cause the session to save,
+                # so do it manually
+                request.session.modified = True
 
-            return ajaxform.redirect(request, 'data_capture:step_4')
-        else:
-            add_generic_form_error(request, form)
+                return ajaxform.redirect(request, 'data_capture:step_4')
+            else:
+                add_generic_form_error(request, form)
 
-    return ajaxform.render(
-        request,
-        context={
-            'step_number': 3,
-            'form': form
-        },
-        template_name='data_capture/price_list/step_3.html',
-        ajax_template_name='data_capture/upload_form.html',
-    )
+        return ajaxform.render(
+            request,
+            context={
+                'step_number': 3,
+                'form': form
+            },
+            template_name='data_capture/price_list/step_3.html',
+            ajax_template_name='data_capture/upload_form.html',
+        )
 
 
 @login_required
@@ -129,6 +133,7 @@ def step_4(request, gleaned_data):
                 request.session['data_capture']['gleaned_data'])
             current_price_list.save()
             gleaned_data.add_to_price_list(current_price_list)
+            print(current_price_list)
         else:
             add_generic_form_error(request, form)
 
