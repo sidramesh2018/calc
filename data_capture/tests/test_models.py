@@ -1,19 +1,22 @@
-from django.test import TestCase, override_settings
-from django.contrib.auth.models import User
+from django.test import override_settings
 
 from contracts.models import Contract
 from ..schedules import registry
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..models import SubmittedPriceList, SubmittedPriceListRow
-from .common import FAKE_SCHEDULE
+from .common import BaseTestCase, FAKE_SCHEDULE
 
 
-class ModelTestCase(TestCase):
+class ModelTestCase(BaseTestCase):
     DEFAULT_SCHEDULE = FAKE_SCHEDULE
 
     def setUp(self):
-        self.user = User.objects.create_user(username='foo')
+        super().setUp()
         registry._init()
+        self.setup_user()
+
+    def setup_user(self):
+        self.user = self.create_user(username='foo')
 
     def create_price_list(self, **kwargs):
         final_kwargs = dict(
@@ -22,24 +25,6 @@ class ModelTestCase(TestCase):
             contract_number='GS-123-4567',
             vendor_name='UltraCorp',
             schedule=self.DEFAULT_SCHEDULE
-        )
-        final_kwargs.update(kwargs)
-        return SubmittedPriceList(**final_kwargs)
-
-
-@override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
-class ModelsTests(ModelTestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='foo')
-        registry._init()
-
-    def create_price_list(self, **kwargs):
-        final_kwargs = dict(
-            submitter=self.user,
-            is_small_business=False,
-            contract_number='GS-123-4567',
-            vendor_name='UltraCorp',
-            schedule=FAKE_SCHEDULE
         )
         final_kwargs.update(kwargs)
         return SubmittedPriceList(**final_kwargs)
@@ -53,6 +38,9 @@ class ModelsTests(ModelTestCase):
         final_kwargs.update(kwargs)
         return SubmittedPriceListRow(**final_kwargs)
 
+
+@override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
+class ModelsTests(ModelTestCase):
     def test_add_row_works(self):
         p = self.create_price_list()
         p.save()
@@ -87,6 +75,7 @@ class ModelsTests(ModelTestCase):
         row = self.create_row(labor_category='Software Engineer',
                               price_list=p)
         row.save()
+        self.create_row(price_list=p, is_muted=True).save()
         p.approve()
 
         self.assertEqual(Contract.objects.all().count(), 1)
@@ -101,8 +90,8 @@ class ModelsTests(ModelTestCase):
     def test_unapprove_works(self):
         p = self.create_price_list()
         p.save()
-        row = self.create_row(price_list=p)
-        row.save()
+        self.create_row(price_list=p).save()
+        self.create_row(price_list=p, is_muted=True).save()
         p.approve()
         p.unapprove()
 
