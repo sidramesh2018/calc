@@ -56,10 +56,13 @@ def r10_file(content=None, name='r10.xlsx'):
 )
 class StepTestCase(TestCase):
     def login(self, is_staff=False):
-        user = User.objects.create_user(
-            username='foo',
-            password='bar'
-        )
+        try:
+            user = User.objects.get(username='foo')
+        except User.DoesNotExist:
+            user = User.objects.create_user(
+                username='foo',
+                password='bar'
+            )
         if is_staff:
             user.is_staff = True
             user.save()

@@ -121,12 +121,14 @@ def step_3(request):
 @login_required
 @gleaned_data_required
 def step_4(request, gleaned_data):
-    if request.method == 'GET':
-        preferred_schedule = registry.get_class(
-            request.session['data_capture']['schedule']
-        )
-    elif request.method == 'POST':
-        if gleaned_data.valid_rows:
+    if not gleaned_data.valid_rows:
+        return redirect('data_capture:step_3')
+    else:
+        if request.method == 'GET':
+            preferred_schedule = registry.get_class(
+                request.session['data_capture']['schedule']
+            )
+        elif request.method == 'POST':
             current_price_list = \
                 SubmittedPriceList.objects.get(id=request.session['price_list_id'])
             current_price_list.serialized_gleaned_data = json.dumps(
@@ -134,8 +136,6 @@ def step_4(request, gleaned_data):
             current_price_list.save()
             gleaned_data.add_to_price_list(current_price_list)
             print(current_price_list)
-        else:
-            add_generic_form_error(request, form)
 
     return render(request, 'data_capture/price_list/step_4.html', {
         'step_number': 4,

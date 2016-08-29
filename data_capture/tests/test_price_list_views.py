@@ -1,5 +1,6 @@
 import json
 
+from ..forms.price_list import Step2Form
 from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
@@ -7,6 +8,7 @@ from .common import StepTestCase, FAKE_SCHEDULE, FAKE_SCHEDULE_EXAMPLE_PATH
 
 
 class PriceListStepTestCase(StepTestCase):
+    # TODO: Move individual setUp functions here if applicable
     def set_fake_gleaned_data(self, rows):
         session = self.client.session
         pricelist = FakeSchedulePriceList(rows)
@@ -186,35 +188,96 @@ class Step3Tests(PriceListStepTestCase):
             })
             self.assertRedirects(res, Step4Tests.url)
 
-class Step4Tests(StepTestCase):
+class Step4Tests(PriceListStepTestCase):
     url = '/data-capture/step/4'
-    valid_rows = [{
+    rows = [{
         'education': 'Bachelors',
         'price': '15.00',
         'service': 'Project Manager',
         'sin': '132-40',
         'years_experience': '7'
+    }, {
+        'education': 'School of hard knocks',
+        'price': '0',
+        'service': 'Oil change & tune up',
+        'sin': 'absolved',
+        'years_experience': 'vii'
     }]
-    invalid_rows = [{
-        'education': 'BA',
-        'price': '15.00',
-        'service': 'Project Manager',
-        'sin': '12-40',
-        'years_experience': '7'
-    }]
+
+    def setUp(self):
+        session = self.client.session
+        # user = self.login()
+        # print(user)
+        session['data_capture'] = {
+            'schedule': FAKE_SCHEDULE,
+            'contract_number': 'GS-123-4567',
+            'vendor_name': 'foo',
+            'contractor_site': 'Customer',
+            'is_small_business': False
+        }
+        # This doesn't work.
+        # form = Step2Form({
+            # 'contract_number': ['GS-123-4567'],
+            # 'vendor_name': ['foo'],
+            # 'schedule': [FAKE_SCHEDULE],
+            # 'contractor_site': 'Customer',
+            # 'is_small_business': 'False',
+            # 'submitter_id': ['foo']
+        # })
+        # form.is_valid()
+        # print(form.errors)
+        # price_list = form.save()
+        # session['price_list_id'] = price_list.id
+        session.save()
+
+    def test_login_is_required(self):
+        self.assertRedirectsToLogin(self.url)
+
+    def test_gleaned_data_is_required(self):
+        self.login()
+        res = self.client.get(self.url)
+        self.assertRedirects(res, Step3Tests.url)
 
     def test_get_is_ok(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
+    def test_gleaned_data_with_valid_rows_is_required(self):
+        self.login()
+        self.set_fake_gleaned_data([])
+        res = self.client.get(self.url)
+        self.assertRedirects(res, Step3Tests.url)
+
+    # FAIL
     def test_valid_post_discards_invalid_rows(self):
-        pass
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        print(self.client)
+        self.client.post(self.url, self.client.session['data_capture'])
+        # p = SubmittedPriceList.objects.get(id=self.client.session['price_list_id'])
 
-    def test_valid_post_updates_models(self):
-        pass
+        # gleaned_data = registry.deserialize(
+            # json.loads(p.serialized_gleaned_data)
+        # )
+        # assert isinstance(gleaned_data, FakeSchedulePriceList)
+        self.assertLess(gleaned_data.valid_rows.count, self.rows.count)
 
+    # FAIL
     def test_valid_post_redirects_to_step_5(self):
-        pass
+        self.login()
+        # model posting stuff here when it works
+        self.assertEqual(res.status_code, 200)
+
+    # FAIL
+    def test_invalid_post_raises_error(self):
+        self.login()
+        self.set_fake_gleaned_data([])
+        res = self.client.post(self.url, self.set_fake_gleaned_data([]))
+        self.assertHasMessage(
+            res,
+            'error',
+            'What error message should this be?'
+        )
 
 class Step5Tests(StepTestCase):
     url = '/data-capture/step/5'
@@ -223,5 +286,17 @@ class Step5Tests(StepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
+    def test_login_is_required(self):
+        self.assertRedirectsToLogin(self.url)
+
+    def test_gleaned_data_is_required(self):
+        self.login()
+        res = self.client.get(self.url)
+        self.assertRedirects(res, Step3Tests.url)
+
     def test_session_is_deleted(self):
-        pass
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        self.set_vendor_info(self.vendor_info)
+        self.client.post(self.url, self.valid_form)
+        assert 'data_capture' not in self.client.session
