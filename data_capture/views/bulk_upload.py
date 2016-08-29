@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction
+from django.views.decorators.http import require_POST
 
 from .. import forms
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
@@ -81,8 +82,10 @@ def region_10_step_2(request):
 
 @user_passes_test(lambda u: u.is_staff)
 @transaction.atomic
+@require_POST
 def region_10_step_3(request):
     '''Load data and show success screen'''
+
     upload_source_id = request.session.get('data_capture:upload_source_id')
     if upload_source_id is None:
         return redirect('data_capture:bulk_region_10_step_1')
@@ -92,8 +95,7 @@ def region_10_step_3(request):
     file = ContentFile(upload_source.original_file)
     converter = Region10SpreadsheetConverter(file)
 
-    # Delete existing contracts identified by the same
-    # procurement_center
+    # Delete existing contracts identified by the same procurement_center
     Contract.objects.filter(
         upload_source__procurement_center=BulkUploadContractSource.REGION_10
     ).delete()
@@ -121,8 +123,11 @@ def region_10_step_3(request):
     # remove the upload_source_id from session
     del request.session['data_capture:upload_source_id']
 
-    return render(request, 'data_capture/bulk_upload/region_10_step_3.html', {
-        'step_number': 3,
-        'num_bad_rows': len(bad_rows),
-        'num_contracts': len(contracts),
-    })
+    return render(
+        request,
+        'data_capture/bulk_upload/region_10_step_3.html', {
+            'step_number': 3,
+            'num_bad_rows': len(bad_rows),
+            'num_contracts': len(contracts),
+        }
+    )
