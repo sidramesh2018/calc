@@ -4,6 +4,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 
+from contracts.models import BulkUploadContractSource
+
 
 def path(*paths):
     root_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -20,6 +22,19 @@ R10_XLSX_PATH = path('static', 'data_capture', 'r10_export_sample.xlsx')
 
 XLSX_CONTENT_TYPE = ('application/vnd.openxmlformats-'
                      'officedocument.spreadsheetml.sheet')
+
+
+def create_bulk_upload_contract_source(user):
+    if isinstance(user, str):
+        user = User.objects.create_user('testuser', email=user)
+    with open(R10_XLSX_PATH, 'rb') as f:
+        src = BulkUploadContractSource.objects.create(
+            submitter=user,
+            has_been_loaded=False,
+            original_file=f.read(),
+            procurement_center=BulkUploadContractSource.REGION_10,
+        )
+    return src
 
 
 def uploaded_csv_file(content=None):

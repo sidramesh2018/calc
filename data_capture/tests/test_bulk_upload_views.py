@@ -1,40 +1,9 @@
 import json
-from unittest.mock import patch
-from django.contrib.auth.models import User
-from django.core import mail
-from django.test import TestCase
-from rq import SimpleWorker
-import django_rq
 
-from ..views import bulk_upload
-from .common import StepTestCase, R10_XLSX_PATH
+from .test_jobs import process_worker_jobs
+from .common import (StepTestCase, R10_XLSX_PATH,
+                     create_bulk_upload_contract_source)
 from contracts.models import Contract, BulkUploadContractSource
-
-
-def process_worker_jobs():
-    # We need to do this while testing to avoid strange errors on Travis.
-    #
-    # See:
-    #
-    #   http://python-rq.org/docs/testing/
-    #   https://github.com/ui/django-rq/issues/123
-
-    queue = django_rq.get_queue()
-    worker = SimpleWorker([queue], connection=queue.connection)
-    worker.work(burst=True)
-
-
-def create_bulk_upload_contract_source(user):
-    if isinstance(user, str):
-        user = User.objects.create_user('testuser', email=user)
-    with open(R10_XLSX_PATH, 'rb') as f:
-        src = BulkUploadContractSource.objects.create(
-            submitter=user,
-            has_been_loaded=False,
-            original_file=f.read(),
-            procurement_center=BulkUploadContractSource.REGION_10,
-        )
-    return src
 
 
 class R10StepTestCase(StepTestCase):
@@ -211,28 +180,3 @@ class Region10UploadStep3Tests(R10StepTestCase):
 
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
-
-
-class ProcessBulkUploadTests(TestCase):
-    @patch.object(bulk_upload, 'process_bulk_upload')
-    def test_sends_email_on_failure(self, mock):
-        mock.side_effect = Exception('KABLOOEY')
-        src = create_bulk_upload_contract_source(user='foo@example.org')
-        ctx = bulk_upload.process_bulk_upload_and_send_email(src.id)
-        self.assertEqual(len(mail.outbox), 1)
-
-        message = mail.outbox[0]
-        self.assertEqual(message.recipients(), ['foo@example.org'])
-        self.assertEqual(ctx['successful'], False)
-        self.assertRegexpMatches(message.body, 'KABLOOEY')
-
-    def test_sends_email_on_success(self):
-        src = create_bulk_upload_contract_source(user='foo@example.org')
-        ctx = bulk_upload.process_bulk_upload_and_send_email(src.id)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].recipients(), ['foo@example.org'])
-        self.assertEqual(ctx['successful'], True)
-        self.assertIn('num_contracts', ctx)
-        self.assertIn('num_bad_rows', ctx)
-        self.assertEqual(ctx['num_contracts'], 3)
-        self.assertEqual(ctx['num_bad_rows'], 1)
