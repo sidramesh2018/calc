@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | CALC{% endblock %}
+
+{% block branding %}
+  <h1 id="site-name">CALC Administration</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block userlinks %}
+  <a href="{% url 'data_capture:bulk_region_10_step_1' %}">Region 10 Upload</a> /
+  {{ block.super }}
+{% endblock %}
+
+{% block welcome-msg %}
+    Welcome,
+    <strong>{% firstof user.get_short_name user.email user.get_username %}</strong>.
+{% endblock %}
