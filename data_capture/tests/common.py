@@ -32,6 +32,7 @@ def create_bulk_upload_contract_source(user):
             submitter=user,
             has_been_loaded=False,
             original_file=f.read(),
+            file_mime_type=XLSX_CONTENT_TYPE,
             procurement_center=BulkUploadContractSource.REGION_10,
         )
     return src

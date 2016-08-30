@@ -27,7 +27,8 @@ def region_10_step_1(request):
                 submitter=request.user,
                 procurement_center=BulkUploadContractSource.REGION_10,
                 has_been_loaded=False,
-                original_file=file.read()
+                original_file=file.read(),
+                file_mime_type=file.content_type
             )
 
             request.session['data_capture:upload_source_id'] = upload_source.pk

@@ -40,6 +40,7 @@ class Command(BaseCommand):
         upload_source = BulkUploadContractSource.objects.create(
             has_been_loaded=True,
             original_file=f.read(),
+            file_mime_type="text/csv",
             procurement_center=BulkUploadContractSource.REGION_10
         )
         f.close()

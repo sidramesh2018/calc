@@ -1,8 +1,10 @@
 import json
+from django.core.files.base import ContentFile
 
 from .test_jobs import process_worker_jobs
-from .common import (StepTestCase, R10_XLSX_PATH,
+from .common import (StepTestCase, R10_XLSX_PATH, XLSX_CONTENT_TYPE,
                      create_bulk_upload_contract_source)
+
 from contracts.models import Contract, BulkUploadContractSource
 
 
@@ -48,6 +50,10 @@ class Region10UploadStep1Tests(R10StepTestCase):
             upload_source = BulkUploadContractSource.objects.all()[0]
             self.assertEqual(upload_source.procurement_center,
                              BulkUploadContractSource.REGION_10)
+            self.assertEqual(upload_source.file_mime_type, XLSX_CONTENT_TYPE)
+            f.seek(0)  # reseek back to start so it can be read again
+            self.assertEqual(ContentFile(upload_source.original_file).read(),
+                             f.read())
             self.assertEqual(
                 self.client.session['data_capture:upload_source_id'],
                 upload_source.pk)
