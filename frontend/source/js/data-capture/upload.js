@@ -100,6 +100,21 @@ class UploadWidget extends window.HTMLElement {
     event.preventDefault();
   }
 
+  _checkForAjaxFormParent() {
+    if (this.uploadInput.form &&
+        this.uploadInput.form.getAttribute('is') !== 'ajax-form') {
+      if (window.console && window.console.log) {
+        window.console.log(
+          'Warning: <upload-widget> must have a ' +
+          '<form is="ajax-form"> parent in order to support ' +
+          'drag-and-drop.'
+        );
+      }
+      return false;
+    }
+    return true;
+  }
+
   attachedCallback() {
     const $el = $(this);
     const $input = $('input', $el);
@@ -155,7 +170,8 @@ class UploadWidget extends window.HTMLElement {
       $el.append(err);
     }
 
-    if (!HAS_BROWSER_SUPPORT || supports.isForciblyDegraded(this)) {
+    if (!this._checkForAjaxFormParent() || !HAS_BROWSER_SUPPORT ||
+        supports.isForciblyDegraded(this)) {
       $el.addClass('degraded');
       this.isDegraded = true;
       return finishInitialization();
