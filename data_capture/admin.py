@@ -1,7 +1,11 @@
 from django.contrib import admin
 from django.db import models
 from django import forms
+from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
+from django.utils.html import format_html
+from django.contrib import messages
+
 
 from .schedules import registry
 from .models import SubmittedPriceList, SubmittedPriceListRow
@@ -12,7 +16,17 @@ class SubmittedPriceListRowInline(admin.TabularInline):
 
     can_delete = False
 
-    exclude = ('contract_model',)
+    fields = (
+        'labor_category',
+        'education_level',
+        'min_years_experience',
+        'hourly_rate_year1',
+        'current_price',
+        'sin',
+        'is_muted',
+    )
+
+    readonly_fields = ()
 
     formfield_overrides = {
         models.TextField: {'widget': forms.TextInput}
@@ -21,15 +35,101 @@ class SubmittedPriceListRowInline(admin.TabularInline):
     def has_add_permission(self, request):
         return False
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.is_approved:
+            return self.fields
+        return self.readonly_fields
+
+
+def approve(modeladmin, request, queryset):
+    unapproved = queryset.filter(is_approved=False)
+    count = unapproved.count()
+    for obj in unapproved:
+        obj.approve()
+    messages.add_message(
+        request,
+        messages.INFO,
+        '{} price list(s) have been approved and added to CALC.'.format(
+            count
+        )
+    )
+
+
+approve.short_description = (
+    'Approve selected price lists (add their data to CALC)'
+)
+
+
+def unapprove(modeladmin, request, queryset):
+    approved = queryset.filter(is_approved=True)
+    count = approved.count()
+    for obj in approved:
+        obj.unapprove()
+    messages.add_message(
+        request,
+        messages.INFO,
+        '{} price list(s) have been unapproved and removed from CALC.'.format(
+            count
+        )
+    )
+
+
+unapprove.short_description = (
+    'Unapprove selected price lists (remove their data from CALC)'
+)
+
+
+class UndeletableModelAdmin(admin.ModelAdmin):
+    '''
+    Represents a model admin UI that offers no way of deleting
+    instances. This is useful to ensure accidental data loss, especially
+    when we want to keep it around for historical/data provenance purposes.
+    '''
+
+    # http://stackoverflow.com/a/25813184/2422398
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        del actions['delete_selected']
+        return actions
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(SubmittedPriceList)
-class SubmittedPriceListAdmin(admin.ModelAdmin):
+class SubmittedPriceListAdmin(UndeletableModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
-                    'is_approved')
+                    'created_at', 'is_approved')
 
-    exclude = ('serialized_gleaned_data', 'schedule')
+    actions = [approve, unapprove]
 
-    readonly_fields = ('schedule_title', 'current_status')
+    fields = (
+        'contract_number',
+        'vendor_name',
+        'is_small_business',
+        'schedule_title',
+        'contractor_site',
+        'contract_year',
+        'contract_start',
+        'contract_end',
+        'submitter',
+        'created_at',
+        'updated_at',
+        'is_approved',
+        'current_status',
+    )
+
+    readonly_fields = (
+        'schedule_title',
+        'created_at',
+        'updated_at',
+        'is_approved',
+        'current_status'
+    )
+
+    list_filter = (
+        'is_approved',
+    )
 
     inlines = [
         SubmittedPriceListRowInline
@@ -40,14 +140,18 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
             return mark_safe(
                 "<span style=\"color: green\">"
                 "This price list has been approved, so its data is now "
-                "in CALC. Uncheck the <strong>Is approved</strong> box to "
-                "remove its data from CALC.</span>"
+                "in CALC. To unapprove it, you will need to use the "
+                "'Unapprove selected price lists' action from the "
+                "<a href=\"..\">list view</a>. Note also that in order "
+                "to edit the fields in this price list, you will first "
+                "need to unapprove it."
             )
         return mark_safe(
             "<span style=\"color: red\">"
             "This price list is not currently approved, so its data is "
-            "not in CALC. Check the <strong>Is approved</strong> box to "
-            "add its data to CALC."
+            "not in CALC. To approve it, you will need to use the "
+            "'Approve selected price lists' action from the "
+            "<a href=\"..\">list view</a>."
         )
 
     def schedule_title(self, instance):
@@ -58,14 +162,45 @@ class SubmittedPriceListAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.is_approved:
+            return self.fields
+        return self.readonly_fields
 
-    def save_model(self, request, obj, form, change):
-        original = SubmittedPriceList.objects.get(pk=obj.id)
-        if original.is_approved != obj.is_approved:
-            if obj.is_approved:
-                obj.approve()
-            else:
-                obj.unapprove()
-        obj.save()
+
+@admin.register(SubmittedPriceListRow)
+class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
+    list_display = (
+        'contract_number',
+        'vendor_name',
+        'labor_category',
+        'education_level',
+        'min_years_experience',
+        'hourly_rate_year1',
+        'current_price',
+        'sin',
+        'is_muted',
+    )
+
+    list_editable = (
+        'is_muted',
+    )
+
+    def contract_number(self, obj):
+        url = reverse('admin:data_capture_submittedpricelist_change',
+                      args=(obj.price_list.id,))
+        return format_html(
+            '<a href="{}">{}</a>',
+            url,
+            obj.price_list.contract_number
+        )
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(price_list__is_approved=False)
+
+    def vendor_name(self, obj):
+        return obj.price_list.vendor_name
+
+    def has_add_permission(self, request):
+        return False
