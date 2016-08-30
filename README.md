@@ -22,7 +22,14 @@ CALC is a [Django] project. You can configure everything by running:
 cp .env.sample .env
 ```
 
-Edit the `.env` file to contain your local database configuration, and run:
+Edit the `.env` file to contain your local database configuration. Note
+that you need to use postgres as a backend, since CALC uses its full-text
+search functionality.
+
+You'll also want to make sure you have a local instance of redis running,
+on its default port, as we use it for CALC's task queue.
+
+Now run:
 
 ```sh
 ./manage.py syncdb
@@ -55,6 +62,9 @@ If you just want to build the assets once without watching for changes, run
 ```sh
 npm run gulp -- build
 ```
+
+Also, in yet another terminal, you will want to run
+`python manage.py rqworker` to process all the tasks in the task queue.
 
 If you are managing https://calc.gsa.gov or any other cloud.gov-based deployment, see [`deploy.md`][].
 
@@ -220,6 +230,9 @@ string), the boolean is true; otherwise, it's false.
   email, as per the [dj-email-url schema][]. When `DEBUG` is true,
   this defaults to `console:`. The setting can easily be manually
   tested via the `manage.py sendtestemail` command.
+
+* `REDIS_URL` is the URL for redis, which is used by the task queue.
+  When `DEBUG` is true, it defaults to `redis://localhost:6379/0`.
 
 * `ENABLE_SEO_INDEXING` is a boolean value that indicates whether to
   indicate to search engines that they can index the site.

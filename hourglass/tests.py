@@ -3,7 +3,9 @@ import json
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
 
-from .settings_utils import load_cups_from_vcap_services, get_whitelisted_ips
+from .settings_utils import (load_cups_from_vcap_services,
+                             load_redis_url_from_vcap_services,
+                             get_whitelisted_ips)
 
 
 class ComplianceTests(DjangoTestCase):
@@ -63,13 +65,13 @@ class RobotsTests(DjangoTestCase):
         self.assertEqual(res.content, b"User-agent: *\nDisallow:")
 
 
-class CupsTests(unittest.TestCase):
+def make_vcap_services_env(vcap_services):
+    return {
+        'VCAP_SERVICES': json.dumps(vcap_services)
+    }
 
-    @staticmethod
-    def make_vcap_services_env(vcap_services):
-        return {
-            'VCAP_SERVICES': json.dumps(vcap_services)
-        }
+
+class CupsTests(unittest.TestCase):
 
     def test_noop_if_vcap_services_not_in_env(self):
         env = {}
@@ -77,7 +79,7 @@ class CupsTests(unittest.TestCase):
         self.assertEqual(env, {})
 
     def test_irrelevant_cups_are_ignored(self):
-        env = self.make_vcap_services_env({
+        env = make_vcap_services_env({
             "user-provided": [
                 {
                     "label": "user-provided",
@@ -96,7 +98,7 @@ class CupsTests(unittest.TestCase):
         self.assertFalse('boop' in env)
 
     def test_credentials_are_loaded(self):
-        env = self.make_vcap_services_env({
+        env = make_vcap_services_env({
             "user-provided": [
                 {
                     "label": "user-provided",
@@ -113,6 +115,44 @@ class CupsTests(unittest.TestCase):
         load_cups_from_vcap_services('boop-env', env=env)
 
         self.assertEqual(env['boop'], 'jones')
+
+
+class RedisUrlTests(unittest.TestCase):
+    def test_noop_when_vcap_not_in_env(self):
+        env = {}
+        load_redis_url_from_vcap_services('redis-service', env=env)
+        self.assertEqual(env, {})
+
+    def test_noop_when_name_not_in_vcap(self):
+        env = make_vcap_services_env({
+            'redis28-swarm': [{
+                'name': 'a-different-name',
+                'credentials': {
+                    'hostname': 'the_host',
+                    'password': 'the_password',
+                    'port': '1234'
+                }
+            }]
+        })
+        load_redis_url_from_vcap_services('boop')
+        self.assertFalse('REDIS_URL' in env)
+
+    def test_redis_url_is_loaded(self):
+        env = make_vcap_services_env({
+            'redis28-swarm': [{
+                'name': 'redis-service',
+                'credentials': {
+                    'hostname': 'the_host',
+                    'password': 'the_password',
+                    'port': '1234'
+                }
+            }]
+        })
+
+        load_redis_url_from_vcap_services('redis-service', env=env)
+        self.assertTrue('REDIS_URL' in env)
+        self.assertEqual(env['REDIS_URL'],
+                         'redis://:the_password@the_host:1234')
 
 
 class GetWhitelistedIPsTest(unittest.TestCase):

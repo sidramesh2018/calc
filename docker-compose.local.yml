@@ -10,3 +10,6 @@ gulp:
     - .:/calc
     - /calc/node_modules/
   command: gulp
+rq_worker:
+  volumes:
+    - .:/calc
