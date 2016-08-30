@@ -1,8 +1,10 @@
 import unittest
 import json
+from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
 
+from . import healthcheck
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
                              get_whitelisted_ips)
@@ -48,6 +50,26 @@ class ComplianceTests(DjangoTestCase):
     def test_has_security_headers_on_404_when_setting_enabled(self):
         res = self.client.get('/i-am-a-nonexistent-page')
         self.assertHasHeaders(res)
+
+
+class HealthcheckTests(DjangoTestCase):
+    def test_it_works(self):
+        res = self.client.get('/healthcheck/')
+        self.assertEqual(res.status_code, 200)
+        self.assertJSONEqual(str(res.content, encoding='utf8'), {
+            'is_database_synchronized': True,
+            'rq_jobs': 0
+        })
+
+    @patch.object(healthcheck, 'is_database_synchronized')
+    def test_it_returns_500_when_db_is_not_synchronized(self, mock):
+        mock.return_value = False
+        res = self.client.get('/healthcheck/')
+        self.assertEqual(res.status_code, 500)
+        self.assertJSONEqual(str(res.content, encoding='utf8'), {
+            'is_database_synchronized': False,
+            'rq_jobs': 0
+        })
 
 
 class RobotsTests(DjangoTestCase):
