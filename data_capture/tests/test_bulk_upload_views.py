@@ -182,3 +182,12 @@ class Region10UploadStep3Tests(R10StepTestCase):
 
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
+
+    def test_cancel_clears_session_and_redirects(self):
+        user = self.login(is_staff=True)
+        self.setup_upload_source(user)
+        res = self.client.post(self.url, {'cancel': ''})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res['Location'], 'http://testserver/')
+        session = self.client.session
+        self.assertNotIn('data_capture:upload_source_id', session)

@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .. import forms
+from ..decorators import handle_cancel
 from ..schedules import registry
 from .common import add_generic_form_error
 from frontend import ajaxform
@@ -66,6 +67,7 @@ def step_2(request, gleaned_data):
 
 @login_required
 @gleaned_data_required
+@handle_cancel
 def step_3(request, gleaned_data):
     if not gleaned_data.valid_rows:
         # The user may have manually changed the URL or something to
@@ -98,6 +100,7 @@ def step_3(request, gleaned_data):
     })
 
 
+@handle_cancel
 def step_4(request):
     return render(request, 'data_capture/price_list/step_4.html', {
         'step_number': 4
