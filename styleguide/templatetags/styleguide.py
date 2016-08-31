@@ -7,6 +7,10 @@ from django.utils.html import escape
 from django.utils.text import slugify
 
 
+BASE_GITHUB_URL = 'https://github.com/18F/calc'
+
+DEFAULT_GITHUB_BRANCH = 'develop'
+
 register = template.Library()
 
 
@@ -47,7 +51,7 @@ class GuideNode(template.Node):
 @register.simple_tag
 def pathname(name):
     '''
-    Outputs the given project-relative path wrapped in a <code> tag.
+    Outputs a link to the source code of the given project-relative path.
 
     If the path doesn't exist, raises an exception. This is primarily
     done to prevent documentation rot.
@@ -55,11 +59,19 @@ def pathname(name):
 
     my_dir = os.path.abspath(os.path.dirname(__file__))
     root_dir = os.path.normpath(os.path.join(my_dir, '..', '..'))
+    github_url = '{}/blob/{}/{}'.format(
+        BASE_GITHUB_URL,
+        DEFAULT_GITHUB_BRANCH,
+        name
+    )
 
     if not os.path.exists(os.path.join(root_dir, name)):
         raise Exception('Path %s does not exist' % name)
 
-    return SafeString('<code>%s</code>' % escape(name))
+    return SafeString('<code><a href="{}">{}</a></code>'.format(
+        escape(github_url),
+        escape(name)
+    ))
 
 
 @register.simple_tag(takes_context=True)
