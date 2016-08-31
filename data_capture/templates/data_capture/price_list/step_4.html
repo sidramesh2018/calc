@@ -105,12 +105,25 @@
   <a href="{% url 'index' %}" class="button button-cancel">Cancel</a>
 
   {% if gleaned_data.valid_rows %}
-  <div class="submit-group">
-    <span class="submit-label">
-      Submit to approver
-    </span>
-    <a href="{% url 'data_capture:step_5' %}" class="button button-primary">Next</a>
-  </div>
+  <form method="post">
+  {% csrf_token %}
+    <input type="hidden" name="contract_number" value="{{ price_list.contract_number }}">
+    <input type="hidden" name="vendor_name" value="{{ price_list.vendor_name }}">
+    <input type="hidden" name="schedule" value="{{ price_list.schedule }}">
+    <input type="hidden" name="is_small_business" value="{{ price_list.is_small_business }}">
+    <input type="hidden" name="contractor_site" value="{{ price_list.contractor_site }}">
+    <input type="hidden" name="contract_year" value="{{ price_list.contract_year }}">
+    <input type="hidden" name="contract_start" value="{{ price_list.contract_start }}">
+    <input type="hidden" name="contract_end" value="{{ price_list.contract_end }}">
+
+    <div class="submit-group">
+      <span class="submit-label">
+        Submit to approver
+      </span>
+      <button type="submit" class="button-primary">Next</button>
+
+    </form>
+    </div>
   {% endif %}
 </div>
 
