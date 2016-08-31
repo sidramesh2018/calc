@@ -8,3 +8,4 @@ require('jquery-tablesort');
 require('./tablesort');
 require('./upload');
 require('./ajaxform');
+require('./alerts');
