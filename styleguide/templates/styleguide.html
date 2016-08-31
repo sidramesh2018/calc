@@ -49,8 +49,11 @@
   </p>
 
   <p>
+    We use an {% webcomponent '<upload-widget>' %} with a nested
+    {% webcomponent '<input is="upload-input">' %} to progressively enhance
+    the front-end. However, using them is rarely needed in practice, as
     {% pyobjname 'frontend.upload.UploadWidget' %} contains the Django
-    widget for rendering the HTML of the upload widget.
+    widget for rendering all the required HTML.
   </p>
 
   <h3>Form Submission</h3>
@@ -58,16 +61,17 @@
   <p>
     Due to the technical limitations of HTML5, forms containing the
     progressively-enhanced upload widget must be submitted via ajax. This can
-    be accomplished via a custom Ajax Form component.
+    be accomplished via a custom {% webcomponent '<form is="ajax-form">' %}
+    web component.
   </p>
 
   <p>
     {% pyobjname 'frontend.ajaxform' %} contains utilities for processing
-    Ajax Forms in a progressively-enhanced way.
+    forms submitted by this web component in a progressively-enhanced way.
   </p>
 
   <p>
-    For a simple Ajax Form code example that also embeds an upload
+    For a simple ajax form code example that also embeds an upload
     widget, see
     {% pathname 'styleguide/ajaxform_example.py' %} and
     {% pathname 'styleguide/templates/styleguide_ajaxform_example.html' %}.
@@ -401,4 +405,5 @@
 </div>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 <script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
+<script src="{% static 'frontend/built/js/styleguide/index.min.js' %}"></script>
 {% endblock %}

@@ -108,6 +108,8 @@ class AjaxForm extends window.HTMLFormElement {
   }
 }
 
+AjaxForm.prototype.SOURCE_FILENAME = __filename;
+
 document.registerElement('ajax-form', {
   extends: 'form',
   prototype: AjaxForm.prototype,
