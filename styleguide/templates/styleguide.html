@@ -48,6 +48,11 @@
     and Drop File Uploading</a> by Osvaldas Valutis.
   </p>
 
+  <p>
+    {% pyobjname 'frontend.upload.UploadWidget' %} contains the Django
+    widget for rendering the HTML of the upload widget.
+  </p>
+
   <h3>Form Submission</h3>
 
   <p>
@@ -57,7 +62,13 @@
   </p>
 
   <p>
-    For a simple Ajax Form code example, see
+    {% pyobjname 'frontend.ajaxform' %} contains utilities for processing
+    Ajax Forms in a progressively-enhanced way.
+  </p>
+
+  <p>
+    For a simple Ajax Form code example that also embeds an upload
+    widget, see
     {% pathname 'styleguide/ajaxform_example.py' %} and
     {% pathname 'styleguide/templates/styleguide_ajaxform_example.html' %}.
   </p>
@@ -370,10 +381,9 @@
   {% guide_section "Dates" %}
 
   <p>
-    We have a custom Django form field and widget that
-    offers three separate text fields for users to enter
+    {% pyobjname 'frontend.date.SplitDateField' %} is a custom Django form
+    field and widget that offers three separate text fields for users to enter
     dates, as per the <a href="https://standards.usa.gov/form-controls/#date-input">USWDS section on date input</a>.
-
   <p>
     For a simple code example, see
     {% pathname 'styleguide/date_example.py' %} and
