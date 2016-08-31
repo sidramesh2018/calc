@@ -79,6 +79,16 @@ class WebComponentHTMLParser(HTMLParser):
 
 @register.simple_tag
 def webcomponent(html):
+    '''
+    Link to the source code of a web component, e.g. <foo> or
+    <input is="bar">.
+
+    This actually renders markup that client-side code will resolve into
+    a definitive link via introspecting the JS runtime environment. The
+    front-end will raise an error if the web component or its source code
+    can't be found, to help prevent documentation rot.
+    '''
+
     parser = WebComponentHTMLParser()
     parser.feed(html)
     return SafeString(
