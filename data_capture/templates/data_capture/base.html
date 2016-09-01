@@ -5,6 +5,8 @@
 {% block title %}Data Capture{% endblock title %}
 
 {% block head %}
+{% if enable_js %}
 <script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
+{% endif %}
 <link rel="stylesheet" href="{% static 'frontend/built/style/data_capture.min.css' %}">
 {% endblock head %}

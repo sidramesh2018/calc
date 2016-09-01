@@ -61,6 +61,7 @@ TEMPLATES = [{
         'context_processors': [
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
+            'hourglass.context_processors.enable_js',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",
             "django.template.context_processors.i18n",

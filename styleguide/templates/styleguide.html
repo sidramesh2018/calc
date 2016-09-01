@@ -407,7 +407,9 @@
 
   {% endguide %}
 </div>
+{% if enable_js %}
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 <script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
 <script src="{% static 'frontend/built/js/styleguide/index.min.js' %}"></script>
+{% endif %}
 {% endblock %}
