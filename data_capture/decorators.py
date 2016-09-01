@@ -1,8 +1,6 @@
 from functools import wraps
 
 from django.shortcuts import redirect
-from django.http import JsonResponse
-from django.core.urlresolvers import reverse
 
 from frontend import ajaxform
 
