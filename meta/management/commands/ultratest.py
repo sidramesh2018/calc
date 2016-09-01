@@ -79,6 +79,12 @@ def command(verbosity, testtype):
     '''
     is_verbose = verbosity > 1
 
+    # This is kind of annoying; 'testtype' is the most readable name for the
+    # CLI end-user, but 'testtype_names' is more readable for the actual
+    # implementation, so we'll just assign the latter to the former.
+    testtype_names = testtype
+    del testtype
+
     TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
     ESLINT_CMD = 'npm run failable-eslint'
     PYTEST_CMD = 'py.test --cov-report xml {} --cov'.format(
@@ -133,8 +139,8 @@ def command(verbosity, testtype):
             )
         )
 
-    if testtype:
-        to_run = [get_testtype(t) for t in testtype]
+    if testtype_names:
+        to_run = [get_testtype(t) for t in testtype_names]
     else:
         to_run = testtypes
 
