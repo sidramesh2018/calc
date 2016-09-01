@@ -3,6 +3,7 @@ import tempfile
 import subprocess
 import djclick as click
 import xml.etree.ElementTree as etree
+from django.core.management.base import CommandError
 
 from docker_django_management import IS_RUNNING_IN_DOCKER
 
@@ -71,13 +72,14 @@ def get_coverage():
 
 @click.command()
 @click.pass_verbosity
-@click.option('--lintonly', help='Run linters only (no tests)', is_flag=True)
-def command(verbosity, lintonly):
+@click.argument('testtype', nargs=-1)
+def command(verbosity, testtype):
     '''
     Management command to test and lint everything
     '''
     is_verbose = verbosity > 1
 
+    TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
     ESLINT_CMD = 'npm run failable-eslint'
     PYTEST_CMD = 'py.test --cov-report xml {} --cov'.format(
         ('--cov-report term' if is_verbose else '')
@@ -89,7 +91,7 @@ def command(verbosity, lintonly):
         ESLINT_CMD = ('eslint --rule "import/no-unresolved: off" '
                       '--max-warnings 0 .')
 
-    linters = [
+    testtypes = [
         {
             'name': 'flake8',
             'cmd': 'flake8 --exclude=node_modules,migrations .'
@@ -98,9 +100,6 @@ def command(verbosity, lintonly):
             'name': 'eslint',
             'cmd': ESLINT_CMD
         },
-    ]
-
-    tests = [
         {
             'name': 'bandit',
             'cmd': 'bandit -r .'
@@ -118,16 +117,41 @@ def command(verbosity, lintonly):
             return
         click.secho(msg, **kwargs)
 
-    if lintonly:
-        echo('Running linters only', 1)
+    def get_testtype_names(testtypes=testtypes):
+        return ', '.join([
+            t['name'] for t in testtypes
+        ])
+
+    def get_testtype(name):
+        for t in testtypes:
+            if t['name'] == name:
+                return t
+        raise CommandError(
+            '"{}" is not a valid test type. Please choose from {}.'.format(
+                name,
+                get_testtype_names()
+            )
+        )
+
+    if testtype:
+        to_run = [get_testtype(t) for t in testtype]
     else:
+        to_run = testtypes
+
+    if to_run == testtypes:
         echo('Running ALL THE TESTS', 1)
+    else:
+        echo('Running {}'.format(get_testtype_names(to_run)), 1)
+
+    report_coverage = False
+
+    for t in to_run:
+        if t['name'] in TESTTYPES_TO_REPORT_COVERAGE_ON:
+            report_coverage = True
+
+    if report_coverage:
         # get coverage from the last run, before it is overwritten
         coverage_before = get_coverage()
-
-    to_run = linters
-    if not lintonly:
-        to_run += tests
 
     failures = []
     failure_outputs = []
@@ -171,7 +195,7 @@ def command(verbosity, lintonly):
         echo('Failing tests: {}'.format(', '.join(failures)), 0)
         exit_code = 1
 
-    if not lintonly:
+    if report_coverage:
         coverage_after = get_coverage()
         echo('Coverage: {:.2%}'.format(coverage_after), 1,
              nl=(not coverage_before))
