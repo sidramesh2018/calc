@@ -89,6 +89,8 @@ class UploadInput extends window.HTMLInputElement {
   }
 }
 
+UploadInput.prototype.SOURCE_FILENAME = __filename;
+
 document.registerElement('upload-input', {
   extends: 'input',
   prototype: UploadInput.prototype,
@@ -213,6 +215,8 @@ class UploadWidget extends window.HTMLElement {
     return finishInitialization();
   }
 }
+
+UploadWidget.prototype.SOURCE_FILENAME = __filename;
 
 UploadWidget.HAS_BROWSER_SUPPORT = HAS_BROWSER_SUPPORT;
 

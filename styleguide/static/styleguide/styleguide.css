@@ -58,3 +58,11 @@ html .styleguide-example pre {
   margin: 0;
   border: none;
 }
+
+code > a {
+  text-decoration: none;
+}
+
+code > a:hover {
+  text-decoration: underline;
+}

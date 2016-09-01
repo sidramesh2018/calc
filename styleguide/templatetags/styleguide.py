@@ -1,4 +1,5 @@
 import os.path
+from html.parser import HTMLParser
 from textwrap import dedent
 from inspect import getsourcefile
 
@@ -60,10 +61,44 @@ def github_url_for_path(path):
     GitHub URL to its syntax-highlighted source code.
     '''
 
-    return '{}/blob/{}/{}'.format(
+    return '{}/tree/{}/{}'.format(
         BASE_GITHUB_URL,
         DEFAULT_GITHUB_BRANCH,
         path
+    )
+
+
+class WebComponentHTMLParser(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        self.tag = tag
+        self.extends = ''
+        for attr, val in attrs:
+            if attr == 'is':
+                self.extends = val
+
+
+@register.simple_tag
+def webcomponent(html):
+    '''
+    Link to the source code of a web component, e.g. <foo> or
+    <input is="bar">.
+
+    This actually renders markup that client-side code will resolve into
+    a definitive link via introspecting the JS runtime environment. The
+    front-end will raise an error if the web component or its source code
+    can't be found, to help prevent documentation rot.
+    '''
+
+    parser = WebComponentHTMLParser()
+    parser.feed(html)
+    return SafeString(
+        '<code><a is="web-component-link" href="{}" '
+        'data-tag="{}" data-extends="{}">{}</a></code>'.format(
+            escape(github_url_for_path('')),
+            escape(parser.tag),
+            escape(parser.extends),
+            escape(html)
+        )
     )
 
 
