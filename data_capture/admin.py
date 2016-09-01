@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 from django.contrib import messages
 
-
+import data_capture.email as email
 from .schedules import registry
 from .models import SubmittedPriceList, SubmittedPriceListRow
 
@@ -44,8 +44,10 @@ class SubmittedPriceListRowInline(admin.TabularInline):
 def approve(modeladmin, request, queryset):
     unapproved = queryset.filter(is_approved=False)
     count = unapproved.count()
-    for obj in unapproved:
-        obj.approve()
+    for price_list in unapproved:
+        price_list.approve()
+        email.price_list_approved(price_list)
+
     messages.add_message(
         request,
         messages.INFO,
@@ -63,8 +65,9 @@ approve.short_description = (
 def unapprove(modeladmin, request, queryset):
     approved = queryset.filter(is_approved=True)
     count = approved.count()
-    for obj in approved:
-        obj.unapprove()
+    for price_list in approved:
+        price_list.unapprove()
+        email.price_list_unapproved(price_list)
     messages.add_message(
         request,
         messages.INFO,

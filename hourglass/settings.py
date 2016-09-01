@@ -40,6 +40,7 @@ if DEBUG:
     )
     os.environ.setdefault('EMAIL_URL', 'console:')
     os.environ.setdefault('REDIS_URL', 'redis://localhost:6379/0')
+    os.environ.setdefault('SYSTEM_EMAIL_ADDRESS', 'dev@localhost')
 
 if 'EMAIL_URL' not in os.environ:
     raise Exception('Please define the EMAIL_URL environment variable!')
@@ -48,6 +49,8 @@ email_config = dj_email_url.config()
 # Sets a number of settings values, as described at
 # https://github.com/migonzalvar/dj-email-url
 vars().update(email_config)
+
+SYSTEM_EMAIL_ADDRESS = os.environ['SYSTEM_EMAIL_ADDRESS']
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 

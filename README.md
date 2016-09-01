@@ -231,6 +231,9 @@ string), the boolean is true; otherwise, it's false.
   this defaults to `console:`. The setting can easily be manually
   tested via the `manage.py sendtestemail` command.
 
+* `SYSTEM_EMAIL_ADDRESS` is the email from-address to use in all system
+  generated emails. When `DEBUG` is true, this defaults to `dev@localhost`.
+
 * `REDIS_URL` is the URL for redis, which is used by the task queue.
   When `DEBUG` is true, it defaults to `redis://localhost:6379/0`.
 

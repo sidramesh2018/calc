@@ -71,10 +71,11 @@ def r10_file(content=None, name='r10.xlsx'):
 )
 class BaseTestCase(TestCase):
     def create_user(self, username, password=None, is_staff=False,
-                    is_superuser=False):
+                    is_superuser=False, email=None):
         user = User.objects.create_user(
             username=username,
-            password=password
+            password=password,
+            email=email
         )
         if is_staff:
             user.is_staff = True
