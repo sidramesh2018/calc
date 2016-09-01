@@ -1,0 +1,46 @@
+.excel-wrapper {
+  overflow: scroll;
+  padding: 1em;
+  border: 2px solid lightgray;
+}
+
+table.excel {
+  font-family: Arial, Helvetica, serif;
+  width: auto;
+  margin: 0;
+
+  tbody tr {
+    &:hover > * {
+      background: unset !important;
+    }
+
+    &:nth-child(odd) {
+      background: unset;
+    }
+  }
+
+  td {
+    min-width: 10em;
+    padding: 0;
+    border: 1px solid lightgray;
+  }
+}
+
+table.excel.excel-schedule-70 {
+  tr:first-child {
+    background: lightgray;
+
+    td {
+      vertical-align: bottom;
+    }
+  }
+
+  tr:not(:first-child) td:not(:first-child) {
+    font-style: italic;
+  }
+
+  td {
+    border-color: black;
+    text-align: center;
+  }
+}

@@ -352,6 +352,64 @@
 
     {% endexample %}
 
+  {% guide_section "Excel Tables" %}
+
+  <p>Defined in {% pathname 'frontend/source/sass/components/_exceltables.scss' %}.</p>
+
+  <p>
+    Sometimes we need to display "screenshots" of Microsoft Excel tables
+    to users, to communicate what kind of spreadsheet they need to upload.
+    Doing this with standard HTML tables that are styled to look like
+    excel tables allows us to accomplish this in an accessible and
+    easily changeable way.
+  </p>
+
+  <p>
+    The base class just styles the table to look like a standard Excel
+    sheet without any styling:
+  </p>
+
+  {% example %}
+  <div class="excel-wrapper">
+    <table class="excel">
+      <tr><td>A1</td><td>B1</td></tr>
+      <tr><td>A2</td><td>B2</td></tr>
+    </table>
+  </div>
+  {% endexample %}
+
+  <p>
+    But we have extra classes that we can layer on top to emulate the
+    styling of specific contract vehicle spreadsheets.
+  </p>
+
+  <p>For example, here's a style for Schedule 70 proposed price lists:</p>
+
+  {% example %}
+  <div class="excel-wrapper">
+    <table class="excel excel-schedule-70">
+      <tr>
+        <td>SIN(s) PROPOSED</td>
+        <td>SERVICE PROPOSED (e.g. Job Title/Task)</td>
+        <td>MINIMUM EDUCATION/CERTIFICATION LEVEL</td>
+        <td>MINIMUM YEARS OF EXPERIENCE</td>
+        <td>COMMERCIAL LIST PRICE (CPL) OR MARKET PRICES</td>
+        <td>UNIT OF ISSUE (e.g. Hour, Task, Sq ft)</td>
+        <td>MOST FAVORED CUSTOMER (MFC)</td>
+      </tr>
+      <tr>
+        <td>132-51</td>
+        <td>Project Manager</td>
+        <td>Bachelors</td>
+        <td>5</td>
+        <td>$125</td>
+        <td>Hour</td>
+        <td>All Commercial</td>
+      </tr>
+    </table>
+  </div>
+  {% endexample %}
+
   {% guide_section "Forms" %}
   {% example %}
   <label for="input-type-text">Text input label</label>
