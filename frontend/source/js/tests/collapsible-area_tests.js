@@ -17,7 +17,7 @@ function makeArea() {
   return { ca, h1 };
 }
 
-QUnit.test('is upgraded whenc containing at least one element', assert => {
+QUnit.test('is upgraded when containing at least one element', assert => {
   const { ca } = makeArea();
   assert.strictEqual(ca.isUpgraded, true);
 });
