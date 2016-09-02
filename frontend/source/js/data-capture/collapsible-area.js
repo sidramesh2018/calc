@@ -20,6 +20,9 @@ class CollapsibleArea extends window.HTMLElement {
       return;
     }
 
+    // Note that this will always be undefined on IE6-8 because
+    // `firstElementChild` wasn't added until IE9. But that's ok, it
+    // just means we won't progressively enhance on those browsers.
     this.expander = this.firstElementChild;
 
     this.isUpgraded = Boolean(this.expander &&
