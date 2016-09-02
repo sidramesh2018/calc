@@ -37,6 +37,35 @@ QUnit.test('toggle() flips aria-expanded value', assert => {
   assert.equal(h1.getAttribute('aria-expanded'), 'false');
 });
 
+QUnit.test('toggles on click', assert => {
+  const { h1 } = makeArea();
+  h1.onclick();
+  assert.equal(h1.getAttribute('aria-expanded'), 'true');
+});
+
+QUnit.test('toggles on space', assert => {
+  const { h1 } = makeArea();
+  h1.onkeyup({ keyCode: 32 });
+  assert.equal(h1.getAttribute('aria-expanded'), 'true');
+});
+
+QUnit.test('toggles on enter', assert => {
+  const { h1 } = makeArea();
+  h1.onkeyup({ keyCode: 13 });
+  assert.equal(h1.getAttribute('aria-expanded'), 'true');
+});
+
+QUnit.test('does not toggle on other keys', assert => {
+  const { h1 } = makeArea();
+  for (let i = 0; i < 128; i++) {
+    if (i !== 13 && i !== 32) {
+      h1.onkeyup({ keyCode: i });
+      assert.equal(h1.getAttribute('aria-expanded'), 'false',
+                   `does not toggle on keyCode == ${i}`);
+    }
+  }
+});
+
 QUnit.test('emits collapsibleareaready event', assert => {
   const done = assert.async();
 

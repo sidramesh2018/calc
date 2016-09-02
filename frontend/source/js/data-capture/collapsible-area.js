@@ -29,12 +29,12 @@ class CollapsibleArea extends window.HTMLElement {
       this.expander.setAttribute('aria-expanded', 'false');
       this.expander.setAttribute('role', 'button');
       this.expander.setAttribute('tabindex', '0');
-      this.expander.addEventListener('click', this.toggle.bind(this), false);
-      this.expander.addEventListener('keyup', e => {
+      this.expander.onclick = this.toggle.bind(this);
+      this.expander.onkeyup = e => {
         if (e.keyCode === KEY_SPACE || e.keyCode === KEY_ENTER) {
           this.toggle();
         }
-      }, true);
+      };
       dispatchBubbly(this, 'collapsibleareaready');
     }
   }
