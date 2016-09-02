@@ -271,10 +271,32 @@ class Step4Tests(PriceListStepTestCase):
         res = self.client.post(self.url, session['data_capture'])
         self.assertRedirects(res, Step5Tests.url)
 
-class Step5Tests(StepTestCase):
+class Step5Tests(PriceListStepTestCase):
     url = '/data-capture/step/5'
+    rows = [{
+        'education': 'Bachelors',
+        'price': '15.00',
+        'service': 'Project Manager',
+        'sin': '132-40',
+        'years_experience': '7'
+    }]
+    session_data = {
+        'schedule': FAKE_SCHEDULE,
+        'contract_number': 'GS-123-4567',
+        'vendor_name': 'foo',
+        'contractor_site': 'Customer',
+        'is_small_business': False,
+        'contract_start': '1985-07-08',
+        'contract_end': '1989-04-14',
+        'contract_year': 1
+    }
 
     def test_get_is_ok(self):
+        self.login()
+        session = self.client.session
+        session['data_capture'] = {}
+        session.save()
+        self.set_fake_gleaned_data(self.rows)
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
@@ -283,12 +305,17 @@ class Step5Tests(StepTestCase):
 
     def test_gleaned_data_is_required(self):
         self.login()
+        session = self.client.session
+        session['data_capture'] = self.session_data
+        session.save()
         res = self.client.get(self.url)
         self.assertRedirects(res, Step3Tests.url)
 
     def test_session_is_deleted(self):
         self.login()
+        session = self.client.session
+        session['data_capture'] = self.session_data
+        session.save()
         self.set_fake_gleaned_data(self.rows)
-        self.set_vendor_info(self.vendor_info)
-        self.client.post(self.url, self.valid_form)
+        self.client.post(self.url, session)
         assert 'data_capture' not in self.client.session
