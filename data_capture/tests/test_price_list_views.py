@@ -1,5 +1,6 @@
 import json
 
+from datetime import datetime
 from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
@@ -10,11 +11,7 @@ class PriceListStepTestCase(StepTestCase):
     # TODO: Move individual setUp functions here if applicable
     def set_fake_gleaned_data(self, rows):
         session = self.client.session
-        print(session.get('data_capture'))
         pricelist = FakeSchedulePriceList(rows)
-        # if 'data_capture' not in session:
-            # session['data_capture'] = {}
-        print('newp')
         session['data_capture']['schedule'] = registry.get_classname(pricelist)
         session['data_capture']['gleaned_data'] = registry.serialize(pricelist)
         session.save()
@@ -68,10 +65,16 @@ class Step1Tests(PriceListStepTestCase):
 class Step2Tests(PriceListStepTestCase):
     url = '/data-capture/step/2'
 
-    # TODO: Add contract start/end and year
     valid_form = {
         'contractor_site': 'Customer',
-        'is_small_business': False
+        'is_small_business': 'False',
+        'contract_year': 1,
+        'contract_start_0': '1985',
+        'contract_start_1': '07',
+        'contract_start_2': '08',
+        'contract_end_0': '1989',
+        'contract_end_1': '04',
+        'contract_end_2': '14'
     }
 
     def setUp(self):
@@ -79,7 +82,7 @@ class Step2Tests(PriceListStepTestCase):
         session['data_capture'] = {
             'schedule': FAKE_SCHEDULE,
             'contract_number': 'GS-123-4567',
-            'vendor_name': 'foo'
+            'vendor_name': 'foo',
         }
         session.save()
 
@@ -91,17 +94,13 @@ class Step2Tests(PriceListStepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
-    def test_valid_post_creates_models(self):
-        user = self.login()
+    def test_valid_post_updates_session_data(self):
+        self.login()
+        print("valid_form = %s" % self.valid_form)
         self.client.post(self.url, self.valid_form)
-        p = SubmittedPriceList.objects.filter(
-            contract_number='GS-123-4567'
-        )[0]
-        self.assertEqual(p.schedule, FAKE_SCHEDULE)
-        self.assertEqual(p.vendor_name, 'foo')
-        self.assertEqual(p.contractor_site, 'Customer')
-        self.assertEqual(p.is_small_business, False)
-        self.assertEqual(p.submitter, user)
+        posted_data = self.client.session['data_capture']
+        self.assertEqual(posted_data['contractor_site'], self.valid_form['contractor_site'])
+        self.assertEqual(posted_data['is_small_business'], self.valid_form['is_small_business'])
 
     def test_valid_post_redirects_to_step_3(self):
         self.login()
@@ -284,6 +283,17 @@ class Step4Tests(PriceListStepTestCase):
         # model posting stuff here when it works
         self.assertEqual(res.status_code, 200)
 
+    def test_valid_post_creates_models(self):
+        user = self.login()
+        self.client.post(self.url, self.valid_form)
+        p = SubmittedPriceList.objects.filter(
+            contract_number='GS-123-4567'
+        )[0]
+        self.assertEqual(p.schedule, FAKE_SCHEDULE)
+        self.assertEqual(p.vendor_name, 'foo')
+        self.assertEqual(p.contractor_site, 'Customer')
+        self.assertEqual(p.is_small_business, False)
+        self.assertEqual(p.submitter, user)
 
 class Step5Tests(StepTestCase):
     url = '/data-capture/step/5'
