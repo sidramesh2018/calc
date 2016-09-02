@@ -62,7 +62,6 @@ def step_2(request):
     elif request.method == 'POST':
         form = forms.Step2Form(request.POST)
         if form.is_valid():
-            print("form.cleaned_data = %s" % form.cleaned_data)
             request.session['data_capture']['is_small_business'] = \
                 form.cleaned_data['is_small_business']
             request.session['data_capture']['contractor_site'] = \
