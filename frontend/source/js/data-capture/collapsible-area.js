@@ -4,6 +4,8 @@ import 'document-register-element';
 
 import * as supports from './feature-detection';
 
+import { dispatchBubbly } from './custom-event';
+
 const KEY_SPACE = 32;
 const KEY_ENTER = 13;
 
@@ -20,9 +22,8 @@ class CollapsibleArea extends window.HTMLElement {
 
     this.expander = this.firstElementChild;
 
-    this.isUpgraded = this.expander &&
-                      'classList' in this &&
-                      !supports.isForciblyDegraded(this);
+    this.isUpgraded = Boolean(this.expander &&
+                              !supports.isForciblyDegraded(this));
 
     if (this.isUpgraded) {
       this.expander.setAttribute('aria-expanded', 'false');
@@ -34,6 +35,7 @@ class CollapsibleArea extends window.HTMLElement {
           this.toggle();
         }
       }, true);
+      dispatchBubbly(this, 'collapsibleareaready');
     }
   }
 
@@ -53,3 +55,5 @@ CollapsibleArea.prototype.SOURCE_FILENAME = __filename;
 document.registerElement('collapsible-area', {
   prototype: CollapsibleArea.prototype,
 });
+
+module.exports = CollapsibleArea;
