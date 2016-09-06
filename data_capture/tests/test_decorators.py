@@ -6,6 +6,7 @@ from django.test import TestCase, override_settings
 
 from ..decorators import handle_cancel, staff_login_required
 from .common import BaseTestCase
+from hourglass.urls import urlpatterns
 
 
 @handle_cancel
@@ -31,7 +32,7 @@ def staff_only_view(request):
 def index(request):
     return HttpResponse('index')
 
-urlpatterns = [
+urlpatterns += [
     url(r'^test_view/$', ok_view),
     url(r'^another_view/$', index, name='another_view'),
     url(r'^redirect_name_view/$',
@@ -109,15 +110,14 @@ class HandleCancelTests(TestCase):
         self.assertEqual(res['Location'], 'http://testserver/another_view/')
 
 
-@override_settings(
-    ROOT_URLCONF=__name__,
-    LOGIN_URL='login')
+@override_settings(ROOT_URLCONF=__name__)
 class StaffLoginRequiredTests(BaseTestCase):
 
     def test_redirects_to_login(self):
         res = self.client.get('/staff_only_view/')
         self.assertEqual(302, res.status_code)
-        self.assertTrue(res['Location'].startswith('http://testserver/login'))
+        self.assertTrue(
+            res['Location'].startswith('http://testserver/auth/login'))
 
     def test_staff_user_is_permitted(self):
         self.login(is_staff=True)
