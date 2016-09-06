@@ -10,10 +10,10 @@ const KEY_SPACE = 32;
 const KEY_ENTER = 13;
 
 /**
- * CollapsibleArea represents a <collapsible-area> web component.
+ * ExpandableArea represents a <expandable-area> web component.
  */
 
-class CollapsibleArea extends window.HTMLElement {
+class ExpandableArea extends window.HTMLElement {
   attachedCallback() {
     if ('isUpgraded' in this) {
       // We've already been attached.
@@ -38,7 +38,7 @@ class CollapsibleArea extends window.HTMLElement {
           this.toggle();
         }
       };
-      dispatchBubbly(this, 'collapsibleareaready');
+      dispatchBubbly(this, 'expandableareaready');
     }
   }
 
@@ -53,10 +53,10 @@ class CollapsibleArea extends window.HTMLElement {
   }
 }
 
-CollapsibleArea.prototype.SOURCE_FILENAME = __filename;
+ExpandableArea.prototype.SOURCE_FILENAME = __filename;
 
-document.registerElement('collapsible-area', {
-  prototype: CollapsibleArea.prototype,
+document.registerElement('expandable-area', {
+  prototype: ExpandableArea.prototype,
 });
 
-module.exports = CollapsibleArea;
+module.exports = ExpandableArea;

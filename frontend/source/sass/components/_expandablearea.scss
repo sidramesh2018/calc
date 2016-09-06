@@ -1,23 +1,23 @@
 @import '../base/variables';
 
-collapsible-area > *[role="button"][aria-expanded="false"]:before {
+expandable-area > *[role="button"][aria-expanded="false"]:before {
   content: '\25B6';
   padding-right: 4px;
   display: inline-block;
 }
 
-collapsible-area > *[role="button"][aria-expanded="true"]:before {
+expandable-area > *[role="button"][aria-expanded="true"]:before {
   content: '\25BC';
   padding-right: 4px;
   display: inline-block;
 }
 
-collapsible-area > *[role="button"] {
+expandable-area > *[role="button"] {
   cursor: pointer;
   color: $color-primary;
   text-decoration: underline;
 }
 
-collapsible-area > *[role="button"][aria-expanded="false"] ~ * {
+expandable-area > *[role="button"][aria-expanded="false"] ~ * {
   display: none;
 }

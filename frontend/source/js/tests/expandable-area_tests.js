@@ -1,15 +1,15 @@
 /* global QUnit document */
 
-QUnit.module('collapsible-area');
+QUnit.module('expandable-area');
 
 QUnit.test('is not upgraded when empty', assert => {
-  const ca = document.createElement('collapsible-area');
+  const ca = document.createElement('expandable-area');
   ca.attachedCallback();
   assert.strictEqual(ca.isUpgraded, false);
 });
 
 function makeArea() {
-  const ca = document.createElement('collapsible-area');
+  const ca = document.createElement('expandable-area');
   const h1 = document.createElement('h1');
   ca.appendChild(h1);
   ca.attachedCallback();
@@ -66,19 +66,19 @@ QUnit.test('does not toggle on other keys', assert => {
   }
 });
 
-QUnit.test('emits collapsibleareaready event', assert => {
+QUnit.test('emits expandableareaready event', assert => {
   const done = assert.async();
 
   const fixture = document.getElementById('qunit-fixture');
   const div = document.createElement('div');
 
-  div.addEventListener('collapsibleareaready', () => {
+  div.addEventListener('expandableareaready', () => {
     fixture.removeChild(div);
-    assert.ok(true, 'collapsibleareaready received');
+    assert.ok(true, 'expandableareaready received');
     done();
   });
 
-  div.innerHTML = '<collapsible-area><h1>hi</h1></collapsible-area>';
+  div.innerHTML = '<expandable-area><h1>hi</h1></expandable-area>';
 
   fixture.appendChild(div);
 });

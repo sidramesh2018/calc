@@ -405,22 +405,23 @@
     </div>
   </div>
 
-  {% guide_section "Collapsible Area" %}
+  {% guide_section "Expandable Area" %}
 
   <p>
-    The {% webcomponent '<collapsible-area>' %} web component makes it possible
-    to progressively enhance an area to be collapsible. The first child
+    The {% webcomponent '<expandable-area>' %} web component makes it possible
+    to progressively enhance an area to be initially collapsed, and expandable
+    via user interaction. The first child
     element is assumed to be the expander (which is dynamically given the
     <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role">button role</a>) while all of its siblings are
-    the collapsible content.
+    the expandable content.
   </p>
 
   {% example %}
-  <collapsible-area>
+  <expandable-area>
     <h6>Why are computers so hard to use?</h6>
     <p>Here is a paragraph of explanatory text.</p>
     <p>Here is another paragraph of explanatory text.</p>
-  </collapsible-area>
+  </expandable-area>
   {% endexample %}
 
   <p>
@@ -430,17 +431,17 @@
   <div class="styleguide-example">
     <div class="rendering">
       <h3 class="example-heading">Example (no JavaScript)</h3>
-      <collapsible-area data-force-degradation>
+      <expandable-area data-force-degradation>
         <h6>Why are computers so hard to use?</h6>
         <p>Here is a paragraph of explanatory text.</p>
         <p>Here is another paragraph of explanatory text.</p>
-      </collapsible-area>
+      </expandable-area>
     </div>
   </div>
 
   <p>
     Styling for this component can be found in
-    {% pathname 'frontend/source/sass/components/_collapsiblearea.scss' %}.
+    {% pathname 'frontend/source/sass/components/_expandablearea.scss' %}.
   </p>
 
   {% endguide %}

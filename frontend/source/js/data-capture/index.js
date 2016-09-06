@@ -8,4 +8,4 @@ require('jquery-tablesort');
 require('./tablesort');
 require('./upload');
 require('./ajaxform');
-require('./collapsible-area');
+require('./expandable-area');
