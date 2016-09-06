@@ -1,17 +1,16 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import user_passes_test
 from django.core.files.base import ContentFile
 from django.views.decorators.http import require_POST
 
 from .. import forms, jobs
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
-from ..decorators import handle_cancel
+from ..decorators import handle_cancel, staff_login_required
 from .common import add_generic_form_error
 from frontend import ajaxform
 from contracts.models import BulkUploadContractSource
 
 
-@user_passes_test(lambda u: u.is_staff)
+@staff_login_required
 def region_10_step_1(request):
     '''
     Start of Region 10 Bulk Upload - Upload the spreadsheet
@@ -53,7 +52,7 @@ def region_10_step_1(request):
     )
 
 
-@user_passes_test(lambda u: u.is_staff)
+@staff_login_required
 def region_10_step_2(request):
     '''
     Confirm that the new data should be loaded
@@ -75,7 +74,7 @@ def region_10_step_2(request):
     })
 
 
-@user_passes_test(lambda u: u.is_staff)
+@staff_login_required
 @require_POST
 @handle_cancel
 def region_10_step_3(request):

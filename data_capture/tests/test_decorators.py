@@ -4,7 +4,8 @@ from django.conf.urls import url
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
 
-from ..decorators import handle_cancel
+from ..decorators import handle_cancel, staff_login_required
+from .common import BaseTestCase
 
 
 @handle_cancel
@@ -22,6 +23,11 @@ def key_prefix_view(request):
     return HttpResponse('ok no args')
 
 
+@staff_login_required
+def staff_only_view(request):
+    return HttpResponse('ok')
+
+
 def index(request):
     return HttpResponse('index')
 
@@ -33,6 +39,8 @@ urlpatterns = [
     url(r'^key_prefix_view/$',
         key_prefix_view, name='key_prefix_view'),
     url(r'^$', index, name='index'),
+    url(r'^staff_only_view/$', staff_only_view, name='staff_only_view'),
+    url(r'^login/$', ok_view, name='login')
 ]
 
 
@@ -99,3 +107,25 @@ class HandleCancelTests(TestCase):
         self.assertSessionOk()
         self.assertEqual(302, res.status_code)
         self.assertEqual(res['Location'], 'http://testserver/another_view/')
+
+
+@override_settings(
+    ROOT_URLCONF=__name__,
+    LOGIN_URL='login')
+class StaffLoginRequiredTests(BaseTestCase):
+
+    def test_redirects_to_login(self):
+        res = self.client.get('/staff_only_view/')
+        self.assertEqual(302, res.status_code)
+        self.assertTrue(res['Location'].startswith('http://testserver/login'))
+
+    def test_staff_user_is_permitted(self):
+        self.login(is_staff=True)
+        res = self.client.get('/staff_only_view/')
+        self.assertEqual(200, res.status_code)
+        self.assertEqual(b'ok', res.content)
+
+    def test_non_staff_user_is_denied(self):
+        self.login(is_staff=False)
+        res = self.client.get('/staff_only_view/')
+        self.assertEqual(403, res.status_code)
