@@ -1,7 +1,8 @@
+@import '../base/variables';
+
 .excel-wrapper {
   overflow: scroll;
-  padding: 1em;
-  border: 2px solid lightgray;
+  font-size: $small-font-size;
 }
 
 table.excel {
@@ -21,7 +22,7 @@ table.excel {
 
   td {
     min-width: 10em;
-    padding: 0;
+    padding: 2px;
     border: 1px solid lightgray;
   }
 }
