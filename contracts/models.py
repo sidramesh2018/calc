@@ -130,6 +130,7 @@ class BulkUploadContractSource(models.Model):
     submitter = models.ForeignKey(User, null=True, blank=True)
     has_been_loaded = models.BooleanField(default=False)
     original_file = models.BinaryField()
+    file_mime_type = models.TextField()
     procurement_center = models.CharField(
         db_index=True, max_length=5, choices=PROCUREMENT_CENTER_CHOICES)
 

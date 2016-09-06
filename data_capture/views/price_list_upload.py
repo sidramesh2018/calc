@@ -5,7 +5,9 @@ from functools import wraps
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from ..forms import price_list as forms
+# from ..forms import price_list as forms
+from .. import forms
+from ..decorators import handle_cancel
 from ..schedules import registry
 from .common import add_generic_form_error
 from frontend import ajaxform
@@ -51,6 +53,7 @@ def step_1(request):
         })
 
 
+@handle_cancel
 @login_required
 def step_2(request):
     # Redirect back to step 1 if we don't have data
@@ -87,6 +90,7 @@ def step_2(request):
     })
 
 
+@handle_cancel
 @login_required
 def step_3(request):
     if 'data_capture' not in request.session:
@@ -123,6 +127,7 @@ def step_3(request):
 
 @login_required
 @gleaned_data_required
+@handle_cancel
 def step_4(request, gleaned_data):
     if not gleaned_data.valid_rows:
         return redirect('data_capture:step_3')

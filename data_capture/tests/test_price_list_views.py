@@ -118,6 +118,14 @@ class Step2Tests(PriceListStepTestCase):
             'Oops, please correct the errors below and try again.'
         )
 
+    def test_cancel_clears_session_and_redirects(self):
+        res = self.client.post(self.url, {'cancel': ''})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res['Location'], 'http://testserver/')
+        session = self.client.session
+        for k in list(session.keys()):
+            self.assertFalse(k.startswith('data_capture:'))
+
 
 class Step3Tests(PriceListStepTestCase):
     url = '/data-capture/step/3'
@@ -189,6 +197,15 @@ class Step3Tests(PriceListStepTestCase):
                 'file': f
             })
             self.assertRedirects(res, Step4Tests.url)
+
+    def test_cancel_clears_session_and_redirects(self):
+        res = self.client.post(self.url, {'cancel': ''})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res['Location'], 'http://testserver/')
+        session = self.client.session
+        for k in list(session.keys()):
+            self.assertFalse(k.startswith('data_capture:'))
+
 
 class Step4Tests(PriceListStepTestCase):
     url = '/data-capture/step/4'
@@ -270,6 +287,17 @@ class Step4Tests(PriceListStepTestCase):
         self.set_fake_gleaned_data(self.rows)
         res = self.client.post(self.url, session['data_capture'])
         self.assertRedirects(res, Step5Tests.url)
+
+    def test_cancel_clears_session_and_redirects(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        res = self.client.post(self.url, {'cancel': ''})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res['Location'], 'http://testserver/')
+        session = self.client.session
+        for k in list(session.keys()):
+            self.assertFalse(k.startswith('data_capture:'))
+
 
 class Step5Tests(PriceListStepTestCase):
     url = '/data-capture/step/5'

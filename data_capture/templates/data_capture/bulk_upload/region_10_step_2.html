@@ -13,20 +13,23 @@
       <p>No valid rows were found in the uploaded spreadsheet. Please check your file and <a href="{% url 'data_capture:bulk_region_10_step_1' %}">try again</a>.</p>
     {% endif %}
 
-    <div class="form-button-row clearfix">
-      <a href="{% url 'data_capture:bulk_region_10_step_1' %}" class="button button-previous">Previous</a>
+    <form method="post" action="{% url 'data_capture:bulk_region_10_step_3' %}">
+      {% csrf_token %}
+      <div class="form-button-row clearfix">
+        <a href="{% url 'data_capture:bulk_region_10_step_1' %}" class="button button-previous">Previous</a>
 
-      <a href="{% url 'index' %}" class="button button-cancel">Cancel</a>
+        <button type="submit" class="button-secondary" name="cancel">Cancel</button>
 
-      {% if total %}
-      <div class="submit-group">
-        <span class="submit-label">
-          Load data and view results
-        </span>
-        {# TODO: It would be nice to have JS that disables this button once clicked #}
-        <a href="{% url 'data_capture:bulk_region_10_step_3' %}" class="button button-primary">Confirm</a>
+        {% if total %}
+          <div class="submit-group">
+            <span class="submit-label">
+              Load data and view results
+            </span>
+            {# TODO: It would be nice to have JS that disables this button once clicked #}
+            <button type="submit" class="button-primary" name="submit">Confirm</button>
+          </div>
+        {% endif %}
       </div>
-      {% endif %}
-    </div>
+    </form>
   {% endwith %}
 {% endblock step_body %}

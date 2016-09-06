@@ -69,6 +69,21 @@ import { UploadWidget } from '../data-capture/upload';
     assert.equal(typeof UploadWidget.HAS_BROWSER_SUPPORT, 'boolean');
   });
 
+  test('widget w/ non-ajaxform form is always degraded', assert => {
+    const div = document.createElement('div');
+    const done = assert.async();
+
+    div.addEventListener('uploadwidgetready', e => {
+      assert.ok(e.target.isDegraded);
+      done();
+    });
+
+    div.innerHTML = '<form style="display: none"><upload-widget>' +
+                    '<input type="file" is="upload-input">' +
+                    '</upload-widget></form>';
+    document.body.appendChild(div);
+  });
+
   test('upload-input removes "required" attr on upgrade', assert => {
     upload = document.createElement('input', { is: 'upload-input' });
     upload.setAttribute('required', '');

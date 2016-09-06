@@ -34,6 +34,8 @@ const dirs = {
       dataExplorer: 'frontend/static/frontend/built/js/data-explorer',
       // CALC 2.0 Data Capture scripts
       dataCapture: 'frontend/static/frontend/built/js/data-capture',
+      // Styleguide scripts
+      styleguide: 'frontend/static/frontend/built/js/styleguide',
       // CALC 2.0 Tests
       tests: 'frontend/static/frontend/built/js/tests',
     },
@@ -45,6 +47,8 @@ const paths = {
   js: '**/*.js',
   dataCaptureEntry: 'data-capture/index.js',
   dataCaptureOutfile: 'index.min.js',
+  styleguideEntry: 'styleguide/index.js',
+  styleguideOutfile: 'index.min.js',
   testEntry: 'tests/index.js',
   testOutfile: 'index.min.js',
 };
@@ -116,7 +120,8 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 );
 
 // Compile and lint JavaScript sources
-gulp.task('js', ['lint', 'js:data-capture', 'js:tests', 'js:legacy']);
+gulp.task('js', ['lint', 'js:data-capture', 'js:styleguide',
+                 'js:tests', 'js:legacy']);
 
 gulp.task('js:legacy', ['js:data-explorer:index', 'js:common:base']);
 
@@ -197,6 +202,14 @@ gulp.task('js:data-capture', () =>
     path.join(dirs.src.scripts, paths.dataCaptureEntry),
     dirs.dest.scripts.dataCapture,
     paths.dataCaptureOutfile
+  )
+);
+
+gulp.task('js:styleguide', () =>
+  browserifyBundle(
+    path.join(dirs.src.scripts, paths.styleguideEntry),
+    dirs.dest.scripts.styleguide,
+    paths.styleguideOutfile
   )
 );
 

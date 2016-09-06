@@ -34,3 +34,28 @@ def get_whitelisted_ips(env=os.environ):
         return None
 
     return [s.strip() for s in env['WHITELISTED_IPS'].split(',')]
+
+
+def load_redis_url_from_vcap_services(name, env=os.environ):
+    '''
+    Detects if a redis28-swarm service instance with the given name
+    is present in VCAP_SERVICES.
+    If it is, then it creates a URL for the instance and sets env['REDIS_URL']
+    to that URL. If not, it just returns and does nothing.
+    '''
+
+    if 'VCAP_SERVICES' not in env:
+        return
+
+    vcap = json.loads(env['VCAP_SERVICES'])
+
+    for entry in vcap.get('redis28-swarm', []):
+        if entry['name'] == name:
+            creds = entry['credentials']
+            url = 'redis://:{password}@{hostname}:{port}'.format(
+                password=creds['password'],
+                hostname=creds['hostname'],
+                port=creds['port']
+            )
+            env['REDIS_URL'] = url
+            return

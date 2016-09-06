@@ -1,5 +1,9 @@
 import json
-from .common import StepTestCase, R10_XLSX_PATH
+from django.core.files.base import ContentFile
+
+from .test_jobs import process_worker_jobs
+from .common import (StepTestCase, R10_XLSX_PATH, XLSX_CONTENT_TYPE,
+                     create_bulk_upload_contract_source)
 
 from contracts.models import Contract, BulkUploadContractSource
 
@@ -10,17 +14,11 @@ class R10StepTestCase(StepTestCase):
         session.clear()
 
     def setup_upload_source(self, user):
-        with open(R10_XLSX_PATH, 'rb') as f:
-            src = BulkUploadContractSource.objects.create(
-                submitter=user,
-                has_been_loaded=False,
-                original_file=f.read(),
-                procurement_center=BulkUploadContractSource.REGION_10,
-            )
-            session = self.client.session
-            session['data_capture:upload_source_id'] = src.pk
-            session.save()
-            return src
+        src = create_bulk_upload_contract_source(user)
+        session = self.client.session
+        session['data_capture:upload_source_id'] = src.pk
+        session.save()
+        return src
 
 
 class Region10UploadStep1Tests(R10StepTestCase):
@@ -29,10 +27,10 @@ class Region10UploadStep1Tests(R10StepTestCase):
     def test_login_is_required(self):
         self.assertRedirectsToLogin(self.url)
 
-    def test_non_staff_login_errors(self):
+    def test_non_staff_login_is_denied(self):
         self.login()
         res = self.client.get(self.url)
-        self.assertNotEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 403)
 
     def test_get_is_ok(self):
         self.login(is_staff=True)
@@ -52,6 +50,10 @@ class Region10UploadStep1Tests(R10StepTestCase):
             upload_source = BulkUploadContractSource.objects.all()[0]
             self.assertEqual(upload_source.procurement_center,
                              BulkUploadContractSource.REGION_10)
+            self.assertEqual(upload_source.file_mime_type, XLSX_CONTENT_TYPE)
+            f.seek(0)  # reseek back to start so it can be read again
+            self.assertEqual(ContentFile(upload_source.original_file).read(),
+                             f.read())
             self.assertEqual(
                 self.client.session['data_capture:upload_source_id'],
                 upload_source.pk)
@@ -110,14 +112,10 @@ class Region10UploadStep2Tests(R10StepTestCase):
         res = self.client.get(self.url)
         self.assertRedirects(res, Region10UploadStep1Tests.url)
 
-    def test_non_staff_login_errors(self):
+    def test_non_staff_login_is_denied(self):
         self.login()
         res = self.client.get(self.url)
-        self.assertEqual(res.status_code, 302)
-        self.assertEqual(
-            res['Location'],
-            'http://testserver/auth/login?next={}'.format(self.url)
-        )
+        self.assertEqual(res.status_code, 403)
 
     def test_get_is_ok(self):
         user = self.login(is_staff=True)
@@ -133,31 +131,31 @@ class Region10UploadStep3Tests(R10StepTestCase):
     def test_login_is_required(self):
         self.assertRedirectsToLogin(self.url)
 
-    def test_session_source_id_is_required(self):
-        self.login(is_staff=True)
-        res = self.client.get(self.url)
-        self.assertRedirects(res, Region10UploadStep1Tests.url)
-
-    def test_non_staff_login_errors(self):
+    def test_non_staff_login_is_denied(self):
         self.login()
         res = self.client.get(self.url)
-        self.assertEqual(res.status_code, 302)
-        self.assertEqual(
-            res['Location'],
-            'http://testserver/auth/login?next={}'.format(self.url)
-        )
+        self.assertEqual(res.status_code, 403)
 
-    def test_get_is_ok_and_contracts_are_created_properly(self):
+    def test_not_available_via_get(self):
+        self.login(is_staff=True)
+        res = self.client.get(self.url)
+        self.assertEquals(res.status_code, 405)
+
+    def test_session_source_id_is_required(self):
+        self.login(is_staff=True)
+        res = self.client.post(self.url)
+        self.assertRedirects(res, Region10UploadStep1Tests.url)
+
+    def test_post_is_ok_and_contracts_are_created_properly(self):
         user = self.login(is_staff=True)
         self.setup_upload_source(user)
-        res = self.client.get(self.url)
+        res = self.client.post(self.url)
         self.assertEqual(res.status_code, 200)
+
+        process_worker_jobs()
+
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
-        self.assertIn('num_contracts', res.context)
-        self.assertIn('num_bad_rows', res.context)
-        self.assertEqual(res.context['num_contracts'], 3)
-        self.assertEqual(res.context['num_bad_rows'], 1)
         upload_source = BulkUploadContractSource.objects.all()[0]
         self.assertTrue(upload_source.has_been_loaded)
         for c in contracts:
@@ -178,7 +176,19 @@ class Region10UploadStep3Tests(R10StepTestCase):
             upload_source=other_source
         )
         self.setup_upload_source(user)
-        res = self.client.get(self.url)
+        res = self.client.post(self.url)
         self.assertEqual(res.status_code, 200)
+
+        process_worker_jobs()
+
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
+
+    def test_cancel_clears_session_and_redirects(self):
+        user = self.login(is_staff=True)
+        self.setup_upload_source(user)
+        res = self.client.post(self.url, {'cancel': ''})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res['Location'], 'http://testserver/')
+        session = self.client.session
+        self.assertNotIn('data_capture:upload_source_id', session)

@@ -2,6 +2,7 @@
 services:
 - db-calc-dev
 - calc-env
+- calc-redis
 applications:
 - name: calc-dev
   instances: 1
@@ -18,3 +19,11 @@ applications:
     NEW_RELIC_CONFIG_FILE: "newrelic.ini"
     NEW_RELIC_ENV: "staging"
     NEW_RELIC_LOG: "stdout"
+- name: calc-rqworker
+  no-route: true
+  instances: 1
+  memory: 256M
+  buildpack: python_buildpack
+  command: python manage.py rqworker default
+  stack: cflinuxfs2
+  timeout: 180

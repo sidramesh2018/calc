@@ -172,6 +172,14 @@ advancedTest('submit triggers ajax w/ form data', (assert, s) => {
   $(s.ajaxform).submit();
 });
 
+advancedTest('submitted XHR has X-Requested-With header', (assert, s) => {
+  s.setFile(createBlob('hello there'));
+  $(s.ajaxform).submit();
+
+  const req = server.requests[0];
+  assert.equal(req.requestHeaders['X-Requested-With'], 'XMLHttpRequest');
+});
+
 advancedTest('form_html replaces form & rebinds it', {
   fooValue: 'hello',
 }, (assert, s) => {

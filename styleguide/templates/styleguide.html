@@ -48,17 +48,33 @@
     and Drop File Uploading</a> by Osvaldas Valutis.
   </p>
 
+  <p>
+    We use an {% webcomponent '<upload-widget>' %} with a nested
+    {% webcomponent '<input is="upload-input">' %} to progressively enhance
+    the front-end. However, using them is rarely needed in practice, as
+    {% pyobjname 'frontend.upload.UploadWidget' %} contains the Django
+    widget for rendering all the required HTML.
+  </p>
+
   <h3>Form Submission</h3>
 
   <p>
     Due to the technical limitations of HTML5, forms containing the
     progressively-enhanced upload widget must be submitted via ajax. This can
-    be accomplished via a custom Ajax Form component.
+    be accomplished via a custom {% webcomponent '<form is="ajax-form">' %}
+    web component.
   </p>
 
   <p>
-    For a simple Ajax Form code example, see
-    {% pathname 'styleguide/ajaxform_example.py' %}.
+    {% pyobjname 'frontend.ajaxform' %} contains utilities for processing
+    forms submitted by this web component in a progressively-enhanced way.
+  </p>
+
+  <p>
+    For a simple ajax form code example that also embeds an upload
+    widget, see
+    {% pathname 'styleguide/ajaxform_example.py' %} and
+    {% pathname 'styleguide/templates/styleguide_ajaxform_example.html' %}.
   </p>
 
   <div class="styleguide-example">
@@ -138,7 +154,7 @@
 
   {% guide_section "Form Button Row" %}
 
-  <p>Part of <code>data_capture.min.css</code></p>
+  <p>Defined in {% pathname 'frontend/source/sass/components/_formbuttonrow.scss' %}.</p>
 
   <p>The form-button-row widget is used to add common buttons to the bottom of forms in a multi-step process, such as the Data Capture Upload flow.</p>
 
@@ -146,13 +162,13 @@
   <div class="form-button-row clearfix">
     <a href="#" class="button button-previous">Previous</a>
 
-    <a href="#" class="button button-cancel">Cancel</a>
+    <button type="submit" name="cancel" class="button-secondary">Cancel</button>
 
     <div class="submit-group">
       <span class="submit-label">
         Provide details about the contract.
       </span>
-      <button type="submit" class="button button-primary">Next</button>
+      <button type="submit" class="button-primary">Next</button>
     </div>
   </div>
   {% endexample %}
@@ -160,7 +176,11 @@
   {% guide_section "Alerts" %}
 
   <p>
-    Part of <code>data_capture.min.css</code>. These are similar to the
+    Defined in {% pathname 'frontend/source/sass/components/_alerts.scss' %}.</p>
+  </p>
+
+  <p>
+    These are similar to the
     <a href="https://standards.usa.gov/alerts/">US Web Design Standards</a>,
     but add a stroke and the CALC standard border radius. We do not color the
     background of the error alert because the red background would make it
@@ -369,13 +389,13 @@
   {% guide_section "Dates" %}
 
   <p>
-    We have a custom Django form field and widget that
-    offers three separate text fields for users to enter
+    {% pyobjname 'frontend.date.SplitDateField' %} is a custom Django form
+    field and widget that offers three separate text fields for users to enter
     dates, as per the <a href="https://standards.usa.gov/form-controls/#date-input">USWDS section on date input</a>.
-
   <p>
     For a simple code example, see
-    {% pathname 'styleguide/date_example.py' %}.
+    {% pathname 'styleguide/date_example.py' %} and
+    {% pathname 'styleguide/templates/styleguide_date_example.html' %}.
   </p>
 
   <div class="styleguide-example">
@@ -389,4 +409,5 @@
 </div>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 <script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
+<script src="{% static 'frontend/built/js/styleguide/index.min.js' %}"></script>
 {% endblock %}

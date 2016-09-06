@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 
+from .healthcheck import healthcheck
 from .robots import robots_txt
 
 
@@ -17,6 +18,7 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
     url(r'^about/$', TemplateView.as_view(template_name='about.html'),
         name='about'),
+    url(r'^healthcheck/', healthcheck),
     url(r'^api/', include('api.urls')),
     url(r'^data-capture/',
         include('data_capture.urls', namespace='data_capture')),

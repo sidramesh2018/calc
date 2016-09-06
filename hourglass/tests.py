@@ -1,9 +1,13 @@
 import unittest
 import json
+from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
 
-from .settings_utils import load_cups_from_vcap_services, get_whitelisted_ips
+from . import healthcheck
+from .settings_utils import (load_cups_from_vcap_services,
+                             load_redis_url_from_vcap_services,
+                             get_whitelisted_ips)
 
 
 class ComplianceTests(DjangoTestCase):
@@ -48,6 +52,26 @@ class ComplianceTests(DjangoTestCase):
         self.assertHasHeaders(res)
 
 
+class HealthcheckTests(DjangoTestCase):
+    def test_it_works(self):
+        res = self.client.get('/healthcheck/')
+        self.assertEqual(res.status_code, 200)
+        self.assertJSONEqual(str(res.content, encoding='utf8'), {
+            'is_database_synchronized': True,
+            'rq_jobs': 0
+        })
+
+    @patch.object(healthcheck, 'is_database_synchronized')
+    def test_it_returns_500_when_db_is_not_synchronized(self, mock):
+        mock.return_value = False
+        res = self.client.get('/healthcheck/')
+        self.assertEqual(res.status_code, 500)
+        self.assertJSONEqual(str(res.content, encoding='utf8'), {
+            'is_database_synchronized': False,
+            'rq_jobs': 0
+        })
+
+
 class RobotsTests(DjangoTestCase):
 
     @override_settings(ENABLE_SEO_INDEXING=False)
@@ -63,13 +87,13 @@ class RobotsTests(DjangoTestCase):
         self.assertEqual(res.content, b"User-agent: *\nDisallow:")
 
 
-class CupsTests(unittest.TestCase):
+def make_vcap_services_env(vcap_services):
+    return {
+        'VCAP_SERVICES': json.dumps(vcap_services)
+    }
 
-    @staticmethod
-    def make_vcap_services_env(vcap_services):
-        return {
-            'VCAP_SERVICES': json.dumps(vcap_services)
-        }
+
+class CupsTests(unittest.TestCase):
 
     def test_noop_if_vcap_services_not_in_env(self):
         env = {}
@@ -77,7 +101,7 @@ class CupsTests(unittest.TestCase):
         self.assertEqual(env, {})
 
     def test_irrelevant_cups_are_ignored(self):
-        env = self.make_vcap_services_env({
+        env = make_vcap_services_env({
             "user-provided": [
                 {
                     "label": "user-provided",
@@ -96,7 +120,7 @@ class CupsTests(unittest.TestCase):
         self.assertFalse('boop' in env)
 
     def test_credentials_are_loaded(self):
-        env = self.make_vcap_services_env({
+        env = make_vcap_services_env({
             "user-provided": [
                 {
                     "label": "user-provided",
@@ -113,6 +137,44 @@ class CupsTests(unittest.TestCase):
         load_cups_from_vcap_services('boop-env', env=env)
 
         self.assertEqual(env['boop'], 'jones')
+
+
+class RedisUrlTests(unittest.TestCase):
+    def test_noop_when_vcap_not_in_env(self):
+        env = {}
+        load_redis_url_from_vcap_services('redis-service', env=env)
+        self.assertEqual(env, {})
+
+    def test_noop_when_name_not_in_vcap(self):
+        env = make_vcap_services_env({
+            'redis28-swarm': [{
+                'name': 'a-different-name',
+                'credentials': {
+                    'hostname': 'the_host',
+                    'password': 'the_password',
+                    'port': '1234'
+                }
+            }]
+        })
+        load_redis_url_from_vcap_services('boop')
+        self.assertFalse('REDIS_URL' in env)
+
+    def test_redis_url_is_loaded(self):
+        env = make_vcap_services_env({
+            'redis28-swarm': [{
+                'name': 'redis-service',
+                'credentials': {
+                    'hostname': 'the_host',
+                    'password': 'the_password',
+                    'port': '1234'
+                }
+            }]
+        })
+
+        load_redis_url_from_vcap_services('redis-service', env=env)
+        self.assertTrue('REDIS_URL' in env)
+        self.assertEqual(env['REDIS_URL'],
+                         'redis://:the_password@the_host:1234')
 
 
 class GetWhitelistedIPsTest(unittest.TestCase):

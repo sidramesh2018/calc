@@ -14,7 +14,9 @@ import dj_database_url
 import dj_email_url
 from dotenv import load_dotenv
 
-from .settings_utils import load_cups_from_vcap_services, get_whitelisted_ips
+from .settings_utils import (load_cups_from_vcap_services,
+                             load_redis_url_from_vcap_services,
+                             get_whitelisted_ips)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -24,6 +26,7 @@ if os.path.exists(DOTENV_PATH):
     load_dotenv(DOTENV_PATH)
 
 load_cups_from_vcap_services('calc-env')
+load_redis_url_from_vcap_services('calc-redis')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
@@ -36,11 +39,18 @@ if DEBUG:
         'I am an insecure secret key intended ONLY for dev/testing.'
     )
     os.environ.setdefault('EMAIL_URL', 'console:')
+    os.environ.setdefault('REDIS_URL', 'redis://localhost:6379/0')
+    os.environ.setdefault('SYSTEM_EMAIL_ADDRESS', 'dev@localhost')
+
+if 'EMAIL_URL' not in os.environ:
+    raise Exception('Please define the EMAIL_URL environment variable!')
 
 email_config = dj_email_url.config()
 # Sets a number of settings values, as described at
 # https://github.com/migonzalvar/dj-email-url
 vars().update(email_config)
+
+SYSTEM_EMAIL_ADDRESS = os.environ['SYSTEM_EMAIL_ADDRESS']
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 
@@ -82,6 +92,7 @@ INSTALLED_APPS = (
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'django_rq',
 
     'data_explorer',
     'contracts',
@@ -151,6 +162,11 @@ if not DEBUG:
     STATICFILES_STORAGE = ('whitenoise.storage.'
                            'CompressedManifestStaticFilesStorage')
 
+RQ_QUEUES = {
+    'default': {
+        'URL': os.environ['REDIS_URL'],
+    }
+}
 
 PAGINATION = 200
 
@@ -205,6 +221,10 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'rq.worker': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        }
     },
 }
 

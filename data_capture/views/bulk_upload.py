@@ -1,19 +1,16 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import user_passes_test
-
-from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from django.db import transaction
+from django.views.decorators.http import require_POST
 
-from .. import forms
+from .. import forms, jobs
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
+from ..decorators import handle_cancel, staff_login_required
 from .common import add_generic_form_error
 from frontend import ajaxform
-from contracts.loaders.region_10 import Region10Loader
-from contracts.models import Contract, BulkUploadContractSource
+from contracts.models import BulkUploadContractSource
 
 
-@user_passes_test(lambda u: u.is_staff)
+@staff_login_required
 def region_10_step_1(request):
     '''
     Start of Region 10 Bulk Upload - Upload the spreadsheet
@@ -30,7 +27,8 @@ def region_10_step_1(request):
                 submitter=request.user,
                 procurement_center=BulkUploadContractSource.REGION_10,
                 has_been_loaded=False,
-                original_file=file.read()
+                original_file=file.read(),
+                file_mime_type=file.content_type
             )
 
             request.session['data_capture:upload_source_id'] = upload_source.pk
@@ -54,13 +52,10 @@ def region_10_step_1(request):
     )
 
 
-@user_passes_test(lambda u: u.is_staff)
+@staff_login_required
 def region_10_step_2(request):
     '''
     Confirm that the new data should be loaded
-
-    TODO: Should we use a Form to have POST submit and  POST cancel
-    instead of a simple link to step_3?
     '''
     upload_source_id = request.session.get('data_capture:upload_source_id')
     if upload_source_id is None:
@@ -79,50 +74,21 @@ def region_10_step_2(request):
     })
 
 
-@user_passes_test(lambda u: u.is_staff)
-@transaction.atomic
+@staff_login_required
+@require_POST
+@handle_cancel
 def region_10_step_3(request):
     '''Load data and show success screen'''
+
     upload_source_id = request.session.get('data_capture:upload_source_id')
     if upload_source_id is None:
         return redirect('data_capture:bulk_region_10_step_1')
 
-    upload_source = BulkUploadContractSource.objects.get(pk=upload_source_id)
-
-    file = ContentFile(upload_source.original_file)
-    converter = Region10SpreadsheetConverter(file)
-
-    # Delete existing contracts identified by the same
-    # procurement_center
-    Contract.objects.filter(
-        upload_source__procurement_center=BulkUploadContractSource.REGION_10
-    ).delete()
-
-    contracts = []
-    bad_rows = []
-
-    for row in converter.convert_next():
-        try:
-            c = Region10Loader.make_contract(row, upload_source=upload_source)
-            contracts.append(c)
-        except (ValueError, ValidationError) as e:
-            bad_rows.append(row)
-
-    # Save new contracts
-    Contract.objects.bulk_create(contracts)
-
-    # Update search field on Contract models
-    Contract._fts_manager.update_search_field()
-
-    # Update the upload_source
-    upload_source.has_been_loaded = True
-    upload_source.save()
+    jobs.process_bulk_upload_and_send_email.delay(upload_source_id)
 
     # remove the upload_source_id from session
     del request.session['data_capture:upload_source_id']
 
     return render(request, 'data_capture/bulk_upload/region_10_step_3.html', {
         'step_number': 3,
-        'num_bad_rows': len(bad_rows),
-        'num_contracts': len(contracts),
     })
