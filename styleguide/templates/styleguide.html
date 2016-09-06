@@ -463,6 +463,45 @@
     </div>
   </div>
 
+  {% guide_section "Expandable Area" %}
+
+  <p>
+    The {% webcomponent '<expandable-area>' %} web component makes it possible
+    to progressively enhance an area to be initially collapsed, and expandable
+    via user interaction. The first child
+    element is assumed to be the expander (which is dynamically given the
+    <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role">button role</a>) while all of its siblings are
+    the expandable content.
+  </p>
+
+  {% example %}
+  <expandable-area>
+    <h6>Why are computers so hard to use?</h6>
+    <p>Here is a paragraph of explanatory text.</p>
+    <p>Here is another paragraph of explanatory text.</p>
+  </expandable-area>
+  {% endexample %}
+
+  <p>
+    When JavaScript isn't available, the hidden content is always shown:
+  </p>
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example (no JavaScript)</h3>
+      <expandable-area data-force-degradation>
+        <h6>Why are computers so hard to use?</h6>
+        <p>Here is a paragraph of explanatory text.</p>
+        <p>Here is another paragraph of explanatory text.</p>
+      </expandable-area>
+    </div>
+  </div>
+
+  <p>
+    Styling for this component can be found in
+    {% pathname 'frontend/source/sass/components/_expandablearea.scss' %}.
+  </p>
+
   {% endguide %}
 </div>
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
