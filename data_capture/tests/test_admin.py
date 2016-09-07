@@ -44,13 +44,33 @@ class AdminTestCase(ModelTestCase):
         if name != 'hourglass.middleware.DebugOnlyDebugToolbarMiddleware'
     ]),
 )
-class ViewTests(AdminTestCase):
-    def test_non_superuser_cannot_set_superuser(self):
+class DebugAdminTestCase(AdminTestCase):
+    pass
+
+
+class SuperuserViewTests(DebugAdminTestCase):
+    def setup_user(self):
+        self.user = self.login(is_superuser=True)
+
+    def test_can_set_superuser(self):
+        res = self.client.get('/admin/auth/user/{}/'.format(self.user.id))
+        self.assertContains(res, 'Superuser')
+        self.assertEqual(res.status_code, 200)
+
+    def test_can_see_superusers(self):
+        self.create_user(username='superdawg', is_superuser=True)
+        res = self.client.get('/admin/auth/user/')
+        self.assertContains(res, 'superdawg')
+        self.assertEqual(res.status_code, 200)
+
+
+class NonSuperuserViewTests(DebugAdminTestCase):
+    def test_cannot_set_superuser(self):
         res = self.client.get('/admin/auth/user/{}/'.format(self.user.id))
         self.assertNotContains(res, 'Superuser')
         self.assertEqual(res.status_code, 200)
 
-    def test_non_superuser_cannot_see_superusers(self):
+    def test_cannot_see_superusers(self):
         self.create_user(username='superdawg', is_superuser=True)
         res = self.client.get('/admin/auth/user/')
         self.assertNotContains(res, 'superdawg')
