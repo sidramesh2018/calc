@@ -12,8 +12,8 @@ class PriceListStepTestCase(StepTestCase):
     def set_fake_gleaned_data(self, rows):
         session = self.client.session
         pricelist = FakeSchedulePriceList(rows)
-        session['data_capture']['schedule'] = registry.get_classname(pricelist)
-        session['data_capture']['gleaned_data'] = registry.serialize(pricelist)
+        session['data_capture:price_list']['schedule'] = registry.get_classname(pricelist)
+        session['data_capture:price_list']['gleaned_data'] = registry.serialize(pricelist)
         session.save()
 
     def setUp(self):
@@ -40,10 +40,10 @@ class Step1Tests(PriceListStepTestCase):
     def test_valid_post_sets_session_data(self):
         self.login()
         self.client.post(self.url, self.valid_form)
-        self.assertEqual(self.client.session['data_capture']['schedule'],
+        self.assertEqual(self.client.session['data_capture:price_list']['schedule'],
              FAKE_SCHEDULE)
-        self.assertEqual(self.client.session['data_capture']['contract_number'], 'GS-123-4567')
-        self.assertEqual(self.client.session['data_capture']['vendor_name'], 'foo')
+        self.assertEqual(self.client.session['data_capture:price_list']['contract_number'], 'GS-123-4567')
+        self.assertEqual(self.client.session['data_capture:price_list']['vendor_name'], 'foo')
 
     def test_valid_post_redirects_to_step_2(self):
         self.login()
@@ -79,7 +79,7 @@ class Step2Tests(PriceListStepTestCase):
 
     def setUp(self):
         session = self.client.session
-        session['data_capture'] = {
+        session['data_capture:price_list'] = {
             'schedule': FAKE_SCHEDULE,
             'contract_number': 'GS-123-4567',
             'vendor_name': 'foo',
@@ -97,7 +97,7 @@ class Step2Tests(PriceListStepTestCase):
     def test_valid_post_updates_session_data(self):
         self.login()
         self.client.post(self.url, self.valid_form)
-        posted_data = self.client.session['data_capture']
+        posted_data = self.client.session['data_capture:price_list']
         self.assertEqual(posted_data['contractor_site'], self.valid_form['contractor_site'])
         self.assertEqual(posted_data['is_small_business'], self.valid_form['is_small_business'])
 
@@ -139,7 +139,7 @@ class Step3Tests(PriceListStepTestCase):
 
     def setUp(self):
         session = self.client.session
-        session['data_capture'] = {
+        session['data_capture:price_list'] = {
             'schedule': FAKE_SCHEDULE,
             'contract_number': 'GS-123-4567',
             'vendor_name': 'foo'
@@ -166,9 +166,9 @@ class Step3Tests(PriceListStepTestCase):
             self.client.post(self.url, {
                 'file': f
             })
-            self.assertEqual(self.client.session['data_capture']['schedule'],
+            self.assertEqual(self.client.session['data_capture:price_list']['schedule'],
                  FAKE_SCHEDULE)
-            gleaned_data = self.client.session['data_capture']['gleaned_data']
+            gleaned_data = self.client.session['data_capture:price_list']['gleaned_data']
             gleaned_data = registry.deserialize(gleaned_data)
             assert isinstance(gleaned_data, FakeSchedulePriceList)
             self.assertEqual(gleaned_data.rows, [{
@@ -238,7 +238,7 @@ class Step4Tests(PriceListStepTestCase):
     def test_gleaned_data_is_required(self):
         self.login()
         session = self.client.session
-        session['data_capture'] = self.session_data
+        session['data_capture:price_list'] = self.session_data
         session.save()
         res = self.client.get(self.url)
         self.assertRedirects(res, Step3Tests.url)
@@ -246,7 +246,7 @@ class Step4Tests(PriceListStepTestCase):
     def test_get_is_ok(self):
         self.login()
         session = self.client.session
-        session['data_capture'] = self.session_data
+        session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
         res = self.client.get(self.url)
@@ -255,7 +255,7 @@ class Step4Tests(PriceListStepTestCase):
     def test_gleaned_data_with_valid_rows_is_required(self):
         self.login()
         session = self.client.session
-        session['data_capture'] = self.session_data
+        session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data([])
         res = self.client.get(self.url)
@@ -264,10 +264,10 @@ class Step4Tests(PriceListStepTestCase):
     def test_valid_post_creates_models(self):
         user = self.login()
         session = self.client.session
-        session['data_capture'] = self.session_data
+        session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        self.client.post(self.url, session['data_capture'])
+        self.client.post(self.url, session['data_capture:price_list'])
         p = SubmittedPriceList.objects.filter(
             contract_number='GS-123-4567'
         )[0]
@@ -281,16 +281,16 @@ class Step4Tests(PriceListStepTestCase):
     def test_valid_post_redirects_to_step_5(self):
         self.login()
         session = self.client.session
-        session['data_capture'] = self.session_data
+        session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        res = self.client.post(self.url, session['data_capture'])
+        res = self.client.post(self.url, session['data_capture:price_list'])
         self.assertRedirects(res, Step5Tests.url)
 
     def test_cancel_clears_session_and_redirects(self):
         self.login()
         session = self.client.session
-        session['data_capture'] = self.session_data
+        session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
         res = self.client.post(self.url, {'cancel': ''})
@@ -324,7 +324,7 @@ class Step5Tests(PriceListStepTestCase):
     def test_get_is_ok(self):
         self.login()
         session = self.client.session
-        session['data_capture'] = {}
+        session['data_capture:price_list'] = {}
         session.save()
         self.set_fake_gleaned_data(self.rows)
         res = self.client.get(self.url)
@@ -336,7 +336,7 @@ class Step5Tests(PriceListStepTestCase):
     def test_gleaned_data_is_required(self):
         self.login()
         session = self.client.session
-        session['data_capture'] = self.session_data
+        session['data_capture:price_list'] = self.session_data
         session.save()
         res = self.client.get(self.url)
         self.assertRedirects(res, Step3Tests.url)
@@ -344,8 +344,8 @@ class Step5Tests(PriceListStepTestCase):
     def test_session_is_deleted(self):
         self.login()
         session = self.client.session
-        session['data_capture'] = self.session_data
+        session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
         self.client.post(self.url, session)
-        assert 'data_capture' not in self.client.session
+        assert 'data_capture:price_list' not in self.client.session

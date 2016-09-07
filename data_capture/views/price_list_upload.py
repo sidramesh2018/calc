@@ -16,7 +16,7 @@ def gleaned_data_required(f):
     @wraps(f)
     def wrapper(request):
         try:
-            d = request.session['data_capture']['gleaned_data']
+            d = request.session['data_capture:price_list']['gleaned_data']
         except:
             return redirect('data_capture:step_3')
 
@@ -32,15 +32,14 @@ def step_1(request):
         form = forms.Step1Form(request.POST)
         if form.is_valid():
             # Clear out request.session if it previously existed
-            if 'data_capture' in request.session:
-                del request.session['data_capture']
+            if 'data_capture:price_list' in request.session:
+                del request.session['data_capture:price_list']
 
-            request.session['data_capture'] = {
+            request.session['data_capture:price_list'] = {
                 'contract_number': request.POST['contract_number'],
                 'vendor_name': request.POST['vendor_name'],
                 'schedule': request.POST['schedule']
             }
-
             return redirect('data_capture:step_2')
 
         else:
@@ -56,7 +55,7 @@ def step_1(request):
 @login_required
 def step_2(request):
     # Redirect back to step 1 if we don't have data
-    if 'contract_number' not in request.session['data_capture']:
+    if 'contract_number' not in request.session['data_capture:price_list']:
         return redirect('data_capture:step_1')
 
     if request.method == 'GET':
@@ -64,15 +63,15 @@ def step_2(request):
     elif request.method == 'POST':
         form = forms.Step2Form(request.POST)
         if form.is_valid():
-            request.session['data_capture']['is_small_business'] = \
+            request.session['data_capture:price_list']['is_small_business'] = \
                 form.cleaned_data['is_small_business']
-            request.session['data_capture']['contractor_site'] = \
+            request.session['data_capture:price_list']['contractor_site'] = \
                 form.cleaned_data['contractor_site']
-            request.session['data_capture']['contract_year'] = \
+            request.session['data_capture:price_list']['contract_year'] = \
                 form.cleaned_data['contract_year']
-            request.session['data_capture']['contract_start'] = \
+            request.session['data_capture:price_list']['contract_start'] = \
                 form.cleaned_data['contract_start'].strftime("%Y-%m-%d")
-            request.session['data_capture']['contract_end'] = \
+            request.session['data_capture:price_list']['contract_end'] = \
                 form.cleaned_data['contract_end'].strftime("%Y-%m-%d")
 
             # Changing the value of a subkey doesn't cause the session to save,
@@ -92,7 +91,7 @@ def step_2(request):
 @handle_cancel
 @login_required
 def step_3(request):
-    if 'data_capture' not in request.session:
+    if 'data_capture:price_list' not in request.session:
         return redirect('data_capture:step_1')
     else:
         if request.method == 'GET':
@@ -100,11 +99,11 @@ def step_3(request):
         elif request.method == 'POST':
             posted_data = dict(
                     request.POST,
-                    schedule=request.session['data_capture']['schedule'])
+                    schedule=request.session['data_capture:price_list']['schedule'])
             form = forms.Step3Form(posted_data, request.FILES)
 
             if form.is_valid():
-                request.session['data_capture']['gleaned_data'] = \
+                request.session['data_capture:price_list']['gleaned_data'] = \
                     registry.serialize(form.cleaned_data['gleaned_data'])
 
                 request.session.modified = True
@@ -132,17 +131,17 @@ def step_4(request, gleaned_data):
         return redirect('data_capture:step_3')
     else:
         preferred_schedule = registry.get_class(
-            request.session['data_capture']['schedule']
+            request.session['data_capture:price_list']['schedule']
         )
         if request.method == 'POST':
             form = forms.Step4Form(request.POST)
             if form.is_valid():
                 price_list = form.save(commit=False)
-                price_list.contract_start = datetime.strptime(request.session['data_capture']['contract_start'], "%Y-%m-%d")
-                price_list.contract_end = datetime.strptime(request.session['data_capture']['contract_end'], "%Y-%m-%d")
+                price_list.contract_start = datetime.strptime(request.session['data_capture:price_list']['contract_start'], "%Y-%m-%d")
+                price_list.contract_end = datetime.strptime(request.session['data_capture:price_list']['contract_end'], "%Y-%m-%d")
                 price_list.submitter = request.user
                 price_list.serialized_gleaned_data = json.dumps(
-                    request.session['data_capture']['gleaned_data'])
+                    request.session['data_capture:price_list']['gleaned_data'])
                 price_list.save()
                 gleaned_data.add_to_price_list(price_list)
                 return redirect('data_capture:step_5')
@@ -152,7 +151,7 @@ def step_4(request, gleaned_data):
     return render(request, 'data_capture/price_list/step_4.html', {
         'step_number': 4,
         'gleaned_data': gleaned_data,
-        'price_list': request.session['data_capture'],
+        'price_list': request.session['data_capture:price_list'],
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
         'preferred_schedule': preferred_schedule,
     })
@@ -162,7 +161,7 @@ def step_4(request, gleaned_data):
 @gleaned_data_required
 def step_5(request, gleaned_data):
     if gleaned_data.valid_rows:
-        del request.session['data_capture']
+        del request.session['data_capture:price_list']
     else:
         # The user may have manually changed the URL or something to
         # get here. Push them back to the last step.
