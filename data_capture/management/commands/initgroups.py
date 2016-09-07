@@ -24,6 +24,7 @@ class Command(BaseCommand):
         try:
             group = Group.objects.get(name=groupname)
         except Group.DoesNotExist:
+            self.stdout.write("  Group does not exist, creating it.")
             group = Group(name=groupname)
             group.save()
         group.permissions = [
