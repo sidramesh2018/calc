@@ -5,10 +5,35 @@ from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 
 import data_capture.email as email
 from .schedules import registry
 from .models import SubmittedPriceList, SubmittedPriceListRow
+
+
+class CustomUserAdmin(UserAdmin):
+    '''
+    Simplified user admin for non-superusers, which also prevents such
+    users from upgrading themselves to superuser.
+    '''
+
+    non_superuser_fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'groups')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+
+    def get_fieldsets(self, request, obj=None):
+        if obj is not None and not request.user.is_superuser:
+            return self.non_superuser_fieldsets
+        return super().get_fieldsets(request, obj)
+
+
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
 
 
 class SubmittedPriceListRowInline(admin.TabularInline):
