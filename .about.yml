@@ -28,6 +28,7 @@ stack:
 - Django
 - JavaScript
 - Postgres
+- Redis
 
 # Services used to supply project status information
 # Items:
