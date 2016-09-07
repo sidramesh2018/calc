@@ -80,6 +80,15 @@ TEMPLATES = [{
 ALLOWED_HOSTS = ['*']
 
 
+DATA_CAPTURE_APP_CONFIG = 'DefaultDataCaptureApp'
+
+# When IS_RQ_SCHEDULER is in the env,
+# instead use the special DataCaptureSchedulerApp since this process
+# is being used as the scheduler instance.
+if 'IS_RQ_SCHEDULER' in os.environ:
+    DATA_CAPTURE_APP_CONFIG = 'DataCaptureSchedulerApp'
+
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -96,7 +105,7 @@ INSTALLED_APPS = (
 
     'data_explorer',
     'contracts',
-    'data_capture',
+    'data_capture.apps.{}'.format(DATA_CAPTURE_APP_CONFIG),
     'api',
     'djorm_pgfulltext',
     'rest_framework',
@@ -224,7 +233,11 @@ LOGGING = {
         'rq.worker': {
             'handlers': ['console'],
             'level': 'INFO',
-        }
+        },
+        'rq_scheduler': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
     },
 }
 
@@ -301,4 +314,5 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
     'debug_toolbar.panels.redirects.RedirectsPanel',
+    'data_capture.panels.ScheduledJobsPanel',
 ]

@@ -1,8 +1,9 @@
 from django.core import mail
 from django.conf import settings
 from django.test import override_settings
+from django.contrib.auth.models import User
 
-import data_capture.email as email
+from .. import email
 from .common import create_bulk_upload_contract_source, FAKE_SCHEDULE
 from .test_models import ModelTestCase
 
@@ -67,3 +68,20 @@ class EmailTests(ModelTestCase):
             'CALC Region 10 bulk data results - upload #{}'.format(src.pk))
         self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
         self.assertEqual(result.context['traceback'], 'traceback_contents')
+
+    def test_approval_reminder(self):
+        User.objects.create_superuser('admin', 'admin@localhost', 'password')
+        User.objects.create_superuser('admin2', 'admin2@localhost', 'password')
+        User.objects.create_superuser('blankadmin', '', 'password')
+        count = 5
+        result = email.approval_reminder(count)
+        self.assertTrue(result.was_successful)
+        message = mail.outbox[0]
+        self.assertEqual(message.recipients(),
+                         ['admin@localhost', 'admin2@localhost'])
+        self.assertEqual(
+            message.subject,
+            'CALC Reminder - {} price lists not approved'.format(count)
+        )
+        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(result.context['count_not_approved'], count)

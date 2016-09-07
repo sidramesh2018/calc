@@ -1,6 +1,8 @@
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.contrib.auth.models import User
 from django.conf import settings
+from django.template.defaultfilters import pluralize
 
 
 class EmailResult():
@@ -94,5 +96,27 @@ def bulk_upload_failed(upload_source, traceback):
     )
     return EmailResult(
         was_successful=result is 1,
+        context=ctx
+    )
+
+
+def approval_reminder(count_not_approved):
+    ctx = {
+        'count_not_approved': count_not_approved
+    }
+    superusers = User.objects.filter(is_superuser=True)
+    recipients = [s.email for s in superusers if s.email]
+    result = send_mail(
+        subject='CALC Reminder - {} price list{} not approved'.format(
+            count_not_approved, pluralize(count_not_approved)),
+        message=render_to_string(
+            'data_capture/email/approval_reminder.txt',
+            ctx
+        ),
+        from_email=settings.SYSTEM_EMAIL_ADDRESS,
+        recipient_list=recipients
+    )
+    return EmailResult(
+        was_successful=result is 1,  # or count of superusers
         context=ctx
     )
