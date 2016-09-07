@@ -20,7 +20,12 @@ class CustomUserAdmin(UserAdmin):
     '''
 
     non_superuser_fieldsets = (
-        (None, {'fields': ('username', 'password')}),
+        (None, {'fields': (
+            'username',
+            # Even though we don't need/use the password field, showing it
+            # is apparently required to make submitting changes work.
+            'password'
+        )}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'groups')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
