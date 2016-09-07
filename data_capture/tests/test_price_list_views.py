@@ -96,7 +96,6 @@ class Step2Tests(PriceListStepTestCase):
 
     def test_valid_post_updates_session_data(self):
         self.login()
-        print("valid_form = %s" % self.valid_form)
         self.client.post(self.url, self.valid_form)
         posted_data = self.client.session['data_capture']
         self.assertEqual(posted_data['contractor_site'], self.valid_form['contractor_site'])
@@ -290,6 +289,9 @@ class Step4Tests(PriceListStepTestCase):
 
     def test_cancel_clears_session_and_redirects(self):
         self.login()
+        session = self.client.session
+        session['data_capture'] = self.session_data
+        session.save()
         self.set_fake_gleaned_data(self.rows)
         res = self.client.post(self.url, {'cancel': ''})
         self.assertEqual(res.status_code, 302)

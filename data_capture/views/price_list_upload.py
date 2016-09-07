@@ -5,7 +5,6 @@ from functools import wraps
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-# from ..forms import price_list as forms
 from .. import forms
 from ..decorators import handle_cancel
 from ..schedules import registry
