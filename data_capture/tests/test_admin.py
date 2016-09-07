@@ -45,6 +45,17 @@ class AdminTestCase(ModelTestCase):
     ]),
 )
 class ViewTests(AdminTestCase):
+    def test_non_superuser_cannot_set_superuser(self):
+        res = self.client.get('/admin/auth/user/{}/'.format(self.user.id))
+        self.assertNotContains(res, 'Superuser')
+        self.assertEqual(res.status_code, 200)
+
+    def test_non_superuser_cannot_see_superusers(self):
+        self.create_user(username='superdawg', is_superuser=True)
+        res = self.client.get('/admin/auth/user/')
+        self.assertNotContains(res, 'superdawg')
+        self.assertEqual(res.status_code, 200)
+
     def test_submittedpricelistrow_list_returns_200(self):
         res = self.client.get('/admin/data_capture/submittedpricelistrow/')
         self.assertEqual(res.status_code, 200)
