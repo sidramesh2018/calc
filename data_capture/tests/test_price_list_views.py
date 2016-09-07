@@ -1,6 +1,5 @@
 import json
 
-from datetime import datetime
 from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
@@ -12,8 +11,10 @@ class PriceListStepTestCase(StepTestCase):
     def set_fake_gleaned_data(self, rows):
         session = self.client.session
         pricelist = FakeSchedulePriceList(rows)
-        session['data_capture:price_list']['schedule'] = registry.get_classname(pricelist)
-        session['data_capture:price_list']['gleaned_data'] = registry.serialize(pricelist)
+        session['data_capture:price_list']['schedule'] = \
+            registry.get_classname(pricelist)
+        session['data_capture:price_list']['gleaned_data'] = \
+            registry.serialize(pricelist)
         session.save()
 
     def setUp(self):
@@ -40,10 +41,10 @@ class Step1Tests(PriceListStepTestCase):
     def test_valid_post_sets_session_data(self):
         self.login()
         self.client.post(self.url, self.valid_form)
-        self.assertEqual(self.client.session['data_capture:price_list']['schedule'],
-             FAKE_SCHEDULE)
-        self.assertEqual(self.client.session['data_capture:price_list']['contract_number'], 'GS-123-4567')
-        self.assertEqual(self.client.session['data_capture:price_list']['vendor_name'], 'foo')
+        session_data = self.client.session['data_capture:price_list']
+        self.assertEqual(session_data['schedule'], FAKE_SCHEDULE)
+        self.assertEqual(session_data['contract_number'], 'GS-123-4567')
+        self.assertEqual(session_data['vendor_name'], 'foo')
 
     def test_valid_post_redirects_to_step_2(self):
         self.login()
@@ -98,8 +99,10 @@ class Step2Tests(PriceListStepTestCase):
         self.login()
         self.client.post(self.url, self.valid_form)
         posted_data = self.client.session['data_capture:price_list']
-        self.assertEqual(posted_data['contractor_site'], self.valid_form['contractor_site'])
-        self.assertEqual(posted_data['is_small_business'], self.valid_form['is_small_business'])
+        self.assertEqual(posted_data['contractor_site'],
+                         self.valid_form['contractor_site'])
+        self.assertEqual(posted_data['is_small_business'],
+                         self.valid_form['is_small_business'])
 
     def test_valid_post_redirects_to_step_3(self):
         self.login()
@@ -166,9 +169,9 @@ class Step3Tests(PriceListStepTestCase):
             self.client.post(self.url, {
                 'file': f
             })
-            self.assertEqual(self.client.session['data_capture:price_list']['schedule'],
-                 FAKE_SCHEDULE)
-            gleaned_data = self.client.session['data_capture:price_list']['gleaned_data']
+            session_data = self.client.session['data_capture:price_list']
+            self.assertEqual(session_data['schedule'], FAKE_SCHEDULE)
+            gleaned_data = session_data['gleaned_data']
             gleaned_data = registry.deserialize(gleaned_data)
             assert isinstance(gleaned_data, FakeSchedulePriceList)
             self.assertEqual(gleaned_data.rows, [{
@@ -272,9 +275,12 @@ class Step4Tests(PriceListStepTestCase):
             contract_number='GS-123-4567'
         )[0]
         self.assertEqual(p.schedule, FAKE_SCHEDULE)
-        self.assertEqual(p.vendor_name, self.session_data['vendor_name'])
-        self.assertEqual(p.contractor_site, self.session_data['contractor_site'])
-        self.assertEqual(p.is_small_business, self.session_data['is_small_business'])
+        self.assertEqual(p.vendor_name,
+                         self.session_data['vendor_name'])
+        self.assertEqual(p.contractor_site,
+                         self.session_data['contractor_site'])
+        self.assertEqual(p.is_small_business,
+                         self.session_data['is_small_business'])
         self.assertEqual(p.submitter, user)
         self.assertEqual(p.contract_year, self.session_data['contract_year'])
 

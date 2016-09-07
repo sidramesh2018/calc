@@ -97,9 +97,10 @@ def step_3(request):
         if request.method == 'GET':
             form = forms.Step3Form()
         elif request.method == 'POST':
+            sked = request.session['data_capture:price_list']['schedule']
             posted_data = dict(
-                    request.POST,
-                    schedule=request.session['data_capture:price_list']['schedule'])
+                request.POST,
+                schedule=sked)
             form = forms.Step3Form(posted_data, request.FILES)
 
             if form.is_valid():
@@ -136,12 +137,15 @@ def step_4(request, gleaned_data):
         if request.method == 'POST':
             form = forms.Step4Form(request.POST)
             if form.is_valid():
+                sesh_data = request.session['data_capture:price_list']
                 price_list = form.save(commit=False)
-                price_list.contract_start = datetime.strptime(request.session['data_capture:price_list']['contract_start'], "%Y-%m-%d")
-                price_list.contract_end = datetime.strptime(request.session['data_capture:price_list']['contract_end'], "%Y-%m-%d")
+                price_list.contract_start = \
+                    datetime.strptime(sesh_data['contract_start'], "%Y-%m-%d")
+                price_list.contract_end = \
+                    datetime.strptime(sesh_data['contract_end'], "%Y-%m-%d")
                 price_list.submitter = request.user
                 price_list.serialized_gleaned_data = json.dumps(
-                    request.session['data_capture:price_list']['gleaned_data'])
+                    sesh_data['gleaned_data'])
                 price_list.save()
                 gleaned_data.add_to_price_list(price_list)
                 return redirect('data_capture:step_5')
