@@ -26,6 +26,12 @@ class CustomUserAdmin(UserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if not request.user.is_superuser:
+            qs = qs.filter(is_superuser=False)
+        return qs
+
     def get_fieldsets(self, request, obj=None):
         if obj is not None and not request.user.is_superuser:
             return self.non_superuser_fieldsets
