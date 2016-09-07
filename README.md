@@ -12,7 +12,7 @@ CALC (formerly known as "Hourglass"), which stands for Contracts Awarded Labor C
 To install the requirements, use:
 
 ```sh
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 npm install
 ```
 

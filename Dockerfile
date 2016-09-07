@@ -28,8 +28,9 @@ ENV NODE_PATH /node/node_modules
 ENV DDM_IS_RUNNING_IN_DOCKER yup
 
 COPY requirements.txt /calc/
+COPY requirements-dev.txt /calc/
 
-RUN pip install -r /calc/requirements.txt
+RUN pip install -r /calc/requirements-dev.txt
 
 # The following lines set up our container for being run in a
 # cloud environment, where folder sharing is disabled. They're
