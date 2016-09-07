@@ -288,8 +288,16 @@ Currently, authorization is set up as follows:
   users and assign them to groups. They can also review submitted price lists
   and approve/unapprove them.
 * **Superusers** can do anything, but only infrastructure/operational
-  engineers should be given this capability. An initial superuser can be
-  created via `manage.py createsuperuser`.
+  engineers should be given this capability.
+
+An initial superuser can be created via e.g.:
+
+```
+python manage.py createsuperuser --noinput --username foo --email foo@localhost
+```
+
+This will create a user without a password, which is fine since CALC doesn't
+use password authentication.
 
 ## API
 
