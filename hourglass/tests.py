@@ -3,6 +3,7 @@ import json
 from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
+from django.contrib.auth.models import User
 
 from . import healthcheck
 from .settings_utils import (load_cups_from_vcap_services,
@@ -189,3 +190,44 @@ class GetWhitelistedIPsTest(unittest.TestCase):
         }
         ips = get_whitelisted_ips(env)
         self.assertListEqual(ips, ['1.2.3.4', '1.2.3.8', '1.2.3.16'])
+
+
+@override_settings(
+    # This will make tests run faster.
+    PASSWORD_HASHERS=['django.contrib.auth.hashers.MD5PasswordHasher'],
+    # Ignore our custom auth backend so we can log the user in via
+    # Django 1.8's login helpers.
+    AUTHENTICATION_BACKENDS=['django.contrib.auth.backends.ModelBackend'],
+)
+class AdminLoginTest(DjangoTestCase):
+    def test_non_logged_in_user_is_redirected_to_login(self):
+        res = self.client.get('/admin/')
+        self.assertEqual(res.status_code, 302)
+        self.assertTrue(
+            res['Location'].startswith('http://testserver/admin/login'))
+
+    def test_is_staff_user_can_view(self):
+        user = User.objects.create_user(
+            username='nonstaff',
+            password='foo',
+        )
+        user.is_staff = True
+        user.save()
+        logged_in = self.client.login(
+            username=user.username, password='foo')
+        self.assertTrue(logged_in)
+        res = self.client.get('/admin/')
+        self.assertEqual(res.status_code, 200)
+
+    def test_non_is_staff_user_is_not_permitted(self):
+        user = User.objects.create_user(
+            username='nonstaff',
+            password='foo',
+        )
+        user.is_staff = False
+        user.save()
+        logged_in = self.client.login(
+            username=user.username, password='foo')
+        self.assertTrue(logged_in)
+        res = self.client.get('/admin/', follow=True)
+        self.assertEqual(res.status_code, 403)
