@@ -3,6 +3,7 @@ import logging
 from io import StringIO
 from django import forms
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
 
 from contracts.models import EDUCATION_CHOICES as _EDUCATION_CHOICES
 from .base import BasePriceList
@@ -41,6 +42,7 @@ class FakeScheduleRow(forms.Form):
 
 class FakeSchedulePriceList(BasePriceList):
     title = 'Fake Schedule (for dev/debugging only)'
+    table_template = 'data_capture/price_list/tables/fake_schedule.html'
 
     def __init__(self, rows):
         super().__init__()
@@ -67,6 +69,14 @@ class FakeSchedulePriceList(BasePriceList):
 
     def serialize(self):
         return self.rows
+
+    def to_table(self):
+        return render_to_string(self.table_template,
+                                {'rows': self.valid_rows})
+
+    def to_error_table(self):
+        return render_to_string(self.table_template,
+                                {'rows': self.invalid_rows})
 
     @classmethod
     def deserialize(cls, rows):

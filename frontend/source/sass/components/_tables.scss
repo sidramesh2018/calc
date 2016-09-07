@@ -106,6 +106,28 @@ td.column-exclude a {
   }
 }
 
+th.number {
+  text-align: right;
+}
+
+td.number {
+  font-family: $font-family-mono;
+  text-align: right;
+}
+
+td > .currency-symbol {
+  color: $color-gray-medium;
+  width: 50%;
+  float: left;
+}
+
+.price-list-table {
+  th, td {
+    max-width: 1em;
+    vertical-align: bottom;
+  }
+}
+
 /* Not used because the corresponding JS conflicts with the tooltips. Only here for future reference. */
 th.collapsible {
   position: relative;
@@ -124,4 +146,3 @@ td.collapsed {
   width: 1.5em !important;
   border-left: 1px dotted $color-gray-lightest;
 }
-

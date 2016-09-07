@@ -188,3 +188,15 @@ class S70Tests(ModelTestCase):
 
         self.assertTrue(isinstance(restored, s70.Schedule70PriceList))
         self.assertEqual(s.rows, restored.rows)
+
+    def test_to_table_works(self):
+        s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+        table_html = s.to_table()
+        self.assertIsNotNone(table_html)
+        self.assertTrue(isinstance(table_html, str))
+
+    def test_to_error_table_works(self):
+        s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+        table_html = s.to_error_table()
+        self.assertIsNotNone(table_html)
+        self.assertTrue(isinstance(table_html, str))
