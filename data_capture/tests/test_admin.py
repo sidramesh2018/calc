@@ -1,5 +1,6 @@
 import io
 import unittest.mock as mock
+from django.conf import settings
 from django.core.management import call_command
 from django.contrib import messages
 from django.test import override_settings
@@ -32,6 +33,16 @@ class AdminTestCase(ModelTestCase):
     # Strangely, disabling DEBUG mode silences some errors in Django
     # admin views, so we'll enforce it so that any errors are raised.
     DEBUG=True,
+    # And enabling DEBUG will enable the Django Debug Toolbar, which
+    # unfortunately massively slows down our tests, so let's disable that.
+    INSTALLED_APPS=tuple([
+        name for name in settings.INSTALLED_APPS
+        if name != 'debug_toolbar'
+    ]),
+    MIDDLEWARE_CLASSES=tuple([
+        name for name in settings.MIDDLEWARE_CLASSES
+        if name != 'hourglass.middleware.DebugOnlyDebugToolbarMiddleware'
+    ]),
 )
 class ViewTests(AdminTestCase):
     def test_submittedpricelistrow_list_returns_200(self):
