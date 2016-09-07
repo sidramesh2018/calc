@@ -1,4 +1,6 @@
+import io
 import unittest.mock as mock
+from django.core.management import call_command
 from django.contrib import messages
 from django.test import override_settings
 
@@ -19,7 +21,11 @@ class AdminTestCase(ModelTestCase):
         self.row.save()
 
     def setup_user(self):
-        self.user = self.login(is_superuser=True)
+        call_command('initgroups', stdout=io.StringIO())
+        self.user = self.login(
+            is_staff=True,
+            groups=('Data Administrators',)
+        )
 
 
 @override_settings(
