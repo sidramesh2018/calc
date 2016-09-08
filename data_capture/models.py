@@ -11,6 +11,7 @@ class SubmittedPriceList(models.Model):
     # This is the equivalent of Contract.idv_piid.
     contract_number = models.CharField(
         max_length=128,
+        help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
     )
     vendor_name = models.CharField(max_length=128)
     schedule = models.CharField(

@@ -12,7 +12,6 @@ class Step1Form(forms.Form):
     )
     contract_number = forms.CharField(
         max_length=128,
-        help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
     )
     vendor_name = forms.CharField(max_length=128)
 
@@ -21,8 +20,8 @@ class Step2Form(forms.ModelForm):
     is_small_business = forms.ChoiceField(
         label='Business size',
         choices=[
-            (True, 'Small business'),
-            (False, 'Not a small business'),
+            (True, 'This is a small business.'),
+            (False, 'This is not a small business.'),
         ],
         widget=forms.widgets.RadioSelect,
     )
