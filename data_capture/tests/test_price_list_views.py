@@ -200,6 +200,30 @@ class Step3Tests(PriceListStepTestCase):
             })
             self.assertRedirects(res, Step4Tests.url)
 
+    def test_invalid_post_returns_html(self):
+        self.login()
+        res = self.client.post(self.url, {})
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, r'<!DOCTYPE html>')
+        self.assertContains(res, r'This field is required')
+        self.assertHasMessage(
+            res,
+            'error',
+            'Oops, please correct the error below and try again.'
+        )
+
+    def test_invalid_post_via_xhr_returns_json(self):
+        self.login()
+        res, json_data = self.ajax_post({})
+        assert '<!DOCTYPE html>' not in json_data['form_html']
+        self.assertRegexpMatches(json_data['form_html'],
+                                 r'This field is required')
+        self.assertHasMessage(
+           res,
+           'error',
+           'Oops, please correct the error below and try again.'
+        )
+
     def test_cancel_clears_session_and_redirects(self):
         res = self.client.post(self.url, {'cancel': ''})
         self.assertEqual(res.status_code, 302)

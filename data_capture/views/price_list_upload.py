@@ -120,7 +120,7 @@ def step_3(request):
                 'form': form
             },
             template_name='data_capture/price_list/step_3.html',
-            ajax_template_name='data_capture/upload_form.html',
+            ajax_template_name='data_capture/price_list/upload_form.html',
         )
 
 
