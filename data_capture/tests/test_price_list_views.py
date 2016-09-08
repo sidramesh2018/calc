@@ -263,6 +263,10 @@ class Step4Tests(PriceListStepTestCase):
         self.assertRedirectsToLogin(self.url)
 
     def test_gleaned_data_is_required(self):
+        # TODO: This login and session-setting code is repeated
+        # throughout all these tests--perhaps we should just move it into
+        # the test's setUp() code or consolidate in some other way?
+
         self.login()
         session = self.client.session
         session['data_capture:price_list'] = self.session_data
