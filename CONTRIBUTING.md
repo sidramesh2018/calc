@@ -36,6 +36,13 @@ CALC also provides a custom Django management command to run all linters and uni
 python manage.py ultratest
 ```
 
+You can run specific linters or tests via ultratest by specifying their name(s), for example:
+
+```sh
+python manage.py ultratest flake8
+python manage.py ultratest flake8 eslint
+```
+
 [PEP8]: https://www.python.org/dev/peps/pep-0008/
 [eslint]: http://eslint.org/
 [linter-eslint]: https://github.com/AtomLinter/linter-eslint
