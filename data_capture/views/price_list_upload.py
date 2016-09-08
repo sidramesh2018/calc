@@ -1,5 +1,4 @@
 import json
-# from ..models import SubmittedPriceList
 from datetime import datetime
 from functools import wraps
 from django.shortcuts import render, redirect
@@ -150,8 +149,6 @@ def step_4(request, gleaned_data):
                 price_list.save()
                 gleaned_data.add_to_price_list(price_list)
                 return redirect('data_capture:step_5')
-            else:
-                print(form.errors)
 
     return render(request, 'data_capture/price_list/step_4.html', {
         'step_number': 4,
