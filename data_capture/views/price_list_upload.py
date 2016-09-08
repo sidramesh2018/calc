@@ -54,6 +54,9 @@ def step_1(request):
 @handle_cancel
 @login_required
 def step_2(request):
+    def ymd(date_input):
+        return date_input.strftime("%Y-%m-%d")
+
     # Redirect back to step 1 if we don't have data
     if 'contract_number' not in request.session['data_capture:price_list']:
         return redirect('data_capture:step_1')
@@ -63,16 +66,14 @@ def step_2(request):
     elif request.method == 'POST':
         form = forms.Step2Form(request.POST)
         if form.is_valid():
-            request.session['data_capture:price_list']['is_small_business'] = \
-                form.cleaned_data['is_small_business']
-            request.session['data_capture:price_list']['contractor_site'] = \
-                form.cleaned_data['contractor_site']
-            request.session['data_capture:price_list']['contract_year'] = \
-                form.cleaned_data['contract_year']
-            request.session['data_capture:price_list']['contract_start'] = \
-                form.cleaned_data['contract_start'].strftime("%Y-%m-%d")
-            request.session['data_capture:price_list']['contract_end'] = \
-                form.cleaned_data['contract_end'].strftime("%Y-%m-%d")
+            session_data = request.session['data_capture:price_list']
+            session_data.update({
+                'is_small_business': form.cleaned_data['is_small_business'],
+                'contractor_site': form.cleaned_data['contractor_site'],
+                'contract_year': form.cleaned_data['contract_year'],
+                'contract_start': ymd(form.cleaned_data['contract_start']),
+                'contract_end': ymd(form.cleaned_data['contract_end'])
+            })
 
             # Changing the value of a subkey doesn't cause the session to save,
             # so do it manually
