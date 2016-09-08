@@ -12,6 +12,7 @@ class Step1Form(forms.Form):
     )
     contract_number = forms.CharField(
         max_length=128,
+        help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
     )
     vendor_name = forms.CharField(max_length=128)
 
