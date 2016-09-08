@@ -31,7 +31,8 @@ urlpatterns = [
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
 ]
 
-tests_url = url(r'^tests/$', TemplateView.as_view(template_name='tests.html'))
+tests_url = url(r'^tests/$', TemplateView.as_view(template_name='tests.html'),
+                name="tests")
 
 if settings.DEBUG:
     import debug_toolbar
