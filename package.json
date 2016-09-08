@@ -44,7 +44,7 @@
   },
   "homepage": "https://github.com/18F/CALC#readme",
   "engines": {
-    "node": ">=5.10.0 <7.0",
+    "node": ">=6.0 <7.0",
     "npm": ">=3.8.0"
   }
 }
