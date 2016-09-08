@@ -153,27 +153,6 @@
   </ol>
   {% endexample %}
 
-  {% guide_section "Form Button Row" %}
-
-  <p>Defined in {% pathname 'frontend/source/sass/components/_formbuttonrow.scss' %}.</p>
-
-  <p>The form-button-row widget is used to add common buttons to the bottom of forms in a multi-step process, such as the Data Capture Upload flow.</p>
-
-  {% example %}
-  <div class="form-button-row clearfix">
-    <a href="#" class="button button-previous">Previous</a>
-
-    <button type="submit" name="cancel" class="button-secondary">Cancel</button>
-
-    <div class="submit-group">
-      <span class="submit-label">
-        Provide details about the contract.
-      </span>
-      <button type="submit" class="button-primary">Next</button>
-    </div>
-  </div>
-  {% endexample %}
-
   {% guide_section "Alerts" %}
 
   <p>
@@ -463,6 +442,27 @@
       {% include "styleguide_date_example.html" %}
     </div>
   </div>
+
+  {% guide_section "Form Button Row" %}
+
+  <p>Defined in {% pathname 'frontend/source/sass/components/_formbuttonrow.scss' %}.</p>
+
+  <p>The form-button-row widget is used to add common buttons to the bottom of forms in a multi-step process, such as the Data Capture Upload flow.</p>
+
+  {% example %}
+  <div class="form-button-row clearfix">
+    <a href="#" class="button button-previous">Previous</a>
+
+    <button type="submit" name="cancel" class="button-secondary">Cancel</button>
+
+    <div class="submit-group">
+      <span class="submit-label">
+        Provide details about the contract.
+      </span>
+      <button type="submit" class="button-primary">Next</button>
+    </div>
+  </div>
+  {% endexample %}
 
   {% guide_section "Expandable Area" %}
 
