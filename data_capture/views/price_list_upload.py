@@ -50,7 +50,6 @@ def step_1(request):
         })
 
 
-@handle_cancel
 @login_required
 def step_2(request):
     def ymd(date_input):
@@ -88,7 +87,6 @@ def step_2(request):
     })
 
 
-@handle_cancel
 @login_required
 def step_3(request):
     if 'data_capture:price_list' not in request.session:
@@ -126,7 +124,6 @@ def step_3(request):
 
 @login_required
 @gleaned_data_required
-@handle_cancel
 def step_4(request, gleaned_data):
     if not gleaned_data.valid_rows:
         return redirect('data_capture:step_3')
