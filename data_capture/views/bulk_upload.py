@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.files.base import ContentFile
 from django.views.decorators.http import require_POST
+from django.conf import settings
 
 from .. import forms, jobs
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
@@ -91,4 +92,5 @@ def region_10_step_3(request):
 
     return render(request, 'data_capture/bulk_upload/region_10_step_3.html', {
         'step_number': 3,
+        'SEND_TRANSACTIONAL_EMAILS': settings.SEND_TRANSACTIONAL_EMAILS,
     })

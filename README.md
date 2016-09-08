@@ -230,8 +230,10 @@ string), the boolean is true; otherwise, it's false.
 
 * `EMAIL_URL` is the URL for the service to use when sending
   email, as per the [dj-email-url schema][]. When `DEBUG` is true,
-  this defaults to `console:`. The setting can easily be manually
-  tested via the `manage.py sendtestemail` command.
+  this defaults to `console:`. If it is set to `dummy:` then no emails will
+  be sent and messages about email notifications will not be shown to users.
+  The setting can easily be manually tested via the `manage.py sendtestemail`
+  command.
 
 * `SYSTEM_EMAIL_ADDRESS` is the email from-address to use in all system
   generated emails. When `DEBUG` is true, this defaults to `dev@localhost`.

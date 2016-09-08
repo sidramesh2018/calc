@@ -45,6 +45,8 @@ if DEBUG:
 if 'EMAIL_URL' not in os.environ:
     raise Exception('Please define the EMAIL_URL environment variable!')
 
+SEND_TRANSACTIONAL_EMAILS = os.environ['EMAIL_URL'] == 'dummy:'
+
 email_config = dj_email_url.config()
 # Sets a number of settings values, as described at
 # https://github.com/migonzalvar/dj-email-url

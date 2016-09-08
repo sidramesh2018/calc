@@ -151,6 +151,7 @@ class Region10UploadStep3Tests(R10StepTestCase):
         self.setup_upload_source(user)
         res = self.client.post(self.url)
         self.assertEqual(res.status_code, 200)
+        self.assertIn('SEND_TRANSACTIONAL_EMAILS', res.context)
 
         process_worker_jobs()
 
