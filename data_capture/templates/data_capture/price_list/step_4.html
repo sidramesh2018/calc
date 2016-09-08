@@ -19,42 +19,19 @@
 
   {% with rows=gleaned_data.invalid_rows %}
 
-  {% with total=rows|length %}
-  <h3>{{ total }} row{{ total|pluralize:" has,s have" }} errors</h3>
+    {% with total=rows|length %}
+      <h3>{{ total }} row{{ total|pluralize:" has,s have" }} errors</h3>
 
-  <p>
-    The row{{ total|pluralize }} below appear{{ total|pluralize:"s," }} to be
-    invalid and <strong>will be discarded</strong> when you upload your
-    price list.
-    If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
-    in your original spreadsheet and <a href="{% url 'data_capture:step_1' %}">try uploading it again</a>.
-  </p>
-  {% endwith %}
-  <table>
-    <thead>
-      <tr>
-      {% for field in rows.0 %}
-        <th>{{ field.label }}</th>
-      {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for row in rows %}
+      <p>
+        The row{{ total|pluralize }} below appear{{ total|pluralize:"s," }} to be
+        invalid and <strong>will be discarded</strong> when you upload your
+        price list.
+        If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
+        in your original spreadsheet and <a href="{% url 'data_capture:step_3' %}">try uploading it again</a>.
+      </p>
+    {% endwith %}
 
-        {# TODO: Should we print out non-field errors here? #}
-
-        <tr>
-        {% for field in row %}
-          <td{% if field.errors %} class="error"{% endif %}>
-            <span>{{ field.value }}</span>
-            {{ field.errors }}
-          </td>
-        {% endfor %}
-        </tr>
-
-      {% endfor %}
-    </tbody>
-  </table>
+    {{ gleaned_data.to_error_table|safe }}
   {% endwith %}
 </div>
 {% endif %}
@@ -63,31 +40,13 @@
 
 {% with rows=gleaned_data.valid_rows %}
 
-{% with total=rows|length %}
-<h3>{{ total }} row{{ total|pluralize }} ready to add to CALC</h3>
+  {% with total=rows|length %}
+    <h3>{{ total }} row{{ total|pluralize }} ready to add to CALC</h3>
 
-<p>Please double-check the data below to make sure all looks right.</p>
-{% endwith %}
+    <p>Please double-check the data below to make sure all looks right.</p>
+  {% endwith %}
 
-<table>
-  <thead>
-    <tr>
-    {% for field in rows.0 %}
-      <th>{{ field.label }}</th>
-    {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-  {% for row in rows %}
-    <tr>
-    {% for field in row %}
-      <td>{{ field.value }}</td>
-    {% endfor %}
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
-
+  {{ gleaned_data.to_table|safe }}
 {% endwith %}
 
 {% else %}
@@ -128,4 +87,3 @@
 </div>
 
 {% endblock %}
-
