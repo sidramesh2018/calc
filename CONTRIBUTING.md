@@ -43,6 +43,13 @@ python manage.py ultratest flake8
 python manage.py ultratest flake8 eslint
 ```
 
+If you are using our docker-compose based development environment, make sure
+to run ultratest within the docker context:
+
+```sh
+docker-compose run app python manage.py ultratest
+```
+
 [PEP8]: https://www.python.org/dev/peps/pep-0008/
 [eslint]: http://eslint.org/
 [linter-eslint]: https://github.com/AtomLinter/linter-eslint
