@@ -15,6 +15,9 @@
 {{ form.file }}
 
 <div class="form-button-row clearfix">
+<a href="{% url 'data_capture:step_2' %}" class="button button-previous">Previous</a>
+
+  <a href="{% url 'index' %}" class="button button-cancel">Cancel</a>
   <div class="submit-group">
     <span class="submit-label">
       Double-check your data and fix any errors.

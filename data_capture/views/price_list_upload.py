@@ -56,9 +56,8 @@ def step_1(request):
 def step_2(request):
     def ymd(date_input):
         return date_input.strftime("%Y-%m-%d")
-
     # Redirect back to step 1 if we don't have data
-    if 'contract_number' not in request.session['data_capture:price_list']:
+    if 'contract_number' not in request.session.get('data_capture:price_list', {}):
         return redirect('data_capture:step_1')
 
     if request.method == 'GET':
