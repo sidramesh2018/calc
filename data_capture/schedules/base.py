@@ -39,6 +39,22 @@ class BasePriceList:
 
         raise NotImplementedError()
 
+    def to_table(self):
+        '''
+        Returns a string of the HTML table representation of the valid rows
+        of the price list
+        '''
+
+        raise NotImplementedError()
+
+    def to_error_table(self):
+        '''
+        Returns a string of the HTML table representation of the invalid
+        rows of the price list
+        '''
+
+        return NotImplementedError()
+
     @classmethod
     def deserialize(cls, obj):
         '''

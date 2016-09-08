@@ -1,6 +1,6 @@
 <form enctype="multipart/form-data" method="post"
       is="ajax-form"
-      action="{% url 'data_capture:step_1' %}">
+      action="{% url 'data_capture:step_3' %}">
 
 {% csrf_token %}
 
@@ -10,17 +10,15 @@
 
 {{ form.non_field_errors }}
 
-{{ form.schedule.errors }}
-
-<label for="{{ form.schedule.id_for_label }}">Which schedule is associated with this price list?</label>
-
-{{ form.schedule }}
-
 {{ form.file.errors }}
 
 {{ form.file }}
 
 <div class="form-button-row clearfix">
+  <a href="{% url 'data_capture:step_2' %}" class="button button-previous">Previous</a>
+
+  {# TODO: Add a cancel button here and make sure it works w/ ajaxform. #}
+
   <div class="submit-group">
     <span class="submit-label">
       Double-check your data and fix any errors.
