@@ -13,25 +13,25 @@ def get_schedules():
     """
     return [{
         'SIN': 520,
-        'name': 'Formerly FABS'
+        'name': 'Legacy FABS'
     }, {
         'SIN': 541,
-        'name': 'Formerly AIMS'
+        'name': 'Legacy AIMS'
     }, {
         'SIN': 73802,
-        'name': 'Formerly Language'
+        'name': 'Legacy Language'
     }, {
         'SIN': 871,
-        'name': 'Formerly PES'
+        'name': 'Legacy PES'
     }, {
         'SIN': 874,
-        'name': 'Formerly MOBIS'
+        'name': 'Legacy MOBIS'
     }, {
         'SIN': 87405,
-        'name': 'Formerly Logistics'
+        'name': 'Legacy Logistics'
     }, {
         'SIN': 899,
-        'name': 'Formerly Environmental'
+        'name': 'Legacy Environmental'
     }, {
         'SIN': 132,
         'name': 'IT 70'
