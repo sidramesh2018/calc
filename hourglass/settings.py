@@ -297,6 +297,10 @@ if not UAA_CLIENT_SECRET:
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 DEBUG_TOOLBAR_CONFIG = {
+    'DISABLE_PANELS': set([
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+        'debug_toolbar.panels.profiling.ProfilingPanel',
+    ]),
     'SHOW_TOOLBAR_CALLBACK': 'hourglass.middleware.show_toolbar',
 }
 
