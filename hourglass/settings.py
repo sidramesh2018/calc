@@ -305,6 +305,7 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 DEBUG_TOOLBAR_PANELS = [
+    'data_capture.panels.DocsPanel',
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.profiling.ProfilingPanel',
     'debug_toolbar.panels.timer.TimerPanel',
