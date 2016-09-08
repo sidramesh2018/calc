@@ -7,6 +7,10 @@ from frontend.date import SplitDateField
 
 
 class Step1Form(forms.Form):
+    # TODO: Consider making this a ModelForm that we just don't save; that
+    # way, the fields are generated through introspecting the
+    # SubmittedPriceList model and we keep things nice and DRY.
+
     schedule = forms.ChoiceField(
         choices=registry.get_choices
     )
@@ -42,6 +46,9 @@ class Step2Form(forms.ModelForm):
 
 
 class Step3Form(forms.Form):
+    # TODO: We should figure out a way of getting rid of this field, since
+    # we're not actually asking the user for it anymore.
+
     schedule = forms.ChoiceField(
         choices=registry.get_choices
     )
@@ -80,6 +87,11 @@ class Step4Form(forms.ModelForm):
             'contract_end',
             'contract_year',
         ]
+
+        # TODO: It'd be nice if we could actually get rid of all these
+        # hidden inputs, since all this data is already stored in our request
+        # session.
+
         widgets = {
             'contract_number': forms.HiddenInput(),
             'vendor_name': forms.HiddenInput(),
