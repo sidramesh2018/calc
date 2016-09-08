@@ -33,6 +33,7 @@ Now run:
 
 ```sh
 ./manage.py syncdb
+./manage.py initgroups
 ```
 
 to set up the database. After that, you can load all of the data by running:
@@ -118,6 +119,7 @@ cp .env.sample .env
 ln -sf docker-compose.local.yml docker-compose.override.yml
 docker-compose build
 docker-compose run app python manage.py syncdb
+docker-compose run app python manage.py initgroups
 docker-compose run app python manage.py load_data
 docker-compose run app python manage.py load_s70
 ```
@@ -269,17 +271,33 @@ string), the boolean is true; otherwise, it's false.
   will likely only be used for cloud.gov deployments, where the built-in proxy
   sets those security headers on 200 responses but not on others.
 
-## Staff Login
-
-Staff can log in to CALC for administrative tasks, but accounts
-for each user must be manually created either via `manage.py createsuperuser`
-or the admin UI itself.
+## Authentication and Authorization
 
 We use cloud.gov/Cloud Foundry's User Account and Authentication (UAA)
 server to authenticate users. When a user logs in via UAA, their email
 address is looked up in Django's user database; if a matching email is
 found, the user is logged in. If not, however, the user is *not* logged in,
 and will be shown an error message.
+
+Running `manage.py initgroups` will initialize all Django groups for CALC.
+Currently, authorization is set up as follows:
+
+* **Non-staff users** can upload individual price lists for approval.
+* **Staff users** can bulk upload price list data.
+* **Staff users** in the **Data Administrators** group can create and edit
+  users and assign them to groups. They can also review submitted price lists
+  and approve/unapprove them.
+* **Superusers** can do anything, but only infrastructure/operational
+  engineers should be given this capability.
+
+An initial superuser can be created via e.g.:
+
+```
+python manage.py createsuperuser --noinput --username foo --email foo@localhost
+```
+
+This will create a user without a password, which is fine since CALC doesn't
+use password authentication.
 
 ## API
 
