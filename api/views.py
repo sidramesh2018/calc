@@ -51,6 +51,7 @@ def get_contracts_queryset(request_params, wage_field):
     min_education = request_params.get('min_education', None)
     education = request_params.get('education', None)
     schedule = request_params.get('schedule', None)
+    sin = request_params.get('sin', None)
     site = request_params.get('site', None)
     business_size = request_params.get('business_size', None)
     price = request_params.get('price', None)
@@ -114,6 +115,13 @@ def get_contracts_queryset(request_params, wage_field):
                 selected_degrees.append(pair[0])
         contracts = contracts.filter(education_level__in=selected_degrees)
 
+    if sin:
+        # TODO A special case to work around the frontend using SIN for both
+        # consolidated and SIN values:
+        if sin == 'Consolidated':
+            contracts = contracts.filter(schedule__iexact='Consolidated')
+        else:
+            contracts = contracts.filter(sin__icontains=sin)
     if schedule:
         contracts = contracts.filter(schedule__iexact=schedule)
     if site:

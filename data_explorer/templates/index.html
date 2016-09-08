@@ -264,16 +264,12 @@
             <div class="filter filter-schedule">
               <label for="schedule">Schedule:</label>
               <a href="/about#schedules" class="filter-more-info">What's this?</a>
-              <select id="schedule" name="schedule">
+              <select id="sin" name="sin">
                 <option value="">(all)</option>
                 <option value="Consolidated">Consolidated</option>
                 {% get_schedules as schedules %}
                 {% for schedule in schedules %}
-                  {% if schedule.name == 'IT 70' %}
-                    <option value="schedule.name">{{ schedule.SIN }} - {{ schedule.name }}</option>
-                  {% else %}
-                    <option value="schedule.name">{{ schedule.SIN }} - Formerly {{ schedule.name }}</option>
-                  {% endif %}
+                  <option value="{{schedule.SIN}}">{{ schedule.SIN }} - {{ schedule.name }}</option>
                 {% endfor %}
               </select>
             </div>

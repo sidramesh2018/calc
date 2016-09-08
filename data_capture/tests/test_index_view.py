@@ -6,8 +6,5 @@ class IndexViewTestCase(StepTestCase):
     def test_schedule_filters_contain_SIN(self):
         response = self.client.get('')
         for schedule in get_schedules():
-            matcher = '{SIN} - Formerly {name}'.format(**schedule)
-            if schedule['name'] == 'IT 70':
-                matcher = '{SIN} - {name}'.format(**schedule)
-
+            matcher = '{SIN} - {name}'.format(**schedule)
             self.assertContains(response, matcher)
