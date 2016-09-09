@@ -20,9 +20,12 @@ const HAS_BROWSER_SUPPORT = supports.dragAndDrop() && supports.formData() &&
  */
 
 class UploadInput extends window.HTMLInputElement {
-  attachedCallback() {
+  createdCallback() {
     this.isUpgraded = false;
     this._upgradedValue = null;
+  }
+
+  attachedCallback() {
     if (this.getAttribute('type') !== 'file') {
       throw new Error('<input is="upload-input"> must have type "file".');
     }
