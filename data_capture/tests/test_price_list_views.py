@@ -41,7 +41,8 @@ class Step1Tests(PriceListStepTestCase):
     def test_valid_post_sets_session_data(self):
         self.login()
         self.client.post(self.url, self.valid_form)
-        session_data = self.client.session['data_capture:price_list']
+        session_pl = self.client.session['data_capture:price_list']
+        session_data = session_pl['step_1_POST']
         self.assertEqual(session_data['schedule'], FAKE_SCHEDULE)
         self.assertEqual(session_data['contract_number'], 'GS-123-4567')
         self.assertEqual(session_data['vendor_name'], 'foo')
@@ -69,7 +70,7 @@ class Step2Tests(PriceListStepTestCase):
     valid_form = {
         'contractor_site': 'Customer',
         'is_small_business': 'False',
-        'contract_year': 1,
+        'contract_year': '1',
         'contract_start_0': '1985',
         'contract_start_1': '07',
         'contract_start_2': '08',
@@ -81,9 +82,7 @@ class Step2Tests(PriceListStepTestCase):
     def setUp(self):
         session = self.client.session
         session['data_capture:price_list'] = {
-            'schedule': FAKE_SCHEDULE,
-            'contract_number': 'GS-123-4567',
-            'vendor_name': 'foo',
+            'step_1_POST': Step1Tests.valid_form,
         }
         session.save()
 
@@ -98,7 +97,8 @@ class Step2Tests(PriceListStepTestCase):
     def test_valid_post_updates_session_data(self):
         self.login()
         self.client.post(self.url, self.valid_form)
-        posted_data = self.client.session['data_capture:price_list']
+        session_pl = self.client.session['data_capture:price_list']
+        posted_data = session_pl['step_2_POST']
         self.assertEqual(posted_data['contractor_site'],
                          self.valid_form['contractor_site'])
         self.assertEqual(posted_data['is_small_business'],
@@ -143,9 +143,8 @@ class Step3Tests(PriceListStepTestCase):
     def setUp(self):
         session = self.client.session
         session['data_capture:price_list'] = {
-            'schedule': FAKE_SCHEDULE,
-            'contract_number': 'GS-123-4567',
-            'vendor_name': 'foo'
+            'step_1_POST': Step1Tests.valid_form,
+            'step_2_POST': Step2Tests.valid_form,
         }
         session.save()
 
@@ -169,9 +168,10 @@ class Step3Tests(PriceListStepTestCase):
             self.client.post(self.url, {
                 'file': f
             })
-            session_data = self.client.session['data_capture:price_list']
-            self.assertEqual(session_data['schedule'], FAKE_SCHEDULE)
-            gleaned_data = session_data['gleaned_data']
+            session_pl = self.client.session['data_capture:price_list']
+            self.assertEqual(session_pl['step_1_POST']['schedule'],
+                             FAKE_SCHEDULE)
+            gleaned_data = session_pl['gleaned_data']
             gleaned_data = registry.deserialize(gleaned_data)
             assert isinstance(gleaned_data, FakeSchedulePriceList)
             self.assertEqual(gleaned_data.rows, [{
@@ -249,14 +249,8 @@ class Step4Tests(PriceListStepTestCase):
         'years_experience': 'vii'
     }]
     session_data = {
-        'schedule': FAKE_SCHEDULE,
-        'contract_number': 'GS-123-4567',
-        'vendor_name': 'foo',
-        'contractor_site': 'Customer',
-        'is_small_business': False,
-        'contract_start': '1985-07-08',
-        'contract_end': '1989-04-14',
-        'contract_year': 1
+        'step_1_POST': Step1Tests.valid_form,
+        'step_2_POST': Step2Tests.valid_form,
     }
 
     def test_login_is_required(self):
@@ -283,14 +277,15 @@ class Step4Tests(PriceListStepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
-    def test_gleaned_data_with_valid_rows_is_required(self):
+    def test_gleaned_data_with_valid_rows_is_required_on_POST(self):
         self.login()
         session = self.client.session
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data([])
-        res = self.client.get(self.url)
-        self.assertRedirects(res, Step3Tests.url)
+
+        res = self.client.post(self.url)
+        self.assertEqual(res.status_code, 400)
 
     def test_valid_post_creates_models(self):
         user = self.login()
@@ -298,19 +293,16 @@ class Step4Tests(PriceListStepTestCase):
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        self.client.post(self.url, session['data_capture:price_list'])
+        self.client.post(self.url)
         p = SubmittedPriceList.objects.filter(
             contract_number='GS-123-4567'
         )[0]
         self.assertEqual(p.schedule, FAKE_SCHEDULE)
-        self.assertEqual(p.vendor_name,
-                         self.session_data['vendor_name'])
-        self.assertEqual(p.contractor_site,
-                         self.session_data['contractor_site'])
-        self.assertEqual(p.is_small_business,
-                         self.session_data['is_small_business'])
+        self.assertEqual(p.vendor_name, 'foo')
+        self.assertEqual(p.contractor_site, 'Customer')
+        self.assertEqual(p.is_small_business, False)
         self.assertEqual(p.submitter, user)
-        self.assertEqual(p.contract_year, self.session_data['contract_year'])
+        self.assertEqual(p.contract_year, 1)
 
     def test_valid_post_redirects_to_step_5(self):
         self.login()
@@ -318,7 +310,7 @@ class Step4Tests(PriceListStepTestCase):
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        res = self.client.post(self.url, session['data_capture:price_list'])
+        res = self.client.post(self.url)
         self.assertRedirects(res, Step5Tests.url)
 
     def test_cancel_clears_session_and_redirects(self):
@@ -345,14 +337,8 @@ class Step5Tests(PriceListStepTestCase):
         'years_experience': '7'
     }]
     session_data = {
-        'schedule': FAKE_SCHEDULE,
-        'contract_number': 'GS-123-4567',
-        'vendor_name': 'foo',
-        'contractor_site': 'Customer',
-        'is_small_business': False,
-        'contract_start': '1985-07-08',
-        'contract_end': '1989-04-14',
-        'contract_year': 1
+        'step_1_POST': Step1Tests.valid_form,
+        'step_2_POST': Step2Tests.valid_form,
     }
 
     def test_get_is_ok(self):

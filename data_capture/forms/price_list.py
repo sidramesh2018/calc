@@ -6,19 +6,18 @@ from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
 
 
-class Step1Form(forms.Form):
-    # TODO: Consider making this a ModelForm that we just don't save; that
-    # way, the fields are generated through introspecting the
-    # SubmittedPriceList model and we keep things nice and DRY.
-
+class Step1Form(forms.ModelForm):
     schedule = forms.ChoiceField(
         choices=registry.get_choices
     )
-    contract_number = forms.CharField(
-        max_length=128,
-        help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
-    )
-    vendor_name = forms.CharField(max_length=128)
+
+    class Meta:
+        model = SubmittedPriceList
+        fields = [
+            'schedule',
+            'contract_number',
+            'vendor_name',
+        ]
 
 
 class Step2Form(forms.ModelForm):
@@ -72,33 +71,3 @@ class Step3Form(forms.Form):
             cleaned_data['gleaned_data'] = gleaned_data
 
         return cleaned_data
-
-
-class Step4Form(forms.ModelForm):
-    class Meta:
-        model = SubmittedPriceList
-        fields = [
-            'contract_number',
-            'vendor_name',
-            'schedule',
-            'is_small_business',
-            'contractor_site',
-            'contract_start',
-            'contract_end',
-            'contract_year',
-        ]
-
-        # TODO: It'd be nice if we could actually get rid of all these
-        # hidden inputs, since all this data is already stored in our request
-        # session.
-
-        widgets = {
-            'contract_number': forms.HiddenInput(),
-            'vendor_name': forms.HiddenInput(),
-            'schedule': forms.HiddenInput(),
-            'is_small_business': forms.HiddenInput(),
-            'contractor_site': forms.HiddenInput(),
-            'contract_year': forms.HiddenInput(),
-            'contract_start': forms.HiddenInput(),
-            'contract_end': forms.HiddenInput()
-        }
