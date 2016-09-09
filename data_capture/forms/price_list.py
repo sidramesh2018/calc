@@ -6,19 +6,18 @@ from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
 
 
-class Step1Form(forms.Form):
-    # TODO: Consider making this a ModelForm that we just don't save; that
-    # way, the fields are generated through introspecting the
-    # SubmittedPriceList model and we keep things nice and DRY.
-
+class Step1Form(forms.ModelForm):
     schedule = forms.ChoiceField(
         choices=registry.get_choices
     )
-    contract_number = forms.CharField(
-        max_length=128,
-        help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
-    )
-    vendor_name = forms.CharField(max_length=128)
+
+    class Meta:
+        model = SubmittedPriceList
+        fields = [
+            'schedule',
+            'contract_number',
+            'vendor_name',
+        ]
 
 
 class Step2Form(forms.ModelForm):
