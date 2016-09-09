@@ -27,7 +27,7 @@ script:
 - py.test --ignore=selenium_tests --cov
 env:
   global:
-  - TRAVIS_NODE_VERSION=5.10.0
+  - TRAVIS_NODE_VERSION=6.5.0
   - PHANTOMJS_TIMEOUT=15
   - DEBUG=yup
   - DATABASE_URL=postgres://postgres@localhost/hourglass
