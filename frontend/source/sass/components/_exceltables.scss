@@ -6,7 +6,11 @@
 }
 
 table.excel {
+  // Note that we are specifically styling this to look like a vanilla
+  // Excel table; hence our explicit use of Arial instead of one of our
+  // SASS font-family variables.
   font-family: Arial, Helvetica, serif;
+
   width: auto;
   margin: 0;
 
