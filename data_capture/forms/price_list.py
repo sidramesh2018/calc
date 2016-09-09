@@ -71,33 +71,3 @@ class Step3Form(forms.Form):
             cleaned_data['gleaned_data'] = gleaned_data
 
         return cleaned_data
-
-
-class Step4Form(forms.ModelForm):
-    class Meta:
-        model = SubmittedPriceList
-        fields = [
-            'contract_number',
-            'vendor_name',
-            'schedule',
-            'is_small_business',
-            'contractor_site',
-            'contract_start',
-            'contract_end',
-            'contract_year',
-        ]
-
-        # TODO: It'd be nice if we could actually get rid of all these
-        # hidden inputs, since all this data is already stored in our request
-        # session.
-
-        widgets = {
-            'contract_number': forms.HiddenInput(),
-            'vendor_name': forms.HiddenInput(),
-            'schedule': forms.HiddenInput(),
-            'is_small_business': forms.HiddenInput(),
-            'contractor_site': forms.HiddenInput(),
-            'contract_year': forms.HiddenInput(),
-            'contract_start': forms.HiddenInput(),
-            'contract_end': forms.HiddenInput()
-        }
