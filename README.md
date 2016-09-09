@@ -78,16 +78,10 @@ python manage.py ultratest
 ```
 
 ### Unit Tests
-To run unit tests:
+To run just unit tests:
 
 ```sh
 py.test
-```
-
-To run unit tests and generate a coverage report:
-
-```sh
-py.test --cov
 ```
 
 For more information on running only specific tests, see
