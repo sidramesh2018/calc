@@ -456,8 +456,7 @@ class ContractsTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         self.assertResultsEqual(resp.data['results'],
-                                [{'id': 28,
-                                  'idv_piid': 'ABC1231',
+                                [{'idv_piid': 'ABC1231',
                                   'vendor_name': 'CompanyName1',
                                   'labor_category': 'Business Analyst II',
                                   'education_level': None,
