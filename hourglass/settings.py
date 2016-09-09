@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
-                             get_whitelisted_ips)
+                             get_whitelisted_ips, is_running_tests)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -39,6 +39,10 @@ if DEBUG:
         'I am an insecure secret key intended ONLY for dev/testing.'
     )
     os.environ.setdefault('EMAIL_URL', 'console:')
+    if 'REDIS_URL' not in os.environ:
+        # Only set a default REDIS_TEST_URL if REDIS_URL is not
+        # explicitly defined either.
+        os.environ.setdefault('REDIS_TEST_URL', 'redis://localhost:6379/1')
     os.environ.setdefault('REDIS_URL', 'redis://localhost:6379/0')
     os.environ.setdefault('SYSTEM_EMAIL_ADDRESS', 'dev@localhost')
 
@@ -178,6 +182,9 @@ RQ_QUEUES = {
         'URL': os.environ['REDIS_URL'],
     }
 }
+
+if is_running_tests():
+    RQ_QUEUES['default']['URL'] = os.environ['REDIS_TEST_URL']
 
 PAGINATION = 200
 

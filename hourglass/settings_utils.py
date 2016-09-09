@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 
 
@@ -59,3 +60,19 @@ def load_redis_url_from_vcap_services(name, env=os.environ):
             )
             env['REDIS_URL'] = url
             return
+
+
+def is_running_tests(argv=sys.argv):
+    '''
+    Returns whether or not we're running tests.
+    '''
+
+    basename = os.path.basename(argv[0])
+    first_arg = argv[1] if len(argv) > 1 else None
+
+    if basename == 'manage.py' and first_arg == 'test':
+        return True
+    if basename == 'py.test':
+        return True
+
+    return False

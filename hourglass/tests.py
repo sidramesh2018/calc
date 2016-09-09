@@ -8,7 +8,8 @@ from django.contrib.auth.models import User
 from . import healthcheck
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
-                             get_whitelisted_ips)
+                             get_whitelisted_ips,
+                             is_running_tests)
 
 
 class ComplianceTests(DjangoTestCase):
@@ -231,3 +232,20 @@ class AdminLoginTest(DjangoTestCase):
         self.assertTrue(logged_in)
         res = self.client.get('/admin/', follow=True)
         self.assertEqual(res.status_code, 403)
+
+
+class IsRunningTestsTests(unittest.TestCase):
+    def test_returns_true_when_running_tests(self):
+        self.assertTrue(is_running_tests(), True)
+
+    def test_returns_false_when_running_gunicorn(self):
+        self.assertFalse(is_running_tests(['gunicorn']))
+
+    def test_returns_false_when_running_manage_runserver(self):
+        self.assertFalse(is_running_tests(['manage.py', 'runserver']))
+
+    def test_returns_true_when_running_manage_test(self):
+        self.assertTrue(is_running_tests(['manage.py', 'test']))
+
+    def test_returns_true_when_running_py_test(self):
+        self.assertTrue(is_running_tests(['/usr/local/bin/py.test']))

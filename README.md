@@ -241,6 +241,10 @@ string), the boolean is true; otherwise, it's false.
 * `REDIS_URL` is the URL for redis, which is used by the task queue.
   When `DEBUG` is true, it defaults to `redis://localhost:6379/0`.
 
+* `REDIS_TEST_URL` is the redis URL to use when running tests.
+  When `DEBUG` is true *and* `REDIS_URL` isn't defined, it defaults to
+  `redis://localhost:6379/1`.
+
 * `ENABLE_SEO_INDEXING` is a boolean value that indicates whether to
   indicate to search engines that they can index the site.
 
