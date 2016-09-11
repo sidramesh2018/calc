@@ -145,6 +145,8 @@ def step_4(request, gleaned_data):
         price_list.save()
         gleaned_data.add_to_price_list(price_list)
 
+        del request.session['data_capture:price_list']
+
         return redirect('data_capture:step_5')
 
     return render(request, 'data_capture/price_list/step_4.html', {
@@ -156,15 +158,7 @@ def step_4(request, gleaned_data):
 
 
 @login_required
-@gleaned_data_required
-def step_5(request, gleaned_data):
-    if gleaned_data.valid_rows:
-        del request.session['data_capture:price_list']
-    else:
-        # The user may have manually changed the URL or something to
-        # get here. Push them back to the last step.
-        return redirect('data_capture:step_4')
-
+def step_5(request):
     return render(request, 'data_capture/price_list/step_5.html', {
         'step_number': 5
     })

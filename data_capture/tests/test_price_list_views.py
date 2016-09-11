@@ -177,7 +177,7 @@ class Step3Tests(PriceListStepTestCase):
         self.login()
         self.delete_price_list_from_session()
         res = self.client.get(self.url)
-        self.assertRedirects(res, Step2Tests.url)
+        self.assertRedirects(res, Step2Tests.url, target_status_code=302)
 
     def test_valid_post_updates_session_data(self):
         self.login()
@@ -321,13 +321,14 @@ class Step4Tests(PriceListStepTestCase):
         self.assertEqual(p.submitter, user)
         self.assertEqual(p.contract_year, 1)
 
-    def test_valid_post_redirects_to_step_5(self):
+    def test_valid_post_clears_session_and_redirects_to_step_5(self):
         self.login()
         session = self.client.session
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
         res = self.client.post(self.url)
+        assert 'data_capture:price_list' not in self.client.session
         self.assertRedirects(res, Step5Tests.url)
 
     def test_cancel_clears_session_and_redirects(self):
@@ -346,43 +347,11 @@ class Step4Tests(PriceListStepTestCase):
 
 class Step5Tests(PriceListStepTestCase):
     url = '/data-capture/step/5'
-    rows = [{
-        'education': 'Bachelors',
-        'price': '15.00',
-        'service': 'Project Manager',
-        'sin': '132-40',
-        'years_experience': '7'
-    }]
-    session_data = {
-        'step_1_POST': Step1Tests.valid_form,
-        'step_2_POST': Step2Tests.valid_form,
-    }
 
     def test_get_is_ok(self):
         self.login()
-        session = self.client.session
-        session['data_capture:price_list'] = {}
-        session.save()
-        self.set_fake_gleaned_data(self.rows)
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
     def test_login_is_required(self):
         self.assertRedirectsToLogin(self.url)
-
-    def test_gleaned_data_is_required(self):
-        self.login()
-        session = self.client.session
-        session['data_capture:price_list'] = self.session_data
-        session.save()
-        res = self.client.get(self.url)
-        self.assertRedirects(res, Step3Tests.url)
-
-    def test_session_is_deleted(self):
-        self.login()
-        session = self.client.session
-        session['data_capture:price_list'] = self.session_data
-        session.save()
-        self.set_fake_gleaned_data(self.rows)
-        self.client.post(self.url, session)
-        assert 'data_capture:price_list' not in self.client.session
