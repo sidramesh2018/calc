@@ -84,6 +84,22 @@
     </div>
   </div>
 
+  <h3>Accessibility</h3>
+
+  <p>
+    Any response from the ajax form that dynamically updates content on
+    the page instead of redirecting the user to a new page should
+    contain an {% webcomponent '<alerts-widget>' %} which wraps
+    a message to inform users about what just happened. This will
+    automatically be focused when the content is injected into the
+    page, allowing screen readers to announce it.
+  </p>
+
+  <p>
+    To experience this in action, try submitting invalid data into the
+    example form above.
+  </p>
+
   <h3>Graceful Degradation</h3>
 
   <p>
