@@ -1,5 +1,7 @@
 /* global window, document */
 
+import { dispatchBubbly } from './custom-event';
+
 /**
  * AlertsWidget represents an <alerts-widget> web component.
  *
@@ -13,6 +15,7 @@ class AlertsWidget extends window.HTMLInputElement {
   attachedCallback() {
     this.setAttribute('tabindex', '-1');
     this.focus();
+    dispatchBubbly(this, 'alertswidgetready');
   }
 }
 
