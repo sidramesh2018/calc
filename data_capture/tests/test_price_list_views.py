@@ -17,6 +17,11 @@ class PriceListStepTestCase(StepTestCase):
             registry.serialize(pricelist)
         session.save()
 
+    def delete_price_list_from_session(self):
+        session = self.client.session
+        del session['data_capture:price_list']
+        session.save()
+
     def setUp(self):
         registry._init()
 
@@ -94,6 +99,12 @@ class Step2Tests(PriceListStepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
+    def test_redirects_to_step_1_if_not_completed(self):
+        self.login()
+        self.delete_price_list_from_session()
+        res = self.client.get(self.url)
+        self.assertRedirects(res, Step1Tests.url)
+
     def test_valid_post_updates_session_data(self):
         self.login()
         self.client.post(self.url, self.valid_form)
@@ -161,6 +172,12 @@ class Step3Tests(PriceListStepTestCase):
         self.login()
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
+
+    def test_redirects_to_step_2_if_not_completed(self):
+        self.login()
+        self.delete_price_list_from_session()
+        res = self.client.get(self.url)
+        self.assertRedirects(res, Step2Tests.url)
 
     def test_valid_post_updates_session_data(self):
         self.login()
