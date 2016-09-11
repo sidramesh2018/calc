@@ -29,6 +29,28 @@ exports.setDelegate = newDelegate => {
 
 exports.MISC_ERROR = MISC_ERROR;
 
+/**
+ * AjaxForm represents a <form is="ajax-form"> web component, which submits
+ * a form via XMLHttpRequest (aka ajax) when the requisite browser
+ * capabilities exist. If a browser doesn't support the prerequisites for
+ * form submission via ajax, or if JS is disabled entirely, the form falls
+ * back to a standard form.
+ *
+ * Note that when the form data is submitted via ajax, it is submitted
+ * to the same URL, but with the `X-Requested-With: XMLHttpRequest`
+ * header. This header should be detected on the server-side; if it's
+ * set, the server is expected to respond with a JSON object containing
+ * one of the following keys and values:
+ *
+ *   * `form_html`, containing a string value representing the HTML of a
+ *     new <form is="ajax-form"> to replace the current form with. This is
+ *     generally presented when there were server-side validation issues
+ *     with the form.
+ *
+ *   * `redirect_url`, containing a string value representing the URL to
+ *     redirect the user's browser to.
+ */
+
 class AjaxForm extends window.HTMLFormElement {
   attachedCallback() {
     this.isDegraded = !supports.formData() ||
@@ -107,6 +129,8 @@ class AjaxForm extends window.HTMLFormElement {
     });
   }
 }
+
+AjaxForm.prototype.SOURCE_FILENAME = __filename;
 
 document.registerElement('ajax-form', {
   extends: 'form',

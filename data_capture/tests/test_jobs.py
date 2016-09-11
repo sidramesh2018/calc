@@ -26,21 +26,15 @@ class ProcessBulkUploadTests(TestCase):
     def test_sends_email_on_failure(self, mock):
         mock.side_effect = Exception('KABLOOEY')
         src = create_bulk_upload_contract_source(user='foo@example.org')
-        ctx = jobs.process_bulk_upload_and_send_email(src.id)
+        jobs.process_bulk_upload_and_send_email(src.id)
         self.assertEqual(len(mail.outbox), 1)
 
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), ['foo@example.org'])
-        self.assertEqual(ctx['successful'], False)
         self.assertRegexpMatches(message.body, 'KABLOOEY')
 
     def test_sends_email_on_success(self):
         src = create_bulk_upload_contract_source(user='foo@example.org')
-        ctx = jobs.process_bulk_upload_and_send_email(src.id)
+        jobs.process_bulk_upload_and_send_email(src.id)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].recipients(), ['foo@example.org'])
-        self.assertEqual(ctx['successful'], True)
-        self.assertIn('num_contracts', ctx)
-        self.assertIn('num_bad_rows', ctx)
-        self.assertEqual(ctx['num_contracts'], 3)
-        self.assertEqual(ctx['num_bad_rows'], 1)

@@ -2,14 +2,17 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
-from django.contrib.auth.decorators import login_required
+
+from data_capture.decorators import staff_login_required
 
 from .healthcheck import healthcheck
 from .robots import robots_txt
 
-
-# http://stackoverflow.com/a/13186337
-admin.site.login = login_required(admin.site.login)
+# Wrap the admin site login with our staff_login_required decorator,
+# which will raise a PermissionDenied exception if a logged-in, but non-staff
+# user attempts to access the login page.
+# ref: http://stackoverflow.com/a/38520951
+admin.site.login = staff_login_required(admin.site.login)
 
 urlpatterns = [
     # Examples:
@@ -28,7 +31,8 @@ urlpatterns = [
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
 ]
 
-tests_url = url(r'^tests/$', TemplateView.as_view(template_name='tests.html'))
+tests_url = url(r'^tests/$', TemplateView.as_view(template_name='tests.html'),
+                name="tests")
 
 if settings.DEBUG:
     import debug_toolbar

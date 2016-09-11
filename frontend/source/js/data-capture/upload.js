@@ -9,6 +9,16 @@ import { dispatchBubbly } from './custom-event';
 const HAS_BROWSER_SUPPORT = supports.dragAndDrop() && supports.formData() &&
                             supports.dataTransfer();
 
+/**
+ * UploadInput represents a <input is="upload-input" type="file"> web
+ * component.
+ *
+ * Unlike a standard file input, it allows for the file to be set by
+ * client code via the `upgradedValue` property. However, in order for the
+ * input to be writable, client code must call its `upgrade()` method and
+ * manually submit the `upgradedValue` to a server via ajax.
+ */
+
 class UploadInput extends window.HTMLInputElement {
   attachedCallback() {
     this.isUpgraded = false;
@@ -89,10 +99,24 @@ class UploadInput extends window.HTMLInputElement {
   }
 }
 
+UploadInput.prototype.SOURCE_FILENAME = __filename;
+
 document.registerElement('upload-input', {
   extends: 'input',
   prototype: UploadInput.prototype,
 });
+
+/**
+ * UploadWidget represents a <upload-widget> web component, which provides
+ * a large area for users to drag-and-drop files into. It also serves as a
+ * sort of view into the state of a nested <input is="upload-input">, telling
+ * the user the name of the current file to be uploaded, and reporting
+ * errors (such as invalid file type) if necessary.
+ *
+ * An <upload-widget> must be nested within a <form is="ajax-form"> in order
+ * to work properly, since supporting HTML5 drag-and-drop necessitates
+ * submitting the dropped file via ajax.
+ */
 
 class UploadWidget extends window.HTMLElement {
   _stopAndPrevent(event) {
@@ -213,6 +237,8 @@ class UploadWidget extends window.HTMLElement {
     return finishInitialization();
   }
 }
+
+UploadWidget.prototype.SOURCE_FILENAME = __filename;
 
 UploadWidget.HAS_BROWSER_SUPPORT = HAS_BROWSER_SUPPORT;
 

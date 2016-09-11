@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
-                             get_whitelisted_ips)
+                             get_whitelisted_ips, is_running_tests)
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -39,15 +39,24 @@ if DEBUG:
         'I am an insecure secret key intended ONLY for dev/testing.'
     )
     os.environ.setdefault('EMAIL_URL', 'console:')
+    if 'REDIS_URL' not in os.environ:
+        # Only set a default REDIS_TEST_URL if REDIS_URL is not
+        # explicitly defined either.
+        os.environ.setdefault('REDIS_TEST_URL', 'redis://localhost:6379/1')
     os.environ.setdefault('REDIS_URL', 'redis://localhost:6379/0')
+    os.environ.setdefault('SYSTEM_EMAIL_ADDRESS', 'dev@localhost')
 
 if 'EMAIL_URL' not in os.environ:
     raise Exception('Please define the EMAIL_URL environment variable!')
+
+SEND_TRANSACTIONAL_EMAILS = os.environ['EMAIL_URL'] == 'dummy:'
 
 email_config = dj_email_url.config()
 # Sets a number of settings values, as described at
 # https://github.com/migonzalvar/dj-email-url
 vars().update(email_config)
+
+SYSTEM_EMAIL_ADDRESS = os.environ['SYSTEM_EMAIL_ADDRESS']
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 
@@ -77,6 +86,15 @@ TEMPLATES = [{
 ALLOWED_HOSTS = ['*']
 
 
+DATA_CAPTURE_APP_CONFIG = 'DefaultDataCaptureApp'
+
+# When IS_RQ_SCHEDULER is in the env,
+# instead use the special DataCaptureSchedulerApp since this process
+# is being used as the scheduler instance.
+if 'IS_RQ_SCHEDULER' in os.environ:
+    DATA_CAPTURE_APP_CONFIG = 'DataCaptureSchedulerApp'
+
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -93,7 +111,7 @@ INSTALLED_APPS = (
 
     'data_explorer',
     'contracts',
-    'data_capture',
+    'data_capture.apps.{}'.format(DATA_CAPTURE_APP_CONFIG),
     'api',
     'djorm_pgfulltext',
     'rest_framework',
@@ -165,6 +183,9 @@ RQ_QUEUES = {
     }
 }
 
+if is_running_tests():
+    RQ_QUEUES['default']['URL'] = os.environ['REDIS_TEST_URL']
+
 PAGINATION = 200
 
 REST_FRAMEWORK = {
@@ -221,7 +242,11 @@ LOGGING = {
         'rq.worker': {
             'handlers': ['console'],
             'level': 'INFO',
-        }
+        },
+        'rq_scheduler': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
     },
 }
 
@@ -281,10 +306,15 @@ if not UAA_CLIENT_SECRET:
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 DEBUG_TOOLBAR_CONFIG = {
+    'DISABLE_PANELS': set([
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+        'debug_toolbar.panels.profiling.ProfilingPanel',
+    ]),
     'SHOW_TOOLBAR_CALLBACK': 'hourglass.middleware.show_toolbar',
 }
 
 DEBUG_TOOLBAR_PANELS = [
+    'data_capture.panels.DocsPanel',
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.profiling.ProfilingPanel',
     'debug_toolbar.panels.timer.TimerPanel',
@@ -298,4 +328,5 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
     'debug_toolbar.panels.redirects.RedirectsPanel',
+    'data_capture.panels.ScheduledJobsPanel',
 ]

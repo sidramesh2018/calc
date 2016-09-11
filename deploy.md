@@ -12,6 +12,15 @@ To start, target the org and space you want to work with. For example, if you wa
 Manifest files, which contain import deploy configuration settings, are located
 in the [manifests](manifests/) directory of this project.
 
+Note that this project has two requirements files:
+* `requirements.txt` for production dependencies
+* `requirements-dev.txt` for development and testing dependencies
+
+During local development and continuous integration testing, `pip install -r requirements-dev.txt` is used,
+which installs both development and production dependencies.
+During deployments, the Cloud Foundry python buildpack uses only `requirements.txt` by default,
+so only production dependencies will be installed.
+
 ## CF Structure
 - Organization: `oasis`
 - Spaces: `calc-dev`, `calc-prod`

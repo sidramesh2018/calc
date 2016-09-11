@@ -1,12 +1,11 @@
 import logging
 import traceback
-from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import transaction
-from django.template.loader import render_to_string
 from django_rq import job
 
+from . import email
 from .r10_spreadsheet_converter import Region10SpreadsheetConverter
 from contracts.loaders.region_10 import Region10Loader
 from contracts.models import Contract, BulkUploadContractSource
@@ -65,32 +64,18 @@ def process_bulk_upload_and_send_email(upload_source_id):
     upload_source = BulkUploadContractSource.objects.get(
         pk=upload_source_id
     )
-    ctx = {'upload_source': upload_source}
-    successful = False
+
     try:
         num_contracts, num_bad_rows = _process_bulk_upload(upload_source)
-        ctx['num_contracts'] = num_contracts
-        ctx['num_bad_rows'] = num_bad_rows
-        successful = True
+        email.bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows)
     except:
         contracts_logger.exception(
             'An exception occurred during bulk upload processing '
             '(pk=%d).' % upload_source_id
         )
-        ctx['traceback'] = traceback.format_exc()
-    ctx['successful'] = successful
-    send_mail(
-        subject='CALC Region 10 bulk data results - upload #%d' % (
-            upload_source.id,
-        ),
-        message=render_to_string(
-            'data_capture/bulk_upload/region_10_email.txt',
-            ctx
-        ),
-        from_email=None,
-        recipient_list=[upload_source.submitter.email]
-    )
+        tb = traceback.format_exc()
+        email.bulk_upload_failed(upload_source, tb)
+
     contracts_logger.info(
         "Ending bulk upload processing (pk=%d)." % upload_source_id
     )
-    return ctx

@@ -4,7 +4,7 @@ from django.db import connections, DEFAULT_DB_ALIAS
 import django_rq
 
 
-def is_database_synchronized(database='default'):
+def is_database_synchronized(database=DEFAULT_DB_ALIAS):
     connection = connections[database]
     connection.prepare_database()
     executor = MigrationExecutor(connection)

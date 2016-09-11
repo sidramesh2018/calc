@@ -27,10 +27,10 @@ class Region10UploadStep1Tests(R10StepTestCase):
     def test_login_is_required(self):
         self.assertRedirectsToLogin(self.url)
 
-    def test_non_staff_login_errors(self):
+    def test_non_staff_login_is_denied(self):
         self.login()
         res = self.client.get(self.url)
-        self.assertNotEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 403)
 
     def test_get_is_ok(self):
         self.login(is_staff=True)
@@ -112,14 +112,10 @@ class Region10UploadStep2Tests(R10StepTestCase):
         res = self.client.get(self.url)
         self.assertRedirects(res, Region10UploadStep1Tests.url)
 
-    def test_non_staff_login_errors(self):
+    def test_non_staff_login_is_denied(self):
         self.login()
         res = self.client.get(self.url)
-        self.assertEqual(res.status_code, 302)
-        self.assertEqual(
-            res['Location'],
-            'http://testserver/auth/login?next={}'.format(self.url)
-        )
+        self.assertEqual(res.status_code, 403)
 
     def test_get_is_ok(self):
         user = self.login(is_staff=True)
@@ -134,6 +130,11 @@ class Region10UploadStep3Tests(R10StepTestCase):
 
     def test_login_is_required(self):
         self.assertRedirectsToLogin(self.url)
+
+    def test_non_staff_login_is_denied(self):
+        self.login()
+        res = self.client.get(self.url)
+        self.assertEqual(res.status_code, 403)
 
     def test_not_available_via_get(self):
         self.login(is_staff=True)
@@ -150,6 +151,7 @@ class Region10UploadStep3Tests(R10StepTestCase):
         self.setup_upload_source(user)
         res = self.client.post(self.url)
         self.assertEqual(res.status_code, 200)
+        self.assertIn('SEND_TRANSACTIONAL_EMAILS', res.context)
 
         process_worker_jobs()
 
@@ -182,3 +184,12 @@ class Region10UploadStep3Tests(R10StepTestCase):
 
         contracts = Contract.objects.all()
         self.assertEqual(len(contracts), 3)
+
+    def test_cancel_clears_session_and_redirects(self):
+        user = self.login(is_staff=True)
+        self.setup_upload_source(user)
+        res = self.client.post(self.url, {'cancel': ''})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res['Location'], 'http://testserver/')
+        session = self.client.session
+        self.assertNotIn('data_capture:upload_source_id', session)

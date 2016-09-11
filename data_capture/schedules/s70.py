@@ -1,8 +1,9 @@
 import functools
 import logging
+import xlrd
 from django import forms
 from django.core.exceptions import ValidationError
-import xlrd
+from django.template.loader import render_to_string
 
 from .base import BasePriceList
 from contracts.models import EDUCATION_CHOICES
@@ -129,6 +130,7 @@ class Schedule70Row(forms.Form):
 
 class Schedule70PriceList(BasePriceList):
     title = 'IT Schedule 70'
+    table_template = 'data_capture/price_list/tables/schedule_70.html'
 
     def __init__(self, rows):
         super().__init__()
@@ -155,6 +157,14 @@ class Schedule70PriceList(BasePriceList):
 
     def serialize(self):
         return self.rows
+
+    def to_table(self):
+        return render_to_string(self.table_template,
+                                {'rows': self.valid_rows})
+
+    def to_error_table(self):
+        return render_to_string(self.table_template,
+                                {'rows': self.invalid_rows})
 
     @classmethod
     def deserialize(cls, rows):

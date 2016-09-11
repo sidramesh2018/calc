@@ -3,11 +3,13 @@ import json
 from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
+from django.contrib.auth.models import User
 
 from . import healthcheck
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
-                             get_whitelisted_ips)
+                             get_whitelisted_ips,
+                             is_running_tests)
 
 
 class ComplianceTests(DjangoTestCase):
@@ -189,3 +191,61 @@ class GetWhitelistedIPsTest(unittest.TestCase):
         }
         ips = get_whitelisted_ips(env)
         self.assertListEqual(ips, ['1.2.3.4', '1.2.3.8', '1.2.3.16'])
+
+
+@override_settings(
+    # This will make tests run faster.
+    PASSWORD_HASHERS=['django.contrib.auth.hashers.MD5PasswordHasher'],
+    # Ignore our custom auth backend so we can log the user in via
+    # Django 1.8's login helpers.
+    AUTHENTICATION_BACKENDS=['django.contrib.auth.backends.ModelBackend'],
+)
+class AdminLoginTest(DjangoTestCase):
+    def test_non_logged_in_user_is_redirected_to_login(self):
+        res = self.client.get('/admin/')
+        self.assertEqual(res.status_code, 302)
+        self.assertTrue(
+            res['Location'].startswith('http://testserver/admin/login'))
+
+    def test_is_staff_user_can_view(self):
+        user = User.objects.create_user(
+            username='nonstaff',
+            password='foo',
+        )
+        user.is_staff = True
+        user.save()
+        logged_in = self.client.login(
+            username=user.username, password='foo')
+        self.assertTrue(logged_in)
+        res = self.client.get('/admin/')
+        self.assertEqual(res.status_code, 200)
+
+    def test_non_is_staff_user_is_not_permitted(self):
+        user = User.objects.create_user(
+            username='nonstaff',
+            password='foo',
+        )
+        user.is_staff = False
+        user.save()
+        logged_in = self.client.login(
+            username=user.username, password='foo')
+        self.assertTrue(logged_in)
+        res = self.client.get('/admin/', follow=True)
+        self.assertEqual(res.status_code, 403)
+
+
+class IsRunningTestsTests(unittest.TestCase):
+    def test_returns_true_when_running_tests(self):
+        self.assertTrue(is_running_tests(), True)
+
+    def test_returns_false_when_running_gunicorn(self):
+        self.assertFalse(is_running_tests(['gunicorn']))
+
+    def test_returns_false_when_running_manage_runserver(self):
+        self.assertFalse(is_running_tests(['manage.py', 'runserver']))
+
+    def test_returns_true_when_running_manage_test(self):
+        self.assertTrue(is_running_tests(['manage.py', 'test']))
+
+    def test_returns_true_when_running_py_test(self):
+        self.assertTrue(is_running_tests(['/usr/local/bin/py.test']))

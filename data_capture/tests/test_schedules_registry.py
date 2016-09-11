@@ -41,6 +41,18 @@ class FakeScheduleOnlyTests(RegistryTestCase):
         deserialized = registry.deserialize(serialized)
         self.assertEqual(p.rows, deserialized.rows)
 
+    def test_to_table_works(self):
+        p = registry.load_from_upload(FAKE_SCHEDULE, uploaded_csv_file())
+        table_html = p.to_table()
+        self.assertIsNotNone(table_html)
+        self.assertTrue(isinstance(table_html, str))
+
+    def test_to_error_table_works(self):
+        p = registry.load_from_upload(FAKE_SCHEDULE, uploaded_csv_file())
+        table_html = p.to_error_table()
+        self.assertIsNotNone(table_html)
+        self.assertTrue(isinstance(table_html, str))
+
 
 class FooSchedulePriceList(BasePriceList):
     title = 'Foo Schedule'

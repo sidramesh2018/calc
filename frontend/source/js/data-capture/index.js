@@ -9,3 +9,4 @@ require('./tablesort');
 require('./upload');
 require('./ajaxform');
 require('./alerts');
+require('./expandable-area');

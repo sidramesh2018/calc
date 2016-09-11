@@ -6,7 +6,48 @@ from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
 
 
-class Step1Form(forms.Form):
+class Step1Form(forms.ModelForm):
+    schedule = forms.ChoiceField(
+        choices=registry.get_choices
+    )
+
+    class Meta:
+        model = SubmittedPriceList
+        fields = [
+            'schedule',
+            'contract_number',
+            'vendor_name',
+        ]
+
+
+class Step2Form(forms.ModelForm):
+    is_small_business = forms.ChoiceField(
+        label='Business size',
+        choices=[
+            (True, 'This is a small business.'),
+            (False, 'This is not a small business.'),
+        ],
+        widget=forms.widgets.RadioSelect,
+    )
+
+    contract_start = SplitDateField(required=False)
+    contract_end = SplitDateField(required=False)
+
+    class Meta:
+        model = SubmittedPriceList
+        fields = [
+            'is_small_business',
+            'contractor_site',
+            'contract_start',
+            'contract_end',
+            'contract_year',
+        ]
+
+
+class Step3Form(forms.Form):
+    # TODO: We should figure out a way of getting rid of this field, since
+    # we're not actually asking the user for it anymore.
+
     schedule = forms.ChoiceField(
         choices=registry.get_choices
     )
@@ -30,29 +71,3 @@ class Step1Form(forms.Form):
             cleaned_data['gleaned_data'] = gleaned_data
 
         return cleaned_data
-
-
-class Step3Form(forms.ModelForm):
-    is_small_business = forms.ChoiceField(
-        label='Business size',
-        choices=[
-            (True, 'Small business'),
-            (False, 'Not a small business'),
-        ],
-        widget=forms.widgets.RadioSelect,
-    )
-
-    contract_start = SplitDateField(required=False)
-    contract_end = SplitDateField(required=False)
-
-    class Meta:
-        model = SubmittedPriceList
-        fields = [
-            'contract_number',
-            'vendor_name',
-            'is_small_business',
-            'contractor_site',
-            'contract_year',
-            'contract_start',
-            'contract_end',
-        ]

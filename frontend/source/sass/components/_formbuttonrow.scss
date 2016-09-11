@@ -4,8 +4,11 @@
   position: relative;
   margin-top: 2em;
 
+  button,
+  button[type="submit"],
   .button {
-    margin-right: 2em;
+    display: inline-block;
+    margin: 0 2em 0 0;
   }
 
   .submit-group {

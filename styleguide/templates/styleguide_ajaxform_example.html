@@ -1,5 +1,10 @@
 <form enctype="multipart/form-data" method="post"
+
+      {# The line below is VERY important, as it tells the browser #}
+      {# to progressively enhance the form into an ajax form. #}
+
       is="ajax-form"
+
       action="{% url 'styleguide:ajaxform' %}">
   {% csrf_token %}
 
