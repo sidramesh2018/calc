@@ -30,10 +30,6 @@ def step_1(request):
     elif request.method == 'POST':
         form = forms.Step1Form(request.POST)
         if form.is_valid():
-            # Clear out request.session if it previously existed
-            if 'data_capture:price_list' in request.session:
-                del request.session['data_capture:price_list']
-
             request.session['data_capture:price_list'] = {
                 'step_1_POST': request.POST,
             }
