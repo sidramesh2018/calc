@@ -1,5 +1,6 @@
 import json
 from functools import wraps
+from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
@@ -24,10 +25,11 @@ def gleaned_data_required(f):
 
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def step_1(request):
     if request.method == 'GET':
         form = forms.Step1Form()
-    elif request.method == 'POST':
+    else:
         form = forms.Step1Form(request.POST)
         if form.is_valid():
             request.session['data_capture:price_list'] = {
@@ -46,6 +48,7 @@ def step_1(request):
 
 @handle_cancel
 @login_required
+@require_http_methods(["GET", "POST"])
 def step_2(request):
     # Redirect back to step 1 if we don't have data
     if 'step_1_POST' not in request.session.get('data_capture:price_list',
@@ -54,7 +57,7 @@ def step_2(request):
 
     if request.method == 'GET':
         form = forms.Step2Form()
-    elif request.method == 'POST':
+    else:
         form = forms.Step2Form(request.POST)
         if form.is_valid():
             session_data = request.session['data_capture:price_list']
@@ -76,6 +79,7 @@ def step_2(request):
 
 @handle_cancel
 @login_required
+@require_http_methods(["GET", "POST"])
 def step_3(request):
     if 'step_2_POST' not in request.session.get('data_capture:price_list',
                                                 {}):
@@ -83,7 +87,7 @@ def step_3(request):
     else:
         if request.method == 'GET':
             form = forms.Step3Form()
-        elif request.method == 'POST':
+        else:
             session_pl = request.session['data_capture:price_list']
             posted_data = dict(
                 request.POST,
