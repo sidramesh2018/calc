@@ -99,6 +99,11 @@ class Step2Tests(PriceListStepTestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
 
+    def test_going_back_to_previous_step_prefills_its_form(self):
+        self.login()
+        res = self.client.get(Step1Tests.url)
+        self.assertContains(res, 'GS-123-4567')
+
     def test_redirects_to_step_1_if_not_completed(self):
         self.login()
         self.delete_price_list_from_session()
@@ -172,6 +177,11 @@ class Step3Tests(PriceListStepTestCase):
         self.login()
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
+
+    def test_going_back_to_previous_step_prefills_its_form(self):
+        self.login()
+        res = self.client.get(Step2Tests.url)
+        self.assertContains(res, '1985')
 
     def test_redirects_to_step_2_if_not_completed(self):
         self.login()
