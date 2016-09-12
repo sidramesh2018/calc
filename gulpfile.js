@@ -1,5 +1,11 @@
 'use strict'; // eslint-disable-line
 
+require('dotenv').config({ silent: true });
+
+if (!('DEBUG' in process.env)) {
+  process.env.NODE_ENV = 'production';
+}
+
 const path = require('path');
 
 const gulp = require('gulp');
@@ -9,6 +15,7 @@ const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename');
 const eslint = require('gulp-eslint');
+const gulpif = require('gulp-if');
 const gutil = require('gulp-util');
 const uglify = require('gulp-uglify');
 const source = require('vinyl-source-stream');
@@ -176,7 +183,7 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
       .pipe(source(outputFile))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(uglify())
+        .pipe(gulpif(process.env.NODE_ENV === 'production', uglify()))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest(outputPath))
       .on('data', file => {
