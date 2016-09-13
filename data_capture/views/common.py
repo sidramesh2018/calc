@@ -16,7 +16,7 @@ def add_generic_form_error(request, form):
 
 class Steps:
     '''
-    This class makes it easier to consolidate the logic of
+    The `Steps` class makes it easier to consolidate the logic of
     multi-step workflows.
 
     The `Steps` constructor takes a format string representing what
