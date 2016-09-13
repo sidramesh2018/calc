@@ -2,7 +2,7 @@
 
 .form-button-row {
   position: relative;
-  margin-top: 2em;
+  margin-top: 4rem;
 
   button,
   button[type="submit"],
@@ -12,8 +12,8 @@
   }
 
   .submit-group {
-    float: left;
-    /* TODO: Use flexbox */
+    display: inline-block;
+
     button,
     .button {
       margin: 0;
