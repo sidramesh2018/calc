@@ -25,8 +25,14 @@ import { UploadWidget } from '../data-capture/upload';
       input = upload.find('input');
       cb();
     });
-    document.body.appendChild(div);
+
+    // On browsers with native support for custom elements, this
+    // could synchronously upgrade the elements.
     div.innerHTML = UPLOAD_HTML;
+
+    // This will cause the attached/connected callbacks (depending on
+    // version of custom elements spec) to be triggered.
+    document.body.appendChild(div);
   }
 
   function degradedTest(name, cb) {
