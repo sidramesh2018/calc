@@ -128,7 +128,7 @@ def step_3(request, step):
             context=step.context({
                 'form': form
             }),
-            template_name=step.template_name(),
+            template_name=step.template_name,
             ajax_template_name='data_capture/price_list/upload_form.html',
         )
 
