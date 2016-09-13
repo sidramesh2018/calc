@@ -7,11 +7,11 @@ from django.http import HttpResponseBadRequest
 from .. import forms
 from ..decorators import handle_cancel
 from ..schedules import registry
-from .common import add_generic_form_error, StepBuilder
+from .common import add_generic_form_error, Steps
 from frontend import ajaxform
 
 
-steps = StepBuilder(
+steps = Steps(
     template_format='data_capture/price_list/step_{}.html',
 )
 

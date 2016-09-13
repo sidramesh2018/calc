@@ -13,7 +13,7 @@ def add_generic_form_error(request, form):
     )
 
 
-class StepBuilder:
+class Steps:
     def __init__(self, template_format):
         self.template_format = template_format
         self._views = []
