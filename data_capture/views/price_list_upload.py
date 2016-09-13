@@ -111,14 +111,16 @@ def step_3(request):
                                                 {}):
         return redirect('data_capture:step_2')
     else:
+        session_pl = request.session['data_capture:price_list']
+        schedule = session_pl['step_1_POST']['schedule']
         if request.method == 'GET':
-            form = forms.Step3Form()
+            form = forms.Step3Form(schedule=schedule)
         else:
-            session_pl = request.session['data_capture:price_list']
-            posted_data = dict(
+            form = forms.Step3Form(
                 request.POST,
-                schedule=session_pl['step_1_POST']['schedule'])
-            form = forms.Step3Form(posted_data, request.FILES)
+                request.FILES,
+                schedule=schedule
+            )
 
             if form.is_valid():
                 session_pl['gleaned_data'] = \

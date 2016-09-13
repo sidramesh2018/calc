@@ -45,22 +45,19 @@ class Step2Form(forms.ModelForm):
 
 
 class Step3Form(forms.Form):
-    # TODO: We should figure out a way of getting rid of this field, since
-    # we're not actually asking the user for it anymore.
-
-    schedule = forms.ChoiceField(
-        choices=registry.get_choices
-    )
-
     file = forms.FileField(widget=UploadWidget())
+
+    def __init__(self, *args, **kwargs):
+        self.schedule = kwargs.pop('schedule')
+        super().__init__(*args, **kwargs)
 
     def clean(self):
         cleaned_data = super().clean()
-        schedule = cleaned_data.get('schedule')
         file = cleaned_data.get('file')
 
-        if schedule and file:
-            gleaned_data = registry.smart_load_from_upload(schedule, file)
+        if file:
+            gleaned_data = registry.smart_load_from_upload(self.schedule,
+                                                           file)
 
             if gleaned_data.is_empty():
                 raise forms.ValidationError(
