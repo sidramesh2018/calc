@@ -6,6 +6,7 @@ ol.steps {
   list-style-type: none;
   list-style-position: inside;
   display: flex;
+  margin-top: 3rem;
 
   li {
     list-style: none;
@@ -44,6 +45,7 @@ ol.steps {
     label {
       font-weight: 100;
       margin-top: 0.2rem;
+      max-width: 100px;
     }
   }
 }

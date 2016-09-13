@@ -1,6 +1,7 @@
 import time
 from django import forms
 from django.http import HttpResponse
+from django.contrib import messages
 
 from frontend import ajaxform
 from frontend.upload import UploadWidget
@@ -57,6 +58,11 @@ def view(request):
                 raise Exception('Here is the 500 your ordered.')
             else:
                 return HttpResponse('Here is an unexpected response.')
+
+        messages.add_message(
+            request, messages.ERROR,
+            'Uh oh. Please correct the error(s) below and try again.'
+        )
 
     return ajaxform.render(
         request,

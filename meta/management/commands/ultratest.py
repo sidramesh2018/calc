@@ -87,7 +87,7 @@ def command(verbosity, testtype):
 
     TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
     ESLINT_CMD = 'npm run failable-eslint'
-    PYTEST_CMD = 'py.test --cov-report xml {}'.format(
+    PYTEST_CMD = 'py.test --cov-report xml {} --cov'.format(
         ('--cov-report term' if is_verbose else '')
     )
 

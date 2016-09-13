@@ -9,9 +9,9 @@ class EmailResult():
     '''
     Simple class to hold result data from email sending functions
     '''
-    def __init__(self, was_successful, context={}):
+    def __init__(self, was_successful, context=None):
         self.was_successful = was_successful
-        self.context = context
+        self.context = context or {}
 
 
 def price_list_approved(price_list):

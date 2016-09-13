@@ -1,31 +1,25 @@
 {% extends 'data_capture/bulk_upload/region_10_step.html' %}
 {% load humanize %}
 
-{% block subtitle %}Confirm Load{% endblock subtitle %}
+{% block subtitle %}Confirm load{% endblock subtitle %}
 
 {% block step_body %}
   {% with total=file_metadata.num_rows %}
     {% if total %}
-      <p>{{ total|intcomma }} row{{ total|pluralize }} were found in the uploaded spreadsheet.</p>
-
-      <p>This will delete all existing Region 10 data and replace it with the new data.</p>
+      <h3>{{ total|intcomma }} row{{ total|pluralize }} ready to add to CALC</h3>
+      <p>Are you ready to <strong>delete all existing Region 10 data</strong> and replace it with the {{ total|intcomma }} new row{{ total|pluralize }} of data you just uploaded?</p>
     {% else %}
       <p>No valid rows were found in the uploaded spreadsheet. Please check your file and <a href="{% url 'data_capture:bulk_region_10_step_1' %}">try again</a>.</p>
     {% endif %}
 
-    <form method="post" action="{% url 'data_capture:bulk_region_10_step_3' %}">
+    <form method="post" action="{% url 'data_capture:bulk_region_10_step_2' %}">
       {% csrf_token %}
       <div class="form-button-row clearfix">
-        <a href="{% url 'data_capture:bulk_region_10_step_1' %}" class="button button-previous">Previous</a>
-
-        <button type="submit" class="button-secondary" name="cancel">Cancel</button>
+        <button type="submit" class="button-secondary" name="cancel">No, keep the existing data</button>
 
         {% if total %}
           <div class="submit-group">
-            <span class="submit-label">
-              Load data and view results
-            </span>
-            <button type="submit" class="button-primary" name="submit">Confirm</button>
+            <button type="submit" class="button-primary" name="submit">Yes, replace existing data with my file</button>
           </div>
         {% endif %}
       </div>

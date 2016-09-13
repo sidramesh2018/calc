@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.files.base import ContentFile
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods
 from django.conf import settings
 
 from .. import forms, jobs
@@ -12,6 +12,7 @@ from contracts.models import BulkUploadContractSource
 
 
 @staff_login_required
+@require_http_methods(["GET", "POST"])
 def region_10_step_1(request):
     '''
     Start of Region 10 Bulk Upload - Upload the spreadsheet
@@ -54,41 +55,45 @@ def region_10_step_1(request):
 
 
 @staff_login_required
+@handle_cancel
+@require_http_methods(["GET", "POST"])
 def region_10_step_2(request):
     '''
-    Confirm that the new data should be loaded
+    Confirm that the new data should be loaded and load it when the user
+    submits
     '''
     upload_source_id = request.session.get('data_capture:upload_source_id')
     if upload_source_id is None:
         return redirect('data_capture:bulk_region_10_step_1')
 
-    # Get the BulkUploadContractSource based on upload_source_id
-    upload_source = BulkUploadContractSource.objects.get(pk=upload_source_id)
+    if request.method == 'GET':
+        # Get the BulkUploadContractSource based on upload_source_id
+        upload_source = BulkUploadContractSource.objects.get(
+            pk=upload_source_id)
 
-    file = ContentFile(upload_source.original_file)
+        file = ContentFile(upload_source.original_file)
 
-    file_metadata = Region10SpreadsheetConverter(file).get_metadata()
+        file_metadata = Region10SpreadsheetConverter(file).get_metadata()
 
-    return render(request, 'data_capture/bulk_upload/region_10_step_2.html', {
-        'step_number': 2,
-        'file_metadata': file_metadata,
-    })
+        return render(
+            request,
+            'data_capture/bulk_upload/region_10_step_2.html', {
+                'step_number': 2,
+                'file_metadata': file_metadata,
+            })
 
-
-@staff_login_required
-@require_POST
-@handle_cancel
-def region_10_step_3(request):
-    '''Load data and show success screen'''
-
-    upload_source_id = request.session.get('data_capture:upload_source_id')
-    if upload_source_id is None:
-        return redirect('data_capture:bulk_region_10_step_1')
-
+    # else 'POST' because of @require_http_methods decorator
     jobs.process_bulk_upload_and_send_email.delay(upload_source_id)
 
     # remove the upload_source_id from session
     del request.session['data_capture:upload_source_id']
+
+    return redirect('data_capture:bulk_region_10_step_3')
+
+
+@staff_login_required
+def region_10_step_3(request):
+    '''Show success page'''
 
     return render(request, 'data_capture/bulk_upload/region_10_step_3.html', {
         'step_number': 3,
