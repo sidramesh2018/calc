@@ -21,7 +21,8 @@
   }
 
   .submit-label {
-    display: inline-block;
+    display: block;
+    float: right;
     height: 38px;
     color: $color-gray-medium;
     margin-left: 1em;
