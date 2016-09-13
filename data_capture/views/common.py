@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.contrib import messages
 from django.shortcuts import render
 from django.template.defaultfilters import pluralize
@@ -12,11 +13,9 @@ def add_generic_form_error(request, form):
 
 
 class StepBuilder:
-    def __init__(self, template_format, view_format, globs):
+    def __init__(self, template_format):
         self._template_format = template_format
-        self._view_format = view_format
-        self._globs = globs
-        self._num_steps = None
+        self._views = []
 
     def context(self, step, context=None):
         final_ctx = {
@@ -34,11 +33,26 @@ class StepBuilder:
         return render(request, self.template_name(step),
                       self.context(step, context))
 
+    def step(self, func):
+        self._views.append(func)
+        if not func.__name__.endswith(str(self.num_steps)):
+            raise ValueError('Expected {} to end with the number {}'.format(
+                func.__name__,
+                self.num_steps
+            ))
+        return func
+
+    @property
+    def urls(self):
+        urlpatterns = []
+
+        for i in range(self.num_steps):
+            view = self._views[i]
+            regex = r'^' + str(i + 1) + r'$'
+            urlpatterns.append(url(regex, view, name=view.__name__))
+
+        return urlpatterns
+
     @property
     def num_steps(self):
-        if self._num_steps is None:
-            for i in range(1, 999):
-                if self._view_format.format(i) not in self._globs:
-                    self._num_steps = i - 1
-                    break
-        return self._num_steps
+        return len(self._views)

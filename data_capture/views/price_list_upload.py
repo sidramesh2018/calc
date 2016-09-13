@@ -12,10 +12,8 @@ from .common import add_generic_form_error, StepBuilder
 from frontend import ajaxform
 
 
-step = StepBuilder(
+steps = StepBuilder(
     template_format='data_capture/price_list/step_{}.html',
-    view_format='step_{}',
-    globs=globals()
 )
 
 
@@ -31,6 +29,7 @@ def gleaned_data_required(f):
     return wrapper
 
 
+@steps.step
 @login_required
 @require_http_methods(["GET", "POST"])
 def step_1(request):
@@ -47,11 +46,12 @@ def step_1(request):
         else:
             add_generic_form_error(request, form)
 
-    return step.render(1, request, {
+    return steps.render(1, request, {
         'form': form,
     })
 
 
+@steps.step
 @handle_cancel
 @login_required
 @require_http_methods(["GET", "POST"])
@@ -77,11 +77,12 @@ def step_2(request):
         else:
             add_generic_form_error(request, form)
 
-    return step.render(2, request, {
+    return steps.render(2, request, {
         'form': form
     })
 
 
+@steps.step
 @handle_cancel
 @login_required
 @require_http_methods(["GET", "POST"])
@@ -111,14 +112,15 @@ def step_3(request):
 
         return ajaxform.render(
             request,
-            context=step.context(3, {
+            context=steps.context(3, {
                 'form': form
             }),
-            template_name=step.template_name(3),
+            template_name=steps.template_name(3),
             ajax_template_name='data_capture/price_list/upload_form.html',
         )
 
 
+@steps.step
 @login_required
 @gleaned_data_required
 @handle_cancel
@@ -157,13 +159,14 @@ def step_4(request, gleaned_data):
 
         return redirect('data_capture:step_5')
 
-    return step.render(4, request, {
+    return steps.render(4, request, {
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
         'preferred_schedule': preferred_schedule,
     })
 
 
+@steps.step
 @login_required
 def step_5(request):
-    return step.render(5, request)
+    return steps.render(5, request)
