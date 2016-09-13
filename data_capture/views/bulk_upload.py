@@ -19,7 +19,7 @@ steps = Steps(
 @steps.step
 @staff_login_required
 @require_http_methods(["GET", "POST"])
-def region_10_step_1(request, step):
+def bulk_region_10_step_1(request, step):
     '''
     Start of Region 10 Bulk Upload - Upload the spreadsheet
     '''
@@ -63,7 +63,7 @@ def region_10_step_1(request, step):
 @staff_login_required
 @handle_cancel
 @require_http_methods(["GET", "POST"])
-def region_10_step_2(request, step):
+def bulk_region_10_step_2(request, step):
     '''
     Confirm that the new data should be loaded and load it when the user
     submits
@@ -96,7 +96,7 @@ def region_10_step_2(request, step):
 
 @steps.step
 @staff_login_required
-def region_10_step_3(request, step):
+def bulk_region_10_step_3(request, step):
     '''Show success page'''
 
     return step.render(request, {
