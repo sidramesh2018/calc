@@ -2,11 +2,10 @@ import json
 from functools import wraps
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 
 from .. import forms
-from ..decorators import handle_cancel
+from ..decorators import handle_cancel, contract_officer_perms_required
 from ..schedules import registry
 from .common import add_generic_form_error
 from frontend import ajaxform
@@ -24,7 +23,7 @@ def gleaned_data_required(f):
     return wrapper
 
 
-@login_required
+@contract_officer_perms_required
 @require_http_methods(["GET", "POST"])
 def step_1(request):
     if request.method == 'GET':
@@ -46,9 +45,9 @@ def step_1(request):
         })
 
 
-@handle_cancel
-@login_required
+@contract_officer_perms_required
 @require_http_methods(["GET", "POST"])
+@handle_cancel
 def step_2(request):
     # Redirect back to step 1 if we don't have data
     if 'step_1_POST' not in request.session.get('data_capture:price_list',
@@ -77,9 +76,9 @@ def step_2(request):
     })
 
 
-@handle_cancel
-@login_required
+@contract_officer_perms_required
 @require_http_methods(["GET", "POST"])
+@handle_cancel
 def step_3(request):
     if 'step_2_POST' not in request.session.get('data_capture:price_list',
                                                 {}):
@@ -115,7 +114,7 @@ def step_3(request):
         )
 
 
-@login_required
+@contract_officer_perms_required
 @gleaned_data_required
 @handle_cancel
 def step_4(request, gleaned_data):
@@ -161,7 +160,7 @@ def step_4(request, gleaned_data):
     })
 
 
-@login_required
+@contract_officer_perms_required
 def step_5(request):
     return render(request, 'data_capture/price_list/step_5.html', {
         'step_number': 5
