@@ -1,15 +1,22 @@
 import json
 from functools import wraps
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 
 from .. import forms
 from ..decorators import handle_cancel
 from ..schedules import registry
-from .common import add_generic_form_error
+from .common import add_generic_form_error, StepBuilder
 from frontend import ajaxform
+
+
+step = StepBuilder(
+    template_format='data_capture/price_list/step_{}.html',
+    view_format='step_{}',
+    globs=globals()
+)
 
 
 def gleaned_data_required(f):
@@ -40,10 +47,9 @@ def step_1(request):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/price_list/step_1.html', {
-            'step_number': 1,
-            'form': form,
-        })
+    return step.render(1, request, {
+        'form': form,
+    })
 
 
 @handle_cancel
@@ -71,8 +77,7 @@ def step_2(request):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/price_list/step_2.html', {
-        'step_number': 2,
+    return step.render(2, request, {
         'form': form
     })
 
@@ -106,11 +111,10 @@ def step_3(request):
 
         return ajaxform.render(
             request,
-            context={
-                'step_number': 3,
+            context=step.context(3, {
                 'form': form
-            },
-            template_name='data_capture/price_list/step_3.html',
+            }),
+            template_name=step.template_name(3),
             ajax_template_name='data_capture/price_list/upload_form.html',
         )
 
@@ -153,8 +157,7 @@ def step_4(request, gleaned_data):
 
         return redirect('data_capture:step_5')
 
-    return render(request, 'data_capture/price_list/step_4.html', {
-        'step_number': 4,
+    return step.render(4, request, {
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
         'preferred_schedule': preferred_schedule,
@@ -163,6 +166,4 @@ def step_4(request, gleaned_data):
 
 @login_required
 def step_5(request):
-    return render(request, 'data_capture/price_list/step_5.html', {
-        'step_number': 5
-    })
+    return step.render(5, request)
