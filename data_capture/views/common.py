@@ -1,3 +1,4 @@
+from functools import wraps
 from django.conf.urls import url
 from django.contrib import messages
 from django.shortcuts import render
@@ -14,33 +15,25 @@ def add_generic_form_error(request, form):
 
 class StepBuilder:
     def __init__(self, template_format):
-        self._template_format = template_format
+        self.template_format = template_format
         self._views = []
 
-    def context(self, step, context=None):
-        final_ctx = {
-            'step_number': step,
-            'NUM_STEPS': self.num_steps
-        }
-        if context:
-            final_ctx.update(context)
-        return final_ctx
-
-    def template_name(self, step):
-        return self._template_format.format(step)
-
-    def render(self, step, request, context=None):
-        return render(request, self.template_name(step),
-                      self.context(step, context))
-
     def step(self, func):
-        self._views.append(func)
-        if not func.__name__.endswith(str(self.num_steps)):
+        step_number = self.num_steps + 1
+
+        if not func.__name__.endswith(str(step_number)):
             raise ValueError('Expected {} to end with the number {}'.format(
                 func.__name__,
                 self.num_steps
             ))
-        return func
+
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            kwargs['step'] = StepRenderer(self, step_number)
+            return func(*args, **kwargs)
+
+        self._views.append(wrapper)
+        return wrapper
 
     @property
     def urls(self):
@@ -56,3 +49,28 @@ class StepBuilder:
     @property
     def num_steps(self):
         return len(self._views)
+
+
+class StepRenderer:
+    def __init__(self, steps, step_number):
+        self.steps = steps
+        self.number = step_number
+
+    def context(self, context=None):
+        final_ctx = {'step': self}
+        if context:
+            final_ctx.update(context)
+        return final_ctx
+
+    def template_name(self):
+        return self.steps.template_format.format(self.number)
+
+    def render(self, request, context=None):
+        return render(request, self.template_name(),
+                      self.context(context))
+
+    def description(self):
+        return "Step {} of {}".format(
+            self.number,
+            self.steps.num_steps
+        )

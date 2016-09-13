@@ -1,5 +1,4 @@
 import json
-from functools import wraps
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -17,22 +16,10 @@ steps = StepBuilder(
 )
 
 
-def gleaned_data_required(f):
-    @wraps(f)
-    def wrapper(request):
-        try:
-            d = request.session['data_capture:price_list']['gleaned_data']
-        except:
-            return redirect('data_capture:step_3')
-
-        return f(request, registry.deserialize(d))
-    return wrapper
-
-
 @steps.step
 @login_required
 @require_http_methods(["GET", "POST"])
-def step_1(request):
+def step_1(request, step):
     if request.method == 'GET':
         form = forms.Step1Form()
     else:
@@ -46,7 +33,7 @@ def step_1(request):
         else:
             add_generic_form_error(request, form)
 
-    return steps.render(1, request, {
+    return step.render(request, {
         'form': form,
     })
 
@@ -55,7 +42,7 @@ def step_1(request):
 @handle_cancel
 @login_required
 @require_http_methods(["GET", "POST"])
-def step_2(request):
+def step_2(request, step):
     # Redirect back to step 1 if we don't have data
     if 'step_1_POST' not in request.session.get('data_capture:price_list',
                                                 {}):
@@ -77,7 +64,7 @@ def step_2(request):
         else:
             add_generic_form_error(request, form)
 
-    return steps.render(2, request, {
+    return step.render(request, {
         'form': form
     })
 
@@ -86,7 +73,7 @@ def step_2(request):
 @handle_cancel
 @login_required
 @require_http_methods(["GET", "POST"])
-def step_3(request):
+def step_3(request, step):
     if 'step_2_POST' not in request.session.get('data_capture:price_list',
                                                 {}):
         return redirect('data_capture:step_2')
@@ -112,19 +99,27 @@ def step_3(request):
 
         return ajaxform.render(
             request,
-            context=steps.context(3, {
+            context=step.context({
                 'form': form
             }),
-            template_name=steps.template_name(3),
+            template_name=step.template_name(),
             ajax_template_name='data_capture/price_list/upload_form.html',
         )
 
 
 @steps.step
 @login_required
-@gleaned_data_required
 @handle_cancel
-def step_4(request, gleaned_data):
+def step_4(request, step):
+    gleaned_data = None
+    try:
+        price_list = request.session['data_capture:price_list']
+        gleaned_data = price_list['gleaned_data']
+    except KeyError:
+        return redirect('data_capture:step_3')
+
+    gleaned_data = registry.deserialize(gleaned_data)
+
     session_pl = request.session['data_capture:price_list']
     preferred_schedule = registry.get_class(
         session_pl['step_1_POST']['schedule']
@@ -159,7 +154,7 @@ def step_4(request, gleaned_data):
 
         return redirect('data_capture:step_5')
 
-    return steps.render(4, request, {
+    return step.render(request, {
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
         'preferred_schedule': preferred_schedule,
@@ -168,5 +163,5 @@ def step_4(request, gleaned_data):
 
 @steps.step
 @login_required
-def step_5(request):
-    return steps.render(5, request)
+def step_5(request, step):
+    return step.render(request)
