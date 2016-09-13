@@ -137,11 +137,12 @@ def step_3(request, step):
 @contract_officer_perms_required
 @handle_cancel
 def step_4(request, step):
-    gleaned_data = None
-    try:
-        price_list = request.session['data_capture:price_list']
-        gleaned_data = price_list['gleaned_data']
-    except KeyError:
+    gleaned_data = get_nested_item(request.session, (
+        'data_capture:price_list',
+        'gleaned_data',
+    ))
+
+    if gleaned_data is None:
         return redirect('data_capture:step_3')
 
     gleaned_data = registry.deserialize(gleaned_data)
