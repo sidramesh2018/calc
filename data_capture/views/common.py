@@ -35,7 +35,9 @@ class Steps:
         >>> @steps.step
         ... def step_2(request, step): pass
 
-    Note that skipping numbers is not allowed, e.g.:
+    (What's that extra `step` argument?  We'll get to that in a moment!)
+
+    Breaking this ordering, e.g. by skipping numbers, is not allowed:
 
         >>> @steps.step
         ... def step_5(request, step): pass
@@ -55,10 +57,13 @@ class Steps:
         >>> steps.urls
         [<RegexURLPattern step_1 ^1$>, <RegexURLPattern step_2 ^2$>]
 
-    The `step` argument passed into each view function is a `StepRenderer`
-    instance bound to the particular step that the view represents.
+    Now, what's that `step` argument passed into each view function?
 
-    These can also be retrieved manually if needed:
+    It's a `StepRenderer` instance bound to the particular step that the
+    view represents, and it provides some tools that make it easy to
+    render steps.
+
+    `StepRenderer` instances can also be retrieved manually if needed:
 
         >>> step1 = steps.get_step_renderer(1)
 
