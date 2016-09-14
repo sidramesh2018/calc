@@ -410,7 +410,7 @@ Other parameters allow you to filter by:
 `o` [other]).
  * Whether or not the vendor works on the contractor or customer site.
 
-Here is an example with all three parameters (`schedule`, `sin`, `site`, and
+Here is an example with all four parameters (`schedule`, `sin`, `site`, and
 `business_size`) included:
 
 ```

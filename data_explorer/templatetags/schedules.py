@@ -10,8 +10,7 @@ def get_schedules():
 
         SIN - the schedule number
         schedule - the schedule name.
-        name - the human readable name
-        name - the human readable name
+        name - the human readable name.
     """
     return [{
         'SIN': 520,
