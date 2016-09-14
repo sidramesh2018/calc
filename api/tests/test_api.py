@@ -591,27 +591,6 @@ class ContractsTest(TestCase):
                                   'contractor_site': None,
                                   'business_size': None}])
 
-    def test_filter_by_consolidate_sin(self):
-        data = get_contract_recipe().make(_quantity=2)
-        data[0].schedule = 'Consolidated'
-        data[0].save()
-
-        resp = self.c.get(self.path, {'sin': 'Consolidated'})
-        self.assertEqual(resp.status_code, 200)
-
-        self.assertResultsEqual(resp.data['results'],
-                                [{'idv_piid': 'ABC1231',
-                                  'vendor_name': 'CompanyName1',
-                                  'labor_category': 'Business Analyst II',
-                                  'education_level': None,
-                                  'min_years_experience': 6,
-                                  'hourly_rate_year1': 21.0,
-                                  'current_price': 21.0,
-                                  'schedule': 'Consolidated',
-                                  'sin': '541-4B, 541-4BRC',
-                                  'contractor_site': None,
-                                  'business_size': None}])
-
     def test_filter_by_business_size(self):
         get_contract_recipe().make(
             _quantity=3,

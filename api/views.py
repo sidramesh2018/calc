@@ -115,13 +115,8 @@ def get_contracts_queryset(request_params, wage_field):
                 selected_degrees.append(pair[0])
         contracts = contracts.filter(education_level__in=selected_degrees)
 
-    if sin == 'Consolidated':
-        # A special case to let the frontend use SIN for both Consolidated and
-        # SIN values:
-        contracts = contracts.filter(schedule__iexact='Consolidated')
-    elif sin:
+    if sin:
         contracts = contracts.filter(sin__icontains=sin)
-
     if schedule:
         contracts = contracts.filter(schedule__iexact=schedule)
     if site:
