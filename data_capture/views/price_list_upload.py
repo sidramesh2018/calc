@@ -150,21 +150,20 @@ def step_4(request, step):
     gleaned_data = registry.deserialize(gleaned_data)
 
     session_pl = request.session['data_capture:price_list']
-    preferred_schedule = registry.get_class(
-        session_pl['step_1_POST']['schedule']
+    step_1_form = forms.Step1Form(
+        session_pl['step_1_POST']
     )
+    if not step_1_form.is_valid():
+        raise AssertionError('invalid step 1 data in session')
+
+    preferred_schedule = step_1_form.cleaned_data['schedule_class']
+
     if request.method == 'POST':
         if not gleaned_data.valid_rows:
             # Our UI never should've let the user issue a request
             # like this.
             return HttpResponseBadRequest()
-        step_1_form = forms.Step1Form(
-            session_pl['step_1_POST']
-        )
-        if not step_1_form.is_valid():
-            raise AssertionError('invalid step 1 data in session')
         price_list = step_1_form.save(commit=False)
-
         step_2_form = forms.Step2Form(
             session_pl['step_2_POST'],
             instance=price_list
@@ -176,6 +175,12 @@ def step_4(request, step):
         price_list.submitter = request.user
         price_list.serialized_gleaned_data = json.dumps(
             session_pl['gleaned_data'])
+
+        # We always want to explicitly set the schedule to the
+        # one that the gleaned data is part of, in case we gracefully
+        # fell back to a schedule other than the one the user chose.
+        price_list.schedule = registry.get_classname(gleaned_data)
+
         price_list.save()
         gleaned_data.add_to_price_list(price_list)
 
@@ -186,7 +191,7 @@ def step_4(request, step):
     return step.render(request, {
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
-        'preferred_schedule': preferred_schedule,
+        'preferred_schedule_title': preferred_schedule.title,
     })
 
 
