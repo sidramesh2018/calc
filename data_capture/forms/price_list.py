@@ -19,6 +19,13 @@ class Step1Form(forms.ModelForm):
             'vendor_name',
         ]
 
+    def clean(self):
+        cleaned_data = super().clean()
+        schedule = cleaned_data.get('schedule')
+        if schedule:
+            cleaned_data['schedule_class'] = registry.get_class(schedule)
+        return cleaned_data
+
 
 class Step2Form(forms.ModelForm):
     is_small_business = forms.ChoiceField(
