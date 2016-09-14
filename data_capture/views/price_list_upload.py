@@ -1,26 +1,18 @@
 import json
-from functools import wraps
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest
 
 from .. import forms
 from ..decorators import handle_cancel, contract_officer_perms_required
 from ..schedules import registry
-from .common import add_generic_form_error
+from .common import add_generic_form_error, Steps
 from frontend import ajaxform
 
 
-def gleaned_data_required(f):
-    @wraps(f)
-    def wrapper(request):
-        try:
-            d = request.session['data_capture:price_list']['gleaned_data']
-        except:
-            return redirect('data_capture:step_3')
-
-        return f(request, registry.deserialize(d))
-    return wrapper
+steps = Steps(
+    template_format='data_capture/price_list/step_{}.html',
+)
 
 
 def get_nested_item(obj, keys, default=None):
@@ -44,9 +36,10 @@ def get_nested_item(obj, keys, default=None):
     return obj[key]
 
 
+@steps.step
 @contract_officer_perms_required
 @require_http_methods(["GET", "POST"])
-def step_1(request):
+def step_1(request, step):
     if request.method == 'GET':
         form = forms.Step1Form(data=get_nested_item(
             request.session,
@@ -63,16 +56,16 @@ def step_1(request):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/price_list/step_1.html', {
-            'step_number': 1,
-            'form': form,
-        })
+    return step.render(request, {
+        'form': form,
+    })
 
 
+@steps.step
 @contract_officer_perms_required
 @require_http_methods(["GET", "POST"])
 @handle_cancel
-def step_2(request):
+def step_2(request, step):
     # Redirect back to step 1 if we don't have data
     if 'step_1_POST' not in request.session.get('data_capture:price_list',
                                                 {}):
@@ -97,16 +90,16 @@ def step_2(request):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/price_list/step_2.html', {
-        'step_number': 2,
+    return step.render(request, {
         'form': form
     })
 
 
+@steps.step
 @contract_officer_perms_required
 @require_http_methods(["GET", "POST"])
 @handle_cancel
-def step_3(request):
+def step_3(request, step):
     if 'step_2_POST' not in request.session.get('data_capture:price_list',
                                                 {}):
         return redirect('data_capture:step_2')
@@ -132,19 +125,28 @@ def step_3(request):
 
         return ajaxform.render(
             request,
-            context={
-                'step_number': 3,
+            context=step.context({
                 'form': form
-            },
-            template_name='data_capture/price_list/step_3.html',
+            }),
+            template_name=step.template_name,
             ajax_template_name='data_capture/price_list/upload_form.html',
         )
 
 
+@steps.step
 @contract_officer_perms_required
-@gleaned_data_required
 @handle_cancel
-def step_4(request, gleaned_data):
+def step_4(request, step):
+    gleaned_data = get_nested_item(request.session, (
+        'data_capture:price_list',
+        'gleaned_data',
+    ))
+
+    if gleaned_data is None:
+        return redirect('data_capture:step_3')
+
+    gleaned_data = registry.deserialize(gleaned_data)
+
     session_pl = request.session['data_capture:price_list']
     preferred_schedule = registry.get_class(
         session_pl['step_1_POST']['schedule']
@@ -179,16 +181,14 @@ def step_4(request, gleaned_data):
 
         return redirect('data_capture:step_5')
 
-    return render(request, 'data_capture/price_list/step_4.html', {
-        'step_number': 4,
+    return step.render(request, {
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
         'preferred_schedule': preferred_schedule,
     })
 
 
+@steps.step
 @contract_officer_perms_required
-def step_5(request):
-    return render(request, 'data_capture/price_list/step_5.html', {
-        'step_number': 5
-    })
+def step_5(request, step):
+    return step.render(request)
