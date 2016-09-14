@@ -46,6 +46,19 @@ h3.styleguide-section {
   letter-spacing: 1px;
 }
 
+.styleguide-example a[target="_blank"] {
+  display: inline-block;
+  padding-left: 1em;
+  min-height: 1em;
+  background-image: url(vendor/font-awesome-external-link.svg);
+  background-size: 1em;
+  background-repeat: no-repeat;
+}
+
+.styleguide-example .example-heading a[target="_blank"] {
+  float: right;
+}
+
 /* This selector looks weird because we're waging a war on
  * two fronts between CodeClimate's CSS linter and
  * Prism's default CSS. */
