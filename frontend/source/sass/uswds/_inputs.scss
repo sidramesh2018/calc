@@ -150,3 +150,83 @@ legend {
 .form-group-year {
   width: 7rem;
 }
+
+// Custom checkboxes
+
+input[type="checkbox"],
+input[type="radio"] {
+  @include sr-only();
+
+  .lt-ie9 & {
+    border: 0;
+    float: left;
+    margin: 0.4em 0.4em 0 0;
+    position: static;
+    width: auto;
+  }
+}
+
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+  cursor: pointer;
+  font-weight: 400;
+  margin-bottom: 0.5em;
+}
+
+input[type="checkbox"] + label::before,
+input[type="radio"] + label::before {
+  background: $color-white;
+  border-radius: $border-radius;
+  box-shadow: 0 0 0 1px $color-gray-medium;
+  content: '\a0';
+  display: inline-block;
+  height: 1.8rem;
+  line-height: 1.8rem;
+  margin-right: 0.6em;
+  text-indent: 0.15em;
+  width: 1.8rem;
+}
+
+input[type="radio"] + label::before {
+  box-shadow: 0 0 0 2px $color-white, 0 0 0 3px $color-gray-medium;
+  height: 1.6rem;
+  line-height: 1.6rem;
+  width: 1.6rem;
+  border-radius: 100%;
+}
+
+input[type="checkbox"]:checked + label::before,
+input[type="radio"]:checked + label::before {
+  background-color: $color-primary;
+  box-shadow: 0 0 0 1px $color-primary;
+}
+
+input[type="radio"]:checked + label::before {
+  box-shadow: 0 0 0 2px $color-white, 0 0 0 4px $color-primary;
+}
+
+input[type="radio"]:focus + label::before {
+  box-shadow: 0 0 0 2px $color-white, 0 0 0 4px $color-primary, 0 0 3px 4px $color-focus, 0 0 7px 4px $color-focus;
+}
+
+input[type="checkbox"]:checked + label::before {
+  background-image: url('../img/correct8.png');
+  background-image: url('../img/correct8.svg');
+  background-position: 50%;
+  background-repeat: no-repeat;
+}
+
+input[type="checkbox"]:focus + label::before {
+  box-shadow: 0 0 0 1px $color-white, 0 0 0 3px $color-primary;
+}
+
+input[type="checkbox"]:disabled + label {
+  color: $color-gray;
+}
+
+input[type="checkbox"]:disabled + label::before,
+input[type="radio"]:disabled + label::before {
+  background: $color-gray-lighter;
+  box-shadow: 0 0 0 1px $color-gray-light;
+  cursor: not-allowed;
+}

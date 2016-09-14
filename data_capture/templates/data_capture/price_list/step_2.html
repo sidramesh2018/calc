@@ -11,8 +11,14 @@
 {{ form.non_field_errors }}
 
 {{ form.is_small_business.errors }}
-{{ form.is_small_business.label_tag }}
-{{ form.is_small_business }}
+<ul>
+  {% for radio in form.is_small_business %}
+  <li>
+    {{ radio.tag }}
+    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+  </li>
+  {% endfor %}
+</ul>
 
 {{ form.contractor_site.errors }}
 {{ form.contractor_site.label_tag }}
