@@ -48,6 +48,14 @@ class Step3Form(forms.Form):
     file = forms.FileField(widget=UploadWidget())
 
     def __init__(self, *args, **kwargs):
+        '''
+        This constructor requires `schedule` to be passed in as a
+        keyword argument. It should be a string referring to the
+        fully-qualified class name for an entry in the schedule
+        registry, e.g.
+        "data_capture.schedules.fake_schedule.FakeSchedulePriceList".
+        '''
+
         self.schedule = kwargs.pop('schedule')
         super().__init__(*args, **kwargs)
 
