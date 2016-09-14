@@ -21,8 +21,8 @@ class SubmittedPriceList(models.Model):
     contractor_site = models.CharField(
         verbose_name='Worksite',
         choices=[
-            ('Customer', 'Customer'),
-            ('Contractor', 'Contractor'),
+            ('Customer', 'Customer/Offsite'),
+            ('Contractor', 'Contractor/Onsite'),
             ('Both', 'Both'),
         ],
         max_length=128

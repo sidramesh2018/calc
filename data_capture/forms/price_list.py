@@ -29,9 +29,30 @@ class Step2Form(forms.ModelForm):
         ],
         widget=forms.widgets.RadioSelect,
     )
-
+    contractor_site = forms.ChoiceField(
+        label='Worksite',
+        choices=[
+            ('Customer', 'Customer/Offsite'),
+            ('Contractor', 'Contractor/Onsite'),
+            ('Both', 'Both'),
+        ],
+        widget=forms.widgets.RadioSelect,
+    )
     contract_start = SplitDateField(required=False)
     contract_end = SplitDateField(required=False)
+
+    contract_year = forms.ChoiceField(
+        label='Contract year',
+        choices=[
+            (1, '1'),
+            (2, '2'),
+            (3, '3'),
+            (4, '4'),
+            (5, '5'),
+        ],
+        widget=forms.widgets.RadioSelect,
+    )
+
 
     class Meta:
         model = SubmittedPriceList
