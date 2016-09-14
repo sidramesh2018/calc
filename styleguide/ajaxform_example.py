@@ -47,22 +47,28 @@ def view(request):
     form = None
 
     if request.method == 'POST':
-        form = ExampleForm(request.POST, request.FILES)
+        if 'cancel' in request.POST:
+            messages.add_message(
+                request, messages.INFO,
+                'Form submission cancelled.'
+            )
+        else:
+            form = ExampleForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            choice = form.cleaned_data['on_valid_submit']
-            if choice == CHOICE_REDIRECT:
-                time.sleep(3)
-                return ajaxform.redirect(request, 'styleguide:index')
-            elif choice == CHOICE_500:
-                raise Exception('Here is the 500 your ordered.')
-            else:
-                return HttpResponse('Here is an unexpected response.')
+            if form.is_valid():
+                choice = form.cleaned_data['on_valid_submit']
+                if choice == CHOICE_REDIRECT:
+                    time.sleep(3)
+                    return ajaxform.redirect(request, 'styleguide:index')
+                elif choice == CHOICE_500:
+                    raise Exception('Here is the 500 your ordered.')
+                else:
+                    return HttpResponse('Here is an unexpected response.')
 
-        messages.add_message(
-            request, messages.ERROR,
-            'Uh oh. Please correct the error(s) below and try again.'
-        )
+            messages.add_message(
+                request, messages.ERROR,
+                'Uh oh. Please correct the error(s) below and try again.'
+            )
 
     return ajaxform.render(
         request,
