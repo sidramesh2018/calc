@@ -10,6 +10,41 @@ from contracts.models import EDUCATION_CHOICES
 from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 
 
+DEFAULT_SHEET_NAME = '(3)Labor Categories'
+
+EXAMPLE_SHEET_ROWS = [
+    [
+        r'SIN(s) PROPOSED',
+        r'SERVICE PROPOSED (e.g. Job Title/Task)',
+        r'MINIMUM EDUCATION/ CERTIFICATION LEVEL',
+        r'MINIMUM YEARS OF EXPERIENCE',
+        r'COMMERCIAL LIST PRICE (CPL) OR MARKET PRICES',
+        r'UNIT OF ISSUE (e.g. Hour, Task, Sq ft)',
+        r'MOST FAVORED CUSTOMER (MFC)',
+        r'BEST  DISCOUNT OFFERED TO MFC (%)',
+        r'MFC PRICE',
+        r'GSA(%) DISCOUNT (exclusive of the .75% IFF)',
+        r'PRICE OFFERED TO GSA (excluding IFF)',
+        r'PRICE OFFERED TO GSA (including IFF)',
+        r'QUANTITY/ VOLUME DISCOUNT',
+    ],
+    [
+        r'132-51',
+        r'Project Manager',
+        r'Bachelors',
+        r'5',
+        r'$125',
+        r'Hour',
+        r'All Commercial Customers',
+        r'7.00%',
+        r'$123.99',
+        r'10.00%',
+        r'$110.99',
+        r'$115.99',
+        r'15.00%',
+    ]
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -30,7 +65,7 @@ def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
     return str(val)
 
 
-def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
+def glean_labor_categories_from_file(f, sheet_name=DEFAULT_SHEET_NAME):
     # TODO: I'm not sure how big these uploaded files can get. While
     # the labor categories price lists don't get that long, according to
     # user research interviews, *product* price lists can get really long;
@@ -131,7 +166,8 @@ class Schedule70Row(forms.Form):
 class Schedule70PriceList(BasePriceList):
     title = 'IT Schedule 70'
     table_template = 'data_capture/price_list/tables/schedule_70.html'
-
+    upload_example_template = ('data_capture/price_list/upload_examples/'
+                               'schedule_70.html')
     upload_widget_extra_instructions = 'XLS or XLSX format, please.'
 
     def __init__(self, rows):
@@ -167,6 +203,13 @@ class Schedule70PriceList(BasePriceList):
     def to_error_table(self):
         return render_to_string(self.table_template,
                                 {'rows': self.invalid_rows})
+
+    @classmethod
+    def get_upload_example_context(cls):
+        return {
+            'sheet_name': DEFAULT_SHEET_NAME,
+            'sheet_rows': EXAMPLE_SHEET_ROWS,
+        }
 
     @classmethod
     def deserialize(cls, rows):

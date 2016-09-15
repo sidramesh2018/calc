@@ -66,7 +66,16 @@ class BasePriceList:
         return NotImplementedError()
 
     @classmethod
-    def render_upload_example(cls):
+    def get_upload_example_context(cls):
+        '''
+        Returns a dictionary to use as the context for the upload example
+        template.
+        '''
+
+        return None
+
+    @classmethod
+    def render_upload_example(cls, request=None):
         '''
         Returns the HTML containing an example of what the schedule
         expects the user to upload, along with any other pertinent
@@ -76,7 +85,9 @@ class BasePriceList:
         '''
 
         if cls.upload_example_template is not None:
-            return render_to_string(cls.upload_example_template)
+            return render_to_string(cls.upload_example_template,
+                                    cls.get_upload_example_context(),
+                                    request=request)
         return ''
 
     @classmethod

@@ -157,7 +157,9 @@ def step_3(request, step):
             request,
             context=step.context({
                 'form': form,
-                'upload_example': schedule_class.render_upload_example()
+                'upload_example': schedule_class.render_upload_example(
+                    request
+                )
             }),
             template_name=step.template_name,
             ajax_template_name='data_capture/price_list/upload_form.html',
