@@ -5,7 +5,7 @@
 {% block step_body %}
 <h2>Enter contract details</h2>
 
-<form method="post">
+<form method="post" class="columns nine">
 {% csrf_token %}
 
 {{ form.non_field_errors }}
@@ -34,18 +34,19 @@
   </ul>
 </fieldset>
 
-  <div class="date-range">
-    <fieldset>
-      <legend>{{ form.contract_start.label }}</legend>
-      {{ form.contract_start.errors }}
-      {{ form.contract_start }}
-    </fieldset>
-    <fieldset>
-      <legend>{{ form.contract_end.label }}</legend>
-      {{ form.contract_end.errors }}
-      {{ form.contract_end }}
-    </fieldset>
-  </div>
+<div class="date-range">
+  <fieldset>
+    <legend>{{ form.contract_start.label }}</legend>
+    {{ form.contract_start.errors }}
+    {{ form.contract_start }}
+  </fieldset>
+  <p>to</p>
+  <fieldset>
+    <legend>{{ form.contract_end.label }}</legend>
+    {{ form.contract_end.errors }}
+    {{ form.contract_end }}
+  </fieldset>
+</div>
 
 <fieldset>
   <legend>{{ form.contract_year.label }}</legend>
