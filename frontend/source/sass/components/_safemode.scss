@@ -18,5 +18,5 @@ aside.safe-mode {
 }
 
 aside.safe-mode.safe-mode-disable {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: transparentize($color-black, 0.2);
 }
