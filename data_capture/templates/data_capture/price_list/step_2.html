@@ -9,29 +9,30 @@
 {% csrf_token %}
 
 {{ form.non_field_errors }}
-
-{{ form.is_small_business.label_tag }}
-{{ form.is_small_business.errors }}
-<ul>
-  {% for radio in form.is_small_business %}
-  <li>
-    {{ radio.tag }}
-    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-  </li>
-  {% endfor %}
-</ul>
-
-{{ form.contractor_site.errors }}
-{{ form.contractor_site.label_tag }}
-<ul>
-  {% for radio in form.contractor_site %}
-  <li>
-    {{ radio.tag }}
-    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-  </li>
-  {% endfor %}
-</ul>
-
+<fieldset>
+  <legend>{{ form.is_small_business.label }}</legend>
+  {{ form.is_small_business.errors }}
+  <ul>
+    {% for radio in form.is_small_business %}
+    <li>
+      {{ radio.tag }}
+      <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+    </li>
+    {% endfor %}
+  </ul>
+</fieldset>
+<fieldset>
+  <legend>{{ form.contractor_site.label }}</legend>
+  {{ form.contractor_site.errors }}
+  <ul>
+    {% for radio in form.contractor_site %}
+    <li>
+      {{ radio.tag }}
+      <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+    </li>
+    {% endfor %}
+  </ul>
+</fieldset>
 
 <p>
   <fieldset>
@@ -49,16 +50,18 @@
   </fieldset>
 </p>
 
-{{ form.contract_year.errors }}
-{{ form.contract_year.label_tag }}
-<ul>
-  {% for radio in form.contract_year %}
-  <li>
-    {{ radio.tag }}
-    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-  </li>
-  {% endfor %}
-</ul>
+<fieldset>
+  <legend>{{ form.contract_year.label }}</legend>
+  {{ form.contract_year.errors }}
+  <ul>
+    {% for radio in form.contract_year %}
+    <li>
+      {{ radio.tag }}
+      <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+    </li>
+    {% endfor %}
+  </ul>
+</fieldset>
 
 <div class="form-button-row clearfix">
   <a href="{% url 'data_capture:step_1' %}" class="button button-previous">Previous</a>
