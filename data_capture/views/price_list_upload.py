@@ -2,10 +2,12 @@ import json
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required, permission_required
 
 from .. import forms
-from ..decorators import handle_cancel, contract_officer_perms_required
+from ..decorators import handle_cancel
 from ..schedules import registry
+from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from .common import add_generic_form_error, Steps
 from frontend import ajaxform
 
@@ -37,7 +39,8 @@ def get_nested_item(obj, keys, default=None):
 
 
 @steps.step
-@contract_officer_perms_required
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 def step_1(request, step):
     if request.method == 'GET':
@@ -62,7 +65,8 @@ def step_1(request, step):
 
 
 @steps.step
-@contract_officer_perms_required
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
 def step_2(request, step):
@@ -96,7 +100,8 @@ def step_2(request, step):
 
 
 @steps.step
-@contract_officer_perms_required
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
 def step_3(request, step):
@@ -136,7 +141,8 @@ def step_3(request, step):
 
 
 @steps.step
-@contract_officer_perms_required
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @handle_cancel
 def step_4(request, step):
     gleaned_data = get_nested_item(request.session, (
@@ -196,6 +202,7 @@ def step_4(request, step):
 
 
 @steps.step
-@contract_officer_perms_required
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 def step_5(request, step):
     return step.render(request)

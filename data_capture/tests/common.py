@@ -4,6 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User, Group
 
+from ..management.commands.initgroups import get_permissions_from_ns_codenames
 from contracts.models import BulkUploadContractSource
 
 
@@ -91,11 +92,15 @@ class BaseTestCase(TestCase):
         return user
 
     def login(self, username='foo', is_staff=False, is_superuser=False,
-              groups=()):
+              groups=(), permissions=None):
         user = self.create_user(username=username, password='bar',
                                 is_staff=is_staff,
                                 is_superuser=is_superuser,
                                 groups=groups)
+        if permissions:
+            user.user_permissions = get_permissions_from_ns_codenames(
+                permissions)
+            user.save()
         assert self.client.login(username=username, password='bar')
         return user
 

@@ -3,8 +3,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from data_capture.decorators import staff_login_required
-
+from .decorators import staff_login_required
 from .healthcheck import healthcheck
 from .robots import robots_txt
 
