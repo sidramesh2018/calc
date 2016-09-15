@@ -4,7 +4,6 @@ from ..models import SubmittedPriceList
 from ..schedules import registry
 from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
-from frontend.radios import RadioSelectWidget
 
 
 class Step1Form(forms.ModelForm):
