@@ -1,3 +1,4 @@
+{% if not is_safe_mode_enabled %}
 <script>
 var globalErrorCount = 0;
 
@@ -25,3 +26,4 @@ window.onload = function() {
   }
 };
 </script>
+{% endif %}

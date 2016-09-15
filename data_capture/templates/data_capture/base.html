@@ -10,3 +10,7 @@
 {% endif %}
 <link rel="stylesheet" href="{% static 'frontend/built/style/data_capture.min.css' %}">
 {% endblock head %}
+
+{% block before_body_close %}
+{% include 'frontend/safe_mode/ui.html' %}
+{% endblock %}
