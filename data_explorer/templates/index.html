@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" href="{% static 'frontend/built/style/data_explorer.min.css' %}">
 
-{% if enable_js %}
+{% if not is_safe_mode_enabled %}
 <!--[if IE 9]>
   <script src="{% static 'frontend/js/vendor/vex.combined.min.js' %}"></script>
   <script>vex.defaultOptions.className = 'vex-theme-default';</script>
@@ -517,7 +517,7 @@
 
 </form>
 
-{% if enable_js %}
+{% if not is_safe_mode_enabled %}
 <![if gt IE 8]>
 {# For the list of files included in this built script, see gulpfile.js #}
 <script src= "{% static 'frontend/built/js/data-explorer/index.min.js' %}"></script>

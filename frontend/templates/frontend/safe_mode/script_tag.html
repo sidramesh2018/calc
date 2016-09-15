@@ -1,0 +1,27 @@
+<script>
+var globalErrorCount = 0;
+
+function showEnableSafeModeUI() {
+  var el = document.getElementById('safe-mode-enable');
+
+  if (el && el.hasAttribute('style')) {
+    el.removeAttribute('style');
+    el.focus();
+  }
+}
+
+window.onerror = function() {
+  globalErrorCount++;
+
+  // Enclose the following in a try/catch to avoid infinite recursion.
+  try {
+    showEnableSafeModeUI();
+  } catch (e) {}
+};
+
+window.onload = function() {
+  if (globalErrorCount) {
+    showEnableSafeModeUI();
+  }
+};
+</script>

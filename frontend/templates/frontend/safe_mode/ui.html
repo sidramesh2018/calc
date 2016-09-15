@@ -1,0 +1,21 @@
+{% if is_safe_mode_enabled %}
+<aside class="safe-mode safe-mode-disable">
+  <form method="post" action="{% url 'safe_mode:disable' %}">
+    {% csrf_token %}
+    <button class="button-primary" type="submit">Deactivate Safe Mode</button>
+    This site is currently in <strong>safe mode</strong>. For an enhanced
+    experience, you can try disabling it, but you may experience
+    compatibility issues with your current browser.
+  </form>
+</aside>
+{% else %}
+<aside id="safe-mode-enable" class="safe-mode" style="display: none" tabindex="-1" role="alert">
+  <form method="post" action="{% url 'safe_mode:enable' %}">
+    {% csrf_token %}
+    <button class="button-primary" type="submit">Activate Safe Mode</button>
+    Having problems using this page? We apologize for the inconvenience.
+    Try activating this site's <strong>safe mode</strong> for a better
+    experience.
+  </form>
+</aside>
+{% endif %}

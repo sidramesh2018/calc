@@ -7,38 +7,12 @@
     <meta name="viewport" content="width=960">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" href="{% static 'frontend/built/style/main.min.css' %}"/>
-    {% if enable_js %}
+    {% if not is_safe_mode_enabled %}
     <!--[if lte IE 9]>
     <script src="{% static 'frontend/js/vendor/aight.v2.min.js' %}"></script>
     <script src="{% static 'frontend/js/vendor/history.min.js' %}"></script>
     <![endif]-->
-    <script>
-    var globalErrorCount = 0;
-
-    function showDisableJavaScriptUI() {
-      var el = document.getElementById('js-disable');
-
-      if (el && el.hasAttribute('style')) {
-        el.removeAttribute('style');
-        el.focus();
-      }
-    }
-
-    window.onerror = function() {
-      globalErrorCount++;
-
-      // Enclose the following in a try/catch to avoid infinite recursion.
-      try {
-        showDisableJavaScriptUI();
-      } catch (e) {}
-    };
-
-    window.onload = function() {
-      if (globalErrorCount) {
-        showDisableJavaScriptUI();
-      }
-    };
-    </script>
+    {% include 'frontend/safe_mode/script_tag.html' %}
     <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
 
     <![if gt IE 8]>
@@ -139,7 +113,7 @@
       </div>
     </footer>
 
-    {% if enable_js %}
+    {% if not is_safe_mode_enabled %}
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -170,25 +144,7 @@
     <![endif]>
      <!-- Ethnio Activation Code -->
     <script type="text/javascript" language="javascript" src="https://ethn.io/88263.js" async="true" charset="utf-8"></script>
-    <aside id="js-disable" class="js js-disable" style="display: none" tabindex="-1" role="alert">
-      <form method="post" action="{% url 'js:disable' %}">
-        {% csrf_token %}
-        <button class="button-primary" type="submit">Activate Safe Mode</button>
-        Having problems using this page? We apologize for the inconvenience.
-        Try activating this site's <strong>safe mode</strong> for a better
-        experience.
-      </form>
-    </aside>
-    {% else %}
-    <aside class="js js-enable">
-      <form method="post" action="{% url 'js:enable' %}">
-        {% csrf_token %}
-        <button class="button-primary" type="submit">Deactivate Safe Mode</button>
-        This site is currently in <strong>safe mode</strong>. For an enhanced
-        experience, you can try disabling it, but you may experience
-        compatibility issues with your current browser.
-      </form>
-    </aside>
     {% endif %}
+    {% include 'frontend/safe_mode/ui.html' %}
   </body>
 </html>

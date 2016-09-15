@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
     url(r'^about/$', TemplateView.as_view(template_name='about.html'),
         name='about'),
-    url(r'^js/', include('hourglass.enable_js', namespace='js')),
+    url(r'^safe-mode/', include('frontend.safe_mode', namespace='safe_mode')),
     url(r'^healthcheck/', healthcheck),
     url(r'^api/', include('api.urls')),
     url(r'^data-capture/',
