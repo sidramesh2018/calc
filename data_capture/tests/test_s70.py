@@ -200,3 +200,8 @@ class S70Tests(ModelTestCase):
         table_html = s.to_error_table()
         self.assertIsNotNone(table_html)
         self.assertTrue(isinstance(table_html, str))
+
+    def test_render_upload_example_works(self):
+        html = s70.Schedule70PriceList.render_upload_example()
+        self.assertTrue('looks like this' in html)
+        self.assertTrue('Bachelors' in html)

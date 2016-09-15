@@ -23,6 +23,9 @@ class BasePriceListTests(TestCase):
     def test_render_upload_example_returns_empty_string_by_default(self):
         self.assertEqual(BasePriceList.render_upload_example(), '')
 
+    def test_get_upload_example_context_returns_none_by_default(self):
+        self.assertEqual(BasePriceList.get_upload_example_context(), None)
+
     @patch.object(base, 'render_to_string')
     def test_render_upload_example_calls_render_to_string(self, r):
         class FunkyPriceList(BasePriceList):
@@ -32,4 +35,17 @@ class BasePriceListTests(TestCase):
 
         self.assertEqual(FunkyPriceList.render_upload_example(), 'blah')
 
-        r.assert_called_once_with('foo/bar.html')
+        r.assert_called_once_with('foo/bar.html', None, request=None)
+
+    @patch.object(base, 'render_to_string')
+    def test_render_upload_example_calls_get_upload_example_context(self, r):
+        class FunkyPriceList(BasePriceList):
+            upload_example_template = 'foo/bar.html'
+
+            @classmethod
+            def get_upload_example_context(cls):
+                return {'foo': 'bar'}
+
+        FunkyPriceList.render_upload_example('I am a fake request')
+        r.assert_called_once_with('foo/bar.html', {'foo': 'bar'},
+                                  request='I am a fake request')
