@@ -38,6 +38,29 @@ def get_nested_item(obj, keys, default=None):
     return obj[key]
 
 
+def get_step_form_from_session(step_number, request, **kwargs):
+    '''
+    Bring back the given Form instance for a step from the
+    request session.  Returns None if the step hasn't been completed yet.
+
+    Any keyword arguments are passed on to the Form constructor.
+    '''
+
+    cls = getattr(forms, 'Step{}Form'.format(step_number))
+    post_data = get_nested_item(request.session, (
+        'data_capture:price_list',
+        'step_{}_POST'.format(step_number)
+    ))
+    if post_data is None:
+        return None
+    form = cls(post_data, **kwargs)
+    if not form.is_valid():
+        raise AssertionError(
+            'invalid step {} data in session'.format(step_number)
+        )
+    return form
+
+
 @steps.step
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
@@ -71,8 +94,7 @@ def step_1(request, step):
 @handle_cancel
 def step_2(request, step):
     # Redirect back to step 1 if we don't have data
-    if 'step_1_POST' not in request.session.get('data_capture:price_list',
-                                                {}):
+    if get_step_form_from_session(1, request) is None:
         return redirect('data_capture:step_1')
 
     if request.method == 'GET':
@@ -105,19 +127,20 @@ def step_2(request, step):
 @require_http_methods(["GET", "POST"])
 @handle_cancel
 def step_3(request, step):
-    if 'step_2_POST' not in request.session.get('data_capture:price_list',
-                                                {}):
+    if get_step_form_from_session(2, request) is None:
         return redirect('data_capture:step_2')
     else:
         session_pl = request.session['data_capture:price_list']
-        schedule = session_pl['step_1_POST']['schedule']
+        step_1_data = get_step_form_from_session(1, request).cleaned_data
+        schedule_class = step_1_data['schedule_class']
+
         if request.method == 'GET':
-            form = forms.Step3Form(schedule=schedule)
+            form = forms.Step3Form(schedule=step_1_data['schedule'])
         else:
             form = forms.Step3Form(
                 request.POST,
                 request.FILES,
-                schedule=schedule
+                schedule=step_1_data['schedule']
             )
 
             if form.is_valid():
@@ -133,7 +156,8 @@ def step_3(request, step):
         return ajaxform.render(
             request,
             context=step.context({
-                'form': form
+                'form': form,
+                'upload_example': schedule_class.render_upload_example()
             }),
             template_name=step.template_name,
             ajax_template_name='data_capture/price_list/upload_form.html',
@@ -156,11 +180,7 @@ def step_4(request, step):
     gleaned_data = registry.deserialize(gleaned_data)
 
     session_pl = request.session['data_capture:price_list']
-    step_1_form = forms.Step1Form(
-        session_pl['step_1_POST']
-    )
-    if not step_1_form.is_valid():
-        raise AssertionError('invalid step 1 data in session')
+    step_1_form = get_step_form_from_session(1, request)
 
     preferred_schedule = step_1_form.cleaned_data['schedule_class']
 
@@ -170,12 +190,8 @@ def step_4(request, step):
             # like this.
             return HttpResponseBadRequest()
         price_list = step_1_form.save(commit=False)
-        step_2_form = forms.Step2Form(
-            session_pl['step_2_POST'],
-            instance=price_list
-        )
-        if not step_2_form.is_valid():
-            raise AssertionError('invalid step 2 data in session')
+        step_2_form = get_step_form_from_session(2, request,
+                                                 instance=price_list)
         step_2_form.save(commit=False)
 
         price_list.submitter = request.user

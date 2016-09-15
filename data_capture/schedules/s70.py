@@ -132,6 +132,8 @@ class Schedule70PriceList(BasePriceList):
     title = 'IT Schedule 70'
     table_template = 'data_capture/price_list/tables/schedule_70.html'
 
+    upload_widget_extra_instructions = 'XLS or XLSX format, please.'
+
     def __init__(self, rows):
         super().__init__()
 
