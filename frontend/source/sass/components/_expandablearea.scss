@@ -1,0 +1,23 @@
+@import '../base/variables';
+
+expandable-area > *[role="button"][aria-expanded="false"]:before {
+  content: '\25B6';
+  padding-right: 4px;
+  display: inline-block;
+}
+
+expandable-area > *[role="button"][aria-expanded="true"]:before {
+  content: '\25BC';
+  padding-right: 4px;
+  display: inline-block;
+}
+
+expandable-area > *[role="button"] {
+  cursor: pointer;
+  color: $color-primary;
+  text-decoration: underline;
+}
+
+expandable-area > *[role="button"][aria-expanded="false"] ~ * {
+  display: none;
+}

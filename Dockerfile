@@ -11,7 +11,7 @@ RUN \
   mv /tmp/phantomjs-$PHANTOMJS_VERSION-linux-x86_64/ /srv/var/phantomjs && \
   ln -s /srv/var/phantomjs/bin/phantomjs /usr/bin/phantomjs
 
-RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 
 # Note that we want postgresql-client so 'manage.py dbshell' works.
 RUN apt-get update && \
@@ -28,8 +28,9 @@ ENV NODE_PATH /node/node_modules
 ENV DDM_IS_RUNNING_IN_DOCKER yup
 
 COPY requirements.txt /calc/
+COPY requirements-dev.txt /calc/
 
-RUN pip install -r /calc/requirements.txt
+RUN pip install -r /calc/requirements-dev.txt
 
 # The following lines set up our container for being run in a
 # cloud environment, where folder sharing is disabled. They're

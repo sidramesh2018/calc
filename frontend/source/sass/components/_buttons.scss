@@ -86,3 +86,37 @@ input.button-secondary[type="button"] {
   color: $color-white;
   border: 0;
 }
+
+button.button-link,
+input.button-link[type="submit"],
+input.button-link[type="reset"],
+input.button-link[type="button"] {
+
+  border: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  text-transform: none;
+  text-decoration: underline;
+  color: $color-primary;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+
+  &:hover,
+  &.button-hover {
+    color: $color-primary-darker;
+  }
+
+  &:focus,
+  &.button-focus {
+    color: $color-primary-darker;
+  }
+
+  &:active,
+  &.button-active {
+    color: $color-primary-darker;
+  }
+}

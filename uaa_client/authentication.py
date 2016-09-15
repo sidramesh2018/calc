@@ -3,6 +3,7 @@ import requests
 import jwt
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib.auth.backends import ModelBackend
 from django.conf import settings
 
 logger = logging.getLogger('uaa_client')
@@ -53,7 +54,14 @@ def get_user_by_email(email):
         return None
 
 
-class UaaBackend:
+class UaaBackend(ModelBackend):
+    '''
+    Custom auth backend for Cloud Foundry / cloud.gov User Account and
+    Authentication (UAA) servers.
+
+    This inherits from ModelBackend so that the superclass can provide
+    all authorization methods (e.g. `has_perm()`).
+    '''
 
     def authenticate(self, uaa_oauth2_code=None, request=None, **kwargs):
         if uaa_oauth2_code is None or request is None:
@@ -66,9 +74,3 @@ class UaaBackend:
         user_info = jwt.decode(access_token, verify=False)
 
         return get_user_by_email(user_info['email'])
-
-    def get_user(self, user_id):
-        try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return None

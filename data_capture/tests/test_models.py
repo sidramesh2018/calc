@@ -16,7 +16,7 @@ class ModelTestCase(BaseTestCase):
         self.setup_user()
 
     def setup_user(self):
-        self.user = self.create_user(username='foo')
+        self.user = self.create_user(username='foo', email='foo@example.com')
 
     def create_price_list(self, **kwargs):
         final_kwargs = dict(

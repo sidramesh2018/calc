@@ -14,10 +14,10 @@ class SubmittedPriceList(models.Model):
         help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
     )
     vendor_name = models.CharField(max_length=128)
-    is_small_business = models.BooleanField()
     schedule = models.CharField(
         max_length=128
     )
+    is_small_business = models.BooleanField()
     contractor_site = models.CharField(
         verbose_name='Worksite',
         choices=[

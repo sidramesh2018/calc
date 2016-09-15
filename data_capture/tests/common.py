@@ -2,7 +2,7 @@ import os
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from contracts.models import BulkUploadContractSource
 
@@ -71,11 +71,16 @@ def r10_file(content=None, name='r10.xlsx'):
 )
 class BaseTestCase(TestCase):
     def create_user(self, username, password=None, is_staff=False,
-                    is_superuser=False):
+                    is_superuser=False, email=None, groups=()):
         user = User.objects.create_user(
             username=username,
-            password=password
+            password=password,
+            email=email
         )
+        for groupname in groups:
+            g = Group.objects.get(name=groupname)
+            g.user_set.add(user)
+            g.save()
         if is_staff:
             user.is_staff = True
             user.save()
@@ -85,10 +90,12 @@ class BaseTestCase(TestCase):
             user.save()
         return user
 
-    def login(self, username='foo', is_staff=False, is_superuser=False):
+    def login(self, username='foo', is_staff=False, is_superuser=False,
+              groups=()):
         user = self.create_user(username=username, password='bar',
                                 is_staff=is_staff,
-                                is_superuser=is_superuser)
+                                is_superuser=is_superuser,
+                                groups=groups)
         assert self.client.login(username=username, password='bar')
         return user
 

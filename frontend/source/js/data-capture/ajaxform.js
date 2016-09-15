@@ -29,6 +29,28 @@ exports.setDelegate = newDelegate => {
 
 exports.MISC_ERROR = MISC_ERROR;
 
+/**
+ * AjaxForm represents a <form is="ajax-form"> web component, which submits
+ * a form via XMLHttpRequest (aka ajax) when the requisite browser
+ * capabilities exist. If a browser doesn't support the prerequisites for
+ * form submission via ajax, or if JS is disabled entirely, the form falls
+ * back to a standard form.
+ *
+ * Note that when the form data is submitted via ajax, it is submitted
+ * to the same URL, but with the `X-Requested-With: XMLHttpRequest`
+ * header. This header should be detected on the server-side; if it's
+ * set, the server is expected to respond with a JSON object containing
+ * one of the following keys and values:
+ *
+ *   * `form_html`, containing a string value representing the HTML of a
+ *     new <form is="ajax-form"> to replace the current form with. This is
+ *     generally presented when there were server-side validation issues
+ *     with the form.
+ *
+ *   * `redirect_url`, containing a string value representing the URL to
+ *     redirect the user's browser to.
+ */
+
 class AjaxForm extends window.HTMLFormElement {
   attachedCallback() {
     this.isDegraded = !supports.formData() ||
@@ -54,6 +76,14 @@ class AjaxForm extends window.HTMLFormElement {
       } else if (el.type === 'file') {
         for (let j = 0; j < el.files.length; j++) {
           formData.append(el.name, el.files[j]);
+        }
+      } else if (el.type === 'submit') {
+        // This logic is used to support multiple submit buttons.
+        // However, it's assumed that the "default" submit button, which
+        // is triggered in browsers by being the first in the DOM tree,
+        // has no 'name' value associated with it.
+        if (document.activeElement === el) {
+          formData.append(el.name, el.value);
         }
       } else {
         formData.append(el.name, el.value);

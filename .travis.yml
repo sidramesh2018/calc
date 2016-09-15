@@ -15,7 +15,7 @@ before_install:
 after_success:
 - codeclimate-test-reporter
 install:
-- pip install -r requirements.txt
+- pip install -r requirements-dev.txt
 - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 - npm install
 - gulp build
@@ -24,10 +24,10 @@ script:
 - python manage.py ultratest flake8
 - echo "For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330"
 - bandit -r .
-- py.test --ignore=selenium_tests --cov
+- py.test --ignore=frontend/tests/test_selenium.py --cov
 env:
   global:
-  - TRAVIS_NODE_VERSION=5.10.0
+  - TRAVIS_NODE_VERSION=6.5.0
   - PHANTOMJS_TIMEOUT=15
   - DEBUG=yup
   - DATABASE_URL=postgres://postgres@localhost/hourglass

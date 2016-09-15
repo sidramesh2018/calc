@@ -10,13 +10,15 @@
     "browserify": "^13.0.1",
     "del": "^2.2.1",
     "document-register-element": "^1.0.0",
-    "eslint": "^3.1.0",
+    "dotenv": "^2.0.0",
+    "eslint": "^3.2.0",
     "eslint-config-airbnb-base": "^5.0.1",
-    "eslint-plugin-import": "^1.10.3",
+    "eslint-plugin-import": "^1.12.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^2.0.11",
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^3.0.1",
+    "gulp-if": "^2.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.6.0",
@@ -44,7 +46,7 @@
   },
   "homepage": "https://github.com/18F/CALC#readme",
   "engines": {
-    "node": ">=5.10.0 <7.0",
+    "node": ">=6.0 <7.0",
     "npm": ">=3.8.0"
   }
 }

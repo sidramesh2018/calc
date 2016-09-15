@@ -8,6 +8,10 @@
       action="{% url 'styleguide:ajaxform' %}">
   {% csrf_token %}
 
+  {% if request.is_ajax %}
+  {% include 'data_capture/messages.html' %}
+  {% endif %}
+
   {% with form=ajaxform_form %}
     {{ form.non_field_errors }}
     {{ form.question.errors }}
@@ -20,5 +24,7 @@
     {{ form.file }}
   {% endwith %}
 
-  <button type="submit" class="button-primary">Submit</button>
+  <button type="submit" class="button-primary" style="display: inline-block">Submit</button>
+
+  <button type="submit" class="button-secondary" name="cancel" formnovalidate style="display: inline-block">Cancel</button>
 </form>

@@ -4,10 +4,17 @@
 
 {% block step_body %}
 
+  {% if SEND_TRANSACTIONAL_EMAILS %}
   <p>
     Your data is being processed and you will be sent an email when
     everything is finished.
   </p>
+  {% else %}
+  <p>
+    Your data is being processed and should be be available in CALC within
+    a few minutes.
+  </p>
+  {% endif %}
 
   <p>Return to the <a href="/" title="CALC home page">CALC home page</a>.</p>
 

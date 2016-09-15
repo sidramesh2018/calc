@@ -1,10 +1,17 @@
 import json
+import io
 
+from django.core.management import call_command
 from django.conf.urls import url
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
+from django.contrib.auth.models import Permission
 
-from ..decorators import handle_cancel
+from ..decorators import (handle_cancel,
+                          staff_login_required,
+                          contract_officer_perms_required)
+from .common import BaseTestCase
+from hourglass.urls import urlpatterns
 
 
 @handle_cancel
@@ -22,10 +29,20 @@ def key_prefix_view(request):
     return HttpResponse('ok no args')
 
 
+@staff_login_required
+def staff_only_view(request):
+    return HttpResponse('ok')
+
+
+@contract_officer_perms_required
+def co_only_view(request):
+    return HttpResponse('ok')
+
+
 def index(request):
     return HttpResponse('index')
 
-urlpatterns = [
+urlpatterns += [
     url(r'^test_view/$', ok_view),
     url(r'^another_view/$', index, name='another_view'),
     url(r'^redirect_name_view/$',
@@ -33,6 +50,9 @@ urlpatterns = [
     url(r'^key_prefix_view/$',
         key_prefix_view, name='key_prefix_view'),
     url(r'^$', index, name='index'),
+    url(r'^staff_only_view/$', staff_only_view, name='staff_only_view'),
+    url(r'^co_only_view/', co_only_view, name='co_only_view'),
+    url(r'^login/$', ok_view, name='login')
 ]
 
 
@@ -99,3 +119,59 @@ class HandleCancelTests(TestCase):
         self.assertSessionOk()
         self.assertEqual(302, res.status_code)
         self.assertEqual(res['Location'], 'http://testserver/another_view/')
+
+
+@override_settings(ROOT_URLCONF=__name__)
+class StaffLoginRequiredTests(BaseTestCase):
+
+    def test_redirects_to_login(self):
+        res = self.client.get('/staff_only_view/')
+        self.assertEqual(302, res.status_code)
+        self.assertTrue(
+            res['Location'].startswith('http://testserver/auth/login'))
+
+    def test_staff_user_is_permitted(self):
+        self.login(is_staff=True)
+        res = self.client.get('/staff_only_view/')
+        self.assertEqual(200, res.status_code)
+        self.assertEqual(b'ok', res.content)
+
+    def test_non_staff_user_is_denied(self):
+        self.login(is_staff=False)
+        res = self.client.get('/staff_only_view/')
+        self.assertEqual(403, res.status_code)
+
+
+@override_settings(ROOT_URLCONF=__name__)
+class ContractOfficerPermsRequiredTests(BaseTestCase):
+    def test_redirects_to_login_when_anonymous_user(self):
+        res = self.client.get('/co_only_view/')
+        self.assertEqual(302, res.status_code)
+        self.assertTrue(
+            res['Location'].startswith('http://testserver/auth/login'))
+
+    def test_user_with_sufficient_perms_is_admitted(self):
+        user = self.login()
+        add_pl = Permission.objects.get(
+            codename='add_submittedpricelist')
+        add_pl_row = Permission.objects.get(
+            codename='add_submittedpricelistrow')
+        user.user_permissions.add(add_pl, add_pl_row)
+        res = self.client.get('/co_only_view/')
+        self.assertEqual(200, res.status_code)
+        self.assertEqual(b'ok', res.content)
+
+    def test_permission_denied_when_insufficient_perms(self):
+        user = self.login()
+        add_pl = Permission.objects.get(
+            codename='add_submittedpricelist')
+        user.user_permissions.add(add_pl)
+        res = self.client.get('/co_only_view/')
+        self.assertEqual(403, res.status_code)
+
+    def test_user_in_contract_officer_group_is_admitted(self):
+        call_command('initgroups', stdout=io.StringIO())
+        self.login(groups=['Contract Officers'])
+        res = self.client.get('/co_only_view/')
+        self.assertEqual(200, res.status_code)
+        self.assertEqual(b'ok', res.content)

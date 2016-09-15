@@ -7,14 +7,31 @@
 {% endblock %}
 
 {% block step_body %}
-{% include 'data_capture/price_list/step_1_form.html' %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
 
-{% if show_debug_ui %}
-{% load static %}
-<p class="dev-note">
-  <strong>Developers:</strong>
-  Download <a href="{% static 'data_capture/fake_schedule_example.csv' %}"><code>fake_schedule_example.csv</code></a>
-  and choose "Fake Schedule" from the drop-down to get started.
-</p>
-{% endif %}
+  {{ form.schedule.errors }}
+  <label for="{{ form.schedule.id_for_label }}">Which schedule is associated with this price list?</label>
+  {{ form.schedule }}
+
+  {{ form.contract_number.errors }}
+  {{ form.contract_number.label_tag }}
+  {{ form.contract_number.help_text }}
+  {{ form.contract_number }}
+
+  {{ form.vendor_name.errors }}
+  {{ form.vendor_name.label_tag }}
+  {{ form.vendor_name }}
+
+  <div class="form-button-row clearfix">
+    <div class="submit-group">
+      <span class="submit-label">
+        Provide some basic details about the contract.
+      </span>
+      <button type="submit" class="button-primary">Next</button>
+    </div>
+  </div>
+</form>
+
 {% endblock %}

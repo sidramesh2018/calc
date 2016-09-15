@@ -1,4 +1,4 @@
-@import '../base/variables';
+$em-base:             10px;
 
 // WDS: Mobile-first media query helper
 @mixin media($bp) {

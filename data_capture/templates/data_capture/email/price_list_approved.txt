@@ -1,0 +1,10 @@
+
+The price list you submitted to CALC on {{ price_list.created_at }} has been
+approved!
+
+The submitted price list was for contract {{ price_list.contract_number }}
+({{ price_list.get_schedule_title }}) with {{ price_list.vendor_name }}.
+
+Thank you for helping make CALC a better tool for all of its users!
+
+If you have any questions, please contact the CALC administrator at calc@gsa.gov.
