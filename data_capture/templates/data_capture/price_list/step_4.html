@@ -61,17 +61,15 @@
 <div class="form-button-row clearfix">
   <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
 
-  <a href="{% url 'index' %}" class="button button-cancel">Cancel</a>
-
   {% if gleaned_data.valid_rows %}
-  <form method="post">
+  <form method="post" class="submit-group">
     {% csrf_token %}
-    <div class="submit-group">
-      <span class="submit-label">
-        Submit to approver
-      </span>
-      <button type="submit" class="button-primary">Next</button>
-    </div>
+    <button type="submit" class="button-primary">Next</button>
+    <span class="submit-label">
+      Submit to approver
+    </span>
+
+    <button type="submit" class="button-link" name="cancel" formnovalidate>Cancel</button>
   </form>
   {% endif %}
 </div>

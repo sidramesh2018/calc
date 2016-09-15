@@ -39,16 +39,16 @@
 {{ form.contract_year }}
 
 <div class="form-button-row clearfix">
-  <a href="{% url 'data_capture:step_1' %}" class="button button-previous">Previous</a>
-
-  <a href="{% url 'index' %}" class="button button-secondary">Cancel</a>
+  <a href="{% url 'data_capture:step_1' %}" class="button button-outline button-previous">Previous</a>
 
   <div class="submit-group">
+    <button type="submit" class="button-primary">Next</button>
     <span class="submit-label">
       Choose the awarded price list to upload.
     </span>
-    <button type="submit" class="button-primary">Next</button>
   </div>
+
+  <button type="submit" class="button-link" name="cancel" formnovalidate>Cancel</button>
 </div>
 
 </form>

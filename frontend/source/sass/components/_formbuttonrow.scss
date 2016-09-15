@@ -2,7 +2,7 @@
 
 .form-button-row {
   position: relative;
-  margin-top: 2em;
+  margin-top: 4rem;
 
   button,
   button[type="submit"],
@@ -12,22 +12,22 @@
   }
 
   .submit-group {
-    float: right;
+    display: inline-block;
 
     button,
     .button {
-      float: right;
       margin: 0;
     }
   }
 
   .submit-label {
-    display: inline-block;
+    display: block;
+    float: right;
     height: 38px;
     color: $color-gray-medium;
-    text-align: right;
-    margin-right: 1em;
+    margin-left: 1em;
     max-width: 160px;
     font-size: $small-font-size;
+    line-height: $small-line-height;
   }
 }
