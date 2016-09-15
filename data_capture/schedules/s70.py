@@ -1,6 +1,8 @@
 import functools
 import logging
 import xlrd
+import re
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
@@ -48,6 +50,22 @@ EXAMPLE_SHEET_ROWS = [
 logger = logging.getLogger(__name__)
 
 
+def strip_non_numeric(text):
+    '''
+    Returns a string of the given argument with non-numeric characters removed
+
+    >>> strip_non_numeric('  $1,015.25  ')
+    '1015.25'
+
+    If a non-string argument is given, it is cast to a string and returned
+
+    >>> strip_non_numeric(55.25)
+    '55.25'
+
+    '''
+    return re.sub("[^\d\.]", "", str(text))
+
+
 def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
     val = ''
 
@@ -92,7 +110,7 @@ def glean_labor_categories_from_file(f, sheet_name=DEFAULT_SHEET_NAME):
         cval = functools.partial(safe_cell_str_value, sheet, rownum)
 
         sin = cval(0)
-        price_including_iff = cval(11)
+        price_including_iff = cval(11, coercer=strip_non_numeric)
 
         # We basically just keep going until we run into a row that
         # doesn't have a SIN or price including IFF.
@@ -104,13 +122,13 @@ def glean_labor_categories_from_file(f, sheet_name=DEFAULT_SHEET_NAME):
         cat['labor_category'] = cval(1)
         cat['education_level'] = cval(2)
         cat['min_years_experience'] = cval(3, coercer=int)
-        cat['commercial_list_price'] = cval(4)
+        cat['commercial_list_price'] = cval(4, coercer=strip_non_numeric)
         cat['unit_of_issue'] = cval(5)
         cat['most_favored_customer'] = cval(6)
         cat['best_discount'] = cval(7)
-        cat['mfc_price'] = cval(8)
+        cat['mfc_price'] = cval(8, coercer=strip_non_numeric)
         cat['gsa_discount'] = cval(9)
-        cat['price_excluding_iff'] = cval(10)
+        cat['price_excluding_iff'] = cval(10, coercer=strip_non_numeric)
         cat['price_including_iff'] = price_including_iff
         cat['volume_discount'] = cval(12)
         cats.append(cat)
