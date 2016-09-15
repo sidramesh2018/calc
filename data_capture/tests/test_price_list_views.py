@@ -1,11 +1,10 @@
-import io
 import json
 import unittest
-from django.core.management import call_command
 
 from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
+from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from .common import StepTestCase, FAKE_SCHEDULE, FAKE_SCHEDULE_EXAMPLE_PATH
 
 
@@ -30,22 +29,20 @@ class PriceListStepTestCase(StepTestCase):
     def setUp(self):
         super().setUp()
         registry._init()
-        call_command('initgroups', stdout=io.StringIO())
 
-    def login(self, groups=None, **kwargs):
-        if groups is None:
-            groups = ['Contract Officers']
-        return super().login(groups=groups, **kwargs)
+    def login(self, **kwargs):
+        kwargs['permissions'] = [PRICE_LIST_UPLOAD_PERMISSION]
+        return super().login(**kwargs)
 
     def test_login_is_required(self):
         if not self.url:
             raise unittest.SkipTest()
         self.assertRedirectsToLogin(self.url)
 
-    def test_group_is_required(self):
+    def test_permission_is_required(self):
         if not self.url:
             raise unittest.SkipTest()
-        self.login(groups=[])
+        super().login()
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 403)
 

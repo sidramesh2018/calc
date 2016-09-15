@@ -43,6 +43,9 @@ class FakeScheduleRow(forms.Form):
 class FakeSchedulePriceList(BasePriceList):
     title = 'Fake Schedule (for dev/debugging only)'
     table_template = 'data_capture/price_list/tables/fake_schedule.html'
+    upload_example_template = ('data_capture/price_list/upload_examples/'
+                               'fake_schedule.html')
+    upload_widget_extra_instructions = 'CSV format, please.'
 
     def __init__(self, rows):
         super().__init__()

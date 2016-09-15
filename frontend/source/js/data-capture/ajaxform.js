@@ -77,6 +77,14 @@ class AjaxForm extends window.HTMLFormElement {
         for (let j = 0; j < el.files.length; j++) {
           formData.append(el.name, el.files[j]);
         }
+      } else if (el.type === 'submit') {
+        // This logic is used to support multiple submit buttons.
+        // However, it's assumed that the "default" submit button, which
+        // is triggered in browsers by being the first in the DOM tree,
+        // has no 'name' value associated with it.
+        if (document.activeElement === el) {
+          formData.append(el.name, el.value);
+        }
       } else {
         formData.append(el.name, el.value);
       }

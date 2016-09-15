@@ -1,3 +1,6 @@
+from django.template.loader import render_to_string
+
+
 class BasePriceList:
     '''
     Abstract base class for price lists being imported into CALC.
@@ -6,6 +9,13 @@ class BasePriceList:
     # Human-readable name of the schedule to which the price list
     # belongs. Subclasses should override this.
     title = 'Unknown Schedule'
+
+    # Path to the template used for presenting an example of
+    # what to upload.
+    upload_example_template = None
+
+    # Extra instructions text to use for the upload widget.
+    upload_widget_extra_instructions = None
 
     def __init__(self):
         # This is a list of Django Form objects representing
@@ -54,6 +64,31 @@ class BasePriceList:
         '''
 
         return NotImplementedError()
+
+    @classmethod
+    def get_upload_example_context(cls):
+        '''
+        Returns a dictionary to use as the context for the upload example
+        template.
+        '''
+
+        return None
+
+    @classmethod
+    def render_upload_example(cls, request=None):
+        '''
+        Returns the HTML containing an example of what the schedule
+        expects the user to upload, along with any other pertinent
+        information.
+
+        If the schedule has no example, returns an empty string.
+        '''
+
+        if cls.upload_example_template is not None:
+            return render_to_string(cls.upload_example_template,
+                                    cls.get_upload_example_context(),
+                                    request=request)
+        return ''
 
     @classmethod
     def deserialize(cls, obj):
