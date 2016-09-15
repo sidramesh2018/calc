@@ -440,6 +440,27 @@
   </select>
   {% endexample %}
 
+  {% guide_section "Radio Buttons" %}
+
+  <p>
+    Because USWDS uses a slightly different HTML structure for
+    radio buttons than Django, we need to use a custom
+    {% pyobjname 'frontend.radio.UswdsRadioSelect' %} widget.
+  </p>
+
+  <p>
+    For a simple code example, see
+    {% pathname 'styleguide/radio_example.py' %} and
+    {% pathname 'styleguide/templates/styleguide_radio_example.html' %}.
+  </p>
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example</h3>
+      {% include "styleguide_radio_example.html" %}
+    </div>
+  </div>
+
   {% guide_section "Dates" %}
 
   <p>

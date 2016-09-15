@@ -14,3 +14,7 @@ class StyleguideTests(TestCase):
     def test_styleguide_date_returns_200(self):
         response = self.client.get('/styleguide/date')
         self.assertEqual(response.status_code, 200)
+
+    def test_styleguide_radio_returns_200(self):
+        response = self.client.get('/styleguide/radio')
+        self.assertEqual(response.status_code, 200)
