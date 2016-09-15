@@ -34,21 +34,18 @@
   </ul>
 </fieldset>
 
-<p>
-  <fieldset>
-    <legend>{{ form.contract_start.label }}</legend>
-    {{ form.contract_start.errors }}
-    {{ form.contract_start }}
-  </fieldset>
-</p>
-
-<p>
-  <fieldset>
-    <legend>{{ form.contract_end.label }}</legend>
-    {{ form.contract_end.errors }}
-    {{ form.contract_end }}
-  </fieldset>
-</p>
+  <div class="date-range">
+    <fieldset>
+      <legend>{{ form.contract_start.label }}</legend>
+      {{ form.contract_start.errors }}
+      {{ form.contract_start }}
+    </fieldset>
+    <fieldset>
+      <legend>{{ form.contract_end.label }}</legend>
+      {{ form.contract_end.errors }}
+      {{ form.contract_end }}
+    </fieldset>
+  </div>
 
 <fieldset>
   <legend>{{ form.contract_year.label }}</legend>

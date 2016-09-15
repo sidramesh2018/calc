@@ -80,3 +80,11 @@ form ul {
   color: $color-gray;
   display: block;
 }
+
+.date-range {
+  display: flex;
+  margin-bottom: 2.5rem;
+  fieldset {
+    flex-grow: 1;
+  }
+}
