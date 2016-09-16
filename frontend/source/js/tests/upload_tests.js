@@ -127,7 +127,6 @@ import { UploadWidget } from '../data-capture/upload';
   });
 
   degradedTest('degraded upload sets attributes properly', (assert) => {
-    assert.ok(upload.hasClass('degraded'));
     assert.ok(!upload[0].hasAttribute('aria-live'));
   });
 
