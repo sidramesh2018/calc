@@ -199,7 +199,6 @@ class UploadWidget extends window.HTMLElement {
 
     if (!this._checkForAjaxFormParent() || !HAS_BROWSER_SUPPORT ||
         supports.isForciblyDegraded(this)) {
-      $el.addClass('degraded');
       this.isDegraded = true;
       return finishInitialization();
     }
@@ -209,6 +208,8 @@ class UploadWidget extends window.HTMLElement {
 
     // The content of the upload widget will change when the user chooses
     // a file, so let's make sure screen readers let users know about it.
+    // Note that this is also used by CSS rules to determine whether or
+    // not the widget has actually been upgraded by JS.
     $el.attr('aria-live', 'polite');
 
     $el.on('dragenter', e => {

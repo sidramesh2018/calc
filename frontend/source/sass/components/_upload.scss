@@ -53,7 +53,8 @@ upload-widget {
   }
 }
 
-.js upload-widget:not(.degraded) {
+// Rules specific to JS-upgraded widgets.
+upload-widget[aria-live] {
   input {
     width: 0.1px;
     height: 0.1px;
@@ -64,8 +65,8 @@ upload-widget {
   }
 }
 
-.no-js upload-widget,
-.js upload-widget.degraded {
+// Rules specific to non-JS-upgraded widgets.
+upload-widget:not([aria-live]) {
   font-size: 1.3rem;
   display: block;
   border: none;
