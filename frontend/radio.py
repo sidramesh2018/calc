@@ -17,7 +17,7 @@ class UswdsRadioChoiceInput(forms.widgets.RadioChoiceInput):
         if self.id_for_label:
             label_for = format_html(' for="{}"', self.id_for_label)
         else:
-            label_for = ''
+            raise ValueError('USWDS-style radios must have "id" attributes')
         attrs = dict(self.attrs, **attrs) if attrs else self.attrs
         return format_html(
             '{}<label{}>{}</label>', self.tag(attrs), label_for,
