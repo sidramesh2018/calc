@@ -1,6 +1,10 @@
 @import '../base/variables';
 @import '../uswds/inputs';
 
+legend {
+  font-size: $base-font-size;
+}
+
 input[type="radio"] + label {
   margin-top: 0;
 }

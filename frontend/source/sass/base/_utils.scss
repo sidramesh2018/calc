@@ -109,3 +109,9 @@ th:hover.tooltips span {
 .noUi-connect {
   background: $color-primary;
 }
+
+/* Skeleton adds margin even to the first column in a row. */
+.row .column:first-child,
+.row .columns:first-child {
+  margin-left: 0;
+}
