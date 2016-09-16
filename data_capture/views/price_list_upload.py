@@ -1,26 +1,20 @@
 import json
-from functools import wraps
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.http import HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required, permission_required
 
 from .. import forms
-from ..decorators import handle_cancel, contract_officer_perms_required
+from ..decorators import handle_cancel
 from ..schedules import registry
-from .common import add_generic_form_error
+from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
+from .common import add_generic_form_error, Steps
 from frontend import ajaxform
 
 
-def gleaned_data_required(f):
-    @wraps(f)
-    def wrapper(request):
-        try:
-            d = request.session['data_capture:price_list']['gleaned_data']
-        except:
-            return redirect('data_capture:step_3')
-
-        return f(request, registry.deserialize(d))
-    return wrapper
+steps = Steps(
+    template_format='data_capture/price_list/step_{}.html',
+)
 
 
 def get_nested_item(obj, keys, default=None):
@@ -44,9 +38,34 @@ def get_nested_item(obj, keys, default=None):
     return obj[key]
 
 
-@contract_officer_perms_required
+def get_step_form_from_session(step_number, request, **kwargs):
+    '''
+    Bring back the given Form instance for a step from the
+    request session.  Returns None if the step hasn't been completed yet.
+
+    Any keyword arguments are passed on to the Form constructor.
+    '''
+
+    cls = getattr(forms, 'Step{}Form'.format(step_number))
+    post_data = get_nested_item(request.session, (
+        'data_capture:price_list',
+        'step_{}_POST'.format(step_number)
+    ))
+    if post_data is None:
+        return None
+    form = cls(post_data, **kwargs)
+    if not form.is_valid():
+        raise AssertionError(
+            'invalid step {} data in session'.format(step_number)
+        )
+    return form
+
+
+@steps.step
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
-def step_1(request):
+def step_1(request, step):
     if request.method == 'GET':
         form = forms.Step1Form(data=get_nested_item(
             request.session,
@@ -63,19 +82,19 @@ def step_1(request):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/price_list/step_1.html', {
-            'step_number': 1,
-            'form': form,
-        })
+    return step.render(request, {
+        'form': form,
+    })
 
 
-@contract_officer_perms_required
+@steps.step
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
-def step_2(request):
+def step_2(request, step):
     # Redirect back to step 1 if we don't have data
-    if 'step_1_POST' not in request.session.get('data_capture:price_list',
-                                                {}):
+    if get_step_form_from_session(1, request) is None:
         return redirect('data_capture:step_1')
 
     if request.method == 'GET':
@@ -97,28 +116,32 @@ def step_2(request):
         else:
             add_generic_form_error(request, form)
 
-    return render(request, 'data_capture/price_list/step_2.html', {
-        'step_number': 2,
+    return step.render(request, {
         'form': form
     })
 
 
-@contract_officer_perms_required
+@steps.step
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
-def step_3(request):
-    if 'step_2_POST' not in request.session.get('data_capture:price_list',
-                                                {}):
+def step_3(request, step):
+    if get_step_form_from_session(2, request) is None:
         return redirect('data_capture:step_2')
     else:
+        session_pl = request.session['data_capture:price_list']
+        step_1_data = get_step_form_from_session(1, request).cleaned_data
+        schedule_class = step_1_data['schedule_class']
+
         if request.method == 'GET':
-            form = forms.Step3Form()
+            form = forms.Step3Form(schedule=step_1_data['schedule'])
         else:
-            session_pl = request.session['data_capture:price_list']
-            posted_data = dict(
+            form = forms.Step3Form(
                 request.POST,
-                schedule=session_pl['step_1_POST']['schedule'])
-            form = forms.Step3Form(posted_data, request.FILES)
+                request.FILES,
+                schedule=step_1_data['schedule']
+            )
 
             if form.is_valid():
                 session_pl['gleaned_data'] = \
@@ -132,46 +155,56 @@ def step_3(request):
 
         return ajaxform.render(
             request,
-            context={
-                'step_number': 3,
-                'form': form
-            },
-            template_name='data_capture/price_list/step_3.html',
+            context=step.context({
+                'form': form,
+                'upload_example': schedule_class.render_upload_example(
+                    request
+                )
+            }),
+            template_name=step.template_name,
             ajax_template_name='data_capture/price_list/upload_form.html',
         )
 
 
-@contract_officer_perms_required
-@gleaned_data_required
+@steps.step
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @handle_cancel
-def step_4(request, gleaned_data):
+def step_4(request, step):
+    gleaned_data = get_nested_item(request.session, (
+        'data_capture:price_list',
+        'gleaned_data',
+    ))
+
+    if gleaned_data is None:
+        return redirect('data_capture:step_3')
+
+    gleaned_data = registry.deserialize(gleaned_data)
+
     session_pl = request.session['data_capture:price_list']
-    preferred_schedule = registry.get_class(
-        session_pl['step_1_POST']['schedule']
-    )
+    step_1_form = get_step_form_from_session(1, request)
+
+    preferred_schedule = step_1_form.cleaned_data['schedule_class']
+
     if request.method == 'POST':
         if not gleaned_data.valid_rows:
             # Our UI never should've let the user issue a request
             # like this.
             return HttpResponseBadRequest()
-        step_1_form = forms.Step1Form(
-            session_pl['step_1_POST']
-        )
-        if not step_1_form.is_valid():
-            raise AssertionError('invalid step 1 data in session')
         price_list = step_1_form.save(commit=False)
-
-        step_2_form = forms.Step2Form(
-            session_pl['step_2_POST'],
-            instance=price_list
-        )
-        if not step_2_form.is_valid():
-            raise AssertionError('invalid step 2 data in session')
+        step_2_form = get_step_form_from_session(2, request,
+                                                 instance=price_list)
         step_2_form.save(commit=False)
 
         price_list.submitter = request.user
         price_list.serialized_gleaned_data = json.dumps(
             session_pl['gleaned_data'])
+
+        # We always want to explicitly set the schedule to the
+        # one that the gleaned data is part of, in case we gracefully
+        # fell back to a schedule other than the one the user chose.
+        price_list.schedule = registry.get_classname(gleaned_data)
+
         price_list.save()
         gleaned_data.add_to_price_list(price_list)
 
@@ -179,16 +212,15 @@ def step_4(request, gleaned_data):
 
         return redirect('data_capture:step_5')
 
-    return render(request, 'data_capture/price_list/step_4.html', {
-        'step_number': 4,
+    return step.render(request, {
         'gleaned_data': gleaned_data,
         'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
-        'preferred_schedule': preferred_schedule,
+        'preferred_schedule_title': preferred_schedule.title,
     })
 
 
-@contract_officer_perms_required
-def step_5(request):
-    return render(request, 'data_capture/price_list/step_5.html', {
-        'step_number': 5
-    })
+@steps.step
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+def step_5(request, step):
+    return step.render(request)

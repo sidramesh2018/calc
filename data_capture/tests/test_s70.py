@@ -16,9 +16,9 @@ S70 = '%s.Schedule70PriceList' % s70.__name__
 S70_XLSX_PATH = path('static', 'data_capture', 's70_example.xlsx')
 
 
-def uploaded_xlsx_file(content=None):
+def uploaded_xlsx_file(path=S70_XLSX_PATH, content=None):
     if content is None:
-        with open(S70_XLSX_PATH, 'rb') as f:
+        with open(path, 'rb') as f:
             content = f.read()
 
     return SimpleUploadedFile(
@@ -79,6 +79,28 @@ class GleanLaborCategoriesTests(TestCase):
             'volume_discount': '0.15',
         }])
 
+    def test_text_formatted_prices_are_gleaned(self):
+        file_path = path(
+            'static', 'data_capture', 'price_list_with_text_prices.xlsx')
+        rows = s70.glean_labor_categories_from_file(
+            uploaded_xlsx_file(file_path))
+
+        self.assertEqual(rows, [{
+            'sin': '132-51',
+            'labor_category': 'Text Price Row',
+            'education_level': 'Bachelors',
+            'min_years_experience': '5',
+            'commercial_list_price': '110.50',
+            'unit_of_issue': 'Hour',
+            'most_favored_customer': 'All Commercial Customers',
+            'best_discount': '0.07',
+            'mfc_price': '105.50',
+            'gsa_discount': '0.1',
+            'price_excluding_iff': '105.40',
+            'price_including_iff': '105.30',
+            'volume_discount': '0.15',
+        }])
+
     def test_validation_error_raised_when_sheet_not_present(self):
         with self.assertRaisesRegexp(
             ValidationError,
@@ -99,7 +121,7 @@ class LoadFromUploadValidationErrorTests(TestCase):
             s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
 
     def test_raises_validation_error_on_corrupt_files(self):
-        f = uploaded_xlsx_file(b'foo')
+        f = uploaded_xlsx_file(content=b'foo')
 
         with self.assertRaisesRegexp(
             ValidationError,
@@ -200,3 +222,7 @@ class S70Tests(ModelTestCase):
         table_html = s.to_error_table()
         self.assertIsNotNone(table_html)
         self.assertTrue(isinstance(table_html, str))
+
+    def test_render_upload_example_works(self):
+        html = s70.Schedule70PriceList.render_upload_example()
+        self.assertTrue('Bachelors' in html)

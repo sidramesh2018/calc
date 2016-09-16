@@ -1,19 +1,28 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.core.files.base import ContentFile
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
+from django.contrib.auth.decorators import login_required, permission_required
 
 from .. import forms, jobs
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
-from ..decorators import handle_cancel, staff_login_required
-from .common import add_generic_form_error
+from ..management.commands.initgroups import BULK_UPLOAD_PERMISSION
+from ..decorators import handle_cancel
+from .common import add_generic_form_error, Steps
 from frontend import ajaxform
 from contracts.models import BulkUploadContractSource
 
 
-@staff_login_required
+steps = Steps(
+    template_format='data_capture/bulk_upload/region_10_step_{}.html',
+)
+
+
+@steps.step
+@login_required
+@permission_required(BULK_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
-def region_10_step_1(request):
+def bulk_region_10_step_1(request, step):
     '''
     Start of Region 10 Bulk Upload - Upload the spreadsheet
     '''
@@ -44,20 +53,21 @@ def region_10_step_1(request):
 
     return ajaxform.render(
         request,
-        context={
-            'step_number': 1,
+        context=step.context({
             'form': form,
-        },
-        template_name='data_capture/bulk_upload/region_10_step_1.html',
+        }),
+        template_name=step.template_name,
         ajax_template_name='data_capture/bulk_upload/'
                            'region_10_step_1_form.html',
     )
 
 
-@staff_login_required
+@steps.step
+@login_required
+@permission_required(BULK_UPLOAD_PERMISSION, raise_exception=True)
 @handle_cancel
 @require_http_methods(["GET", "POST"])
-def region_10_step_2(request):
+def bulk_region_10_step_2(request, step):
     '''
     Confirm that the new data should be loaded and load it when the user
     submits
@@ -75,12 +85,9 @@ def region_10_step_2(request):
 
         file_metadata = Region10SpreadsheetConverter(file).get_metadata()
 
-        return render(
-            request,
-            'data_capture/bulk_upload/region_10_step_2.html', {
-                'step_number': 2,
-                'file_metadata': file_metadata,
-            })
+        return step.render(request, {
+            'file_metadata': file_metadata,
+        })
 
     # else 'POST' because of @require_http_methods decorator
     jobs.process_bulk_upload_and_send_email.delay(upload_source_id)
@@ -91,11 +98,12 @@ def region_10_step_2(request):
     return redirect('data_capture:bulk_region_10_step_3')
 
 
-@staff_login_required
-def region_10_step_3(request):
+@steps.step
+@login_required
+@permission_required(BULK_UPLOAD_PERMISSION, raise_exception=True)
+def bulk_region_10_step_3(request, step):
     '''Show success page'''
 
-    return render(request, 'data_capture/bulk_upload/region_10_step_3.html', {
-        'step_number': 3,
+    return step.render(request, {
         'SEND_TRANSACTIONAL_EMAILS': settings.SEND_TRANSACTIONAL_EMAILS,
     })

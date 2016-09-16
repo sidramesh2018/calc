@@ -79,7 +79,11 @@
 
   <div class="styleguide-example">
     <div class="rendering">
-      <h3 class="example-heading">Example</h3>
+      <h3 class="example-heading">
+        Example
+        <a href="{% url 'styleguide:ajaxform' %}" target="_blank" title="Open in new tab"></a>
+      </h3>
+
       {% include "styleguide_ajaxform_example.html" %}
     </div>
   </div>
@@ -152,11 +156,21 @@
   </p>
 
   <p>
-    Use <code>li.steps-done</code> to identify a step as being completed.
+    Use <code>li.current</code> to identify a step as being the current
+    one.
+  </p>
+
+  <p>
+    We recommend adding <code>aria-hidden="true"</code> to the list, as
+    there isn't an easy way to communicate the information to vision-impaired
+    users without being overly verbose (thus annoying the user) or confusing.
+    However, <em>do</em> be sure to repeat the name of the current step
+    elsewhere in a header, so that the user knows what step they're currently
+    on.
   </p>
 
   {% example %}
-  <ol class="steps">
+  <ol class="steps" aria-hidden="true">
     <li>
       <label>Upload price list</label>
     </li>
@@ -475,7 +489,10 @@
 
   <div class="styleguide-example">
     <div class="rendering">
-      <h3 class="example-heading">Example</h3>
+      <h3 class="example-heading">
+        Example
+        <a href="{% url 'styleguide:date' %}" target="_blank" title="Open in new tab"></a>
+      </h3>
       {% include "styleguide_date_example.html" %}
     </div>
   </div>
@@ -490,14 +507,15 @@
   <div class="form-button-row clearfix">
     <a href="#" class="button button-previous">Previous</a>
 
-    <button type="submit" name="cancel" class="button-secondary">Cancel</button>
 
     <div class="submit-group">
+      <button type="submit" class="button-primary">Next</button>
       <span class="submit-label">
         Provide details about the contract.
       </span>
-      <button type="submit" class="button-primary">Next</button>
     </div>
+
+    <button type="submit" name="cancel" class="button-link" formnovalidate>Cancel</button>
   </div>
   {% endexample %}
 

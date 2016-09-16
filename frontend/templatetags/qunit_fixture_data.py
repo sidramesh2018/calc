@@ -28,6 +28,7 @@ class AjaxformTestsForm(forms.Form):
             ' action="/post-stuff">',
             '  %s' % str(self.as_ul()),
             '  <button type="submit">submit</button>',
+            '  <button type="submit" name="cancel">cancel</button>',
             '</form>'
         ])
 

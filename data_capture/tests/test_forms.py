@@ -12,16 +12,14 @@ class Step3FormTests(TestCase):
         registry._init()
 
     def test_invalid_when_file_is_missing(self):
-        form = Step3Form({})
+        form = Step3Form({}, schedule=FAKE_SCHEDULE)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['file'][0], 'This field is required.')
 
     def test_invalid_when_file_cannot_be_gleaned(self):
-        form = Step3Form({
-            'schedule': FAKE_SCHEDULE,
-        }, {
+        form = Step3Form({}, {
             'file': uploaded_csv_file(b'i cannot be gleaned')
-        })
+        }, schedule=FAKE_SCHEDULE)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             '__all__': [
@@ -31,11 +29,9 @@ class Step3FormTests(TestCase):
         })
 
     def test_clean_sets_gleaned_data(self):
-        form = Step3Form({
-            'schedule': FAKE_SCHEDULE,
-        }, {
+        form = Step3Form({}, {
             'file': uploaded_csv_file()
-        })
+        }, schedule=FAKE_SCHEDULE)
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data['gleaned_data'].title,
                          FakeSchedulePriceList.title)

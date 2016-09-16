@@ -149,6 +149,23 @@ advancedTest('upgraded form has falsy .isDegraded', (assert, s) => {
   assert.ok(!s.ajaxform.isDegraded);
 });
 
+advancedTest('custom submit btn info only included when ' +
+             'in active focus', (assert, s) => {
+  $(s.ajaxform).on('submit', () => {
+    const formData = server.requests[0].requestBody;
+
+    // Ugh, only newer browsers support FormData.prototype.get().
+    if (typeof formData.get === 'function') {
+      assert.ok(formData.has('cancel'));
+    } else {
+      assert.ok(true);
+    }
+  });
+  $parentDiv.show();
+  $('button[name="cancel"]', s.ajaxform).focus();
+  $(s.ajaxform).submit();
+});
+
 advancedTest('submit triggers ajax w/ form data', (assert, s) => {
   $(s.ajaxform).on('submit', e => {
     assert.ok(e.isDefaultPrevented());
@@ -164,6 +181,7 @@ advancedTest('submit triggers ajax w/ form data', (assert, s) => {
     if (typeof formData.get === 'function') {
       assert.equal(formData.get('foo'), 'bar');
       assert.equal(formData.get('file').size, 'hello there'.length);
+      assert.ok(!formData.has('cancel'));
     }
   });
 

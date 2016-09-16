@@ -1,6 +1,8 @@
 import functools
 import logging
 import xlrd
+import re
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
@@ -10,7 +12,58 @@ from contracts.models import EDUCATION_CHOICES
 from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 
 
+DEFAULT_SHEET_NAME = '(3)Labor Categories'
+
+EXAMPLE_SHEET_ROWS = [
+    [
+        r'SIN(s) PROPOSED',
+        r'SERVICE PROPOSED (e.g. Job Title/Task)',
+        r'MINIMUM EDUCATION/ CERTIFICATION LEVEL',
+        r'MINIMUM YEARS OF EXPERIENCE',
+        r'COMMERCIAL LIST PRICE (CPL) OR MARKET PRICES',
+        r'UNIT OF ISSUE (e.g. Hour, Task, Sq ft)',
+        r'MOST FAVORED CUSTOMER (MFC)',
+        r'BEST  DISCOUNT OFFERED TO MFC (%)',
+        r'MFC PRICE',
+        r'GSA(%) DISCOUNT (exclusive of the .75% IFF)',
+        r'PRICE OFFERED TO GSA (excluding IFF)',
+        r'PRICE OFFERED TO GSA (including IFF)',
+        r'QUANTITY/ VOLUME DISCOUNT',
+    ],
+    [
+        r'132-51',
+        r'Project Manager',
+        r'Bachelors',
+        r'5',
+        r'$125',
+        r'Hour',
+        r'All Commercial Customers',
+        r'7.00%',
+        r'$123.99',
+        r'10.00%',
+        r'$110.99',
+        r'$115.99',
+        r'15.00%',
+    ]
+]
+
 logger = logging.getLogger(__name__)
+
+
+def strip_non_numeric(text):
+    '''
+    Returns a string of the given argument with non-numeric characters removed
+
+    >>> strip_non_numeric('  $1,015.25  ')
+    '1015.25'
+
+    If a non-string argument is given, it is cast to a string and returned
+
+    >>> strip_non_numeric(55.25)
+    '55.25'
+
+    '''
+    return re.sub("[^\d\.]", "", str(text))
 
 
 def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
@@ -30,7 +83,7 @@ def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
     return str(val)
 
 
-def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
+def glean_labor_categories_from_file(f, sheet_name=DEFAULT_SHEET_NAME):
     # TODO: I'm not sure how big these uploaded files can get. While
     # the labor categories price lists don't get that long, according to
     # user research interviews, *product* price lists can get really long;
@@ -57,7 +110,7 @@ def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
         cval = functools.partial(safe_cell_str_value, sheet, rownum)
 
         sin = cval(0)
-        price_including_iff = cval(11)
+        price_including_iff = cval(11, coercer=strip_non_numeric)
 
         # We basically just keep going until we run into a row that
         # doesn't have a SIN or price including IFF.
@@ -69,13 +122,13 @@ def glean_labor_categories_from_file(f, sheet_name='(3)Labor Categories'):
         cat['labor_category'] = cval(1)
         cat['education_level'] = cval(2)
         cat['min_years_experience'] = cval(3, coercer=int)
-        cat['commercial_list_price'] = cval(4)
+        cat['commercial_list_price'] = cval(4, coercer=strip_non_numeric)
         cat['unit_of_issue'] = cval(5)
         cat['most_favored_customer'] = cval(6)
         cat['best_discount'] = cval(7)
-        cat['mfc_price'] = cval(8)
+        cat['mfc_price'] = cval(8, coercer=strip_non_numeric)
         cat['gsa_discount'] = cval(9)
-        cat['price_excluding_iff'] = cval(10)
+        cat['price_excluding_iff'] = cval(10, coercer=strip_non_numeric)
         cat['price_including_iff'] = price_including_iff
         cat['volume_discount'] = cval(12)
         cats.append(cat)
@@ -131,6 +184,9 @@ class Schedule70Row(forms.Form):
 class Schedule70PriceList(BasePriceList):
     title = 'IT Schedule 70'
     table_template = 'data_capture/price_list/tables/schedule_70.html'
+    upload_example_template = ('data_capture/price_list/upload_examples/'
+                               'schedule_70.html')
+    upload_widget_extra_instructions = 'XLS or XLSX format, please.'
 
     def __init__(self, rows):
         super().__init__()
@@ -165,6 +221,13 @@ class Schedule70PriceList(BasePriceList):
     def to_error_table(self):
         return render_to_string(self.table_template,
                                 {'rows': self.invalid_rows})
+
+    @classmethod
+    def get_upload_example_context(cls):
+        return {
+            'sheet_name': DEFAULT_SHEET_NAME,
+            'sheet_rows': EXAMPLE_SHEET_ROWS,
+        }
 
     @classmethod
     def deserialize(cls, rows):

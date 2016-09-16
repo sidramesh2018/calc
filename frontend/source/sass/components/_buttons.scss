@@ -5,7 +5,10 @@ $font-size-button: rem(11px); // with the all-caps, even the small font size is 
 
 button,
 .button,
-.button:visited {
+.button:visited,
+[type="submit"],
+[type="reset"],
+[type="button"] {
   // WDS override
   margin-bottom: 0;
   margin-top: 0;
