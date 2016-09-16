@@ -2,22 +2,38 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission
 
 
+BULK_UPLOAD_PERMISSION = 'contracts.add_bulkuploadcontractsource'
+PRICE_LIST_UPLOAD_PERMISSION = 'data_capture.add_submittedpricelist'
+
 ROLES = {}
 
 ROLES['Data Administrators'] = set([
     'auth.add_user',
     'auth.change_user',
+    BULK_UPLOAD_PERMISSION,
     'data_capture.change_submittedpricelist',
     'data_capture.change_submittedpricelistrow',
 ])
 
 ROLES['Contract Officers'] = set([
-    'data_capture.add_submittedpricelist',
+    PRICE_LIST_UPLOAD_PERMISSION,
     'data_capture.add_submittedpricelistrow',
 ])
 
 # Data Administrators should also have any perms that Contract Officers do
 ROLES['Data Administrators'].update(ROLES['Contract Officers'])
+
+
+def get_permissions_from_ns_codenames(ns_codenames):
+    '''
+    Returns a list of Permission objects for the specified namespaced codenames
+    '''
+    splitnames = [ns_codename.split('.') for ns_codename in ns_codenames]
+    return [
+        Permission.objects.get(codename=codename,
+                               content_type__app_label=app_label)
+        for app_label, codename in splitnames
+    ]
 
 
 class Command(BaseCommand):
@@ -35,12 +51,7 @@ class Command(BaseCommand):
             self.stdout.write("  Group does not exist, creating it.")
             group = Group(name=groupname)
             group.save()
-        splitnames = [perm.split('.') for perm in perms]
-        group.permissions = [
-            Permission.objects.get(codename=codename,
-                                   content_type__app_label=app_label)
-            for app_label, codename in splitnames
-        ]
+        group.permissions = get_permissions_from_ns_codenames(perms)
         group.save()
 
     def handle(self, *args, **kwargs):

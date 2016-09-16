@@ -64,7 +64,13 @@ class Step3Form(forms.Form):
         '''
 
         self.schedule = kwargs.pop('schedule')
+        self.schedule_class = registry.get_class(self.schedule)
+
         super().__init__(*args, **kwargs)
+
+        extra = self.schedule_class.upload_widget_extra_instructions
+        if extra is not None:
+            self.fields['file'].widget.extra_instructions = extra
 
     def clean(self):
         cleaned_data = super().clean()
