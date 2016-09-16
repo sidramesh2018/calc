@@ -39,11 +39,7 @@ class Step2Form(forms.ModelForm):
     )
     contractor_site = forms.ChoiceField(
         label='Worksite',
-        choices=[
-            ('Customer', 'Customer/Offsite'),
-            ('Contractor', 'Contractor/Onsite'),
-            ('Both', 'Both'),
-        ],
+        choices=SubmittedPriceList.CONTRACTOR_SITE_CHOICES,
         widget=UswdsRadioSelect,
     )
     contract_start = SplitDateField(required=False)

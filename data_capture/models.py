@@ -5,6 +5,12 @@ from contracts.models import Contract, EDUCATION_CHOICES
 
 
 class SubmittedPriceList(models.Model):
+    CONTRACTOR_SITE_CHOICES = [
+        ('Customer', 'Customer/Offsite'),
+        ('Contractor', 'Contractor/Onsite'),
+        ('Both', 'Both'),
+    ]
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -20,11 +26,7 @@ class SubmittedPriceList(models.Model):
     is_small_business = models.BooleanField()
     contractor_site = models.CharField(
         verbose_name='Worksite',
-        choices=[
-            ('Customer', 'Customer/Offsite'),
-            ('Contractor', 'Contractor/Onsite'),
-            ('Both', 'Both'),
-        ],
+        choices=CONTRACTOR_SITE_CHOICES,
         max_length=128
     )
     contract_year = models.IntegerField(null=True, blank=True)
