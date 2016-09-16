@@ -10,6 +10,8 @@
     <script src="{% static 'frontend/js/vendor/aight.v2.min.js' %}"></script>
     <script src="{% static 'frontend/js/vendor/history.min.js' %}"></script>
     <![endif]-->
+
+    {% include 'frontend/safe_mode/script_tag.html' %}
     <link rel="stylesheet" href="{% static 'frontend/built/style/main.min.css' %}"/>
 
     <![if gt IE 8]>
@@ -107,6 +109,8 @@
         </div>
       </div>
     </footer>
+
+    {% if not is_safe_mode_enabled %}
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -137,5 +141,8 @@
     <![endif]>
      <!-- Ethnio Activation Code -->
     <script type="text/javascript" language="javascript" src="https://ethn.io/88263.js" async="true" charset="utf-8"></script>
+    {% endif %}
+
+    {% block before_body_close %}{% endblock %}
   </body>
 </html>

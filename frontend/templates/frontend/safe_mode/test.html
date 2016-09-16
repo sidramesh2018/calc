@@ -1,0 +1,67 @@
+<script>
+(function() {
+  function activate(window, document) {
+    {% include 'frontend/safe_mode/script.js' %}
+
+    return window;
+  }
+
+  function removeFakeUI() {
+    var div = document.getElementById('safe-mode-enable');
+
+    if (div) {
+      div.parentNode.removeChild(div);
+    }
+  }
+
+  function createFakeUI() {
+    var div = document.createElement('div');
+
+    div.setAttribute('id', 'safe-mode-enable');
+    div.setAttribute('style', 'display: none');
+    document.body.appendChild(div);
+
+    return div;
+  }
+
+  QUnit.module('safe-mode', {
+    beforeEach: removeFakeUI,
+    afterEach: removeFakeUI
+  });
+
+  QUnit.test('onerror never throws exceptions', function(assert) {
+    activate({}, null).onerror();
+    assert.ok(true);
+  });
+
+  QUnit.test('onload does nothing if no errors occurred', function(assert) {
+    var div = createFakeUI();
+
+    activate({}, document).onload();
+    assert.ok(div.hasAttribute('style'));
+  });
+
+  QUnit.test('onload shows UI if errors occurred', function(assert) {
+    var div;
+    var win = activate({}, document);
+
+    // Simulate an error occurring, but before the UI is in the DOM.
+    win.onerror();
+
+    // Now add the UI to the DOM.
+    div = createFakeUI();
+
+    // Now simulate a page load.
+    win.onload();
+
+    assert.ok(!div.hasAttribute('style'));
+  });
+
+  QUnit.test('onerror shows UI if in DOM', function(assert) {
+    var div = createFakeUI();
+
+    activate({}, document).onerror();
+    assert.ok(!div.hasAttribute('style'));
+  });
+})();
+</script>

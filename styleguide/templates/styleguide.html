@@ -539,7 +539,10 @@
 
   {% endguide %}
 </div>
+{% if not is_safe_mode_enabled %}
 <script src="{% static 'styleguide/vendor/prism.js' %}"></script>
 <script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
 <script src="{% static 'frontend/built/js/styleguide/index.min.js' %}"></script>
+{% endif %}
+{% include 'frontend/safe_mode/ui.html' %}
 {% endblock %}
