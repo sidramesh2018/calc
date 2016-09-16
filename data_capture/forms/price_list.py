@@ -4,6 +4,7 @@ from ..models import SubmittedPriceList
 from ..schedules import registry
 from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
+from frontend.radio import UswdsRadioSelect
 
 
 class Step1Form(forms.ModelForm):
@@ -27,7 +28,7 @@ class Step2Form(forms.ModelForm):
             (True, 'This is a small business.'),
             (False, 'This is not a small business.'),
         ],
-        widget=forms.widgets.RadioSelect,
+        widget=UswdsRadioSelect,
     )
     contractor_site = forms.ChoiceField(
         label='Worksite',
@@ -36,7 +37,7 @@ class Step2Form(forms.ModelForm):
             ('Contractor', 'Contractor/Onsite'),
             ('Both', 'Both'),
         ],
-        widget=forms.widgets.RadioSelect,
+        widget=UswdsRadioSelect,
     )
     contract_start = SplitDateField(required=False)
     contract_end = SplitDateField(required=False)
@@ -50,7 +51,7 @@ class Step2Form(forms.ModelForm):
             (4, '4'),
             (5, '5'),
         ],
-        widget=forms.widgets.RadioSelect,
+        widget=UswdsRadioSelect,
     )
 
     class Meta:
