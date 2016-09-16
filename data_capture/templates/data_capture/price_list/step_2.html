@@ -12,26 +12,12 @@
   <fieldset>
     <legend>{{ form.is_small_business.label }}</legend>
     {{ form.is_small_business.errors }}
-    <ul>
-      {% for radio in form.is_small_business %}
-      <li>
-        {{ radio.tag }}
-        <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-      </li>
-      {% endfor %}
-    </ul>
+    {{ form.is_small_business }}
   </fieldset>
   <fieldset>
     <legend>{{ form.contractor_site.label }}</legend>
     {{ form.contractor_site.errors }}
-    <ul>
-      {% for radio in form.contractor_site %}
-      <li>
-        {{ radio.tag }}
-        <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-      </li>
-      {% endfor %}
-    </ul>
+    {{ form.contractor_site }}
   </fieldset>
 
   <div class="date-range">
