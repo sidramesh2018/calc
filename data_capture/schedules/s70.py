@@ -83,11 +83,9 @@ def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
     return str(val)
 
 
-def find_header_row(sheet):
-    CHECK_THRESHOLD = 50
-
+def find_header_row(sheet, row_threshold=50):
     first_col_heading = EXAMPLE_SHEET_ROWS[0][0]
-    row_limit = min(sheet.nrows, CHECK_THRESHOLD)
+    row_limit = min(sheet.nrows, row_threshold)
 
     for rx in range(row_limit):
         if sheet.cell_value(rx, 0) == first_col_heading:
