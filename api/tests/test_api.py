@@ -456,8 +456,7 @@ class ContractsTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         self.assertResultsEqual(resp.data['results'],
-                                [{'id': 28,
-                                  'idv_piid': 'ABC1231',
+                                [{'idv_piid': 'ABC1231',
                                   'vendor_name': 'CompanyName1',
                                   'labor_category': 'Business Analyst II',
                                   'education_level': None,
@@ -567,6 +566,30 @@ class ContractsTest(TestCase):
                                     'schedule': 'MOBIS',
                                     'contractor_site': None,
                                     'business_size': None}])
+
+    def test_filter_by_nonexistant_sin(self):
+        get_contract_recipe().make(_quantity=3)
+        resp = self.c.get(self.path, {'sin': '12345'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertResultsEqual(resp.data['results'], [])
+
+    def test_filter_by_sin(self):
+        get_contract_recipe().make(_quantity=2)
+        resp = self.c.get(self.path, {'sin': '871'})
+        self.assertEqual(resp.status_code, 200)
+
+        self.assertResultsEqual(resp.data['results'],
+                                [{'idv_piid': 'ABC1232',
+                                  'vendor_name': 'CompanyName2',
+                                  'labor_category': 'Business Analyst II',
+                                  'education_level': None,
+                                  'min_years_experience': 7,
+                                  'hourly_rate_year1': 22.0,
+                                  'current_price': 22.0,
+                                  'schedule': 'PES',
+                                  'sin': '871 3',
+                                  'contractor_site': None,
+                                  'business_size': None}])
 
     def test_filter_by_business_size(self):
         get_contract_recipe().make(
@@ -918,7 +941,7 @@ class ContractsTest(TestCase):
         self.assertEqual(len(results), len(expected),
                          "Got a different number of results than expected.")
 
-        if 'idv_piid' in dict_results[0].keys():
+        if len(dict_results) > 0 and 'idv_piid' in dict_results[0].keys():
             result_ids = [x['idv_piid'] for x in dict_results]
             expected_ids = [x['idv_piid'] for x in expected]
 

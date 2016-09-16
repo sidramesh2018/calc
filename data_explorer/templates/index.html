@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load schedules %}
 
 {% block head %}
 
@@ -265,14 +266,11 @@
               <a href="/about#schedules" class="filter-more-info">What's this?</a>
               <select id="schedule" name="schedule">
                 <option value="">(all)</option>
-                <option value="AIMS">AIMS</option>
                 <option value="Consolidated">Consolidated</option>
-                <option value="Environmental">Environmental</option>
-                <option value="Logistics">Logistics</option>
-                <option value="Language Services">Language Services</option>
-                <option value="MOBIS">MOBIS</option>
-                <option value="PES">PES</option>
-                <option value="IT Schedule 70">IT Schedule 70</option>
+                {% get_schedules as schedules %}
+                {% for schedule in schedules %}
+                  <option value="{{schedule.schedule}}">{{ schedule.SIN }} - {{ schedule.name }}</option>
+                {% endfor %}
               </select>
             </div>
 

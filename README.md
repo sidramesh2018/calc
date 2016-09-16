@@ -401,16 +401,18 @@ http://localhost:8000/api/rates/?q=environmental+technician&exclude=875173,87574
 The `id` attribute is available in api response.
 
 #### Other Filters
-Other params allow you to filter by the contract schedule of the transaction,
-whether or not the vendor is a small business (valid values: `s` [small] and
-`o` [other]), and whether or not the vendor works on the contractor or customer
-site.
+Other parameters allow you to filter by:
+ * The contract schedule of the transaction.
+ * The contract SIN of the transaction.
+ * Whether or not the vendor is a small business (valid values: `s` [small] and
+`o` [other]).
+ * Whether or not the vendor works on the contractor or customer site.
 
-Here is an example with all three parameters (`schedule`, `site`, and
+Here is an example with all four parameters (`schedule`, `sin`, `site`, and
 `business_size`) included:
 
 ```
-http://localhost:8000/api/rates/?schedule=mobis&site=customer&business_size=s
+http://localhost:8000/api/rates/?schedule=mobis&sin=874&site=customer&business_size=s
 ```
 
 For schedules, there are 8 different values that will return results (case
@@ -425,6 +427,17 @@ insensitive):
  - Consolidated
  - IT Schedule 70
 
+For SIN codes, there are several possible codes. They will contain the following
+numbers for their corresponding schedules:
+
+ - 899 - Environmental
+ - 541 - AIMS
+ - 87405 - Logistics
+ - 73802 - Language Services
+ - 871 - PES
+ - 874 - MOBIS
+ - 132 - IT Schedule 70
+ 
 For site, there are only 3 values (also case insensitive):
 
  - Customer
