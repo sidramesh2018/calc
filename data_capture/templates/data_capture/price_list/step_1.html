@@ -11,17 +11,17 @@
   {% csrf_token %}
   {{ form.non_field_errors }}
 
-  {{ form.schedule.errors }}
   <label for="{{ form.schedule.id_for_label }}">Which schedule is associated with this price list?</label>
+  {{ form.schedule.errors }}
   {{ form.schedule }}
 
+  <label>{{ form.contract_number.label }}</label>
   {{ form.contract_number.errors }}
-  {{ form.contract_number.label_tag }}
-  {{ form.contract_number.help_text }}
   {{ form.contract_number }}
+  <p class="helptext">{{ form.contract_number.help_text }}</p>
 
+  <label>{{ form.vendor_name.label }}</label>
   {{ form.vendor_name.errors }}
-  {{ form.vendor_name.label_tag }}
   {{ form.vendor_name }}
 
   <div class="form-button-row clearfix">

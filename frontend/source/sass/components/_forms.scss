@@ -80,3 +80,20 @@ form ul {
   color: $color-gray;
   display: block;
 }
+
+.date-range {
+  margin-bottom: 2.5rem;
+  fieldset {
+    display: inline-block;
+    .form-group:last-child {
+      margin-right: 0;
+    }
+  }
+  p {
+    display: inline-block;
+    padding: 0px 40px;
+    vertical-align: bottom;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+}

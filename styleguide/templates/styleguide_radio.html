@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block body %}
+<div class="container">
+  <h1>Radio Widget Example</h1>
+
+  {% include 'data_capture/messages.html' %}
+
+  {% include "styleguide_radio_example.html" %}
+</div>
+
+<script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
+{% endblock %}
