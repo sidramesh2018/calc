@@ -117,7 +117,8 @@ def step_2(request, step):
             add_generic_form_error(request, form)
 
     return step.render(request, {
-        'form': form
+        'form': form,
+        'step_1_data': get_step_form_from_session(1, request)
     })
 
 
