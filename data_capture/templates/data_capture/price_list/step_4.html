@@ -58,20 +58,22 @@
 
 {% endif %}
 
-<div class="form-button-row clearfix">
-  <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
+<form method="post">
+  <div class="form-button-row clearfix">
+    <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
 
-  {% if gleaned_data.valid_rows %}
-  <form method="post" class="submit-group">
-    {% csrf_token %}
-    <button type="submit" class="button-primary">Next</button>
-    <span class="submit-label">
-      Submit to approver
-    </span>
+    {% if gleaned_data.valid_rows %}
+      <div class="submit-group">
+        {% csrf_token %}
+        <button type="submit" class="button-primary">Next</button>
+        <span class="submit-label">
+          Submit to approver
+        </span>
+      </div>
+    {% endif %}
 
     <button type="submit" class="button-link" name="cancel" formnovalidate>Cancel</button>
-  </form>
-  {% endif %}
-</div>
+  </div>
+</form>
 
 {% endblock %}
