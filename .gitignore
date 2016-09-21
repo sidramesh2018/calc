@@ -1,4 +1,5 @@
 /static
+/static_compressed
 /frontend/static/frontend/built
 *.pyc
 *.swp

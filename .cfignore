@@ -1,4 +1,5 @@
 /static
+/static_compressed
 *.pyc
 *.swp
 *.swo
@@ -27,4 +28,3 @@ docker-compose.override.yml
 .dockerignore
 /manifests
 cf-ssh.yml
-
