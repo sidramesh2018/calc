@@ -21,7 +21,7 @@ class UswdsDate extends window.HTMLElement {
 
     return null;
   }
-  _onKeyDown(e) {
+  handleKeyDown(e) {
     if (e.keyCode === KEY_DASH || e.keyCode === KEY_PERIOD ||
         e.keyCode === KEY_SLASH) {
       const nextInput = this._getNextInput(e.target);
@@ -33,7 +33,7 @@ class UswdsDate extends window.HTMLElement {
     }
   }
   createdCallback() {
-    this.addEventListener('keydown', this._onKeyDown.bind(this), true);
+    this.addEventListener('keydown', this.handleKeyDown.bind(this), true);
   }
 }
 
