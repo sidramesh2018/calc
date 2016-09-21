@@ -133,26 +133,20 @@ class GleanLaborCategoriesTests(TestCase):
         }])
 
     def test_text_formatted_prices_are_gleaned(self):
-        file_path = path(
-            'tests', 'fixtures', 's70', 'price_list_with_text_prices.xlsx')
-        rows = s70.glean_labor_categories_from_file(
-            uploaded_xlsx_file(file_path))
+        book = FakeWorkbook()
+        book._sheets[0]._cells[1][4] = '  $1,123.49  '
+        book._sheets[0]._cells[1][8] = '$109.50'
+        book._sheets[0]._cells[1][10] = ' $ 106.50'
+        book._sheets[0]._cells[1][11] = '$107.50'
 
-        self.assertEqual(rows, [{
-            'sin': '132-51',
-            'labor_category': 'Text Price Row',
-            'education_level': 'Bachelors',
-            'min_years_experience': '5',
-            'commercial_list_price': '110.50',
-            'unit_of_issue': 'Hour',
-            'most_favored_customer': 'All Commercial Customers',
-            'best_discount': '0.07',
-            'mfc_price': '105.50',
-            'gsa_discount': '0.1',
-            'price_excluding_iff': '105.40',
-            'price_including_iff': '105.30',
-            'volume_discount': '0.15',
-        }])
+        rows = s70.glean_labor_categories_from_book(book)
+
+        row = rows[0]
+
+        self.assertEqual(row['commercial_list_price'], '1123.49')
+        self.assertEqual(row['mfc_price'], '109.50')
+        self.assertEqual(row['price_excluding_iff'], '106.50')
+        self.assertEqual(row['price_including_iff'], '107.50')
 
     def test_min_education_is_gleaned_from_text(self):
         book = FakeWorkbook()
