@@ -176,6 +176,12 @@ environment variables:
 app:
   environment:
     - DEBUG=yup
+rq_worker:
+  environment:
+    - DEBUG=yup
+rq_scheduler:
+  environment:
+    - DEBUG=yup
 ```
 
 You'll also want to tell Docker Compose what port to listen on,
