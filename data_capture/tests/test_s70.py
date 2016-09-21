@@ -60,6 +60,30 @@ class SafeCellStrValueTests(TestCase):
         self.assertEqual(s70.safe_cell_str_value(s, 1, 1, int), '5')
 
 
+class FindHeaderRowTests(TestCase):
+
+    def return_heading_on_row_4(self, row, col):
+        if row is 4:
+            return s70.EXAMPLE_SHEET_ROWS[0][0]
+        return 'boop'
+
+    def test_find_header_row_works(self):
+        sheet_mock = MagicMock(nrows=10)
+        sheet_mock.cell_value.side_effect = self.return_heading_on_row_4
+        self.assertEqual(s70.find_header_row(sheet_mock), 4)
+
+    def test_raises_validation_error_if_table_not_found(self):
+        sheet_mock = MagicMock(nrows=10)
+        with self.assertRaises(ValidationError):
+            s70.find_header_row(sheet_mock)
+
+    def test_raises_validation_error_when_threshold_is_reached(self):
+        sheet_mock = MagicMock(nrows=10)
+        sheet_mock.cell_value.side_effect = self.return_heading_on_row_4
+        with self.assertRaises(ValidationError):
+            s70.find_header_row(sheet_mock, row_threshold=3)
+
+
 class GleanLaborCategoriesTests(TestCase):
     def test_rows_are_returned(self):
         rows = s70.glean_labor_categories_from_file(uploaded_xlsx_file())

@@ -83,6 +83,17 @@ def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
     return str(val)
 
 
+def find_header_row(sheet, row_threshold=50):
+    first_col_heading = EXAMPLE_SHEET_ROWS[0][0]
+    row_limit = min(sheet.nrows, row_threshold)
+
+    for rx in range(row_limit):
+        if sheet.cell_value(rx, 0) == first_col_heading:
+            return rx
+
+    raise ValidationError('Could not find Labor Categories price table.')
+
+
 def glean_labor_categories_from_file(f, sheet_name=DEFAULT_SHEET_NAME):
     # TODO: I'm not sure how big these uploaded files can get. While
     # the labor categories price lists don't get that long, according to
@@ -103,7 +114,8 @@ def glean_labor_categories_from_file(f, sheet_name=DEFAULT_SHEET_NAME):
 
     sheet = book.sheet_by_name(sheet_name)
 
-    rownum = 3
+    rownum = find_header_row(sheet) + 1  # add 1 to start on first data row
+
     cats = []
 
     while True:
