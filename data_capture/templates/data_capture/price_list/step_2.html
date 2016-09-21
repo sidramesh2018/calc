@@ -3,9 +3,8 @@
 {% block subtitle %}Enter contract details{% endblock %}
 
 {% block step_body %}
-<h2>Price list details for {{ step_1_data.contract_number.value }}</h2>
+<h2>Price list details for {{ step_1_data.vendor_name.value }} ({{ step_1_data.contract_number.value }})</h2>
 <div class="row">
-  <h3><strong>{{ step_1_data.vendor_name.value }}</strong></h3>
   <form method="post" class="columns nine">
   {% csrf_token %}
 
