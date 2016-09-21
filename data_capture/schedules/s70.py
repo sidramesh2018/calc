@@ -1,13 +1,13 @@
 import functools
 import logging
 import xlrd
-import re
 
 from django import forms
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 
 from .base import BasePriceList
+from .coercers import strip_non_numeric, extract_min_education
 from contracts.models import EDUCATION_CHOICES
 from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 
@@ -48,22 +48,6 @@ EXAMPLE_SHEET_ROWS = [
 ]
 
 logger = logging.getLogger(__name__)
-
-
-def strip_non_numeric(text):
-    '''
-    Returns a string of the given argument with non-numeric characters removed
-
-    >>> strip_non_numeric('  $1,015.25  ')
-    '1015.25'
-
-    If a non-string argument is given, it is cast to a string and returned
-
-    >>> strip_non_numeric(55.25)
-    '55.25'
-
-    '''
-    return re.sub("[^\d\.]", "", str(text))
 
 
 def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
@@ -107,6 +91,10 @@ def glean_labor_categories_from_file(f, sheet_name=DEFAULT_SHEET_NAME):
 
     book = xlrd.open_workbook(file_contents=f.read())
 
+    return glean_labor_categories_from_book(book, sheet_name)
+
+
+def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
     if sheet_name not in book.sheet_names():
         raise ValidationError(
             'There is no sheet in the workbook called "%s".' % sheet_name
@@ -132,7 +120,7 @@ def glean_labor_categories_from_file(f, sheet_name=DEFAULT_SHEET_NAME):
         cat = {}
         cat['sin'] = sin
         cat['labor_category'] = cval(1)
-        cat['education_level'] = cval(2)
+        cat['education_level'] = cval(2, coercer=extract_min_education)
         cat['min_years_experience'] = cval(3, coercer=int)
         cat['commercial_list_price'] = cval(4, coercer=strip_non_numeric)
         cat['unit_of_issue'] = cval(5)
