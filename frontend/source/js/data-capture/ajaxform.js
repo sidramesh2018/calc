@@ -17,7 +17,17 @@ class Delegate {
   }
 
   redirect(url) {
-    // http://stackoverflow.com/a/13123626
+    // Some browsers will actually cache the state of our page, including
+    // its DOM and JS, when the user navigates away from it, so that if/when
+    // the user navigates back, the cached version is shown.
+    //
+    // In the case of ajaxform, this ultimately means that the user could
+    // be shown the page in a state that we never expected it to be in, so
+    // we'll use the 'pageshow' event, which is triggered in such situations,
+    // to reload the page if this ever happens.
+    //
+    // For more details, see: http://stackoverflow.com/a/13123626
+
     this.window.onpageshow = e => {
       if (e.persisted) {
         this.window.location.reload();
