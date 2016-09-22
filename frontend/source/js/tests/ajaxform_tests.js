@@ -133,6 +133,27 @@ formTest('degraded form does not cancel form submission', {
   $(s.ajaxform).submit();
 });
 
+test('Delegate.redirect() works', assert => {
+  const fakeWindow = {};
+  const delegate = new ajaxform.Delegate(fakeWindow);
+  let reloadCalled = false;
+
+  delegate.redirect('http://boop');
+  assert.equal(fakeWindow.location, 'http://boop');
+  fakeWindow.location = { reload: () => { reloadCalled = true; } };
+  fakeWindow.onpageshow({ persisted: true });
+  assert.ok(reloadCalled);
+});
+
+test('Delegate.alert() works', assert => {
+  const messages = [];
+  const fakeWindow = { alert(msg) { messages.push(msg); } };
+  const delegate = new ajaxform.Delegate(fakeWindow);
+
+  delegate.alert('boop');
+  assert.deepEqual(messages, ['boop']);
+});
+
 test('populateFormData() works w/ non-upgraded file inputs', assert => {
   const formData = ajaxform.AjaxForm.prototype.populateFormData.call({
     elements: [{

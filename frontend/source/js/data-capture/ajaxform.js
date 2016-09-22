@@ -11,16 +11,28 @@ const $ = jQuery;
 const MISC_ERROR = 'Sorry, we’re having trouble. ' +
                    'Please try again later or refresh your browser.';
 
-// This abstracts various actions for test suites to hook into.
-let delegate = {
+class Delegate {
+  constructor(window) {
+    this.window = window;
+  }
+
   redirect(url) {
-    window.location = url;
-  },
+    // http://stackoverflow.com/a/13123626
+    this.window.onpageshow = e => {
+      if (e.persisted) {
+        this.window.location.reload();
+      }
+    };
+    this.window.location = url;
+  }
+
   alert(msg) {
     // TODO: Be more user-friendly here.
-    window.alert(msg);   // eslint-disable-line no-alert
-  },
-};
+    this.window.alert(msg);
+  }
+}
+
+let delegate = new Delegate(window);
 
 exports.setDelegate = newDelegate => {
   delegate = newDelegate;
@@ -146,3 +158,4 @@ document.registerElement('ajax-form', {
 });
 
 exports.AjaxForm = AjaxForm;
+exports.Delegate = Delegate;
