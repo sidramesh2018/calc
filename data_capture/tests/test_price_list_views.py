@@ -93,7 +93,6 @@ class Step2Tests(PriceListStepTestCase):
     valid_form = {
         'contractor_site': 'Customer',
         'is_small_business': 'False',
-        'contract_year': '1',
         'contract_start_0': '1985',
         'contract_start_1': '07',
         'contract_start_2': '08',
@@ -342,7 +341,6 @@ class Step4Tests(PriceListStepTestCase):
         self.assertEqual(p.contractor_site, 'Customer')
         self.assertEqual(p.is_small_business, False)
         self.assertEqual(p.submitter, user)
-        self.assertEqual(p.contract_year, 1)
 
     def test_valid_post_clears_session_and_redirects_to_step_5(self):
         self.login()

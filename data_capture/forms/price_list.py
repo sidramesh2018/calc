@@ -45,18 +45,6 @@ class Step2Form(forms.ModelForm):
     contract_start = SplitDateField()
     contract_end = SplitDateField()
 
-    contract_year = forms.ChoiceField(
-        label='Contract year',
-        choices=[
-            (1, '1'),
-            (2, '2'),
-            (3, '3'),
-            (4, '4'),
-            (5, '5'),
-        ],
-        widget=UswdsRadioSelect,
-    )
-
     class Meta:
         model = SubmittedPriceList
         fields = [
@@ -64,7 +52,6 @@ class Step2Form(forms.ModelForm):
             'contractor_site',
             'contract_start',
             'contract_end',
-            'contract_year',
         ]
 
 
