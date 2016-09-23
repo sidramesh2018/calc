@@ -2,10 +2,9 @@
 @import 'libs/skeleton/normalize';
 @import 'libs/skeleton/skeleton';
 @import 'libs/tooltipster';
-@import 'base/reset';
-@import 'base/typography';
-@import 'base/utils';
 @import 'base/variables';
+@import 'base/reset';
+@import 'base/utils';
 @import 'components/alerts';
 @import 'components/buttons';
 @import 'components/footer';
@@ -19,3 +18,4 @@
 @import 'components/page';
 @import 'components/safemode';
 @import 'components/expandablearea';
+@import 'base/typography';
