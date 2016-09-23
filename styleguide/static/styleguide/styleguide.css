@@ -100,3 +100,18 @@ kbd {
   line-height:1.4;
   white-space:nowrap;
 }
+
+:target {
+  animation-duration: 2s;
+  animation-name: highlight-fade;
+}
+
+@keyframes highlight-fade {
+  from {
+    background-color: #fff0be;
+  }
+
+  to {
+    background-color: inherit;
+  }
+}
