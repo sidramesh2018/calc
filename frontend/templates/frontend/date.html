@@ -1,6 +1,6 @@
 <span class="form-hint" id="{{ hint_id }}">For example: 04 28 1986</span>
 
-<div class="date-mm-dd-yy">
+<uswds-date class="date-mm-dd-yy">
   <div class="form-group form-group-month">
     <label for="{{ month.id }}">Month</label>
 
@@ -14,4 +14,4 @@
     <label for="{{ year.id }}">Year</label>
     <input class="input-inline" aria-describedby="{{ hint_id }}" id="{{ year.id }}" name="{{ year.name }}" pattern="[0-9]{4}" type="number" min="1900" max="9999" value="{{ year.value }}">
   </div>
-</div>
+</uswds-date>

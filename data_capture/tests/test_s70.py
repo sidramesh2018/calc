@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from decimal import Decimal
 from unittest.mock import Mock, MagicMock, patch
 from django.test import TestCase, override_settings
@@ -26,6 +27,34 @@ def uploaded_xlsx_file(path=S70_XLSX_PATH, content=None):
         content,
         content_type=XLSX_CONTENT_TYPE
     )
+
+
+class FakeSheet:
+    def __init__(self, name=s70.DEFAULT_SHEET_NAME, cells=None):
+        if cells is None:
+            cells = deepcopy(s70.EXAMPLE_SHEET_ROWS)
+        self.name = name
+        self._cells = cells
+
+    @property
+    def nrows(self):
+        return len(self._cells)
+
+    def cell_value(self, rownum, colnum):
+        return self._cells[rownum][colnum]
+
+
+class FakeWorkbook:
+    def __init__(self, sheets=None):
+        if sheets is None:
+            sheets = [FakeSheet()]
+        self._sheets = sheets
+
+    def sheet_names(self):
+        return [sheet.name for sheet in self._sheets]
+
+    def sheet_by_name(self, name):
+        return [sheet for sheet in self._sheets if sheet.name == name][0]
 
 
 class SafeCellStrValueTests(TestCase):
@@ -104,26 +133,28 @@ class GleanLaborCategoriesTests(TestCase):
         }])
 
     def test_text_formatted_prices_are_gleaned(self):
-        file_path = path(
-            'static', 'data_capture', 'price_list_with_text_prices.xlsx')
-        rows = s70.glean_labor_categories_from_file(
-            uploaded_xlsx_file(file_path))
+        book = FakeWorkbook()
+        book._sheets[0]._cells[1][4] = '  $1,123.49  '
+        book._sheets[0]._cells[1][8] = '$109.50'
+        book._sheets[0]._cells[1][10] = ' $ 106.50'
+        book._sheets[0]._cells[1][11] = '$107.50'
 
-        self.assertEqual(rows, [{
-            'sin': '132-51',
-            'labor_category': 'Text Price Row',
-            'education_level': 'Bachelors',
-            'min_years_experience': '5',
-            'commercial_list_price': '110.50',
-            'unit_of_issue': 'Hour',
-            'most_favored_customer': 'All Commercial Customers',
-            'best_discount': '0.07',
-            'mfc_price': '105.50',
-            'gsa_discount': '0.1',
-            'price_excluding_iff': '105.40',
-            'price_including_iff': '105.30',
-            'volume_discount': '0.15',
-        }])
+        rows = s70.glean_labor_categories_from_book(book)
+
+        row = rows[0]
+
+        self.assertEqual(row['commercial_list_price'], '1123.49')
+        self.assertEqual(row['mfc_price'], '109.50')
+        self.assertEqual(row['price_excluding_iff'], '106.50')
+        self.assertEqual(row['price_including_iff'], '107.50')
+
+    def test_min_education_is_gleaned_from_text(self):
+        book = FakeWorkbook()
+        book._sheets[0]._cells[1][2] = 'GED or high school diploma'
+
+        rows = s70.glean_labor_categories_from_book(book)
+
+        self.assertEqual(rows[0]['education_level'], 'High School')
 
     def test_validation_error_raised_when_sheet_not_present(self):
         with self.assertRaisesRegexp(
