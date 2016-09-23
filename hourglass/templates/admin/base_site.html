@@ -9,7 +9,9 @@
 {% block nav-global %}{% endblock %}
 
 {% block userlinks %}
-  <a href="{% url 'data_capture:bulk_region_10_step_1' %}">Region 10 Upload</a> /
+  {% if perms.contracts.add_bulkuploadcontractsource %}
+    <a href="{% url 'data_capture:bulk_region_10_step_1' %}">Region 10 Upload</a> /
+  {% endif %}
   {{ block.super }}
 {% endblock %}
 
