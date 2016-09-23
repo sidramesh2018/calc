@@ -108,7 +108,7 @@ kbd {
 
 @keyframes highlight-fade {
   from {
-    background-color: yellow;
+    background-color: #fff0be;
   }
 
   to {
