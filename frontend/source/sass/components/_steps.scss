@@ -1,4 +1,23 @@
 @import '../base/variables';
+
+@keyframes step-fade-in {
+  from {
+    background-color: $color-white;
+    color: $color-primary;
+  }
+
+  to {
+    background-color: $color-primary;
+    color: $color-white;
+  }
+}
+
+ol.steps li + li.current::before {
+  animation-duration: 2s;
+  animation-delay: 0.25s;
+  animation-name: step-fade-in;
+}
+
 ol.steps {
   counter-reset: li;
   font-weight: 300;
