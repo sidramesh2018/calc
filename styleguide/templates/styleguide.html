@@ -484,6 +484,13 @@
     {% pyobjname 'frontend.date.SplitDateField' %} is a custom Django form
     field and widget that offers three separate text fields for users to enter
     dates, as per the <a href="https://standards.usa.gov/form-controls/#date-input">USWDS section on date input</a>.
+  </p>
+  <p>
+    We use a {% webcomponent '<uswds-date>' %} to provide some optional
+    dynamic functionality, such as automatically advancing focus to the
+    next input field in the date whenever <kbd>/</kbd>,
+    <kbd>.</kbd>, or <kbd>-</kbd> is pressed.
+  </p>
   <p>
     For a simple code example, see
     {% pathname 'styleguide/date_example.py' %} and

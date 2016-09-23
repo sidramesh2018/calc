@@ -10,3 +10,4 @@ require('./upload');
 require('./ajaxform');
 require('./alerts');
 require('./expandable-area');
+require('./date');

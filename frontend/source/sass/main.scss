@@ -18,4 +18,6 @@
 @import 'components/page';
 @import 'components/safemode';
 @import 'components/expandablearea';
+@import 'components/date';
+/* for some reason this must be last to override skeleton's h rules?! */
 @import 'base/typography';
