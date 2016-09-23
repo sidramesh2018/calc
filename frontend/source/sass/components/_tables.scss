@@ -146,3 +146,11 @@ td.collapsed {
   width: 1.5em !important;
   border-left: 1px dotted $color-gray-lightest;
 }
+
+/* Some labor categories (especially the "interpreter" categories)
+ * are incredibly long, so we should limit the width. */
+th.column-labor_category {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 22rem;
+}
