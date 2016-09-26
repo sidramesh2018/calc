@@ -44,10 +44,8 @@ fieldset,
   max-width: 53rem;
 }
 
-/* TODO: Django's default form rendering uses a <ul class="errorlist">
-   for errors, and <span class="helptext"> for help text. We should either
-   style them properly, or render our own markup. The following are some
-   temporary styles to make us not look confusing, at least. */
+/* Django's default form rendering uses a <ul class="errorlist">
+   for errors, and <span class="helptext"> for help text. */
 .fieldset-error {
   border-left: 3px solid $color-secondary-dark;
   background-color: #fef5f5;
