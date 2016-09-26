@@ -51,6 +51,17 @@ def uploaded_csv_file(content=None):
     )
 
 
+def create_csv_content(rows=None):
+    if rows is None:
+        rows = [
+            ['132-40', 'Project Manager', 'Bachelors', '7', '15.00']
+        ]
+    headers = ['sin', 'service', 'education', 'years_experience', 'price']
+    all_rows = [headers] + rows
+    as_str = '\n'.join([','.join(x) for x in all_rows])
+    return as_str.encode('utf-8')
+
+
 def r10_file(content=None, name='r10.xlsx'):
     if content is None:
         with open(R10_XLSX_PATH, 'rb') as f:

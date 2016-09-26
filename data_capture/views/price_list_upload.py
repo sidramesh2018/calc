@@ -1,6 +1,6 @@
 import json
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -145,10 +145,14 @@ def step_3(request, step):
             )
 
             if form.is_valid():
-                session_pl['gleaned_data'] = \
-                    registry.serialize(form.cleaned_data['gleaned_data'])
+                gleaned_data = form.cleaned_data['gleaned_data']
 
+                session_pl['gleaned_data'] = registry.serialize(gleaned_data)
                 request.session.modified = True
+
+                if gleaned_data.invalid_rows:
+                    return ajaxform.redirect(request,
+                                             'data_capture:step_3_errors')
 
                 return ajaxform.redirect(request, 'data_capture:step_4')
             else:
@@ -167,9 +171,40 @@ def step_3(request, step):
         )
 
 
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+@require_http_methods(["GET", "POST"])
+@handle_cancel
+def step_3_errors(request):
+    step = steps.get_step_renderer(3)
+    gleaned_data = get_nested_item(request.session, (
+        'data_capture:price_list',
+        'gleaned_data'
+    ))
+
+    if gleaned_data is None:
+        return redirect('data_capture:step_3')
+
+    gleaned_data = registry.deserialize(gleaned_data)
+
+    step_1_form = get_step_form_from_session(1, request)
+
+    preferred_schedule = step_1_form.cleaned_data['schedule_class']
+
+    return render(request,
+                  'data_capture/price_list/step_3_errors.html',
+                  step.context({
+                    'gleaned_data': gleaned_data,
+                    'is_preferred_schedule': isinstance(gleaned_data,
+                                                        preferred_schedule),
+                    'preferred_schedule_title': preferred_schedule.title,
+                  }))
+
+
 @steps.step
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+@require_http_methods(["GET", "POST"])
 @handle_cancel
 def step_4(request, step):
     gleaned_data = get_nested_item(request.session, (
