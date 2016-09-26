@@ -44,7 +44,7 @@ h6 {
 p {
   font-size: $base-font-size;
   line-height: $base-line-height;
-  max-width: 72rem;
+  max-width: $line-length-max-width;
 }
 
 .help-text {
