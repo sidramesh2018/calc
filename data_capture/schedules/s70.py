@@ -1,6 +1,7 @@
 import functools
 import logging
 import xlrd
+import re
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -47,6 +48,22 @@ EXAMPLE_SHEET_ROWS = [
     ]
 ]
 
+DEFAULT_FIELD_TITLE_MAP = {
+    'sin': 'SIN(s) PROPOSED',
+    'labor_category': 'SERVICE PROPOSED (e.g. Job Title/Task)',
+    'education_level': 'MINIMUM EDUCATION/ CERTIFICATION LEVEL',
+    'min_years_experience': 'MINIMUM YEARS OF EXPERIENCE',
+    'commercial_list_price': 'COMMERCIAL LIST PRICE (CPL) OR MARKET PRICES',
+    'unit_of_issue': 'UNIT OF ISSUE (e.g. Hour, Task, Sq ft)',
+    'most_favored_customer': 'MOST FAVORED CUSTOMER (MFC)',
+    'best_discount': 'BEST  DISCOUNT OFFERED TO MFC (%)',
+    'mfc_price': 'MFC PRICE',
+    'gsa_discount': 'GSA(%) DISCOUNT (exclusive of the .75% IFF)',
+    'price_excluding_iff': 'PRICE OFFERED TO GSA (excluding IFF)',
+    'price_including_iff': 'PRICE OFFERED TO GSA (including IFF)',
+    'volume_discount': 'QUANTITY/ VOLUME DISCOUNT',
+}
+
 logger = logging.getLogger(__name__)
 
 
@@ -65,6 +82,27 @@ def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
             pass
 
     return str(val)
+
+
+def generate_column_index_map(heading_row, field_title_map=None):
+    def normalize(s):
+        return re.sub(r'\s+', '', str(s).lower())
+
+    def find_col(col_name):
+        for idx, cell in enumerate(heading_row):
+            if normalize(cell.value) == normalize(col_name):
+                return idx
+        raise ValidationError('Column heading "{}" was not found.'.format(
+            col_name))
+
+    if field_title_map is None:
+        field_title_map = DEFAULT_FIELD_TITLE_MAP
+
+    col_idx_map = {}
+    for field, title in field_title_map.items():
+        col_idx_map[field] = find_col(title)
+
+    return col_idx_map
 
 
 def find_header_row(sheet, row_threshold=50):
@@ -106,11 +144,25 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
 
     cats = []
 
+    heading_row = sheet.row(rownum - 1)
+
+    col_idx_map = generate_column_index_map(heading_row)
+
+    coercion_map = {
+        'price_including_iff': strip_non_numeric,
+        'min_years_experience': int,
+        'education_level': extract_min_education,
+        'commercial_list_price': strip_non_numeric,
+        'mfc_price': strip_non_numeric,
+        'price_excluding_iff': strip_non_numeric
+    }
+
     while True:
         cval = functools.partial(safe_cell_str_value, sheet, rownum)
 
-        sin = cval(0)
-        price_including_iff = cval(11, coercer=strip_non_numeric)
+        sin = cval(col_idx_map['sin'])
+        price_including_iff = cval(col_idx_map['price_including_iff'],
+                                   coercer=strip_non_numeric)
 
         # We basically just keep going until we run into a row that
         # doesn't have a SIN or price including IFF.
@@ -118,19 +170,11 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
             break
 
         cat = {}
-        cat['sin'] = sin
-        cat['labor_category'] = cval(1)
-        cat['education_level'] = cval(2, coercer=extract_min_education)
-        cat['min_years_experience'] = cval(3, coercer=int)
-        cat['commercial_list_price'] = cval(4, coercer=strip_non_numeric)
-        cat['unit_of_issue'] = cval(5)
-        cat['most_favored_customer'] = cval(6)
-        cat['best_discount'] = cval(7)
-        cat['mfc_price'] = cval(8, coercer=strip_non_numeric)
-        cat['gsa_discount'] = cval(9)
-        cat['price_excluding_iff'] = cval(10, coercer=strip_non_numeric)
-        cat['price_including_iff'] = price_including_iff
-        cat['volume_discount'] = cval(12)
+
+        for field, col_idx in col_idx_map.items():
+            coercer = coercion_map.get(field, None)
+            cat[field] = cval(col_idx, coercer=coercer)
+
         cats.append(cat)
 
         rownum += 1

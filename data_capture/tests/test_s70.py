@@ -1,4 +1,6 @@
 import json
+import copy
+
 from copy import deepcopy
 from decimal import Decimal
 from unittest.mock import Mock, MagicMock, patch
@@ -29,6 +31,15 @@ def uploaded_xlsx_file(path=S70_XLSX_PATH, content=None):
     )
 
 
+class FakeCell:
+    def __init__(self, val):
+        self._val = val
+
+    @property
+    def value(self):
+        return self._val
+
+
 class FakeSheet:
     def __init__(self, name=s70.DEFAULT_SHEET_NAME, cells=None):
         if cells is None:
@@ -42,6 +53,9 @@ class FakeSheet:
 
     def cell_value(self, rownum, colnum):
         return self._cells[rownum][colnum]
+
+    def row(self, rownum):
+        return [FakeCell(c) for c in self._cells[rownum]]
 
 
 class FakeWorkbook:
@@ -87,6 +101,37 @@ class SafeCellStrValueTests(TestCase):
         s.cell_value.return_value = 5.0
 
         self.assertEqual(s70.safe_cell_str_value(s, 1, 1, int), '5')
+
+
+class TestGenerateColumnIndexMap(TestCase):
+    def setUp(self):
+        self.heading_row = [
+            Mock(value='HEADING 2'),
+            Mock(value='heading 1'),
+            Mock(value='  Heading 3  '),
+        ]
+
+        self.field_title_map = {
+            'field_1': 'heading 1',
+            'field_2': 'heading 2',
+            'field_3': 'heading 3',
+        }
+
+    def test_generate_column_index_map_works(self):
+        col_idx_map = s70.generate_column_index_map(
+            self.heading_row, field_title_map=self.field_title_map)
+        self.assertEqual(col_idx_map, {
+            'field_1': 1,
+            'field_2': 0,
+            'field_3': 2,
+        })
+
+    def test_raises_on_missing_field(self):
+        map_with_additional_field = copy.copy(self.field_title_map)
+        map_with_additional_field['missing_field'] = 'BOOP'
+        with self.assertRaises(ValidationError):
+            s70.generate_column_index_map(
+                self.heading_row, field_title_map=map_with_additional_field)
 
 
 class FindHeaderRowTests(TestCase):

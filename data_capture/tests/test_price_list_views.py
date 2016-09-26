@@ -5,7 +5,29 @@ from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
-from .common import StepTestCase, FAKE_SCHEDULE, FAKE_SCHEDULE_EXAMPLE_PATH
+from .common import (StepTestCase, FAKE_SCHEDULE, uploaded_csv_file,
+                     create_csv_content)
+
+
+class HandleCancelMixin():
+    def test_cancel_clears_session_and_redirects(self):
+        self.login()
+        res = self.client.post(self.url, {'cancel': ''})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res['Location'], 'http://testserver/')
+        session = self.client.session
+        for k in list(session.keys()):
+            self.assertFalse(k.startswith('data_capture:'))
+
+
+class RequireGleanedDataMixin():
+    def test_gleaned_data_is_required(self):
+        self.login()
+        session = self.client.session
+        session['data_capture:price_list'] = self.session_data
+        session.save()
+        res = self.client.get(self.url)
+        self.assertRedirects(res, Step3Tests.url)
 
 
 class PriceListStepTestCase(StepTestCase):
@@ -87,7 +109,7 @@ class Step1Tests(PriceListStepTestCase):
         )
 
 
-class Step2Tests(PriceListStepTestCase):
+class Step2Tests(PriceListStepTestCase, HandleCancelMixin):
     url = '/data-capture/step/2'
 
     valid_form = {
@@ -151,19 +173,10 @@ class Step2Tests(PriceListStepTestCase):
             'Oops, please correct the errors below and try again.'
         )
 
-    def test_cancel_clears_session_and_redirects(self):
-        self.login()
-        res = self.client.post(self.url, {'cancel': ''})
-        self.assertEqual(res.status_code, 302)
-        self.assertEqual(res['Location'], 'http://testserver/')
-        session = self.client.session
-        for k in list(session.keys()):
-            self.assertFalse(k.startswith('data_capture:'))
 
-
-class Step3Tests(PriceListStepTestCase):
+class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
     url = '/data-capture/step/3'
-    csvpath = FAKE_SCHEDULE_EXAMPLE_PATH
+
     rows = [{
         'education': 'Bachelors',
         'price': '15.00',
@@ -205,41 +218,60 @@ class Step3Tests(PriceListStepTestCase):
 
     def test_valid_post_updates_session_data(self):
         self.login()
-        with open(self.csvpath) as f:
-            self.client.post(self.url, {
-                'file': f
-            })
-            session_pl = self.client.session['data_capture:price_list']
-            self.assertEqual(session_pl['step_1_POST']['schedule'],
-                             FAKE_SCHEDULE)
-            gleaned_data = session_pl['gleaned_data']
-            gleaned_data = registry.deserialize(gleaned_data)
-            assert isinstance(gleaned_data, FakeSchedulePriceList)
-            self.assertEqual(gleaned_data.rows, [{
-                'education': 'Bachelors',
-                'price': '15.00',
-                'service': 'Project Manager',
-                'sin': '132-40',
-                'years_experience': '7'
-            }])
+        self.client.post(self.url, {
+            'file': uploaded_csv_file()
+        })
+        session_pl = self.client.session['data_capture:price_list']
+        self.assertEqual(session_pl['step_1_POST']['schedule'],
+                         FAKE_SCHEDULE)
+        gleaned_data = session_pl['gleaned_data']
+        gleaned_data = registry.deserialize(gleaned_data)
+        assert isinstance(gleaned_data, FakeSchedulePriceList)
+        self.assertEqual(gleaned_data.rows, [{
+            'education': 'Bachelors',
+            'price': '15.00',
+            'service': 'Project Manager',
+            'sin': '132-40',
+            'years_experience': '7'
+        }])
 
     def test_valid_post_via_xhr_returns_json(self):
         self.login()
-        with open(self.csvpath) as f:
-            res, json_data = self.ajax_post({
-                'file': f
-            })
-            self.assertEqual(json_data, {
-                'redirect_url': '/data-capture/step/4'
-            })
+        res, json_data = self.ajax_post({
+            'file': uploaded_csv_file()
+        })
+        self.assertEqual(json_data, {
+            'redirect_url': Step4Tests.url
+        })
+
+    def test_post_with_invalid_rows_via_xhr_returns_json_redirect(self):
+        self.login()
+        res, json_data = self.ajax_post({
+            'file': uploaded_csv_file(
+                content=create_csv_content(rows=[
+                    ['132-40', 'Project Manager', 'invalid edu', '7', '15.00']
+                ]))
+        })
+        self.assertEqual(json_data, {
+            'redirect_url': Step3ErrorTests.url
+        })
 
     def test_valid_post_redirects_to_step_4(self):
         self.login()
-        with open(self.csvpath) as f:
-            res = self.client.post(self.url, {
-                'file': f
-            })
-            self.assertRedirects(res, Step4Tests.url)
+        res = self.client.post(self.url, {
+            'file': uploaded_csv_file()
+        })
+        self.assertRedirects(res, Step4Tests.url)
+
+    def test_post_with_invalid_rows_redirects_to_step_3_errors(self):
+        self.login()
+        res = self.client.post(self.url, {
+            'file': uploaded_csv_file(
+                content=create_csv_content(rows=[
+                    ['132-40', 'Project Manager', 'invalid edu', '7', '15.00']
+                ]))
+        })
+        self.assertRedirects(res, Step3ErrorTests.url)
 
     def test_invalid_post_returns_html(self):
         self.login()
@@ -265,18 +297,41 @@ class Step3Tests(PriceListStepTestCase):
            'Oops, please correct the error below and try again.'
         )
 
-    def test_cancel_clears_session_and_redirects(self):
-        self.login()
-        res = self.client.post(self.url, {'cancel': ''})
-        self.assertEqual(res.status_code, 302)
-        self.assertEqual(res['Location'], 'http://testserver/')
+
+class Step3ErrorTests(PriceListStepTestCase,
+                      HandleCancelMixin, RequireGleanedDataMixin):
+    url = '/data-capture/step/3/errors'
+
+    rows = [{
+        'education': 'Bachelors',
+        'price': '15.00',
+        'service': 'Project Manager',
+        'sin': '132-40',
+        'years_experience': '7'
+    }]
+
+    session_data = {
+        'step_1_POST': Step1Tests.valid_form,
+        'step_2_POST': Step2Tests.valid_form,
+    }
+
+    def setUp(self):
+        super().setUp()
         session = self.client.session
-        for k in list(session.keys()):
-            self.assertFalse(k.startswith('data_capture:'))
+        session['data_capture:price_list'] = self.session_data
+        session.save()
+
+    def test_get_is_ok(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        res = self.client.get(self.url)
+        self.assertEqual(res.status_code, 200)
 
 
-class Step4Tests(PriceListStepTestCase):
+class Step4Tests(PriceListStepTestCase,
+                 HandleCancelMixin, RequireGleanedDataMixin):
     url = '/data-capture/step/4'
+
     rows = [{
         'education': 'Bachelors',
         'price': '15.00',
@@ -294,18 +349,6 @@ class Step4Tests(PriceListStepTestCase):
         'step_1_POST': Step1Tests.valid_form,
         'step_2_POST': Step2Tests.valid_form,
     }
-
-    def test_gleaned_data_is_required(self):
-        # TODO: This login and session-setting code is repeated
-        # throughout all these tests--perhaps we should just move it into
-        # the test's setUp() code or consolidate in some other way?
-
-        self.login()
-        session = self.client.session
-        session['data_capture:price_list'] = self.session_data
-        session.save()
-        res = self.client.get(self.url)
-        self.assertRedirects(res, Step3Tests.url)
 
     def test_get_is_ok(self):
         self.login()
@@ -351,19 +394,6 @@ class Step4Tests(PriceListStepTestCase):
         res = self.client.post(self.url)
         assert 'data_capture:price_list' not in self.client.session
         self.assertRedirects(res, Step5Tests.url)
-
-    def test_cancel_clears_session_and_redirects(self):
-        self.login()
-        session = self.client.session
-        session['data_capture:price_list'] = self.session_data
-        session.save()
-        self.set_fake_gleaned_data(self.rows)
-        res = self.client.post(self.url, {'cancel': ''})
-        self.assertEqual(res.status_code, 302)
-        self.assertEqual(res['Location'], 'http://testserver/')
-        session = self.client.session
-        for k in list(session.keys()):
-            self.assertFalse(k.startswith('data_capture:'))
 
 
 class Step5Tests(PriceListStepTestCase):
