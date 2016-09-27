@@ -49,6 +49,13 @@ class CustomUserCreationForm(forms.ModelForm, UniqueEmailFormMixin):
         fields = ('email',)
 
     def generate_username(self, email, max_attempts=100):
+        '''
+        Generate a unique username based on the given email address
+        by slugifying the first several characters of the username
+        part of the email. If needed, a number is added at the end
+        to avoid conflicts with existing usernames.
+        '''
+
         basename = slugify(email.split('@')[0])[:15]
         for i in range(max_attempts):
             if i == 0:
