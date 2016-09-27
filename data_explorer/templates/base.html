@@ -52,7 +52,9 @@
                     {% if user.is_staff %}
                     <li><a href="{% url 'admin:index' %}">Site admin</a></li>
                     {% endif %}
+                    {% if perms.data_capture.add_submittedpricelist %}
                     <li><a href="{% url 'data_capture:step_1' %}">Add price data</a></li>
+                    {% endif %}
                     <li><a href="{% url 'about' %}">About this tool</a></li>
                   </ul>
                 </li>
