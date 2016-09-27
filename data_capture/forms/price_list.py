@@ -42,19 +42,11 @@ class Step2Form(forms.ModelForm):
         choices=SubmittedPriceList.CONTRACTOR_SITE_CHOICES,
         widget=UswdsRadioSelect,
     )
-    contract_start = SplitDateField()
-    contract_end = SplitDateField()
-
-    contract_year = forms.ChoiceField(
-        label='Contract year',
-        choices=[
-            (1, '1'),
-            (2, '2'),
-            (3, '3'),
-            (4, '4'),
-            (5, '5'),
-        ],
-        widget=UswdsRadioSelect,
+    contract_start = SplitDateField(
+        label='Contract or current option start'
+    )
+    contract_end = SplitDateField(
+        label='Contract or current option end'
     )
 
     class Meta:
@@ -64,7 +56,6 @@ class Step2Form(forms.ModelForm):
             'contractor_site',
             'contract_start',
             'contract_end',
-            'contract_year',
         ]
 
 

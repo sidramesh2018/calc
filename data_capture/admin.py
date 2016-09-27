@@ -148,7 +148,6 @@ class SubmittedPriceListAdmin(UndeletableModelAdmin):
         'is_small_business',
         'schedule_title',
         'contractor_site',
-        'contract_year',
         'contract_start',
         'contract_end',
         'submitter',

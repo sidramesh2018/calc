@@ -29,7 +29,6 @@ class SubmittedPriceList(models.Model):
         choices=CONTRACTOR_SITE_CHOICES,
         max_length=128
     )
-    contract_year = models.IntegerField(null=True, blank=True)
     contract_start = models.DateField(
         null=True,
         blank=True,
@@ -79,7 +78,6 @@ class SubmittedPriceList(models.Model):
                 idv_piid=self.contract_number,
                 contract_start=self.contract_start,
                 contract_end=self.contract_end,
-                contract_year=self.contract_year,
                 vendor_name=self.vendor_name,
                 labor_category=row.labor_category,
                 education_level=row.education_level,
