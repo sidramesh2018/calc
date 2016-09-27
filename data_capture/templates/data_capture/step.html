@@ -9,9 +9,6 @@
   Add price data to CALC
   <span class="sr-only">{{ step.description }}</span>
 </h1>
-
-{% block step_heading %}{% endblock %}
-
 {% block steps %}
   <ol class="steps" aria-hidden="true">
     <li {% if step.number == 1 %}class="current"{% endif %}>
@@ -31,6 +28,8 @@
     </li>
   </ol>
 {% endblock %}
+
+{% block step_heading %}{% endblock %}
 
 {% include 'data_capture/messages.html' %}
 

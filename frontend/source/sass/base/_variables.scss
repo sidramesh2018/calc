@@ -63,6 +63,8 @@ $h4-font-size:        rem(17px);
 $h5-font-size:        rem(15px);
 $h6-font-size:        rem(13px);
 
+$line-length-max-width: rem(720px); // not in WDS; 75% of Skeleton's container max-width
+
 $base-line-height:    1.4; // WDS uses 1.5, but our base font is .2rem smaller
 $heading-line-height: 1.3;
 $small-line-height: 1.3;
