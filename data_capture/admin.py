@@ -48,7 +48,7 @@ class CustomUserCreationForm(forms.ModelForm, UniqueEmailFormMixin):
         model = User
         fields = ('email',)
 
-    def find_username(self, email, max_attempts=100):
+    def generate_username(self, email, max_attempts=100):
         basename = slugify(email.split('@')[0])[:15]
         for i in range(max_attempts):
             if i == 0:
@@ -58,7 +58,7 @@ class CustomUserCreationForm(forms.ModelForm, UniqueEmailFormMixin):
             if not User.objects.filter(username=username).exists():
                 return username
         raise Exception(
-            'unable to find username for {} after {} attempts'.format(
+            'unable to generate username for {} after {} attempts'.format(
                 email,
                 max_attempts
             )
@@ -68,7 +68,7 @@ class CustomUserCreationForm(forms.ModelForm, UniqueEmailFormMixin):
         email = self.cleaned_data.get('email')
 
         if email:
-            self.cleaned_data['username'] = self.find_username(email)
+            self.cleaned_data['username'] = self.generate_username(email)
 
         return self.cleaned_data
 

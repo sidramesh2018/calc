@@ -58,26 +58,27 @@ class CustomUserCreationFormTests(TestCase):
             'email': ['That email address is already in use.']
         })
 
-    def test_find_username_works(self):
+    def test_generate_username_works(self):
         form = admin.CustomUserCreationForm()
-        self.assertEqual(form.find_username('boop.jones@gsa.gov'),
+        self.assertEqual(form.generate_username('boop.jones@gsa.gov'),
                          'boopjones')
 
-    def test_find_username_appends_number_when_needed(self):
+    def test_generate_username_appends_number_when_needed(self):
         User.objects.create_user(username='boopjones')
         form = admin.CustomUserCreationForm()
-        self.assertEqual(form.find_username('boop.jones@gsa.gov'),
+        self.assertEqual(form.generate_username('boop.jones@gsa.gov'),
                          'boopjones1')
 
-    def test_find_username_raises_exception_when_attempts_maxed_out(self):
+    def test_generate_username_raises_exception_when_attempts_maxed_out(self):
         User.objects.create_user(username='boopjones')
         User.objects.create_user(username='boopjones1')
         form = admin.CustomUserCreationForm()
         with self.assertRaisesRegexp(
             Exception,
-            'unable to find username for boop.jones@gsa.gov after 2 attempts'
+            'unable to generate username for '
+            'boop.jones@gsa.gov after 2 attempts'
         ):
-            form.find_username('boop.jones@gsa.gov', max_attempts=2)
+            form.generate_username('boop.jones@gsa.gov', max_attempts=2)
 
     def test_save_sets_username(self):
         form = admin.CustomUserCreationForm({'email': 'foo@gsa.gov'})
