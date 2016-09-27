@@ -56,3 +56,11 @@ $color-error-bg: #fef5f5;
     color: $color-secondary-dark;
   }
 }
+
+alerts-widget:focus {
+  outline: none;
+}
+.message-error h3 {
+  color: $color-secondary-dark;
+  margin-bottom: 0;
+}

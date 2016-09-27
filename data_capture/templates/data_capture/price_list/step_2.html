@@ -2,42 +2,41 @@
 
 {% block subtitle %}Enter contract details{% endblock %}
 
+{% block step_heading %}<h2>Price list details for {{ step_1_data.vendor_name.value }} ({{ step_1_data.contract_number.value }})</h2>{% endblock %}
 {% block step_body %}
-<h2>Price list details for {{ step_1_data.contract_number.value }}</h2>
 <div class="row">
-  <h3><strong>{{ step_1_data.vendor_name.value }}</strong></h3>
   <form method="post" class="columns nine">
   {% csrf_token %}
 
   {{ form.non_field_errors }}
-  <fieldset>
-    <legend>{{ form.is_small_business.label }}</legend>
+  <fieldset{% if form.is_small_business.errors %} class="fieldset-error"{% endif %}>
     {{ form.is_small_business.errors }}
+    {{ form.is_small_business.label_tag }}
     {{ form.is_small_business }}
   </fieldset>
-  <fieldset>
-    <legend>{{ form.contractor_site.label }}</legend>
+  <fieldset{% if form.contractor_site.errors %} class="fieldset-error"{% endif %}>
     {{ form.contractor_site.errors }}
+    {{ form.contractor_site.label_tag }}
     {{ form.contractor_site }}
   </fieldset>
 
-  <div class="date-range">
+  <div class="date-range{% if form.contract_start.errors or form.contract_end.errors %} fieldset-error{% endif %}">
     <fieldset>
-      <legend>{{ form.contract_start.label }}</legend>
       {{ form.contract_start.errors }}
+      {{ form.contract_start.label_tag }}
       {{ form.contract_start }}
     </fieldset>
     <p>to</p>
     <fieldset>
-      <legend>{{ form.contract_end.label }}</legend>
       {{ form.contract_end.errors }}
+      {{ form.contract_end.label_tag }}
       {{ form.contract_end }}
     </fieldset>
   </div>
 
-  <fieldset>
-    <legend>{{ form.contract_year.label }}</legend>
+  <fieldset{% if form.contract_year.errors %} class="fieldset-error"{% endif %}>
     {{ form.contract_year.errors }}
+    {{ form.contract_year.label_tag }}
     {{ form.contract_year }}
   </fieldset>
 

@@ -11,18 +11,24 @@
   {% csrf_token %}
   {{ form.non_field_errors }}
 
-  <label for="{{ form.schedule.id_for_label }}">Which schedule is associated with this price list?</label>
-  {{ form.schedule.errors }}
-  {{ form.schedule }}
+  <fieldset{% if form.schedule.errors %} class="fieldset-error"{% endif %}>
+    {{ form.schedule.errors }}
+    <label for="{{ form.schedule.id_for_label }}">Which schedule is associated with this price list?</label>
+    {{ form.schedule }}
+  </fieldset>
 
-  <label>{{ form.contract_number.label }}</label>
-  {{ form.contract_number.errors }}
-  {{ form.contract_number }}
-  <p class="helptext">{{ form.contract_number.help_text }}</p>
+  <fieldset{% if form.contract_number.errors %} class="fieldset-error"{% endif %}>
+    {{ form.contract_number.errors }}
+    {{ form.contract_number.label_tag }}
+    {{ form.contract_number }}
+    <p class="helptext">{{ form.contract_number.help_text }}</p>
+  </fieldset>
 
-  <label>{{ form.vendor_name.label }}</label>
-  {{ form.vendor_name.errors }}
-  {{ form.vendor_name }}
+  <fieldset{% if form.vendor_name.errors %} class="fieldset-error"{% endif %}>
+    {{ form.vendor_name.errors }}
+    {{ form.vendor_name.label_tag }}
+    {{ form.vendor_name }}
+  </fieldset>
 
   <div class="form-button-row clearfix">
     <div class="submit-group">

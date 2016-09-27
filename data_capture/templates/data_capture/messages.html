@@ -1,8 +1,8 @@
 {% if messages %}
 <alerts-widget>
   {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-      <p>{{ message }}</p>
+    <div class="message message-{{ message.tags }}">
+      <h3>{{ message }}</h3>
     </div>
   {% endfor %}
 </alerts-widget>
