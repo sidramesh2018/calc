@@ -49,9 +49,12 @@ class CustomUserCreationForm(forms.ModelForm, UniqueEmailFormMixin):
         fields = ('email',)
 
     def find_username(self, email, max_attempts=100):
-        basename = slugify(email)[:15]
+        basename = slugify(email.split('@')[0])[:15]
         for i in range(max_attempts):
-            username = '{}_{}'.format(basename, i)
+            if i == 0:
+                username = basename
+            else:
+                username = '{}{}'.format(basename, i)
             if not User.objects.filter(username=username).exists():
                 return username
         raise Exception(
