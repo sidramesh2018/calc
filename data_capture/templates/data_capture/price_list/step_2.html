@@ -20,14 +20,14 @@
     {{ form.contractor_site }}
   </fieldset>
 
-  <div class="date-range{% if form.contract_start.errors or form.contract_end.errors %} fieldset-error{% endif %}">
-    <fieldset>
+  <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+    <fieldset {% if form.contract_start.errors %}class="fieldset-error"{% endif %}>
       {{ form.contract_start.errors }}
       {{ form.contract_start.label_tag }}
       {{ form.contract_start }}
     </fieldset>
     <p>to</p>
-    <fieldset>
+    <fieldset {% if form.contract_end.errors %}class="fieldset-error"{% endif %}>
       {{ form.contract_end.errors }}
       {{ form.contract_end.label_tag }}
       {{ form.contract_end }}
