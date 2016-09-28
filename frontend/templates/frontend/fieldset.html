@@ -1,6 +1,11 @@
 <fieldset{% if field.errors %} class="fieldset-error"{% endif %}>
   {{ field.errors }}
-  {{ field.label_tag }}
+  {% if use_legend %}
+    {# We're wrapping the <legend> in a <span> for styling: http://stackoverflow.com/a/3973527 #}
+    <span><legend>{{ field.label }}</legend></span>
+  {% else %}
+    {{ field.label_tag }}
+  {% endif %}
   {{ field }}
   {% if field.help_text %}
     <p class="helptext">{{ field.help_text }}</p>
