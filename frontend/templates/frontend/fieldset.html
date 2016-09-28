@@ -1,0 +1,8 @@
+<fieldset{% if field.errors %} class="fieldset-error"{% endif %}>
+  {{ field.errors }}
+  {{ field.label_tag }}
+  {{ field }}
+  {% if field.help_text %}
+    <p class="helptext">{{ field.help_text }}</p>
+  {% endif %}
+</fieldset>
