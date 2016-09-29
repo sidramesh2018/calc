@@ -1,4 +1,5 @@
 {% extends 'data_capture/step.html' %}
+{% load frontend %}
 
 {% block subtitle %}Enter contract details{% endblock %}
 
@@ -9,29 +10,14 @@
   {% csrf_token %}
 
   {{ form.non_field_errors }}
-  <fieldset{% if form.is_small_business.errors %} class="fieldset-error"{% endif %}>
-    {{ form.is_small_business.errors }}
-    {{ form.is_small_business.label_tag }}
-    {{ form.is_small_business }}
-  </fieldset>
-  <fieldset{% if form.contractor_site.errors %} class="fieldset-error"{% endif %}>
-    {{ form.contractor_site.errors }}
-    {{ form.contractor_site.label_tag }}
-    {{ form.contractor_site }}
-  </fieldset>
 
-  <div class="date-range{% if form.contract_start.errors or form.contract_end.errors %} fieldset-error{% endif %}">
-    <fieldset>
-      {{ form.contract_start.errors }}
-      {{ form.contract_start.label_tag }}
-      {{ form.contract_start }}
-    </fieldset>
+  {% fieldset form.is_small_business %}
+  {% fieldset form.contractor_site %}
+
+  <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+    {% fieldset form.contract_start %}
     <p>to</p>
-    <fieldset>
-      {{ form.contract_end.errors }}
-      {{ form.contract_end.label_tag }}
-      {{ form.contract_end }}
-    </fieldset>
+    {% fieldset form.contract_end %}
   </div>
 
   <div class="form-button-row clearfix">

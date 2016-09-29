@@ -9,6 +9,7 @@ from frontend.radio import UswdsRadioSelect
 
 class Step1Form(forms.ModelForm):
     schedule = forms.ChoiceField(
+        label="Which schedule is associated with this price list?",
         choices=registry.get_choices
     )
 
