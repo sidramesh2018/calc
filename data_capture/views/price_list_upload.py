@@ -219,8 +219,19 @@ def step_4(request, step):
 
     session_pl = request.session['data_capture:price_list']
     step_1_form = get_step_form_from_session(1, request)
+    step_2_form = get_step_form_from_session(2, request)
 
-    preferred_schedule = step_1_form.cleaned_data['schedule_class']
+    pl_details = {
+        'preferred_schedule': step_1_form.cleaned_data['schedule_class'],
+        'vendor_name': step_1_form.cleaned_data['vendor_name'],
+        'contract_number': step_1_form.cleaned_data['contract_number'],
+        'is_small_business': step_2_form.cleaned_data['is_small_business'],
+        'contractor_site': step_2_form.cleaned_data['contractor_site'],
+        'contract_start': step_2_form.cleaned_data['contract_start'],
+        'contract_end': step_2_form.cleaned_data['contract_end'],
+        'escalation_rate': step_2_form.cleaned_data['escalation_rate'],
+    }
+
 
     if request.method == 'POST':
         if not gleaned_data.valid_rows:
@@ -250,8 +261,9 @@ def step_4(request, step):
 
     return step.render(request, {
         'gleaned_data': gleaned_data,
-        'is_preferred_schedule': isinstance(gleaned_data, preferred_schedule),
-        'preferred_schedule_title': preferred_schedule.title,
+        'price_list': pl_details,
+        'is_preferred_schedule': isinstance(gleaned_data, pl_details['preferred_schedule']),
+        'preferred_schedule_title': pl_details['preferred_schedule'].title,
     })
 
 
