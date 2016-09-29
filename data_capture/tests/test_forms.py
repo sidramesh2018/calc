@@ -1,3 +1,5 @@
+import datetime
+
 from django.test import TestCase, override_settings
 
 from .common import FAKE_SCHEDULE, uploaded_csv_file, r10_file
@@ -15,6 +17,16 @@ class Step2FormTests(TestCase):
         form = Step2Form({'escalation_rate': 2.5})
         form.is_valid()
         self.assertEqual(form.cleaned_data['escalation_rate'], 2.5)
+
+    def test_start_and_end_date_is_validated(self):
+        form = Step2Form({
+            'contract_start': datetime.date(2020, 1, 1),
+            'contract_end': datetime.date(2015, 1, 1),
+            'contractor_site': 'Both',
+            'is_small_business': True,
+        })
+        self.assertFalse(form.is_valid())
+        print(form.errors)
 
 
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])

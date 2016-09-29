@@ -61,6 +61,15 @@ class Step2Form(forms.ModelForm):
         required=False,
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        if 'contract_start' in cleaned_data and 'contract_end' in cleaned_data:
+            start = cleaned_data['contract_start']
+            end = cleaned_data['contract_end']
+            if start > end:
+                self.add_error('contract_start',
+                               'Start date must be before end date.')
+
     def clean_escalation_rate(self):
         value = self.cleaned_data['escalation_rate']
         if value is None:
