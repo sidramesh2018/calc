@@ -228,47 +228,47 @@ input[type="checkbox"]:checked ~ label {
   margin-top: 1em;
   text-align: center;
   position: relative;
+  display: flex;
+  justify-content: space-between;
 }
 
 .price-block {
   background: $color-gray-lightest;
   border: 1px solid $color-gray-lighter;
   border-radius: 4px;
+  flex-grow: 9;
+  .row {
+    display: flex;
+    align-items: flex-end;
+    div {
+      flex-grow: 1;
+    }
+  }
 }
 
-.standard-deviation-title {
-  font-size: 14px;
-  padding-bottom: 4px;
-  padding-top: 11px;
+@media (min-width: 550px) {
+  .price-block {
+    max-width: 65.5%;
+  }
 }
-
-.avg-price-block {
-  border-left: 1px solid $color-gray-lighter;
-  border-right: 1px solid $color-gray-lighter;
-}
-
 .avg-price-block,
 .standard-deviation-block {
   display: inline-block;
   margin: 0 auto;
-  padding: .4em 0;
+  padding: .4em;
   text-align: center;
-  width: 32%;
+  /*width: 32%;*/
 }
 
 .proposed-price-block {
   background: $color-gray-lightest;
   border: 1px solid $color-gray-lighter;
   border-radius: 4px;
-  padding: 1.1em 2em .5em 2em;
-  margin: 0 20px 0 0;
+  padding: 0.4em 1.8em;
+  margin-left: 3rem;
   float: right;
   display: none;
-  /*@media (max-width: 800px) {*/
-    /*clear: both;*/
-    /*float: left;*/
-    /*margin: 10px 0 0 0;*/
-  /*}*/
+  flex-grow: 1;
 }
 
 .proposed-price {
@@ -287,20 +287,29 @@ input[type="checkbox"]:checked ~ label {
   }
 }
 
-.proposed-price-title {
-  font-size: 16px;
+.avg-price-block,
+.standard-deviation-block,
+.proposed-price-block {
+  h5 {
+    margin-bottom: 0;
+    font-weight: 300;
+  }
 }
 
-.avg-price-block h5,
-.standard-deviation-block h5 {
-    margin-bottom: 0;
+.avg-price-block {
+    border-right: 1px solid $color-gray-lighter;
+    border-left: 1px solid $color-gray-lighter;
+  h5 {
+    font-size: 2.4rem;
+  }
 }
 
 #avg-price-highlight,
-.sd-highlight,
-.proposed-price-highlight {
+h5.sd-highlight,
+h5.proposed-price-highlight {
   color: $color-primary;
   font-weight: 400;
+  font-size: 2.4rem;
 }
 
 .slider {
