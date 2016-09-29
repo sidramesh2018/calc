@@ -11,7 +11,6 @@ from django.core.exceptions import ValidationError
 from .common import path, XLSX_CONTENT_TYPE
 from .test_models import ModelTestCase
 from ..schedules import s70, registry
-from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 
 
 S70 = '%s.Schedule70PriceList' % s70.__name__
@@ -275,30 +274,8 @@ class S70Tests(ModelTestCase):
         self.assertEqual(row.labor_category, 'Project Manager')
         self.assertEqual(row.education_level, 'BA')
         self.assertEqual(row.min_years_experience, 5)
-        self.assertEqual(row.hourly_rate_year1, Decimal('115.99'))
-        self.assertEqual(row.current_price, Decimal('115.99'))
+        self.assertEqual(row.base_year_rate, Decimal('115.99'))
         self.assertEqual(row.sin, '132-51')
-
-        row.full_clean()
-
-    def test_price_is_none_when_below_min_rate(self):
-        price = FEDERAL_MIN_CONTRACT_RATE - 1.0
-        s = s70.Schedule70PriceList(rows=[{
-            'sin': '132-51',
-            'labor_category': 'Engineer 1',
-            'education_level': 'Bachelors',
-            'min_years_experience': '2',
-            'price_including_iff': str(price),
-        }])
-
-        p = self.create_price_list()
-        p.save()
-
-        s.add_to_price_list(p)
-
-        row = p.rows.all()[0]
-
-        self.assertEqual(row.current_price, None)
 
         row.full_clean()
 

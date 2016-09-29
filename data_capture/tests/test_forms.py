@@ -3,7 +3,18 @@ from django.test import TestCase, override_settings
 from .common import FAKE_SCHEDULE, uploaded_csv_file, r10_file
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
-from ..forms import Step3Form, Region10BulkUploadForm
+from ..forms import Step2Form, Step3Form, Region10BulkUploadForm
+
+
+class Step2FormTests(TestCase):
+    def test_clean_escalation_rate_works(self):
+        form = Step2Form({'escalation_rate': None})
+        form.is_valid()
+        self.assertEqual(form.cleaned_data['escalation_rate'], 0)
+
+        form = Step2Form({'escalation_rate': 2.5})
+        form.is_valid()
+        self.assertEqual(form.cleaned_data['escalation_rate'], 2.5)
 
 
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])

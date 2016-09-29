@@ -10,7 +10,6 @@ from django.template.loader import render_to_string
 from .base import BasePriceList
 from .coercers import strip_non_numeric, extract_min_education
 from contracts.models import EDUCATION_CHOICES
-from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 
 
 DEFAULT_SHEET_NAME = '(3)Labor Categories'
@@ -217,12 +216,8 @@ class Schedule70Row(forms.Form):
             if name == self.cleaned_data['education_level']
         ][0]
 
-    def contract_model_hourly_rate_year1(self):
+    def contract_model_base_year_rate(self):
         return self.cleaned_data['price_including_iff']
-
-    def contract_model_current_price(self):
-        price = self.contract_model_hourly_rate_year1()
-        return price if price >= FEDERAL_MIN_CONTRACT_RATE else None
 
 
 class Schedule70PriceList(BasePriceList):
@@ -250,8 +245,7 @@ class Schedule70PriceList(BasePriceList):
                 labor_category=row.cleaned_data['labor_category'],
                 education_level=row.contract_model_education_level(),
                 min_years_experience=row.cleaned_data['min_years_experience'],
-                hourly_rate_year1=row.contract_model_hourly_rate_year1(),
-                current_price=row.contract_model_current_price(),
+                base_year_rate=row.contract_model_base_year_rate(),
                 sin=row.cleaned_data['sin']
             )
 

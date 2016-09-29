@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
-from contracts.models import Contract, EDUCATION_CHOICES
+from contracts.models import (Contract, EDUCATION_CHOICES,
+                              MIN_ESCALATION_RATE, MAX_ESCALATION_RATE)
 
 
 class SubmittedPriceList(models.Model):
@@ -36,6 +38,10 @@ class SubmittedPriceList(models.Model):
     contract_end = models.DateField(
         null=True,
         blank=True,
+    )
+    escalation_rate = models.FloatField(
+        validators=[MinValueValidator(MIN_ESCALATION_RATE),
+                    MaxValueValidator(MAX_ESCALATION_RATE)]
     )
 
     submitter = models.ForeignKey(User)
@@ -74,6 +80,7 @@ class SubmittedPriceList(models.Model):
         for row in self.rows.filter(is_muted=False):
             if row.contract_model is not None:
                 raise AssertionError()
+
             contract = Contract(
                 idv_piid=self.contract_number,
                 contract_start=self.contract_start,
@@ -82,19 +89,22 @@ class SubmittedPriceList(models.Model):
                 labor_category=row.labor_category,
                 education_level=row.education_level,
                 min_years_experience=row.min_years_experience,
-                hourly_rate_year1=row.hourly_rate_year1,
-                hourly_rate_year2=None,
-                hourly_rate_year3=None,
-                hourly_rate_year4=None,
-                hourly_rate_year5=None,
-                current_price=row.hourly_rate_year1,
-                next_year_price=None,
-                second_year_price=None,
                 contractor_site=self.contractor_site,
                 schedule=self.get_schedule_title(),
                 business_size=self.get_business_size_string(),
                 sin=row.sin,
             )
+
+            contract.adjust_contract_year()
+
+            # Assuming the rate in the price list is the 'base rate'
+            # Escalate the hourly_rate_yearX fields
+            contract.escalate_hourly_rate_fields(
+                row.base_year_rate, self.escalation_rate)
+
+            # Update current/next/second year price fields
+            contract.update_price_fields()
+
             contract.full_clean(exclude=['piid'])
             contract.save()
             row.contract_model = contract
@@ -117,9 +127,7 @@ class SubmittedPriceListRow(models.Model):
         choices=EDUCATION_CHOICES, max_length=5, null=True,
         blank=True)
     min_years_experience = models.IntegerField()
-    hourly_rate_year1 = models.DecimalField(max_digits=10, decimal_places=2)
-    current_price = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True)
+    base_year_rate = models.DecimalField(max_digits=10, decimal_places=2)
     sin = models.TextField(null=True, blank=True)
 
     is_muted = models.BooleanField(

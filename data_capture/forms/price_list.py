@@ -5,6 +5,7 @@ from ..schedules import registry
 from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
 from frontend.radio import UswdsRadioSelect
+from contracts.models import MIN_ESCALATION_RATE, MAX_ESCALATION_RATE
 
 
 class Step1Form(forms.ModelForm):
@@ -44,11 +45,27 @@ class Step2Form(forms.ModelForm):
         widget=UswdsRadioSelect,
     )
     contract_start = SplitDateField(
-        label='Contract or current option start'
+        label='Contract or current option period start'
     )
     contract_end = SplitDateField(
-        label='Contract or current option end'
+        label='Contract or current option period end'
     )
+    escalation_rate = forms.FloatField(
+        label="Escalation Rate (%)",
+        help_text='This is the escalation rate (as a %) '
+                  'for calculating out-year pricing. '
+                  'Leave this field blank or enter 0 if this contract does '
+                  'not have a fixed escalation rate.',
+        min_value=MIN_ESCALATION_RATE,
+        max_value=MAX_ESCALATION_RATE,
+        required=False,
+    )
+
+    def clean_escalation_rate(self):
+        value = self.cleaned_data['escalation_rate']
+        if value is None:
+            value = 0
+        return value
 
     class Meta:
         model = SubmittedPriceList
@@ -57,6 +74,7 @@ class Step2Form(forms.ModelForm):
             'contractor_site',
             'contract_start',
             'contract_end',
+            'escalation_rate'
         ]
 
 

@@ -147,8 +147,7 @@ class SubmittedPriceListRowInline(admin.TabularInline):
         'labor_category',
         'education_level',
         'min_years_experience',
-        'hourly_rate_year1',
-        'current_price',
+        'base_year_rate',
         'sin',
         'is_muted',
     )
@@ -305,8 +304,7 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
         'labor_category',
         'education_level',
         'min_years_experience',
-        'hourly_rate_year1',
-        'current_price',
+        'base_year_rate',
         'sin',
         'is_muted',
     )

@@ -65,8 +65,7 @@ class FakeSchedulePriceList(BasePriceList):
                 labor_category=row['service'].value(),
                 education_level=EDU_LEVELS[row['education'].value()],
                 min_years_experience=row['years_experience'].value(),
-                hourly_rate_year1=row['price'].value(),
-                current_price=row['price'].value(),
+                base_year_rate=row['price'].value(),
                 sin=row['sin'].value()
             )
 
