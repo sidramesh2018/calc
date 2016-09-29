@@ -97,7 +97,7 @@ class Region10UploadStep1Tests(R10StepTestCase):
         self.assertHasMessage(
             res,
             'error',
-            'Oops, please correct the error below and try again.'
+            'Oops! Please correct the following error.'
         )
 
     def test_invalid_post_via_xhr_returns_json(self):
@@ -109,7 +109,7 @@ class Region10UploadStep1Tests(R10StepTestCase):
         self.assertHasMessage(
             res,
             'error',
-            'Oops, please correct the error below and try again.'
+            'Oops! Please correct the following error.'
         )
 
 

@@ -105,7 +105,7 @@ class Step1Tests(PriceListStepTestCase):
         self.assertHasMessage(
             res,
             'error',
-            'Oops, please correct the errors below and try again.'
+            'Oops! Please correct the following error.'
         )
 
 
@@ -170,7 +170,7 @@ class Step2Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertHasMessage(
             res,
             'error',
-            'Oops, please correct the errors below and try again.'
+            'Oops! Please correct the following error.'
         )
 
 
@@ -282,7 +282,7 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertHasMessage(
             res,
             'error',
-            'Oops, please correct the error below and try again.'
+            'Oops! Please correct the following error.'
         )
 
     def test_invalid_post_via_xhr_returns_json(self):
@@ -294,7 +294,7 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertHasMessage(
            res,
            'error',
-           'Oops, please correct the error below and try again.'
+           'Oops! Please correct the following error.'
         )
 
 
