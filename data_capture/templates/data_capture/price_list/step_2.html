@@ -34,12 +34,6 @@
     </fieldset>
   </div>
 
-  <fieldset{% if form.contract_year.errors %} class="fieldset-error"{% endif %}>
-    {{ form.contract_year.errors }}
-    {{ form.contract_year.label_tag }}
-    {{ form.contract_year }}
-  </fieldset>
-
   <div class="form-button-row clearfix">
     <a href="{% url 'data_capture:step_1' %}" class="button button-outline button-previous">Previous</a>
 

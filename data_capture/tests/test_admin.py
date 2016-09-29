@@ -3,7 +3,8 @@ import unittest.mock as mock
 from django.conf import settings
 from django.core.management import call_command
 from django.contrib import messages
-from django.test import override_settings
+from django.contrib.auth.models import User
+from django.test import override_settings, TestCase
 
 from .. import admin, models, email
 from .common import FAKE_SCHEDULE
@@ -48,6 +49,45 @@ class DebugAdminTestCase(AdminTestCase):
     pass
 
 
+class CustomUserCreationFormTests(TestCase):
+    def test_checks_uniqueness_of_email(self):
+        User.objects.create_user(username='blerg', email='foo@gsa.gov')
+        form = admin.CustomUserCreationForm({'email': 'foo@gsa.gov'})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            'email': ['That email address is already in use.']
+        })
+
+    def test_generate_username_works(self):
+        form = admin.CustomUserCreationForm()
+        self.assertEqual(form.generate_username('boop.jones@gsa.gov'),
+                         'boopjones')
+
+    def test_generate_username_appends_number_when_needed(self):
+        User.objects.create_user(username='boopjones')
+        form = admin.CustomUserCreationForm()
+        self.assertEqual(form.generate_username('boop.jones@gsa.gov'),
+                         'boopjones1')
+
+    def test_generate_username_raises_exception_when_attempts_maxed_out(self):
+        User.objects.create_user(username='boopjones')
+        User.objects.create_user(username='boopjones1')
+        form = admin.CustomUserCreationForm()
+        with self.assertRaisesRegexp(
+            Exception,
+            'unable to generate username for '
+            'boop.jones@gsa.gov after 2 attempts'
+        ):
+            form.generate_username('boop.jones@gsa.gov', max_attempts=2)
+
+    def test_save_sets_username(self):
+        form = admin.CustomUserCreationForm({'email': 'foo@gsa.gov'})
+        self.assertTrue(form.is_valid())
+        user = form.save()
+        self.assertEqual(user.username, 'foo')
+        self.assertEqual(user.email, 'foo@gsa.gov')
+
+
 class SuperuserViewTests(DebugAdminTestCase):
     def setup_user(self):
         self.user = self.login(is_superuser=True)
@@ -65,6 +105,11 @@ class SuperuserViewTests(DebugAdminTestCase):
 
 
 class NonSuperuserViewTests(DebugAdminTestCase):
+    def test_user_add_returns_200(self):
+        res = self.client.get('/admin/auth/user/add/')
+        self.assertContains(res, 'First, enter an email address',
+                            status_code=200)
+
     def test_cannot_set_superuser(self):
         res = self.client.get('/admin/auth/user/{}/'.format(self.user.id))
         self.assertNotContains(res, 'Superuser')

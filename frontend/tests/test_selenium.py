@@ -653,6 +653,11 @@ class FunctionalTests(LiveServerTestCase):
         self.assertEqual(results_count, str(
             num), "Results count mismatch: '%s' != %d" % (results_count, num))
 
+    def get_label_for_input(self, input, form):
+        return form.find_element_by_css_selector('label[for="{}"]'.format(
+            input.get_attribute('id')
+        ))
+
     def set_form_value(self, form, key, value):
         fields = form.find_elements_by_name(key)
         field = fields[0]
@@ -663,7 +668,7 @@ class FunctionalTests(LiveServerTestCase):
             if field_type in ('checkbox', 'radio'):
                 for _field in fields:
                     if _field.get_attribute('value') == value:
-                        _field.click()
+                        self.get_label_for_input(_field, form).click()
             else:
                 field.send_keys(str(value))
         return field
