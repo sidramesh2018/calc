@@ -1,5 +1,8 @@
 import io
+import zipfile
+import xml.etree.cElementTree as ET
 import xlrd.xlsx
+
 from django.test import TestCase
 from defusedxml.common import EntitiesForbidden
 
@@ -23,11 +26,23 @@ BILLION_LAUGHS_XML = """\
 <lolz>&lol9;</lolz>"""
 
 
-class XlsxSecurityTests(TestCase):
-    def test_billion_laughs_fails(self):
-        if xlrd.xlsx.ET is None:
-            xlrd.xlsx.ensure_elementtree_imported(verbosity=False,
-                                                  logfile=None)
+def build_zipfile(files):
+    blob = io.BytesIO()
+    zf = zipfile.ZipFile(blob, mode='w')
+    for key, value in files.items():
+        zf.writestr(key, value)
+    zf.close()
+    return blob.getvalue()
 
+
+class BillionLaughsTests(TestCase):
+    def test_xlrd_open_workbook_raises_entities_forbidden(self):
         with self.assertRaises(EntitiesForbidden):
-            xlrd.xlsx.ET.parse(io.StringIO(BILLION_LAUGHS_XML))
+            xlrd.open_workbook(file_contents=build_zipfile({
+                'xl/_rels/workbook.xml.rels': BILLION_LAUGHS_XML,
+                'xl/workbook.xml': BILLION_LAUGHS_XML
+            }))
+
+    def test_et_parse_raises_entities_forbidden(self):
+        with self.assertRaises(EntitiesForbidden):
+            ET.parse(io.StringIO(BILLION_LAUGHS_XML))
