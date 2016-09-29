@@ -1,5 +1,3 @@
-import datetime
-
 from django.test import TestCase, override_settings
 
 from .common import FAKE_SCHEDULE, uploaded_csv_file, r10_file
@@ -18,16 +16,21 @@ class Step2FormTests(TestCase):
         form.is_valid()
         self.assertEqual(form.cleaned_data['escalation_rate'], 2.5)
 
-    def test_start_and_end_date_is_validated(self):
+    def test_contract_start_and_end_date_is_validated(self):
         form = Step2Form({
-            'contract_start': datetime.date(2020, 1, 1),
-            'contract_end': datetime.date(2015, 1, 1),
+            'contract_start_0': '2020',
+            'contract_start_1': '01',
+            'contract_start_2': '1',
+            'contract_end_0': '2015',
+            'contract_end_1': '01',
+            'contract_end_2': '01',
             'contractor_site': 'Both',
             'is_small_business': True,
         })
         self.assertFalse(form.is_valid())
-        # TODO: actually validate that `contract_start` field has the right
-        # error message added to it
+        self.assertIn('contract_start', form.errors)
+        self.assertEqual(form.errors['contract_start'][0],
+                         'Start date must be before end date.')
 
 
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
