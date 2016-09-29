@@ -26,7 +26,8 @@ class Step2FormTests(TestCase):
             'is_small_business': True,
         })
         self.assertFalse(form.is_valid())
-        print(form.errors)
+        # TODO: actually validate that `contract_start` field has the right
+        # error message added to it
 
 
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
