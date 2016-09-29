@@ -1,4 +1,8 @@
 import re
+
+from datetime import datetime
+from decimal import Decimal
+
 from django.db import models
 from django.contrib.auth.models import User
 from djorm_pgfulltext.models import SearchManager, SearchQuerySet
@@ -11,6 +15,10 @@ EDUCATION_CHOICES = (
     ('MA', 'Masters'),
     ('PHD', 'Ph.D.'),
 )
+
+MIN_ESCALATION_RATE = 0
+MAX_ESCALATION_RATE = 99
+NUM_CONTRACT_YEARS = 5
 
 
 def convert_to_tsquery(query):
@@ -206,3 +214,96 @@ class Contract(models.Model):
     @staticmethod
     def normalize_rate(rate):
         return float(rate.replace(',', '').replace('$', ''))
+
+    def update_price_fields(self):
+        '''
+        Set current, next, and second year price fields based on this
+        contract's contract_year.
+        '''
+        if self.contract_year is None:
+            raise ValueError('self.contract_year must be set')
+
+        curr_contract_year = self.contract_year
+
+        contract_end_year = self.calculate_end_year()
+
+        if 0 < curr_contract_year <= contract_end_year:
+            self.current_price = self.get_hourly_rate(curr_contract_year)
+        else:
+            self.current_price = None
+
+        if -1 < curr_contract_year < contract_end_year:
+            self.next_year_price = self.get_hourly_rate(curr_contract_year + 1)
+        else:
+            self.next_year_price = None
+
+        if -2 < curr_contract_year < contract_end_year - 1:
+            self.second_year_price = self.get_hourly_rate(
+                curr_contract_year + 2)
+        else:
+            self.second_year_price = None
+
+    def escalate_hourly_rate_fields(self, base_year_rate, escalation_rate):
+        if (escalation_rate < MIN_ESCALATION_RATE or
+                escalation_rate > MAX_ESCALATION_RATE):
+                raise ValueError(
+                    'escalation_rate must be between {} and {}'.format(
+                        MIN_ESCALATION_RATE, MAX_ESCALATION_RATE))
+
+        self.hourly_rate_year1 = base_year_rate
+
+        for i in range(2, NUM_CONTRACT_YEARS + 1):
+            # use base rate by default
+            next_rate = base_year_rate
+
+            # if there is an escalation rate, increase the
+            # previous year's value by the escalation rate
+            if escalation_rate > 0:
+                escalation_factor = Decimal(1 + escalation_rate/100)
+                prev_rate = self.get_hourly_rate(i-1)
+                next_rate = escalation_factor * prev_rate
+
+            self.set_hourly_rate(i, next_rate)
+
+    def adjust_contract_year(self, current_date=None):
+        if current_date is None:
+            current_date = datetime.today().date()
+
+        if not self.contract_start:
+            # TODO: What should happen in this case? Could also early return
+            raise ValueError('contract_start must be defined')
+
+        # Calculate the difference in years between the current_date and
+        # the contract start date
+        # (365.25 is used to account for leap years)
+        curr_contract_year = int(
+            (current_date - self.contract_start).days / 365.25) + 1
+
+        self.contract_year = curr_contract_year
+
+    def calculate_end_year(self):
+        if not self.contract_start or not self.contract_end:
+            raise ValueError('contract_start and contract_end must be defined')
+
+        if self.contract_start > self.contract_end:
+            raise ValueError('contract_start cannot be after contract_end')
+
+        # Calculate the end year of the contract, with a ceiling of 5 (since
+        # the hourly_rate_yearX fields only go up to 5)
+        # (365.25 is used to account for leap years)
+        contract_end_year = min(5, int(
+            (self.contract_end - self.contract_start).days / 365.25) + 1)
+
+        return contract_end_year
+
+    def get_hourly_rate(self, year):
+        if year < 1 or year > NUM_CONTRACT_YEARS:
+            raise ValueError(
+                'year must be in range 1 to {}'.format(NUM_CONTRACT_YEARS))
+        return getattr(self, 'hourly_rate_year{}'.format(year))
+
+    def set_hourly_rate(self, year, val):
+        if year < 1 or year > NUM_CONTRACT_YEARS:
+            raise ValueError(
+                'year must be in range 1 to {}'.format(NUM_CONTRACT_YEARS))
+        setattr(self, 'hourly_rate_year{}'.format(year), val)
