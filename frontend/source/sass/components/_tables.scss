@@ -117,7 +117,6 @@ td.number {
 
 td > .currency-symbol {
   color: $color-gray-medium;
-  width: 50%;
   float: left;
 }
 
@@ -153,4 +152,10 @@ th.column-labor_category {
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 22rem;
+}
+
+@media all and (min-width: 650px) {
+  td > .currency-symbol {
+    width: 50%;
+  }
 }
