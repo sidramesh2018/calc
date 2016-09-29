@@ -1,3 +1,5 @@
+{% load static %}
+
 <p>
   For Schedule 70, this is your completed Price Proposal Template.
   We'll only read the <strong>{{ sheet_name }}</strong> tab. It
@@ -16,9 +18,12 @@
   </table>
 </div>
 
+<p>
+  If you're not using a spreadsheet like this, please download and
+  fill out the <a href="{% static 'data_capture/s70_template.xls' %}">Schedule 70 Price List Template</a>.
+</p>
+
 {% if show_debug_ui %}
-{% load static %}
-<br>
 <div class="dev-note">
   <strong>Developers:</strong>
   Download <a href="{% static 'data_capture/s70_example.xlsx' %}"><code>s70_example.xlsx</code></a>
