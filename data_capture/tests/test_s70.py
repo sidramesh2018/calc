@@ -255,6 +255,13 @@ class S70Tests(ModelTestCase):
             r'This field must contain one of the following values'
         )
 
+    def test_price_including_iff_is_validated(self):
+        p = s70.Schedule70PriceList(rows=[{'price_including_iff': '1.10'}])
+        self.assertRegexpMatches(
+            p.invalid_rows[0].errors['price_including_iff'][0],
+            r'Price must be at least'
+        )
+
     def test_min_years_experience_is_validated(self):
         p = s70.Schedule70PriceList(rows=[{'min_years_experience': ''}])
 

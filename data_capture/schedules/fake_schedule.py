@@ -1,12 +1,13 @@
 import csv
 import logging
 from io import StringIO
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 
 from contracts.models import EDUCATION_CHOICES as _EDUCATION_CHOICES
-from .base import BasePriceList
+from .base import BasePriceList, min_price_validator
 
 
 EDU_LEVELS = {}
@@ -37,7 +38,9 @@ class FakeScheduleRow(forms.Form):
     years_experience = forms.IntegerField(
         label="Minimum years of experience"
     )
-    price = forms.DecimalField(label="Price")
+    price = forms.DecimalField(
+        label="Price",
+        validators=[min_price_validator])
 
 
 class FakeSchedulePriceList(BasePriceList):

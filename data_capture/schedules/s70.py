@@ -7,7 +7,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 
-from .base import BasePriceList
+from .base import BasePriceList, min_price_validator
 from .coercers import strip_non_numeric, extract_min_education
 from contracts.models import EDUCATION_CHOICES
 
@@ -193,7 +193,8 @@ class Schedule70Row(forms.Form):
         label="Minimum years of experience"
     )
     price_including_iff = forms.DecimalField(
-        label="Price offered to GSA (including IFF)"
+        label="Price offered to GSA (including IFF)",
+        validators=[min_price_validator]
     )
 
     def clean_education_level(self):
