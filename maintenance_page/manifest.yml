@@ -1,0 +1,8 @@
+applications:
+- name: calc-maintenance
+  instances: 1
+  memory: 64M
+  disk_quota: 64M
+  host: calc-maintenance
+  domain: apps.cloud.gov
+  stack: cflinuxfs2
