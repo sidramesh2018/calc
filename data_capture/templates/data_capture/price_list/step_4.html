@@ -20,7 +20,7 @@
   {% with total=rows|length %}
     <h3>{{ total }} row{{ total|pluralize }} ready to add to CALC</h3>
 
-    <p>Please double-check the data below to make sure all looks right.</p>
+    <p>Please double check the data below to make sure all looks right.</p>
   {% endwith %}
 
   {{ gleaned_data.to_table|safe }}

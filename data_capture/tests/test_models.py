@@ -1,3 +1,6 @@
+import datetime
+from decimal import Decimal
+
 from django.test import override_settings
 
 from contracts.models import Contract
@@ -24,7 +27,10 @@ class ModelTestCase(BaseTestCase):
             is_small_business=False,
             contract_number='GS-123-4567',
             vendor_name='UltraCorp',
-            schedule=self.DEFAULT_SCHEDULE
+            schedule=self.DEFAULT_SCHEDULE,
+            contract_start=datetime.date(2016, 9, 1),
+            contract_end=datetime.date(2021, 9, 1),
+            escalation_rate=0,
         )
         final_kwargs.update(kwargs)
         return SubmittedPriceList(**final_kwargs)
@@ -33,7 +39,7 @@ class ModelTestCase(BaseTestCase):
         final_kwargs = dict(
             labor_category='Project Manager',
             min_years_experience=5,
-            hourly_rate_year1=10,
+            base_year_rate=10,
         )
         final_kwargs.update(kwargs)
         return SubmittedPriceListRow(**final_kwargs)
@@ -47,12 +53,12 @@ class ModelsTests(ModelTestCase):
         row = p.add_row(
             labor_category='Project Manager',
             min_years_experience=5,
-            hourly_rate_year1=10,
+            base_year_rate=10,
         )
         self.assertEqual(list(p.rows.all()), [row])
         self.assertEqual(row.labor_category, 'Project Manager')
         self.assertEqual(row.min_years_experience, 5)
-        self.assertEqual(row.hourly_rate_year1, 10)
+        self.assertEqual(row.base_year_rate, 10)
 
     def test_get_schedule_title_works(self):
         p = self.create_price_list(schedule=FAKE_SCHEDULE)
@@ -70,6 +76,7 @@ class ModelsTests(ModelTestCase):
         p = self.create_price_list(
             contract_number='GS-123-4568',
             schedule=FAKE_SCHEDULE,
+            escalation_rate=1
         )
         p.save()
         row = self.create_row(labor_category='Software Engineer',
@@ -86,6 +93,21 @@ class ModelsTests(ModelTestCase):
         self.assertEqual(contract.labor_category, 'Software Engineer')
         self.assertEqual(contract.schedule, FakeSchedulePriceList.title)
         self.assertEqual(contract.labor_category, 'Software Engineer')
+        self.assertEqual(contract.hourly_rate_year1, Decimal(10.00))
+        self.assertAlmostEqual(
+            contract.hourly_rate_year2, Decimal(10.10), places=2)
+        self.assertAlmostEqual(
+            contract.hourly_rate_year3, Decimal(10.20), places=2)
+        self.assertAlmostEqual(
+            contract.hourly_rate_year4, Decimal(10.30), places=2)
+        self.assertAlmostEqual(
+            contract.hourly_rate_year5, Decimal(10.41), places=2)
+        self.assertEqual(contract.contract_year, 1)
+        self.assertEqual(contract.current_price, 10.00)
+        self.assertAlmostEqual(
+            contract.next_year_price, Decimal(10.10), places=2)
+        self.assertAlmostEqual(
+            contract.second_year_price, Decimal(10.20), places=2)
 
     def test_unapprove_works(self):
         p = self.create_price_list()

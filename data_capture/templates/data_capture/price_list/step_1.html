@@ -1,9 +1,10 @@
 {% extends 'data_capture/step.html' %}
+{% load frontend %}
 
 {% block subtitle %}Upload price list{% endblock %}
 
 {% block step_heading %}
-<p>Your price lists help make CALC a more robust tool. Uploading them is quick. Once you upload a price list, we'll make sure we understand your data, ask you for a few details, and send your price list to a CALC admin. The admin will check the data and publish it on CALC for all to use.</p>
+<p>Your price lists help make CALC a more robust tool, and sharing them is easy. Once you upload a price list, we'll make sure we understand your data, ask you for a few details, and send your price list to a CALC admin. The admin will check the data and publish it on CALC for all to use.</p>
 {% endblock %}
 
 {% block step_body %}
@@ -11,24 +12,9 @@
   {% csrf_token %}
   {{ form.non_field_errors }}
 
-  <fieldset{% if form.schedule.errors %} class="fieldset-error"{% endif %}>
-    {{ form.schedule.errors }}
-    <label for="{{ form.schedule.id_for_label }}">Which schedule is associated with this price list?</label>
-    {{ form.schedule }}
-  </fieldset>
-
-  <fieldset{% if form.contract_number.errors %} class="fieldset-error"{% endif %}>
-    {{ form.contract_number.errors }}
-    {{ form.contract_number.label_tag }}
-    {{ form.contract_number }}
-    <p class="helptext">{{ form.contract_number.help_text }}</p>
-  </fieldset>
-
-  <fieldset{% if form.vendor_name.errors %} class="fieldset-error"{% endif %}>
-    {{ form.vendor_name.errors }}
-    {{ form.vendor_name.label_tag }}
-    {{ form.vendor_name }}
-  </fieldset>
+  {% fieldset form.schedule %}
+  {% fieldset form.contract_number %}
+  {% fieldset form.vendor_name %}
 
   <div class="form-button-row clearfix">
     <div class="submit-group">
