@@ -13,14 +13,14 @@
 
 <h2>Verify vendor and contract details</h2>
 <div class="row">
-  <ul class="contract-details columns eight">
-    <li>Vendor: <span>{{ price_list.vendor_name }}</span>
-    <li>Contract #<span>{{ price_list.contract_number }}</span></li>
-    <li>Small business: <span>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</span></li>
-    <li>Contractor worksite: <span>{{ price_list.contractor_site }}</span></li>
-    <li>Contract dates: <span>{{ price_list.contract_start }}</span> to <span>{{ price_list.contract_end }}</span></li>
-    <li>Escalation rate: <span>{{ price_list.escalation_rate }}%</span></li>
-    <li>Schedule: <span>{{ gleaned_data.title }}</span>
+  <dl class="contract-details columns eight">
+    <li>Vendor: <dd>{{ price_list.vendor_name }}</dd>
+    <li>Contract number: <dd>{{ price_list.contract_number }}</dd></li>
+    <li>Small business: <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd></li>
+    <li>Contractor worksite: <dd>{{ price_list.contractor_site }}</dd></li>
+    <li>Contract dates: <dd>{{ price_list.contract_start }}</dd> to <dd>{{ price_list.contract_end }}</dd></li>
+    <li>Escalation rate: <dd>{{ price_list.escalation_rate }}%</dd></li>
+    <li>Schedule: <dd>{{ gleaned_data.title }}</dd>
       {% if not is_preferred_schedule %}
       <div class="alert alert-warning">
         <p>
@@ -32,7 +32,7 @@
       </div>
       {% endif %}
     </li>
-  </ul>
+  </dl>
 </div>
 
 
