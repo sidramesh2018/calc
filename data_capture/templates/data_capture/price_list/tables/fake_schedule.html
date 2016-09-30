@@ -27,12 +27,11 @@
         {{ row.years_experience.value }}
         {{ row.years_experience.errors }}
       </td>
-      <td class="number {% if row.price.errors %}error{% endif %}">
+      <td class="number currency{% if row.price.errors %}error{% endif %}">
         {% if row.price.errors %}
           {{ row.price.value }}
           {{ row.price.errors }}
         {% else %}
-          <span class="currency-symbol">$</span>
           {{ row.price.value|floatformat:2 }}
         {% endif %}
       </td>
