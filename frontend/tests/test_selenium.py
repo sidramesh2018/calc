@@ -178,6 +178,15 @@ class FunctionalTests(LiveServerTestCase):
         # XXX oh my god why do we have to do this???
         self.driver.execute_script('$("[name=q]").blur()')
 
+    def search_for_query_type(self, query, query_type):
+        # Important: We want to click the radio before entering the
+        # text, otherwise the radio may be obscured by the autocomplete
+        # suggestions (that's the working theory, at least).
+
+        form = self.get_form()
+        self.set_form_values(form, query_type=query_type)
+        self.search_for(query)
+
     def data_is_loaded(self):
         form = self.get_form()
         if has_class(form, 'error'):
@@ -590,9 +599,7 @@ class FunctionalTests(LiveServerTestCase):
             ['Systems Engineer I', 'Software Engineer II', 'Consultant II']))
         driver = self.load()
         self.wait_for(self.data_is_loaded)
-        form = self.get_form()
-        self.search_for('software engineer')
-        self.set_form_values(form, query_type='match_phrase')
+        self.search_for_query_type('software engineer', 'match_phrase')
         self.submit_form_and_wait()
         cells = driver.find_elements_by_css_selector(
             'table.results tbody .column-labor_category')
@@ -607,9 +614,7 @@ class FunctionalTests(LiveServerTestCase):
              'Senior Software Engineer']))
         driver = self.load()
         self.wait_for(self.data_is_loaded)
-        form = self.get_form()
-        self.search_for('software engineer')
-        self.set_form_values(form, query_type='match_exact')
+        self.search_for_query_type('software engineer', 'match_exact')
         self.submit_form_and_wait()
         cells = driver.find_elements_by_css_selector(
             'table.results tbody .column-labor_category')
