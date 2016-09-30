@@ -13,7 +13,7 @@ test_contract_link
 
 8/25/15 [TS]
 """
-from django.conf import settings
+
 from django.test import LiveServerTestCase
 
 from selenium import webdriver
