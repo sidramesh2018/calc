@@ -115,12 +115,6 @@ td.number {
   text-align: right;
 }
 
-td > .currency-symbol {
-  color: $color-gray-medium;
-  width: 50%;
-  float: left;
-}
-
 .price-list-table {
   th, td {
     max-width: 1em;
@@ -153,4 +147,33 @@ th.column-labor_category {
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 22rem;
+}
+
+@media all and (min-width: 400px) {
+  td.number.currency:before {
+    content: '$';
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+    color: $color-gray-medium;
+  }
+}
+
+@media all and (min-width: 500px) {
+  td.number.currency:before {
+    left: 12%;
+  }
+}
+
+@media all and (min-width: 650px) {
+  td.number.currency:before {
+    left: 30%;
+  }
+}
+
+@media all and (min-width: 880px) {
+  td.number.currency:before {
+    left: 50%;
+  }
 }
