@@ -32,19 +32,13 @@ from datetime import datetime
 from .utils import build_static_assets
 
 
-TESTING_KEY = 'REMOTE_TESTING'
-REMOTE_TESTING = hasattr(settings, TESTING_KEY) and getattr(
-    settings, TESTING_KEY) or {}
-TESTING_URL = os.environ.get('LOCAL_TUNNEL_URL', REMOTE_TESTING.get('url'))
+WD_HUB_URL = os.environ.get('WD_HUB_URL')
+WD_TESTING_URL = os.environ.get('WD_TESTING_URL')
+WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
+                                    'phantomjs')
 
 PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
-
-
-def _get_testing_config(key, default=None):
-    return REMOTE_TESTING.get(key, os.environ.get('%s_%s' % (
-        TESTING_KEY, key.upper()), default
-    ))
 
 
 def _get_webdriver(name):
@@ -54,7 +48,9 @@ def _get_webdriver(name):
     elif name == 'firefox':
         return webdriver.Firefox()
     elif name == 'phantomjs':
-        return webdriver.PhantomJS()
+        driver = webdriver.PhantomJS()
+        driver.command_executor.set_timeout(PHANTOMJS_TIMEOUT)
+        return driver
     raise 'No such webdriver: "%s"' % name
 
 
@@ -66,38 +62,26 @@ class FunctionalTests(LiveServerTestCase):
 
     @classmethod
     def get_driver(cls):
-        if not REMOTE_TESTING or not TESTING_URL:
-            driver = _get_webdriver(os.environ.get('TESTING_BROWSER',
-                                                   'phantomjs'))
-            driver.command_executor.set_timeout(PHANTOMJS_TIMEOUT)
-            return driver
+        if not WD_TESTING_URL:
+            return _get_webdriver(WD_TESTING_BROWSER)
 
-        if REMOTE_TESTING.get('enabled') is False:
-            pass
-
-        username = _get_testing_config('username')
-        access_key = _get_testing_config('access_key')
-        hub_url = _get_testing_config('hub_url')
-        if None in (username, access_key, hub_url):
-            raise Exception(
-                'You must provide a username, access_key and hub URL!'
-            )
+        if not WD_HUB_URL:
+            raise Exception('WD_HUB_URL must be defined!')
 
         desired_cap = webdriver.DesiredCapabilities.CHROME
         # these are the standard Selenium capabilities
-        desired_cap['platform'] = _get_testing_config('platform', 'Windows 7')
-        desired_cap['browserName'] = _get_testing_config(
-            'browser', 'internet explorer')
-        desired_cap['version'] = _get_testing_config('browser_version', '9.0')
+
+        if 'WD_TESTING_PLATFORM' in os.environ:
+            desired_cap['platform'] = os.environ['WD_TESTING_PLATFORM']
+        desired_cap['browserName'] = WD_TESTING_BROWSER
+        if 'WD_TESTING_BROWSER_VERSION' in os.environ:
+            desired_cap['version'] = os.environ['WD_TESTING_BROWSER_VERSION']
         desired_cap['name'] = 'CALC'
-        other_caps = REMOTE_TESTING.get('capabilities')
-        if other_caps:
-            desired_cap.update(other_caps)
         print('capabilities:', desired_cap)
 
         driver = webdriver.Remote(
             desired_capabilities=desired_cap,
-            command_executor=hub_url % (username, access_key)
+            command_executor=WD_HUB_URL
         )
 
         # XXX should this be higher?
@@ -135,8 +119,8 @@ class FunctionalTests(LiveServerTestCase):
 
     def setUp(self):
         self.base_url = self.live_server_url
-        if TESTING_URL:
-            self.base_url = TESTING_URL
+        if WD_TESTING_URL:
+            self.base_url = WD_TESTING_URL
         self.driver.set_window_size(*self.window_size)
         super(FunctionalTests, self).setUp()
 
