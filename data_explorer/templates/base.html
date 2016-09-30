@@ -125,6 +125,9 @@
         // forces SSL even if the page were somehow loaded over http://
         ga('set', 'forceSSL', true);
 
+{% if user.is_authenticated %}
+        ga('set', 'dimension1', '{{ user.id }}');
+{% endif %}
         ga('create', 'UA-48605964-21', 'auto');
         ga('send', 'pageview');
     </script>
