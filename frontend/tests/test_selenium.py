@@ -102,6 +102,7 @@ class FunctionalTests(LiveServerTestCase):
         cls.driver.quit()
         if cls.connect:
             cls.connect.shutdown_connect()
+        super().tearDownClass()
 
     @classmethod
     def take_screenshot(cls):
