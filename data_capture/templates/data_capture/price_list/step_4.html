@@ -3,39 +3,37 @@
 {% block subtitle %}Validate data{% endblock %}
 
 {% block step_body %}
-<h2>Validate price list data for {{ price_list.vendor_name }}</h2>
-<div>
-  <h3> </h3>
-  <ul class="contract-details">
+{% with rows=gleaned_data.valid_rows %}
+  {% with total=rows|length %}
+    <h2>Verify {{ total }} row{{ total|pluralize }} of data </h2>
+  {% endwith %}
+
+  {{ gleaned_data.to_table|safe }}
+{% endwith %}
+
+<h2>Verify vendor and contract details</h2>
+<div class="row">
+  <ul class="contract-details columns eight">
+    <li>Vendor: <span>{{ price_list.vendor_name }}</span>
     <li>Contract #<span>{{ price_list.contract_number }}</span></li>
     <li>Small business: <span>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</span></li>
     <li>Contractor worksite: <span>{{ price_list.contractor_site }}</span></li>
     <li>Contract dates: <span>{{ price_list.contract_start }}</span> to <span>{{ price_list.contract_end }}</span></li>
     <li>Escalation rate: <span>{{ price_list.escalation_rate }}%</span></li>
-    <li>Schedule: <span>{{ gleaned_data.title }}</span></li>
+    <li>Schedule: <span>{{ gleaned_data.title }}</span>
+      {% if not is_preferred_schedule %}
+      <div class="alert alert-warning">
+        <p>
+          <strong>Note:</strong> You specified that the price list you were
+          uploading was for <em>{{ preferred_schedule_title }}</em>, but it
+          appears to be for <em>{{ gleaned_data.title }}</em>. If this is
+          incorrect, please upload a different file.
+        </p>
+      </div>
+      {% endif %}
+    </li>
   </ul>
 </div>
-
-{# TODO: remove this block? #}
-{% if not is_preferred_schedule %}
-<div class="alert alert-warning">
-  <p>
-    <strong>Note:</strong> You specified that the price list you were
-    uploading was for <em>{{ preferred_schedule_title }}</em>, but it
-    appears to be for <em>{{ gleaned_data.title }}</em>. If this is
-    incorrect, please upload a different file.
-  </p>
-</div>
-{% endif %}
-
-{% with rows=gleaned_data.valid_rows %}
-
-  {% with total=rows|length %}
-    <h3>{{ total }} row{{ total|pluralize }} ready to add to CALC</h3>
-  {% endwith %}
-
-  {{ gleaned_data.to_table|safe }}
-{% endwith %}
 
 
 <form method="post">
@@ -49,9 +47,9 @@
 
     {% if gleaned_data.valid_rows %}
       <div class="submit-group">
-        <button type="submit" class="button-primary">Next</button>
+        <button type="submit" class="button-primary">Submit</button>
         <span class="submit-label">
-          Submit for approval.
+          Submit price list data for approval.
         </span>
       </div>
     {% endif %}
