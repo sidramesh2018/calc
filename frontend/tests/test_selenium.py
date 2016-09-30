@@ -90,6 +90,7 @@ class FunctionalTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
+        socket.setdefaulttimeout(5)
         build_static_assets()
         cls.driver = cls.get_driver()
         cls.longMessage = True
