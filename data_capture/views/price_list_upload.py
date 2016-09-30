@@ -232,7 +232,6 @@ def step_4(request, step):
         'escalation_rate': step_2_form.cleaned_data['escalation_rate'],
     }
 
-
     if request.method == 'POST':
         if not gleaned_data.valid_rows:
             # Our UI never should've let the user issue a request
@@ -262,7 +261,8 @@ def step_4(request, step):
     return step.render(request, {
         'gleaned_data': gleaned_data,
         'price_list': pl_details,
-        'is_preferred_schedule': isinstance(gleaned_data, pl_details['preferred_schedule']),
+        'is_preferred_schedule': isinstance(gleaned_data,
+                                            pl_details['preferred_schedule']),
         'preferred_schedule_title': pl_details['preferred_schedule'].title,
     })
 
