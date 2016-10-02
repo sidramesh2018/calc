@@ -14,7 +14,7 @@ test_contract_link
 8/25/15 [TS]
 """
 
-from django.test import LiveServerTestCase
+from django.test import LiveServerTestCase, override_settings
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
@@ -622,6 +622,24 @@ class FunctionalTests(LiveServerTestCase):
             len(cells), 1, 'wrong cell count: %d (expected 1)' % len(cells))
         self.assertEqual(cells[0].text, 'Software Engineer',
                          'bad cell text: "%s"' % cells[0].text)
+
+    @override_settings(ROOT_URLCONF='frontend.tests.test_qunit')
+    def test_qunit(self):
+        self.load('/tests/')
+
+        FAILED_SEL = '#qunit-testresult .failed'
+
+        def are_results_loaded():
+            els = self.driver.find_elements_by_css_selector(FAILED_SEL)
+
+            return len(els) > 0
+
+        self.wait_for(are_results_loaded)
+
+        failed = self.driver.find_element_by_css_selector(FAILED_SEL).text
+
+        if failed != '0':
+            raise Exception("{} qunit test(s) failed".format(failed))
 
     def _test_column_is_sortable(self, driver, colname):
         col_header = find_column_header(driver, colname)
