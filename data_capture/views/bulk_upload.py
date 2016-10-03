@@ -3,6 +3,7 @@ from django.core.files.base import ContentFile
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required
+from django.template.loader import render_to_string
 
 from .. import forms, jobs
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
@@ -16,6 +17,54 @@ from contracts.models import BulkUploadContractSource
 steps = Steps(
     template_format='data_capture/bulk_upload/region_10_step_{}.html',
 )
+
+EXAMPLE_SHEET_ROWS = [
+    [
+        'Labor Category',
+        'Year 1/base',
+        'Year 2',
+        'Year 3',
+        'Year 4',
+        'Year 5',
+        'Education',
+        'MinExpAct',
+        'Bus Size',
+        'Location',
+        'COMPANY NAME',
+        'CONTRACT .',
+        'Schedule',
+        'SIN NUMBER',
+        'Begin Date',
+        'End Date',
+        'Contract Year',
+    ],
+    [
+        'Academic Expert',
+        '580.69',
+        '592.30',
+        '604.14',
+        '616.23',
+        '628.55',
+        'Ph.D.',
+        '5',
+        'S',
+        'Both',
+        'Acme Inc.',
+        'GS-000-1234',
+        'Consolidated',
+        '123-45',
+        '5/1/16',
+        '4/30/20',
+        '1',
+    ]
+]
+
+
+def render_r10_spreadsheet_example(request=None):
+    return render_to_string(
+        'data_capture/price_list/upload_examples/region_10.html',
+        {'sheet_rows': EXAMPLE_SHEET_ROWS},
+        request=request)
 
 
 @steps.step
@@ -55,6 +104,7 @@ def bulk_region_10_step_1(request, step):
         request,
         context=step.context({
             'form': form,
+            'upload_example': render_r10_spreadsheet_example(request),
         }),
         template_name=step.template_name,
         ajax_template_name='data_capture/bulk_upload/'
