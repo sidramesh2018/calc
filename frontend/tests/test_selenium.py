@@ -511,11 +511,13 @@ class FunctionalTests(LiveServerTestCase):
         header2 = find_column_header(driver, 'labor_category')
 
         header1.click()
+        self.wait_for(lambda: has_class(header1, 'sorted'))
         self.assertTrue(has_class(header1, 'sorted'), "column 1 is not sorted")
         self.assertFalse(has_class(header2, 'sorted'),
                          "column 2 is still sorted (but should not be)")
 
         header2.click()
+        self.wait_for(lambda: has_class(header2, 'sorted'))
         self.assertTrue(has_class(header2, 'sorted'), "column 2 is not sorted")
         self.assertFalse(has_class(header1, 'sorted'),
                          "column 1 is still sorted (but should not be)")
