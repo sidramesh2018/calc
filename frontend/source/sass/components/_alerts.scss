@@ -13,27 +13,6 @@ $color-error-bg: #fef5f5;
     }
   }
 
-  td.error {
-    border: 2px solid $color-secondary-dark;
-    color: $color-secondary-dark;
-    font-weight: $font-weight-bold;
-    padding-left: 2.5rem;
-
-    .errorlist {
-      color: $color-base;
-      font-weight: $font-weight-normal;
-      font-size: $small-font-size;
-      border: none;
-      background-image: url('../../images/uswds/alerts/error.png');
-      background-image: url('../../images/uswds/alerts/error.svg');
-      background-size: 2.5rem;
-      background-repeat: no-repeat;
-      background-position: top 3px left;
-      padding-left: 2.5rem;
-      margin-left: -2.5rem;
-      max-width: 220px;
-    }
-  }
 
   thead th {
     color: $color-black;

@@ -9,50 +9,8 @@ table {
     padding-bottom: 1.5em;
     vertical-align: bottom;
   }
-
-  thead {
-    th {
-      position: relative;
-      vertical-align: bottom;
-      color: $color-gray;
-      border-bottom: 1px solid;
-      &.sortable {
-        text-decoration: underline;
-        cursor: pointer;
-        padding-right: 1.5em;
-        &:after {
-          display: inline-block;
-          line-height: 1em;
-          height: 1em;
-          position: absolute;
-          bottom: .4em;
-          right: 0;
-          margin-top: -.5em;
-          margin-right: .25em;
-          content: "▽";
-          font-weight: normal;
-          font-size: .9em;
-        }
-      }
-      &.sorted {
-        color: $color-black;
-        background: #f8f8f8;
-        position: relative;
-        &:after {
-          content: "▲";
-          font-size: 1em;
-        }
-        &.descending:after {
-          content: "▼";
-        }
-      }
-    }
-  }
   tbody {
     tr {
-      &:hover > * {
-        background: $color-gold-lightest !important;
-      }
       &:nth-child(odd) {
         background: #f9f9f9;
         td.sorted {
@@ -62,6 +20,58 @@ table {
     }
     th {
       font-weight: normal;
+    }
+  }
+
+  &.sortable,
+  &.price-list-table {
+    thead {
+      th {
+        position: relative;
+        vertical-align: bottom;
+        color: $color-gray;
+        border-bottom: 1px solid;
+        &.sortable {
+          text-decoration: underline;
+          cursor: pointer;
+          padding-right: 1.5em;
+          &:after {
+            display: inline-block;
+            line-height: 1em;
+            height: 1em;
+            position: absolute;
+            bottom: .4em;
+            right: 0;
+            margin-top: -.5em;
+            margin-right: .25em;
+            content: "▽";
+            font-weight: normal;
+            font-size: .9em;
+          }
+        }
+        &.sorted {
+          color: $color-black;
+          background: #f8f8f8;
+          position: relative;
+          &:after {
+            content: "▲";
+            font-size: 1em;
+          }
+          &.descending:after {
+            content: "▼";
+          }
+        }
+      }
+    }
+  }
+
+  &.hoverable {
+    tbody {
+      tr {
+        &:hover > * {
+          background: $color-gold-lightest !important;
+        }
+      }
     }
   }
 }
@@ -81,7 +91,36 @@ td.sorted {
   background: #fafafa;
 }
 
-/*th.collapsible a.toggle-collapse,*/
+/* used on price list upload error page */
+td.error {
+  border-left: 2px solid $color-secondary-dark;
+  background-color: $color-error-bg;
+  color: $color-secondary-dark;
+  font-weight: $font-weight-bold;
+  padding-left: 2.5rem;
+
+  &.number .errorlist {
+    /* number cells align right, so match error to value style */
+    margin: 0;
+    float: right;
+  }
+
+  .errorlist {
+    color: $color-base;
+    font-weight: $font-weight-normal;
+    font-size: $small-font-size;
+    border: none;
+    background-image: url('../../images/uswds/alerts/error.png');
+    background-image: url('../../images/uswds/alerts/error.svg');
+    background-size: 2.5rem;
+    background-repeat: no-repeat;
+    background-position: top 3px left;
+    padding-left: 2.5rem;
+    margin-left: -2.5rem;
+    max-width: 220px;
+  }
+}
+
 th.exclude a.restore {
   position: absolute;
   font-size: 1rem;

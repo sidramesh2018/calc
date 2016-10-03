@@ -8,6 +8,9 @@ function showEnableSafeModeUI() {
   if (el && el.hasAttribute('style')) {
     el.removeAttribute('style');
     el.focus();
+    if (typeof ga === 'function') {
+      ga('send', 'event', 'safe mode', 'show');
+    }
   }
 }
 
