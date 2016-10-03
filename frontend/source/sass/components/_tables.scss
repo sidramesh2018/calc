@@ -23,7 +23,8 @@ table {
     }
   }
 
-  &.sortable {
+  &.sortable,
+  &.price-list-table {
     thead {
       th {
         position: relative;
