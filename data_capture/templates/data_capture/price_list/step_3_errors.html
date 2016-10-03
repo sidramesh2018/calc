@@ -2,61 +2,64 @@
 
 {% block subtitle %}Review errors{% endblock %}
 
-{% block step_heading %}
-  <p>Review errors found during processing the uploaded price list.</p>
-{% endblock step_heading %}
-
 {% block step_body %}
-  <h2>Review errors</h2>
-
-  {% if not is_preferred_schedule %}
-    <p>
-      <strong>Note:</strong> You specified that the price list you were
-      uploading was for <em>{{ preferred_schedule_title }}</em>, but it
-      appears to be for <em>{{ gleaned_data.title }}</em>. If this is
-      incorrect, please upload a different file.
-    </p>
-  {% endif %}
-
-  <div class="alert alert-error" role="alert">
-
+  <h2>Upload awarded price list</h2>
     {% with rows=gleaned_data.invalid_rows %}
 
       {% with total=rows|length %}
-        <h3>{{ total }} row{{ total|pluralize:" has,s have" }} errors</h3>
 
+      <div class="alert alert-error" role="alert">
+        {% if not gleaned_data.valid_rows %}
+          <h3>No valid rows found!</h3>
+          <p>
+            Your uploaded price list contains no valid rows. Please fix the errors
+            shown above in the original file and
+            <a href="{% url 'data_capture:step_3' %}">try uploading it again</a>.
+          </p>
+        {% else %}
+          <h3>{{ total }} row{{ total|pluralize:" has,s have" }} errors</h3>
+          <p>
+            The row{{ total|pluralize }} below appear{{ total|pluralize:"s," }} to be
+            invalid and <strong>will be discarded</strong> when you upload your
+            price list.
+            If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
+            in your original spreadsheet and <a href="{% url 'data_capture:step_3' %}">try uploading it again</a>.
+          </p>
+        {% endif %}
+
+        {% if not is_preferred_schedule %}
+        <hr />
         <p>
-          The row{{ total|pluralize }} below appear{{ total|pluralize:"s," }} to be
-          invalid and <strong>will be discarded</strong> when you upload your
-          price list.
-          If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
-          in your original spreadsheet and <a href="{% url 'data_capture:step_3' %}">try uploading it again</a>.
+          <strong>Note:</strong> You specified that the price list you were
+          uploading was for <em>{{ preferred_schedule_title }}</em>, but it
+          appears to be for <em>{{ gleaned_data.title }}</em>. If this is
+          incorrect, please upload a different file.
         </p>
+        {% endif %}
+      </div>
       {% endwith %}
-
       {{ gleaned_data.to_error_table|safe }}
     {% endwith %}
-  </div>
 
-  {% if not gleaned_data.valid_rows %}
-    <p>
-      Your uploaded price list contains no valid rows. Please fix the errors
-      shown above in the original file and
-      <a href="{% url 'data_capture:step_3' %}">try uploading it again</a>.
-    </p>
-  {% endif %}
 
   <form method="post">
     {% csrf_token %}
     <div class="form-button-row clearfix">
-      <a href="{% url 'data_capture:step_3' %}" class="button button-previous">
-        Fix errors and re-upload price list
+      <a href="{% url 'data_capture:step_3' %}" class="button button-primary">
+        Upload revised price list
       </a>
 
       {% if gleaned_data.valid_rows %}
-        <a href="{% url 'data_capture:step_4' %}" class="button button-primary">
+        <a href="{% url 'data_capture:step_4' %}" class="button button-secondary">
           Continue without these rows
         </a>
+      {% else %}
+        <div class="submit-group">
+          <div class="button button-disabled">Continue without these rows</div>
+          <span class="submit-label">
+            Upload a spreadsheet with valid rows to continue.
+          </span>
+        </div>
       {% endif %}
 
       <button type="submit" class="button-link" name="cancel" formnovalidate>Cancel</button>

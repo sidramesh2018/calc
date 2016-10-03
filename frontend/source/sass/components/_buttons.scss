@@ -123,3 +123,11 @@ input.button-link[type="button"] {
     color: $color-primary-darker;
   }
 }
+
+.button.button-disabled {
+  background-color: $color-gray-lighter;
+  cursor: default;
+  &:hover {
+    color: $color-gray;
+  }
+}
