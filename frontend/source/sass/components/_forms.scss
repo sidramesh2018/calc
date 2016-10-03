@@ -32,11 +32,20 @@ form ul {
 
 fieldset {
   max-width: 53rem;
+  ul {
+    margin-bottom: 0;
+    li:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
-fieldset + fieldset {
+fieldset + fieldset,
+fieldset ~ fieldset,
+fieldset + div + fieldset {
   margin-top: 3rem;
 }
+
 
 /* Django's default form rendering uses a <ul class="errorlist">
    for errors, and <span class="helptext"> for help text. */

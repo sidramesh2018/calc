@@ -1,3 +1,5 @@
+@import '../base/variables';
+
 body {
   display: flex;
   flex-direction: column;
@@ -7,4 +9,8 @@ body {
 main {
   // https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
   flex: 1 0 auto;
+}
+
+.secondary-step h1 {
+  font-size: $h3-font-size;
 }
