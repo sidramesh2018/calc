@@ -53,7 +53,8 @@ class ExpandableArea extends window.HTMLElement {
                    ? 'false' : 'true';
     this.expander.setAttribute('aria-expanded', newVal);
     ga('send', 'event', 'expandable area',
-       newVal === 'true' ? 'expand' : 'collapse');
+       newVal === 'true' ? 'expand' : 'collapse',
+       this.expander.textContent);
   }
 }
 
