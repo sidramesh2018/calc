@@ -14,7 +14,7 @@ test_contract_link
 8/25/15 [TS]
 """
 
-from django.test import LiveServerTestCase, override_settings
+from django.test import LiveServerTestCase
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
@@ -54,7 +54,7 @@ def _get_webdriver(name):
     raise 'No such webdriver: "%s"' % name
 
 
-class FunctionalTests(LiveServerTestCase):
+class SeleniumTestCase(LiveServerTestCase):
     connect = None
     driver = None
     screenshot_filename = 'selenium_tests/screenshot.png'
@@ -95,7 +95,7 @@ class FunctionalTests(LiveServerTestCase):
         cls.driver = cls.get_driver()
         cls.longMessage = True
         cls.maxDiff = None
-        super(FunctionalTests, cls).setUpClass()
+        super().setUpClass()
 
     @classmethod
     def tearDownClass(cls):
@@ -117,14 +117,14 @@ class FunctionalTests(LiveServerTestCase):
         print('screenshot taken: %s' % png)
 
     def _fail(self, *args, **kwargs):
-        super(FunctionalTests, self).fail(*args, **kwargs)
+        super().fail(*args, **kwargs)
 
     def setUp(self):
         self.base_url = self.live_server_url
         if WD_TESTING_URL:
             self.base_url = WD_TESTING_URL
         self.driver.set_window_size(*self.window_size)
-        super(FunctionalTests, self).setUp()
+        super().setUp()
 
     def load(self, uri='/'):
         url = self.base_url + uri
@@ -145,17 +145,19 @@ class FunctionalTests(LiveServerTestCase):
         # self.driver.execute_script('$("body").addClass("selenium")')
         return self.driver
 
-    def load_and_wait(self, uri='/'):
-        self.load(uri)
-        self.wait_for(self.data_is_loaded)
-        return self.driver
-
     def wait_for(self, condition, timeout=10):
         try:
             wait_for(condition, timeout=timeout)
         except Exception as err:
             return self.fail(err)
         return True
+
+
+class DataExplorerTests(SeleniumTestCase):
+    def load_and_wait(self, uri='/'):
+        self.load(uri)
+        self.wait_for(self.data_is_loaded)
+        return self.driver
 
     def get_form(self):
         return self.driver.find_element_by_id('search')
@@ -624,24 +626,6 @@ class FunctionalTests(LiveServerTestCase):
             len(cells), 1, 'wrong cell count: %d (expected 1)' % len(cells))
         self.assertEqual(cells[0].text, 'Software Engineer',
                          'bad cell text: "%s"' % cells[0].text)
-
-    @override_settings(ROOT_URLCONF='frontend.tests.test_qunit')
-    def test_qunit(self):
-        self.load('/tests/')
-
-        FAILED_SEL = '#qunit-testresult .failed'
-
-        def are_results_loaded():
-            els = self.driver.find_elements_by_css_selector(FAILED_SEL)
-
-            return len(els) > 0
-
-        self.wait_for(are_results_loaded)
-
-        failed = self.driver.find_element_by_css_selector(FAILED_SEL).text
-
-        if failed != '0':
-            raise Exception("{} qunit test(s) failed".format(failed))
 
     def _test_column_is_sortable(self, driver, colname):
         col_header = find_column_header(driver, colname)
