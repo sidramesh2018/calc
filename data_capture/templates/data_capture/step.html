@@ -3,7 +3,7 @@
 {% block title %}Add price data to CALC / {{ step.description|capfirst }}: {% block subtitle %}{% endblock %}{% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container {% block body_class %}{% endblock %}">
 
 <h1>
   Add price data to CALC
@@ -15,13 +15,13 @@
       <label>Choose schedule</label>
     </li>
     <li {% if step.number == 2 %}class="current"{% endif %}>
-      <label>Enter contract details</label>
+      <label>Enter price list details</label>
     </li>
     <li {% if step.number == 3 %}class="current"{% endif %}>
       <label>Upload price list</label>
     </li>
     <li {% if step.number == 4 %}class="current"{% endif %}>
-      <label>Validate data</label>
+      <label>Verify data</label>
     </li>
     <li {% if step.number == 5 %}class="current"{% endif %}>
       <label>Submit data</label>

@@ -1,6 +1,8 @@
 {% extends 'data_capture/step.html' %}
 
-{% block subtitle %}Validate data{% endblock %}
+{% block body_class %}secondary-step{% endblock %}
+
+{% block subtitle %}Verify data{% endblock %}
 
 {% block step_body %}
 {% with rows=gleaned_data.valid_rows %}
@@ -14,7 +16,7 @@
 <h2>Verify vendor and contract details</h2>
 <div class="row">
   <dl class="contract-details columns eight">
-    <li>Vendor: <dd>{{ price_list.vendor_name }}</dd>
+    <li>Vendor: <dd>{{ price_list.vendor_name }}</dd></li>
     <li>Contract number: <dd>{{ price_list.contract_number }}</dd></li>
     <li>Small business: <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd></li>
     <li>Contractor worksite: <dd>{{ price_list.contractor_site }}</dd></li>
