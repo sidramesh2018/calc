@@ -36,10 +36,22 @@ WD_HUB_URL = os.environ.get('WD_HUB_URL')
 WD_TESTING_URL = os.environ.get('WD_TESTING_URL')
 WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
                                     'phantomjs')
+WD_TUNNEL_ID = os.environ.get('WD_TUNNEL_ID')
 WD_SOCKET_TIMEOUT = int(os.environ.get('WD_SOCKET_TIMEOUT', '5'))
-
 PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
+
+
+if WD_TESTING_URL and WD_HUB_URL is None and \
+   'SAUCE_USERNAME' in os.environ and 'SAUCE_ACCESS_KEY' in os.environ:
+    WD_HUB_URL = 'http://{}:{}@ondemand.saucelabs.com/wd/hub'.format(
+        os.environ['SAUCE_USERNAME'],
+        os.environ['SAUCE_ACCESS_KEY']
+    )
+
+
+if 'TRAVIS_JOB_NUMBER' in os.environ and WD_TUNNEL_ID is None:
+    WD_TUNNEL_ID = os.environ['TRAVIS_JOB_NUMBER']
 
 
 def _get_webdriver(name):
@@ -79,6 +91,9 @@ class SeleniumTestCase(LiveServerTestCase):
             desired_cap['version'] = os.environ['WD_TESTING_BROWSER_VERSION']
         if 'WD_JOB_VISIBILITY' in os.environ:
             desired_cap['public'] = os.environ['WD_JOB_VISIBILITY']
+        if WD_TUNNEL_ID:
+            desired_cap['tunnel-identifier'] = WD_TUNNEL_ID
+
         desired_cap['name'] = 'CALC'
         print('capabilities:', desired_cap)
 

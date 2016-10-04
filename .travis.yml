@@ -3,6 +3,7 @@ python:
 - 3.4
 addons:
   postgresql: 9.3
+  sauce_connect: true
 matrix:
   fast_finish: true
 services:
@@ -31,6 +32,14 @@ env:
   - PHANTOMJS_TIMEOUT=15
   - DEBUG=yup
   - DATABASE_URL=postgres://postgres@localhost/hourglass
+  - DJANGO_LIVE_TEST_SERVER_ADDRESS=127.0.0.1:8000
+  - WD_TESTING_URL=http://127.0.0.1:8000
+  - WD_TESTING_BROWSER=internet explorer
+  - WD_TESTING_BROWSER_VERSION=11.103
+  - WD_JOB_VISIBILITY=public
+  - WD_SOCKET_TIMEOUT=60
+  - SAUCE_USERNAME=atulvarma
+  - secure: "RbgG35nc1SHgjdxVbGUDlumePeR/+dXq5fMbfTXOW8uFYw5kGh75px2KdFDkL1JIA1vbfxyNFm09x32uXMcHsBKu9fJS7xbpMrRDbJoV2wVy5wd6qtvZ7yFbR87Fqo3/tuGu13jNNDvUgKjpUlrzLZKaL7qvv5Gd7CVhkySUa1o="
 deploy:
   edge: true
   skip_cleanup: true
