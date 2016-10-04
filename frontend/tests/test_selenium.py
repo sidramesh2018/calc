@@ -42,14 +42,6 @@ PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
 
 
-if WD_TESTING_URL and WD_HUB_URL is None and \
-   'SAUCE_USERNAME' in os.environ and 'SAUCE_ACCESS_KEY' in os.environ:
-    WD_HUB_URL = 'http://{}:{}@ondemand.saucelabs.com/wd/hub'.format(
-        os.environ['SAUCE_USERNAME'],
-        os.environ['SAUCE_ACCESS_KEY']
-    )
-
-
 if os.environ.get('TRAVIS') == 'true':
     if os.environ.get('TRAVIS_SECURE_ENV_VARS') == 'true':
         # We're running in a trusted environment, so use Sauce Labs
@@ -65,6 +57,14 @@ if os.environ.get('TRAVIS') == 'true':
         WD_TESTING_BROWSER_VERSION = None
         WD_TESTING_URL = None
         WD_HUB_URL = None
+
+
+if WD_TESTING_URL and WD_HUB_URL is None and \
+   'SAUCE_USERNAME' in os.environ and 'SAUCE_ACCESS_KEY' in os.environ:
+    WD_HUB_URL = 'http://{}:{}@ondemand.saucelabs.com/wd/hub'.format(
+        os.environ['SAUCE_USERNAME'],
+        os.environ['SAUCE_ACCESS_KEY']
+    )
 
 
 def _get_webdriver(name):
