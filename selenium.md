@@ -39,21 +39,27 @@ default `DOCKER_EXPOSED_PORT` of `8000`.
 
 3. Set the following environment variables in your `.env` file:
 
-       DJANGO_LIVE_TEST_SERVER_ADDRESS=0.0.0.0:8000
-       WD_TESTING_URL=http://localhost:8000
-       WD_TESTING_BROWSER=chrome
+   ```
+   DJANGO_LIVE_TEST_SERVER_ADDRESS=0.0.0.0:8000
+   WD_TESTING_URL=http://localhost:8000
+   WD_TESTING_BROWSER=chrome
+   ```
 
    You will also want to define `WD_HUB_URL` in a way that allows your
    docker container to make a request to the Selenium server running on
    your machine.  You should be able to get this by running the following:
 
-       echo "http://`ip route | awk '/docker0/ { print $NF }'`:4444/wd/hub"
+   ```
+   echo "http://`ip route | awk '/docker0/ { print $NF }'`:4444/wd/hub"
+   ```
 
    Supposing the above command produced the output
    `http://192.168.1.5:4444/wd/hub`, you can test connectivity from CALC's
    docker container by running:
 
-       docker-compose run app curl -I http://192.168.1.5:4444/wd/hub
+   ```
+   docker-compose run app curl -I http://192.168.1.5:4444/wd/hub
+   ```
 
    This command should result in a 302 if it's able to connect to your
    Selenium server.
@@ -64,7 +70,9 @@ default `DOCKER_EXPOSED_PORT` of `8000`.
 
 5. Run the following:
 
-       docker-compose run --service-ports app python manage.py test frontend
+   ```
+   docker-compose run --service-ports app python manage.py test frontend
+   ```
 
    If you need to run this multiple times but aren't changing any
    front-end code between runs, set `SKIP_STATIC_ASSET_BUILDING=yup` in
