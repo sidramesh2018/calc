@@ -47,10 +47,12 @@ default `DOCKER_EXPOSED_PORT` of `8000`.
 
    You will also want to define `WD_HUB_URL` in a way that allows your
    docker container to make a request to the Selenium server running on
-   your machine.  You should be able to get this by running the following:
+   your machine.  One way to do this is by using the IP address of your
+   machine on your LAN; on OS X, for instance, you should be able to
+   use the output of the following command:
 
    ```
-   echo "http://`ip route | awk '/docker0/ { print $NF }'`:4444/wd/hub"
+   echo "http://`ipconfig getifaddr en0`:4444/wd/hub"
    ```
 
    Supposing the above command produced the output
