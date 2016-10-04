@@ -19,7 +19,7 @@ define the following environment variables (unless otherwise noted):
   Examples include `chrome`, `firefox`, `internet explorer`, `android`,
   `chrome`, `iPhone`, `iPad`, `opera`, and `safari`.
 
-## Example: Docker + your machine's desktop browser
+## Example: Docker + your machine's Chrome browser
 
 If you're using Docker, configuration may not be straightforward due
 to the fact that CALC is running in its own Docker container with its
@@ -41,7 +41,7 @@ default `DOCKER_EXPOSED_PORT` of `8000`.
 
    ```
    DJANGO_LIVE_TEST_SERVER_ADDRESS=0.0.0.0:8000
-   WD_TESTING_URL=http://localhost:8000
+   WD_TESTING_URL=http://127.0.0.1:8000
    WD_TESTING_BROWSER=chrome
    ```
 
@@ -80,6 +80,32 @@ default `DOCKER_EXPOSED_PORT` of `8000`.
    front-end code between runs, set `SKIP_STATIC_ASSET_BUILDING=yup` in
    your `.env` to make things run faster.
 
+
+### Running Selenium and a headless Chrome browser in Docker
+
+We can modify the earlier setup to use a [Selenium Docker image][] that
+runs the Selenium hub server and a headless Chrome browser in a Docker
+container.  The advantage is that you don't need to have Java, Selenium hub,
+Chrome, and ChromeDriver on your local system; the downside is that you won't
+be able to see what's happening except via screenshots taken by the test
+suite.
+
+In a separate terminal, run:
+
+```
+docker run -it --rm -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome:2.53.1
+```
+
+Your `WD_HUB_URL` should remain unchanged, since the same port on your
+machine is hosting the Selenium server (it's just forwarding all requests to
+the container now).
+
+However, you will need to change the IP address of your `WD_TESTING_URL`,
+as the browser is no longer running on your machine, but inside a Docker
+container. You'll probably want to give it the same IP that `WD_HUB_URL`
+uses.
+
 [Selenium hub]: https://seleniumhq.github.io/docs/grid.html#what_is_a_hub_and_node
 [Selenium Standalone Server]: http://www.seleniumhq.org/download/
 [ChromeDriver]: https://sites.google.com/a/chromium.org/chromedriver/
+[Selenium Docker image]: https://github.com/SeleniumHQ/docker-selenium
