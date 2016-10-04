@@ -13,7 +13,7 @@ test_contract_link
 
 8/25/15 [TS]
 """
-from django.conf import settings
+
 from django.test import LiveServerTestCase
 
 from selenium import webdriver
@@ -32,19 +32,39 @@ from datetime import datetime
 from .utils import build_static_assets
 
 
-TESTING_KEY = 'REMOTE_TESTING'
-REMOTE_TESTING = hasattr(settings, TESTING_KEY) and getattr(
-    settings, TESTING_KEY) or {}
-TESTING_URL = os.environ.get('LOCAL_TUNNEL_URL', REMOTE_TESTING.get('url'))
-
+WD_HUB_URL = os.environ.get('WD_HUB_URL')
+WD_TESTING_URL = os.environ.get('WD_TESTING_URL')
+WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
+                                    'phantomjs')
+WD_TUNNEL_ID = os.environ.get('WD_TUNNEL_ID')
+WD_SOCKET_TIMEOUT = int(os.environ.get('WD_SOCKET_TIMEOUT', '5'))
 PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
 
 
-def _get_testing_config(key, default=None):
-    return REMOTE_TESTING.get(key, os.environ.get('%s_%s' % (
-        TESTING_KEY, key.upper()), default
-    ))
+if os.environ.get('TRAVIS') == 'true':
+    if os.environ.get('TRAVIS_SECURE_ENV_VARS') == 'true':
+        # We're running in a trusted environment, so use Sauce Labs
+        # if it's available.
+        WD_TUNNEL_ID = os.environ['TRAVIS_JOB_NUMBER']
+        WD_TESTING_URL = 'http://{}'.format(
+            os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS']
+        )
+    else:
+        # We're running against an untrusted PR from another repository,
+        # so default to using PhantomJS locally.
+        WD_TESTING_BROWSER = 'phantomjs'
+        WD_TESTING_BROWSER_VERSION = None
+        WD_TESTING_URL = None
+        WD_HUB_URL = None
+
+
+if WD_TESTING_URL and WD_HUB_URL is None and \
+   'SAUCE_USERNAME' in os.environ and 'SAUCE_ACCESS_KEY' in os.environ:
+    WD_HUB_URL = 'http://{}:{}@ondemand.saucelabs.com/wd/hub'.format(
+        os.environ['SAUCE_USERNAME'],
+        os.environ['SAUCE_ACCESS_KEY']
+    )
 
 
 def _get_webdriver(name):
@@ -54,11 +74,13 @@ def _get_webdriver(name):
     elif name == 'firefox':
         return webdriver.Firefox()
     elif name == 'phantomjs':
-        return webdriver.PhantomJS()
+        driver = webdriver.PhantomJS()
+        driver.command_executor.set_timeout(PHANTOMJS_TIMEOUT)
+        return driver
     raise 'No such webdriver: "%s"' % name
 
 
-class FunctionalTests(LiveServerTestCase):
+class SeleniumTestCase(LiveServerTestCase):
     connect = None
     driver = None
     screenshot_filename = 'selenium_tests/screenshot.png'
@@ -66,38 +88,31 @@ class FunctionalTests(LiveServerTestCase):
 
     @classmethod
     def get_driver(cls):
-        if not REMOTE_TESTING or not TESTING_URL:
-            driver = _get_webdriver(os.environ.get('TESTING_BROWSER',
-                                                   'phantomjs'))
-            driver.command_executor.set_timeout(PHANTOMJS_TIMEOUT)
-            return driver
+        if not WD_TESTING_URL:
+            return _get_webdriver(WD_TESTING_BROWSER)
 
-        if REMOTE_TESTING.get('enabled') is False:
-            pass
-
-        username = _get_testing_config('username')
-        access_key = _get_testing_config('access_key')
-        hub_url = _get_testing_config('hub_url')
-        if None in (username, access_key, hub_url):
-            raise Exception(
-                'You must provide a username, access_key and hub URL!'
-            )
+        if not WD_HUB_URL:
+            raise Exception('WD_HUB_URL must be defined!')
 
         desired_cap = webdriver.DesiredCapabilities.CHROME
         # these are the standard Selenium capabilities
-        desired_cap['platform'] = _get_testing_config('platform', 'Windows 7')
-        desired_cap['browserName'] = _get_testing_config(
-            'browser', 'internet explorer')
-        desired_cap['version'] = _get_testing_config('browser_version', '9.0')
+
+        if 'WD_TESTING_PLATFORM' in os.environ:
+            desired_cap['platform'] = os.environ['WD_TESTING_PLATFORM']
+        desired_cap['browserName'] = WD_TESTING_BROWSER
+        if 'WD_TESTING_BROWSER_VERSION' in os.environ:
+            desired_cap['version'] = os.environ['WD_TESTING_BROWSER_VERSION']
+        if 'WD_JOB_VISIBILITY' in os.environ:
+            desired_cap['public'] = os.environ['WD_JOB_VISIBILITY']
+        if WD_TUNNEL_ID:
+            desired_cap['tunnel-identifier'] = WD_TUNNEL_ID
+
         desired_cap['name'] = 'CALC'
-        other_caps = REMOTE_TESTING.get('capabilities')
-        if other_caps:
-            desired_cap.update(other_caps)
         print('capabilities:', desired_cap)
 
         driver = webdriver.Remote(
             desired_capabilities=desired_cap,
-            command_executor=hub_url % (username, access_key)
+            command_executor=WD_HUB_URL
         )
 
         # XXX should this be higher?
@@ -106,11 +121,13 @@ class FunctionalTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls._old_socket_timeout = socket.getdefaulttimeout()
+        socket.setdefaulttimeout(WD_SOCKET_TIMEOUT)
         build_static_assets()
         cls.driver = cls.get_driver()
         cls.longMessage = True
         cls.maxDiff = None
-        super(FunctionalTests, cls).setUpClass()
+        super().setUpClass()
 
     @classmethod
     def tearDownClass(cls):
@@ -118,6 +135,8 @@ class FunctionalTests(LiveServerTestCase):
         cls.driver.quit()
         if cls.connect:
             cls.connect.shutdown_connect()
+        socket.setdefaulttimeout(cls._old_socket_timeout)
+        super().tearDownClass()
 
     @classmethod
     def take_screenshot(cls):
@@ -131,14 +150,14 @@ class FunctionalTests(LiveServerTestCase):
         print('screenshot taken: %s' % png)
 
     def _fail(self, *args, **kwargs):
-        super(FunctionalTests, self).fail(*args, **kwargs)
+        super().fail(*args, **kwargs)
 
     def setUp(self):
         self.base_url = self.live_server_url
-        if TESTING_URL:
-            self.base_url = TESTING_URL
+        if WD_TESTING_URL:
+            self.base_url = WD_TESTING_URL
         self.driver.set_window_size(*self.window_size)
-        super(FunctionalTests, self).setUp()
+        super().setUp()
 
     def load(self, uri='/'):
         url = self.base_url + uri
@@ -159,17 +178,19 @@ class FunctionalTests(LiveServerTestCase):
         # self.driver.execute_script('$("body").addClass("selenium")')
         return self.driver
 
-    def load_and_wait(self, uri='/'):
-        self.load(uri)
-        self.wait_for(self.data_is_loaded)
-        return self.driver
-
     def wait_for(self, condition, timeout=10):
         try:
             wait_for(condition, timeout=timeout)
         except Exception as err:
             return self.fail(err)
         return True
+
+
+class DataExplorerTests(SeleniumTestCase):
+    def load_and_wait(self, uri='/'):
+        self.load(uri)
+        self.wait_for(self.data_is_loaded)
+        return self.driver
 
     def get_form(self):
         return self.driver.find_element_by_id('search')
@@ -191,6 +212,15 @@ class FunctionalTests(LiveServerTestCase):
         q.send_keys(query)
         # XXX oh my god why do we have to do this???
         self.driver.execute_script('$("[name=q]").blur()')
+
+    def search_for_query_type(self, query, query_type):
+        # Important: We want to click the radio before entering the
+        # text, otherwise the radio may be obscured by the autocomplete
+        # suggestions (that's the working theory, at least).
+
+        form = self.get_form()
+        self.set_form_values(form, query_type=query_type)
+        self.search_for(query)
 
     def data_is_loaded(self):
         form = self.get_form()
@@ -516,11 +546,13 @@ class FunctionalTests(LiveServerTestCase):
         header2 = find_column_header(driver, 'labor_category')
 
         header1.click()
+        self.wait_for(lambda: has_class(header1, 'sorted'))
         self.assertTrue(has_class(header1, 'sorted'), "column 1 is not sorted")
         self.assertFalse(has_class(header2, 'sorted'),
                          "column 2 is still sorted (but should not be)")
 
         header2.click()
+        self.wait_for(lambda: has_class(header2, 'sorted'))
         self.assertTrue(has_class(header2, 'sorted'), "column 2 is not sorted")
         self.assertFalse(has_class(header1, 'sorted'),
                          "column 1 is still sorted (but should not be)")
@@ -604,9 +636,7 @@ class FunctionalTests(LiveServerTestCase):
             ['Systems Engineer I', 'Software Engineer II', 'Consultant II']))
         driver = self.load()
         self.wait_for(self.data_is_loaded)
-        form = self.get_form()
-        self.search_for('software engineer')
-        self.set_form_values(form, query_type='match_phrase')
+        self.search_for_query_type('software engineer', 'match_phrase')
         self.submit_form_and_wait()
         cells = driver.find_elements_by_css_selector(
             'table.results tbody .column-labor_category')
@@ -621,9 +651,7 @@ class FunctionalTests(LiveServerTestCase):
              'Senior Software Engineer']))
         driver = self.load()
         self.wait_for(self.data_is_loaded)
-        form = self.get_form()
-        self.search_for('software engineer')
-        self.set_form_values(form, query_type='match_exact')
+        self.search_for_query_type('software engineer', 'match_exact')
         self.submit_form_and_wait()
         cells = driver.find_elements_by_css_selector(
             'table.results tbody .column-labor_category')

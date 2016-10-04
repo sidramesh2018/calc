@@ -1,11 +1,12 @@
+import os
 from django.conf import settings
 from django.core import management
 
 import subprocess
 
 
-_static_assets_built = False
-_static_asset_prereqs_built = False
+_static_assets_built = _static_asset_prereqs_built = \
+    'SKIP_STATIC_ASSET_BUILDING' in os.environ
 
 
 def build_static_asset_prerequisites():
