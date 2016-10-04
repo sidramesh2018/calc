@@ -32,6 +32,11 @@ env:
   - PHANTOMJS_TIMEOUT=15
   - DEBUG=yup
   - DATABASE_URL=postgres://postgres@localhost/hourglass
+
+  # These environment variables affect the running of Webdriver/Selenium
+  # tests. Note that if we're not in a trusted environment (e.g. a PR
+  # is being issued from an untrusted fork), we will default to using
+  # PhantomJS locally, rather than a real-world browser via Sauce Labs.
   - DJANGO_LIVE_TEST_SERVER_ADDRESS=127.0.0.1:8000
   - WD_TESTING_BROWSER="internet explorer"
   - WD_TESTING_BROWSER_VERSION=11.103
