@@ -36,6 +36,7 @@ WD_HUB_URL = os.environ.get('WD_HUB_URL')
 WD_TESTING_URL = os.environ.get('WD_TESTING_URL')
 WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
                                     'phantomjs')
+WD_SOCKET_TIMEOUT = int(os.environ.get('WD_SOCKET_TIMEOUT', '5'))
 
 PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
@@ -76,6 +77,8 @@ class SeleniumTestCase(LiveServerTestCase):
         desired_cap['browserName'] = WD_TESTING_BROWSER
         if 'WD_TESTING_BROWSER_VERSION' in os.environ:
             desired_cap['version'] = os.environ['WD_TESTING_BROWSER_VERSION']
+        if 'WD_JOB_VISIBILITY' in os.environ:
+            desired_cap['public'] = os.environ['WD_JOB_VISIBILITY']
         desired_cap['name'] = 'CALC'
         print('capabilities:', desired_cap)
 
@@ -90,7 +93,8 @@ class SeleniumTestCase(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        socket.setdefaulttimeout(5)
+        cls._old_socket_timeout = socket.getdefaulttimeout()
+        socket.setdefaulttimeout(WD_SOCKET_TIMEOUT)
         build_static_assets()
         cls.driver = cls.get_driver()
         cls.longMessage = True
@@ -103,6 +107,7 @@ class SeleniumTestCase(LiveServerTestCase):
         cls.driver.quit()
         if cls.connect:
             cls.connect.shutdown_connect()
+        socket.setdefaulttimeout(cls._old_socket_timeout)
         super().tearDownClass()
 
     @classmethod
