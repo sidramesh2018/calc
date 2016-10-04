@@ -50,8 +50,21 @@ if WD_TESTING_URL and WD_HUB_URL is None and \
     )
 
 
-if 'TRAVIS_JOB_NUMBER' in os.environ and WD_TUNNEL_ID is None:
-    WD_TUNNEL_ID = os.environ['TRAVIS_JOB_NUMBER']
+if os.environ.get('TRAVIS') == 'true':
+    if os.environ.get('TRAVIS_SECURE_ENV_VARS') == 'true':
+        # We're running in a trusted environment, so use Sauce Labs
+        # if it's available.
+        WD_TUNNEL_ID = os.environ['TRAVIS_JOB_NUMBER']
+        WD_TESTING_URL = 'http://{}'.format(
+            os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS']
+        )
+    else:
+        # We're running against an untrusted PR from another repository,
+        # so default to using PhantomJS locally.
+        WD_TESTING_BROWSER = 'phantomjs'
+        WD_TESTING_BROWSER_VERSION = None
+        WD_TESTING_URL = None
+        WD_HUB_URL = None
 
 
 def _get_webdriver(name):
