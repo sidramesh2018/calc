@@ -3,6 +3,7 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
 from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db import transaction
 
 from .. import forms
 from ..decorators import handle_cancel
@@ -206,6 +207,7 @@ def step_3_errors(request):
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
+@transaction.atomic
 def step_4(request, step):
     gleaned_data = get_nested_item(request.session, (
         'data_capture:price_list',
