@@ -298,3 +298,16 @@ class StaffLoginRequiredTests(DjangoTestCase):
         self.login(is_staff=False)
         res = self.client.get('/staff_only_view/')
         self.assertEqual(403, res.status_code)
+
+
+class ContextProcessorTests(DjangoTestCase):
+    @override_settings(GA_TRACKING_ID='boop')
+    def test_ga_tracking_id_is_included(self):
+        res = self.client.get('/')
+        self.assertIn('GA_TRACKING_ID', res.context)
+        self.assertEquals(res.context['GA_TRACKING_ID'], 'boop')
+
+    def test_ga_tracking_id_defaults_to_empty_string(self):
+        res = self.client.get('/')
+        self.assertIn('GA_TRACKING_ID', res.context)
+        self.assertEquals(res.context['GA_TRACKING_ID'], '')

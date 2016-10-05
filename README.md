@@ -289,6 +289,10 @@ string), the boolean is true; otherwise, it's false.
   will likely only be used for cloud.gov deployments, where the built-in proxy
   sets those security headers on 200 responses but not on others.
 
+* `GA_TRACKING_ID` is the tracking ID (e.g. `'UA-12345678-12'`)
+  for the associated Google Analytics account.
+  It will default to the empty string if not found in the environment.
+
 ## Authentication and Authorization
 
 We use cloud.gov/Cloud Foundry's User Account and Authentication (UAA)
@@ -455,7 +459,7 @@ numbers for their corresponding schedules:
  - 871 - PES
  - 874 - MOBIS
  - 132 - IT Schedule 70
- 
+
 For site, there are only 3 values (also case insensitive):
 
  - Customer
