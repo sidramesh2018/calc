@@ -28,3 +28,5 @@ docker-compose.override.yml
 .dockerignore
 /manifests
 cf-ssh.yml
+calc-deploy_manifest.yml
+calc-prod_manifest.yml

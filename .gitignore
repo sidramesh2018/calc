@@ -27,3 +27,5 @@ pip-selfcheck.json
 *credentials*.json
 docker-compose.override.yml
 cf-ssh.yml
+calc-deploy_manifest.yml
+calc-prod_manifest.yml

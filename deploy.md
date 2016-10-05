@@ -23,25 +23,37 @@ so only production dependencies will be installed.
 
 ## CF Structure
 - Organization: `oasis`
-- Spaces: `calc-dev`, `calc-prod`
+- Spaces: `calc-dev` (staging), `calc-prod` (production)
 - Apps:
-  - calc-dev space:
-    - calc-dev
+  - `calc-dev` (staging) space:
+    - `calc-dev`
+    - `calc-rqworker`
+    - `calc-rqscheduler`
+  - `calc-prod` (production) space:
+    - `calc-prod-a`
+    - `calc-rqworker-a`
+    - `calc-rqscheduler-a`
+    - `calc-prod-b`
+    - `calc-rqworker-b`
+    - `calc-rqscheduler-b`
+    - `calc-maintenance`
 - Routes:
-  - calc-dev.apps.cloud.gov -> calc-dev space, calc-dev app
+  - calc-dev.apps.cloud.gov -> `calc-dev` space, `calc-dev` app
+  - calc-prod-a.apps.cloud.gov -> `calc-prod` space, `calc-prod-a` app
+  - calc-prod-b.apps.cloud.gov -> `calc-prod` space, `calc-prod-b` app
+  - calc.gsa.gov -> current production instance, either `calc-prod-a` or `calc-prod-b`,
+    or the maintenance page app, `calc-maintenance`
 
-TODO: Structure for production deployment once determined
+## Services
 
-## Environment Variables
+### User Provided Service
 
-For cloud.gov deployments, this project makes use of a
-[User Provided Service (UPS)][UPS] to get its configuration
-variables, instead of using the local environment. You will need to create a
-UPS called `calc-env`, provide 'credentials' to it, and link it to the
+For cloud.gov deployments, this project makes use of a [User Provided Service (UPS)][UPS] to get its configuration
+variables, instead of using the local environment (except for [New Relic-related environment variables](#new-relic-environment-variables)).
+You will need to create a UPS called `calc-env`, provide 'credentials' to it, and link it to the
 application instance. This will need to be done for every Cloud Foundry `space`.
 
-First, create a file with a name like `credentials-staging.json` with all the configuration values specified as per the "Environment Variables" section of
-[`README.md`][]:
+First, create a JSON file (e.g. `credentials-staging.json`) with all the configuration values specified as per the "Environment Variables" section of [`README.md`][]. **DO NOT COMMIT THIS FILE.**
 
 ```json
 {
@@ -50,20 +62,39 @@ First, create a file with a name like `credentials-staging.json` with all the co
 }
 ```
 
-Then enter the following commands (assuming you already have an application
-instance named `calc-dev`):
+Then enter the following commands (filling in the main application instance name
+for `<APP_INSTANCE>`) to create the user-provided service:
 
 ```sh
 cf cups calc-env -p credentials-staging.json
-cf bind-service calc-dev calc-env
-cf restage calc-dev
+cf bind-service <APP_INSTANCE> calc-env
+cf restage <APP_INSTANCE>
 ```
 
-You can update the user provided service with the following commands:
+You can update the user-provided service with the following commands:
 
 ```sh
 cf uups calc-env -p credentials-staging.json
 cf restage calc-dev
+```
+
+### Database Service
+
+CALC uses PostgreSQL for its database.
+
+```sh
+cf create-service aws-rds <SERVICE_PLAN> calc-db
+cf bind-service <APP_INSTANCE> calc-db
+```
+
+### Redis Service
+
+CALC uses Redis along with [rq](http://python-rq.org/) for scheduling and processing
+asynchronous tasks.
+
+```sh
+cf create-service redis28-swarm standard calc-redis
+cf bind-service <APP_INSTANCE> calc-redis
 ```
 
 ## New Relic Environment Variables
@@ -103,7 +134,57 @@ There is an example sandbox manifest at [manifests/manifest-sandbox.yml](manifes
 
 ## Production Servers
 
-TODO Production application development once determined
+Production deploys are a somewhat manual process. We use "blue-green" deployments,
+which basically means that we have duplicate production instances.
+That way, the current production instance will continue serving
+traffic while the new instance is getting deployed. Once the new instance is deployed
+and verified to be working, then the URL (calc.gsa.gov) is switched over from the
+previous instance to the newly deployed one.
+
+The two production instances are `calc-prod-a` and `calc-prod-b`.
+
+To deploy:
+
+Assuming `calc-prod-b` is the currently running production instance
+(ie, the one that is listening on https://calc.gsa.gov), and a breaking
+database migration is not needed, we will do the new
+deployment to `calc-prod-a`:
+
+```sh
+cf push -f manifests/manifest-prod-a.yml
+cf map-route calc-prod-a calc.gsa.gov
+cf unmap-route calc-prod-b calc.gsa.gov
+```
+
+If a breaking database migration needs to be done, things get a little trickier because
+the database service is actually shared between the two production apps. If the migration
+breaks the current version of CALC, the blue-green deploy pattern won't work, so CALC
+will actually need to have a (hopefully short) amount of downtime.
+
+We have a very simple maintenance page application that uses the CloudFoundry staticfiles
+buildpack. This app is is the [maintenance_page](maintenance_page/) subdirectory.
+
+If `calc-maintenance` is not running or has not been deployed yet:
+
+```sh
+cd maintenance_page
+cf push
+```
+
+Once `calc-maintenance` is running:
+
+```sh
+cf map-route calc-maintenance calc.gsa.gov
+cf unmap-route calc-prod-b  # or calc-prod-a
+```
+
+And then deploy to the production instance of your choosing. Once the deployment
+is successful:
+
+```sh
+cf map-route calc-prod-a calc.gsa.gov  # or calc-prod-b
+cf unmap-route calc-maintenance
+```
 
 ## Logs
 
@@ -112,6 +193,14 @@ Logs in cloud.gov-deployed applications are generally viewable by running
 
 Note that the web application and the `rq` worker application have separate
 logs, so you will need to look at each individually.
+
+## Initial Superuser
+
+After the initial setup of `calc-db` and a production app, you will need to
+create a superuser account, after which you'll be able to login to the
+Django admin panel to add additional user accounts. The easiest way to create
+the initial superuser is to use `cf-ssh` (docs [here](https://docs.cloud.gov/getting-started/one-off-tasks/))
+and run `python manage.py createsuperuser`.
 
 ## Setting up the API
 
