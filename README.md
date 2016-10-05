@@ -304,11 +304,12 @@ and will be shown an error message.
 Running `manage.py initgroups` will initialize all Django groups for CALC.
 Currently, authorization is set up as follows:
 
-* **Non-staff users** can upload individual price lists for approval.
-* **Staff users** can bulk upload price list data.
-* **Staff users** in the **Data Administrators** group can create and edit
-  users and assign them to groups. They can also review submitted price lists
-  and approve/unapprove them.
+* **Non-staff users** in the **Contract Officers** group can upload individual
+  price lists for approval.
+* **Staff users** in the **Data Administrators** group can
+  * create and edit users and assign them to groups,
+  * review submitted price lists and approve/unapprove them,
+  * bulk upload data exports (only Region 10 data for now).
 * **Superusers** can do anything, but only infrastructure/operational
   engineers should be given this capability.
 

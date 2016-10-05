@@ -7,6 +7,9 @@ PRICE_LIST_UPLOAD_PERMISSION = 'data_capture.add_submittedpricelist'
 
 ROLES = {}
 
+# Devs: If any roles are added or modified, please also update
+# the "Authentication and Authorization" section of README.md
+
 ROLES['Data Administrators'] = set([
     'auth.add_user',
     'auth.change_user',
