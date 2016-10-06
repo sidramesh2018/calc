@@ -2,9 +2,10 @@
 
 **Only of interest to 18F team members**
 
-If you don’t already have one, request a Cloud Foundry account in #devops
-in Slack and download the Cloud Foundry CLI according to the instructions here:
-https://docs.18f.gov/getting-started/setup/
+Download the Cloud Foundry CLI according to the instructions here:
+https://docs.18f.gov/getting-started/setup/.
+Make sure you are using a version >= v6.17.1, otherwise pushing multiple apps
+at once might not work.
 
 To start, target the org and space you want to work with. For example, if you wanted to work with the staging space:
 `cf target -o oasis -s calc-dev`
