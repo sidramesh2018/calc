@@ -27,7 +27,7 @@
         {{ row.years_experience.value }}
         {{ row.years_experience.errors }}
       </td>
-      <td class="number currency{% if row.price.errors %}error{% endif %}">
+      <td class="number {% if row.price_including_iff.errors %}error{% else %}currency{% endif %}">
         {% if row.price.errors %}
           {{ row.price.value }}
           {{ row.price.errors }}
