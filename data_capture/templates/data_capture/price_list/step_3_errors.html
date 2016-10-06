@@ -13,8 +13,7 @@
           <h3>No valid rows found!</h3>
           <p>
             Your uploaded price list contains no valid rows. Please fix the errors
-            shown above in the original file and
-            <a href="{% url 'data_capture:step_3' %}">try uploading it again</a>.
+            shown below in the original file and try uploading it again.
           </p>
         {% else %}
           <h3>{{ total }} row{{ total|pluralize:" has,s have" }} errors</h3>
@@ -23,7 +22,7 @@
             invalid and <strong>will be discarded</strong> when you upload your
             price list.
             If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
-            in your original spreadsheet and <a href="{% url 'data_capture:step_3' %}">try uploading it again</a>.
+            in your original spreadsheet and try uploading it again.
           </p>
         {% endif %}
 
@@ -41,13 +40,28 @@
       {{ gleaned_data.to_error_table|safe }}
     {% endwith %}
 
+  <h2>Want to try that again?</h2>
 
-  <form method="post">
+  <p>
+    If you'd like to fix the errors above in your spreadsheet,
+    you can try uploading it again here.
+    {% if gleaned_data.valid_rows %}
+      Otherwise, we'll discard the rows with problems when we upload
+      your original spreadsheet.
+    {% endif %}
+  </p>
+
+  <form enctype="multipart/form-data" method="post"
+        is="ajax-form"
+        action="{% url 'data_capture:step_3' %}">
     {% csrf_token %}
+
+    {{ form.file }}
+
     <div class="form-button-row clearfix">
-      <a href="{% url 'data_capture:step_3' %}" class="button button-primary">
+      <button type="submit" class="button-primary">
         Upload revised price list
-      </a>
+      </button>
 
       {% if gleaned_data.valid_rows %}
         <a href="{% url 'data_capture:step_4' %}" class="button button-secondary">
