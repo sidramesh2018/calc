@@ -3,7 +3,7 @@
 **Only of interest to 18F team members**
 
 Download the Cloud Foundry CLI according to the instructions here:
-https://docs.18f.gov/getting-started/setup/.
+https://docs.cloud.gov/getting-started/setup/.
 Make sure you are using a version >= v6.17.1, otherwise pushing multiple apps
 at once might not work.
 
