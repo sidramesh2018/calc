@@ -12,6 +12,8 @@ class DryRunFinished(Exception):
 def get_or_create_users(email_addresses):
     users = []
     for email in email_addresses:
+        if not email:
+            continue
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
@@ -42,6 +44,9 @@ def command(user_file, groupname, dryrun):
     If the optional "--group <GROUPNAME>" argument is specified, then all the
     users (either found or created) are added to the matching group.
     '''
+    if dryrun:
+        click.echo('Starting dry run (no database records will be modified).')
+
     if groupname:
         try:
             group = Group.objects.get(name=groupname)
@@ -62,4 +67,4 @@ def command(user_file, groupname, dryrun):
             if dryrun:
                 raise DryRunFinished()
     except DryRunFinished:
-        click.echo("Dry run complete. No database records have been modified.")
+        click.echo("Dry run complete.")

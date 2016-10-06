@@ -19,6 +19,14 @@ class TestBulkCreateUsers(TestCase):
         for u in users:
             self.assertIn(u.email, email_addresses)
 
+    def test_get_or_create_users_skips_empty_strings(self):
+
+        results = bulkcreateusers.get_or_create_users(['', 'boop@beep'])
+        users = User.objects.all()
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual('boop@beep', users[0].email)
+
     def test_add_users_to_group_works(self):
         user = User.objects.create_user('test_user', email='test@gsa.gov')
         group = Group(name='Test Group')
