@@ -102,7 +102,8 @@ class Steps:
         'Hello from step 1 of 2! foo is bar.'
     '''
 
-    def __init__(self, template_format):
+    def __init__(self, template_format, extra_ctx_vars=None):
+        self.extra_ctx_vars = extra_ctx_vars or {}
         self.template_format = template_format
         self._views = []
 
@@ -149,6 +150,7 @@ class StepRenderer:
 
     def context(self, context=None):
         final_ctx = {'step': self}
+        final_ctx.update(self.steps.extra_ctx_vars)
         if context:
             final_ctx.update(context)
         return final_ctx

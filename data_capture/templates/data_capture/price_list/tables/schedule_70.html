@@ -5,6 +5,7 @@
       <th>Service proposed (e.g. job title/task)</th>
       <th>Minimum education / certification level</th>
       <th class="number">Minimum years of experience</th>
+      <th>Unit of issue</th>
       <th class="number">Price offered to GSA (including IFF)</th>
     </tr>
   </thead>
@@ -26,6 +27,11 @@
       <td class="number {% if row.min_years_experience.errors %}error{% endif %}">
         {{ row.min_years_experience.value }}
         {{ row.min_years_experience.errors }}
+      </td>
+
+      <td class="{% if row.unit_of_issue.errors %}error{% endif %}">
+        {{ row.unit_of_issue.value }}
+        {{ row.unit_of_issue.errors }}
       </td>
       <td class="number {% if row.price_including_iff.errors %}error{% else %}currency{% endif %}">
         {% if row.price_including_iff.errors %}
