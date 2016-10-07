@@ -9,7 +9,7 @@
 
 @supports ((animation-name: test) and (animation-fill-mode: forwards)) {
   ol.steps li + li.current::before {
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-delay: 0.25s;
     animation-name: step-fade-in;
     animation-fill-mode: forwards;
@@ -26,7 +26,7 @@ ol.steps {
   list-style-type: none;
   list-style-position: inside;
   display: flex;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
 
   li {
     list-style: none;

@@ -5,10 +5,6 @@
 {% block body %}
 <div class="container {% block body_class %}{% endblock %}">
 
-<h1>
-  {% block page_heading %}Add price data to CALC{% endblock %}
-  <span class="sr-only">{{ step.description }}</span>
-</h1>
 {% block steps %}
   <ol class="steps" aria-hidden="true">
     <li {% if step.number == 1 %}class="current"{% endif %}>
@@ -29,6 +25,10 @@
   </ol>
 {% endblock %}
 
+<h1>
+  {% block page_heading %}{% endblock %}
+  <span class="sr-only">{{ step.description }}</span>
+</h1>
 {% block step_heading %}{% endblock %}
 
 {% include 'data_capture/messages.html' %}
