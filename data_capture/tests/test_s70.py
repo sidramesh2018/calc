@@ -165,32 +165,18 @@ class GleanLaborCategoriesTests(TestCase):
             'labor_category': 'Project Manager',
             'education_level': 'Bachelors',
             'min_years_experience': '5',
-            'commercial_list_price': '125.0',
             'unit_of_issue': 'Hour',
-            'most_favored_customer': 'All Commercial Customers',
-            'best_discount': '0.07',
-            'mfc_price': '123.99',
-            'gsa_discount': '0.1',
-            'price_excluding_iff': '110.99',
             'price_including_iff': '115.99',
-            'volume_discount': '0.15',
         }])
 
     def test_text_formatted_prices_are_gleaned(self):
         book = FakeWorkbook()
-        book._sheets[0]._cells[1][4] = '  $1,123.49  '
-        book._sheets[0]._cells[1][8] = '$109.50'
-        book._sheets[0]._cells[1][10] = ' $ 106.50'
-        book._sheets[0]._cells[1][11] = '$107.50'
+        book._sheets[0]._cells[1][11] = '$  1,107.50 '
 
         rows = s70.glean_labor_categories_from_book(book)
 
         row = rows[0]
-
-        self.assertEqual(row['commercial_list_price'], '1123.49')
-        self.assertEqual(row['mfc_price'], '109.50')
-        self.assertEqual(row['price_excluding_iff'], '106.50')
-        self.assertEqual(row['price_including_iff'], '107.50')
+        self.assertEqual(row['price_including_iff'], '1107.50')
 
     def test_min_education_is_gleaned_from_text(self):
         book = FakeWorkbook()
@@ -199,6 +185,14 @@ class GleanLaborCategoriesTests(TestCase):
         rows = s70.glean_labor_categories_from_book(book)
 
         self.assertEqual(rows[0]['education_level'], 'High School')
+
+    def test_unit_of_issue_is_gleaned_to_hour(self):
+        book = FakeWorkbook()
+        book._sheets[0]._cells[1][5] = 'Hourly'
+
+        rows = s70.glean_labor_categories_from_book(book)
+
+        self.assertEqual(rows[0]['unit_of_issue'], 'Hour')
 
     def test_validation_error_raised_when_sheet_not_present(self):
         with self.assertRaisesRegexp(
@@ -244,7 +238,8 @@ class S70Tests(ModelTestCase):
             'labor_category': 'Project Manager',
             'min_years_experience': 5,
             'price_including_iff': Decimal('115.99'),
-            'sin': '132-51'
+            'sin': '132-51',
+            'unit_of_issue': 'Hour'
         })
 
     def test_education_level_is_validated(self):
@@ -267,6 +262,22 @@ class S70Tests(ModelTestCase):
 
         self.assertEqual(p.invalid_rows[0].errors['min_years_experience'],
                          ['This field is required.'])
+
+    def test_unit_of_issue_is_validated(self):
+        p = s70.Schedule70PriceList(rows=[{'unit_of_issue': ''}])
+        self.assertEqual(p.invalid_rows[0].errors['unit_of_issue'],
+                         ['This field is required.'])
+
+        p = s70.Schedule70PriceList(rows=[{'unit_of_issue': 'Day'}])
+        self.assertEqual(p.invalid_rows[0].errors['unit_of_issue'],
+                         ['Value must be "Hour" or "Hourly"'])
+
+    def test_unit_of_issue_can_be_hour_or_hourly(self):
+        p = s70.Schedule70PriceList(rows=[{'unit_of_issue': 'Hour'}])
+        self.assertNotIn('unit_of_issue', p.invalid_rows[0])
+
+        p = s70.Schedule70PriceList(rows=[{'unit_of_issue': 'hourly'}])
+        self.assertNotIn('unit_of_issue', p.invalid_rows[0])
 
     def test_add_to_price_list_works(self):
         s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())

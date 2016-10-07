@@ -2,6 +2,7 @@ import re
 import string
 
 from contracts.models import EDUCATION_CHOICES
+from .base import hour_regex
 
 
 def strip_non_numeric(text):
@@ -118,3 +119,30 @@ def extract_min_education(text):
                 return label
 
     return text
+
+
+def extract_hour_unit_of_issue(text):
+    '''
+    Returns 'Hour' if the given text matches
+    'Hour' or 'Hourly' (case-insensitive)
+
+    >>> extract_hour_unit_of_issue('Hourly')
+    'Hour'
+
+    >>> extract_hour_unit_of_issue('hour')
+    'Hour'
+
+    Returns the original string if it does not match
+
+    >>> extract_hour_unit_of_issue('boop')
+    'boop'
+
+    Returns the original value if the input is not a string
+
+    >>> extract_hour_unit_of_issue(50)
+    50
+    '''
+    if not isinstance(text, str) or not hour_regex.match(text):
+        return text
+
+    return 'Hour'

@@ -1,5 +1,7 @@
+import re
+
 from django.template.loader import render_to_string
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 
 from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 
@@ -7,6 +9,12 @@ min_price_validator = MinValueValidator(
     FEDERAL_MIN_CONTRACT_RATE,
     message='Price must be at least the federal contractor minimum wage '
             '(${0:.2f})'.format(FEDERAL_MIN_CONTRACT_RATE))
+
+
+hour_regex = re.compile(r'^hour(ly)?$', flags=re.IGNORECASE)
+
+hourly_rates_only_validator = RegexValidator(
+    hour_regex, 'Value must be "Hour" or "Hourly"')
 
 
 class BasePriceList:
