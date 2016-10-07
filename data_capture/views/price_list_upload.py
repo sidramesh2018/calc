@@ -3,6 +3,7 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
 from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db import transaction
 
 from .. import forms
 from ..decorators import handle_cancel
@@ -173,8 +174,7 @@ def step_3(request, step):
 
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
-@require_http_methods(["GET", "POST"])
-@handle_cancel
+@require_http_methods(["GET"])
 def step_3_errors(request):
     step = steps.get_step_renderer(3)
     gleaned_data = get_nested_item(request.session, (
@@ -191,9 +191,12 @@ def step_3_errors(request):
 
     preferred_schedule = step_1_form.cleaned_data['schedule_class']
 
+    form = forms.Step3Form(schedule=step_1_form.cleaned_data['schedule'])
+
     return render(request,
                   'data_capture/price_list/step_3_errors.html',
                   step.context({
+                    'form': form,
                     'gleaned_data': gleaned_data,
                     'is_preferred_schedule': isinstance(gleaned_data,
                                                         preferred_schedule),
@@ -206,6 +209,7 @@ def step_3_errors(request):
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
+@transaction.atomic
 def step_4(request, step):
     gleaned_data = get_nested_item(request.session, (
         'data_capture:price_list',

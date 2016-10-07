@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.db import models
+from django.db import models, transaction
 from django import forms
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
@@ -167,6 +167,7 @@ class SubmittedPriceListRowInline(admin.TabularInline):
         return self.readonly_fields
 
 
+@transaction.atomic
 def approve(modeladmin, request, queryset):
     unapproved = queryset.filter(is_approved=False)
     count = unapproved.count()
@@ -188,6 +189,7 @@ approve.short_description = (
 )
 
 
+@transaction.atomic
 def unapprove(modeladmin, request, queryset):
     approved = queryset.filter(is_approved=True)
     count = approved.count()

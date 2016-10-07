@@ -299,7 +299,7 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
 
 
 class Step3ErrorTests(PriceListStepTestCase,
-                      HandleCancelMixin, RequireGleanedDataMixin):
+                      RequireGleanedDataMixin):
     url = '/data-capture/step/3/errors'
 
     rows = [{

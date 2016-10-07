@@ -60,6 +60,8 @@ SYSTEM_EMAIL_ADDRESS = os.environ['SYSTEM_EMAIL_ADDRESS']
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 
+GA_TRACKING_ID = os.environ.get('GA_TRACKING_ID', '')
+
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'DIRS': [
@@ -70,6 +72,7 @@ TEMPLATES = [{
         'context_processors': [
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
+            'hourglass.context_processors.google_analytics_tracking_id',
             'frontend.context_processors.is_safe_mode_enabled',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",

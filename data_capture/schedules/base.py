@@ -5,8 +5,8 @@ from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 
 min_price_validator = MinValueValidator(
     FEDERAL_MIN_CONTRACT_RATE,
-    message='Price must be at least ${0:.2f}'.format(
-        FEDERAL_MIN_CONTRACT_RATE))
+    message='Price must be at least the federal contractor minimum wage '
+            '(${0:.2f})'.format(FEDERAL_MIN_CONTRACT_RATE))
 
 
 class BasePriceList:

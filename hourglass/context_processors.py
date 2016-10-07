@@ -9,3 +9,8 @@ def api_host(request):
 def show_debug_ui(request):
     '''Include show_debug_ui in all request contexts'''
     return {'show_debug_ui': settings.DEBUG and not settings.HIDE_DEBUG_UI}
+
+
+def google_analytics_tracking_id(request):
+    '''Include GA_TRACKING_ID in all request contexts'''
+    return {'GA_TRACKING_ID': settings.GA_TRACKING_ID}

@@ -99,12 +99,6 @@ td.error {
   font-weight: $font-weight-bold;
   padding-left: 2.5rem;
 
-  &.number .errorlist {
-    /* number cells align right, so match error to value style */
-    margin: 0;
-    float: right;
-  }
-
   .errorlist {
     color: $color-base;
     font-weight: $font-weight-normal;
@@ -156,7 +150,6 @@ td.number {
 
 .price-list-table {
   th, td {
-    max-width: 1em;
     vertical-align: bottom;
   }
 }

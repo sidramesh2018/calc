@@ -3,24 +3,20 @@
 {% block subtitle %}Select file{% endblock %}
 
 {% block step_heading %}
-<h3>Choose file to upload</h3>
+<p>Start here to upload an exported Region 10 pricing database spreadsheet into CALC, which will <strong>delete and replace</strong> all of the existing Region 10 data.</p>
+<p>Please be patient during this process as it may take several minutes to load large data files.</p>
 {% endblock step_heading %}
 
 {% block step_body %}
-  <p>Upload an exported Region 10 pricing database spreadsheet into CALC. <strong>This will delete and replace all of the existing Region 10 data in CALC!</strong></p>
-  <p>Please be patient during this process as it may take several minutes to load large data files.</p>
+  {% if upload_example %}
+  <expandable-area>
+    <p><strong>I don't know what to upload.</strong></p>
+    <div>
+      {{ upload_example }}
+    </div>
+  </expandable-area>
+  {% endif %}
+
   {% include 'data_capture/bulk_upload/region_10_step_1_form.html' %}
 
-  {% if show_debug_ui %}
-    {% load static %}
-    <p class="dev-note">
-      <strong>Developers:</strong>
-      Download <a href="{% static 'data_capture/r10_export_sample.xlsx' %}"><code>r10_export_sample.xlsx</code></a>
-      to use as an example Region 10 bulk export to load.
-    </p>
-    <p class="dev-note">
-      <strong>NOTE:</strong> If you have the Debug Toolbar enabled, you will not be able to import large datasets.
-      You can disable it (and other dev/debug affordances) by setting <code>HIDE_DEBUG_UI=yup</code> in your local <code>.env</code> file.
-    </p>
-  {% endif %}
 {% endblock step_body %}

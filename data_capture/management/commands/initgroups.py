@@ -1,11 +1,14 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission
-
+from django.db import transaction
 
 BULK_UPLOAD_PERMISSION = 'contracts.add_bulkuploadcontractsource'
 PRICE_LIST_UPLOAD_PERMISSION = 'data_capture.add_submittedpricelist'
 
 ROLES = {}
+
+# Devs: If any roles are added or modified, please also update
+# the "Authentication and Authorization" section of README.md
 
 ROLES['Data Administrators'] = set([
     'auth.add_user',
@@ -54,6 +57,7 @@ class Command(BaseCommand):
         group.permissions = get_permissions_from_ns_codenames(perms)
         group.save()
 
+    @transaction.atomic
     def handle(self, *args, **kwargs):
         self.verbosity = int(kwargs['verbosity'])
         for groupname, perms in ROLES.items():

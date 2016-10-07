@@ -69,13 +69,64 @@ def get_coverage():
 
     return None
 
+TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
+ESLINT_CMD = 'npm run failable-eslint'
+
+if IS_RUNNING_IN_DOCKER:
+    # Until https://github.com/benmosher/eslint-plugin-import/issues/142
+    # is fixed, we need to disable the following rule for Docker support.
+    ESLINT_CMD = ('eslint --rule "import/no-unresolved: off" '
+                  '--max-warnings 0 .')
+
+TESTTYPES = [
+    {
+        'name': 'flake8',
+        'cmd': 'flake8 --exclude=node_modules,migrations .'
+    },
+    {
+        'name': 'eslint',
+        'cmd': ESLINT_CMD
+    },
+    {
+        'name': 'bandit',
+        'cmd': 'bandit -r .'
+    },
+    {
+        'name': 'py.test',
+        'cmd': 'py.test --cov-report xml --cov-report term --cov'
+    },
+]
+
+
+def get_testtype_names(testtypes=None, joiner=", "):
+    if not testtypes:
+        testtypes = TESTTYPES
+    return joiner.join([
+        t['name'] for t in testtypes
+    ])
+
+
+def get_testtype(name):
+    for t in TESTTYPES:
+        if t['name'] == name:
+            return t
+    raise CommandError(
+        '"{}" is not a valid test type. Please choose from {}.'.format(
+            name,
+            get_testtype_names()
+        )
+    )
+
 
 @click.command()
 @click.pass_verbosity
-@click.argument('testtype', nargs=-1)
+@click.argument('testtype', nargs=-1,
+                metavar='[{}]'.format(get_testtype_names(joiner="|")))
 def command(verbosity, testtype):
     '''
-    Management command to test and lint everything
+    Test and lint everything!
+
+    Optionally specify one or more test names to run only those tests.
     '''
     is_verbose = verbosity > 1
 
@@ -85,66 +136,19 @@ def command(verbosity, testtype):
     testtype_names = testtype
     del testtype
 
-    TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
-    ESLINT_CMD = 'npm run failable-eslint'
-    PYTEST_CMD = 'py.test --cov-report xml {} --cov'.format(
-        ('--cov-report term' if is_verbose else '')
-    )
-
-    if IS_RUNNING_IN_DOCKER:
-        # Until https://github.com/benmosher/eslint-plugin-import/issues/142
-        # is fixed, we need to disable the following rule for Docker support.
-        ESLINT_CMD = ('eslint --rule "import/no-unresolved: off" '
-                      '--max-warnings 0 .')
-
-    testtypes = [
-        {
-            'name': 'flake8',
-            'cmd': 'flake8 --exclude=node_modules,migrations .'
-        },
-        {
-            'name': 'eslint',
-            'cmd': ESLINT_CMD
-        },
-        {
-            'name': 'bandit',
-            'cmd': 'bandit -r .'
-        },
-        {
-            'name': 'py.test',
-            'cmd': PYTEST_CMD
-        },
-    ]
-
-    print_with_rainbow_colors(ASCII_ART_LOGO)
-
     def echo(msg, v_level, **kwargs):
         if verbosity < v_level:
             return
         click.secho(msg, **kwargs)
 
-    def get_testtype_names(testtypes=testtypes):
-        return ', '.join([
-            t['name'] for t in testtypes
-        ])
-
-    def get_testtype(name):
-        for t in testtypes:
-            if t['name'] == name:
-                return t
-        raise CommandError(
-            '"{}" is not a valid test type. Please choose from {}.'.format(
-                name,
-                get_testtype_names()
-            )
-        )
+    print_with_rainbow_colors(ASCII_ART_LOGO)
 
     if testtype_names:
         to_run = [get_testtype(t) for t in testtype_names]
     else:
-        to_run = testtypes
+        to_run = TESTTYPES
 
-    if to_run == testtypes:
+    if to_run == TESTTYPES:
         echo('Running ALL THE TESTS', 1)
     else:
         echo('Running {}'.format(get_testtype_names(to_run)), 1)

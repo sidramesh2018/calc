@@ -87,6 +87,18 @@ py.test
 For more information on running only specific tests, see
 [`py.test` Usage and Invocations][pytest].
 
+### Browser tests via Selenium
+
+By default, CALC's browser-based tests will run via PhantomJS. This
+is nice because it requires no configuration (aside from installing
+PhantomJS, if you're not using the Docker setup).
+
+However, it might also be preferable to run the browser-based tests in
+a real-world browser. This can be done via Selenium/WebDriver. The
+trade-off is that this requires configuration.
+
+For details on how to do this, see [`selenium.md`](selenium.md).
+
 ### Security Scans
 
 We use [bandit](https://github.com/openstack/bandit) for security-related static analysis.
@@ -277,6 +289,10 @@ string), the boolean is true; otherwise, it's false.
   will likely only be used for cloud.gov deployments, where the built-in proxy
   sets those security headers on 200 responses but not on others.
 
+* `GA_TRACKING_ID` is the tracking ID (e.g. `'UA-12345678-12'`)
+  for the associated Google Analytics account.
+  It will default to the empty string if not found in the environment.
+
 ## Authentication and Authorization
 
 We use cloud.gov/Cloud Foundry's User Account and Authentication (UAA)
@@ -288,11 +304,12 @@ and will be shown an error message.
 Running `manage.py initgroups` will initialize all Django groups for CALC.
 Currently, authorization is set up as follows:
 
-* **Non-staff users** can upload individual price lists for approval.
-* **Staff users** can bulk upload price list data.
-* **Staff users** in the **Data Administrators** group can create and edit
-  users and assign them to groups. They can also review submitted price lists
-  and approve/unapprove them.
+* **Non-staff users** in the **Contract Officers** group can upload individual
+  price lists for approval.
+* **Staff users** in the **Data Administrators** group can
+  * create and edit users and assign them to groups,
+  * review submitted price lists and approve/unapprove them,
+  * bulk upload data exports (only Region 10 data for now).
 * **Superusers** can do anything, but only infrastructure/operational
   engineers should be given this capability.
 
@@ -443,7 +460,7 @@ numbers for their corresponding schedules:
  - 871 - PES
  - 874 - MOBIS
  - 132 - IT Schedule 70
- 
+
 For site, there are only 3 values (also case insensitive):
 
  - Customer
