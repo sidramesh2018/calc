@@ -161,11 +161,21 @@ class SeleniumTestCase(LiveServerTestCase):
         self.driver.set_window_size(*self.window_size)
         super().setUp()
 
+        if WD_IS_USING_SAUCE_LABS and not hasattr(self, '_gateway_ensured'):
+            self.ensure_gateway_works()
+            self._gateway_ensured = True
+
     def tearDown(self):
         if WD_IS_USING_SAUCE_LABS:
             print("Results: http://saucelabs.com/jobs/{}".format(
                 self.driver.session_id
             ))
+
+    def ensure_gateway_works(self):
+        def about():
+            self.load('/about/')
+            return 'CALC' in self.driver.page_source
+        self.wait_for(about)
 
     def load(self, uri='/'):
         url = self.base_url + uri
