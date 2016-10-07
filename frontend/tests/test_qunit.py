@@ -10,6 +10,7 @@ from .test_selenium import WD_TESTING_BROWSER, SeleniumTestCase
 
 urlpatterns += [tests_url]
 
+TESTS_URL = '/tests/?hidepassed'
 
 if WD_TESTING_BROWSER == 'phantomjs':
     RUNNER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -25,7 +26,7 @@ if WD_TESTING_BROWSER == 'phantomjs':
 
         def test_qunit(self):
             subprocess.check_call([
-                'phantomjs', RUNNER_PATH, self.live_server_url + '/tests/'
+                'phantomjs', RUNNER_PATH, self.live_server_url + TESTS_URL
             ])
 
         @classmethod
@@ -40,7 +41,7 @@ else:
         '''
 
         def test_qunit(self):
-            self.load('/tests/')
+            self.load(TESTS_URL)
 
             FAILED = '#qunit-testresult .failed'
 

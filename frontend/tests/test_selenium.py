@@ -32,6 +32,7 @@ from datetime import datetime
 from .utils import build_static_assets
 
 
+WD_IS_USING_SAUCE_LABS = False
 WD_HUB_URL = os.environ.get('WD_HUB_URL')
 WD_TESTING_URL = os.environ.get('WD_TESTING_URL')
 WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
@@ -65,6 +66,7 @@ if WD_TESTING_URL and WD_HUB_URL is None and \
         os.environ['SAUCE_USERNAME'],
         os.environ['SAUCE_ACCESS_KEY']
     )
+    WD_IS_USING_SAUCE_LABS = True
 
 
 def _get_webdriver(name):
@@ -158,6 +160,12 @@ class SeleniumTestCase(LiveServerTestCase):
             self.base_url = WD_TESTING_URL
         self.driver.set_window_size(*self.window_size)
         super().setUp()
+
+    def tearDown(self):
+        if WD_IS_USING_SAUCE_LABS:
+            print("Results: http://saucelabs.com/jobs/{}".format(
+                self.driver.session_id
+            ))
 
     def load(self, uri='/'):
         url = self.base_url + uri
