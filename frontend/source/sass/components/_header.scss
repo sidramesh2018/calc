@@ -117,7 +117,7 @@ nav {
 
     li {
       list-style: none;
-      margin: 1.4rem 2rem;
+      margin: 1.4rem 2rem 0;
       font-size: $base-font-size;
       font-weight: bold;
 
@@ -141,21 +141,33 @@ nav {
     margin: 0;
     color: $color-white;
     display: flex;
+    margin: 0 -2rem;
+    padding: 0;
     li {
-      padding: 0;
+      padding: 0 0.5rem 1.4rem;
       margin: 0 0.5em;
       flex-grow: 1;
       &:first-child {
         margin-left: 0;
+        padding-left: 2rem;
       }
       &:last-child {
         margin-right: 0;
+        padding-right: 2rem;
+      }
+      &.current {
+        background: $color-white;
+        a {
+          color: $color-primary-darkest;
+          text-decoration: none;
+        }
       }
       a {
         padding: 0;
         font-weight: normal;
-        font-size: $small-font-size;
+        font-size: 11px; // $small-font-size - 2 to accommodate uppercase
         text-decoration: underline;
+        text-transform: uppercase;
       }
     }
   }

@@ -8,19 +8,19 @@
 {% block steps %}
   <ol class="steps" aria-hidden="true">
     <li {% if step.number == 1 %}class="current"{% endif %}>
-      <label>Choose schedule</label>
+      <label>Basic information</label>
     </li>
     <li {% if step.number == 2 %}class="current"{% endif %}>
-      <label>Enter price list details</label>
+      <label>Vendor details</label>
     </li>
     <li {% if step.number == 3 %}class="current"{% endif %}>
-      <label>Upload price list</label>
+      <label>Price list upload</label>
     </li>
     <li {% if step.number == 4 %}class="current"{% endif %}>
-      <label>Verify data</label>
+      <label>Data verification</label>
     </li>
     <li {% if step.number == 5 %}class="current"{% endif %}>
-      <label>Submit data</label>
+      <label>Submit</label>
     </li>
   </ol>
 {% endblock %}

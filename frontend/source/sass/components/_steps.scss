@@ -26,11 +26,11 @@ ol.steps {
   list-style-type: none;
   list-style-position: inside;
   display: flex;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 
   li {
     list-style: none;
-    border-top: 3px solid $color-primary;
+    border-top: 2px solid $color-primary;
     padding-top: 14px;
     flex-grow: 1;
     flex-basis: 20%;
@@ -39,8 +39,8 @@ ol.steps {
     &:before {
       content: counter(li);
       counter-increment: li;
-      width: 18px;
-      height: 18px;
+      width: 2rem;
+      height: 2rem;
       padding: 0;
       position: absolute;
       top: -12px;
@@ -48,7 +48,7 @@ ol.steps {
       background-color: $color-primary;
       color: $color-white;
       border-radius: 30px;
-      border: 3px solid $color-primary;
+      border: 2px solid $color-primary;
       text-align: center;
       font-size: 80%;
       font-weight: 700;
