@@ -28,15 +28,12 @@ function addHashChangePolyfill(window) {
 }
 
 test('it works', assert => {
-  const done = assert.async();
   const iframe = document.createElement('iframe');
   const getScrollTop = () =>
     $('body', iframe.contentDocument).scrollTop() ||
     $('html', iframe.contentDocument).scrollTop();
-  let step = 1;
-  document.body.appendChild(iframe);
 
-  $(iframe).css({
+  $(iframe).appendTo('body').css({
     height: '50px',
     visibility: 'hidden',
   });
@@ -52,26 +49,30 @@ test('it works', assert => {
 
   addHashChangePolyfill(iframe.contentWindow);
 
+  const done = assert.async();
+  const steps = (function* runSteps() {
+    assert.equal(iframe.contentWindow.location.hash, '');
+    assert.equal(getScrollTop(), 0);
+    $('a', iframe.contentDocument).click();
+
+    yield;
+
+    assert.equal(iframe.contentWindow.location.hash, '#foo');
+    assert.ok(getScrollTop() !== 0);
+    iframe.contentWindow.history.back();
+
+    yield;
+
+    assert.equal(iframe.contentWindow.location.hash, '');
+    assert.equal(getScrollTop(), 0);
+    $(iframe).remove();
+    done();
+  }());
+
   activate(iframe.contentWindow, {
     scrollMs: 50,
-    onScroll: () => {
-      if (step === 1) {
-        assert.equal(iframe.contentWindow.location.hash, '#foo');
-        assert.ok(getScrollTop() !== 0);
-        iframe.contentWindow.history.back();
-      } else if (step === 2) {
-        assert.equal(iframe.contentWindow.location.hash, '');
-        assert.equal(getScrollTop(), 0);
-        $(iframe).remove();
-        done();
-      } else {
-        throw new Error(`unexpected step: ${step}`);
-      }
-      step++;
-    },
+    onScroll: () => steps.next(),
   });
 
-  assert.equal(iframe.contentWindow.location.hash, '');
-  assert.equal(getScrollTop(), 0);
-  $('a', iframe.contentDocument).click();
+  steps.next();
 });
