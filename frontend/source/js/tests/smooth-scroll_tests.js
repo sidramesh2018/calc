@@ -53,18 +53,22 @@ test('it works', assert => {
   const steps = (function* runSteps() {
     assert.equal(iframe.contentWindow.location.hash, '');
     assert.equal(getScrollTop(), 0);
-    $('a', iframe.contentDocument).click();
 
-    yield;
+    yield $('a', iframe.contentDocument).click();
 
     assert.equal(iframe.contentWindow.location.hash, '#foo');
     assert.ok(getScrollTop() !== 0);
-    iframe.contentWindow.history.back();
 
-    yield;
+    yield iframe.contentWindow.history.back();
 
     assert.equal(iframe.contentWindow.location.hash, '');
     assert.equal(getScrollTop(), 0);
+
+    yield iframe.contentWindow.history.forward();
+
+    assert.equal(iframe.contentWindow.location.hash, '#foo');
+    assert.ok(getScrollTop() !== 0);
+
     $(iframe).remove();
     done();
   }());
