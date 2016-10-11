@@ -62,7 +62,7 @@ function smoothScroll(window, scrollTop, scrollMs, cb) {
   const $els = $('html, body', window.document);
   let callbacksLeft = $els.length;
 
-  $els.animate({
+  $els.stop().animate({
     scrollTop,
   }, scrollMs, () => {
     // This callback is going to be called multiple times because
