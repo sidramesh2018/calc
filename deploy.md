@@ -99,20 +99,11 @@ cf bind-service <APP_INSTANCE> calc-redis
 
 ## New Relic Environment Variables
 
-To enable integrated New Relic monitoring, cloud.gov-deployed versions of the
-the application are launched with `newrelic-admin` (see [`cf.sh`](/cf.sh)).
-Basic New Relic configuration is done in [`newrelic.ini`](/newrelic.ini), but
-additional settings need to be provided as "real" environment variables, i.e.,
-not through the user provided service. This is because UPS parsing is done in
-the application, but `newrelic-admin` runs outside of the application.
+Basic New Relic configuration is done in [`newrelic.ini`](/newrelic.ini), with
+additional settings specified in each deployment environment's [manifest](/manifests/) file.
 
-Non-secret environment variables are specified in each deployment's
-associated `manifest-<ENV>.yml` file (see [`manifest-staging.yml`](/manifests/manifest-staging.yml) as an example).
-
-The only secret New Relic environment variable that you will need to manually
-set for each deployment is `NEW_RELIC_LICENSE_KEY`:
-
-`cf set-env <APP_NAME> NEW_RELIC_LICENSE_KEY <LICENSE_KEY>`
+As described in [`README.md`](/README.md), you will need to supply the `NEW_RELIC_LICENSE_KEY`
+as part of each deployment's [User Provided Service](#user-provided-service).
 
 ## Staging Server
 
