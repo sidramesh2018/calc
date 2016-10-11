@@ -138,7 +138,7 @@
 
     {% if not is_safe_mode_enabled %}
     <!-- Digital Analytics Program roll-up, see https://analytics.usa.gov for data -->
-    <script id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=GSA"></script>
+    <script async id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=GSA"></script>
 
     <![if gt IE 8]>
     <script>
@@ -149,8 +149,6 @@
       }
     </script>
     <![endif]>
-     <!-- Ethnio Activation Code -->
-    <script type="text/javascript" language="javascript" src="https://ethn.io/88263.js" async="true" charset="utf-8"></script>
     {% endif %}
 
     {% block before_body_close %}{% endblock %}

@@ -2,9 +2,13 @@
 
 **Only of interest to 18F team members**
 
-If you don’t already have one, request a Cloud Foundry account in #devops
-in Slack and download the Cloud Foundry CLI according to the instructions here:
-https://docs.18f.gov/getting-started/setup/
+Download the Cloud Foundry CLI according to the instructions here:
+https://docs.cloud.gov/getting-started/setup/.
+Make sure you are using a version >= v6.17.1, otherwise pushing multiple apps
+at once might not work.
+
+You will also need to install the `autopilot` plugin for Cloud Foundry, which
+is used for zero-downtime deploys. Instructions are at https://github.com/contraband/autopilot.
 
 To start, target the org and space you want to work with. For example, if you wanted to work with the staging space:
 `cf target -o oasis -s calc-dev`
@@ -30,18 +34,14 @@ so only production dependencies will be installed.
     - `calc-rqworker`
     - `calc-rqscheduler`
   - `calc-prod` (production) space:
-    - `calc-prod-a`
-    - `calc-rqworker-a`
-    - `calc-rqscheduler-a`
-    - `calc-prod-b`
-    - `calc-rqworker-b`
-    - `calc-rqscheduler-b`
+    - `calc-prod`
+    - `calc-rqworker`
+    - `calc-rqscheduler`
     - `calc-maintenance`
 - Routes:
   - calc-dev.apps.cloud.gov -> `calc-dev` space, `calc-dev` app
-  - calc-prod-a.apps.cloud.gov -> `calc-prod` space, `calc-prod-a` app
-  - calc-prod-b.apps.cloud.gov -> `calc-prod` space, `calc-prod-b` app
-  - calc.gsa.gov -> current production instance, either `calc-prod-a` or `calc-prod-b`,
+  - calc-prod.apps.cloud.gov -> `calc-prod` space, `calc-prod` app
+  - calc.gsa.gov -> `calc-prod` space, `calc-prod` app
     or the maintenance page app, `calc-maintenance`
 
 ## Services
@@ -122,9 +122,10 @@ for details and settings.
 
 Should you need to, you can push directly to calc-dev.apps.cloud.gov with:
 
-`cf push -f manifests/manifest-staging.yml`
-
-Remember to target the `calc-dev` space first (`cf target -s calc-dev`).
+```sh
+cf target -o oasis -s calc-dev
+cf push -f manifests/manifest-staging.yml
+```
 
 ## Your Own Server
 
@@ -134,32 +135,25 @@ There is an example sandbox manifest at [manifests/manifest-sandbox.yml](manifes
 
 ## Production Servers
 
-Production deploys are a somewhat manual process. We use "blue-green" deployments,
-which basically means that we have duplicate production instances.
-That way, the current production instance will continue serving
-traffic while the new instance is getting deployed. Once the new instance is deployed
-and verified to be working, then the URL (calc.gsa.gov) is switched over from the
-previous instance to the newly deployed one.
+Production deploys are a somewhat manual process in that they are not done
+from CI. However, just like in our Travis deployments to staging, we use the
+Cloud Foundry [autopilot plugin](https://github.com/contraband/autopilot).
 
-The two production instances are `calc-prod-a` and `calc-prod-b`.
-
-To deploy:
-
-Assuming `calc-prod-b` is the currently running production instance
-(ie, the one that is listening on https://calc.gsa.gov), and a breaking
-database migration is not needed, we will do the new
-deployment to `calc-prod-a`:
+To deploy, first make sure you are targeting the prod space:
 
 ```sh
-cf push -f manifests/manifest-prod-a.yml
-cf map-route calc-prod-a calc.gsa.gov
-cf unmap-route calc-prod-b calc.gsa.gov
+cf target -o oasis -s calc-prod
+```
+
+Then use the autopilot plugin's `zero-downtime-push` command to deploy:
+
+```sh
+cf zero-downtime-push calc-prod -f manifests/manifest-prod.yml
 ```
 
 If a breaking database migration needs to be done, things get a little trickier because
 the database service is actually shared between the two production apps. If the migration
-breaks the current version of CALC, the blue-green deploy pattern won't work, so CALC
-will actually need to have a (hopefully short) amount of downtime.
+breaks the current version of CALC, we'll need to have a (hopefully short) amount of downtime.
 
 We have a very simple maintenance page application that uses the CloudFoundry staticfiles
 buildpack. This app is is the [maintenance_page](maintenance_page/) subdirectory.
@@ -175,14 +169,19 @@ Once `calc-maintenance` is running:
 
 ```sh
 cf map-route calc-maintenance calc.gsa.gov
-cf unmap-route calc-prod-b  # or calc-prod-a
+cf unmap-route calc-prod
 ```
 
-And then deploy to the production instance of your choosing. Once the deployment
-is successful:
+And then deploy the production app:
 
 ```sh
-cf map-route calc-prod-a calc.gsa.gov  # or calc-prod-b
+cf push -f manifests/manifest-prod.yml
+```
+
+One the deploy is successful:
+
+```sh
+cf map-route calc-prod calc.gsa.gov
 cf unmap-route calc-maintenance
 ```
 

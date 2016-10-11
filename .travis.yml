@@ -29,6 +29,7 @@ env:
   global:
   - TRAVIS_NODE_VERSION=6.5.0
   - PHANTOMJS_TIMEOUT=15
+  - CF_CLI_VERSION=6.22.1
   - DEBUG=yup
   - DATABASE_URL=postgres://postgres@localhost/hourglass
 
@@ -43,17 +44,15 @@ env:
   - WD_SOCKET_TIMEOUT=60
   - SAUCE_USERNAME=atulvarma
   - secure: "RbgG35nc1SHgjdxVbGUDlumePeR/+dXq5fMbfTXOW8uFYw5kGh75px2KdFDkL1JIA1vbfxyNFm09x32uXMcHsBKu9fJS7xbpMrRDbJoV2wVy5wd6qtvZ7yFbR87Fqo3/tuGu13jNNDvUgKjpUlrzLZKaL7qvv5Gd7CVhkySUa1o="
+before_deploy:
+- export PATH=$HOME:$PATH
+- travis_retry curl -L -o $HOME/cf.tgz "https://cli.run.pivotal.io/stable?release=linux64-binary&version=$CF_CLI_VERSION"
+- tar xzvf $HOME/cf.tgz -C $HOME
+- travis_retry cf install-plugin autopilot -f -r CF-Community
 deploy:
-  edge: true
+  provider: script
+  script: "./deploy-travis.sh"
   skip_cleanup: true
-  provider: cloudfoundry
-  username: deploy-hourglass
-  password:
-    secure: "dHsbCYyIb6GVhXioJvKaiNNcPfZuHcOKH8Ojci6EANC4gkxh3Xgtxg/fL/0I5twNM1NQFB7ERlzcsF/8f3FbhdXPYqRoTtgY4ej2t/v6POHHbNaaE9zDWe6z0jtGUWgnrwlsmv0urFigYxTBLgydtmps988/iEgNf+L0C2SjnvQ="
-  api: https://api.cloud.gov
-  organization: oasis
-  space: calc-dev
-  manifest: manifests/manifest-staging.yml
   on:
     branch: develop
 sudo: required

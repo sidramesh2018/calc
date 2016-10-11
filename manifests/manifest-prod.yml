@@ -4,10 +4,10 @@ services:
 - calc-env
 - calc-redis
 applications:
-- name: calc-prod-a
-  host: calc-prod-a
+- name: calc-prod
+  host: calc-prod
   instances: 4
-  memory: 1024M
+  memory: 1G
   disk_quota: 1024M
   domain: apps.cloud.gov
   buildpack: python_buildpack
@@ -19,17 +19,17 @@ applications:
     NEW_RELIC_CONFIG_FILE: "newrelic.ini"
     NEW_RELIC_ENV: "production"
     NEW_RELIC_LOG: "stdout"
-- name: calc-rqworker-a
+- name: calc-rqworker
   no-route: true
   instances: 1
-  memory: 256M
+  memory: 512M
   buildpack: python_buildpack
   command: python manage.py rqworker default
   stack: cflinuxfs2
   timeout: 180
   env:
     DISABLE_COLLECTSTATIC: "1"
-- name: calc-rqscheduler-a
+- name: calc-rqscheduler
   no-route: true
   instances: 1
   memory: 256M

@@ -7,8 +7,10 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 
-from .base import BasePriceList, min_price_validator
-from .coercers import strip_non_numeric, extract_min_education
+from .base import (BasePriceList, min_price_validator,
+                   hourly_rates_only_validator)
+from .coercers import (strip_non_numeric, extract_min_education,
+                       extract_hour_unit_of_issue)
 from contracts.models import EDUCATION_CHOICES
 
 
@@ -52,15 +54,8 @@ DEFAULT_FIELD_TITLE_MAP = {
     'labor_category': 'SERVICE PROPOSED (e.g. Job Title/Task)',
     'education_level': 'MINIMUM EDUCATION/ CERTIFICATION LEVEL',
     'min_years_experience': 'MINIMUM YEARS OF EXPERIENCE',
-    'commercial_list_price': 'COMMERCIAL LIST PRICE (CPL) OR MARKET PRICES',
     'unit_of_issue': 'UNIT OF ISSUE (e.g. Hour, Task, Sq ft)',
-    'most_favored_customer': 'MOST FAVORED CUSTOMER (MFC)',
-    'best_discount': 'BEST  DISCOUNT OFFERED TO MFC (%)',
-    'mfc_price': 'MFC PRICE',
-    'gsa_discount': 'GSA(%) DISCOUNT (exclusive of the .75% IFF)',
-    'price_excluding_iff': 'PRICE OFFERED TO GSA (excluding IFF)',
     'price_including_iff': 'PRICE OFFERED TO GSA (including IFF)',
-    'volume_discount': 'QUANTITY/ VOLUME DISCOUNT',
 }
 
 logger = logging.getLogger(__name__)
@@ -147,12 +142,14 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
 
     col_idx_map = generate_column_index_map(heading_row)
 
+    # dict of property names to functions that will be used to coerce values
+    # if a field is not in this map, it will just be retrieved (safely)
+    # as a string
     coercion_map = {
         'price_including_iff': strip_non_numeric,
         'min_years_experience': int,
         'education_level': extract_min_education,
-        'commercial_list_price': strip_non_numeric,
-        'mfc_price': strip_non_numeric,
+        'unit_of_issue': extract_hour_unit_of_issue,
         'price_excluding_iff': strip_non_numeric
     }
 
@@ -191,6 +188,10 @@ class Schedule70Row(forms.Form):
     )
     min_years_experience = forms.IntegerField(
         label="Minimum years of experience"
+    )
+    unit_of_issue = forms.CharField(
+        label="Unit of issue",
+        validators=[hourly_rates_only_validator]
     )
     price_including_iff = forms.DecimalField(
         label="Price offered to GSA (including IFF)",
