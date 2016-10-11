@@ -25,7 +25,7 @@ DOTENV_PATH = os.path.join(BASE_DIR, '.env')
 if os.path.exists(DOTENV_PATH):
     load_dotenv(DOTENV_PATH)
 
-load_cups_from_vcap_services('calc-env')
+load_cups_from_vcap_services()
 load_redis_url_from_vcap_services('calc-redis')
 
 # SECURITY WARNING: don't run with debug turned on in production!

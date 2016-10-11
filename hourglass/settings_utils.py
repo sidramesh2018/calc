@@ -3,7 +3,7 @@ import sys
 import json
 
 
-def load_cups_from_vcap_services(name, env=os.environ):
+def load_cups_from_vcap_services(name='calc-env', env=os.environ):
     '''
     Detects if VCAP_SERVICES exists in the environment; if so, parses
     it and imports all the credentials from the given custom

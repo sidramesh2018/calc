@@ -293,6 +293,9 @@ string), the boolean is true; otherwise, it's false.
   for the associated Google Analytics account.
   It will default to the empty string if not found in the environment.
 
+* `NEW_RELIC_LICENSE_KEY` is the private New Relic license key for this project.
+  If it is present, then the WSGI app will be wrapped with the  New Relic agent.
+
 ## Authentication and Authorization
 
 We use cloud.gov/Cloud Foundry's User Account and Authentication (UAA)
