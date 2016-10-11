@@ -36,7 +36,11 @@ test('it works', assert => {
   let step = 1;
   document.body.appendChild(iframe);
 
-  iframe.style.height = '50px';
+  $(iframe).css({
+    height: '50px',
+    visibility: 'hidden',
+  });
+
   iframe.contentDocument.open();
   iframe.contentDocument.write([
     '<a href="#foo">foo</a>',
@@ -58,6 +62,7 @@ test('it works', assert => {
       } else if (step === 2) {
         assert.equal(iframe.contentWindow.location.hash, '');
         assert.equal(getScrollTop(), 0);
+        $(iframe).remove();
         done();
       } else {
         throw new Error(`unexpected step: ${step}`);
