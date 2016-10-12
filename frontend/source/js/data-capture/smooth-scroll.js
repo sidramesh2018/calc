@@ -109,6 +109,6 @@ export function activate(window, options = {}) {
   }
 }
 
-if (window.history && window.history.replaceState) {
+if (IS_SUPPORTED) {
   activate(window);
 }
