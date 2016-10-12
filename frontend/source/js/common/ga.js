@@ -16,3 +16,45 @@ function ga(...args) {
 }
 
 module.exports = ga;
+
+/**
+ * Here we tell DAP to re-initialize auto tracking of links
+ * whenever links are added to the page. For more background, see:
+ *
+ *   https://github.com/digital-analytics-program/gov-wide-code/pull/47
+ */
+
+function isAnchorInNodeList(list) {
+  for (let i = 0; i < list.length; i++) {
+    const node = list[i];
+
+    if (node.nodeType === node.ELEMENT_NODE) {
+      if (node.nodeName === 'a' || node.querySelector('a')) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+if ('MutationObserver' in window) {
+  const observer = new window.MutationObserver(mutations => {
+    const wasAnchorAdded = mutations.some(
+      mut => isAnchorInNodeList(mut.addedNodes)
+    );
+    if (wasAnchorAdded) {
+      /* eslint-disable */
+      const initAutoTracker = window._initAutoTracker;
+      /* eslint-enable */
+
+      if (typeof initAutoTracker === 'function') {
+        initAutoTracker();
+      }
+    }
+  });
+
+  observer.observe(window.document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
+}
