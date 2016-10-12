@@ -18,38 +18,80 @@ function ga(...args) {
 module.exports = ga;
 
 /**
- * Here we tell DAP to re-initialize auto tracking of links
- * whenever links are added to the page. For more background, see:
+ * Here we notify DAP about new links we've added to the page, so that
+ * it can auto-track them. For more background, see:
  *
  *   https://github.com/digital-analytics-program/gov-wide-code/pull/47
  */
 
-function isAnchorInNodeList(list) {
+function findLinksInNodeList(list) {
+  const links = [];
+
   for (let i = 0; i < list.length; i++) {
     const node = list[i];
 
     if (node.nodeType === node.ELEMENT_NODE) {
-      if (node.nodeName === 'a' || node.querySelector('a')) {
-        return true;
+      if (node.nodeName === 'a') {
+        links.push(node);
+      } else {
+        const innerLinks = node.querySelectorAll('a');
+        for (let j = 0; j < innerLinks.length; j++) {
+          links.push(innerLinks[i]);
+        }
       }
     }
   }
-  return false;
+
+  return links;
+}
+
+/**
+ * Well, this is horrible.
+ *
+ * To work around DAP's `_initAutoTracker()` getting *all* the links on
+ * a page and adding event handlers to them--which is a problem because
+ * it can lead to the same link being tracked multiple times--we will
+ * temporarily "hack" the underlying DOM API being used to only give the
+ * auto tracker the links we know aren't currently being tracked.
+ *
+ * For more details on a hopefully better workaround in the future,
+ * see:
+ *
+ *   https://github.com/digital-analytics-program/gov-wide-code/pull/48
+ */
+
+function hackilyNotifyAutoTrackerOfNewLinks(initAutoTracker, links) {
+  const oldGet = window.document.getElementsByTagName;
+
+  window.document.getElementsByTagName = () => links;
+
+  try {
+    initAutoTracker();
+  } finally {
+    window.document.getElementsByTagName = oldGet;
+  }
 }
 
 if ('MutationObserver' in window) {
   const observer = new window.MutationObserver(mutations => {
-    const wasAnchorAdded = mutations.some(
-      mut => isAnchorInNodeList(mut.addedNodes)
-    );
-    if (wasAnchorAdded) {
-      /* eslint-disable */
-      const initAutoTracker = window._initAutoTracker;
-      /* eslint-enable */
+    /* eslint-disable */
+    const initAutoTracker = window._initAutoTracker;
+    /* eslint-enable */
 
-      if (typeof initAutoTracker === 'function') {
-        initAutoTracker();
-      }
+    if (window.document.readyState === 'loading' ||
+        typeof initAutoTracker !== 'function') {
+      // DAP hasn't been loaded or initialized the auto tracker yet.
+      // Once that happens, it'll find any links that were added as a
+      // result of these particular mutations, so we can just leave now.
+      return;
+    }
+
+    const links = mutations
+      .map(mut => findLinksInNodeList(mut.addedNodes))
+      .reduce((a, b) => a.concat(b), []);
+
+    if (links.length) {
+      hackilyNotifyAutoTrackerOfNewLinks(initAutoTracker, links);
     }
   });
 
