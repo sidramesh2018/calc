@@ -58,6 +58,21 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+:target {
+  animation-duration: 2s;
+  animation-name: highlight-fade;
+}
+
+@keyframes highlight-fade {
+  from {
+    background-color: #fff0be;
+  }
+
+  to {
+    background-color: inherit;
+  }
+}
+
 p {
   font-size: $base-font-size;
   line-height: $base-line-height;
