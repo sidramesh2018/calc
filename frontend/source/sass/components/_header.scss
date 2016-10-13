@@ -132,8 +132,14 @@ nav {
     color: $color-white;
     padding: 0;
     margin-bottom: 0;
-    &.nav-tabs li {
-      border-radius: $border-radius $border-radius 0 0;
+    &.nav-tabs {
+      float: none;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      li {
+        border-radius: $border-radius $border-radius 0 0;
+      }
     }
     li {
       list-style: none;
@@ -180,7 +186,7 @@ nav {
   nav {
     float: none;
     margin-left: -20px; // to account for container padding
-    > ul {
+    ul {
       padding: 1rem;
       float: none;
       margin-top: 1rem;
