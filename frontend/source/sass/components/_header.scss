@@ -37,13 +37,16 @@ header {
   background-size: auto 100%;
 }
 
-.base-header + .row {
+.base-header {
+  display: flex;
   margin-top: 1.6rem;
+  + .row {
+    margin-top: 1.6rem;
+  }
 }
 
 .logo-container {
-  float: left;
-  margin-top: 1rem;
+  flex-grow: 2; // of 12 total, to approximate grid
 }
 
 .logo {
@@ -101,6 +104,18 @@ header {
 }
 
 nav {
+  flex-grow: 10; // of 12 total, to approximate grid
+  .nav-user-id {
+    margin: 0.5rem 0 0;
+    font-size: $base-font-size;
+    font-weight: bold;
+  }
+  .nav-logout a {
+    color: $color-primary-alt;
+    font-size: $small-font-size;
+    text-decoration: underline;
+    font-weight: normal;
+  }
   &:after {
     content: " ";
     display: table;
@@ -108,17 +123,37 @@ nav {
   }
   > ul {
     list-style: none;
-    margin: 0;
+    display: flex;
     float: right;
-    display: inline-block;
-    position: relative;
-
+    color: $color-white;
+    padding: 0;
     li {
       list-style: none;
-      margin: 0.5rem 0 0;
-      font-size: $base-font-size;
-      font-weight: bold;
-
+      padding: .25rem 1rem .75rem;
+      margin: 0 0.5em;
+      flex-grow: 1;
+      background-color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      border-radius: $border-radius;
+      &:first-child {
+        margin-left: 0rem;
+      }
+      &:last-child {
+        margin-right: 0rem;
+      }
+      &.selected {
+        border-radius: $border-radius $border-radius 0 0;
+        background: $color-white;
+        a {
+          color: $color-primary-darkest;
+        }
+      }
+      a {
+        padding: 0;
+        font-weight: normal;
+        font-size: 11px; // $small-font-size - 2 to accommodate uppercase
+        text-transform: uppercase;
+      }
       a {
         color: $color-white;
         padding: 0.5rem 1.5rem;
@@ -126,47 +161,6 @@ nav {
         &:hover {
           color: $color-white;
         }
-      }
-    }
-    .logout a {
-      color: $color-primary-alt;
-      font-size: $small-font-size;
-      text-decoration: underline;
-      font-weight: normal;
-    }
-  }
-  ul ul {
-    margin: 0;
-    color: $color-white;
-    display: flex;
-    margin: 1.2rem 0 0;
-    padding: 0;
-    li {
-      padding: .25rem 1rem .75rem;
-      margin: 0 0.5em;
-      flex-grow: 1;
-      &:first-child {
-        margin-left: -2rem;
-        padding-left: 2rem;
-      }
-      &:last-child {
-        margin-right: -2rem;
-        padding-right: 2rem;
-      }
-      &.selected {
-        border-radius: $border-radius $border-radius 0 0;
-        background: $color-white;
-        a {
-          color: $color-primary-darkest;
-          text-decoration: none;
-        }
-      }
-      a {
-        padding: 0;
-        font-weight: normal;
-        font-size: 11px; // $small-font-size - 2 to accommodate uppercase
-        text-decoration: underline;
-        text-transform: uppercase;
       }
     }
   }
@@ -184,7 +178,7 @@ nav {
       float: none;
       margin-top: 1rem;
       width: 100%;
-      .logged-in {
+      .nav-user-id {
         max-width: 400px;
       }
     }
