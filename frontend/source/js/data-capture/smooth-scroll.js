@@ -77,6 +77,49 @@ function smoothScroll(window, scrollTop, scrollMs, cb) {
   });
 }
 
+/**
+ * Some modern browsers support the scroll restoration API, which lets
+ * us have full control over how the web page scrolls, eliminating
+ * flicker caused by our code and the browser trying to "fight over"
+ * the current scroll position.
+ *
+ * However, this also means we have to take care of some desirable
+ * auto-scroll features that the browser normally takes care of for us,
+ * such as auto-scrolling to the last known scroll position when the
+ * user reloads or navigates back to our page from somewhere else.
+ **/
+function activateManualScrollRestoration(window) {
+  const doc = window.document;
+  const storage = window.sessionStorage;
+  const scrollKey = () => `${window.location}_scrollTop`;
+  let scrollTop;
+
+  window.history.scrollRestoration = 'manual';   // eslint-disable-line no-param-reassign
+
+  try {
+    scrollTop = parseInt(storage[scrollKey()], 10);
+  } catch (e) {
+    scrollTop = NaN;
+  }
+
+  if (!isNaN(scrollTop)) {
+    const doScroll = () => {
+      doc.documentElement.scrollTop = doc.body.scrollTop = scrollTop;
+    };
+
+    if (doc.readyState === 'interactive' || doc.readyState === 'complete') {
+      doScroll();
+    } else {
+      window.addEventListener('DOMContentLoaded', doScroll, false);
+    }
+  }
+
+  window.addEventListener('beforeunload', () => {
+    storage[scrollKey()] = doc.documentElement.scrollTop ||
+                           doc.body.scrollTop;
+  }, false);
+}
+
 export function activate(window, options = {}) {
   const scrollMs = options.scrollMs || DEFAULT_SCROLL_MS;
   const onScroll = options.onScroll || (() => {});
@@ -105,7 +148,7 @@ export function activate(window, options = {}) {
 
   // https://developers.google.com/web/updates/2015/09/history-api-scroll-restoration
   if ('scrollRestoration' in window.history) {
-    window.history.scrollRestoration = 'manual';   // eslint-disable-line no-param-reassign
+    activateManualScrollRestoration(window);
   }
 }
 
