@@ -15,6 +15,9 @@ from frontend import ajaxform
 
 steps = Steps(
     template_format='data_capture/price_list/step_{}.html',
+    extra_ctx_vars={
+        'current_selected_tab': 'upload_price_data'
+    }
 )
 
 
