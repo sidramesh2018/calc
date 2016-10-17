@@ -88,19 +88,13 @@ function smoothScroll(window, scrollTop, scrollMs, cb) {
  * such as auto-scrolling to the last known scroll position when the
  * user reloads or navigates back to our page from somewhere else.
  **/
-function activateManualScrollRestoration(window) {
+export function activateManualScrollRestoration(window) {
   const doc = window.document;
   const storage = window.sessionStorage;
   const scrollKey = () => `${window.location}_scrollTop`;
-  let scrollTop;
+  const scrollTop = parseInt(storage[scrollKey()], 10);
 
   window.history.scrollRestoration = 'manual';   // eslint-disable-line no-param-reassign
-
-  try {
-    scrollTop = parseInt(storage[scrollKey()], 10);
-  } catch (e) {
-    scrollTop = NaN;
-  }
 
   if (!isNaN(scrollTop)) {
     const doScroll = () => {
@@ -118,6 +112,8 @@ function activateManualScrollRestoration(window) {
     storage[scrollKey()] = doc.documentElement.scrollTop ||
                            doc.body.scrollTop;
   }, false);
+
+  return window;
 }
 
 export function activate(window, options = {}) {
