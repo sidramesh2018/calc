@@ -1,6 +1,10 @@
 /* global $ QUnit document */
 
-import { IS_SUPPORTED, activate } from '../data-capture/smooth-scroll.js';
+import {
+  IS_SUPPORTED,
+  activate,
+  activateManualScrollRestoration,
+} from '../data-capture/smooth-scroll.js';
 
 QUnit.module('smooth-scroll');
 
@@ -27,7 +31,86 @@ function addHashChangePolyfill(window) {
   }, 10);
 }
 
-test('it works', assert => {
+class FakeWindow {
+  constructor(options = {}) {
+    Object.assign(this, {
+      history: {},
+      location: 'http://foo/',
+      document: {
+        body: { scrollTop: 0 },
+        documentElement: { scrollTop: 0 },
+        readyState: options.readyState || 'loading',
+      },
+      sessionStorage: options.sessionStorage || {},
+      listeners: {},
+    });
+  }
+
+  addEventListener(type, cb) {
+    if (type in this.listeners) {
+      throw new Error('only one listener per type expected');
+    }
+    this.listeners[type] = cb;
+  }
+
+  getScrollTop() {
+    if (this.document.body.scrollTop !==
+        this.document.documentElement.scrollTop) {
+      // These need to be the same because some browsers use
+      // the <body>'s scrollTop to control scrolling, while others use
+      // the <html>'s scrollTop.
+      throw new Error('scrollTop of <body> and <html> are not the same');
+    }
+    return this.document.body.scrollTop;
+  }
+}
+
+test('amsr sets history.scrollRestoration', assert => {
+  const win = activateManualScrollRestoration(new FakeWindow());
+  assert.equal(win.history.scrollRestoration, 'manual');
+});
+
+test('amsr remembers scrollTop on window unload', assert => {
+  const win = activateManualScrollRestoration(new FakeWindow());
+  win.document.body.scrollTop = 5;
+  win.listeners.beforeunload();
+  assert.equal(win.sessionStorage['http://foo/_scrollTop'], '5');
+});
+
+test('amsr scrolls to last scrollTop on DOMContentLoaded', assert => {
+  const win = activateManualScrollRestoration(new FakeWindow({
+    sessionStorage: { 'http://foo/_scrollTop': '20' },
+  }));
+  assert.equal(win.getScrollTop(), 0);
+  win.listeners.DOMContentLoaded();   // eslint-disable-line new-cap
+  assert.equal(win.getScrollTop(), 20);
+});
+
+test('amsr scrolls to last scrollTop if readyState=interactive', assert => {
+  const win = activateManualScrollRestoration(new FakeWindow({
+    sessionStorage: { 'http://foo/_scrollTop': '20' },
+    readyState: 'interactive',
+  }));
+  assert.equal(win.getScrollTop(), 20);
+});
+
+test('amsr scrolls to last scrollTop if readyState=complete', assert => {
+  const win = activateManualScrollRestoration(new FakeWindow({
+    sessionStorage: { 'http://foo/_scrollTop': '20' },
+    readyState: 'complete',
+  }));
+  assert.equal(win.getScrollTop(), 20);
+});
+
+test('amsr does not set scrollTop if last value was corrupt', assert => {
+  const win = activateManualScrollRestoration(new FakeWindow({
+    sessionStorage: { 'http://foo/_scrollTop': 'LOL' },
+    readyState: 'complete',
+  }));
+  assert.equal(win.getScrollTop(), 0);
+});
+
+test('activate() works', assert => {
   const iframe = document.createElement('iframe');
   const getScrollTop = () =>
     $('body', iframe.contentDocument).scrollTop() ||
