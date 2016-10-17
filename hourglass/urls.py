@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^api/', include('api.urls')),
     url(r'^data-capture/',
         include('data_capture.urls', namespace='data_capture')),
+    url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^styleguide/', include('styleguide.urls', namespace='styleguide')),
     url(r'^robots.txt$', robots_txt),
