@@ -177,6 +177,7 @@ def step_3(request, step):
 
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+@handle_cancel
 @require_http_methods(["GET"])
 def step_3_errors(request):
     step = steps.get_step_renderer(3)

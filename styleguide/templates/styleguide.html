@@ -568,6 +568,53 @@
     {% pathname 'frontend/source/sass/components/_expandablearea.scss' %}.
   </p>
 
+  {% guide_section "Modal Dialogs" %}
+
+  <p>
+    Modal dialogs provide a way of display a dialog, such as a confirmation
+    message, and associated actions in a visually-pleasing, styleable manner.
+    We use the <a href="https://github.com/edenspiekermann/a11y-dialog">a11y-dialog</a> library for modal dialog support.
+  </p>
+
+  <p>
+    Due to the way <code>a11y-dialog</code> works, markup for the modals needs
+    to be placed outside of the page's <code>&lt;main&gt;</code> element in order
+    to be read properly by screenreaders. In templates, place modal markup in the
+    <code>{% templatetag openblock %} block modals {% templatetag closeblock %}</code>
+    block.
+  </p>
+
+  {% example %}
+  <button data-a11y-dialog-show="example-dialog">Open Dialog</button>
+
+  <!-- Note that any modal markup should be placed in {% templatetag openblock %} block modals {% templatetag closeblock %}
+  otherwise screenreading will not work properly.
+  Screenreading will not work properly in this example for instance. -->
+  <div id="example-dialog" aria-hidden="true" class="dialog">
+    <div class="dialog-overlay" tabindex="-1" data-a11y-dialog-hide></div>
+    <div class="dialog-content" role="dialog" aria-labelledby="example-dialog-title" aria-describedby="example-dialog-description">
+      <div role="document">
+        <h1 id="example-dialog-title">
+          This is an example dialog title
+        </h1>
+
+        <p id="example-dialog-description">
+          Here is some content in the dialog.
+          Click "Dismiss Dialog" or anywhere outside of this dialog to close me.
+        </p>
+
+        <div class="dialog-buttons">
+          <button class="button-primary" data-a11y-dialog-hide>
+            Dismiss dialog
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endexample %}
+
+  <p>When JavaScript is not available, the activator element will do whatever it previously did before being modified to open a dialog.</p>
+
   {% endguide %}
 </div>
 {% if not is_safe_mode_enabled %}
