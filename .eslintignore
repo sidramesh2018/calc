@@ -3,8 +3,3 @@ htmlcov/
 vendor/
 
 frontend/static/frontend/built/
-
-# Ignoring legacy (CALC 1.0) JS files for now
-frontend/source/js/common/hourglass.js
-frontend/source/js/data-explorer/index.js
-frontend/static/frontend/js/hourglass_tests.js

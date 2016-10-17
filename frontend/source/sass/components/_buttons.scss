@@ -13,7 +13,12 @@ button,
   margin-bottom: 0;
   margin-top: 0;
   font-size: $font-size-button;
+
+  &:focus {
+    box-shadow: $focus-shadow;
+  }
 }
+
 // Need to override Skeleton's default button styling
 .button.button-primary,
 button.button-primary,
@@ -42,7 +47,6 @@ input.button-primary[type="button"] {
   &.button-focus {
     background-color: $color-primary-darker;
     border-color: $color-primary-darker;
-    box-shadow: $focus-shadow;
   }
 
   &:active,
@@ -73,7 +77,6 @@ input.button-secondary[type="button"] {
   &.button-focus {
     background-color: $color-secondary-dark;
     border-color: $color-secondary-dark;
-    box-shadow: $focus-shadow;
   }
 
   &:active,
@@ -116,6 +119,8 @@ input.button-link[type="button"] {
   &:focus,
   &.button-focus {
     color: $color-primary-darker;
+    outline: 1px dotted $color-primary-darker;
+    box-shadow: none;
   }
 
   &:active,
@@ -129,5 +134,15 @@ input.button-link[type="button"] {
   cursor: default;
   &:hover {
     color: $color-gray;
+  }
+}
+
+.button.button-disabled,
+button.button-disabled,
+input.button-disabled[type="submit"],
+input.button-disabled[type="reset"],
+input.button-disabled[type="button"] {
+  &:focus {
+    outline: 1px dotted $color-gray-dark;
   }
 }

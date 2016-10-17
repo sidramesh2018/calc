@@ -1,3 +1,6 @@
+const hourglass = require('../common/hourglass');
+
+/* eslint-disable */
 var test = QUnit.test,
     module = QUnit.module;
 
@@ -127,3 +130,4 @@ test("#get()", function(assert) {
     done3();
   });
 });
+/* eslint-enable */

@@ -1,3 +1,6 @@
+const hourglass = {};
+
+/* eslint-disable */
 (function(hourglass) {
 
   // enable CORS support
@@ -160,4 +163,7 @@
     return obj;
   }
 
-})(this.hourglass = {});
+})(hourglass);
+/* eslint-enable */
+
+module.exports = hourglass;
