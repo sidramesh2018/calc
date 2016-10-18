@@ -79,7 +79,7 @@ class BasePriceList:
         rows of the price list
         '''
 
-        return NotImplementedError()
+        raise NotImplementedError()
 
     @classmethod
     def get_upload_example_context(cls):
