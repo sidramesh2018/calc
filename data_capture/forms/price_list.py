@@ -51,9 +51,9 @@ class Step2Form(forms.ModelForm):
         label='Contract or current option period end'
     )
     escalation_rate = forms.FloatField(
-        label="Escalation Rate (%)",
-        help_text='This is the escalation rate (as a %) '
-                  'for calculating out-year pricing. '
+        label="Escalation rate (%)",
+        help_text='CALC uses the escalation rate (as a percentage) '
+                  'to calculate out-year pricing. '
                   'Leave this field blank or enter 0 if this contract does '
                   'not have a fixed escalation rate.',
         min_value=MIN_ESCALATION_RATE,

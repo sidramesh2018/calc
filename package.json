@@ -4,6 +4,7 @@
   "private": true,
   "description": "An estimator for hourly rates on professional services contracts",
   "dependencies": {
+    "a11y-dialog": "2.5.2",
     "babel-polyfill": "^6.9.1",
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.3.0",
@@ -21,7 +22,7 @@
     "gulp-if": "^2.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
-    "gulp-sourcemaps": "^1.6.0",
+    "gulp-sourcemaps": "1.6.0",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
     "jquery-tablesort": "0.0.9",

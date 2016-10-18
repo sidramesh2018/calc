@@ -11,6 +11,7 @@ input[type="radio"] + label {
 
 label {
   font-weight: 700;
+  margin-top: 0;
 }
 
 input,
@@ -31,6 +32,7 @@ textarea,
 select {
   border-radius: $border-radius;
 }
+
 select {
   padding: 0.5rem 0.8rem;
   border-radius: $border-radius;
@@ -38,4 +40,8 @@ select {
     background-position: right 1rem center;
     padding: 0.34em;
   }
+}
+
+input[name="escalation_rate"] {
+  width: 9rem;
 }

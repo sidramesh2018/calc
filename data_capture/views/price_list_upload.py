@@ -15,6 +15,9 @@ from frontend import ajaxform
 
 steps = Steps(
     template_format='data_capture/price_list/step_{}.html',
+    extra_ctx_vars={
+        'current_selected_tab': 'upload_price_data'
+    }
 )
 
 
@@ -174,6 +177,7 @@ def step_3(request, step):
 
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+@handle_cancel
 @require_http_methods(["GET"])
 def step_3_errors(request):
     step = steps.get_step_renderer(3)

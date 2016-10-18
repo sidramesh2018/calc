@@ -11,3 +11,5 @@ require('./ajaxform');
 require('./alerts');
 require('./expandable-area');
 require('./date');
+require('./smooth-scroll');
+require('./modal-dialogs');

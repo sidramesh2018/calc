@@ -6,4 +6,4 @@ if [ $CF_INSTANCE_INDEX = "0" ]; then
     python manage.py initgroups
 fi
 echo "------ Starting APP ------"
-newrelic-admin run-program gunicorn hourglass.wsgi:application
+gunicorn hourglass.wsgi:application
