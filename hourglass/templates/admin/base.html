@@ -1,9 +1,11 @@
+{% load staticfiles %}
 {% load i18n admin_static %}<!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
 <title>{% block title %}{% endblock %}</title>
 <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" />
+<link rel="stylesheet" type="text/css" href=" {% static "frontend/built/style/main.min.css" %}">
 {% block extrastyle %}{% endblock %}
 <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% static "admin/css/ie.css" %}{% endblock %}" /><![endif]-->
 {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
@@ -16,44 +18,54 @@
 
 <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
 
-<!-- Container -->
-<div id="container">
-
-    {% if not is_popup %}
-    <!-- Header -->
-    <div id="header">
-        <h1>This is a header.</h1>
-        <div id="branding">
-        {% block branding %}{% endblock %}
-        </div>
-        {% block usertools %}
-        {% if has_permission %}
-        <div id="user-tools">
-            {% block welcome-msg %}
-                {% trans 'Welcome,' %}
-                <strong>{% firstof user.get_short_name user.get_username %}</strong>.
-            {% endblock %}
-            {% block userlinks %}
-                {% if site_url %}
-                    <a href="{{ site_url }}">{% trans 'View site' %}</a> /
-                {% endif %}
-                {% if user.is_active and user.is_staff %}
-                    {% url 'django-admindocs-docroot' as docsroot %}
-                    {% if docsroot %}
-                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
-                    {% endif %}
-                {% endif %}
-                {% if user.has_usable_password %}
-                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
-                {% endif %}
-                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
-            {% endblock %}
-        </div>
-        {% endif %}
-        {% endblock %}
-        {% block nav-global %}{% endblock %}
+  <div id="banner">
+    <div class="container">
+      <a class="skip-nav" tabindex="-1" href="#main">Skip navigation</a>
+      <p id="usa">
+        <img src="{% static 'frontend/images/flag-usa.png' %}" alt="USA flag">
+        An official website of the U.S. government</p>
+      <p id="site-status">This website is in beta.
+        <a href="#help-wanted">Help us improve.</a>
+      </p>
     </div>
-    <!-- END Header -->
+  </div>
+
+  {% if not is_popup %}
+  <header>
+    <div class="container">
+    {% include "../../data_explorer/templates/_header.html" %}
+    </div>
+  </header>
+  <!-- Header -->
+  <div class="container">
+      <div id="branding">
+      {% block branding %}{% endblock %}
+      </div>
+      {% block usertools %}
+      {% if has_permission %}
+      <div id="user-tools">
+          {% block userlinks %}
+              {% if site_url %}
+                  <a href="{{ site_url }}">{% trans 'View site' %}</a> /
+              {% endif %}
+              {% if user.is_active and user.is_staff %}
+                  {% url 'django-admindocs-docroot' as docsroot %}
+                  {% if docsroot %}
+                      <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+                  {% endif %}
+              {% endif %}
+              {% if user.has_usable_password %}
+              <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+              {% endif %}
+              <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+          {% endblock %}
+      </div>
+      {% endif %}
+      {% endblock %}
+      {% block nav-global %}{% endblock %}
+  </div>
+  <!-- END Header -->
+  <div class="container">
     {% block breadcrumbs %}
     <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
@@ -81,11 +93,10 @@
         {% block sidebar %}{% endblock %}
         <br class="clear" />
     </div>
-    <!-- END Content -->
+  </div>
+  <!-- END Content -->
 
-    {% block footer %}<div id="footer"></div>{% endblock %}
-</div>
-<!-- END Container -->
+  {% block footer %}<div id="footer"></div>{% endblock %}
 
 </body>
 </html>

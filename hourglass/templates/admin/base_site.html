@@ -1,23 +1,12 @@
 {% extends "admin/base.html" %}
 {% load static %}
-{% block stylesheet %}{% static "frontend/style.css" %}{% endblock %}
+{% block stylesheet %}{% static "frontend/admin-overrides.css" %}{% endblock %}
 
 {% block title %}{{ title }} | CALC{% endblock %}
-
-{% block branding %}
-  <h1 id="site-name">CALC Administration</h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}
 
 {% block userlinks %}
   {% if perms.contracts.add_bulkuploadcontractsource %}
     <a href="{% url 'data_capture:bulk_region_10_step_1' %}">Region 10 Upload</a> /
   {% endif %}
   {{ block.super }}
-{% endblock %}
-
-{% block welcome-msg %}
-    Welcome,
-    <strong>{% firstof user.get_short_name user.email user.get_username %}</strong>.
 {% endblock %}
