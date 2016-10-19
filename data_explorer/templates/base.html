@@ -23,15 +23,8 @@
         // forces SSL even if the page were somehow loaded over http://
         ga('set', 'forceSSL', true);
 
-        {% if user.is_authenticated %}
-        ga('set', 'dimension1', '{{ user.id }}');
-        {% endif %}
-
-        {% if is_safe_mode_enabled %}
-        ga('set', 'dimension2', 'safe mode enabled');
-        {% endif %}
-
         ga('create', '{{ GA_TRACKING_ID }}', 'auto');
+        ga('set', 'dimension1', '{% if is_safe_mode_enabled %}safe mode enabled{% endif %}');
         ga('send', 'pageview');
     </script>
 
