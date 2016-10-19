@@ -1,4 +1,6 @@
 {% extends "admin/base.html" %}
+{% load static %}
+{% block stylesheet %}{% static "frontend/style.css" %}{% endblock %}
 
 {% block title %}{{ title }} | CALC{% endblock %}
 
