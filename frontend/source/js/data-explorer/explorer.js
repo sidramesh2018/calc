@@ -1,3 +1,5 @@
+import ga from '../common/ga';
+
 const hourglass = require('../common/hourglass');
 
 /* eslint-disable */
@@ -275,7 +277,7 @@ const hourglass = require('../common/hourglass');
 
       history.pushState(null, null, href);
 
-      if (didSearchChange && typeof(ga) === 'function') {
+      if (didSearchChange) {
         ga('set', 'location', window.location.href);
         ga('send', 'pageview');
       }
