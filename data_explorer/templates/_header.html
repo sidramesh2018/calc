@@ -1,0 +1,21 @@
+{% load staticfiles %}
+        <div class="base-header">
+          <a class="logo-container" href="{% url 'index' %}"><img class="logo" src="{% static 'frontend/images/calc_logo.png' %}" alt="CALC: Contract Awarded Labor Category Tool"></a>
+          <nav>
+            <div class="nav-content">
+              {% if user.is_authenticated %}
+              <p class="nav-user-id">Hello, {{ user.email }} <span class="nav-logout"><a href="{% url 'uaa_client:logout' %}">Log out</a></span></p>
+              {% endif %}
+              <p>{{ current_selected_tab }}</p>
+              <ul{% if current_selected_tab %} class="nav-tabs"{% endif %}>
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin:index' %}">Site admin</a></li>
+                {% endif %}
+                {% if perms.data_capture.add_submittedpricelist %}
+                <li{% if current_selected_tab == 'upload_price_data'%} class="selected"{% endif %}><a href="{% url 'data_capture:step_1' %}">Add price data</a></li>
+                {% endif %}
+                <li{% if current_selected_tab == 'about'%} class="selected"{% endif %}><a href="{% url 'about' %}">About CALC</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
