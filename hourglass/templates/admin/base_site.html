@@ -1,12 +1,11 @@
 {% extends "admin/base.html" %}
 {% load static %}
-{% block stylesheet %}{% static "frontend/admin-overrides.css" %}{% endblock %}
-
 {% block title %}{{ title }} | CALC{% endblock %}
+{% block stylesheet %}{% static "frontend/admin-overrides.css" %}{% endblock %}
 
 {% block userlinks %}
   {% if perms.contracts.add_bulkuploadcontractsource %}
-    <a href="{% url 'data_capture:bulk_region_10_step_1' %}">Region 10 Upload</a> /
+    <li><a href="{% url 'data_capture:bulk_region_10_step_1' %}">Region 10 upload</a></li>
   {% endif %}
   {{ block.super }}
 {% endblock %}
