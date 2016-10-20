@@ -6,7 +6,6 @@
               {% if user.is_authenticated %}
               <p class="nav-user-id">Hello, {{ user.email }} <span class="nav-logout"><a href="{% url 'uaa_client:logout' %}">Log out</a></span></p>
               {% endif %}
-              <p>{{ current_selected_tab }}</p>
               <ul{% if current_selected_tab %} class="nav-tabs"{% endif %}>
                 {% if user.is_staff %}
                 <li><a href="{% url 'admin:index' %}">Site admin</a></li>
