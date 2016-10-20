@@ -1,0 +1,76 @@
+/********************
+ * Django admin CSS *
+ * *****************/
+
+/* nav ul li temp styles until we can get the proper class added in the back end */
+nav ul li {
+  border-radius: 4px 4px 0 0 !important;
+}
+
+nav ul li:first-child {
+  background: white;
+}
+
+nav ul li:first-child a,
+nav ul li:first-child a:hover {
+  color: #112e51;
+}
+/* end temp styles */
+
+#user-tools ul {
+  text-align: right;
+  margin: 2rem 0;
+}
+
+#user-tools ul li {
+  display: inline-block;
+  margin: 0 2rem 0 0;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+#user-tools ul li:last-child {
+  margin-right: 0;
+}
+
+.submit-row,
+.selector .selector-available h2,
+.selector-available h2,
+.selector-chosen h2,
+.selector .selector-filter {
+  background: none !important;
+  border: none !important;
+}
+
+.selector .selector-available h2,
+.selector .selector-chosen h2 {
+  color: #222 !important;
+  text-align: left;
+}
+
+.related-widget-wrapper select {
+  background-image: none;
+}
+
+.selector-chosen select {
+  border: 1px solid #5b616b !important;
+}
+
+#id_permissions_filter {
+  padding-top: 0;
+}
+
+#id_permissions_filter label {
+  display: none;
+}
+#id_permissions_filter input {
+  margin-top: 0;
+}
+
+.submit-row {
+  text-align: left !important;
+}
+
+.submit-row input[type="submit"] {
+  display: inline;
+}
