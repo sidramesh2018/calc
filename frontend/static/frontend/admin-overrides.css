@@ -120,6 +120,7 @@ label,
 }
 
 /* Styling for ul/lis with action links */
-.object-tools {
+.object-tools,
+.messagelist {
   list-style: none;
 }
