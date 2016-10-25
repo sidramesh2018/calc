@@ -54,6 +54,6 @@ alerts-widget:focus {
   @extend .alert-success;
 }
 
-.messagelist li.error {
+.errornote {
   @extend .alert-error;
 }

@@ -1,7 +1,6 @@
 {% extends "admin/base.html" %}
 {% load static %}
 {% block title %}{{ title }} | CALC{% endblock %}
-{% block stylesheet %}{% static "frontend/admin-overrides.css" %}{% endblock %}
 
 {% block userlinks %}
   {% if perms.contracts.add_bulkuploadcontractsource %}
