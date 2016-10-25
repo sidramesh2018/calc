@@ -93,10 +93,33 @@ label,
   display: inline;
 }
 
-
-
 /* Styling for ul/lis with action links */
 .object-tools,
 .messagelist {
   list-style: none;
+}
+
+/* table captions */
+table caption {
+  background-color: #f1f1f1; /* color-gray-lightest */
+  padding: .5rem 1rem;
+  border-bottom: 1px solid #d6d7d9; /* color-gray-lighter */
+}
+
+table caption a {
+  color: #5b616b; /* color-gray */
+  text-decoration: none;
+}
+
+table caption a:hover,
+table caption a:active,
+table caption a:focus {
+  color: #5b616b; /* color-gray */
+}
+
+thead a,
+thead a:hover,
+thead a:active,
+thead a:focus {
+  color: #5b616b; /* color-gray */
 }
