@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.test import override_settings, TestCase
 
-from .. import admin, models, email
+from .. import admin, email
+from ..models import SubmittedPriceList
 from .common import FAKE_SCHEDULE
 from .test_models import ModelTestCase
 
@@ -138,7 +139,7 @@ class NonSuperuserViewTests(DebugAdminTestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_approved_submittedpricelist_detail_returns_200(self):
-        self.price_list.approve()
+        self.price_list.approve(self.user)
         res = self.client.get(
             '/admin/data_capture/submittedpricelist/{}/'.format(
                 self.price_list.id
@@ -150,9 +151,8 @@ class NonSuperuserViewTests(DebugAdminTestCase):
 @mock.patch.object(messages, 'add_message')
 class ActionTests(AdminTestCase):
     def test_approve_ignores_approved_price_lists(self, mock):
-        self.price_list.approve()
-        admin.approve(None, "fake request",
-                      models.SubmittedPriceList.objects.all())
+        self.price_list.approve(self.user)
+        admin.approve(None, "fake request", SubmittedPriceList.objects.all())
         mock.assert_called_once_with(
             "fake request",
             messages.INFO,
@@ -160,8 +160,7 @@ class ActionTests(AdminTestCase):
         )
 
     def test_unapprove_ignores_unapproved_price_lists(self, mock):
-        admin.unapprove(None, "fake request",
-                        models.SubmittedPriceList.objects.all())
+        admin.unapprove(None, "fake request", SubmittedPriceList.objects.all())
         mock.assert_called_once_with(
             "fake request",
             messages.INFO,
@@ -169,32 +168,35 @@ class ActionTests(AdminTestCase):
         )
 
     def test_approve_works(self, msg_mock):
+        request_mock = mock.MagicMock(user=self.user)
         with mock.patch.object(email, 'price_list_approved',
                                wraps=email.price_list_approved) as em_monkey:
-            admin.approve(None, "fake request",
-                          models.SubmittedPriceList.objects.all())
+            admin.approve(None, request_mock, SubmittedPriceList.objects.all())
             msg_mock.assert_called_once_with(
-                "fake request",
+                request_mock,
                 messages.INFO,
                 '1 price list(s) have been approved and added to CALC.'
             )
             em_monkey.assert_called_once_with(self.price_list)
 
         self.price_list.refresh_from_db()
-        self.assertTrue(self.price_list.is_approved)
+        self.assertEqual(self.price_list.status,
+                         SubmittedPriceList.STATUS_APPROVED)
 
     def test_unapprove_works(self, msg_mock):
+        request_mock = mock.MagicMock(user=self.user)
         with mock.patch.object(email, 'price_list_unapproved',
                                wraps=email.price_list_unapproved) as em_monkey:
-            self.price_list.approve()
-            admin.unapprove(None, "fake request",
-                            models.SubmittedPriceList.objects.all())
+            self.price_list.approve(self.user)
+            admin.unapprove(None, request_mock,
+                            SubmittedPriceList.objects.all())
             msg_mock.assert_called_once_with(
-                "fake request",
+                request_mock,
                 messages.INFO,
                 '1 price list(s) have been unapproved and removed from CALC.'
             )
             em_monkey.assert_called_once_with(self.price_list)
 
         self.price_list.refresh_from_db()
-        self.assertFalse(self.price_list.is_approved)
+        self.assertEqual(self.price_list.status,
+                         SubmittedPriceList.STATUS_UNAPPROVED)

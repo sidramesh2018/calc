@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.template.defaultfilters import pluralize
 
+from .models import SubmittedPriceList
+
 
 class EmailResult():
     '''
@@ -18,8 +20,8 @@ def price_list_approved(price_list):
     ctx = {
         'price_list': price_list
     }
-    if not price_list.is_approved:
-        raise AssertionError('price_list.is_approved must be True')
+    if price_list.status is not SubmittedPriceList.STATUS_APPROVED:
+        raise AssertionError('price_list.status must be STATUS_APPROVED')
 
     result = send_mail(
         subject='CALC Price List Approved',
@@ -39,8 +41,8 @@ def price_list_unapproved(price_list):
     ctx = {
         'price_list': price_list
     }
-    if price_list.is_approved:
-        raise AssertionError('price_list.is_approved must be False')
+    if price_list.status is not SubmittedPriceList.STATUS_UNAPPROVED:
+        raise AssertionError('price_list.status must be STATUS_UNAPPROVED')
     result = send_mail(
         subject='CALC Price List Unapproved',
         message=render_to_string(
@@ -100,15 +102,15 @@ def bulk_upload_failed(upload_source, traceback):
     )
 
 
-def approval_reminder(count_not_approved):
+def approval_reminder(count_unreviewed):
     ctx = {
-        'count_not_approved': count_not_approved
+        'count_unreviewed': count_unreviewed
     }
     superusers = User.objects.filter(is_superuser=True)
     recipients = [s.email for s in superusers if s.email]
     result = send_mail(
-        subject='CALC Reminder - {} price list{} not approved'.format(
-            count_not_approved, pluralize(count_not_approved)),
+        subject='CALC Reminder - {} price list{} not reviewed'.format(
+            count_unreviewed, pluralize(count_unreviewed)),
         message=render_to_string(
             'data_capture/email/approval_reminder.txt',
             ctx

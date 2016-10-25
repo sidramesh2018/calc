@@ -162,17 +162,17 @@ class SubmittedPriceListRowInline(admin.TabularInline):
         return False
 
     def get_readonly_fields(self, request, obj=None):
-        if obj and obj.is_approved:
+        if obj and obj.status is SubmittedPriceList.STATUS_APPROVED:
             return self.fields
         return self.readonly_fields
 
 
 @transaction.atomic
 def approve(modeladmin, request, queryset):
-    unapproved = queryset.filter(is_approved=False)
+    unapproved = queryset.exclude(status=SubmittedPriceList.STATUS_APPROVED)
     count = unapproved.count()
     for price_list in unapproved:
-        price_list.approve()
+        price_list.approve(request.user)
         email.price_list_approved(price_list)
 
     messages.add_message(
@@ -191,10 +191,10 @@ approve.short_description = (
 
 @transaction.atomic
 def unapprove(modeladmin, request, queryset):
-    approved = queryset.filter(is_approved=True)
+    approved = queryset.filter(status=SubmittedPriceList.STATUS_APPROVED)
     count = approved.count()
     for price_list in approved:
-        price_list.unapprove()
+        price_list.unapprove(request.user)
         email.price_list_unapproved(price_list)
     messages.add_message(
         request,
@@ -230,7 +230,7 @@ class UndeletableModelAdmin(admin.ModelAdmin):
 @admin.register(SubmittedPriceList)
 class SubmittedPriceListAdmin(UndeletableModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
-                    'created_at', 'is_approved')
+                    'created_at', 'status')
 
     actions = [approve, unapprove]
 
@@ -245,20 +245,24 @@ class SubmittedPriceListAdmin(UndeletableModelAdmin):
         'submitter',
         'created_at',
         'updated_at',
-        'is_approved',
+        'status',
         'current_status',
+        'status_changed_at',
+        'status_changed_by',
     )
 
     readonly_fields = (
         'schedule_title',
         'created_at',
         'updated_at',
-        'is_approved',
-        'current_status'
+        'status',
+        'current_status',
+        'status_changed_at',
+        'status_changed_by',
     )
 
     list_filter = (
-        'is_approved',
+        'status',
     )
 
     inlines = [
@@ -266,7 +270,7 @@ class SubmittedPriceListAdmin(UndeletableModelAdmin):
     ]
 
     def current_status(self, instance):
-        if instance.is_approved:
+        if instance.status is SubmittedPriceList.STATUS_APPROVED:
             return mark_safe(
                 "<span style=\"color: green\">"
                 "This price list has been approved, so its data is now "
@@ -293,7 +297,7 @@ class SubmittedPriceListAdmin(UndeletableModelAdmin):
         return False
 
     def get_readonly_fields(self, request, obj=None):
-        if obj and obj.is_approved:
+        if obj and obj.status is SubmittedPriceList.STATUS_APPROVED:
             return self.fields
         return self.readonly_fields
 
@@ -326,7 +330,8 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(price_list__is_approved=False)
+        return qs.exclude(
+            price_list__status=SubmittedPriceList.STATUS_APPROVED)
 
     def vendor_name(self, obj):
         return obj.price_list.vendor_name
