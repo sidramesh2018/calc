@@ -19,9 +19,9 @@
 }
 
 .action-checkbox input[type=checkbox],
-.action-checkbox input[type=radio] {
-    position: static;
-    left: 0;
+.action-checkbox input[type=radio]{
+  position: static;
+  left: 0;
 }
 
 .filter-block {

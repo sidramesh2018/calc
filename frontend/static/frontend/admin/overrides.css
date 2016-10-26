@@ -17,11 +17,33 @@ nav ul li:first-child a:hover {
 }
 /* end temp styles */
 
+/* USWDS override, because we can't control Django's markup easily */
+.field-is_muted input[type=checkbox],
+.field-is_muted input[type=radio] {
+    position: static;
+    left: 0;
+}
+/* end USWDS override */
+
 label,
 .aligned label {
+  font-weight: bold !important;
+  float: none !important;
   font-size: 1.5rem;
   color: #222;
-  font-weight: bold;
+  width: auto;
+}
+
+form .aligned p,
+form .aligned p.help,
+form .aligned ul {
+  margin-left: 0;
+  padding-left: 0;
+  font-size: 1.5rem;
+}
+
+form .aligned p.help {
+  color: #5b616b; /* color-gray */
 }
 
 /* groups pages */
@@ -122,4 +144,111 @@ thead a:hover,
 thead a:active,
 thead a:focus {
   color: #5b616b; /* color-gray */
+}
+
+.tabular fieldset {
+  max-width: none;
+}
+
+/* add/change buttons */
+.add-related:after {
+  content: "Add";
+  margin-right: 10px;
+}
+
+.change-related:after {
+  content: "Change";
+  margin-right: 10px;
+}
+
+.addlink,
+.changelink,
+.deletelink {
+  position: relative;
+  padding-left: 15px;
+}
+
+.addlink:before {
+    background-image: url(/static/admin/img/icon_addlink.gif);
+    width: 10px;
+    height: 10px;
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 8px;
+  }
+
+.changelink:before {
+    background-image: url(/static/admin/img/icon_changelink.gif);
+    width: 10px;
+    height: 10px;
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+.deletelink:before {
+    background-image: url(/static/admin/img/icon_deletelink.gif);
+    width: 10px;
+    height: 10px;
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+.deletelink {
+  color: gray;
+}
+
+.mini.quiet {
+  color: gray;
+  font-size: 1.3rem;
+}
+
+/* forms.css */
+.inline-group {
+  border: none;
+}
+
+.inline-group .tabular td.original p {
+  display: none; /* this appears to simply append "submitted price list row" to lists */
+}
+
+/* same as filter-block in changelists.css */
+.sidebar {
+  background: #f1f1f1;
+  border-radius: 4px;
+  margin-bottom: 0;
+  padding: 1rem 2rem;
+}
+
+.sidebar h2,
+.sidebar h3 {
+  font-size: 1.5rem; /* to match front-page h5 */
+  font-weight: bold;
+  letter-spacing: normal;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin: 0 0 2rem 0;
+}
+.sidebar ul li {
+  margin-bottom: 0;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #5b616b;
+}
+
+.sidebar ul li.selected a {
+  color: #0071bc;
+  font-weight: bold;
+  border-left: .5rem solid #0071bc;
+  margin-left: -2rem;
+  padding-left: 1.5rem;
 }
