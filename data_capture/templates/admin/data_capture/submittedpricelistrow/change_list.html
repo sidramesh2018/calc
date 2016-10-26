@@ -2,8 +2,7 @@
 
 {% block content %}
 <p>
-  The following rows are <em>only</em> for unapproved price lists that
-  haven't yet made their way into CALC.
+  The following rows are <em>only</em> for non-approved price lists.
 </p>
 <p>
   For rows that are somehow out-of-the-ordinary, you can click the
@@ -15,9 +14,9 @@
   changes.
 </p>
 <p>
-  Once you've muted any necessary rows, you can visit the
-  <a href="{% url 'admin:data_capture_submittedpricelist_changelist' %}">Submitted price list</a> admin page to approve the data
-  for inclusion into CALC.
+  Once you've muted any necessary rows, you can visit the corresponding
+  <a href="{% url 'admin:app_list' app_label='data_capture' %}">price list admin page</a>
+  to approve the data for inclusion into CALC.
 </p>
 {{ block.super }}
 {% endblock %}

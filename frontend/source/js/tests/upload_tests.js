@@ -208,17 +208,41 @@ import { UploadWidget } from '../data-capture/upload';
   advancedTest('dragenter/dragleave affect .dragged-over', (assert) => {
     assert.ok(!upload.hasClass('dragged-over'));
 
-    for (let i = 0; i < 3; i++) {
-      upload.trigger('dragenter');
-      assert.ok(upload.hasClass('dragged-over'));
-    }
+    const OUTER_EL = 'I am a fake outer element';
+    const INNER_EL = 'I am a fake inner element';
 
-    for (let i = 0; i < 2; i++) {
-      upload.trigger('dragleave');
-      assert.ok(upload.hasClass('dragged-over'));
-    }
+    // Simulate user dragging over the outer element.
+    upload.trigger(new $.Event('dragenter', { target: OUTER_EL }));
+    assert.ok(upload.hasClass('dragged-over'));
 
-    upload.trigger('dragleave');
+    // Simulate user dragging over the inner element.
+    upload.trigger(new $.Event('dragenter', { target: INNER_EL }));
+    upload.trigger(new $.Event('dragleave', { target: OUTER_EL }));
+    assert.ok(upload.hasClass('dragged-over'));
+
+    // Simulate user dragging out of the inner element.
+    upload.trigger(new $.Event('dragenter', { target: OUTER_EL }));
+    upload.trigger(new $.Event('dragleave', { target: INNER_EL }));
+    assert.ok(upload.hasClass('dragged-over'));
+
+    // Simulate user dragging out of the outer element.
+    upload.trigger(new $.Event('dragleave', { target: OUTER_EL }));
+    assert.ok(!upload.hasClass('dragged-over'));
+  });
+
+  advancedTest('spurious dragenter events are ignored', (assert) => {
+    const EL = 'I am a fake element';
+
+    // Simulate user dragging over the element.
+    upload.trigger(new $.Event('dragenter', { target: EL }));
+    assert.ok(upload.hasClass('dragged-over'));
+
+    // Simulate https://bugzilla.mozilla.org/show_bug.cgi?id=804036.
+    upload.trigger(new $.Event('dragenter', { target: EL }));
+    assert.ok(upload.hasClass('dragged-over'));
+
+    // Simulate user dragging out of the element.
+    upload.trigger(new $.Event('dragleave', { target: EL }));
     assert.ok(!upload.hasClass('dragged-over'));
   });
 }(QUnit, jQuery));

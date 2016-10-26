@@ -16,11 +16,38 @@
   <h1>CALC Style Guide</h1>
 
   {% guide %}
+
+  {% guide_section "Introduction" %}
+
+  <p>
+    Welcome to the CALC Style Guide!
+  </p>
+
+  <p>
+    CALC's content is structured using 18F's standard voice, which is
+    described in the <a href="https://pages.18f.gov/content-guide/">18F
+    Content Guide</a>.
+  </p>
+
   <p>
     CALC uses <a href="http://getskeleton.com/">Skeleton</a> as the foundation
     for its styles, with alterations based on the
     <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
   </p>
+
+  <p>
+    While not all parts of the site adhere to a single unifying
+    philosophy, we try to build new parts in accordance with
+    Aaron Gustafson's <a href="http://adaptivewebdesign.info/1st-edition/read/chapter-4.html#planning-and-restraint">three maxims for progressive enhancement
+    with JavaScript</a>:
+  </p>
+
+  <ol>
+    <li>Make sure all content is accessible and all necessary tasks can be completed without JavaScript turned on.</li>
+    <li>Use JavaScript to generate any additional markup it needs.
+</li>
+    <li>Apply no style before its time.</li>
+  </ol>
 
   {% guide_section "Typography" %}
 
@@ -614,6 +641,47 @@
   {% endexample %}
 
   <p>When JavaScript is not available, the activator element will do whatever it previously did before being modified to open a dialog.</p>
+
+  {% guide_section "Compatibility Mode" %}
+
+  <p>
+    Because we're designing the new parts of CALC to be progressively enhanced,
+    they can actually work without JavaScript. One advantage of this approach
+    is that in the rare case that the site doesn't work, a user can disable
+    JavaScript in their browser and reload the page&mdash;it can potentially
+    fix things.
+  </p>
+
+  <p>
+    However, there's a few problems with this:
+  </p>
+
+  <ol>
+    <li>Most users don't know what JavaScript is, much less how to disable it.</li>
+    <li>Even if a user knows what JavaScript is and how to disable it in their
+    browser, they have no idea when a JavaScript error has actually occurred.</li>
+  </ol>
+
+  <p>
+    Fortunately, it <em>is</em> possible to use JavaScript to detect when a
+    JavaScript error has occurred, so we do this on progressively
+    enhanced CALC pages. Whenever a JS error occurs, a warning appears
+    that allows users to opt-in to <em>compatibility mode</em>. If the
+    user opts-in, the server will stop sending JS to the client, ensuring
+    a baseline experience.
+  </p>
+
+  {% if not is_safe_mode_enabled %}
+  <p>
+    To see what this looks like in action, you can forcibly trigger a JS error
+    on this page via the button below.
+  </p>
+
+  <button class="button-secondary"
+          onclick="throw new Error('I am an intentional error')">
+    Trigger JavaScript Error
+  </button>
+  {% endif %}
 
   {% endguide %}
 </div>

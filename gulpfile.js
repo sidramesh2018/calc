@@ -165,7 +165,11 @@ gulp.task('set-watching', () => {
 
 function browserifyBundle(entryPath, outputPath, outputFile) {
   // ref: https://gist.github.com/danharper/3ca2273125f500429945
-  let bundler = browserify(entryPath, { debug: true })
+  let bundler = browserify(entryPath, {
+    debug: true,
+    cache: {},
+    packageCache: {},
+  })
     .transform(babelify.configure({ presets: ['es2015'] }));
 
   if (isWatching) {

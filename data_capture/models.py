@@ -1,6 +1,8 @@
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
 
 from contracts.models import (Contract, EDUCATION_CHOICES,
                               MIN_ESCALATION_RATE, MAX_ESCALATION_RATE)
@@ -12,6 +14,18 @@ class SubmittedPriceList(models.Model):
         ('Contractor', 'Contractor/Onsite'),
         ('Both', 'Both'),
     ]
+
+    STATUS_NEW = 0
+    STATUS_APPROVED = 1
+    STATUS_UNAPPROVED = 2
+    STATUS_REJECTED = 3
+
+    STATUS_CHOICES = (
+        (STATUS_NEW, 'new'),
+        (STATUS_APPROVED, 'approved'),
+        (STATUS_UNAPPROVED, 'unapproved'),
+        (STATUS_REJECTED, 'rejected'),
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -45,7 +59,11 @@ class SubmittedPriceList(models.Model):
     )
 
     submitter = models.ForeignKey(User)
-    is_approved = models.BooleanField(default=False)
+
+    status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NEW)
+    status_changed_by = models.ForeignKey(User, related_name='+', null=True)
+    status_changed_at = models.DateTimeField(null=True)
+
     serialized_gleaned_data = models.TextField(
         help_text=(
             'The JSON-serialized data from the upload, including '
@@ -75,8 +93,14 @@ class SubmittedPriceList(models.Model):
             return 'S'
         return 'O'
 
-    def approve(self):
-        self.is_approved = True
+    def _change_status(self, status, user):
+        self.status = status
+        self.status_changed_at = timezone.now()
+        self.status_changed_by = user
+
+    def approve(self, user):
+        self._change_status(self.STATUS_APPROVED, user)
+
         for row in self.rows.filter(is_muted=False):
             if row.contract_model is not None:
                 raise AssertionError()
@@ -112,12 +136,17 @@ class SubmittedPriceList(models.Model):
 
         self.save()
 
-    def unapprove(self):
-        self.is_approved = False
+    def unapprove(self, user):
+        self._change_status(self.STATUS_UNAPPROVED, user)
 
         for row in self.rows.filter(is_muted=False):
-            row.contract_model.delete()
+            if row.contract_model:
+                row.contract_model.delete()
 
+        self.save()
+
+    def reject(self, user):
+        self._change_status(self.STATUS_REJECTED, user)
         self.save()
 
 
