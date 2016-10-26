@@ -37,9 +37,9 @@ label,
 form .aligned p,
 form .aligned p.help,
 form .aligned ul {
-  margin-left: 0;
-  padding-left: 0;
-  font-size: 1.5rem;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  font-size: 1.5rem !important;
 }
 
 form .aligned p.help {
@@ -71,22 +71,22 @@ form .aligned p.help {
 #changelist #toolbar,
 #changelist .paginator,
 #changelist .actions {
-  background: none ;
-  border: none ;
+  background: none !important;
+  border: none !important;
 }
 
 .selector .selector-available h2,
 .selector .selector-chosen h2 {
-  color: #222 ;
+  color: #222 !important;
   text-align: left;
 }
 
-.related-widget-wrapper select {
+select[multiple="multiple"] {
   background-image: none;
 }
 
 .selector-chosen select {
-  border: 1px solid #5b616b ;
+  border: 1px solid #5b616b !important;
 }
 
 #id_permissions_filter {
@@ -168,34 +168,16 @@ thead a:focus {
   padding-left: 15px;
 }
 
-.addlink:before {
-    background-image: url(/static/admin/img/icon_addlink.gif);
-    width: 10px;
-    height: 10px;
-    content: " ";
-    position: absolute;
-    left: 0;
-    top: 8px;
+.addlink {
+    background: url(/static/admin/img/icon_addlink.gif) 0 8px no-repeat;
   }
 
-.changelink:before {
-    background-image: url(/static/admin/img/icon_changelink.gif);
-    width: 10px;
-    height: 10px;
-    content: " ";
-    position: absolute;
-    left: 0;
-    top: 8px;
+.changelink {
+    background: url(/static/admin/img/icon_changelink.gif) 0 8px no-repeat;
 }
 
-.deletelink:before {
-    background-image: url(/static/admin/img/icon_deletelink.gif);
-    width: 10px;
-    height: 10px;
-    content: " ";
-    position: absolute;
-    left: 0;
-    top: 8px;
+.deletelink {
+    background: url(/static/admin/img/icon_deletelink.gif) 0 8px no-repeat;
 }
 
 .deletelink {
@@ -209,7 +191,7 @@ thead a:focus {
 
 /* forms.css */
 .inline-group {
-  border: none;
+  border: none !important;
 }
 
 .inline-group .tabular td.original p {
