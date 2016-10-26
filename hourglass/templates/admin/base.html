@@ -6,7 +6,7 @@
 <title>{% block title %}{% endblock %}</title>
 
 <link rel="stylesheet" type="text/css" href=" {% static "frontend/built/style/main.min.css" %}">
-<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "frontend/admin/overrides.css" %}{% endblock %}" />
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "frontend/built/style/admin/overrides.min.css" %}{% endblock %}" />
 {% block extrastyle %}{% endblock %}
 
 <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% static "admin/css/ie.css" %}{% endblock %}" /><![endif]-->
