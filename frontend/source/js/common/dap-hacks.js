@@ -1,5 +1,9 @@
 /* global window */
 
+export const IS_SUPPORTED = 'MutationObserver' in window;
+
+const DEFAULT_INIT_AUTO_TRACKER_NAME = '_initAutoTracker';
+
 /**
  * Here we notify DAP about new links we've added to the page, so that
  * it can auto-track them. For more background, see:
@@ -7,14 +11,16 @@
  *   https://github.com/digital-analytics-program/gov-wide-code/pull/47
  */
 
-function findLinksInNodeList(list) {
+export function findLinksInNodeList(list) {
   const links = [];
 
   for (let i = 0; i < list.length; i++) {
     const node = list[i];
 
     if (node.nodeType === node.ELEMENT_NODE) {
-      if (node.nodeName === 'a') {
+      const nodeName = node.nodeName && node.nodeName.toLowerCase();
+
+      if (nodeName === 'a') {
         links.push(node);
       } else {
         const innerLinks = node.querySelectorAll('a');
@@ -43,7 +49,7 @@ function findLinksInNodeList(list) {
  *   https://github.com/digital-analytics-program/gov-wide-code/pull/48
  */
 
-function hackilyNotifyAutoTrackerOfNewLinks(initAutoTracker, links) {
+export function hackilyNotifyAutoTrackerOfNewLinks(initAutoTracker, links) {
   const oldGet = window.document.getElementsByTagName;
 
   window.document.getElementsByTagName = () => links;
@@ -55,11 +61,12 @@ function hackilyNotifyAutoTrackerOfNewLinks(initAutoTracker, links) {
   }
 }
 
-if ('MutationObserver' in window) {
+export function observe(
+  parentEl = window.document.documentElement,
+  getInitAutoTracker = () => window[DEFAULT_INIT_AUTO_TRACKER_NAME]
+) {
   const observer = new window.MutationObserver(mutations => {
-    /* eslint-disable */
-    const initAutoTracker = window._initAutoTracker;
-    /* eslint-enable */
+    const initAutoTracker = getInitAutoTracker();
 
     if (window.document.readyState === 'loading' ||
         typeof initAutoTracker !== 'function') {
@@ -78,8 +85,14 @@ if ('MutationObserver' in window) {
     }
   });
 
-  observer.observe(window.document.documentElement, {
+  observer.observe(parentEl, {
     childList: true,
     subtree: true,
   });
+
+  return observer;
+}
+
+if (IS_SUPPORTED) {
+  observe();
 }
