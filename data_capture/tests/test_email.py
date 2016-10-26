@@ -48,6 +48,23 @@ class EmailTests(ModelTestCase):
         with self.assertRaises(AssertionError):
             email.price_list_unapproved(price_list)
 
+    def test_price_list_rejected(self):
+        price_list = self.create_price_list(
+            status=SubmittedPriceList.STATUS_REJECTED)
+        result = email.price_list_rejected(price_list)
+        self.assertTrue(result.was_successful)
+        message = mail.outbox[0]
+        self.assertEqual(message.recipients(), [self.user.email])
+        self.assertEqual(message.subject, 'CALC Price List Rejected')
+        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(result.context['price_list'], price_list)
+
+    def test_price_list_rejected_raises_if_wrong_status(self):
+        price_list = self.create_price_list(
+            status=SubmittedPriceList.STATUS_APPROVED)
+        with self.assertRaises(AssertionError):
+            email.price_list_rejected(price_list)
+
     def test_bulk_uploaded_succeeded(self):
         src = create_bulk_upload_contract_source(self.user)
         result = email.bulk_upload_succeeded(src, 5, 2)

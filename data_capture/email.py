@@ -57,6 +57,26 @@ def price_list_unapproved(price_list):
     )
 
 
+def price_list_rejected(price_list):
+    ctx = {
+        'price_list': price_list
+    }
+    result = send_mail(
+        subject='CALC Price List Rejected',
+        message=render_to_string(
+            'data_capture/email/price_list_rejected.txt',
+            ctx),
+        from_email=settings.SYSTEM_EMAIL_ADDRESS,
+        recipient_list=[price_list.submitter.email]
+    )
+    if price_list.status is not SubmittedPriceList.STATUS_REJECTED:
+        raise AssertionError('price_list.status must be STATUS_REJECTED')
+    return EmailResult(
+        was_successful=result is 1,
+        context=ctx
+    )
+
+
 def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
     ctx = {
         'upload_source': upload_source,

@@ -18,11 +18,13 @@ class SubmittedPriceList(models.Model):
     STATUS_NEW = 0
     STATUS_APPROVED = 1
     STATUS_UNAPPROVED = 2
+    STATUS_REJECTED = 3
 
     STATUS_CHOICES = (
         (STATUS_NEW, 'new'),
         (STATUS_APPROVED, 'approved'),
         (STATUS_UNAPPROVED, 'unapproved'),
+        (STATUS_REJECTED, 'rejected'),
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -96,8 +98,8 @@ class SubmittedPriceList(models.Model):
         self.status_changed_at = timezone.now()
         self.status_changed_by = user
 
-    def approve(self, approval_user):
-        self._change_status(self.STATUS_APPROVED, approval_user)
+    def approve(self, user):
+        self._change_status(self.STATUS_APPROVED, user)
 
         for row in self.rows.filter(is_muted=False):
             if row.contract_model is not None:
@@ -134,12 +136,17 @@ class SubmittedPriceList(models.Model):
 
         self.save()
 
-    def unapprove(self, unapproval_user):
-        self._change_status(self.STATUS_UNAPPROVED, unapproval_user)
+    def unapprove(self, user):
+        self._change_status(self.STATUS_UNAPPROVED, user)
 
         for row in self.rows.filter(is_muted=False):
-            row.contract_model.delete()
+            if row.contract_model:
+                row.contract_model.delete()
 
+        self.save()
+
+    def reject(self, user):
+        self._change_status(self.STATUS_REJECTED, user)
         self.save()
 
 

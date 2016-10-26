@@ -210,6 +210,25 @@ unapprove.short_description = (
 )
 
 
+@transaction.atomic
+def reject(modeladmin, request, queryset):
+    new_pricelists = queryset.filter(status=SubmittedPriceList.STATUS_NEW)
+    count = new_pricelists.count()
+    for price_list in new_pricelists:
+        price_list.reject(request.user)
+        email.price_list_rejected(price_list)
+    messages.add_message(
+        request,
+        messages.INFO,
+        '{} price list(s) have been rejected.'.format(count)
+    )
+
+
+reject.short_description = (
+    'Reject selected price lists'
+)
+
+
 class UndeletableModelAdmin(admin.ModelAdmin):
     '''
     Represents a model admin UI that offers no way of deleting
@@ -227,12 +246,9 @@ class UndeletableModelAdmin(admin.ModelAdmin):
         return False
 
 
-@admin.register(SubmittedPriceList)
-class SubmittedPriceListAdmin(UndeletableModelAdmin):
+class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
                     'created_at', 'status')
-
-    actions = [approve, unapprove]
 
     fields = (
         'contract_number',
@@ -302,6 +318,62 @@ class SubmittedPriceListAdmin(UndeletableModelAdmin):
         return self.readonly_fields
 
 
+class ApprovedPriceList(SubmittedPriceList):
+    class Meta:
+        proxy = True
+
+
+@admin.register(ApprovedPriceList)
+class ApprovedPriceListAdmin(BaseSubmittedPriceListAdmin):
+    actions = [unapprove]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(status=SubmittedPriceList.STATUS_APPROVED)
+
+
+class NewPriceList(SubmittedPriceList):
+    class Meta:
+        proxy = True
+
+
+@admin.register(NewPriceList)
+class NewPriceListAdmin(BaseSubmittedPriceListAdmin):
+    actions = [approve, reject]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(status=SubmittedPriceList.STATUS_NEW)
+
+
+class RejectedPriceList(SubmittedPriceList):
+    class Meta:
+        proxy = True
+
+
+@admin.register(RejectedPriceList)
+class RejectedPriceListAdmin(BaseSubmittedPriceListAdmin):
+    actions = [approve]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(status=SubmittedPriceList.STATUS_REJECTED)
+
+
+class UnapprovedPriceList(SubmittedPriceList):
+    class Meta:
+        proxy = True
+
+
+@admin.register(UnapprovedPriceList)
+class UnapprovedPriceListAdmin(BaseSubmittedPriceListAdmin):
+    actions = [approve]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(status=SubmittedPriceList.STATUS_UNAPPROVED)
+
+
 @admin.register(SubmittedPriceListRow)
 class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
     list_display = (
@@ -320,8 +392,11 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
     )
 
     def contract_number(self, obj):
-        url = reverse('admin:data_capture_submittedpricelist_change',
-                      args=(obj.price_list.id,))
+        # get status label and derive url from it
+        status_display = obj.price_list.get_status_display()
+        url = reverse(
+            'admin:data_capture_{}pricelist_change'.format(status_display),
+            args=(obj.price_list.id,))
         return format_html(
             '<a href="{}">{}</a>',
             url,

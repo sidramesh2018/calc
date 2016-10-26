@@ -5,9 +5,10 @@ from django.core.management import call_command
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.test import override_settings, TestCase
+from django.contrib.admin.sites import AdminSite
 
 from .. import admin, email
-from ..models import SubmittedPriceList
+from ..models import SubmittedPriceList, SubmittedPriceListRow
 from .common import FAKE_SCHEDULE
 from .test_models import ModelTestCase
 
@@ -106,6 +107,10 @@ class SuperuserViewTests(DebugAdminTestCase):
 
 
 class NonSuperuserViewTests(DebugAdminTestCase):
+    '''
+    Tests that non-super user Data Administrator users can access
+    relevant admin views. For changes to group permissions, see initgroups.py
+    '''
     def test_user_add_returns_200(self):
         res = self.client.get('/admin/auth/user/add/')
         self.assertContains(res, 'First, enter an email address',
@@ -126,22 +131,55 @@ class NonSuperuserViewTests(DebugAdminTestCase):
         res = self.client.get('/admin/data_capture/submittedpricelistrow/')
         self.assertEqual(res.status_code, 200)
 
-    def test_submittedpricelist_list_returns_200(self):
-        res = self.client.get('/admin/data_capture/submittedpricelist/')
+    def test_new_pricelist_list_returns_200(self):
+        res = self.client.get('/admin/data_capture/newpricelist/')
         self.assertEqual(res.status_code, 200)
 
-    def test_unapproved_submittedpricelist_detail_returns_200(self):
+    def test_approved_pricelist_list_returns_200(self):
         res = self.client.get(
-            '/admin/data_capture/submittedpricelist/{}/'.format(
+            '/admin/data_capture/approvedpricelist/')
+        self.assertEqual(res.status_code, 200)
+
+    def test_unapproved_pricelist_list_returns_200(self):
+        res = self.client.get(
+            '/admin/data_capture/unapprovedpricelist/')
+        self.assertEqual(res.status_code, 200)
+
+    def test_rejected_pricelist_list_returns_200(self):
+        res = self.client.get(
+            '/admin/data_capture/rejectedpricelist/')
+        self.assertEqual(res.status_code, 200)
+
+    def test_new_pricelist_detail_returns_200(self):
+        res = self.client.get(
+            '/admin/data_capture/newpricelist/{}/'.format(
                 self.price_list.id
             )
         )
         self.assertEqual(res.status_code, 200)
 
-    def test_approved_submittedpricelist_detail_returns_200(self):
+    def test_unapproved_pricelist_detail_returns_200(self):
+        self.price_list.unapprove(self.user)
+        res = self.client.get(
+            '/admin/data_capture/unapprovedpricelist/{}/'.format(
+                self.price_list.id
+            )
+        )
+        self.assertEqual(res.status_code, 200)
+
+    def test_approved_pricelist_detail_returns_200(self):
         self.price_list.approve(self.user)
         res = self.client.get(
-            '/admin/data_capture/submittedpricelist/{}/'.format(
+            '/admin/data_capture/approvedpricelist/{}/'.format(
+                self.price_list.id
+            )
+        )
+        self.assertEqual(res.status_code, 200)
+
+    def test_rejected_pricelist_detail_returns_200(self):
+        self.price_list.reject(self.user)
+        res = self.client.get(
+            '/admin/data_capture/rejectedpricelist/{}/'.format(
                 self.price_list.id
             )
         )
@@ -150,30 +188,45 @@ class NonSuperuserViewTests(DebugAdminTestCase):
 
 @mock.patch.object(messages, 'add_message')
 class ActionTests(AdminTestCase):
+    def setUp(self):
+        super().setUp()
+        self.request_mock = mock.MagicMock(user=self.user)
+
     def test_approve_ignores_approved_price_lists(self, mock):
         self.price_list.approve(self.user)
-        admin.approve(None, "fake request", SubmittedPriceList.objects.all())
+        admin.approve(None, self.request_mock,
+                      SubmittedPriceList.objects.all())
         mock.assert_called_once_with(
-            "fake request",
+            self.request_mock,
             messages.INFO,
             '0 price list(s) have been approved and added to CALC.'
         )
 
     def test_unapprove_ignores_unapproved_price_lists(self, mock):
-        admin.unapprove(None, "fake request", SubmittedPriceList.objects.all())
+        admin.unapprove(None, self.request_mock,
+                        SubmittedPriceList.objects.all())
         mock.assert_called_once_with(
-            "fake request",
+            self.request_mock,
             messages.INFO,
             '0 price list(s) have been unapproved and removed from CALC.'
         )
 
+    def test_reject_ignores_rejected_price_lists(self, mock):
+        self.price_list.reject(self.user)
+        admin.reject(None, self.request_mock, SubmittedPriceList.objects.all())
+        mock.assert_called_once_with(
+            self.request_mock,
+            messages.INFO,
+            '0 price list(s) have been rejected.'
+        )
+
     def test_approve_works(self, msg_mock):
-        request_mock = mock.MagicMock(user=self.user)
         with mock.patch.object(email, 'price_list_approved',
                                wraps=email.price_list_approved) as em_monkey:
-            admin.approve(None, request_mock, SubmittedPriceList.objects.all())
+            admin.approve(None, self.request_mock,
+                          SubmittedPriceList.objects.all())
             msg_mock.assert_called_once_with(
-                request_mock,
+                self.request_mock,
                 messages.INFO,
                 '1 price list(s) have been approved and added to CALC.'
             )
@@ -184,14 +237,14 @@ class ActionTests(AdminTestCase):
                          SubmittedPriceList.STATUS_APPROVED)
 
     def test_unapprove_works(self, msg_mock):
-        request_mock = mock.MagicMock(user=self.user)
         with mock.patch.object(email, 'price_list_unapproved',
                                wraps=email.price_list_unapproved) as em_monkey:
             self.price_list.approve(self.user)
-            admin.unapprove(None, request_mock,
+
+            admin.unapprove(None, self.request_mock,
                             SubmittedPriceList.objects.all())
             msg_mock.assert_called_once_with(
-                request_mock,
+                self.request_mock,
                 messages.INFO,
                 '1 price list(s) have been unapproved and removed from CALC.'
             )
@@ -200,3 +253,45 @@ class ActionTests(AdminTestCase):
         self.price_list.refresh_from_db()
         self.assertEqual(self.price_list.status,
                          SubmittedPriceList.STATUS_UNAPPROVED)
+
+    def test_reject_works(self, msg_mock):
+        with mock.patch.object(email, 'price_list_rejected',
+                               wraps=email.price_list_rejected) as em_monkey:
+            admin.reject(None, self.request_mock,
+                         SubmittedPriceList.objects.all())
+            msg_mock.assert_called_once_with(
+                self.request_mock,
+                messages.INFO,
+                '1 price list(s) have been rejected.'
+            )
+            em_monkey.assert_called_once_with(self.price_list)
+        self.price_list.refresh_from_db()
+        self.assertEqual(self.price_list.status,
+                         SubmittedPriceList.STATUS_REJECTED)
+
+
+class SubmittedPriceListRowAdminTests(AdminTestCase):
+    def setUp(self):
+        super().setUp()
+        self.site = AdminSite()
+        self.pl_model_admin = admin.SubmittedPriceListRowAdmin(
+            SubmittedPriceListRow, self.site)
+
+    def test_contract_number_link_works(self):
+        for val, label in SubmittedPriceList.STATUS_CHOICES:
+            self.price_list.status = val
+            self.assertEqual(
+                self.pl_model_admin.contract_number(self.row),
+                '<a href="/admin/data_capture/{}pricelist/{}/">{}</a>'.format(
+                    label,
+                    self.price_list.id,
+                    self.price_list.contract_number)
+            )
+
+    def test_vendor_name_works(self):
+        self.assertEqual(
+            self.price_list.vendor_name,
+            self.pl_model_admin.vendor_name(self.row))
+
+    def test_has_add_permission_is_false(self):
+        self.assertFalse(self.pl_model_admin.has_add_permission(self.row))

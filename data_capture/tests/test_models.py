@@ -2,6 +2,7 @@ import datetime
 from decimal import Decimal
 
 from django.test import override_settings
+from django.utils import timezone
 
 from contracts.models import Contract
 from ..schedules import registry
@@ -31,6 +32,9 @@ class ModelTestCase(BaseTestCase):
             contract_start=datetime.date(2016, 9, 1),
             contract_end=datetime.date(2021, 9, 1),
             escalation_rate=0,
+            status=SubmittedPriceList.STATUS_NEW,
+            status_changed_by=self.user,
+            status_changed_at=timezone.now(),
         )
         final_kwargs.update(kwargs)
         return SubmittedPriceList(**final_kwargs)
@@ -128,8 +132,18 @@ class ModelsTests(ModelTestCase):
         self.create_row(price_list=p, is_muted=True).save()
         p.approve(self.user)
         p.unapprove(self.user)
-
         self.assertEqual(p.status, SubmittedPriceList.STATUS_UNAPPROVED)
+        self.assertEqual(p.status_changed_by, self.user)
+        self.assertEqual(p.status_changed_at.date(), datetime.date.today())
+        self.assertEqual(p.rows.all()[0].contract_model, None)
+        self.assertEqual(Contract.objects.all().count(), 0)
+
+    def test_reject_works(self):
+        p = self.create_price_list()
+        p.save()
+        self.create_row(price_list=p).save()
+        p.reject(self.user)
+        self.assertEqual(p.status, SubmittedPriceList.STATUS_REJECTED)
         self.assertEqual(p.status_changed_by, self.user)
         self.assertEqual(p.status_changed_at.date(), datetime.date.today())
         self.assertEqual(p.rows.all()[0].contract_model, None)
