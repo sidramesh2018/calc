@@ -1,11 +1,14 @@
 import json
+
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
 from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
+from django.utils import timezone
 
 from .. import forms
+from ..models import SubmittedPriceList
 from ..decorators import handle_cancel
 from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
@@ -177,6 +180,7 @@ def step_3(request, step):
 
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+@handle_cancel
 @require_http_methods(["GET"])
 def step_3_errors(request):
     step = steps.get_step_renderer(3)
@@ -257,6 +261,10 @@ def step_4(request, step):
         # one that the gleaned data is part of, in case we gracefully
         # fell back to a schedule other than the one the user chose.
         price_list.schedule = registry.get_classname(gleaned_data)
+
+        price_list.status = SubmittedPriceList.STATUS_NEW
+        price_list.status_changed_at = timezone.now()
+        price_list.status_changed_by = request.user
 
         price_list.save()
         gleaned_data.add_to_price_list(price_list)

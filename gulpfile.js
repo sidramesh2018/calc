@@ -52,6 +52,8 @@ const dirs = {
 const paths = {
   sass: '**/*.scss',
   js: '**/*.js',
+  dataExplorerEntry: 'data-explorer/index.js',
+  dataExplorerOutfile: 'index.min.js',
   dataCaptureEntry: 'data-capture/index.js',
   dataCaptureOutfile: 'index.min.js',
   styleguideEntry: 'styleguide/index.js',
@@ -62,25 +64,23 @@ const paths = {
 
 const bundles = {
   common: {
-    base: [
+    vendor: [
       'vendor/d3.v3.min.js',
       'vendor/jquery.min.js',
       'vendor/query.xdomainrequest.min.js',
       'vendor/formdb.min.js',
-      'common/hourglass.js',
       'vendor/jquery.tooltipster.js',
       'vendor/jquery.nouislider.all.min.js',
     ],
   },
   dataExplorer: {
-    index: [
+    vendor: [
       'vendor/rgbcolor.js',
       'vendor/StackBlur.js',
       'vendor/canvg.js',
       'vendor/canvas-toBlob.js',
       'vendor/FileSaver.js',
       'vendor/jquery.auto-complete.min.js',
-      'data-explorer/index.js',
     ],
   },
 };
@@ -127,10 +127,11 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 );
 
 // Compile and lint JavaScript sources
-gulp.task('js', ['lint', 'js:data-capture', 'js:styleguide',
+gulp.task('js', ['lint', 'js:data-explorer',
+                 'js:data-capture', 'js:styleguide',
                  'js:tests', 'js:legacy']);
 
-gulp.task('js:legacy', ['js:data-explorer:index', 'js:common:base']);
+gulp.task('js:legacy', ['js:data-explorer:vendor', 'js:common:vendor']);
 
 function concatAndMapSources(name, sources, dest) {
   return gulp.src(sources)
@@ -140,16 +141,16 @@ function concatAndMapSources(name, sources, dest) {
     .pipe(gulp.dest(dest));
 }
 
-gulp.task('js:data-explorer:index', () => concatAndMapSources(
-    'index.min.js',
-    bundles.dataExplorer.index.map((p) => dirs.src.scripts + p),
+gulp.task('js:data-explorer:vendor', () => concatAndMapSources(
+    'vendor.min.js',
+    bundles.dataExplorer.vendor.map((p) => dirs.src.scripts + p),
     dirs.dest.scripts.dataExplorer
   )
 );
 
-gulp.task('js:common:base', () => concatAndMapSources(
-    'base.min.js',
-    bundles.common.base.map((p) => dirs.src.scripts + p),
+gulp.task('js:common:vendor', () => concatAndMapSources(
+    'vendor.min.js',
+    bundles.common.vendor.map((p) => dirs.src.scripts + p),
     dirs.dest.scripts.common
   )
 );
@@ -164,7 +165,11 @@ gulp.task('set-watching', () => {
 
 function browserifyBundle(entryPath, outputPath, outputFile) {
   // ref: https://gist.github.com/danharper/3ca2273125f500429945
-  let bundler = browserify(entryPath, { debug: true })
+  let bundler = browserify(entryPath, {
+    debug: true,
+    cache: {},
+    packageCache: {},
+  })
     .transform(babelify.configure({ presets: ['es2015'] }));
 
   if (isWatching) {
@@ -203,6 +208,14 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
   rebundle();
   return bundler;
 }
+
+gulp.task('js:data-explorer', () =>
+  browserifyBundle(
+    path.join(dirs.src.scripts, paths.dataExplorerEntry),
+    dirs.dest.scripts.dataExplorer,
+    paths.dataExplorerOutfile
+  )
+);
 
 gulp.task('js:data-capture', () =>
   browserifyBundle(

@@ -15,7 +15,7 @@
           <h3>No valid rows found!</h3>
           <p>
             Your uploaded price list contains no valid rows. Please fix the errors
-            shown below in the original file and try uploading it again.
+            shown below in the original file and <a href="#upload">try uploading it again</a>.
           </p>
         {% else %}
           <h3>{{ total }} row{{ total|pluralize:" has,s have" }} errors</h3>
@@ -24,7 +24,7 @@
             invalid and <strong>will be discarded</strong> when you upload your
             price list.
             If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
-            in your original spreadsheet and try uploading it again.
+            in your original spreadsheet and <a href="#upload">try uploading it again</a>.
           </p>
         {% endif %}
 
@@ -42,7 +42,7 @@
       {{ gleaned_data.to_error_table|safe }}
     {% endwith %}
 
-  <h2>Want to try that again?</h2>
+  <h2 id="upload" tabindex="-1">Want to try that again?</h2>
 
   <p>
     If you'd like to fix the errors above in your spreadsheet,
@@ -78,7 +78,7 @@
         </div>
       {% endif %}
 
-      <button type="submit" class="button-link" name="cancel" formnovalidate>Cancel</button>
+      <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
     </div>
   </form>
 

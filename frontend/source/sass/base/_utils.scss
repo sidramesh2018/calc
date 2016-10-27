@@ -115,3 +115,24 @@ th:hover.tooltips span {
 .row .columns:first-child {
   margin-left: 0;
 }
+
+/* Animate the id corresponding to the currently-visited URL hash to
+ * make it easier for users to see. */
+:target {
+  animation-duration: 2s;
+  animation-name: highlight-fade;
+}
+
+@keyframes highlight-fade {
+  from {
+    background-color: #fff0be;
+  }
+
+  to {
+    background-color: inherit;
+  }
+}
+
+.no-scroll {
+  overflow: hidden;
+}

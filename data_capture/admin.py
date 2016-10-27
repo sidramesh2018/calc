@@ -162,17 +162,17 @@ class SubmittedPriceListRowInline(admin.TabularInline):
         return False
 
     def get_readonly_fields(self, request, obj=None):
-        if obj and obj.is_approved:
+        if obj and obj.status is SubmittedPriceList.STATUS_APPROVED:
             return self.fields
         return self.readonly_fields
 
 
 @transaction.atomic
 def approve(modeladmin, request, queryset):
-    unapproved = queryset.filter(is_approved=False)
+    unapproved = queryset.exclude(status=SubmittedPriceList.STATUS_APPROVED)
     count = unapproved.count()
     for price_list in unapproved:
-        price_list.approve()
+        price_list.approve(request.user)
         email.price_list_approved(price_list)
 
     messages.add_message(
@@ -191,10 +191,10 @@ approve.short_description = (
 
 @transaction.atomic
 def unapprove(modeladmin, request, queryset):
-    approved = queryset.filter(is_approved=True)
+    approved = queryset.filter(status=SubmittedPriceList.STATUS_APPROVED)
     count = approved.count()
     for price_list in approved:
-        price_list.unapprove()
+        price_list.unapprove(request.user)
         email.price_list_unapproved(price_list)
     messages.add_message(
         request,
@@ -207,6 +207,25 @@ def unapprove(modeladmin, request, queryset):
 
 unapprove.short_description = (
     'Unapprove selected price lists (remove their data from CALC)'
+)
+
+
+@transaction.atomic
+def reject(modeladmin, request, queryset):
+    new_pricelists = queryset.filter(status=SubmittedPriceList.STATUS_NEW)
+    count = new_pricelists.count()
+    for price_list in new_pricelists:
+        price_list.reject(request.user)
+        email.price_list_rejected(price_list)
+    messages.add_message(
+        request,
+        messages.INFO,
+        '{} price list(s) have been rejected.'.format(count)
+    )
+
+
+reject.short_description = (
+    'Reject selected price lists'
 )
 
 
@@ -227,12 +246,9 @@ class UndeletableModelAdmin(admin.ModelAdmin):
         return False
 
 
-@admin.register(SubmittedPriceList)
-class SubmittedPriceListAdmin(UndeletableModelAdmin):
+class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
-                    'created_at', 'is_approved')
-
-    actions = [approve, unapprove]
+                    'created_at', 'status', 'status_changed_at')
 
     fields = (
         'contract_number',
@@ -245,20 +261,18 @@ class SubmittedPriceListAdmin(UndeletableModelAdmin):
         'submitter',
         'created_at',
         'updated_at',
-        'is_approved',
         'current_status',
+        'status_changed_at',
+        'status_changed_by',
     )
 
     readonly_fields = (
         'schedule_title',
         'created_at',
         'updated_at',
-        'is_approved',
-        'current_status'
-    )
-
-    list_filter = (
-        'is_approved',
+        'current_status',
+        'status_changed_at',
+        'status_changed_by',
     )
 
     inlines = [
@@ -266,23 +280,23 @@ class SubmittedPriceListAdmin(UndeletableModelAdmin):
     ]
 
     def current_status(self, instance):
-        if instance.is_approved:
-            return mark_safe(
-                "<span style=\"color: green\">"
-                "This price list has been approved, so its data is now "
-                "in CALC. To unapprove it, you will need to use the "
-                "'Unapprove selected price lists' action from the "
-                "<a href=\"..\">list view</a>. Note also that in order "
-                "to edit the fields in this price list, you will first "
-                "need to unapprove it."
-            )
-        return mark_safe(
-            "<span style=\"color: red\">"
-            "This price list is not currently approved, so its data is "
-            "not in CALC. To approve it, you will need to use the "
-            "'Approve selected price lists' action from the "
-            "<a href=\"..\">list view</a>."
-        )
+        content = instance.get_status_display() + "<br>"
+        if instance.status is SubmittedPriceList.STATUS_APPROVED:
+            content += ("<span style=\"color: green\">"
+                        "This price list has been approved, so its data is "
+                        "now in CALC. To unapprove it, you will need to use "
+                        "the 'Unapprove selected price lists' action from the "
+                        "<a href=\"..\">list view</a>. Note also that in "
+                        "order to edit the fields in this price list, you "
+                        "will first need to unapprove it.")
+        else:
+            content += ("<span style=\"color: red\">"
+                        "This price list is not currently approved, so its "
+                        "data is not in CALC. To approve it, you will need to "
+                        "use the 'Approve selected price lists' action from "
+                        "the <a href=\"..\">list view</a>.")
+
+        return mark_safe(content)
 
     def schedule_title(self, instance):
         return registry.get_class(instance.schedule).title
@@ -293,9 +307,65 @@ class SubmittedPriceListAdmin(UndeletableModelAdmin):
         return False
 
     def get_readonly_fields(self, request, obj=None):
-        if obj and obj.is_approved:
+        if obj and obj.status is SubmittedPriceList.STATUS_APPROVED:
             return self.fields
         return self.readonly_fields
+
+
+class ApprovedPriceList(SubmittedPriceList):
+    class Meta:
+        proxy = True
+
+
+@admin.register(ApprovedPriceList)
+class ApprovedPriceListAdmin(BaseSubmittedPriceListAdmin):
+    actions = [unapprove]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(status=SubmittedPriceList.STATUS_APPROVED)
+
+
+class NewPriceList(SubmittedPriceList):
+    class Meta:
+        proxy = True
+
+
+@admin.register(NewPriceList)
+class NewPriceListAdmin(BaseSubmittedPriceListAdmin):
+    actions = [approve, reject]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(status=SubmittedPriceList.STATUS_NEW)
+
+
+class RejectedPriceList(SubmittedPriceList):
+    class Meta:
+        proxy = True
+
+
+@admin.register(RejectedPriceList)
+class RejectedPriceListAdmin(BaseSubmittedPriceListAdmin):
+    actions = [approve]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(status=SubmittedPriceList.STATUS_REJECTED)
+
+
+class UnapprovedPriceList(SubmittedPriceList):
+    class Meta:
+        proxy = True
+
+
+@admin.register(UnapprovedPriceList)
+class UnapprovedPriceListAdmin(BaseSubmittedPriceListAdmin):
+    actions = [approve]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(status=SubmittedPriceList.STATUS_UNAPPROVED)
 
 
 @admin.register(SubmittedPriceListRow)
@@ -316,8 +386,11 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
     )
 
     def contract_number(self, obj):
-        url = reverse('admin:data_capture_submittedpricelist_change',
-                      args=(obj.price_list.id,))
+        # get status label and derive url from it
+        status_display = obj.price_list.get_status_display()
+        url = reverse(
+            'admin:data_capture_{}pricelist_change'.format(status_display),
+            args=(obj.price_list.id,))
         return format_html(
             '<a href="{}">{}</a>',
             url,
@@ -326,7 +399,8 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(price_list__is_approved=False)
+        return qs.exclude(
+            price_list__status=SubmittedPriceList.STATUS_APPROVED)
 
     def vendor_name(self, obj):
         return obj.price_list.vendor_name

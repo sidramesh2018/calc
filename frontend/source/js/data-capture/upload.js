@@ -155,6 +155,7 @@ class UploadWidget extends window.HTMLElement {
     this.isDegraded = false;
 
     let dragCounter = 0;
+    let lastDragEnterTarget = null;
 
     const finishInitialization = () => {
       if (this.uploadInput instanceof UploadInput) {
@@ -215,10 +216,20 @@ class UploadWidget extends window.HTMLElement {
     $el.on('dragenter', e => {
       this._stopAndPrevent(e);
 
-      dragCounter++;
-      $el.addClass('dragged-over');
+      // Firefox spuriously fires multiple `dragenter` events, which
+      // we need to work around by keeping track of the most recent
+      // event target. For more information, see:
+      //
+      //   https://bugzilla.mozilla.org/show_bug.cgi?id=804036
+
+      if (lastDragEnterTarget !== e.target) {
+        dragCounter++;
+        $el.addClass('dragged-over');
+        lastDragEnterTarget = e.target;
+      }
     });
     $el.on('dragleave', () => {
+      lastDragEnterTarget = null;
       // http://stackoverflow.com/a/21002544/2422398
       if (--dragCounter === 0) {
         $el.removeClass('dragged-over');
@@ -228,6 +239,8 @@ class UploadWidget extends window.HTMLElement {
     $el.on('drop', e => {
       this._stopAndPrevent(e);
       $el.removeClass('dragged-over');
+      dragCounter = 0;
+      lastDragEnterTarget = null;
 
       this.uploadInput.upgradedValue = e.originalEvent.dataTransfer.files[0];
     });

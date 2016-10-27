@@ -23,15 +23,8 @@
         // forces SSL even if the page were somehow loaded over http://
         ga('set', 'forceSSL', true);
 
-        {% if user.is_authenticated %}
-        ga('set', 'dimension1', '{{ user.id }}');
-        {% endif %}
-
-        {% if is_safe_mode_enabled %}
-        ga('set', 'dimension2', 'safe mode enabled');
-        {% endif %}
-
         ga('create', '{{ GA_TRACKING_ID }}', 'auto');
+        ga('set', 'dimension1', '{% if is_safe_mode_enabled %}safe mode enabled{% endif %}');
         ga('send', 'pageview');
     </script>
 
@@ -44,7 +37,7 @@
     </script>
 
     {# For the list of files included in this built script, see gulpfile.js #}
-    <script src="{% static 'frontend/built/js/common/base.min.js' %}"></script>
+    <script src="{% static 'frontend/built/js/common/vendor.min.js' %}"></script>
     <![endif]>
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     {% block head %}
@@ -74,6 +67,8 @@
     {% block body %}
     {% endblock %}
     </main>
+
+    {% block modals %}{% endblock modals %}
 
     <footer>
       <div class="container">
