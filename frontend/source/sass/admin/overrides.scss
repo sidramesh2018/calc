@@ -1,3 +1,5 @@
+@import '../base/_variables.scss';
+
 /********************
  * Django admin CSS *
  * *****************/
@@ -5,15 +7,13 @@
 /* nav ul li temp styles until we can get the proper class added in the back end */
 nav ul li {
   border-radius: 4px 4px 0 0 ;
-}
-
-nav ul li:first-child {
-  background: white;
-}
-
-nav ul li:first-child a,
-nav ul li:first-child a:hover {
-  color: #112e51;
+  &:first-child {
+    background: $color-white;
+    a,
+    a:hover {
+      color: $color-primary-darkest;
+    }
+  }
 }
 /* end temp styles */
 
@@ -34,33 +34,33 @@ label,
   width: auto;
 }
 
-form .aligned p,
-form .aligned p.help,
-form .aligned ul {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-  font-size: 1.5rem !important;
+form .aligned {
+  p,
+  p.help,
+  ul {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    font-size: 1.5rem !important;
+  }
 }
 
 form .aligned p.help {
-  color: #5b616b; /* color-gray */
+  color: $color-gray;
 }
 
 /* groups pages */
 #user-tools ul {
   text-align: right;
   margin: 2rem 0;
-}
-
-#user-tools ul li {
-  display: inline-block;
-  margin: 0 2rem 0 0;
-  text-transform: uppercase;
-  font-size: 11px;
-}
-
-#user-tools ul li:last-child {
-  margin-right: 0;
+  li {
+    display: inline-block;
+    margin: 0 2rem 0 0;
+    text-transform: uppercase;
+    font-size: 11px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .submit-row,
@@ -77,7 +77,7 @@ form .aligned p.help {
 
 .selector .selector-available h2,
 .selector .selector-chosen h2 {
-  color: #222 !important;
+  color: $color-base !important;
   text-align: left;
 }
 
@@ -86,15 +86,14 @@ select[multiple="multiple"] {
 }
 
 .selector-chosen select {
-  border: 1px solid #5b616b !important;
+  border: 1px solid $color-gray !important;
 }
 
 #id_permissions_filter {
   padding-top: 0;
-}
-
-#id_permissions_filter input {
-  margin-top: 0;
+  input {
+    margin-top: 0;
+  }
 }
 
 .selector-filter label img {
@@ -123,27 +122,25 @@ select[multiple="multiple"] {
 
 /* table captions */
 table caption {
-  background-color: #f1f1f1; /* color-gray-lightest */
+  background-color: $color-gray-lightest;
   padding: .5rem 1rem;
-  border-bottom: 1px solid #d6d7d9; /* color-gray-lighter */
-}
-
-table caption a {
-  color: #5b616b; /* color-gray */
-  text-decoration: none;
-}
-
-table caption a:hover,
-table caption a:active,
-table caption a:focus {
-  color: #5b616b; /* color-gray */
+  border-bottom: 1px solid $color-gray-lighter;
+  a {
+    color: $color-gray;
+    text-decoration: none;
+    &:hover,
+    &:active,
+    &:focus {
+      color: $color-gray;
+    }
+  }
 }
 
 thead a,
 thead a:hover,
 thead a:active,
 thead a:focus {
-  color: #5b616b; /* color-gray */
+  color: $color-gray;
 }
 
 .tabular fieldset {
@@ -158,6 +155,11 @@ thead a:focus {
 
 .change-related:after {
   content: "Change";
+  margin-right: 10px;
+}
+
+.delete-related:after {
+  content: "Delete";
   margin-right: 10px;
 }
 
@@ -181,56 +183,52 @@ thead a:focus {
 }
 
 .deletelink {
-  color: gray;
+  color: $color-gray-medium;
 }
 
 .mini.quiet {
-  color: gray;
-  font-size: 1.3rem;
+  color: $color-gray-medium;
+  font-size: $small-font-size;
 }
 
 /* forms.css */
 .inline-group {
   border: none !important;
-}
-
-.inline-group .tabular td.original p {
-  display: none; /* this appears to simply append "submitted price list row" to lists */
+  .tabular td.original p {
+    display: none; /* this appears to simply append "submitted price list row" to lists */
+  }
 }
 
 /* same as filter-block in changelists.css */
 .sidebar {
-  background: #f1f1f1;
+  background: $color-gray-lightest;
   border-radius: 4px;
   margin-bottom: 0;
   padding: 1rem 2rem;
-}
+  h2,
+  h3 {
+    font-size: 1.5rem; /* to match front-page h5 */
+    font-weight: bold;
+    letter-spacing: normal;
+    margin-bottom: 0.5rem;
+  }
 
-.sidebar h2,
-.sidebar h3 {
-  font-size: 1.5rem; /* to match front-page h5 */
-  font-weight: bold;
-  letter-spacing: normal;
-  margin-bottom: 0.5rem;
-}
-
-.sidebar ul {
-  list-style: none;
-  margin: 0 0 2rem 0;
-}
-.sidebar ul li {
-  margin-bottom: 0;
-}
-
-.sidebar ul li a {
-  text-decoration: none;
-  color: #5b616b;
-}
-
-.sidebar ul li.selected a {
-  color: #0071bc;
-  font-weight: bold;
-  border-left: .5rem solid #0071bc;
-  margin-left: -2rem;
-  padding-left: 1.5rem;
+  ul {
+    list-style: none;
+    margin: 0 0 2rem 0;
+    li {
+      margin-bottom: 0;
+      &.selected a {
+        color: $color-primary;
+        font-weight: bold;
+        border-left: .5rem solid $color-primary;
+        margin-left: -2rem;
+        padding-left: 1.5rem;
+      }
+      a {
+        text-decoration: none;
+        color: $color-gray;
+      }
+    }
+  }
 }
