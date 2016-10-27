@@ -4,6 +4,7 @@ from django.test import override_settings
 from django.contrib.auth.models import User
 
 from .. import email
+from ..models import SubmittedPriceList
 from .common import create_bulk_upload_contract_source, FAKE_SCHEDULE
 from .test_models import ModelTestCase
 
@@ -13,7 +14,8 @@ class EmailTests(ModelTestCase):
     '''Tests for email sending functions'''
 
     def test_price_list_approved(self):
-        price_list = self.create_price_list(is_approved=True)
+        price_list = self.create_price_list(
+            status=SubmittedPriceList.STATUS_APPROVED)
 
         result = email.price_list_approved(price_list)
         self.assertTrue(result.was_successful)
@@ -24,13 +26,14 @@ class EmailTests(ModelTestCase):
         self.assertEqual(result.context['price_list'], price_list)
 
     def test_price_list_approved_raises_if_not_approved(self):
-        price_list = self.create_price_list(is_approved=False)
+        price_list = self.create_price_list(
+            status=SubmittedPriceList.STATUS_NEW)
         with self.assertRaises(AssertionError):
             email.price_list_approved(price_list)
 
     def test_price_list_unapproved(self):
-        price_list = self.create_price_list(is_approved=False)
-
+        price_list = self.create_price_list(
+            status=SubmittedPriceList.STATUS_UNAPPROVED)
         result = email.price_list_unapproved(price_list)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
@@ -40,9 +43,27 @@ class EmailTests(ModelTestCase):
         self.assertEqual(result.context['price_list'], price_list)
 
     def test_price_list_unapproved_raises_if_approved(self):
-        price_list = self.create_price_list(is_approved=True)
+        price_list = self.create_price_list(
+            status=SubmittedPriceList.STATUS_APPROVED)
         with self.assertRaises(AssertionError):
             email.price_list_unapproved(price_list)
+
+    def test_price_list_rejected(self):
+        price_list = self.create_price_list(
+            status=SubmittedPriceList.STATUS_REJECTED)
+        result = email.price_list_rejected(price_list)
+        self.assertTrue(result.was_successful)
+        message = mail.outbox[0]
+        self.assertEqual(message.recipients(), [self.user.email])
+        self.assertEqual(message.subject, 'CALC Price List Rejected')
+        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(result.context['price_list'], price_list)
+
+    def test_price_list_rejected_raises_if_wrong_status(self):
+        price_list = self.create_price_list(
+            status=SubmittedPriceList.STATUS_APPROVED)
+        with self.assertRaises(AssertionError):
+            email.price_list_rejected(price_list)
 
     def test_bulk_uploaded_succeeded(self):
         src = create_bulk_upload_contract_source(self.user)
@@ -81,7 +102,7 @@ class EmailTests(ModelTestCase):
                          ['admin@localhost', 'admin2@localhost'])
         self.assertEqual(
             message.subject,
-            'CALC Reminder - {} price lists not approved'.format(count)
+            'CALC Reminder - {} price lists not reviewed'.format(count)
         )
         self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
-        self.assertEqual(result.context['count_not_approved'], count)
+        self.assertEqual(result.context['count_unreviewed'], count)

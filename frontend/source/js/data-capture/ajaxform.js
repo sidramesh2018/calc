@@ -4,6 +4,8 @@ import 'document-register-element';
 
 import * as supports from './feature-detection';
 
+import ga from '../common/ga';
+
 import { dispatchBubbly } from './custom-event';
 
 const $ = jQuery;
@@ -117,6 +119,16 @@ class AjaxForm extends window.HTMLFormElement {
 
   _replaceWithNewForm(html) {
     const newForm = $(html)[0];
+
+    // Here we're assuming for analytics purposes that the
+    // baseline (non-Ajax) version of this form would have resulted in
+    // the user being sent to the page defined by the `action` attribute
+    // of the form we're now loading. So we'll simulate that in GA.
+    const action = $(newForm).attr('action');
+    if (action) {
+      ga('set', 'page', action);
+    }
+    ga('send', 'pageview');
 
     // Replace the form and bind it.
     $(this).replaceWith(newForm);

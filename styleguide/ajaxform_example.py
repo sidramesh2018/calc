@@ -61,7 +61,7 @@ def view(request):
                     time.sleep(3)
                     return ajaxform.redirect(request, 'styleguide:index')
                 elif choice == CHOICE_500:
-                    raise Exception('Here is the 500 your ordered.')
+                    raise Exception('Here is the 500 you ordered.')
                 else:
                     return HttpResponse('Here is an unexpected response.')
 

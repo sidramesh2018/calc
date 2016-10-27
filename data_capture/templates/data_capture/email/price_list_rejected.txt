@@ -1,0 +1,8 @@
+
+The price list you submitted to CALC on {{ price_list.created_at }} has
+unfortunately been rejected.
+
+The submitted price list was for contract {{ price_list.contract_number }}
+({{ price_list.get_schedule_title }}) with {{ price_list.vendor_name }}.
+
+If you have any questions, please contact the CALC administrator at calc@gsa.gov.

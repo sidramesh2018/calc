@@ -11,7 +11,7 @@ import { dispatchBubbly } from './custom-event';
  * readers to announce the content of the widget immediately.
  */
 
-class AlertsWidget extends window.HTMLInputElement {
+class AlertsWidget extends window.HTMLElement {
   attachedCallback() {
     this.setAttribute('tabindex', '-1');
     this.focus();
