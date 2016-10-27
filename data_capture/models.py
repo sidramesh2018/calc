@@ -149,6 +149,9 @@ class SubmittedPriceList(models.Model):
         self._change_status(self.STATUS_REJECTED, user)
         self.save()
 
+    def __str__(self):
+        return "Price List for {}".format(self.contract_number)
+
 
 class SubmittedPriceListRow(models.Model):
     labor_category = models.TextField()
