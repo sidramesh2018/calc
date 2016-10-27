@@ -278,7 +278,8 @@ const hourglass = require('../common/hourglass');
       history.pushState(null, null, href);
 
       if (didSearchChange) {
-        ga('set', 'location', window.location.href);
+        ga('set', 'page', window.location.pathname +
+                          window.location.search);
         ga('send', 'pageview');
       }
     }
