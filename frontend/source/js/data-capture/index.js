@@ -5,6 +5,7 @@
 require('babel-polyfill/dist/polyfill.js');
 require('jquery-tablesort');
 
+require('../common/dap-hacks');
 require('./tablesort');
 require('./upload');
 require('./ajaxform');
