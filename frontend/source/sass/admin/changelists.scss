@@ -24,10 +24,14 @@
   }
 }
 
-.action-checkbox input[type=checkbox],
-.action-checkbox input[type=radio]{
-  position: static;
-  left: 0;
+td.action-checkbox {
+  padding: 0 0 0 0.25em;
+  input[type=checkbox],
+  input[type=radio]{
+    position: static;
+    left: 0;
+    width: auto;
+  }
 }
 
 .filter-block {
