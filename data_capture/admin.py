@@ -271,6 +271,7 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
         'created_at',
         'updated_at',
         'current_status',
+        'submitter',
         'status_changed_at',
         'status_changed_by',
     )
