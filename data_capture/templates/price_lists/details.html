@@ -1,0 +1,57 @@
+{% extends 'data_capture/base.html' %}
+
+{% block title %}{{ price_list.contract_number }} Price List Details{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <p><a href="{% url 'data_capture:price_lists' %}">&laquo; Back to your price lists</a></p>
+
+    {% if price_list.get_status_display == 'approved' %}
+      <div class="alert alert-success">
+        <h3>Approved</h3>
+        <p>This price list's data is available in CALC.</p>
+      </div>
+    {% elif price_list.get_status_display == 'new' %}
+      <div class="alert alert-warning">
+        <h3>Not yet approved</h3>
+        <p>This price list has not yet been reviewed by a CALC Administrator.</p>
+      </div>
+    {% elif price_list.get_status_display == 'rejected' %}
+      <div class="alert alert-error">
+        <h3>Rejected</h3>
+        <p>This price list has been rejected by a CALC Administrator.</p>
+      </div>
+    {% elif price_list.get_status_display == 'unapproved' %}
+      <div class="alert alert-error">
+        <h3>Unapproved</h3>
+        <p>This price list has been removed from CALC.</p>
+      </div>
+    {% endif %}
+
+    <h1>Details for <strong>{{ price_list.vendor_name }}</strong>'s price list</h1>
+    <h2>{{ price_list.contract_number }}</h2>
+
+    <div class="row">
+      <div class="columns eight">
+        {% include "price_lists/_details_list.html" %}
+      </div>
+    </div>
+    <div class="row">
+      {% if gleaned_data.valid_rows %}
+        <div class="columns twelve">
+          {# Note that not all of the valid rows will necessarily be in CALC #}
+          {# once the Price List is approved. The individual rows could be muted. #}
+          <h3>Valid price list rows</h3>
+          {{ gleaned_data.to_table }}
+        </div>
+      {% endif %}
+      {% if gleaned_data.invalid_rows %}
+        <div class="columns twelve">
+          <h3>Invalid price list rows</h3>
+          <p>These rows are invalid and will not be included in CALC.</p>
+          {{ gleaned_data.to_error_table }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock body %}

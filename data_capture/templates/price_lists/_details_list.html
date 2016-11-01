@@ -1,0 +1,40 @@
+<dl class="contract-details">
+  <dt>Vendor</dt>
+  <dd>{{ price_list.vendor_name }}</dd></li>
+
+  <dt>Contract number</dt>
+  <dd>{{ price_list.contract_number }}</dd></li>
+
+  <dt>Schedule</dt>
+  <dd>{{ price_list.get_schedule_title }}</dd></li>
+
+  <dt>Small business</dt>
+  <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd></li>
+
+  <dt>Contractor worksite</dt>
+  <dd>{{ price_list.contractor_site }}</dd></li>
+
+  <dt>Contract dates</dt>
+  <dd class="contract-details__start-date">{{ price_list.contract_start }}</dd>
+  <dd>{{ price_list.contract_end }}</dd></li>
+
+  <dt>Escalation rate</dt>
+  <dd>{% if price_list.escalation_rate %}{{ price_list.escalation_rate }}%{% else %}None{% endif %}</dd></li>
+
+  {% if price_list.created_at %}
+    <dt>Submitted by</dt>
+    <dd>{{ price_list.submitter.email }}</dd>
+  {% endif %}
+
+  <dt>Create at</dt>
+  <dd>{{ price_list.created_at }}</dd></li>
+
+  <dt>Status</dt>
+  <dd>{{ price_list.get_status_display }}</dd></li>
+
+  <dt>Status changed by</dt>
+  <dd>{{ price_list.status_changed_by.email }}</dd></li>
+
+  <dt>Status changed at</dt>
+  <dd>{{ price_list.status_changed_at }}</dd></li>
+</dl>

@@ -1,0 +1,69 @@
+- model: data_capture.submittedpricelist
+  pk: 1
+  fields:
+    contract_end: 2021-02-11
+    contract_number: GS-111-2222
+    contract_start: 2016-02-11
+    contractor_site: Customer
+    created_at: '2016-10-17 16:25:00.042272+00:00'
+    escalation_rate: 2.5
+    status: 0
+    status_changed_at: '2016-10-17 16:25:00.042296+00:00'
+    status_changed_by: 1
+    is_small_business: true
+    schedule: data_capture.schedules.s70.Schedule70PriceList
+    serialized_gleaned_data: '["data_capture.schedules.s70.Schedule70PriceList",
+      [{"min_years_experience": "5", "unit_of_issue": "Day", "price_including_iff":
+      "115.99", "sin": "132-51", "labor_category": "Project Manager", "education_level":
+      "Bachelorz"}, {"min_years_experience": "5", "unit_of_issue": "Hour", "price_including_iff":
+      "1.2", "sin": "132-51", "labor_category": "Project Manager 2", "education_level":
+      "Bachelors"}, {"min_years_experience": "5", "unit_of_issue": "Hour", "price_including_iff":
+      "126.99", "sin": "132-51", "labor_category": "Project Manager 3", "education_level":
+      "Bachelors"}]]'
+    submitter: 1
+    updated_at: '2016-10-17 16:25:00.042296+00:00'
+    vendor_name: Seppi Spandex Suppliers
+- model: data_capture.submittedpricelistrow
+  pk: 1
+  fields:
+    base_year_rate: '126.99'
+    contract_model: null
+    education_level: BA
+    is_muted: false
+    labor_category: Project Manager 3
+    min_years_experience: 5
+    price_list: 1
+    sin: 132-51
+
+- model: data_capture.submittedpricelist
+  pk: 2
+  fields:
+    contract_end: 2021-02-11
+    contract_number: GS-111-3333
+    contract_start: 2016-01-01
+    contractor_site: Customer
+    created_at: '2016-10-18 16:25:00.042272+00:00'
+    escalation_rate: 1.86
+    status: 0
+    status_changed_at: '2016-10-17 16:25:00.042296+00:00'
+    status_changed_by: 1
+    is_small_business: false
+    schedule: data_capture.schedules.s70.Schedule70PriceList
+    serialized_gleaned_data: '["data_capture.schedules.s70.Schedule70PriceList",
+      [{"min_years_experience": "5", "unit_of_issue": "Hour", "price_including_iff":
+      "150.00", "sin": "132-55A", "labor_category": "Senior Project Manager", "education_level":
+      "Masters"}]]'
+    submitter: 1
+    updated_at: '2016-10-18 16:25:00.042296+00:00'
+    vendor_name: MegaCorp
+- model: data_capture.submittedpricelistrow
+  pk: 1
+  fields:
+    base_year_rate: '150.00'
+    contract_model: null
+    education_level: MA
+    is_muted: false
+    labor_category: Senior Project Manager
+    min_years_experience: 5
+    price_list: 2
+    sin: 132-55A

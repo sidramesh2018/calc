@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'corsheaders',
     'uaa_client',
+    'user_account',
     'styleguide',
     'meta',
     'frontend',

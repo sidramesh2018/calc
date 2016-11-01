@@ -4,14 +4,15 @@ from decimal import Decimal
 from django.test import override_settings
 from django.utils import timezone
 
+from hourglass.tests.common import BaseLoginTestCase
 from contracts.models import Contract
 from ..schedules import registry
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..models import SubmittedPriceList, SubmittedPriceListRow
-from .common import BaseTestCase, FAKE_SCHEDULE
+from .common import FAKE_SCHEDULE
 
 
-class ModelTestCase(BaseTestCase):
+class ModelTestCase(BaseLoginTestCase):
     DEFAULT_SCHEDULE = FAKE_SCHEDULE
 
     def setUp(self):
