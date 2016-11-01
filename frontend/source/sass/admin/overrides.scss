@@ -1,0 +1,234 @@
+@import '../base/_variables.scss';
+
+/********************
+ * Django admin CSS *
+ * *****************/
+
+/* nav ul li temp styles until we can get the proper class added in the back end */
+nav ul li {
+  border-radius: 4px 4px 0 0 ;
+  &:first-child {
+    background: $color-white;
+    a,
+    a:hover {
+      color: $color-primary-darkest;
+    }
+  }
+}
+/* end temp styles */
+
+/* USWDS override, because we can't control Django's markup easily */
+.field-is_muted input[type=checkbox],
+.field-is_muted input[type=radio] {
+    position: static;
+    left: 0;
+}
+/* end USWDS override */
+
+label,
+.aligned label {
+  font-weight: bold !important;
+  float: none !important;
+  font-size: 1.5rem;
+  color: #222;
+  width: auto;
+}
+
+form .aligned {
+  p,
+  p.help,
+  ul {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    font-size: 1.5rem !important;
+  }
+}
+
+form .aligned p.help {
+  color: $color-gray;
+}
+
+/* groups pages */
+#user-tools ul {
+  text-align: right;
+  margin: 2rem 0;
+  li {
+    display: inline-block;
+    margin: 0 2rem 0 0;
+    text-transform: uppercase;
+    font-size: 11px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.submit-row,
+.selector .selector-available h2,
+.selector-available h2,
+.selector-chosen h2,
+.selector .selector-filter,
+#changelist #toolbar,
+#changelist .paginator,
+#changelist .actions {
+  background: none !important;
+  border: none !important;
+}
+
+.selector .selector-available h2,
+.selector .selector-chosen h2 {
+  color: $color-base !important;
+  text-align: left;
+}
+
+select[multiple="multiple"] {
+  background-image: none;
+}
+
+.selector-chosen select {
+  border: 1px solid $color-gray !important;
+}
+
+#id_permissions_filter {
+  padding-top: 0;
+  input {
+    margin-top: 0;
+  }
+}
+
+.selector-filter label img {
+  display: none;
+}
+
+.submit-row {
+  text-align: left;
+}
+
+.submit-row input[type="submit"] {
+  display: inline;
+}
+
+/* search */
+.inline-form input[type="search"],
+.inline-form input[type="submit"] {
+  display: inline;
+}
+
+/* Styling for ul/lis with action links */
+.object-tools,
+.messagelist {
+  list-style: none;
+}
+
+/* table captions */
+table caption {
+  background-color: $color-gray-lightest;
+  padding: .5rem 1rem;
+  border-bottom: 1px solid $color-gray-lighter;
+  a {
+    color: $color-gray;
+    text-decoration: none;
+    &:hover,
+    &:active,
+    &:focus {
+      color: $color-gray;
+    }
+  }
+}
+
+thead a,
+thead a:hover,
+thead a:active,
+thead a:focus {
+  color: $color-gray;
+}
+
+.tabular fieldset {
+  max-width: none;
+}
+
+/* add/change buttons */
+.add-related:after {
+  content: "Add";
+  margin-right: 10px;
+}
+
+.change-related:after {
+  content: "Change";
+  margin-right: 10px;
+}
+
+.delete-related:after {
+  content: "Delete";
+  margin-right: 10px;
+}
+
+.addlink,
+.changelink,
+.deletelink {
+  position: relative;
+  padding-left: 15px;
+}
+
+.addlink {
+    background: url(/static/admin/img/icon_addlink.gif) 0 8px no-repeat;
+  }
+
+.changelink {
+    background: url(/static/admin/img/icon_changelink.gif) 0 8px no-repeat;
+}
+
+.deletelink {
+    background: url(/static/admin/img/icon_deletelink.gif) 0 8px no-repeat;
+}
+
+.deletelink {
+  color: $color-gray-medium;
+}
+
+.mini.quiet {
+  color: $color-gray-medium;
+  font-size: $small-font-size;
+}
+
+/* forms.css */
+.inline-group {
+  border: none !important;
+  .tabular td.original p {
+    display: none; /* this appears to simply append "submitted price list row" to lists */
+  }
+}
+
+/* same as filter-block in changelists.css */
+.sidebar {
+  background: $color-gray-lightest;
+  border-radius: 4px;
+  margin-bottom: 0;
+  padding: 1rem 2rem;
+  h2,
+  h3 {
+    font-size: 1.5rem; /* to match front-page h5 */
+    font-weight: bold;
+    letter-spacing: normal;
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0 0 2rem 0;
+    li {
+      margin-bottom: 0;
+      &.selected a {
+        color: $color-primary;
+        font-weight: bold;
+        border-left: .5rem solid $color-primary;
+        margin-left: -2rem;
+        padding-left: 1.5rem;
+      }
+      a {
+        text-decoration: none;
+        color: $color-gray;
+      }
+    }
+  }
+}

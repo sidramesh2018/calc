@@ -1,0 +1,68 @@
+@import '../base/_variables.scss';
+
+/* changelists */
+#changelist {
+  #toolbar form input {
+    padding: auto;
+  }
+
+  .actions {
+    label {
+      font-size: 1.5rem;
+      color: $color-base;
+      margin-left: 0;
+      display: inline-block;
+    }
+
+    select {
+      margin-left: 0 ;
+    }
+
+    button {
+      display: inline ;
+    }
+  }
+}
+
+td.action-checkbox {
+  padding: 0 0 0 0.25em;
+  input[type=checkbox],
+  input[type=radio]{
+    position: static;
+    left: 0;
+    width: auto;
+  }
+}
+
+.filter-block {
+  background: #f1f1f1;
+  border-radius: 4px;
+  margin-bottom: 0;
+  padding: 1rem 2rem;
+  h2,
+  h3 {
+    font-size: $base-font-size; /* to match front-page h5 */
+    font-weight: bold;
+    letter-spacing: normal;
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0 0 2rem 0;
+    li {
+      margin-bottom: 0;
+      &.selected a {
+        color: $color-primary;
+        font-weight: bold;
+        border-left: .5rem solid $color-primary;
+        margin-left: -2rem;
+        padding-left: 1.5rem;
+      }
+      a {
+        text-decoration: none;
+        color: $color-gray;
+      }
+    }
+  }
+}

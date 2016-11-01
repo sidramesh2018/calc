@@ -10,7 +10,7 @@ class DefaultDataCaptureApp(AppConfig):
     '''
 
     name = 'data_capture'
-    verbose_name = 'CALC Data Capture App'
+    verbose_name = 'User-submitted CALC data'
 
 
 class DataCaptureSchedulerApp(AppConfig):
