@@ -16,14 +16,34 @@
 <h2>Verify vendor and contract details</h2>
 <div class="row">
   <dl class="contract-details columns eight">
-    <li>Vendor: <dd>{{ price_list.vendor_name }}</dd></li>
-    <li>Contract number: <dd>{{ price_list.contract_number }}</dd></li>
-    <li>Small business: <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd></li>
-    <li>Contractor worksite: <dd>{{ price_list.contractor_site }}</dd></li>
-    <li>Contract dates: <dd>{{ price_list.contract_start }}</dd> to <dd>{{ price_list.contract_end }}</dd></li>
-    <li>Escalation rate: <dd>{{ price_list.escalation_rate }}%</dd></li>
-    <li>Schedule: <dd>{{ gleaned_data.title }}</dd>
-      {% if not is_preferred_schedule %}
+    <dt>Vendor</dt>
+    <dd>{{ price_list.vendor_name }}</dd>
+
+    <dt>Contract number</dt>
+    <dd>{{ price_list.contract_number }}</dd>
+
+    <dt>Small business</dt>
+    <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd>
+
+    <dt>Contractor worksite</dt>
+    <dd>{{ price_list.contractor_site }}</dd>
+
+    <dt>Contract dates</dt>
+    <dd class="contract-details__start-date">{{ price_list.contract_start }}</dd>
+    <dd>{{ price_list.contract_end }}</dd>
+
+    <dt>Escalation rate</dt>
+    <dd>{{ price_list.escalation_rate }}%</dd>
+
+    <dt>Schedule</dt>
+    <dd>{{ gleaned_data.title }}</dd>
+    </dd>
+  </dl>
+</div>
+
+{% if not is_preferred_schedule %}
+  <div class="row">
+    <div class="columns eight">
       <div class="alert alert-warning">
         <p>
           <strong>Note:</strong> You specified that the price list you were
@@ -32,10 +52,9 @@
           incorrect, please upload a different file.
         </p>
       </div>
-      {% endif %}
-    </li>
-  </dl>
-</div>
+    </div>
+  </div>
+{% endif %}
 
 
 <form method="post">

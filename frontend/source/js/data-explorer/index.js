@@ -4,4 +4,5 @@
 
 require('babel-polyfill/dist/polyfill.js');
 
+require('../common/dap-hacks');
 require('./explorer');

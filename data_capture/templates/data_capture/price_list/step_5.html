@@ -3,6 +3,17 @@
 {% block subtitle %}Data submitted for review!{% endblock %}
 
 {% block step_body %}
-<h2>Success!</h2>
-<p>You’ve submitted your data for review&mdash;it should be available soon!</p>
+  <h2>Success!</h2>
+
+  <div class="alert alert-success">
+    <h3>You’ve submitted your data for review&mdash;it should be available soon!</h3>
+    <p>
+      A CALC administrator will review your submitted data and include it in CALC if all looks good.
+    </p>
+  </div>
+
+  <div class="form-button-row clearfix">
+    <a href="{% url 'index' %}" class="button">Return to the CALC home page</a>
+    <a href="{% url 'data_capture:step_1' %}" class="button button-primary">Add another price list</a>
+  </div>
 {% endblock %}
