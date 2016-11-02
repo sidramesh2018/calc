@@ -6,6 +6,7 @@
       <th>Minimum education</th>
       <th class="number">Minimum years of experience</th>
       <th class="number">Price</th>
+      <th>Analysis</th>
     </tr>
   </thead>
   <tbody>
@@ -35,6 +36,12 @@
           {{ row.price.value|floatformat:2 }}
         {% endif %}
       </td>
+      {% load analyze_contract %}
+      {% with analysis=row|analyze_contract_row %}
+      <td {% if analysis.severe %}class="error"{% endif %}>
+        {{ analysis.description }}
+      </td>
+      {% endwith %}
     </tr>
   {% endfor %}
   </tbody>

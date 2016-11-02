@@ -1,0 +1,12 @@
+{% if severe %}
+This service's price is almost {{ stddevs }} standard
+deviation{{ stddevs|pluralize }} from the mean when performing a CALC
+search for <a href="{{ url }}" target="_blank">{{ labor_category }}</a>.
+<br>
+<br>
+Are you sure this price is fair and reasonable?
+{% else %}
+This service's price is within {{ stddevs }} standard
+deviation{{ stddevs|pluralize }} of the mean when performing a CALC
+search for <a href="{{ url }}" target="_blank">{{ labor_category }}</a>.
+{% endif %}
