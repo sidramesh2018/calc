@@ -248,7 +248,8 @@ class UndeletableModelAdmin(admin.ModelAdmin):
 
 class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
-                    'created_at', 'status', 'status_changed_at')
+                    'created_at', 'status_changed_by_email',
+                    'status_changed_at')
 
     fields = (
         'contract_number',
@@ -263,7 +264,7 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
         'updated_at',
         'current_status',
         'status_changed_at',
-        'status_changed_by',
+        'status_changed_by_email',
     )
 
     readonly_fields = (
@@ -273,12 +274,20 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
         'current_status',
         'submitter',
         'status_changed_at',
-        'status_changed_by',
+        'status_changed_by_email',
     )
 
     inlines = [
         SubmittedPriceListRowInline
     ]
+
+    def status_changed_by_email(self, instance):
+        '''
+        custom field to show the email address of the status_changed_by user
+        '''
+        return instance.status_changed_by.email
+
+    status_changed_by_email.short_description = 'Status changed by'
 
     def current_status(self, instance):
         content = instance.get_status_display() + "<br>"

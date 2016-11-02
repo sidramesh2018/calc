@@ -10,3 +10,8 @@
   {% endif %}
   {{ block.super }}
 {% endblock %}
+
+{% block welcome-msg %}
+    Welcome,
+    <a href="{% url 'user_account:index' %}">{% firstof user.get_short_name user.email user.get_username %}</a>.
+{% endblock %}

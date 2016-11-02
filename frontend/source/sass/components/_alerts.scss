@@ -44,8 +44,20 @@ alerts-widget:focus {
   margin-bottom: 0;
 }
 
-/* for Django admin */
+.alert-submitted-price-lists {
+  ul {
+    list-style: none;
+    margin-bottom: 0;
 
+    > li {
+      display: inline-block;
+      white-space: nowrap;
+      margin-right: 2rem;
+    }
+  }
+}
+
+/* for Django admin */
 .messagelist li {
   @extend .alert;
 }

@@ -114,6 +114,10 @@ nav {
     font-size: $base-font-size;
     font-weight: bold;
     text-align: right;
+
+    > a {
+      color: $color-white;
+    }
   }
   .nav-logout a {
     color: $color-primary-alt;

@@ -7,13 +7,13 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.conf.urls import url
 
-from . import healthcheck
-from .urls import urlpatterns
-from .decorators import staff_login_required
-from .settings_utils import (load_cups_from_vcap_services,
-                             load_redis_url_from_vcap_services,
-                             get_whitelisted_ips,
-                             is_running_tests)
+from .. import healthcheck
+from ..urls import urlpatterns
+from ..decorators import staff_login_required
+from ..settings_utils import (load_cups_from_vcap_services,
+                              load_redis_url_from_vcap_services,
+                              get_whitelisted_ips,
+                              is_running_tests)
 
 
 @staff_login_required
@@ -166,7 +166,7 @@ class RedisUrlTests(unittest.TestCase):
                 'name': 'a-different-name',
                 'credentials': {
                     'hostname': 'the_host',
-                    'password': 'the_password',
+                    'password': 'the_password',  # nosec
                     'port': '1234'
                 }
             }]
@@ -180,7 +180,7 @@ class RedisUrlTests(unittest.TestCase):
                 'name': 'redis-service',
                 'credentials': {
                     'hostname': 'the_host',
-                    'password': 'the_password',
+                    'password': 'the_password',  # nosec
                     'port': '1234'
                 }
             }]
@@ -221,26 +221,26 @@ class AdminLoginTest(DjangoTestCase):
             res['Location'].startswith('http://testserver/admin/login'))
 
     def test_is_staff_user_can_view(self):
-        user = User.objects.create_user(
+        user = User.objects.create_user(  # nosec
             username='nonstaff',
             password='foo',
         )
         user.is_staff = True
         user.save()
-        logged_in = self.client.login(
+        logged_in = self.client.login(  # nosec
             username=user.username, password='foo')
         self.assertTrue(logged_in)
         res = self.client.get('/admin/')
         self.assertEqual(res.status_code, 200)
 
     def test_non_is_staff_user_is_not_permitted(self):
-        user = User.objects.create_user(
+        user = User.objects.create_user(  # nosec
             username='nonstaff',
             password='foo',
         )
         user.is_staff = False
         user.save()
-        logged_in = self.client.login(
+        logged_in = self.client.login(  # nosec
             username=user.username, password='foo')
         self.assertTrue(logged_in)
         res = self.client.get('/admin/', follow=True)
@@ -275,11 +275,12 @@ class IsRunningTestsTests(unittest.TestCase):
 class StaffLoginRequiredTests(DjangoTestCase):
 
     def login(self, is_staff=False):
-        user = User.objects.create_user(username='foo', password='bar')
+        user = User.objects.create_user(username='foo',  # nosec
+                                        password='bar')
         if is_staff:
             user.is_staff = True
             user.save()
-        assert self.client.login(username='foo', password='bar')
+        assert self.client.login(username='foo', password='bar')  # nosec
         return user
 
     def test_redirects_to_login(self):

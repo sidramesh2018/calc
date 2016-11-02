@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
 from django.db import transaction
+
+from hourglass.utils import get_permissions_from_ns_codenames
 
 BULK_UPLOAD_PERMISSION = 'contracts.add_bulkuploadcontractsource'
 PRICE_LIST_UPLOAD_PERMISSION = 'data_capture.add_submittedpricelist'
@@ -29,18 +31,6 @@ ROLES['Contract Officers'] = set([
 
 # Data Administrators should also have any perms that Contract Officers do
 ROLES['Data Administrators'].update(ROLES['Contract Officers'])
-
-
-def get_permissions_from_ns_codenames(ns_codenames):
-    '''
-    Returns a list of Permission objects for the specified namespaced codenames
-    '''
-    splitnames = [ns_codename.split('.') for ns_codename in ns_codenames]
-    return [
-        Permission.objects.get(codename=codename,
-                               content_type__app_label=app_label)
-        for app_label, codename in splitnames
-    ]
 
 
 class Command(BaseCommand):
