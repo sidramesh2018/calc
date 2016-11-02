@@ -1,5 +1,7 @@
 import math
 from urllib.parse import urlencode
+from itertools import chain, combinations
+from functools import cmp_to_key
 from django import template
 from django.db import connection
 from django.db.models import Avg, StdDev
@@ -21,6 +23,32 @@ del _code
 del _name
 
 register = template.Library()
+
+
+# https://docs.python.org/3/library/itertools.html#itertools-recipes
+def powerset(iterable):
+    "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
+
+
+def get_best_permutations(vocab, lexemes):
+    def compare(a, b):
+        a_len = len(a)
+        b_len = len(b)
+
+        if a_len != b_len:
+            return a_len - b_len
+
+        return vocab_val(a) - vocab_val(b)
+
+    def vocab_val(iterable):
+        return sum([vocab[i] for i in iterable])
+
+    permutations = list(powerset(lexemes))
+    permutations.sort(key=cmp_to_key(compare), reverse=True)
+
+    return permutations[:-len(lexemes)]
 
 
 def get_vocab(cursor, model=Contract, field='search_index', min_ndoc=100):
@@ -68,19 +96,15 @@ def broaden_query(cursor, vocab, query):
     orig_words = query.split()
     orig_word_ordering = dict(zip(orig_words, range(len(orig_words))))
     orig_lexemes = get_lexemes(cursor, orig_words)
-    lexeme_map = dict(zip(orig_lexemes, orig_words))
-    lexemes = filter_and_sort_lexemes(vocab, orig_lexemes)
-    words = [lexeme_map[lexeme] for lexeme in lexemes]
+    word_map = dict(zip(orig_lexemes, orig_words))
+    lexemes_in_vocab = [lexeme for lexeme in orig_lexemes if lexeme in vocab]
 
-    while words:
-        words_copy = words[:]
-        words_copy.sort(key=lambda word: orig_word_ordering[word])
-        yield ' '.join(words_copy)
-
-        # TODO: Consider iterating over more combinations of
-        # terms rather than just popping off the most uncommon one.
-
-        words.pop()
+    for lexemes in get_best_permutations(vocab, lexemes_in_vocab):
+        words = sorted(
+            [word_map[lexeme] for lexeme in lexemes],
+            key=lambda word: orig_word_ordering[word]
+        )
+        yield ' '.join(words)
 
 
 def find_comparable_contracts(cursor, vocab, labor_category,
