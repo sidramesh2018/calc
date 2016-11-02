@@ -23,8 +23,10 @@ table {
     }
   }
 
+  /* NOTE: #result_list is for Django admin changelists */
   &.sortable,
-  &.price-list-table {
+  &.price-list-table,
+  &#result_list {
     thead {
       th {
         position: relative;
