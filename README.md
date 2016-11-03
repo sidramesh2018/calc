@@ -136,6 +136,11 @@ ln -sf docker-compose.local.yml docker-compose.override.yml
 docker-compose build
 docker-compose run app python manage.py syncdb
 docker-compose run app python manage.py initgroups
+```
+
+You can optionally load some data into your dockerized database with:
+
+```sh
 docker-compose run app python manage.py load_data
 docker-compose run app python manage.py load_s70
 ```
