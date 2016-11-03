@@ -168,20 +168,19 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         if price_delta >= SEVERE_STDDEVS * stddev:
             result['severe'] = True
 
-        url = get_data_explorer_url(
+        result['avg'] = avg
+        result['stddev'] = stddev
+        result['stddevs'] = math.ceil(price_delta / stddev)
+        result['labor_category'] = phrase
+        result['url'] = get_data_explorer_url(
             phrase,
             min_years_experience - EXPERIENCE_RADIUS,
             min_years_experience + EXPERIENCE_RADIUS,
             education_level
         )
-
         result['description'] = render_to_string(
-            'data_capture/analyze_contract.html', {
-                'severe': result['severe'],
-                'stddevs': math.ceil(price_delta / stddev),
-                'labor_category': phrase,
-                'url': url
-            }
+            'data_capture/analyze_contract.html',
+            result
         )
 
     return result
