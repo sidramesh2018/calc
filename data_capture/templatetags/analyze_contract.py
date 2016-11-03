@@ -32,7 +32,7 @@ def powerset(iterable):
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
 
-def get_best_permutations(vocab, lexemes):
+def get_best_permutations(vocab, lexemes, min_length=4, max_permutations=8):
     def compare(a, b):
         a_len = len(a)
         b_len = len(b)
@@ -45,11 +45,16 @@ def get_best_permutations(vocab, lexemes):
     def vocab_val(iterable):
         return sum([vocab[i] for i in iterable])
 
-    permutations = list(powerset(lexemes))
+    # Remove the first element, as it's the empty set.
+    permutations = list(powerset(lexemes))[1:]
+
+    permutations = list(filter(
+        lambda x: len(' '.join(x)) >= min_length,
+        permutations
+    ))
     permutations.sort(key=cmp_to_key(compare), reverse=True)
 
-    # Remove the last element, as it's the empty set.
-    return permutations[:-1]
+    return permutations[:max_permutations]
 
 
 def get_vocab(cursor, model=Contract, field='search_index', min_ndoc=100):
