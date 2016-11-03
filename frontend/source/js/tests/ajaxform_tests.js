@@ -44,6 +44,8 @@ function makeFormHtml(extraOptions) {
   const options = Object.assign({
     isDegraded: false,
     fooValue: 'bar',
+    aRadioSelectedValue: '2',
+    someCheckboxesValues: ['b', 'c'],
   }, extraOptions || {});
 
   const $form = $('<div></div>')
@@ -54,6 +56,22 @@ function makeFormHtml(extraOptions) {
   }
 
   $form.find('input[name="foo"]').attr('value', options.fooValue);
+
+  // Normally, we would want to set the DOM property `checked` to true
+  // but since we are using this method to generate HTML, we need to use
+  // the attribute `checked` (which sets the default state of the radio)
+  $form.find(`input[name="a_radio"][value="${options.aRadioSelectedValue}"]`)
+    .attr('checked', true);
+
+  const checkboxValues = Array.isArray(options.someCheckboxesValues) ?
+    options.someCheckboxesValues : [options.someCheckboxesValues];
+
+  // Same as above for setting the `checked` attributes of the selected
+  // checkbox values
+  for (const val of checkboxValues) {
+    $form.find(`input[name='some_checkboxes'][value=${val}]`)
+      .attr('checked', true);
+  }
 
   return $form.html();
 }
@@ -201,6 +219,8 @@ advancedTest('submit triggers ajax w/ form data', (assert, s) => {
     // Ugh, only newer browsers support FormData.prototype.get().
     if (typeof formData.get === 'function') {
       assert.equal(formData.get('foo'), 'bar');
+      assert.equal(formData.get('a_radio'), '2');
+      assert.deepEqual(formData.getAll('some_checkboxes'), ['b', 'c']);
       assert.equal(formData.get('file').size, 'hello there'.length);
       assert.ok(!formData.has('cancel'));
     }

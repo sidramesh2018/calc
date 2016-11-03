@@ -1,0 +1,12 @@
+{% load frontend %}
+<form method="post"
+      action="{% url 'styleguide:radio-checkbox' %}">
+  {% csrf_token %}
+
+  {% with form=radio_checkbox_form %}
+    {% fieldset form.radios %}
+    {% fieldset form.checkboxes %}
+  {% endwith %}
+
+  <button type="submit" class="button-primary">Submit</button>
+</form>

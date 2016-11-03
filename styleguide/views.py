@@ -2,7 +2,7 @@ from django import forms
 from django.shortcuts import render
 
 from frontend.upload import UploadWidget
-from . import ajaxform_example, date_example, radio_example
+from . import ajaxform_example, date_example, radio_checkbox_example
 
 
 def get_degraded_upload_widget():
@@ -18,6 +18,6 @@ def index(request):
     }
     ctx.update(ajaxform_example.create_template_context())
     ctx.update(date_example.create_template_context())
-    ctx.update(radio_example.create_template_context())
+    ctx.update(radio_checkbox_example.create_template_context())
 
     return render(request, 'styleguide.html', ctx)
