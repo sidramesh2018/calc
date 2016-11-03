@@ -135,7 +135,8 @@ def get_data_explorer_url(query, min_experience, max_experience, education):
     return '/?{}'.format(urlencode(params))
 
 
-def describe(labor_category, min_years_experience, education_level, price):
+def describe(cursor, vocab, labor_category, min_years_experience,
+             education_level, price):
     result = {
         'severe': False,
         'description': ''
@@ -144,46 +145,44 @@ def describe(labor_category, min_years_experience, education_level, price):
     EXPERIENCE_RADIUS = 2
     SEVERE_STDDEVS = 2
 
-    with connection.cursor() as cursor:
-        vocab = get_vocab(cursor)
-        phrase, contracts = find_comparable_contracts(
-            cursor,
-            vocab,
-            labor_category,
-            min_years_experience,
-            education_level,
-            experience_radius=EXPERIENCE_RADIUS
+    phrase, contracts = find_comparable_contracts(
+        cursor,
+        vocab,
+        labor_category,
+        min_years_experience,
+        education_level,
+        experience_radius=EXPERIENCE_RADIUS
+    )
+
+    if contracts is not None:
+        wage_field = 'current_price'
+        stats = contracts.aggregate(
+            avg=Avg(wage_field),
+            stddev=StdDev(wage_field)
+        )
+        avg = stats['avg']
+        stddev = stats['stddev']
+
+        price_delta = abs(price - avg)
+
+        if price_delta >= SEVERE_STDDEVS * stddev:
+            result['severe'] = True
+
+        url = get_data_explorer_url(
+            phrase,
+            min_years_experience - EXPERIENCE_RADIUS,
+            min_years_experience + EXPERIENCE_RADIUS,
+            education_level
         )
 
-        if contracts is not None:
-            wage_field = 'current_price'
-            stats = contracts.aggregate(
-                avg=Avg(wage_field),
-                stddev=StdDev(wage_field)
-            )
-            avg = stats['avg']
-            stddev = stats['stddev']
-
-            price_delta = abs(price - avg)
-
-            if price_delta >= SEVERE_STDDEVS * stddev:
-                result['severe'] = True
-
-            url = get_data_explorer_url(
-                phrase,
-                min_years_experience - EXPERIENCE_RADIUS,
-                min_years_experience + EXPERIENCE_RADIUS,
-                education_level
-            )
-
-            result['description'] = render_to_string(
-                'data_capture/analyze_contract.html', {
-                    'severe': result['severe'],
-                    'stddevs': math.ceil(price_delta / stddev),
-                    'labor_category': phrase,
-                    'url': url
-                }
-            )
+        result['description'] = render_to_string(
+            'data_capture/analyze_contract.html', {
+                'severe': result['severe'],
+                'stddevs': math.ceil(price_delta / stddev),
+                'labor_category': phrase,
+                'url': url
+            }
+        )
 
     return result
 
@@ -194,13 +193,20 @@ def analyze_contract_row(row):
     # figure out how to make it work independent of schedules; that
     # might mean abandoning this weird template filter approach.
 
+    # TODO: It would be great if we could get an existing DB cursor
+    # from somewhere else and/or cache the vocabulary here; otherwise
+    # each call to this template filter could be fairly expensive.
+
     if (row['price'].errors or row['years_experience'].errors or
             row['education'].errors or row['service'].errors):
         return None
 
-    return describe(
-            row['service'].value(),
-            int(row['years_experience'].value()),
-            EDU_LEVELS[row['education'].value()],
-            float(row['price'].value())
-        )
+    with connection.cursor() as cursor:
+        return describe(
+                cursor,
+                get_vocab(cursor),
+                row['service'].value(),
+                int(row['years_experience'].value()),
+                EDU_LEVELS[row['education'].value()],
+                float(row['price'].value())
+            )
