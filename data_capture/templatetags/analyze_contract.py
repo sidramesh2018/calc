@@ -48,7 +48,8 @@ def get_best_permutations(vocab, lexemes):
     permutations = list(powerset(lexemes))
     permutations.sort(key=cmp_to_key(compare), reverse=True)
 
-    return permutations[:-len(lexemes)]
+    # Remove the last element, as it's the empty set.
+    return permutations[:-1]
 
 
 def get_vocab(cursor, model=Contract, field='search_index', min_ndoc=100):

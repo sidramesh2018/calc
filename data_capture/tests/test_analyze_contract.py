@@ -18,5 +18,7 @@ class AnalyzeContractTests(TestCase):
              ('administrative', 'engineer'),
              ('junior', 'engineer'),
              ('junior', 'administrative'),
-             ('engineer',)]
+             ('engineer',),
+             ('administrative',),
+             ('junior',)],
         )
