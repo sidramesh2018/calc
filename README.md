@@ -29,6 +29,16 @@ search functionality.
 You'll also want to make sure you have a local instance of redis running,
 on its default port, as we use it for CALC's task queue.
 
+Here's some guidance on installing Redis:
+
+* [Installing Redis on Mac OSX](https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298#.fa2s6i1my)
+
+* [Installing Redis on Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04)
+
+Assuming you have Postgres installed you can create the database:
+
+`createdb hourglass`
+
 Now run:
 
 ```sh
