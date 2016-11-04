@@ -24,6 +24,7 @@ def analyze(outfile, base_url='https://calc.gsa.gov'):
 
     with connection.cursor() as cursor:
         vocab = get_vocab(cursor)
+        cache = {}
 
         total = contracts.count()
 
@@ -38,7 +39,8 @@ def analyze(outfile, base_url='https://calc.gsa.gov'):
                 contract.min_years_experience,
                 contract.education_level,
                 float(contract.current_price),
-                severe_stddevs=3
+                severe_stddevs=3,
+                cache=cache
             )
 
             if analysis['severe']:

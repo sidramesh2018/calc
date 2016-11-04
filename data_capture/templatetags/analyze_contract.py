@@ -115,16 +115,29 @@ def broaden_query(cursor, vocab, query):
 
 def find_comparable_contracts(cursor, vocab, labor_category,
                               min_years_experience, education_level,
-                              min_count=30, experience_radius=2):
+                              min_count=30, experience_radius=2,
+                              cache=None):
+    if cache is None:
+        cache = {}
+
     for phrase in broaden_query(cursor, vocab, labor_category):
+        no_results_key = ('find_comparable_contracts:no_results',
+                          phrase, min_years_experience, education_level,
+                          min_count, experience_radius)
+        if no_results_key in cache:
+            continue
+
         contracts = Contract.objects.all().multi_phrase_search(phrase)
         contracts = contracts.filter(
             min_years_experience__gte=min_years_experience - experience_radius,
             min_years_experience__lte=min_years_experience + experience_radius,
             education_level=education_level
         )
+
         if contracts.count() >= min_count:
             return phrase, contracts
+        else:
+            cache[no_results_key] = True
     return None, None
 
 
@@ -142,7 +155,11 @@ def get_data_explorer_url(query, min_experience, max_experience, education):
 
 
 def describe(cursor, vocab, labor_category, min_years_experience,
-             education_level, price, severe_stddevs=2, experience_radius=2):
+             education_level, price, severe_stddevs=2, experience_radius=2,
+             cache=None):
+    if cache is None:
+        cache = {}
+
     result = {
         'severe': False,
         'description': ''
@@ -154,7 +171,8 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         labor_category,
         min_years_experience,
         education_level,
-        experience_radius=experience_radius
+        experience_radius=experience_radius,
+        cache=cache
     )
 
     if contracts is not None:
