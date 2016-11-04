@@ -61,8 +61,8 @@ class SubmittedPriceList(models.Model):
     submitter = models.ForeignKey(User)
 
     status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NEW)
-    status_changed_by = models.ForeignKey(User, related_name='+', null=True)
-    status_changed_at = models.DateTimeField(null=True)
+    status_changed_by = models.ForeignKey(User, related_name='+')
+    status_changed_at = models.DateTimeField()
 
     serialized_gleaned_data = models.TextField(
         help_text=(

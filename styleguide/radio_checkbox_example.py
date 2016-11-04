@@ -2,11 +2,11 @@ from django import forms
 from django.shortcuts import render
 from django.contrib import messages
 
-from frontend.radio import UswdsRadioSelect
+from frontend.widgets import UswdsRadioSelect, UswdsCheckbox
 
 
 class ExampleForm(forms.Form):
-    choices = forms.ChoiceField(
+    radios = forms.ChoiceField(
         widget=UswdsRadioSelect,
         choices=(
             ('1', 'First'),
@@ -14,12 +14,20 @@ class ExampleForm(forms.Form):
         )
     )
 
+    checkboxes = forms.MultipleChoiceField(
+        widget=UswdsCheckbox,
+        choices=(
+            ('a', 'Choice A'),
+            ('b', 'Choice B'),
+        )
+    )
 
-def create_template_context(radio_form=None):
-    if radio_form is None:
-        radio_form = ExampleForm()
 
-    return {'radio_form': radio_form}
+def create_template_context(radio_checkbox_form=None):
+    if radio_checkbox_form is None:
+        radio_checkbox_form = ExampleForm()
+
+    return {'radio_checkbox_form': radio_checkbox_form}
 
 
 def view(request):
@@ -31,7 +39,8 @@ def view(request):
         if form.is_valid():
             messages.add_message(
                 request, messages.SUCCESS,
-                "You chose option #{}!".format(form.cleaned_data['choices'])
+                "You chose radio option #{}!".format(
+                    form.cleaned_data['radios'])
             )
         else:
             messages.add_message(
@@ -42,5 +51,5 @@ def view(request):
     return render(
         request,
         'styleguide_radio.html',
-        create_template_context(radio_form=form),
+        create_template_context(radio_checkbox_form=form),
     )

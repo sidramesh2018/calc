@@ -481,27 +481,28 @@
   </select>
   {% endexample %}
 
-  {% guide_section "Radio Buttons" %}
+  {% guide_section "Radio Buttons and Checkboxes" %}
 
   <p>
     Because USWDS uses a slightly different HTML structure for
-    radio buttons than Django, we need to use a custom
-    {% pyobjname 'frontend.radio.UswdsRadioSelect' %} widget.
+    radio buttons and checkboxes from Django, we need to use custom
+    widgets: {% pyobjname 'frontend.widgets.UswdsRadioSelect' %} and
+    {% pyobjname 'frontend.widgets.UswdsCheckbox' %}.
   </p>
 
   <p>
     For a simple code example, see
-    {% pathname 'styleguide/radio_example.py' %} and
-    {% pathname 'styleguide/templates/styleguide_radio_example.html' %}.
+    {% pathname 'styleguide/radio_checkbox_example.py' %} and
+    {% pathname 'styleguide/templates/styleguide_radio_checkbox_example.html' %}.
   </p>
 
   <div class="styleguide-example">
     <div class="rendering">
       <h3 class="example-heading">
         Example
-        <a href="{% url 'styleguide:radio' %}" target="_blank" title="Open in new tab"></a>
+        <a href="{% url 'styleguide:radio-checkbox' %}" target="_blank" title="Open in new tab"></a>
       </h3>
-      {% include "styleguide_radio_example.html" %}
+      {% include "styleguide_radio_checkbox_example.html" %}
     </div>
   </div>
 

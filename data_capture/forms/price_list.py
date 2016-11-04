@@ -4,7 +4,7 @@ from ..models import SubmittedPriceList
 from ..schedules import registry
 from frontend.upload import UploadWidget
 from frontend.date import SplitDateField
-from frontend.radio import UswdsRadioSelect
+from frontend.widgets import UswdsRadioSelect
 from contracts.models import MIN_ESCALATION_RATE, MAX_ESCALATION_RATE
 
 

@@ -78,10 +78,12 @@ class ModelsTests(ModelTestCase):
         self.assertEqual(p.get_business_size_string(), 'S')
 
     def test_change_status_works(self):
+        original_user = self.create_user(username='boop', email="boop@beep")
         p = self.create_price_list(
             status=SubmittedPriceList.STATUS_NEW,
-            status_changed_by=None,
-            status_changed_at=None)
+            status_changed_by=original_user,
+            status_changed_at=datetime.datetime.now() - datetime.timedelta(
+                days=1))
         p._change_status(SubmittedPriceList.STATUS_APPROVED, self.user)
         self.assertEqual(p.status, SubmittedPriceList.STATUS_APPROVED)
         self.assertEqual(p.status_changed_by, self.user)
