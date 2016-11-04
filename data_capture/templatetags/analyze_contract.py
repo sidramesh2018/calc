@@ -142,14 +142,11 @@ def get_data_explorer_url(query, min_experience, max_experience, education):
 
 
 def describe(cursor, vocab, labor_category, min_years_experience,
-             education_level, price):
+             education_level, price, severe_stddevs=2, experience_radius=2):
     result = {
         'severe': False,
         'description': ''
     }
-
-    EXPERIENCE_RADIUS = 2
-    SEVERE_STDDEVS = 2
 
     phrase, contracts = find_comparable_contracts(
         cursor,
@@ -157,7 +154,7 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         labor_category,
         min_years_experience,
         education_level,
-        experience_radius=EXPERIENCE_RADIUS
+        experience_radius=experience_radius
     )
 
     if contracts is not None:
@@ -171,7 +168,7 @@ def describe(cursor, vocab, labor_category, min_years_experience,
 
         price_delta = abs(price - avg)
 
-        if price_delta >= SEVERE_STDDEVS * stddev:
+        if price_delta >= severe_stddevs * stddev:
             result['severe'] = True
 
         result['avg'] = avg
@@ -180,8 +177,8 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         result['labor_category'] = phrase
         result['url'] = get_data_explorer_url(
             phrase,
-            min_years_experience - EXPERIENCE_RADIUS,
-            min_years_experience + EXPERIENCE_RADIUS,
+            min_years_experience - experience_radius,
+            min_years_experience + experience_radius,
             education_level
         )
         result['description'] = render_to_string(

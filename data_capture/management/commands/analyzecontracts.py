@@ -30,13 +30,17 @@ def analyze(outfile, base_url='https://calc.gsa.gov'):
         for i, contract in enumerate(contracts):
             if int(i / 10) == float(i) / 10.0:
                 print("Processed {} of {} contracts.".format(i, total))
-            info = (
+
+            analysis = describe(
+                cursor,
+                vocab,
                 contract.labor_category,
                 contract.min_years_experience,
                 contract.education_level,
                 float(contract.current_price),
+                severe_stddevs=3
             )
-            analysis = describe(cursor, vocab, *info)
+
             if analysis['severe']:
                 row = OrderedDict((
                     ('Labor category', contract.labor_category),
@@ -54,6 +58,7 @@ def analyze(outfile, base_url='https://calc.gsa.gov'):
                     writer = csv.DictWriter(outfile, fieldnames=row.keys())
                     writer.writeheader()
                 writer.writerow(row)
+                outfile.flush()
 
 
 @click.command()
