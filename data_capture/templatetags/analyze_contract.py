@@ -134,11 +134,12 @@ def find_comparable_contracts(cursor, vocab, labor_category,
             education_level=education_level
         )
 
-        if contracts.count() >= min_count:
-            return phrase, contracts
+        count = contracts.count()
+        if count >= min_count:
+            return phrase, contracts, count
         else:
             cache[no_results_key] = True
-    return None, None
+    return None, None, None
 
 
 def get_data_explorer_url(query, min_experience, max_experience, education):
@@ -165,7 +166,7 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         'description': ''
     }
 
-    phrase, contracts = find_comparable_contracts(
+    phrase, contracts, count = find_comparable_contracts(
         cursor,
         vocab,
         labor_category,
@@ -189,6 +190,7 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         if price_delta >= severe_stddevs * stddev:
             result['severe'] = True
 
+        result['count'] = count
         result['avg'] = avg
         result['stddev'] = stddev
         result['stddevs'] = math.ceil(price_delta / stddev)

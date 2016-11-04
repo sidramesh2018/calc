@@ -50,6 +50,7 @@ def analyze(outfile, base_url='https://calc.gsa.gov'):
                     ('Education', contract.education_level),
                     ('Current year pricing', contract.current_price),
                     ('CALC query', analysis['labor_category']),
+                    ('CALC sample size', analysis['count']),
                     ('CALC avg', analysis['avg']),
                     ('CALC stddev', analysis['stddev']),
                     ('CALC URL', base_url + analysis['url']),
