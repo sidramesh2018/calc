@@ -1,6 +1,7 @@
 import pandas as pd
 from glob import glob
 import os
+import math
 import json
 
 """
@@ -14,6 +15,12 @@ I don't really undetstand what a schedule is, but it's kind of like a geographic
 
 """
 
+def is_nan(obj):
+    if type(obj) == type(float()):
+        return math.isnan(obj)
+    else:
+        return False
+    
 def money_to_float(string):
     """
     hourly wages have dollar signs and use commas, 
@@ -33,8 +40,8 @@ def load_data():
     """
     #loading the datasets into memory
     os.chdir("data")
-    data_sets = glob("*.csv")
-    dfs = [pd.read_csv(data_set) for data_set in data_sets if "_v" in data_set]
+    data_sets = ["hourly_prices_v1.csv","hourly_prices_v2.csv","hourly_prices_v3.csv","hourly_prices_v4.csv"]
+    dfs = [pd.read_csv(data_set) for data_set in data_sets]
     os.chdir("..")
     return dfs
 
@@ -42,6 +49,7 @@ def making_categories():
     """
     This function assumes there is a folder called data, that contains csv's with data on schedule information 
     of different positions to contract for.
+    this function creates a mapping from labor categories to education level + years of experience + schedule
     """
     
     dfs = load_data()
@@ -54,7 +62,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "6-10":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -62,7 +71,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "11-15":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -70,7 +80,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             }
         },
         "High School":{
@@ -80,7 +91,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "6-10":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -88,7 +100,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "11-15":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -96,7 +109,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             }
         },
         "Associates":{
@@ -106,7 +120,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "6-10":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -114,7 +129,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "11-15":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -122,7 +138,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             }
         },
         "Bachelors":{
@@ -132,7 +149,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "6-10":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -140,7 +158,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "11-15":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -148,7 +167,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             }
         },
         "Masters":{
@@ -158,7 +178,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "6-10":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -166,7 +187,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "11-15":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -174,7 +196,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             }
         },
         "Ph.D.":{
@@ -184,7 +207,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "6-10":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -192,7 +216,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             },
             "11-15":{
                 "PES":{"freq":0,"labor categories":[]},
@@ -200,7 +225,8 @@ def making_categories():
                 "Environmental":{"freq":0,"labor categories":[]},
                 "Logistics":{"freq":0,"labor categories":[]},
                 "Consolidated":{"freq":0,"labor categories":[]},
-                "AIMS":{"freq":0,"labor categories":[]}
+                "AIMS":{"freq":0,"labor categories":[]},
+                "Language Services":{"freq":0,"labor categories":[]}
             }
         }
     }
@@ -213,17 +239,16 @@ def making_categories():
             else:
                 seen_labor_categories.append(df.ix[index]["Labor Category"])
             #This part of the code classifies the data into buckets based on some simple rules.
-            if df.ix[index]["MinExpAct"] <6:
+            if df.ix[index]["MinExpAct"] <6 or is_nan(df.ix[index]):
                 years_exp = "0-5"
             elif df.ix[index]["MinExpAct"] >=6 and df.ix[index]["MinExpAct"] < 11:
                 years_exp = "6-10"
             elif df.ix[index]["MinExpAct"] >= 11 and df.ix[index]["MinExpAct"] < 16:
                 years_exp = "11-15"
-            try:
-                categories[ df.ix[index]["Education"] ][ years_exp ][ df.ix[index]["Schedule"] ]["freq"] += 1
-            except:
-                continue
-            categories[ df.ix[index]["Education"] ][ years_exp ][ df.ix[index]["Schedule"] ]["labor categories"].append(df.ix[index]["Labor Category"])
+            
+            education_level = df.ix[index]["Education"] if not is_nan(df.ix[index]["Education"]) else "None" 
+            categories[ education_level ][ years_exp ][ df.ix[index]["Schedule"] ]["freq"] += 1
+            categories[ education_level ][ years_exp ][ df.ix[index]["Schedule"] ]["labor categories"].append(df.ix[index]["Labor Category"])
             
     json.dump(categories,open("categories.json","w"))
 
@@ -246,34 +271,26 @@ def making_labor_category_to_high_level():
     json.dump(labor_category_to_high_level_category,open("labor_category_to_high_level_category.json","w"))
     return list_of_categories
 
-dfs = load_data()
+
 if not os.path.exists("categories.json"):
     making_categories()
-    
-list_of_categories = making_labor_category_to_high_level()
 
+dfs = load_data()
 labor_category = json.load(open("labor_category_to_high_level_category.json","r"))
-
+list_of_categories = making_labor_category_to_high_level()
 set_of_time_series = {}.fromkeys(list_of_categories,pd.DataFrame())
-
-counter = 0
-counter_labor = 0
-for df in dfs:
-    try:
-        df.ix[0]['Schedule']
-    except:
-        continue
+compressed_dfs = [pd.DataFrame() for _ in range(len(dfs))]
+for ind,df in enumerate(dfs):
+    compressed_dfs[ind]["Year 1/base"] = df["Year 1/base"]
+    compressed_dfs[ind]["Begin Date"] = df["Begin Date"]
+    compressed_dfs[ind]["Labor Category"] = df["Labor Category"]
+    
+for df in compressed_dfs:
     for ind in df.index:
-        counter += 1
-        if df.ix[ind]["Labor Category"] in list(labor_category.keys()):
-            counter_labor += 1
-        #labor_cat = labor_category[labor_category[df.ix[ind]["Labor Category"]]]
-
-        #set_of_time_series[labor_cat].append(df.ix[ind])
-
+        labor_cat = labor_category[df.ix[ind]["Labor Category"]]
+        set_of_time_series[labor_cat] = set_of_time_series[labor_cat].append(df.ix[ind])
 
 import code
 code.interact(local=locals())
-
-#To dos - schedule might be missing, continue removing it
-#- Number of years of experience is definitely missing sometimes, replace this with none, if it's a nan value
+    #To dos - schedule might be missing, continue removing it
+    #- Number of years of experience is definitely missing sometimes, replace this with none, if it's a nan value
