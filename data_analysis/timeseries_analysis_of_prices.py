@@ -274,3 +274,6 @@ for df in dfs:
 
 import code
 code.interact(local=locals())
+
+#To dos - schedule might be missing, continue removing it
+#- Number of years of experience is definitely missing sometimes, replace this with none, if it's a nan value
