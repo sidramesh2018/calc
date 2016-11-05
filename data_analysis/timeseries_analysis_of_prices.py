@@ -290,7 +290,12 @@ for df in compressed_dfs:
         labor_cat = labor_category[df.ix[ind]["Labor Category"]]
         set_of_time_series[labor_cat] = set_of_time_series[labor_cat].append(df.ix[ind])
 
+for category in set_of_time_series.keys():
+    set_of_time_series[category].index = set_of_time_series["Begin Date"]
+    del set_of_time_series[category]["Begin Date"]
+    del set_of_time_series[category]["Labor Category"]
+
 import code
 code.interact(local=locals())
-    #To dos - schedule might be missing, continue removing it
-    #- Number of years of experience is definitely missing sometimes, replace this with none, if it's a nan value
+
+    
