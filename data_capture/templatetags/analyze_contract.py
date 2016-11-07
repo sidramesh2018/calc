@@ -69,7 +69,7 @@ class Vocabulary(dict):
             "select word, ndoc from ts_stat(%s) WHERE ndoc > %s",
             [tsvector_query, min_ndoc]
         )
-        vocab = {}
+        vocab = cls()
         for word, ndoc in cursor.fetchall():
             vocab[word] = ndoc
         return vocab
