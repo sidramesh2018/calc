@@ -57,19 +57,22 @@ def get_best_permutations(vocab, lexemes, min_length=4, max_permutations=8):
     return permutations[:max_permutations]
 
 
-def get_vocab(cursor, model=Contract, field='search_index', min_ndoc=100):
-    tsvector_query = 'select {} from {}'.format(
-        model._meta.get_field(field).column,
-        model._meta.db_table
-    )
-    cursor.execute(
-        "select word, ndoc from ts_stat(%s) WHERE ndoc > %s",
-        [tsvector_query, min_ndoc]
-    )
-    vocab = {}
-    for word, ndoc in cursor.fetchall():
-        vocab[word] = ndoc
-    return vocab
+class Vocabulary(dict):
+    @classmethod
+    def create(cls, cursor, model=Contract, field='search_index',
+               min_ndoc=100):
+        tsvector_query = 'select {} from {}'.format(
+            model._meta.get_field(field).column,
+            model._meta.db_table
+        )
+        cursor.execute(
+            "select word, ndoc from ts_stat(%s) WHERE ndoc > %s",
+            [tsvector_query, min_ndoc]
+        )
+        vocab = {}
+        for word, ndoc in cursor.fetchall():
+            vocab[word] = ndoc
+        return vocab
 
 
 def get_lexemes(cursor, words, cache):
@@ -231,7 +234,7 @@ def analyze_contract_row(row):
     with connection.cursor() as cursor:
         return describe(
                 cursor,
-                get_vocab(cursor),
+                Vocabulary.create(cursor),
                 row['service'].value(),
                 int(row['years_experience'].value()),
                 EDU_LEVELS[row['education'].value()],

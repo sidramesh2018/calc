@@ -4,7 +4,7 @@ import djclick as click
 from django.db import connection
 
 from contracts.models import Contract
-from data_capture.templatetags.analyze_contract import describe, get_vocab
+from data_capture.templatetags.analyze_contract import describe, Vocabulary
 
 
 def gsa_advantage_url(contract_id):
@@ -23,7 +23,7 @@ def analyze(outfile, base_url='https://calc.gsa.gov'):
     writer = None
 
     with connection.cursor() as cursor:
-        vocab = get_vocab(cursor)
+        vocab = Vocabulary.create(cursor)
         cache = {}
 
         total = contracts.count()
