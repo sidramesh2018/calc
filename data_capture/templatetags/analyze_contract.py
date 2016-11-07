@@ -72,14 +72,19 @@ def get_vocab(cursor, model=Contract, field='search_index', min_ndoc=100):
     return vocab
 
 
-def get_lexemes(cursor, words):
-    cursor.execute(
-        "select {}".format(
-            ', '.join(["plainto_tsquery(%s)"] * len(words))
-        ),
-        words
-    )
-    return [column[1:-1] for column in cursor.fetchone()]
+def get_lexemes(cursor, words, cache):
+    uncached_words = [word for word in words if word not in cache]
+    if uncached_words:
+        cursor.execute(
+            "select {}".format(
+                ', '.join(["plainto_tsquery(%s)"] * len(words))
+            ),
+            words
+        )
+        lexemes = [column[1:-1] for column in cursor.fetchone()]
+        for word, lexeme in zip(words, lexemes):
+            cache[word] = lexeme
+    return [cache[word] for word in words]
 
 
 def filter_and_sort_lexemes(vocab, lexemes):
@@ -91,7 +96,7 @@ def filter_and_sort_lexemes(vocab, lexemes):
     return lexemes
 
 
-def broaden_query(cursor, vocab, query):
+def broaden_query(cursor, vocab, query, cache):
     '''
     Return an iterator that yields subsets of the given query; the
     subsets are defined by removing search terms in order of the number of
@@ -101,7 +106,7 @@ def broaden_query(cursor, vocab, query):
 
     orig_words = query.split()
     orig_word_ordering = dict(zip(orig_words, range(len(orig_words))))
-    orig_lexemes = get_lexemes(cursor, orig_words)
+    orig_lexemes = get_lexemes(cursor, orig_words, cache)
     word_map = dict(zip(orig_lexemes, orig_words))
     lexemes_in_vocab = [lexeme for lexeme in orig_lexemes if lexeme in vocab]
 
@@ -120,7 +125,7 @@ def find_comparable_contracts(cursor, vocab, labor_category,
     if cache is None:
         cache = {}
 
-    for phrase in broaden_query(cursor, vocab, labor_category):
+    for phrase in broaden_query(cursor, vocab, labor_category, cache):
         no_results_key = ('find_comparable_contracts:no_results',
                           phrase, min_years_experience, education_level,
                           min_count, experience_radius)
