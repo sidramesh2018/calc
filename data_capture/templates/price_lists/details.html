@@ -39,17 +39,40 @@
     <div class="row">
       {% if gleaned_data.valid_rows %}
         <div class="columns twelve">
-          {# Note that not all of the valid rows will necessarily be in CALC #}
-          {# once the Price List is approved. The individual rows could be muted. #}
           <h3>Valid price list rows</h3>
-          {{ gleaned_data.to_table }}
+          <table>
+            <thead>
+              <tr>
+                <th>SIN(s)</th>
+                <th>Labor category</th>
+                <th>Minimum education level</th>
+                <th class="number">Minimum years of experience</th>
+                <th class="number">Base year rate (per hour)</th>
+                <th>Is muted</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in price_list_rows %}
+                <tr>
+                  <td>{{ row.sin }}</td>
+                  <td>{{ row.labor_category }}</td>
+                  <td>{{ row.get_education_level_display }}</td>
+                  <td class="number">{{ row.min_years_experience }}</td>
+                  <td class="number currency">{{ row.base_year_rate }}</td>
+                  <td>{{ row.is_muted }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       {% endif %}
       {% if gleaned_data.invalid_rows %}
         <div class="columns twelve">
-          <h3>Invalid price list rows</h3>
-          <p>These rows are invalid and will not be included in CALC.</p>
-          {{ gleaned_data.to_error_table }}
+          <expandable-area>
+            <h3>Invalid price list rows</h3>
+            <p>These rows are invalid and will not be included in CALC.</p>
+            {{ gleaned_data.to_error_table }}
+          </expandable-area>
         </div>
       {% endif %}
     </div>

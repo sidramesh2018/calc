@@ -57,7 +57,10 @@ def price_list_details(request, id):
     gleaned_data = registry.deserialize(
         json.loads(price_list.serialized_gleaned_data))
 
+    pl_rows = price_list.rows.all()
+
     return render(request, 'price_lists/details.html', {
         'price_list': price_list,
         'gleaned_data': gleaned_data,
+        'price_list_rows': pl_rows,
     })
