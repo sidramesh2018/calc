@@ -3,6 +3,8 @@ from glob import glob
 import os
 import math
 import json
+import datetime
+import time
 
 """
 A bit about this file - Python is a great language full of lots of useful data science libraries.  But it's not that fast.  For this reason we use a series of functions which send data to json files, which can be used by the language as Python Dictionaries.  Because of the size of the data, big but not *that* big, it made sense to chop up the tasks and not repeat computation unless necessary.  Otherwise debugging and iteration would be difficult, because just processing the data, takes a while.
@@ -44,6 +46,9 @@ def load_data():
     dfs = [pd.read_csv(data_set) for data_set in data_sets]
     os.chdir("..")
     return dfs
+
+def date_to_datetime(time_string):
+    return datetime.datetime.strptime(time_string, '%m/%d/%Y')
 
 def making_categories():
     """
@@ -275,27 +280,52 @@ def making_labor_category_to_high_level():
 if not os.path.exists("categories.json"):
     making_categories()
 
-dfs = load_data()
-labor_category = json.load(open("labor_category_to_high_level_category.json","r"))
-list_of_categories = making_labor_category_to_high_level()
-set_of_time_series = {}.fromkeys(list_of_categories,pd.DataFrame())
-compressed_dfs = [pd.DataFrame() for _ in range(len(dfs))]
-for ind,df in enumerate(dfs):
-    compressed_dfs[ind]["Year 1/base"] = df["Year 1/base"]
-    compressed_dfs[ind]["Begin Date"] = df["Begin Date"]
-    compressed_dfs[ind]["Labor Category"] = df["Labor Category"]
-    
-for df in compressed_dfs:
-    for ind in df.index:
-        labor_cat = labor_category[df.ix[ind]["Labor Category"]]
-        set_of_time_series[labor_cat] = set_of_time_series[labor_cat].append(df.ix[ind])
+if __name__ == '__main__':
+    start = time.time()
+    dfs = load_data()
+    print("loaded_data, took:",time.time() - start)
+    start = time.time()
+    labor_category = json.load(open("labor_category_to_high_level_category.json","r"))
+    list_of_categories = making_labor_category_to_high_level()
+    set_of_time_series = {}.fromkeys(list_of_categories,pd.DataFrame())
+    print("loaded json, ran making_labor_category_to_high_level, took:",time.time() - start)
 
-for category in set_of_time_series.keys():
-    set_of_time_series[category].index = set_of_time_series["Begin Date"]
-    del set_of_time_series[category]["Begin Date"]
-    del set_of_time_series[category]["Labor Category"]
+    compressed_dfs = [pd.DataFrame() for _ in range(len(dfs))]
+    start = time.time()
+    for ind,df in enumerate(dfs):
+        compressed_dfs[ind]["Year 1/base"] = df["Year 1/base"]
+        compressed_dfs[ind]["Begin Date"] = df["Begin Date"]
+        compressed_dfs[ind]["Labor Category"] = df["Labor Category"]
+    print("compressed dataframes, took", time.time() - start)
 
-import code
-code.interact(local=locals())
+    start = time.time()
+    for df in compressed_dfs:
+        for ind in df.index:
+            labor_cat = labor_category[df.ix[ind]["Labor Category"]]
+            set_of_time_series[labor_cat] = set_of_time_series[labor_cat].append(df.ix[ind])
+    print("categorizing dataframes, took:", time.time() - start)
+
+    start = time.time()
+    for category in set_of_time_series.keys():
+        set_of_time_series[category].index = [date_to_datetime(elem) for elem in set_of_time_series[category]["Begin Date"]]
+        del set_of_time_series[category]["Begin Date"]
+        del set_of_time_series[category]["Labor Category"]
+    print("organizing categorized dataframes took:", time.time() - start)
+
+    import numpy as np
+    from scipy import stats
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import statsmodels.api as sm
+    from statsmodels.graphics.api import qqplot
+
+    keys = list(set_of_time_series.keys())
+    keys.sort()
+    dta = set_of_time_series[keys[0]]
+    dta["Year 1/base"] = dta["Year 1/base"].apply(lambda x:math.log(x))
+    arima_model_012 = sm.tsa.ARIMA(dta, (0,1,2)).fit()
+
+    import code
+    code.interact(local=locals())
 
     
