@@ -22,6 +22,7 @@ nav ul li {
 .field-is_muted input[type=radio] {
     position: static;
     left: 0;
+    width: auto;
 }
 /* end USWDS override */
 
@@ -120,7 +121,7 @@ select[multiple="multiple"] {
   list-style: none;
 }
 
-/* table captions */
+/* tables */
 table caption {
   background-color: $color-gray-lightest;
   padding: .5rem 1rem;
@@ -145,6 +146,11 @@ thead a:focus {
 
 .tabular fieldset {
   max-width: none;
+}
+
+/* Django displays sort priorities when multiple cols are sorted. Hide 'em. */
+.sortpriority {
+  display: none;
 }
 
 /* add/change buttons */
