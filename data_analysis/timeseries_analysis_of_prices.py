@@ -5,6 +5,13 @@ import math
 import json
 import datetime
 import time
+import numpy as np
+from scipy import stats
+import pandas as pd
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from statsmodels.graphics.api import qqplot
+from scipy.optimize import brute
 
 """
 A bit about this file - Python is a great language full of lots of useful data science libraries.  But it's not that fast.  For this reason we use a series of functions which send data to json files, which can be used by the language as Python Dictionaries.  Because of the size of the data, big but not *that* big, it made sense to chop up the tasks and not repeat computation unless necessary.  Otherwise debugging and iteration would be difficult, because just processing the data, takes a while.
@@ -276,6 +283,20 @@ def making_labor_category_to_high_level():
     json.dump(labor_category_to_high_level_category,open("labor_category_to_high_level_category.json","w"))
     return list_of_categories
 
+#this comes from here: http://stackoverflow.com/questions/22770352/auto-arima-equivalent-for-python
+def objective_function(order,endogenous,exogenous=None):
+    if exogenous:
+        fit = sm.tsa.ARIMA(endogenous,order,exogenous).fit()
+    else:
+        fit = sm.tsa.ARIMA(endogenous,order).fit()
+    return fit.aic()
+
+def model_search(data,exogenous_data=None):
+    grid = (slice(1,3,1),slice(1,3,1),slice(1,3,1))
+    if exogenous_data:
+        return brute(objective_function, args=(data,exogenous_data), finish=None)
+    else:
+        return brute(objective_function, args=(data), finish=None)
 
 if not os.path.exists("categories.json"):
     making_categories()
@@ -297,8 +318,7 @@ if __name__ == '__main__':
         compressed_dfs[ind]["Begin Date"] = df["Begin Date"]
         compressed_dfs[ind]["Labor Category"] = df["Labor Category"]
     print("compressed dataframes, took", time.time() - start)
-
-    start = time.time()
+    
     for df in compressed_dfs:
         for ind in df.index:
             labor_cat = labor_category[df.ix[ind]["Labor Category"]]
@@ -312,20 +332,44 @@ if __name__ == '__main__':
         del set_of_time_series[category]["Labor Category"]
     print("organizing categorized dataframes took:", time.time() - start)
 
-    import numpy as np
-    from scipy import stats
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import statsmodels.api as sm
-    from statsmodels.graphics.api import qqplot
-
+    print("starting model search")
+    start = time.time()
     keys = list(set_of_time_series.keys())
     keys.sort()
-    dta = set_of_time_series[keys[0]]
-    dta["Year 1/base"] = dta["Year 1/base"].apply(lambda x:math.log(x))
-    arima_model_012 = sm.tsa.ARIMA(dta, (0,1,2)).fit()
+    
+    set_of_time_series = {key:set_of_time_series[key].sort_index(axis=0) for key in keys}
+    models = []
+    for key in keys:
+        dta = set_of_time_series[key]
+        models.append({"category":key,"model":model_search(dta)})
+    print("finished model search, in:",time.time() - start)
+    # models = []
+    
+    # keys = list(set_of_time_series.keys())
+    # keys.sort()
+    # dta = set_of_time_series[keys[0]]
+    # dta = dta.sort_index(axis=0)
+    # dta["Year 1/base"] = dta["Year 1/base"].apply(lambda x:math.log(x))
+    
+    # model = sm.tsa.ARIMA(dta,(1,1,0)).fit()
+    # model.fittedvalues = model.fittedvalues.apply(lambda x:x+4)
+    # dicter = {"category":keys[0],"model":model}
+    # models.append(dicter)
 
-    import code
-    code.interact(local=locals())
+    # dta = set_of_time_series[keys[1]]
+    # dta = dta.sort_index(axis=0)
+    # model = sm.tsa.ARIMA(dta,(0,1,2)).fit()
+    # model.fittedvalues = model.fittedvalues.apply(lambda x:x+62)
+    # dicter = {"category":keys[1],"model":model}
+    # models.append(dicter)
 
+    # dta = set_of_time_series[keys[2]]
+    # dta = dta.sort_index(axis=0)
+    # model = sm.tsa.ARIMA(dta,(0,1,2)).fit()
+    # model.fittedvalues = model.fittedvalues.apply(lambda x:x+50)
+    # dicter = {"category":keys[1],"model":model}
+    # models.append(dicter)
+    
+    # import IPython
+    # IPython.embed()
     
