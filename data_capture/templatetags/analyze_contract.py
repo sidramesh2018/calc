@@ -2,6 +2,12 @@ import math
 from urllib.parse import urlencode
 from itertools import chain, combinations
 from functools import cmp_to_key
+
+try:
+    import nltk
+except ImportError:
+    nltk = None
+
 from django import template
 from django.db import connection
 from django.db.models import Avg, StdDev
@@ -158,6 +164,26 @@ def filter_and_sort_lexemes(vocab, lexemes):
     return lexemes
 
 
+class PartOfSpeechMapper:
+    def __init__(self, words):
+        self._tags = {}
+        if nltk is not None:
+            self._tags.update(dict(nltk.pos_tag(
+                [word.lower() for word in words] +
+                # NLTK's POS tagger expects full sentences, whereas the
+                # words we've been given really just represent a noun, so
+                # we'll use them as the subject of a sentence.
+                ['jumps', 'over', 'the', 'lazy', 'dog', '.']
+            )))
+
+    def contains_noun(self, words):
+        pos_types = [self._tags.get(word.lower(), 'NN') for word in words]
+        for pos_type in pos_types:
+            if pos_type.startswith('NN'):
+                return True
+        return False
+
+
 def broaden_query(cursor, vocab, query, cache, min_count):
     '''
     Return an iterator that yields subsets of the given query; the
@@ -171,13 +197,15 @@ def broaden_query(cursor, vocab, query, cache, min_count):
     orig_lexemes = get_lexemes(cursor, orig_words, cache)
     word_map = dict(zip(orig_lexemes, orig_words))
     lexemes_in_vocab = [lexeme for lexeme in orig_lexemes if lexeme in vocab]
+    pos_mapper = PartOfSpeechMapper(orig_words)
 
     for lexemes in get_best_permutations(vocab, lexemes_in_vocab, min_count):
         words = sorted(
             [word_map[lexeme] for lexeme in lexemes],
             key=lambda word: orig_word_ordering[word]
         )
-        yield ' '.join(words)
+        if pos_mapper.contains_noun(words):
+            yield ' '.join(words)
 
 
 def find_comparable_contracts(cursor, vocab, labor_category,
