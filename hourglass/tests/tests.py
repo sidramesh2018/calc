@@ -1,5 +1,7 @@
+import os
 import unittest
 import json
+from unittest import SkipTest
 from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
@@ -309,6 +311,10 @@ class ContextProcessorTests(DjangoTestCase):
         self.assertEquals(res.context['GA_TRACKING_ID'], 'boop')
 
     def test_ga_tracking_id_defaults_to_empty_string(self):
+        if 'GA_TRACKING_ID' in os.environ:
+            # Oof, GA_TRACKING_ID is defined in our outside environment,
+            # so we can't actually test this.
+            raise SkipTest()
         res = self.client.get('/')
         self.assertIn('GA_TRACKING_ID', res.context)
         self.assertEquals(res.context['GA_TRACKING_ID'], '')
