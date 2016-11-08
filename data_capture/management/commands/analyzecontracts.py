@@ -23,7 +23,7 @@ def analyze(outfile, base_url='https://calc.gsa.gov'):
     writer = None
 
     with connection.cursor() as cursor:
-        vocab = Vocabulary.create(cursor)
+        vocab = Vocabulary.from_db(cursor)
         cache = {}
 
         total = contracts.count()

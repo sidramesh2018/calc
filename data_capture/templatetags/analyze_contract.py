@@ -32,7 +32,8 @@ def powerset(iterable):
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
 
 
-def get_best_permutations(vocab, lexemes, min_length=4, max_permutations=8):
+def get_best_permutations(vocab, lexemes, min_count=1, min_length=4,
+                          max_permutations=8):
     def compare(a, b):
         a_len = len(a)
         b_len = len(b)
@@ -43,7 +44,20 @@ def get_best_permutations(vocab, lexemes, min_length=4, max_permutations=8):
         return vocab_val(a) - vocab_val(b)
 
     def vocab_val(iterable):
-        return sum([vocab[i] for i in iterable])
+        if len(iterable) == 1:
+            return vocab[iterable[0]]
+        upper_bound = float('inf')
+        for a, b in combinations(iterable, 2):
+            c = vocab.get_cooccurrences(a, b)
+            if c < upper_bound:
+                upper_bound = c
+        return upper_bound
+
+    def are_cooccurrences_valid(lexemes):
+        for a, b in combinations(lexemes, 2):
+            if vocab.get_cooccurrences(a, b) < min_count:
+                return False
+        return True
 
     # Remove the first element, as it's the empty set.
     permutations = list(powerset(lexemes))[1:]
@@ -52,15 +66,32 @@ def get_best_permutations(vocab, lexemes, min_length=4, max_permutations=8):
         lambda x: len(' '.join(x)) >= min_length,
         permutations
     ))
+    permutations = list(filter(are_cooccurrences_valid, permutations))
     permutations.sort(key=cmp_to_key(compare), reverse=True)
 
     return permutations[:max_permutations]
 
 
 class Vocabulary(dict):
+    def __init__(self):
+        super()
+        self._cinfo = {}
+
     @classmethod
-    def create(cls, cursor, model=Contract, field='search_index',
-               min_ndoc=100):
+    def from_list(cls, docs):
+        vocab = cls()
+        for doc in docs:
+            words = doc.split()
+            for word in words:
+                if word not in vocab:
+                    vocab[word] = 0
+                vocab[word] += 1
+            vocab._update_cooccurrence_info(words)
+        return vocab
+
+    @classmethod
+    def from_db(cls, cursor, model=Contract, field='search_index',
+                min_ndoc=100):
         tsvector_query = 'select {} from {}'.format(
             model._meta.get_field(field).column,
             model._meta.db_table
@@ -72,7 +103,35 @@ class Vocabulary(dict):
         vocab = cls()
         for word, ndoc in cursor.fetchall():
             vocab[word] = ndoc
+        vocab._init_cooccurrence_info_from_db(cursor, model, field)
         return vocab
+
+    def get_cooccurrences(self, a, b):
+        return self._cinfo.get(a, {}).get(b, 0)
+
+    def _update_cooccurrence_info(self, lexemes):
+        cinfo = self._cinfo
+        lexemes = [lexeme for lexeme in lexemes if lexeme in self]
+        for lexeme in lexemes:
+            if lexeme not in cinfo:
+                cinfo[lexeme] = {}
+            lexeme_cinfo = cinfo[lexeme]
+            for other_lexeme in lexemes:
+                lexeme_cinfo[other_lexeme] = lexeme_cinfo.get(
+                    other_lexeme,
+                    0
+                ) + 1
+
+    def _init_cooccurrence_info_from_db(self, cursor, model, field):
+        with connection.cursor() as cursor:
+            cursor.execute('select strip({}) from {}'.format(
+                model._meta.get_field(field).column,
+                model._meta.db_table
+            ))
+
+            for (search,) in cursor:
+                lexemes = [lexeme[1:-1] for lexeme in search.split(' ')]
+                self._update_cooccurrence_info(lexemes)
 
 
 def get_lexemes(cursor, words, cache):
@@ -99,7 +158,7 @@ def filter_and_sort_lexemes(vocab, lexemes):
     return lexemes
 
 
-def broaden_query(cursor, vocab, query, cache):
+def broaden_query(cursor, vocab, query, cache, min_count):
     '''
     Return an iterator that yields subsets of the given query; the
     subsets are defined by removing search terms in order of the number of
@@ -113,7 +172,7 @@ def broaden_query(cursor, vocab, query, cache):
     word_map = dict(zip(orig_lexemes, orig_words))
     lexemes_in_vocab = [lexeme for lexeme in orig_lexemes if lexeme in vocab]
 
-    for lexemes in get_best_permutations(vocab, lexemes_in_vocab):
+    for lexemes in get_best_permutations(vocab, lexemes_in_vocab, min_count):
         words = sorted(
             [word_map[lexeme] for lexeme in lexemes],
             key=lambda word: orig_word_ordering[word]
@@ -128,7 +187,8 @@ def find_comparable_contracts(cursor, vocab, labor_category,
     if cache is None:
         cache = {}
 
-    for phrase in broaden_query(cursor, vocab, labor_category, cache):
+    for phrase in broaden_query(cursor, vocab, labor_category, cache,
+                                min_count):
         no_results_key = ('find_comparable_contracts:no_results',
                           phrase, min_years_experience, education_level,
                           min_count, experience_radius)
@@ -234,7 +294,7 @@ def analyze_contract_row(row):
     with connection.cursor() as cursor:
         return describe(
                 cursor,
-                Vocabulary.create(cursor),
+                Vocabulary.from_db(cursor),
                 row['service'].value(),
                 int(row['years_experience'].value()),
                 EDU_LEVELS[row['education'].value()],
