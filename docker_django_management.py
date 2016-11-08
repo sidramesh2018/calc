@@ -78,17 +78,25 @@ CONTAINER_NAME = os.environ.get('DDM_CONTAINER_NAME')
 IS_RUNNING_IN_DOCKER = 'DDM_IS_RUNNING_IN_DOCKER' in os.environ
 
 
+def info(msg):
+    '''
+    Prints a message.
+    '''
+
+    sys.stderr.write('{}\n'.format(msg))
+    sys.stderr.flush()
+
+
 def warn(msg):
     '''
     Prints a warning message in red.
     '''
 
-    print(
+    info(
         "\x1b[31;1m"  # Red
         "WARNING: " + msg +
         "\x1b[0m"     # Reset colors
     )
-    sys.stdout.flush()
 
 
 def setup_docker_sigterm_handler():
@@ -115,7 +123,7 @@ def setup_docker_sigterm_handler():
                 pass
         sys.exit(0)
 
-    print("Setting up Docker SIGTERM handler for quick, graceful exit.")
+    info("Setting up Docker SIGTERM handler for quick, graceful exit.")
     signal.signal(signal.SIGTERM, handler)
 
 
@@ -147,9 +155,9 @@ def wait_for_db(max_attempts=15, seconds_between_attempts=1):
                 raise e
             attempts += 1
             time.sleep(seconds_between_attempts)
-            print("Attempting to connect to database.")
+            info("Attempting to connect to database.")
 
-    print("Connection to database established.")
+    info("Connection to database established.")
 
 
 def execute_from_command_line(argv):
