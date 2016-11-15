@@ -5,15 +5,41 @@
 {% block subtitle %}Upload price list{% endblock %}
 
 {% block step_body %}
-<h2>Upload awarded price list</h2>
-<p>Choose the <strong>final</strong> awarded price list you'd like to add to CALC.</p>
-{% if upload_example %}
-<expandable-area>
-  <p><strong>I don't know what to upload.</strong></p>
-  <div>
-    {{ upload_example }}
-  </div>
-</expandable-area>
-{% endif %}
-{% include 'data_capture/price_list/upload_form.html' %}
+  <h2>Upload awarded price list</h2>
+
+  {% if gleaned_data %}
+    <p>You have already uploaded a price list. <a href="#upload">Upload a new one</a> if you'd like to replace it.</p>
+
+    {% if gleaned_data.valid_rows %}
+      <h3>Valid rows</h3>
+      {{ gleaned_data.to_table|safe }}
+    {% else %}
+      <div class="alert alert-error">
+        <h3>No valid rows found!</h3>
+        <p>Your uploaded price list contains no valid rows. Please fix the errors and try uploading again.</p>
+      </div>
+    {% endif %}
+
+    {% if gleaned_data.invalid_rows %}
+      <h3>Invalid rows</h3>
+      {{ gleaned_data.to_error_table|safe }}
+    {% endif %}
+  {% endif %}
+
+  {% if not gleaned_data or not gleaned_data.valid_rows %}
+    <p>Choose the <strong>final</strong> awarded price list you'd like to add to CALC.</p>
+  {% else %}
+    <h2 id="upload" tabindex="-1">Want to try that again?</h2>
+    <p>Upload a new <strong>final</strong> awarded price list to replace the one you've already added.</p>
+  {% endif %}
+
+  {% if upload_example %}
+    <expandable-area>
+      <p><strong>I don't know what to upload.</strong></p>
+      <div>
+        {{ upload_example }}
+      </div>
+    </expandable-area>
+  {% endif %}
+  {% include 'data_capture/price_list/upload_form.html' %}
 {% endblock %}

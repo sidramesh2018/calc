@@ -6,6 +6,7 @@ from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
 from django.utils import timezone
+from django.utils.http import is_safe_url
 
 from .. import forms
 from ..models import SubmittedPriceList
@@ -66,6 +67,18 @@ def get_step_form_from_session(step_number, request, **kwargs):
             'invalid step {} data in session'.format(step_number)
         )
     return form
+
+
+def get_deserialized_gleaned_data(request):
+    '''
+    Gets 'gleaned_data' from session and uses the registry to deserialize
+    it. Returns None if 'gleaned_data' is not in session.
+    '''
+    serialized_gleaned_data = get_nested_item(request.session, (
+        'data_capture:price_list', 'gleaned_data'))
+    if serialized_gleaned_data:
+        return registry.deserialize(serialized_gleaned_data)
+    return None
 
 
 @steps.step
@@ -137,45 +150,77 @@ def step_2(request, step):
 def step_3(request, step):
     if get_step_form_from_session(2, request) is None:
         return redirect('data_capture:step_2')
-    else:
-        session_pl = request.session['data_capture:price_list']
-        step_1_data = get_step_form_from_session(1, request).cleaned_data
-        schedule_class = step_1_data['schedule_class']
 
-        if request.method == 'GET':
-            form = forms.Step3Form(schedule=step_1_data['schedule'])
-        else:
-            form = forms.Step3Form(
-                request.POST,
-                request.FILES,
-                schedule=step_1_data['schedule']
-            )
+    session_pl = request.session['data_capture:price_list']
+    step_1_data = get_step_form_from_session(1, request).cleaned_data
+    schedule_class = step_1_data['schedule_class']
 
-            if form.is_valid():
-                gleaned_data = form.cleaned_data['gleaned_data']
+    if request.method == 'GET':
 
-                session_pl['gleaned_data'] = registry.serialize(gleaned_data)
-                request.session.modified = True
+        gleaned_data = get_deserialized_gleaned_data(request)
+        force_show = request.GET.get('force')
 
-                if gleaned_data.invalid_rows:
-                    return ajaxform.redirect(request,
-                                             'data_capture:step_3_errors')
+        if not force_show and gleaned_data and gleaned_data.valid_rows:
+            # If gleaned_data is in session and has valid rows
+            # show the step 3 interstitial
+            return redirect('data_capture:step_3_data')
 
-                return ajaxform.redirect(request, 'data_capture:step_4')
-            else:
-                add_generic_form_error(request, form)
+        form = forms.Step3Form(schedule=step_1_data['schedule'])
+    else:  # POST
+        gleaned_data = get_deserialized_gleaned_data(request)
 
-        return ajaxform.render(
-            request,
-            context=step.context({
-                'form': form,
-                'upload_example': schedule_class.render_upload_example(
-                    request
-                )
-            }),
-            template_name=step.template_name,
-            ajax_template_name='data_capture/price_list/upload_form.html',
+        form = forms.Step3Form(
+            request.POST,
+            request.FILES,
+            schedule=step_1_data['schedule']
         )
+
+        if form.is_valid():
+            gleaned_data = form.cleaned_data['gleaned_data']
+
+            session_pl['gleaned_data'] = registry.serialize(gleaned_data)
+            request.session.modified = True
+
+            if gleaned_data.invalid_rows:
+                return ajaxform.redirect(request, 'data_capture:step_3_errors')
+            return ajaxform.redirect(request, 'data_capture:step_4')
+        else:
+            add_generic_form_error(request, form)
+
+    return ajaxform.render(
+        request,
+        context=step.context({
+            'form': form,
+            'upload_example': schedule_class.render_upload_example(request)
+        }),
+        template_name=step.template_name,
+        ajax_template_name='data_capture/price_list/upload_form.html',
+    )
+
+
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+@handle_cancel
+@require_http_methods(["GET"])
+def step_3_data(request):
+    step = steps.get_step_renderer(3)
+    gleaned_data = get_deserialized_gleaned_data(request)
+
+    if not gleaned_data or not gleaned_data.valid_rows:
+        return redirect('data_capture:step_3')
+
+    step_1_form = get_step_form_from_session(1, request)
+
+    preferred_schedule = step_1_form.cleaned_data['schedule_class']
+
+    return render(request,
+                  'data_capture/price_list/step_3_data.html',
+                  step.context({
+                    'gleaned_data': gleaned_data,
+                    'is_preferred_schedule': isinstance(gleaned_data,
+                                                        preferred_schedule),
+                    'preferred_schedule_title': preferred_schedule.title,
+                  }))
 
 
 @login_required
@@ -184,15 +229,11 @@ def step_3(request, step):
 @require_http_methods(["GET"])
 def step_3_errors(request):
     step = steps.get_step_renderer(3)
-    gleaned_data = get_nested_item(request.session, (
-        'data_capture:price_list',
-        'gleaned_data'
-    ))
+
+    gleaned_data = get_deserialized_gleaned_data(request)
 
     if gleaned_data is None:
         return redirect('data_capture:step_3')
-
-    gleaned_data = registry.deserialize(gleaned_data)
 
     step_1_form = get_step_form_from_session(1, request)
 
@@ -218,15 +259,13 @@ def step_3_errors(request):
 @handle_cancel
 @transaction.atomic
 def step_4(request, step):
-    gleaned_data = get_nested_item(request.session, (
-        'data_capture:price_list',
-        'gleaned_data',
-    ))
+    gleaned_data = get_deserialized_gleaned_data(request)
 
     if gleaned_data is None:
         return redirect('data_capture:step_3')
 
-    gleaned_data = registry.deserialize(gleaned_data)
+    if request.method == 'GET' and not gleaned_data.valid_rows:
+        return redirect('data_capture:step_3')
 
     session_pl = request.session['data_capture:price_list']
     step_1_form = get_step_form_from_session(1, request)
@@ -273,7 +312,12 @@ def step_4(request, step):
 
         return redirect('data_capture:step_5')
 
+    prev_url = request.GET.get('prev')
+    if not is_safe_url(prev_url):
+        prev_url = None
+
     return step.render(request, {
+        'prev_url': prev_url,
         'gleaned_data': gleaned_data,
         'price_list': pl_details,
         'is_preferred_schedule': isinstance(gleaned_data,

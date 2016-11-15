@@ -60,7 +60,9 @@
 <form method="post">
   {% csrf_token %}
   <div class="form-button-row clearfix">
-    {% if gleaned_data.invalid_rows %}
+    {% if prev_url %}
+      <a href="{{ prev_url }}" class="button button-previous">Previous</a>
+    {% elif gleaned_data.invalid_rows %}
       <a href="{% url 'data_capture:step_3_errors' %}" class="button button-previous">Previous</a>
     {% else %}
       <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>

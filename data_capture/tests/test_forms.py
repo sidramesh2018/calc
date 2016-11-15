@@ -43,6 +43,10 @@ class Step3FormTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['file'][0], 'This field is required.')
 
+    def test_valid_when_file_is_missing_and_not_required(self):
+        form = Step3Form({}, schedule=FAKE_SCHEDULE, is_file_required=False)
+        self.assertTrue(form.is_valid())
+
     def test_invalid_when_file_cannot_be_gleaned(self):
         form = Step3Form({}, {
             'file': uploaded_csv_file(b'i cannot be gleaned')

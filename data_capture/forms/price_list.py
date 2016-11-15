@@ -97,16 +97,26 @@ class Step3Form(forms.Form):
         fully-qualified class name for an entry in the schedule
         registry, e.g.
         "data_capture.schedules.fake_schedule.FakeSchedulePriceList".
+
+        `is_file_required` may also be passed in as a keyword argument to
+        indicate whether the file field of this form is required. It
+        defaults to True. If it is False, then the file field of this form
+        will not be required.
         '''
 
         self.schedule = kwargs.pop('schedule')
         self.schedule_class = registry.get_class(self.schedule)
+
+        is_file_required = kwargs.pop('is_file_required', True)
 
         super().__init__(*args, **kwargs)
 
         extra = self.schedule_class.upload_widget_extra_instructions
         if extra is not None:
             self.fields['file'].widget.extra_instructions = extra
+
+        self.fields['file'].required = is_file_required
+        self.fields['file'].widget.required = is_file_required
 
     def clean(self):
         cleaned_data = super().clean()

@@ -128,8 +128,8 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 
 // Compile and lint JavaScript sources
 gulp.task('js', ['lint', 'js:data-explorer',
-                 'js:data-capture', 'js:styleguide',
-                 'js:tests', 'js:legacy']);
+  'js:data-capture', 'js:styleguide',
+  'js:tests', 'js:legacy']);
 
 gulp.task('js:legacy', ['js:data-explorer:vendor', 'js:common:vendor']);
 
