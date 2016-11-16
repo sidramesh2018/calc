@@ -10,7 +10,7 @@ CALC (formerly known as "Hourglass"), which stands for Contracts Awarded Labor C
 ## Related repositories
 
 * [18F/calc-analysis](https://github.com/18F/calc-analysis) contains
-  data science experiments and other analysis that uses CALC
+  data science experiments and other analyses that use CALC
   data.
 
 ## Setup
