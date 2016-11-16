@@ -290,6 +290,9 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         result['avg'] = avg
         result['stddev'] = stddev
         result['stddevs'] = math.ceil(price_delta / stddev)
+        result['preposition'] = \
+          'w' + ('a' * result['stddevs']) + 'y ' + \
+          ('below' if price < avg else 'above')
         result['labor_category'] = phrase
         result['url'] = get_data_explorer_url(
             phrase,
