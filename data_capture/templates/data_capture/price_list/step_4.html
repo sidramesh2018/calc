@@ -39,6 +39,17 @@
 
     {% fieldset form.escalation_rate %}
   {% endwith %}
+
+  <div class="form-button-row clearfix">
+    <div class="submit-group">
+      <button type="submit" class="button" name="save-changes">Save changes</button>
+    </div>
+
+    {# TODO: This should include any existing querystring args. #}
+
+    <a type="submit" href="?">Discard changes</a>
+  </div>
+
 </div>
 
 {% if not show_edit_form %}

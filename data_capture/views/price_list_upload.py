@@ -299,29 +299,40 @@ def step_4(request, step):
 
     if request.method == 'POST':
         if step_1_form.is_valid() and step_2_form.is_valid():
-            price_list = step_1_form.save(commit=False)
-            step_2_form = forms.Step2Form(request.POST, instance=price_list)
-            step_2_form.save(commit=False)
+            if 'save-changes' in request.POST:
+                session_pl['step_1_POST'] = request.POST
+                session_pl['step_2_POST'] = request.POST
 
-            price_list.submitter = request.user
-            price_list.serialized_gleaned_data = json.dumps(
-                session_pl['gleaned_data'])
+                # Changing the value of a subkey doesn't cause the session to
+                # save, so do it manually.
+                request.session.modified = True
 
-            # We always want to explicitly set the schedule to the
-            # one that the gleaned data is part of, in case we gracefully
-            # fell back to a schedule other than the one the user chose.
-            price_list.schedule = registry.get_classname(gleaned_data)
+                return redirect('data_capture:step_4')
+            else:
+                price_list = step_1_form.save(commit=False)
+                step_2_form = forms.Step2Form(request.POST,
+                                              instance=price_list)
+                step_2_form.save(commit=False)
 
-            price_list.status = SubmittedPriceList.STATUS_NEW
-            price_list.status_changed_at = timezone.now()
-            price_list.status_changed_by = request.user
+                price_list.submitter = request.user
+                price_list.serialized_gleaned_data = json.dumps(
+                    session_pl['gleaned_data'])
 
-            price_list.save()
-            gleaned_data.add_to_price_list(price_list)
+                # We always want to explicitly set the schedule to the
+                # one that the gleaned data is part of, in case we gracefully
+                # fell back to a schedule other than the one the user chose.
+                price_list.schedule = registry.get_classname(gleaned_data)
 
-            del request.session['data_capture:price_list']
+                price_list.status = SubmittedPriceList.STATUS_NEW
+                price_list.status_changed_at = timezone.now()
+                price_list.status_changed_by = request.user
 
-            return redirect('data_capture:step_5')
+                price_list.save()
+                gleaned_data.add_to_price_list(price_list)
+
+                del request.session['data_capture:price_list']
+
+                return redirect('data_capture:step_5')
         else:
             add_generic_form_error(request, step_1_form)
             show_edit_form = True
