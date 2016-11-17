@@ -5,15 +5,44 @@
 {% block subtitle %}Verify data{% endblock %}
 
 {% block step_body %}
-{% with rows=gleaned_data.valid_rows %}
-  {% with total=rows|length %}
-    <h2>Verify {{ total }} row{{ total|pluralize }} of data </h2>
-  {% endwith %}
-
-  {{ gleaned_data.to_table|safe }}
-{% endwith %}
+<form method="post">
+  {% csrf_token %}
 
 <h2>Verify vendor and contract details</h2>
+
+<div data-edit-contract-details {% if not show_edit_form %}style="display: none"{% endif %}>
+
+  {{ step_1_form.non_field_errors }}
+  {{ step_2_form.non_field_errors }}
+
+  {# TODO: Maybe reuse view logic from steps 1 and 2 here to stay DRY? #}
+
+  {% load frontend %}
+
+  {% with form=step_1_form %}
+    {# TODO: It'd be nice if we could just eliminate this field. #}
+    <div style="display: none">{% fieldset form.schedule %}</div>
+
+    {% fieldset form.contract_number %}
+    {% fieldset form.vendor_name %}
+  {% endwith %}
+
+  {% with form=step_2_form %}
+    {% fieldset form.is_small_business %}
+    {% fieldset form.contractor_site %}
+
+    <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+      {% fieldset form.contract_start %}
+      <p>to</p>
+      {% fieldset form.contract_end %}
+    </div>
+
+    {% fieldset form.escalation_rate %}
+  {% endwith %}
+</div>
+
+{% if not show_edit_form %}
+<div data-contract-details>
 <div class="row">
   <dl class="contract-details columns eight">
     <dt>Vendor</dt>
@@ -41,6 +70,12 @@
   </dl>
 </div>
 
+{# TODO: This should include any existing querystring args. #}
+
+<p><a href="?show_edit_form=on" class="button" data-edit-btn>Edit</a></p>
+</div>
+{% endif %}
+
 {% if not is_preferred_schedule %}
   <div class="row">
     <div class="columns eight">
@@ -56,9 +91,16 @@
   </div>
 {% endif %}
 
+<br>
 
-<form method="post">
-  {% csrf_token %}
+{% with rows=gleaned_data.valid_rows %}
+  {% with total=rows|length %}
+    <h2>Verify {{ total }} row{{ total|pluralize }} of data </h2>
+  {% endwith %}
+
+  {{ gleaned_data.to_table|safe }}
+{% endwith %}
+
   <div class="form-button-row clearfix">
     {% if prev_url %}
       <a href="{{ prev_url }}" class="button button-previous">Previous</a>
@@ -80,5 +122,29 @@
     <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
   </div>
 </form>
+
+{% if not is_safe_mode_enabled %}
+<script>
+$(function() {
+  var editBtn = $('[data-edit-btn]');
+  var contractDetails = $("[data-contract-details]");
+  var editContractDetails = $("[data-edit-contract-details]");
+
+  if (editBtn.length && contractDetails.length &&
+      editContractDetails.length) {
+    editBtn.click(function(e) {
+      contractDetails.slideUp();
+      editContractDetails.slideDown();
+      e.preventDefault();
+    });
+  } else {
+    console.log(
+      "Warning! Couldn't find edit button and/or related elements, " +
+      "falling back to baseline behavior."
+    );
+  }
+});
+</script>
+{% endif %}
 
 {% endblock %}

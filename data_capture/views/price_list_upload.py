@@ -268,55 +268,72 @@ def step_4(request, step):
         return redirect('data_capture:step_3')
 
     session_pl = request.session['data_capture:price_list']
-    step_1_form = get_step_form_from_session(1, request)
-    step_2_form = get_step_form_from_session(2, request)
+
+    orig_step_1_form = get_step_form_from_session(1, request)
 
     pl_details = {
-        'preferred_schedule': step_1_form.cleaned_data['schedule_class'],
-        'vendor_name': step_1_form.cleaned_data['vendor_name'],
-        'contract_number': step_1_form.cleaned_data['contract_number'],
-        'is_small_business': step_2_form.cleaned_data['is_small_business'],
-        'contractor_site': step_2_form.cleaned_data['contractor_site'],
-        'contract_start': step_2_form.cleaned_data['contract_start'],
-        'contract_end': step_2_form.cleaned_data['contract_end'],
-        'escalation_rate': step_2_form.cleaned_data['escalation_rate'],
+        'preferred_schedule': orig_step_1_form.cleaned_data['schedule_class']
     }
+
+    show_edit_form = (request.GET.get('show_edit_form') == 'on')
 
     if request.method == 'POST':
         if not gleaned_data.valid_rows:
             # Our UI never should've let the user issue a request
             # like this.
             return HttpResponseBadRequest()
-        price_list = step_1_form.save(commit=False)
-        step_2_form = get_step_form_from_session(2, request,
-                                                 instance=price_list)
-        step_2_form.save(commit=False)
+        step_1_form = forms.Step1Form(request.POST)
+        step_2_form = forms.Step2Form(request.POST)
+    else:
+        step_1_form = orig_step_1_form
+        step_2_form = get_step_form_from_session(2, request)
+        pl_details.update({
+            'vendor_name': step_1_form.cleaned_data['vendor_name'],
+            'contract_number': step_1_form.cleaned_data['contract_number'],
+            'is_small_business': step_2_form.cleaned_data['is_small_business'],
+            'contractor_site': step_2_form.cleaned_data['contractor_site'],
+            'contract_start': step_2_form.cleaned_data['contract_start'],
+            'contract_end': step_2_form.cleaned_data['contract_end'],
+            'escalation_rate': step_2_form.cleaned_data['escalation_rate'],
+        })
 
-        price_list.submitter = request.user
-        price_list.serialized_gleaned_data = json.dumps(
-            session_pl['gleaned_data'])
+    if request.method == 'POST':
+        if step_1_form.is_valid() and step_2_form.is_valid():
+            price_list = step_1_form.save(commit=False)
+            step_2_form = forms.Step2Form(request.POST, instance=price_list)
+            step_2_form.save(commit=False)
 
-        # We always want to explicitly set the schedule to the
-        # one that the gleaned data is part of, in case we gracefully
-        # fell back to a schedule other than the one the user chose.
-        price_list.schedule = registry.get_classname(gleaned_data)
+            price_list.submitter = request.user
+            price_list.serialized_gleaned_data = json.dumps(
+                session_pl['gleaned_data'])
 
-        price_list.status = SubmittedPriceList.STATUS_NEW
-        price_list.status_changed_at = timezone.now()
-        price_list.status_changed_by = request.user
+            # We always want to explicitly set the schedule to the
+            # one that the gleaned data is part of, in case we gracefully
+            # fell back to a schedule other than the one the user chose.
+            price_list.schedule = registry.get_classname(gleaned_data)
 
-        price_list.save()
-        gleaned_data.add_to_price_list(price_list)
+            price_list.status = SubmittedPriceList.STATUS_NEW
+            price_list.status_changed_at = timezone.now()
+            price_list.status_changed_by = request.user
 
-        del request.session['data_capture:price_list']
+            price_list.save()
+            gleaned_data.add_to_price_list(price_list)
 
-        return redirect('data_capture:step_5')
+            del request.session['data_capture:price_list']
+
+            return redirect('data_capture:step_5')
+        else:
+            add_generic_form_error(request, step_1_form)
+            show_edit_form = True
 
     prev_url = request.GET.get('prev')
     if not is_safe_url(prev_url):
         prev_url = None
 
     return step.render(request, {
+        'show_edit_form': show_edit_form,
+        'step_1_form': step_1_form,
+        'step_2_form': step_2_form,
         'prev_url': prev_url,
         'gleaned_data': gleaned_data,
         'price_list': pl_details,
