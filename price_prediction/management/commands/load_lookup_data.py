@@ -289,23 +289,9 @@ class Command(BaseCommand):
         
         for ind in df.index:
             labor_cat = labor_category[df.ix[ind]["Labor Category"]]
-            set_of_time_series[labor_cat] = set_of_time_series[labor_cat].append(df.ix[ind])
-
-        for category in set_of_time_series.keys():
-            set_of_time_series[category].index = [date_to_datetime(elem) for elem in set_of_time_series[category]["Begin Date"]]
-            del set_of_time_series[category]["Begin Date"]
-            del set_of_time_series[category]["Labor Category"]
-
-        keys = list(set_of_time_series.keys())
-        keys.sort()
-
-        set_of_time_series = {key:set_of_time_series[key].sort_index(axis=0) for key in keys}
-        models = []
-        for key in keys:
-            dta = set_of_time_series[key]
-            models.append({"category":key,"model":model_search(dta)})
-
-        call_command('update_search_field',
-                     Contract._meta.app_label, Contract._meta.model_name)
+            labor_lookup = LaborCategoryLookUp(labor_key=labor_cat,labor_value=df.ix[ind]["Year 1/base"],start_date=df.ix[ind]["Begin Date"])
+            labor_lookup.save()
+        call_command('create_labor_category_lookup_table',
+                     LaborCategoryLookup._meta.app_label, LaborCategoryLookUp._meta.model_name)
 
         log.info("End load_data task")

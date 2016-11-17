@@ -64,9 +64,9 @@ def date_to_datetime(time_string):
 
 def total_error(values,fitted_values):
     if (len(values) == len(fitted_values)) or (len(values) < len(fitted_values)):
-        return sum([values[ind] - fitted_values[ind] for ind in range(len(values))]) 
+        return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(values))]) 
     else:
-        return sum([values[ind] - fitted_values[ind] for ind in range(len(fitted_values))])
+        return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(fitted_values))])
         
 def check_for_extreme_values(sequence,sequence_to_check=None):
     mean = statistics.mean(sequence)
@@ -88,28 +88,15 @@ def check_for_extreme_values(sequence,sequence_to_check=None):
         
 def setting_y_axis_intercept(data,model):
     data = list(data["Year 1/base"])
-    print("data,model",len(data),len(model.fittedvalues))
     fittedvalues = list(model.fittedvalues)
-    possible_fitted_values = []
-    sorted_values = data[:]
-    sorted_values.sort()
-    seven_lowest = check_for_extreme_values(data,sequence_to_check=sorted_values[:7])
-    seven_highest = check_for_extreme_values(data,sequence_to_check=sorted_values[len(sorted_values)-7:])
-    if len(seven_lowest) < len(seven_highest):
-        for ind in range(len(seven_lowest)):
-            center = abs(seven_highest[ind] - seven_lowest[ind])/2 + seven_lowest[ind]
-            possible_fitted_values.append([elem + center for elem in fittedvalues]) 
-    elif len(seven_lowest) > len(seven_highest):
-        for ind in range(len(seven_highest)):
-            center = abs(seven_highest[ind] - seven_lowest[ind])/2 + seven_lowest[ind]
-            possible_fitted_values.append([elem + center for elem in fittedvalues])
-    else:
-        for ind in range(len(seven_lowest)):
-            center = abs(seven_highest[ind] - seven_lowest[ind])/2 + seven_lowest[ind]
-            possible_fitted_values.append([elem + center for elem in fittedvalues])
     avg = statistics.mean(data)
+    median = statistics.median(data)
+    possible_fitted_values = []
+
     possible_fitted_values.append([elem + avg for elem in fittedvalues])
     possible_fitted_values.append([elem + data[0] for elem in fittedvalues])
+    possible_fitted_values.append([elem + median for elem in fittedvalues])
+    possible_fitted_values.append(fittedvalues)
     min_error = 1000000
     best_fitted_values = 0
     for ind,f_values in enumerate(possible_fitted_values):
@@ -117,7 +104,7 @@ def setting_y_axis_intercept(data,model):
         if cur_error < min_error:
             min_error = cur_error 
             best_fitted_values = ind
-    print(min_error)
+    print("minimum error:",min_error)
     return possible_fitted_values[best_fitted_values]
 
 def making_categories():
