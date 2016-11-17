@@ -56,11 +56,14 @@
 <div data-contract-details>
 <div class="row">
   <dl class="contract-details columns eight">
-    <dt>Vendor</dt>
-    <dd>{{ price_list.vendor_name }}</dd>
+    <dt>Schedule</dt>
+    <dd>{{ gleaned_data.title }}</dd>
 
     <dt>Contract number</dt>
     <dd>{{ price_list.contract_number }}</dd>
+
+    <dt>Vendor</dt>
+    <dd>{{ price_list.vendor_name }}</dd>
 
     <dt>Small business</dt>
     <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd>
@@ -74,10 +77,6 @@
 
     <dt>Escalation rate</dt>
     <dd>{{ price_list.escalation_rate }}%</dd>
-
-    <dt>Schedule</dt>
-    <dd>{{ gleaned_data.title }}</dd>
-    </dd>
   </dl>
 </div>
 
