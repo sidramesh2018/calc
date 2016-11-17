@@ -112,10 +112,17 @@
 
     {% if gleaned_data.valid_rows %}
       <div class="submit-group">
-        <button type="submit" class="button-primary">Submit for review</button>
-        <span class="submit-label">
-          Submit price list data to an administrator for approval.
-        </span>
+        {% if show_edit_form %}
+          <button type="submit" class="button-primary">Save and submit for review</button>
+          <span class="submit-label">
+            Save changes and submit price list data to an administrator for approval.
+          </span>
+        {% else %}
+          <button type="submit" class="button-primary" data-edit-text="Save and submit for review">Submit for review</button>
+          <span class="submit-label" data-edit-text="Save changes and submit price list data to an administrator for approval.">
+            Submit price list data to an administrator for approval.
+          </span>
+        {% endif %}
       </div>
     {% endif %}
 
@@ -123,7 +130,7 @@
   </div>
 </form>
 
-{% if not is_safe_mode_enabled %}
+{% if not is_safe_mode_enabled and not show_edit_form %}
 <script>
 $(function() {
   var editBtn = $('[data-edit-btn]');
@@ -135,6 +142,9 @@ $(function() {
     editBtn.click(function(e) {
       contractDetails.slideUp();
       editContractDetails.slideDown();
+      $('[data-edit-text]').each(function() {
+        $(this).text($(this).attr('data-edit-text'));
+      });
       e.preventDefault();
     });
   } else {
