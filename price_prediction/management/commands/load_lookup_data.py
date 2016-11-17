@@ -2,6 +2,11 @@
 import os
 import logging
 
+import pandas as pd
+import math
+
+import djclick as click
+
 from django.core.management import BaseCommand
 from optparse import make_option
 from django.core.management import call_command
@@ -253,6 +258,7 @@ def making_labor_category_to_high_level(categories):
 
     return list_of_categories, labor_category_to_high_level_category
 
+
 class Command(BaseCommand):
 
     default_filename = 'contracts/docs/hourly_prices.csv'
@@ -277,6 +283,7 @@ class Command(BaseCommand):
         if not filename or not os.path.exists(filename):
             raise ValueError('invalid filename')
 
+        filepath = os.path.abspath(filename)
         log.info("Processing new datafile")
         categories = making_categories(filepath)
         list_of_categories, labor_category = making_labor_category_to_high_level(categories)
@@ -291,7 +298,6 @@ class Command(BaseCommand):
             labor_cat = labor_category[df.ix[ind]["Labor Category"]]
             labor_lookup = LaborCategoryLookUp(labor_key=labor_cat,labor_value=df.ix[ind]["Year 1/base"],start_date=df.ix[ind]["Begin Date"])
             labor_lookup.save()
-        call_command('create_labor_category_lookup_table',
-                     LaborCategoryLookup._meta.app_label, LaborCategoryLookUp._meta.model_name)
+       
 
         log.info("End load_data task")

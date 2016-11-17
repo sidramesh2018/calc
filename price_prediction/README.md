@@ -43,6 +43,40 @@ The above gives some insight into how the code is used.  Specifically, `scipy.op
 
 Other than the brute method, which might be subject to change.  The rest of the code takes advantage of the basic utility of each of the above packages and is therefore unlikely to change.
 
+##Making things async
+
+Example async function: found in data_capture/jobs.py:
+
+```
+@job
+def process_bulk_upload_and_send_email(upload_source_id):
+    contracts_logger.info(
+        "Starting bulk upload processing (pk=%d)." % upload_source_id
+    )
+    upload_source = BulkUploadContractSource.objects.get(
+        pk=upload_source_id
+    )
+
+    try:
+        num_contracts, num_bad_rows = _process_bulk_upload(upload_source)
+        email.bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows)
+    except:
+        contracts_logger.exception(
+            'An exception occurred during bulk upload processing '
+            '(pk=%d).' % upload_source_id
+        )
+        tb = traceback.format_exc()
+        email.bulk_upload_failed(upload_source, tb)
+
+    contracts_logger.info(
+        "Ending bulk upload processing (pk=%d)." % upload_source_id
+    )
+```
+
+Method is called here: data_capture/views/bulk_upload.py
+
+`jobs.process_bulk_upload_and_send_email.delay(upload_source_id)`
+
 ##Data dictionary
 
 Here we will describe the model for the database.  This will include information about each column and each table.
