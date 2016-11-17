@@ -1,134 +1,56 @@
-import pandas as pd
-from glob import glob
-import os
-import math
-import json
-import datetime
-import time
-import numpy as np
+#Price Prediction
+
+##Intro
+
+Description of the tool, what it does, why, and how
+
+##Requirements
+
+The following python packages are required to get things to work:
+
+```
+scipy==0.18.1
+pandas==0.18.0
+numpy==1.11.2
+statsmodels==0.6.1
+```
+
+The following python packages are optional, but recommended, so that you can debug your models:
+
+`matplotlib==1.5.1`
+
+These optional dependencies can be found in requirements-dev.txt
+
+##Justification of requirements
+
+`statsmodels==0.6.1` - This is the heart of the application.  It has the time series model, which is used for price prediction.  
+
+`scipy==0.18.1, pandas==0.18.0, numpy==1.11.2` - these three packages are dependencies for statsmodels.  
+
+##How the requirements are used
+
+In this section, we'll walk through specifically what parts of the packages that get used.  This way, if these dependencies become stale, either because compliance reasons or other issues, you'll know what you can update.  And what cannot be updated.
+
+```
 from scipy import stats
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
-from statsmodels.graphics.api import qqplot
 from scipy.optimize import brute
-import statistics
-from functools import partial
+```
+
+The above gives some insight into how the code is used.  Specifically, `scipy.optimize`'s `brute` method.  This method runs a brute force algorithm against a function passed in.  [Here are the docs for `brute`](https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.brute.html). 
+
+Other than the brute method, which might be subject to change.  The rest of the code takes advantage of the basic utility of each of the above packages and is therefore unlikely to change.
+
+##Data dictionary
+
+Here we will describe the model for the database.  This will include information about each column and each table.
+
+Lookup table
 
 
-"""
-A bit about this file - Python is a great language full of lots of useful data science libraries.  But it's not that fast.  For this reason we use a series of functions which send data to json files, which can be used by the language as Python Dictionaries.  Because of the size of the data, big but not *that* big, it made sense to chop up the tasks and not repeat computation unless necessary.  Otherwise debugging and iteration would be difficult, because just processing the data, takes a while.
 
-Therefore we have the following methods:
-
-making_categories - which maps individual labor categories into buckets across three fields - education level, years of experience and schedule.
-
-I don't really undetstand what a schedule is, but it's kind of like a geographic region?  As well as a business line / set of skills.  So, if you are a schedule 70, it's likely you're in IT and it's even more likely you're a software developer.  It's worth stating that there is talk of moving over to SIN numbers which are used by the government to do something similar to the schedule, but at a more granular level.  Sometimes these SIN numbers have semantic data attached.  And sometimes, they do not.  So it's best to think of them as unique identifiers.  For this reason, it might be worth it to update this script down the road to work off of SIN numbers.  But for right now schedule seems like the right call.
-
-"""
-
-#helpful resource: https://www.analyticsvidhya.com/blog/2016/02/time-series-forecasting-codes-python/
-
-def is_nan(obj):
-    if type(obj) == type(float()):
-        return math.isnan(obj)
-    else:
-        return False
-    
-def money_to_float(string):
-    """
-    hourly wages have dollar signs and use commas, 
-    this method removes those things, so we can treat stuff as floats
-    """
-    if type(string) == type(str()):
-        string = string.replace("$","").replace(",","")
-        return float(string)
-    else:
-        return string
-
-def load_data():
-    """
-    this loads all the csv's into memory and then returns them.
-    Note that only versioned csv's are returned, because the one without a version number
-    is also the highest numbered CSV.  This avoids *some* double counting.
-    """
-    #loading the datasets into memory
-    os.chdir("data")
-    data_sets = ["hourly_prices_v1.csv","hourly_prices_v2.csv","hourly_prices_v3.csv","hourly_prices_v4.csv"]
-    dfs = [pd.read_csv(data_set) for data_set in data_sets]
-    os.chdir("..")
-    return dfs
-
-def date_to_datetime(time_string):
-    return datetime.datetime.strptime(time_string, '%m/%d/%Y')
-
-def total_error(values,fitted_values):
-    if (len(values) == len(fitted_values)) or (len(values) < len(fitted_values)):
-        return sum([values[ind] - fitted_values[ind] for ind in range(len(values))]) 
-    else:
-        return sum([values[ind] - fitted_values[ind] for ind in range(len(fitted_values))])
-        
-def check_for_extreme_values(sequence,sequence_to_check=None):
-    mean = statistics.mean(sequence)
-    stdev = statistics.stdev(sequence)
-    if sequence_to_check != None:
-        for val in sequence_to_check:
-            if val >= mean + (stdev*2):
-                sequence_to_check.remove(val)
-            elif val <= mean - (stdev*2):
-                sequence_to_check.remove(val)
-        return sequence_to_check
-    else:
-        for val in sequence:
-            if val >= mean + (stdev*2):
-                sequence.remove(val)
-            elif val <= mean - (stdev*2):
-                sequence.remove(val)
-        return sequence
-        
-def setting_y_axis_intercept(data,model):
-    data = list(data["Year 1/base"])
-    print("data,model",len(data),len(model.fittedvalues))
-    fittedvalues = list(model.fittedvalues)
-    possible_fitted_values = []
-    sorted_values = data[:]
-    sorted_values.sort()
-    seven_lowest = check_for_extreme_values(data,sequence_to_check=sorted_values[:7])
-    seven_highest = check_for_extreme_values(data,sequence_to_check=sorted_values[len(sorted_values)-7:])
-    if len(seven_lowest) < len(seven_highest):
-        for ind in range(len(seven_lowest)):
-            center = abs(seven_highest[ind] - seven_lowest[ind])/2 + seven_lowest[ind]
-            possible_fitted_values.append([elem + center for elem in fittedvalues]) 
-    elif len(seven_lowest) > len(seven_highest):
-        for ind in range(len(seven_highest)):
-            center = abs(seven_highest[ind] - seven_lowest[ind])/2 + seven_lowest[ind]
-            possible_fitted_values.append([elem + center for elem in fittedvalues])
-    else:
-        for ind in range(len(seven_lowest)):
-            center = abs(seven_highest[ind] - seven_lowest[ind])/2 + seven_lowest[ind]
-            possible_fitted_values.append([elem + center for elem in fittedvalues])
-    avg = statistics.mean(data)
-    possible_fitted_values.append([elem + avg for elem in fittedvalues])
-    possible_fitted_values.append([elem + data[0] for elem in fittedvalues])
-    min_error = 1000000
-    best_fitted_values = 0
-    for ind,f_values in enumerate(possible_fitted_values):
-        cur_error = total_error(data,f_values)
-        if cur_error < min_error:
-            min_error = cur_error 
-            best_fitted_values = ind
-    print(min_error)
-    return possible_fitted_values[best_fitted_values]
-
-def making_categories():
-    """
-    This function assumes there is a folder called data, that contains csv's with data on schedule information 
-    of different positions to contract for.
-    this function creates a mapping from labor categories to education level + years of experience + schedule
-    """
-    
-    dfs = load_data()
-    #making use of the mapping of Labor Category to higher level categorization
     categories = {
         "None":{
             "0-5":{
@@ -347,34 +269,20 @@ def making_labor_category_to_high_level():
     return list_of_categories
 
 #this comes from here: http://stackoverflow.com/questions/22770352/auto-arima-equivalent-for-python
-def objective_function(data,order):
-    return sm.tsa.ARIMA(data,order).fit().aic
+def objective_function(order,endogenous,exogenous=None):
+    if exogenous:
+        fit = sm.tsa.ARIMA(endogenous,order,exogenous).fit()
+    else:
+        fit = sm.tsa.ARIMA(endogenous,order).fit()
+    return fit.aic()
 
-def model_search(data):
-    obj_func = partial(objective_function,data)
-    upper_bound_AR = 10
-    upper_bound_I = 10
-    upper_bound_MA = 10
-    grid_not_found = True
-    while grid_not_found:
-        try:
-            if upper_bound_AR < 0 or upper_bound_I < 0 or upper_bound_MA < 0:
-                grid_not_found = False
-            grid = (slice(1,upper_bound_AR,1),slice(1,upper_bound_I,1),slice(1,upper_bound_MA,1))
-            return brute(obj_func, grid, finish=None)
-        except Exception as e: #found here: http://stackoverflow.com/questions/4308182/getting-the-exception-value-in-python
-            error_string = str(e)
-            if "MA" in error_string:
-                upper_bound_MA -= 1
-            elif "AR" in error_string:
-                upper_bound_AR -= 1
-            else:
-                upper_bound_I -= 1
-                
-    #assuming we don't ever hit a reasonable set of upper_bounds, it's pretty safe to assume this will work
-    grid = (slice(1,2,1),slice(1,2,1),slice(1,2,1))
-    return brute(obj_func, grid, finish=None)
-                
+def model_search(data,exogenous_data=None):
+    grid = (slice(1,3,1),slice(1,3,1),slice(1,3,1))
+    if exogenous_data:
+        return brute(objective_function, args=(data,exogenous_data), finish=None)
+    else:
+        return brute(objective_function, args=(data), finish=None)
+
 if not os.path.exists("categories.json"):
     making_categories()
 
@@ -418,23 +326,9 @@ if __name__ == '__main__':
     
     set_of_time_series = {key:set_of_time_series[key].sort_index(axis=0) for key in keys}
     models = []
-    try:
-        #for key in keys:
-        data = set_of_time_series[keys[0]]
-        #models.append({"category":key,"model":model_search(dta)})
-        model_order = list(model_search(data))
-        model_order = tuple([int(elem) for elem in model_order])
-        model = sm.tsa.ARIMA(data,model_order).fit()
-        import code
-        code.interact(local=locals())
-        model.fittedvalues = setting_y_axis_intercept(data,model)  
-
-        plt.plot(data)
-        plt.plot(model.fittedvalues, color='red')
-        plt.show()
-    except:
-        import code
-        code.interact(local=locals())
+    for key in keys:
+        dta = set_of_time_series[key]
+        models.append({"category":key,"model":model_search(dta)})
     print("finished model search, in:",time.time() - start)
     # models = []
     

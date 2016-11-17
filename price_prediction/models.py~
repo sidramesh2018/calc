@@ -1,0 +1,9 @@
+from django.db import models
+
+class LaborCategoryLookUp(models.Model):
+    labor_key = models.CharField()
+    labor_value = models.CharField()
+
+    def __str__(self):
+        return self.labor_key + ":" + self.labor_value
+

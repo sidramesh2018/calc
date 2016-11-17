@@ -112,7 +112,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'debug_toolbar',
     'django_rq',
-
+    'price_prediction',
     'data_explorer',
     'contracts',
     'data_capture.apps.{}'.format(DATA_CAPTURE_APP_CONFIG),
