@@ -299,6 +299,10 @@ def step_4(request, step):
     if request.method == 'POST':
         if form.is_valid():
             if 'save-changes' in request.POST:
+                # There's not a particularly easy way to separate one
+                # step's fields from another, but fortunately that's OK
+                # because Django's Form constructors take only the POST
+                # data they need, and ignore the rest.
                 session_pl['step_1_POST'] = request.POST
                 session_pl['step_2_POST'] = request.POST
 
