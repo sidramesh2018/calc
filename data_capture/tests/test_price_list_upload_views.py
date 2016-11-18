@@ -91,7 +91,7 @@ class Step1Tests(PriceListStepTestCase):
         self.assertHasMessage(
             res,
             'error',
-            'Oops! Please correct the following error.'
+            'Oops! Please correct the following errors.'
         )
 
 
@@ -156,7 +156,7 @@ class Step2Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertHasMessage(
             res,
             'error',
-            'Oops! Please correct the following error.'
+            'Oops! Please correct the following errors.'
         )
 
 
