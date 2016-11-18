@@ -36,9 +36,7 @@
       <button type="submit" class="button" name="save-changes">Save changes</button>
     </div>
 
-    {# TODO: This should include any existing querystring args. #}
-
-    <a type="submit" href="?">Discard changes</a>
+    <a type="submit" href="{{ step_4_without_edit_url }}">Discard changes</a>
   </div>
 
 </div>
@@ -71,9 +69,7 @@
   </dl>
 </div>
 
-{# TODO: This should include any existing querystring args. #}
-
-<p><a href="?show_edit_form=on" class="button" data-edit-btn>Edit</a></p>
+<p><a href="{{ step_4_with_edit_url }}" class="button" data-edit-btn>Edit</a></p>
 </div>
 {% endif %}
 

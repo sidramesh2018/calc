@@ -1,10 +1,12 @@
 import json
+import urllib.parse
 
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
 from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.http import is_safe_url
 
@@ -23,6 +25,30 @@ steps = Steps(
         'current_selected_tab': 'upload_price_data'
     }
 )
+
+
+def build_url(viewname, **kwargs):
+    '''
+    Build a URL using the given view name and the given query string
+    arguments, returning the result:
+
+        >>> build_url('data_capture:step_4', a='1')
+        '/data-capture/step/4?a=1'
+
+    Any keyword arguments that are `None` will be excluded, though:
+
+        >>> build_url('data_capture:step_4', a=None)
+        '/data-capture/step/4'
+    '''
+
+    url = reverse(viewname)
+    query = [
+        (key, kwargs[key]) for key in kwargs
+        if kwargs[key] is not None
+    ]
+    if not query:
+        return url
+    return '{}?{}'.format(url, urllib.parse.urlencode(query))
 
 
 def get_nested_item(obj, keys, default=None):
@@ -296,6 +322,16 @@ def step_4(request, step):
             session_pl['step_2_POST']
         )
 
+    prev_url = request.GET.get('prev')
+    if not is_safe_url(prev_url):
+        prev_url = None
+
+    step_4_without_edit_url = build_url('data_capture:step_4',
+                                        prev=prev_url)
+    step_4_with_edit_url = build_url('data_capture:step_4',
+                                     prev=prev_url,
+                                     show_edit_form='on')
+
     if request.method == 'POST':
         if form.is_valid():
             if 'save-changes' in request.POST:
@@ -310,7 +346,7 @@ def step_4(request, step):
                 # save, so do it manually.
                 request.session.modified = True
 
-                return redirect('data_capture:step_4')
+                return redirect(step_4_without_edit_url)
             else:
                 price_list = form.save(commit=False)
 
@@ -337,13 +373,11 @@ def step_4(request, step):
             add_generic_form_error(request, form)
             show_edit_form = True
 
-    prev_url = request.GET.get('prev')
-    if not is_safe_url(prev_url):
-        prev_url = None
-
     return step.render(request, {
         'show_edit_form': show_edit_form,
         'form': form,
+        'step_4_with_edit_url': step_4_with_edit_url,
+        'step_4_without_edit_url': step_4_without_edit_url,
         'prev_url': prev_url,
         'gleaned_data': gleaned_data,
         'price_list': pl_details,
