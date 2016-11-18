@@ -419,6 +419,7 @@ class Step4Tests(PriceListStepTestCase,
         session.save()
         self.set_fake_gleaned_data(self.rows)
         res = self.client.get(self.url)
+        self.assertFalse(res.context['show_edit_form'])
         self.assertEqual(res.status_code, 200)
 
     def test_context_has_prev_url_if_query_param_present(self):
@@ -501,6 +502,7 @@ class Step4Tests(PriceListStepTestCase,
         data = self.valid_post_data.copy()
         data['contractor_site'] = 'LOL'
         res = self.client.post(self.url, data)
+        self.assertTrue(res.context['show_edit_form'])
         self.assertContains(res, 'LOL is not one of the available choices')
 
     def test_valid_post_creates_models(self):
