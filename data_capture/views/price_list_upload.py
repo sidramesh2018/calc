@@ -268,11 +268,18 @@ def step_4(request, step):
         return redirect('data_capture:step_3')
 
     session_pl = request.session['data_capture:price_list']
-
-    orig_step_1_form = get_step_form_from_session(1, request)
+    step_1_form = get_step_form_from_session(1, request)
+    step_2_form = get_step_form_from_session(2, request)
 
     pl_details = {
-        'preferred_schedule': orig_step_1_form.cleaned_data['schedule_class']
+        'preferred_schedule': step_1_form.cleaned_data['schedule_class'],
+        'vendor_name': step_1_form.cleaned_data['vendor_name'],
+        'contract_number': step_1_form.cleaned_data['contract_number'],
+        'is_small_business': step_2_form.cleaned_data['is_small_business'],
+        'contractor_site': step_2_form.cleaned_data['contractor_site'],
+        'contract_start': step_2_form.cleaned_data['contract_start'],
+        'contract_end': step_2_form.cleaned_data['contract_end'],
+        'escalation_rate': step_2_form.cleaned_data['escalation_rate'],
     }
 
     show_edit_form = (request.GET.get('show_edit_form') == 'on')
@@ -282,23 +289,15 @@ def step_4(request, step):
             # Our UI never should've let the user issue a request
             # like this.
             return HttpResponseBadRequest()
-        step_1_form = forms.Step1Form(request.POST)
-        step_2_form = forms.Step2Form(request.POST)
+        form = forms.Step4Form(request.POST)
     else:
-        step_1_form = orig_step_1_form
-        step_2_form = get_step_form_from_session(2, request)
-        pl_details.update({
-            'vendor_name': step_1_form.cleaned_data['vendor_name'],
-            'contract_number': step_1_form.cleaned_data['contract_number'],
-            'is_small_business': step_2_form.cleaned_data['is_small_business'],
-            'contractor_site': step_2_form.cleaned_data['contractor_site'],
-            'contract_start': step_2_form.cleaned_data['contract_start'],
-            'contract_end': step_2_form.cleaned_data['contract_end'],
-            'escalation_rate': step_2_form.cleaned_data['escalation_rate'],
-        })
+        form = forms.Step4Form.from_post_data_subsets(
+            session_pl['step_1_POST'],
+            session_pl['step_2_POST']
+        )
 
     if request.method == 'POST':
-        if step_1_form.is_valid() and step_2_form.is_valid():
+        if form.is_valid():
             if 'save-changes' in request.POST:
                 session_pl['step_1_POST'] = request.POST
                 session_pl['step_2_POST'] = request.POST
@@ -309,10 +308,7 @@ def step_4(request, step):
 
                 return redirect('data_capture:step_4')
             else:
-                price_list = step_1_form.save(commit=False)
-                step_2_form = forms.Step2Form(request.POST,
-                                              instance=price_list)
-                step_2_form.save(commit=False)
+                price_list = form.save(commit=False)
 
                 price_list.submitter = request.user
                 price_list.serialized_gleaned_data = json.dumps(
@@ -334,7 +330,7 @@ def step_4(request, step):
 
                 return redirect('data_capture:step_5')
         else:
-            add_generic_form_error(request, step_1_form)
+            add_generic_form_error(request, form)
             show_edit_form = True
 
     prev_url = request.GET.get('prev')
@@ -343,8 +339,7 @@ def step_4(request, step):
 
     return step.render(request, {
         'show_edit_form': show_edit_form,
-        'step_1_form': step_1_form,
-        'step_2_form': step_2_form,
+        'form': form,
         'prev_url': prev_url,
         'gleaned_data': gleaned_data,
         'price_list': pl_details,

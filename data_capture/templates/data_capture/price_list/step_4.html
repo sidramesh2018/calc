@@ -12,33 +12,26 @@
 
 <div data-edit-contract-details {% if not show_edit_form %}style="display: none"{% endif %}>
 
-  {{ step_1_form.non_field_errors }}
-  {{ step_2_form.non_field_errors }}
+  {{ form.non_field_errors }}
 
   {# TODO: Maybe reuse view logic from steps 1 and 2 here to stay DRY? #}
 
   {% load frontend %}
 
-  {% with form=step_1_form %}
-    {# TODO: It'd be nice if we could just eliminate this field. #}
-    <div style="display: none">{% fieldset form.schedule %}</div>
+  {{ form.schedule }}
 
-    {% fieldset form.contract_number %}
-    {% fieldset form.vendor_name %}
-  {% endwith %}
+  {% fieldset form.contract_number %}
+  {% fieldset form.vendor_name %}
+  {% fieldset form.is_small_business %}
+  {% fieldset form.contractor_site %}
 
-  {% with form=step_2_form %}
-    {% fieldset form.is_small_business %}
-    {% fieldset form.contractor_site %}
+  <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+    {% fieldset form.contract_start %}
+    <p>to</p>
+    {% fieldset form.contract_end %}
+  </div>
 
-    <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
-      {% fieldset form.contract_start %}
-      <p>to</p>
-      {% fieldset form.contract_end %}
-    </div>
-
-    {% fieldset form.escalation_rate %}
-  {% endwith %}
+  {% fieldset form.escalation_rate %}
 
   <div class="form-button-row clearfix">
     <div class="submit-group">
