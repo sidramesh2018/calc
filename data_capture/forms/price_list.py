@@ -8,6 +8,26 @@ from frontend.widgets import UswdsRadioSelect
 from contracts.models import MIN_ESCALATION_RATE, MAX_ESCALATION_RATE
 
 
+class EscalationRateField(forms.FloatField):
+    def __init__(self):
+        return super().__init__(
+            label="Escalation rate (%)",
+            help_text='CALC uses the escalation rate (as a percentage) '
+                      'to calculate out-year pricing. '
+                      'Leave this field blank or enter 0 if this contract '
+                      'does not have a fixed escalation rate.',
+            min_value=MIN_ESCALATION_RATE,
+            max_value=MAX_ESCALATION_RATE,
+            required=False
+        )
+
+    def clean(self, value):
+        value = super().clean(value)
+        if value is None:
+            value = 0
+        return value
+
+
 class Step1Form(forms.ModelForm):
     schedule = forms.ChoiceField(
         label="Which schedule is associated with this price list?",
@@ -50,16 +70,7 @@ class Step2Form(forms.ModelForm):
     contract_end = SplitDateField(
         label='Contract or current option period end'
     )
-    escalation_rate = forms.FloatField(
-        label="Escalation rate (%)",
-        help_text='CALC uses the escalation rate (as a percentage) '
-                  'to calculate out-year pricing. '
-                  'Leave this field blank or enter 0 if this contract does '
-                  'not have a fixed escalation rate.',
-        min_value=MIN_ESCALATION_RATE,
-        max_value=MAX_ESCALATION_RATE,
-        required=False,
-    )
+    escalation_rate = EscalationRateField()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -69,12 +80,6 @@ class Step2Form(forms.ModelForm):
             self.add_error('contract_start',
                            'Start date must be before end date.')
         return cleaned_data
-
-    def clean_escalation_rate(self):
-        value = self.cleaned_data['escalation_rate']
-        if value is None:
-            value = 0
-        return value
 
     class Meta:
         model = SubmittedPriceList
@@ -161,16 +166,7 @@ class Step4Form(forms.ModelForm):
     contract_end = SplitDateField(
         label='Contract or current option period end'
     )
-    escalation_rate = forms.FloatField(
-        label="Escalation rate (%)",
-        help_text='CALC uses the escalation rate (as a percentage) '
-                  'to calculate out-year pricing. '
-                  'Leave this field blank or enter 0 if this contract does '
-                  'not have a fixed escalation rate.',
-        min_value=MIN_ESCALATION_RATE,
-        max_value=MAX_ESCALATION_RATE,
-        required=False,
-    )
+    escalation_rate = EscalationRateField()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -180,12 +176,6 @@ class Step4Form(forms.ModelForm):
             self.add_error('contract_start',
                            'Start date must be before end date.')
         return cleaned_data
-
-    def clean_escalation_rate(self):
-        value = self.cleaned_data['escalation_rate']
-        if value is None:
-            value = 0
-        return value
 
     class Meta:
         model = SubmittedPriceList
