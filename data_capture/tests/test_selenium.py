@@ -48,7 +48,7 @@ urlpatterns += [
 class DataCaptureTests(SeleniumTestCase):
     screenshot_filename = 'data_capture.png'
 
-    def test_awesome(self):
+    def test_data_capture(self):
         registry._init()
         call_command('initgroups', stdout=io.StringIO())
         t = BaseLoginTestCase()
@@ -65,4 +65,22 @@ class DataCaptureTests(SeleniumTestCase):
             .send_keys('GS-123-4567')
         e = self.driver.find_element_by_name('vendor_name')
         e.send_keys('Battaglia Sausage Peddlers, Inc.')
+        e.submit()
+
+        self.driver.find_element_by_css_selector(
+            '[for="id_is_small_business_0"]'
+        ).click()
+
+        self.driver.find_element_by_css_selector(
+            '[for="id_contractor_site_2"]'
+        ).click()
+
+        self.driver.find_element_by_name('contract_start_1').send_keys('04')
+        self.driver.find_element_by_name('contract_start_2').send_keys('28')
+        self.driver.find_element_by_name('contract_start_0').send_keys('2016')
+
+        self.driver.find_element_by_name('contract_end_1').send_keys('03')
+        self.driver.find_element_by_name('contract_end_2').send_keys('27')
+        e = self.driver.find_element_by_name('contract_end_0')
+        e.send_keys('2017')
         e.submit()
