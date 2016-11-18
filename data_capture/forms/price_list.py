@@ -8,6 +8,14 @@ from frontend.widgets import UswdsRadioSelect
 from contracts.models import MIN_ESCALATION_RATE, MAX_ESCALATION_RATE
 
 
+def ensure_contract_start_is_before_end(form, cleaned_data):
+    start = cleaned_data.get('contract_start')
+    end = cleaned_data.get('contract_end')
+    if start and end and start > end:
+        form.add_error('contract_start',
+                       'Start date must be before end date.')
+
+
 class EscalationRateField(forms.FloatField):
     def __init__(self):
         return super().__init__(
@@ -74,11 +82,7 @@ class Step2Form(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        start = cleaned_data.get('contract_start')
-        end = cleaned_data.get('contract_end')
-        if start and end and start > end:
-            self.add_error('contract_start',
-                           'Start date must be before end date.')
+        ensure_contract_start_is_before_end(self, cleaned_data)
         return cleaned_data
 
     class Meta:
@@ -170,11 +174,7 @@ class Step4Form(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        start = cleaned_data.get('contract_start')
-        end = cleaned_data.get('contract_end')
-        if start and end and start > end:
-            self.add_error('contract_start',
-                           'Start date must be before end date.')
+        ensure_contract_start_is_before_end(self, cleaned_data)
         return cleaned_data
 
     class Meta:
