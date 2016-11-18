@@ -408,6 +408,10 @@ class Step4Tests(PriceListStepTestCase,
         'step_2_POST': Step2Tests.valid_form,
     }
 
+    valid_post_data = {}
+    valid_post_data.update(Step1Tests.valid_form)
+    valid_post_data.update(Step2Tests.valid_form)
+
     def test_get_is_ok(self):
         self.login()
         session = self.client.session
@@ -473,7 +477,7 @@ class Step4Tests(PriceListStepTestCase,
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        self.client.post(self.url)
+        self.client.post(self.url, self.valid_post_data)
         p = SubmittedPriceList.objects.filter(
             contract_number='GS-123-4567'
         )[0]
@@ -492,7 +496,7 @@ class Step4Tests(PriceListStepTestCase,
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        res = self.client.post(self.url)
+        res = self.client.post(self.url, self.valid_post_data)
         assert 'data_capture:price_list' not in self.client.session
         self.assertRedirects(res, Step5Tests.url)
 
