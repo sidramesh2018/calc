@@ -60,6 +60,14 @@ class CustomUserCreationFormTests(TestCase):
             'email': ['That email address is already in use.']
         })
 
+    def test_checks_case_insensitive_uniqueness_of_email(self):
+        User.objects.create_user(username='blerg', email='foo@gsa.gov')
+        form = admin.CustomUserCreationForm({'email': 'FOO@gsa.gov'})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            'email': ['That email address is already in use.']
+        })
+
     def test_generate_username_works(self):
         form = admin.CustomUserCreationForm()
         self.assertEqual(form.generate_username('boop.jones@gsa.gov'),
