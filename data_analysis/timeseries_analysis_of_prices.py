@@ -67,7 +67,13 @@ def total_error(values,fitted_values):
         return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(values))]) 
     else:
         return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(fitted_values))])
-        
+
+def ave_error(values,fitted_values):
+    if (len(values) == len(fitted_values)) or (len(values) < len(fitted_values)):
+        return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(values))])/len(values) 
+    else:
+        return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(fitted_values))])/len(values)
+    
 def check_for_extreme_values(sequence,sequence_to_check=None):
     mean = statistics.mean(sequence)
     stdev = statistics.stdev(sequence)
@@ -101,8 +107,9 @@ def setting_y_axis_intercept(data,model):
     best_fitted_values = 0
     for ind,f_values in enumerate(possible_fitted_values):
         cur_error = total_error(data,f_values)
-        if cur_error < min_error:
-            min_error = cur_error 
+        avg_error = ave_error(data,f_values)
+        if avg_error < min_error:
+            min_error = avg_error 
             best_fitted_values = ind
     print("minimum error:",min_error)
     return possible_fitted_values[best_fitted_values]
@@ -359,9 +366,36 @@ def model_search(data):
                 upper_bound_I -= 1
                 
     #assuming we don't ever hit a reasonable set of upper_bounds, it's pretty safe to assume this will work
-    grid = (slice(1,2,1),slice(1,2,1),slice(1,2,1))
-    return brute(obj_func, grid, finish=None)
-                
+    try:
+        grid = (slice(1,2,1),slice(1,2,1),slice(1,2,1))
+        return brute(obj_func, grid, finish=None)
+    except: #however we don't always meet invertibility conditions
+        #Here we explicitly test for a single MA or AR process being a better fit
+        #If either has a lower (better) aic score we return that model order
+        model_ar_one = sm.tsa.ARIMA(data,(1,0,0)).fit()
+        model_ma_one = sm.tsa.ARIMA(data,(0,0,1)).fit()
+        if model_ar_one.aic < model_ma_one.aic:
+            return (1,0,0)
+        else:
+            return (0,0,1)
+    
+def trend_predict(data):
+    #seasonal decompose 
+    if len(data) > 52:
+        s = sm.tsa.seasonal_decompose(data["Year 1/base"],freq=52)
+    elif len(data) > 12:
+        s = sm.tsa.seasonal_decompose(data["Year 1/base"], freq=12)
+    else:
+        return None
+    #clearing out NaNs
+    new_data = s.trend.fillna(0)
+    new_data = new_data.iloc[new_data.nonzero()[0]]
+    model_order = list(model_search(data))
+    model_order = tuple([int(elem) for elem in model_order])
+    model = sm.tsa.ARIMA(new_data,model_order).fit()
+    model.fittedvalues = setting_y_axis_intercept(data,model)
+    return model
+
 if not os.path.exists("categories.json"):
     making_categories()
 
@@ -405,26 +439,17 @@ if __name__ == '__main__':
     
     set_of_time_series = {key:set_of_time_series[key].sort_index(axis=0) for key in keys}
     models = []
+
     try:
         #for key in keys:
         data = set_of_time_series[keys[0]]
         
         #http://stackoverflow.com/questions/34494780/time-series-analysis-unevenly-spaced-measures-pandas-statsmodels
         #http://stackoverflow.com/questions/34457281/decomposing-trend-seasonal-and-residual-time-series-elements
-        s = sm.tsa.seasonal_decompose(data["Year 1/base"],freq=52)
-        print(s.resid)
-        print(s.seasonal)
-        print(s.trend)
-        import code
-        code.interact(local=locals())
-        #models.append({"category":key,"model":model_search(dta)})
-        model_order = list(model_search(data))
-        model_order = tuple([int(elem) for elem in model_order])
-        model = sm.tsa.ARIMA(data,model_order).fit()
-        import code
-        code.interact(local=locals())
-        model.fittedvalues = setting_y_axis_intercept(data,model)  
-
+           
+        model = trend_predict(data)
+        #model.fittedvalues = setting_y_axis_intercept(data,model)
+        
         plt.plot(data)
         plt.plot(model.fittedvalues, color='red')
         plt.show()
@@ -432,6 +457,34 @@ if __name__ == '__main__':
         import code
         code.interact(local=locals())
     print("finished model search, in:",time.time() - start)
+
+
+    # try:
+    #     #for key in keys:
+    #     data = set_of_time_series[keys[0]]
+        
+    #     #http://stackoverflow.com/questions/34494780/time-series-analysis-unevenly-spaced-measures-pandas-statsmodels
+    #     #http://stackoverflow.com/questions/34457281/decomposing-trend-seasonal-and-residual-time-series-elements
+           
+    #     s = sm.tsa.seasonal_decompose(data["Year 1/base"],freq=52)
+    #     print(s.resid)
+    #     print(s.seasonal)
+    #     print(s.trend)
+    #     #models.append({"category":key,"model":model_search(dta)})
+    #     model_order = list(model_search(data))
+    #     model_order = tuple([int(elem) for elem in model_order])
+    #     model = sm.tsa.ARIMA(data,model_order).fit()
+    #     import code
+    #     code.interact(local=locals())
+    #     model.fittedvalues = setting_y_axis_intercept(data,model)  
+
+    #     plt.plot(data)
+    #     plt.plot(model.fittedvalues, color='red')
+    #     plt.show()
+    # except:
+    #     import code
+    #     code.interact(local=locals())
+    # print("finished model search, in:",time.time() - start)
     # models = []
     
     # keys = list(set_of_time_series.keys())
