@@ -4,8 +4,7 @@ import logging
 
 import pandas as pd
 import math
-
-import djclick as click
+import datetime
 
 from django.core.management import BaseCommand
 from optparse import make_option
@@ -33,14 +32,13 @@ def money_to_float(string):
     else:
         return string
 
-def making_categories(filepath):
+def making_categories(df):
     """
     This function assumes there is a folder called data, that contains csv's with data on schedule information 
     of different positions to contract for.
     this function creates a mapping from labor categories to education level + years of experience + schedule
     """
     
-    df = pd.read_csv(filepath)
     #making use of the mapping of Labor Category to higher level categorization
     categories = {
         "None":{
@@ -284,8 +282,9 @@ class Command(BaseCommand):
             raise ValueError('invalid filename')
 
         filepath = os.path.abspath(filename)
+        df = pd.read_csv(filepath)
         log.info("Processing new datafile")
-        categories = making_categories(filepath)
+        categories = making_categories(df)
         list_of_categories, labor_category = making_labor_category_to_high_level(categories)
         set_of_time_series = {}.fromkeys(list_of_categories,pd.DataFrame())
 
@@ -296,7 +295,7 @@ class Command(BaseCommand):
         
         for ind in df.index:
             labor_cat = labor_category[df.ix[ind]["Labor Category"]]
-            labor_lookup = LaborCategoryLookUp(labor_key=labor_cat,labor_value=df.ix[ind]["Year 1/base"],start_date=df.ix[ind]["Begin Date"])
+            labor_lookup = LaborCategoryLookUp(labor_key=labor_cat,labor_value=df.ix[ind]["Year 1/base"],start_date=date_to_datetime(df.ix[ind]["Begin Date"]))
             labor_lookup.save()
        
 

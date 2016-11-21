@@ -408,6 +408,15 @@ if __name__ == '__main__':
     try:
         #for key in keys:
         data = set_of_time_series[keys[0]]
+        
+        #http://stackoverflow.com/questions/34494780/time-series-analysis-unevenly-spaced-measures-pandas-statsmodels
+        #http://stackoverflow.com/questions/34457281/decomposing-trend-seasonal-and-residual-time-series-elements
+        s = sm.tsa.seasonal_decompose(data["Year 1/base"],freq=52)
+        print(s.resid)
+        print(s.seasonal)
+        print(s.trend)
+        import code
+        code.interact(local=locals())
         #models.append({"category":key,"model":model_search(dta)})
         model_order = list(model_search(data))
         model_order = tuple([int(elem) for elem in model_order])

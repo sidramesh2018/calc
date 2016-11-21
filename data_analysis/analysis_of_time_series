@@ -1,0 +1,130 @@
+```
+data = set_of_time_series[keys[2]]
+s = sm.tsa.seasonal_decompose(data["Year 1/base"],freq=52)
+plt.plot(s.resid,color="green")
+plt.plot(s.trend,color="blue")
+plt.plot(s.seasonal,color="red")
+plt.show()
+```
+The categories should be read as follows:
+
+Highest Degree - Years Of Experience - Schedule
+Associates - 0-5 - AIMS - (0) predictable - trend is long term stable
+Associates - 0-5 - Consolidated - (1) predictable - residuals are extreme but follows pattern, trend appears to be somewhat stable, well within the predictable range, clear steady seasonal effect
+Associates - 0-5 - Environmental - (2) predictable - trend is stable, residuals are extreme but follows pattern, seasonality is steady effect.
+Associates - 0-5 - Language Services - (3) unpredictable - unstable trend, residuals are unstable and follow no natural pattern, seasonality is unstable and follows no natural pattern
+Associates - 0-5 - Logistics - (4) predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is extremely stable.
+Associates - 0-5 - MOBIS - (5) predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is extremely stable.
+Associates - 0-5 - PES - (6) predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is extremely stable. Not much data.
+Associates - 11-15 - Consolidated - (7) unpredictable - was reasonably flat until recently.  Is currently hard to predict, trend, seasonality and residuals appear to have gone through a lot of uncertainty over the past year.  Were stable from 2000 - 2014. Not much data.
+Associates - 11-15 - Environmental - (8) unpredictable - completely unreasonable to predict any trend or seasonality.  Simply not enough data.
+Associates - 11-15 - Logistics - (9) unpredictable - only seasonal effects were present, but not enough data.
+Associates - 11-15 - MOBIS - (10) unpredictable - only seasonal effects were present, but not enough data.
+Associates - 11-15-PES - (11) unpredictable - trend data shows some stability to the series.  However trend dies after 2012 for some reason?  Seasonal trend dominates through end of series (in 2015).  Residual data appears to be extremely stable through 2004 - 2012.
+Associates - 6-10 - AIMS - (12) predictable - only trend data appears.  It seems to fall within a very narrow range, which is great!
+Associates - 6-10 - Consolidated - (13) predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is extremely stable.
+Associates - 6-10 - Environmental - (14) predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is extreme but stable.
+Associates - 6-10 - Language Services - (15) - only 3 values in this category.  Not enough data to do time series prediction.
+Associates - 6-10 - Logistics - (16) predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is extreme but stable.
+Associates - 6-10 MOBIS - (17) predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is extreme but stable.
+19th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is more muted but varies, still stable.
+20th key - 18th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is more muted but follows a trend as well, still more extreme then trend.
+21st key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+22nd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+23rd key - predictable - trend has a large up spike from last quarter of 2010 to 2013, but other than that is extremely flat.  Seasonality is muted, and varies but is still tractable.  Residuals vary but not so much so that they are extreme.
+24th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+25th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+26th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+27th key - predictable - there is only a trend line, but it doesn't vary much and likely follows regular patterns.
+28th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+29th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+30th key - unpredictable - only 8 values in this series, not enough to do prediction.
+31st key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+32nd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+33rd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+34th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+35th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+36th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+37th key - predictable - there is only a trend line, but it doesn't vary much and likely follows regular patterns. 
+38th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+39th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+40th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+41st key - predictable - trend is stable, residuals and seasonality do not follow a trend.
+42nd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+43rd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+44th key - predictable - trend is stable, residuals and seasonality do not follow a trend.
+45th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+46th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+47th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+48th key - unpredictable - only 4 data points, not enough to predict anything.
+49th key - predictable - trend is stable, residuals and seasonality do not follow a trend.
+50th key - predictable - trend is stable, residuals and seasonality do not follow a trend.
+51st key - predictable - trend is stable, residuals and seasonality do not follow a trend.
+52nd key - predictable - there is only a trend line, but it doesn't vary much and likely follows regular patterns.
+53rd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+54th key - predictable - trend has become extremely stable, not clear pattern for seasonality or residuals.
+55th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+56th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+57th key - unpredictable - looks like this contract was only set up once back in 2012.
+58th key - predictable - trend is stable, residuals and seasonality do not follow a trend.
+59th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+60th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+61st key - unpredictable - not enough data, only 3 points.
+62nd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+63rd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+64th key - unpredictable - looks like contracts were only put up in july 2008.  
+65th key - predictable - trend is mostly stable, residuals and seasonality don't follow a trend.
+66th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+67th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+68th key - unpredictable - looks like contracts were only put up once.
+69th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+70th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+71st key - unpredictable - only 5 data points.
+72nd key - predictable - there is only a trend line, but it follows a fairly clear pattern.
+73rd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+74th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+75th key - unpredictable - this series follows some weird seasonal effects and minor trend right at the end of 2014.
+76th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.  
+77th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+78th key - unpredictable - looks like contracts were only put up in july 2008.
+79th key - predictable - trend is somewhat stable, residuals and seasonality tend to follow some weird patterns.
+80th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+81st key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+82nd key - predictable - trend is stable, residuals are extreme, seasonality is more muted but still extreme.
+83rd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+84th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+85th key - predictable - trend is stable, residuals are extreme, seasonality is more muted but still extreme.
+86th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+87th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+88th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+89th key - unpredictable - no clear trend line, seasonality and residual effects appears random.
+90th key - predictable - there is only a trend line but it follows a clear and obvious pattern.
+91st key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+92nd key - unpredictable - not enough data, only for data points.
+93rd key - unpredictable - no clear trend line, seasonality and residual effects appears random.
+94th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+95th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+96th key - unpredictable - no clear trend line, seasonality and residual effects appears random.
+97th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+98th key - predictable - trend is stable, residuals are extreme, seasonality is extreme.
+99th key - unpredictable - only 8 values.
+100th key - unpredictable - trend is stable for 8 years but then disappears, becomes dominated by seasonality and residuals, which both have become extreme.
+101st key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+102nd key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+103rd key - predictable - trend is stable, however seasonality is random and residuals are stable.
+104th key - predictable - there is only a trend line, but it follows a clear pattern.
+105th key - unpredictable - only 13 data points.
+106th key - predictable - trend is stable, seasonality and residuals are stable as well.
+107th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+108th key - predictable - there is only a trend line, but it is predictable and follows a clear pattern.
+109th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.  Trend drops off around end of 2015 and residuals appear to dominate. 
+110th key - predictable - trend is clear and follows line.
+111th key - unpredictable - trend falls away in 2013 and residuals / seasonality dominate after that.
+112th key - predictable - trend dominates, no seasonality or trend.
+113th key - predictable - trend is stable, residuals are extreme but typically follow a trend, seasonality is stable.
+114th key - unpredictable - trend is stable, but falls away at end of 2013 and is dominated by residuals which are variable.
+115th key - unpredictable
+116th key - unpredictable
+117th key - predictable - trend appears stable.  Trend appears to fall away towards the end of 2015, but that could be because far fewer contracts have been initiated since then.
+118th key - predictable - trend only, follows pattern.
+

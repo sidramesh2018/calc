@@ -77,6 +77,17 @@ Method is called here: data_capture/views/bulk_upload.py
 
 `jobs.process_bulk_upload_and_send_email.delay(upload_source_id)`
 
+##Setting up your model
+
+Step 1) Create your lookup table based on the most recent data.
+
+`python manage.py load_lookup_data.py`
+
+Step 2) Train model
+
+`python manage.py generate_arima_model`
+
+
 ##Data dictionary
 
 Here we will describe the model for the database.  This will include information about each column and each table.
