@@ -31,7 +31,6 @@ COPY requirements.txt /calc/
 COPY requirements-dev.txt /calc/
 
 RUN pip install -r /calc/requirements-dev.txt
-RUN pip install robobrowser==0.5.3
 
 # The following lines set up our container for being run in a
 # cloud environment, where folder sharing is disabled. They're
