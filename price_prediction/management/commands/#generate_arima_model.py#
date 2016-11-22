@@ -136,7 +136,6 @@ def check_for_extreme_values(sequence,sequence_to_check=None):
                 sequence.remove(val)
         return sequence
         
-        
 def trend_predict(data):
     #seasonal decompose 
     if len(data) > 52:
