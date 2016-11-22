@@ -161,7 +161,7 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 );
 
 // Compile and lint JavaScript sources
-gulp.task('js', ['lint'].concat(browserifiedBundles).concat(['js:legacy']));
+gulp.task('js', ['lint', 'js:legacy'].concat(browserifiedBundles));
 
 gulp.task('js:legacy', vendoredBundles);
 
