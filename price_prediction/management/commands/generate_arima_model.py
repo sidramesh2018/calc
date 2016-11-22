@@ -49,6 +49,8 @@ def model_search(data):
                 upper_bound_AR -= 1
             else:
                 upper_bound_I -= 1
+    
+                
                 
     #assuming we don't ever hit a reasonable set of upper_bounds, it's pretty safe to assume this will work
     try:
@@ -135,7 +137,6 @@ def check_for_extreme_values(sequence,sequence_to_check=None):
             elif val <= mean - (stdev*2):
                 sequence.remove(val)
         return sequence
-        
         
 def trend_predict(data):
     #seasonal decompose 

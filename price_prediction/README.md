@@ -87,6 +87,9 @@ Step 2) Train model
 
 `python manage.py generate_arima_model`
 
+##References
+
+* [Rules of thumb for ARIMA models](https://people.duke.edu/~rnau/411arim.htm)
 
 ##Data dictionary
 
