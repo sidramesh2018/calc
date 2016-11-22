@@ -1,9 +1,13 @@
 from datetime import date
+from collections import namedtuple
 
 from django.core.exceptions import ValidationError
 from django.forms import MultiWidget, NumberInput
 from django.forms.fields import MultiValueField, IntegerField
 from django.template.loader import render_to_string
+
+
+FieldNames = namedtuple('FieldNames', ['year', 'month', 'day'])
 
 
 class SplitDateWidget(MultiWidget):
@@ -27,6 +31,10 @@ class SplitDateWidget(MultiWidget):
         if value:
             return [value.year, value.month, value.day]
         return [None, None, None]
+
+    @staticmethod
+    def get_field_names(name):
+        return FieldNames(year=name + '_0', month=name + '_1', day=name + '_2')
 
     def render(self, name, value, attrs=None):
         # Django MultiWidget rendering is not particularly well-suited to
