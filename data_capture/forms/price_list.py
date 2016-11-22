@@ -183,6 +183,12 @@ class Step4Form(forms.ModelForm):
 
     @classmethod
     def from_post_data_subsets(cls, *post_datas):
+        '''
+        This form is basically a superset of the data from earlier steps,
+        and this method makes it easy to pass in the POST data from those
+        earlier steps to obtain an instance of this form.
+        '''
+
         combined_post_data = {}
         for post_data in post_datas:
             combined_post_data.update(post_data)
