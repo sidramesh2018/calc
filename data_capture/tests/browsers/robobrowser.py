@@ -28,7 +28,7 @@ class RoboBrowserForm(base.AbstractBrowserForm):
         self.browser.submit_form(self.form)
 
 
-class RoboBrowserTestCase(LiveServerTestCase):
+class RoboBrowserTestCase(LiveServerTestCase, base.AbstractBrowser):
     def setUp(self):
         super().setUp()
         self.browser = RoboBrowser(history=True, parser='html.parser')

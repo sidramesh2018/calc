@@ -23,7 +23,7 @@ class SeleniumForm(base.AbstractBrowserForm):
         self.form.submit()
 
 
-class SeleniumTestCase(_SeleniumTestCase):
+class SeleniumTestCase(_SeleniumTestCase, base.AbstractBrowser):
     def load(self, url):
         return super().load(url)
 
