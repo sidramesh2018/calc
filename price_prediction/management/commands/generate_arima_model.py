@@ -18,61 +18,13 @@ from functools import partial
 import os
 import logging
 
-import pandas as pd
-import math
-import datetime
 
 from django.core.management import BaseCommand
 from optparse import make_option
 from django.core.management import call_command
 
 
-
-def total_error(values,fitted_values):
-    if (len(values) == len(fitted_values)) or (len(values) < len(fitted_values)):
-        return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(values))]) 
-    else:
-        return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(fitted_values))])
-        
-def check_for_extreme_values(sequence,sequence_to_check=None):
-    mean = statistics.mean(sequence)
-    stdev = statistics.stdev(sequence)
-    if sequence_to_check != None:
-        for val in sequence_to_check:
-            if val >= mean + (stdev*2):
-                sequence_to_check.remove(val)
-            elif val <= mean - (stdev*2):
-                sequence_to_check.remove(val)
-        return sequence_to_check
-    else:
-        for val in sequence:
-            if val >= mean + (stdev*2):
-                sequence.remove(val)
-            elif val <= mean - (stdev*2):
-                sequence.remove(val)
-        return sequence
-        
-def setting_y_axis_intercept(data,model):
-    data = list(data["Year 1/base"])
-    fittedvalues = list(model.fittedvalues)
-    avg = statistics.mean(data)
-    median = statistics.median(data)
-    possible_fitted_values = []
-
-    possible_fitted_values.append([elem + avg for elem in fittedvalues])
-    possible_fitted_values.append([elem + data[0] for elem in fittedvalues])
-    possible_fitted_values.append([elem + median for elem in fittedvalues])
-    possible_fitted_values.append(fittedvalues)
-    min_error = 1000000
-    best_fitted_values = 0
-    for ind,f_values in enumerate(possible_fitted_values):
-        cur_error = total_error(data,f_values)
-        if cur_error < min_error:
-            min_error = cur_error 
-            best_fitted_values = ind
-    print("minimum error:",min_error)
-    return possible_fitted_values[best_fitted_values]
-
+#this comes from here: http://stackoverflow.com/questions/22770352/auto-arima-equivalent-for-python
 def objective_function(data,order):
     return sm.tsa.ARIMA(data,order).fit().aic
 
@@ -98,9 +50,153 @@ def model_search(data):
                 upper_bound_I -= 1
                 
     #assuming we don't ever hit a reasonable set of upper_bounds, it's pretty safe to assume this will work
-    grid = (slice(1,2,1),slice(1,2,1),slice(1,2,1))
-    return brute(obj_func, grid, finish=None)
+    try:
+        grid = (slice(1,2,1),slice(1,2,1),slice(1,2,1))
+        return brute(obj_func, grid, finish=None)
+    except: #however we don't always meet invertibility conditions
+        #Here we explicitly test for a single MA or AR process being a better fit
+        #If either has a lower (better) aic score we return that model order
+        model_ar_one = sm.tsa.ARIMA(data,(1,0,0)).fit()
+        model_ma_one = sm.tsa.ARIMA(data,(0,0,1)).fit()
+        if model_ar_one.aic < model_ma_one.aic:
+            return (1,0,0)
+        else:
+            return (0,0,1)
+    
+def trend_predict(data):
+    #seasonal decompose 
+    if len(data) > 52:
+        s = sm.tsa.seasonal_decompose(data["Price"],freq=52)
+    elif len(data) > 12:
+        s = sm.tsa.seasonal_decompose(data["Price"], freq=12)
+    else:
+        return None
+    #clearing out NaNs
+    new_data = s.trend.fillna(0)
+    new_data = new_data.iloc[new_data.nonzero()[0]]
+    model_order = list(model_search(data))
+    model_order = tuple([int(elem) for elem in model_order])
+    model = sm.tsa.ARIMA(new_data,model_order).fit()
+    model.fittedvalues = setting_y_axis_intercept(new_data,model)
+    return model
 
+def is_nan(obj):
+    if type(obj) == type(float()):
+        return math.isnan(obj)
+    else:
+        return False
+    
+def money_to_float(string):
+    """
+    hourly wages have dollar signs and use commas, 
+    this method removes those things, so we can treat stuff as floats
+    """
+    if type(string) == type(str()):
+        string = string.replace("$","").replace(",","")
+        return float(string)
+    else:
+        return string
+
+def load_data():
+    """
+    this loads all the csv's into memory and then returns them.
+    Note that only versioned csv's are returned, because the one without a version number
+    is also the highest numbered CSV.  This avoids *some* double counting.
+    """
+    #loading the datasets into memory
+    os.chdir("data")
+    data_sets = ["hourly_prices_v1.csv","hourly_prices_v2.csv","hourly_prices_v3.csv","hourly_prices_v4.csv"]
+    dfs = [pd.read_csv(data_set) for data_set in data_sets]
+    os.chdir("..")
+    return dfs
+
+def date_to_datetime(time_string):
+    return datetime.datetime.strptime(time_string, '%m/%d/%Y')
+
+def ave_error(values,fitted_values):
+    if (len(values) == len(fitted_values)) or (len(values) < len(fitted_values)):
+        return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(values))])/len(values) 
+    else:
+        return sum([abs(values[ind] - fitted_values[ind]) for ind in range(len(fitted_values))])/len(values)
+    
+def check_for_extreme_values(sequence,sequence_to_check=None):
+    mean = statistics.mean(sequence)
+    stdev = statistics.stdev(sequence)
+    if sequence_to_check != None:
+        for val in sequence_to_check:
+            if val >= mean + (stdev*2):
+                sequence_to_check.remove(val)
+            elif val <= mean - (stdev*2):
+                sequence_to_check.remove(val)
+        return sequence_to_check
+    else:
+        for val in sequence:
+            if val >= mean + (stdev*2):
+                sequence.remove(val)
+            elif val <= mean - (stdev*2):
+                sequence.remove(val)
+        return sequence
+        
+def setting_y_axis_intercept(data,model):
+    data = list(data["Price"])
+    fittedvalues = list(model.fittedvalues)
+    avg = statistics.mean(data)
+    median = statistics.median(data)
+    possible_fitted_values = []
+
+    possible_fitted_values.append([elem + avg for elem in fittedvalues])
+    possible_fitted_values.append([elem + data[0] for elem in fittedvalues])
+    possible_fitted_values.append([elem + median for elem in fittedvalues])
+    possible_fitted_values.append(fittedvalues)
+    min_error = 1000000
+    best_fitted_values = 0
+    for ind,f_values in enumerate(possible_fitted_values):
+        avg_error = ave_error(data,f_values)
+        if avg_error < min_error:
+            min_error = avg_error 
+            best_fitted_values = ind
+    print("minimum error:",min_error)
+    return possible_fitted_values[best_fitted_values]
+
+        
+def check_for_extreme_values(sequence,sequence_to_check=None):
+    mean = statistics.mean(sequence)
+    stdev = statistics.stdev(sequence)
+    if sequence_to_check != None:
+        for val in sequence_to_check:
+            if val >= mean + (stdev*2):
+                sequence_to_check.remove(val)
+            elif val <= mean - (stdev*2):
+                sequence_to_check.remove(val)
+        return sequence_to_check
+    else:
+        for val in sequence:
+            if val >= mean + (stdev*2):
+                sequence.remove(val)
+            elif val <= mean - (stdev*2):
+                sequence.remove(val)
+        return sequence
+        
+def setting_y_axis_intercept(data,model):
+    data = list(data["Price"])
+    fittedvalues = list(model.fittedvalues)
+    avg = statistics.mean(data)
+    median = statistics.median(data)
+    possible_fitted_values = []
+
+    possible_fitted_values.append([elem + avg for elem in fittedvalues])
+    possible_fitted_values.append([elem + data[0] for elem in fittedvalues])
+    possible_fitted_values.append([elem + median for elem in fittedvalues])
+    possible_fitted_values.append(fittedvalues)
+    min_error = 1000000
+    best_fitted_values = 0
+    for ind,f_values in enumerate(possible_fitted_values):
+        cur_error = total_error(data,f_values)
+        if cur_error < min_error:
+            min_error = cur_error 
+            best_fitted_values = ind
+    print("minimum error:",min_error)
+    return possible_fitted_values[best_fitted_values]
 
 class Command(BaseCommand):
 
@@ -121,16 +217,18 @@ class Command(BaseCommand):
             labor_objects = LaborCategoryLookUp.objects.filter(labor_key=labor_category)
             df = pd.DataFrame()
             for labor_object in labor_objects:
-                df = df.append({"Begin Date":labor_object.start_date,"Price":float(labor_object.labor_value)},ignore_index=True)
-            df.index = df["Begin Date"]
+                df = df.append({"Date":labor_object.start_date,"Price":float(labor_object.labor_value)},ignore_index=True)
+            #sanity checking this is a datetime
+            df["Date"] = pd.to_datetime(df["Date"])
+            df = df.set_index("Date")
+            model = trend_predict(df)
             import code
             code.interact(local=locals())
-            model_order = list(model_search(df))
-            model_order = tuple([int(elem) for elem in model_order])
-            model = sm.tsa.ARIMA(df,model_order).fit()
             for ind,value in enumerate(model.fittedvalues):
                 fitted_values_by_category = FittedValuesByCategory(labor_key=labor_category,fittedvalue=value,start_date=df.ix[ind])
                 fitted_values_by_category.save()
+
+
 # results = sm.tsa.ARIMA(dta, (3,1,0)).fit()
 # results.save
 # sm.load()

@@ -393,7 +393,7 @@ def trend_predict(data):
     model_order = list(model_search(data))
     model_order = tuple([int(elem) for elem in model_order])
     model = sm.tsa.ARIMA(new_data,model_order).fit()
-    model.fittedvalues = setting_y_axis_intercept(data,model)
+    model.fittedvalues = setting_y_axis_intercept(new_data,model)
     return model
 
 if not os.path.exists("categories.json"):
