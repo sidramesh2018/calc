@@ -88,8 +88,8 @@ Object.keys(bundles).forEach(name => {
   const dirName = options.dirName || name;
   const noBrowserify = options.noBrowserify;
   const vendor = options.vendor || [];
-  const entryName = name + 'Entry';
-  const outfileName = name + 'Outfile';
+  const entryName = `${name}Entry`;
+  const outfileName = `${name}Outfile`;
 
   dirs.dest.scripts[name] = `${BUILT_FRONTEND_DIR}/js/${dirName}`;
 
@@ -99,7 +99,7 @@ Object.keys(bundles).forEach(name => {
     paths[outfileName] = 'index.min.js';
 
     gulp.task(browserifiedBundleName, () =>
-      browserifyBundle(
+      browserifyBundle(  // eslint-disable-line
         path.join(dirs.src.scripts, paths[entryName]),
         dirs.dest.scripts[name],
         paths[outfileName]
@@ -110,7 +110,7 @@ Object.keys(bundles).forEach(name => {
 
   if (vendor.length) {
     const vendoredBundleName = `js:${dirName}:vendor`;
-    gulp.task(vendoredBundleName, () => concatAndMapSources(
+    gulp.task(vendoredBundleName, () => concatAndMapSources(  // eslint-disable-line
       'vendor.min.js',
       vendor.map((p) => dirs.src.scripts + p),
       dirs.dest.scripts[name]
