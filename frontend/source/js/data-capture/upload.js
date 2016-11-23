@@ -157,23 +157,6 @@ class UploadWidget extends window.HTMLElement {
     let dragCounter = 0;
     let lastDragEnterTarget = null;
 
-    const finishInitialization = () => {
-      if (this.uploadInput instanceof UploadInput) {
-        if (!this.isDegraded) {
-          this.uploadInput.upgrade();
-
-          const fakeInitialFilename = $el.attr('data-fake-initial-filename');
-
-          if (fakeInitialFilename) {
-            setCurrentFilename(fakeInitialFilename);  // eslint-disable-line
-          }
-        }
-        dispatchBubbly($el[0], 'uploadwidgetready');
-      } else {
-        $el.one('uploadinputready', finishInitialization);
-      }
-    };
-
     function setCurrentFilename(filename) {
       $('input', $el).nextAll().remove();
 
@@ -189,6 +172,23 @@ class UploadWidget extends window.HTMLElement {
       $('.upload-filename', current).text(filename);
       $el.append(current);
     }
+
+    const finishInitialization = () => {
+      if (this.uploadInput instanceof UploadInput) {
+        if (!this.isDegraded) {
+          this.uploadInput.upgrade();
+
+          const fakeInitialFilename = $el.attr('data-fake-initial-filename');
+
+          if (fakeInitialFilename) {
+            setCurrentFilename(fakeInitialFilename);
+          }
+        }
+        dispatchBubbly($el[0], 'uploadwidgetready');
+      } else {
+        $el.one('uploadinputready', finishInitialization);
+      }
+    };
 
     function showInvalidFileMessage() {
       $('input', $el).nextAll().remove();
