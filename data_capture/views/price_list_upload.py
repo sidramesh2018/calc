@@ -158,7 +158,7 @@ def step_3(request, step):
     if request.method == 'GET':
 
         gleaned_data = get_deserialized_gleaned_data(request)
-        force_show = request.GET.get('force')
+        force_show = (request.GET.get('force') == 'on')
 
         if not force_show and gleaned_data and gleaned_data.valid_rows:
             # If gleaned_data is in session and has valid rows

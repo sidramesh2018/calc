@@ -208,11 +208,17 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         res = self.client.get(self.url)
         self.assertRedirects(res, Step3DataTests.url)
 
-    def test_doesnt_redirect_if_force_param_present(self):
+    def test_doesnt_redirect_if_force_param_is_on(self):
         self.login()
         self.set_fake_gleaned_data(self.rows)
-        res = self.client.get(self.url+'?force=1')
+        res = self.client.get(self.url+'?force=on')
         self.assertEqual(res.status_code, 200)
+
+    def test_redirects_if_force_param_is_not_on(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        res = self.client.get(self.url+'?force=whatever')
+        self.assertRedirects(res, Step3DataTests.url)
 
     def test_valid_post_updates_session_data(self):
         self.login()
