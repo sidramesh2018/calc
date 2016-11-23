@@ -37,8 +37,6 @@ class UploadWidget(forms.widgets.FileInput):
         final_attrs['is'] = 'upload-input'
 
         id_for_label = final_attrs.get('id', '')
-        instructions = [self.extra_instructions or '']
-
         widget_attrs = {}
 
         if self.degraded:
@@ -66,7 +64,7 @@ class UploadWidget(forms.widgets.FileInput):
             '  %s' % super().render(name, value, final_attrs),
             '  <div class="upload-chooser">',
             '    <label for="%s">Choose file</label>' % id_for_label,
-            '    <span>%s</span>' % ' '.join(instructions),
+            '    <span>%s</span>' % self.extra_instructions,
             '  </div>',
             '</upload-widget>'
         ])
