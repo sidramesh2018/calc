@@ -99,6 +99,8 @@ const hourglass = {};
         } else {
           var key = unescape(part.substr(0, i)),
               val = unescape(part.substr(i + 1)).replace(/\+/g, " ");
+          // replace < and > to prevent HTML entity injection
+          val = val.replace(/[<>]/g, '');
           switch (val) {
             case "true": val = true; break;
             case "false": val = false; break;
