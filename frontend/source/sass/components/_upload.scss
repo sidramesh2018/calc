@@ -3,7 +3,6 @@
 upload-widget {
   margin: 3rem 0;
   display: flex;
-  height: 6em;
   position: relative;
   align-items: center;
   padding: 0 3em;
@@ -55,6 +54,12 @@ upload-widget {
 
 // Rules specific to JS-upgraded widgets.
 upload-widget[aria-live] {
+  height: 6em;
+
+  .nojs-preamble {
+    display: none;
+  }
+
   input {
     width: 0.1px;
     height: 0.1px;
@@ -70,6 +75,8 @@ upload-widget:not([aria-live]) {
   font-size: 1.3rem;
   display: block;
   border: none;
+  padding-top: 1em;
+  padding-bottom: 1em;
 
   input {
     border: none;
