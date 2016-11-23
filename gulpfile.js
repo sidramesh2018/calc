@@ -25,6 +25,8 @@ const watchify = require('watchify');
 const babelify = require('babelify');
 const del = require('del');
 
+const BUILT_FRONTEND_DIR = 'frontend/static/frontend/built';
+
 const dirs = {
   src: {
     style: 'frontend/source/sass/',
@@ -32,38 +34,21 @@ const dirs = {
   },
   dest: {
     style: {
-      built: 'frontend/static/frontend/built/style',
+      built: `${BUILT_FRONTEND_DIR}/style`,
     },
-    scripts: {
-      // Scripts (vendor libs) common to CALC 1 and 2
-      common: 'frontend/static/frontend/built/js/common',
-      // CALC 1.0 scripts
-      dataExplorer: 'frontend/static/frontend/built/js/data-explorer',
-      // CALC 2.0 Data Capture scripts
-      dataCapture: 'frontend/static/frontend/built/js/data-capture',
-      // Styleguide scripts
-      styleguide: 'frontend/static/frontend/built/js/styleguide',
-      // CALC 2.0 Tests
-      tests: 'frontend/static/frontend/built/js/tests',
-    },
+    scripts: {},
   },
 };
 
 const paths = {
   sass: '**/*.scss',
   js: '**/*.js',
-  dataExplorerEntry: 'data-explorer/index.js',
-  dataExplorerOutfile: 'index.min.js',
-  dataCaptureEntry: 'data-capture/index.js',
-  dataCaptureOutfile: 'index.min.js',
-  styleguideEntry: 'styleguide/index.js',
-  styleguideOutfile: 'index.min.js',
-  testEntry: 'tests/index.js',
-  testOutfile: 'index.min.js',
 };
 
 const bundles = {
+  // Scripts (vendor libs) common to CALC 1 and 2
   common: {
+    noBrowserify: true,
     vendor: [
       'vendor/d3.v3.min.js',
       'vendor/jquery.min.js',
@@ -73,7 +58,9 @@ const bundles = {
       'vendor/jquery.nouislider.all.min.js',
     ],
   },
+  // CALC 1.0 scripts
   dataExplorer: {
+    dirName: 'data-explorer',
     vendor: [
       'vendor/rgbcolor.js',
       'vendor/StackBlur.js',
@@ -83,7 +70,54 @@ const bundles = {
       'vendor/jquery.auto-complete.min.js',
     ],
   },
+  // CALC 2.0 Data Capture scripts
+  dataCapture: {
+    dirName: 'data-capture',
+  },
+  // Styleguide scripts
+  styleguide: {},
+  // CALC 2.0 Tests
+  tests: {},
 };
+
+const browserifiedBundles = [];
+const vendoredBundles = [];
+
+Object.keys(bundles).forEach(name => {
+  const options = bundles[name];
+  const dirName = options.dirName || name;
+  const noBrowserify = options.noBrowserify;
+  const vendor = options.vendor || [];
+  const entryName = `${name}Entry`;
+  const outfileName = `${name}Outfile`;
+
+  dirs.dest.scripts[name] = `${BUILT_FRONTEND_DIR}/js/${dirName}`;
+
+  if (!noBrowserify) {
+    const browserifiedBundleName = `js:${dirName}`;
+    paths[entryName] = `${dirName}/index.js`;
+    paths[outfileName] = 'index.min.js';
+
+    gulp.task(browserifiedBundleName, () =>
+      browserifyBundle(  // eslint-disable-line
+        path.join(dirs.src.scripts, paths[entryName]),
+        dirs.dest.scripts[name],
+        paths[outfileName]
+      )
+    );
+    browserifiedBundles.push(browserifiedBundleName);
+  }
+
+  if (vendor.length) {
+    const vendoredBundleName = `js:${dirName}:vendor`;
+    gulp.task(vendoredBundleName, () => concatAndMapSources(  // eslint-disable-line
+      'vendor.min.js',
+      vendor.map((p) => dirs.src.scripts + p),
+      dirs.dest.scripts[name]
+    ));
+    vendoredBundles.push(vendoredBundleName);
+  }
+});
 
 const isInDocker = ('DDM_IS_RUNNING_IN_DOCKER' in process.env);
 
@@ -100,8 +134,8 @@ gulp.task('build', ['sass', 'js']);
 gulp.task('watch', ['set-watching', 'sass', 'js'], () => {
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
 
-  // js:data-capture sets up its own watch handling (via watchify)
-  // so we don't want to re-trigger it here, ref #437
+  // browserified bundles set up their own watch handling (via watchify)
+  // so we don't want to re-trigger them here, ref #437
   gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint', 'js:legacy']);
 });
 
@@ -127,11 +161,9 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 );
 
 // Compile and lint JavaScript sources
-gulp.task('js', ['lint', 'js:data-explorer',
-  'js:data-capture', 'js:styleguide',
-  'js:tests', 'js:legacy']);
+gulp.task('js', ['lint', 'js:legacy'].concat(browserifiedBundles));
 
-gulp.task('js:legacy', ['js:data-explorer:vendor', 'js:common:vendor']);
+gulp.task('js:legacy', vendoredBundles);
 
 function concatAndMapSources(name, sources, dest) {
   return gulp.src(sources)
@@ -140,20 +172,6 @@ function concatAndMapSources(name, sources, dest) {
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(dest));
 }
-
-gulp.task('js:data-explorer:vendor', () => concatAndMapSources(
-    'vendor.min.js',
-    bundles.dataExplorer.vendor.map((p) => dirs.src.scripts + p),
-    dirs.dest.scripts.dataExplorer
-  )
-);
-
-gulp.task('js:common:vendor', () => concatAndMapSources(
-    'vendor.min.js',
-    bundles.common.vendor.map((p) => dirs.src.scripts + p),
-    dirs.dest.scripts.common
-  )
-);
 
 // boolean flag to indicate to watchify/browserify that it should set up
 // its rebundling
@@ -209,30 +227,6 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
   return bundler;
 }
 
-gulp.task('js:data-explorer', () =>
-  browserifyBundle(
-    path.join(dirs.src.scripts, paths.dataExplorerEntry),
-    dirs.dest.scripts.dataExplorer,
-    paths.dataExplorerOutfile
-  )
-);
-
-gulp.task('js:data-capture', () =>
-  browserifyBundle(
-    path.join(dirs.src.scripts, paths.dataCaptureEntry),
-    dirs.dest.scripts.dataCapture,
-    paths.dataCaptureOutfile
-  )
-);
-
-gulp.task('js:styleguide', () =>
-  browserifyBundle(
-    path.join(dirs.src.scripts, paths.styleguideEntry),
-    dirs.dest.scripts.styleguide,
-    paths.styleguideOutfile
-  )
-);
-
 gulp.task('lint', () => {
   const opts = {};
   if (isInDocker) {
@@ -247,14 +241,6 @@ gulp.task('lint', () => {
     .pipe(eslint(opts))
     .pipe(eslint.format());
 });
-
-gulp.task('js:tests', () =>
-  browserifyBundle(
-    path.join(dirs.src.scripts, paths.testEntry),
-    dirs.dest.scripts.tests,
-    paths.testOutfile
-  )
-);
 
 // set up a SIGTERM handler for quick graceful exit from docker
 process.on('SIGTERM', () => {
