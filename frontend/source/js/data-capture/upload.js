@@ -161,6 +161,12 @@ class UploadWidget extends window.HTMLElement {
       if (this.uploadInput instanceof UploadInput) {
         if (!this.isDegraded) {
           this.uploadInput.upgrade();
+
+          const fakeInitialFilename = $el.attr('data-fake-initial-filename');
+
+          if (fakeInitialFilename) {
+            setCurrentFilename(fakeInitialFilename);  // eslint-disable-line
+          }
         }
         dispatchBubbly($el[0], 'uploadwidgetready');
       } else {
