@@ -19,6 +19,7 @@ def index(request):
         "*.googleapis.com",
         "dap.digitalgov.gov",
         "www.google-analytics.com",
+        "ethn.io",
         # Browsers that don't support CSP v2 need this to work.
         "'unsafe-inline'",
         # For browsers that *do* support CSP v2, the following will
