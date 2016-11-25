@@ -1,46 +1,39 @@
 import pandas as pd
-from glob import glob
 import os
 import math
 import json
 import datetime
 import time
-import numpy as np
-from scipy import stats
-import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
-from statsmodels.graphics.api import qqplot
 from scipy.optimize import brute
 import statistics
 from functools import partial
 
+# A bit about this file - Python is a great language full of lots of useful data science libraries.  But it's not that fast.  For this reason we use a series of functions which send data to json files, which can be used by the language as Python Dictionaries.  Because of the size of the data, big but not *that* big, it made sense to chop up the tasks and not repeat computation unless necessary.  Otherwise debugging and iteration would be difficult, because just processing the data, takes a while.
 
-"""
-A bit about this file - Python is a great language full of lots of useful data science libraries.  But it's not that fast.  For this reason we use a series of functions which send data to json files, which can be used by the language as Python Dictionaries.  Because of the size of the data, big but not *that* big, it made sense to chop up the tasks and not repeat computation unless necessary.  Otherwise debugging and iteration would be difficult, because just processing the data, takes a while.
+# Therefore we have the following methods:
 
-Therefore we have the following methods:
+# making_categories - which maps individual labor categories into buckets across three fields - education level, years of experience and schedule.
 
-making_categories - which maps individual labor categories into buckets across three fields - education level, years of experience and schedule.
-
-I don't really undetstand what a schedule is, but it's kind of like a geographic region?  As well as a business line / set of skills.  So, if you are a schedule 70, it's likely you're in IT and it's even more likely you're a software developer.  It's worth stating that there is talk of moving over to SIN numbers which are used by the government to do something similar to the schedule, but at a more granular level.  Sometimes these SIN numbers have semantic data attached.  And sometimes, they do not.  So it's best to think of them as unique identifiers.  For this reason, it might be worth it to update this script down the road to work off of SIN numbers.  But for right now schedule seems like the right call.
-
-"""
+# I don't really undetstand what a schedule is, but it's kind of like a geographic region?  As well as a business line / set of skills.  So, if you are a schedule 70, it's likely you're in IT and it's even more likely you're a software developer.  It's worth stating that there is talk of moving over to SIN numbers which are used by the government to do something similar to the schedule, but at a more granular level.  Sometimes these SIN numbers have semantic data attached.  And sometimes, they do not.  So it's best to think of them as unique identifiers.  For this reason, it might be worth it to update this script down the road to work off of SIN numbers.  But for right now schedule seems like the right call.
 
 #helpful resource: https://www.analyticsvidhya.com/blog/2016/02/time-series-forecasting-codes-python/
 
 def is_nan(obj):
-    if type(obj) == type(float()):
+    if isinstance(obj,float):
         return math.isnan(obj)
     else:
         return False
-    
+
 def money_to_float(string):
     """
     hourly wages have dollar signs and use commas, 
     this method removes those things, so we can treat stuff as floats
+    
     """
-    if type(string) == type(str()):
+
+    if isinstance(string,str):
         string = string.replace("$","").replace(",","")
         return float(string)
     else:

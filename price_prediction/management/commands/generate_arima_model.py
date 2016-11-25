@@ -1,36 +1,27 @@
-from price_prediction.models import *
+from price_prediction.models import FittedValuesByCategory,LaborCategoryLookUp,PriceModels
 import pandas as pd
-from glob import glob
 import os
 import math
-import json
 import datetime
-import time
-import numpy as np
-from scipy import stats
-import pandas as pd
-import matplotlib.pyplot as plt
 import statsmodels.api as sm
-from statsmodels.graphics.api import qqplot
 from scipy.optimize import brute
 import statistics
 from functools import partial
 import os
-import logging
-
+import code
 
 from django.core.management import BaseCommand
 from optparse import make_option
-from django.core.management import call_command
 
 
 #this comes from here: http://stackoverflow.com/questions/22770352/auto-arima-equivalent-for-python
 def objective_function(data,order):
     return sm.tsa.ARIMA(data,order).fit().aic
 
-def model_search(data):
+def optimizer_search(data,optimizer):
     obj_func = partial(objective_function,data)
     #Back in graduate school professor Lecun said in class that ARIMA models typically only need a max parameter of 5, so I doubled it just in case.
+    aic_order = []
     upper_bound_AR = 10
     upper_bound_I = 10
     upper_bound_MA = 10
@@ -40,7 +31,8 @@ def model_search(data):
             if upper_bound_AR < 0 or upper_bound_I < 0 or upper_bound_MA < 0:
                 grid_not_found = False
             grid = (slice(1,upper_bound_AR,1),slice(1,upper_bound_I,1),slice(1,upper_bound_MA,1))
-            return brute(obj_func, grid, finish=None)
+            order = brute(obj_func, grid, finish=None)
+            return order, obj_func(order)
         except Exception as e: #found here: http://stackoverflow.com/questions/4308182/getting-the-exception-value-in-python
             error_string = str(e)
             if "MA" in error_string:
@@ -49,23 +41,35 @@ def model_search(data):
                 upper_bound_AR -= 1
             else:
                 upper_bound_I -= 1
-    
-                
-                
+        
     #assuming we don't ever hit a reasonable set of upper_bounds, it's pretty safe to assume this will work
     try:
         grid = (slice(1,2,1),slice(1,2,1),slice(1,2,1))
-        return brute(obj_func, grid, finish=None)
+        order = brute(obj_func, grid, finish=None)
+        return order, obj_func(order)
     except: #however we don't always meet invertibility conditions
         #Here we explicitly test for a single MA or AR process being a better fit
         #If either has a lower (better) aic score we return that model order
         model_ar_one = sm.tsa.ARIMA(data,(1,0,0)).fit()
         model_ma_one = sm.tsa.ARIMA(data,(0,0,1)).fit()
         if model_ar_one.aic < model_ma_one.aic:
-            return (1,0,0)
+            return (1,0,0),obj_func((1,0,0))
         else:
-            return (0,0,1)
+            return (0,0,1),obj_func((0,0,1))
 
+
+        
+def model_search(data):
+    results = []
+    results.append(grid_search(data)) # grid search order, grid search score
+
+    min_score = 100000000
+    best_order = ()
+    for result in results:
+        if result[1] < min_score:
+            min_score = result[1]
+            best_order = result[0]
+    return best_order
 
 def date_to_datetime(time_string):
     return datetime.datetime.strptime(time_string, '%m/%d/%Y')
@@ -153,7 +157,7 @@ def trend_predict(data):
     model_order = tuple([int(elem) for elem in model_order])
     model = sm.tsa.ARIMA(new_data,model_order).fit()
     model.fittedvalues = setting_y_axis_intercept(new_data,model)
-    return model,new_data
+    return model,new_data,model_order
 
 def is_nan(obj):
     if type(obj) == type(float()):
@@ -200,7 +204,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         labor_categories = [elem.labor_key for elem in LaborCategoryLookUp.objects.all()]
-
+        order_terms = []
         for labor_category in labor_categories:
             labor_objects = LaborCategoryLookUp.objects.filter(labor_key=labor_category)
             df = pd.DataFrame()
@@ -210,16 +214,17 @@ class Command(BaseCommand):
             df["Date"] = pd.to_datetime(df["Date"])
             df = df.set_index("Date")
             df.sort_index(inplace=True)
-            model,new_data = trend_predict(df)
+            model,new_data,order = trend_predict(df)
+            order_terms.append(order)
             predicted_data = pd.DataFrame()
             for ind in range(len(model.fittedvalues)):
                 predicted_data = predicted_data.append({"date":model.data.dates[ind],"price":model.fittedvalues[ind]},ignore_index=True)
             predicted_data["date"] = pd.to_datetime(predicted_data["date"])
             predicted_data = predicted_data.set_index("date")
             predicted_data.sort_index(inplace=True)
-            plt.plot(df)
-            plt.plot(predicted_data)
-            plt.show()
+            #plt.plot(df)
+            #plt.plot(predicted_data)
+            #plt.show()
 
             #We are using timestamps for the index
             for ind in range(len(predicted_data.index)):
@@ -227,9 +232,9 @@ class Command(BaseCommand):
                     fitted_values_by_category = FittedValuesByCategory(labor_key=labor_category,fittedvalue=predicted_data["price"][ind],start_date=predicted_data.index[ind])
                     fitted_values_by_category.save()
                 except:
-                    import code
+                    
                     code.interact(local=locals())
-
+        code.interact(local=locals())
 # results = sm.tsa.ARIMA(dta, (3,1,0)).fit()
 # results.save
 # sm.load()
