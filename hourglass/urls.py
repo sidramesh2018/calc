@@ -17,7 +17,7 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'hourglass.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
+    url(r'^$', 'data_explorer.views.index', name='index'),
     url(r'^about/$', 'data_explorer.views.about', name='about'),
     url(r'^safe-mode/', include('frontend.safe_mode', namespace='safe_mode')),
     url(r'^healthcheck/', healthcheck),
