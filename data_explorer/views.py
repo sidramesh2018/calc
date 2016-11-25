@@ -19,7 +19,10 @@ def index(request):
         "*.googleapis.com",
         "dap.digitalgov.gov",
         "www.google-analytics.com",
+        # Browsers that don't support CSP v2 need this to work.
         "'unsafe-inline'",
+        # For browsers that *do* support CSP v2, the following will
+        # override our earlier 'unsafe-inline' directive.
         "'nonce-{}'".format(csp_nonce)
     ])
     response['Content-Security-Policy'] = '; '.join([
