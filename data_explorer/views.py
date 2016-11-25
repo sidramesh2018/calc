@@ -14,9 +14,17 @@ def index(request):
     response = render(request, 'index.html', {
         'csp_nonce': mark_safe('nonce="{}"'.format(csp_nonce))
     })
+    script_src = ' '.join([
+        "'self'",
+        "*.googleapis.com",
+        "dap.digitalgov.gov",
+        "www.google-analytics.com",
+        "'unsafe-inline'",
+        "'nonce-{}'".format(csp_nonce)
+    ])
     response['Content-Security-Policy'] = '; '.join([
         "default-src *",
-        "script-src * 'unsafe-inline' 'nonce-{}'".format(csp_nonce),
+        "script-src {}".format(script_src),
         "style-src * 'unsafe-inline'",
         "img-src * data:",
     ])
