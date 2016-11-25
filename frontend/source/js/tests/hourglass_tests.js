@@ -64,6 +64,14 @@ test("parse()", function(assert) {
     parse("?foo=foo%20bar"),
     {foo: "foo bar"},
     "parses '%20' as spaces");
+  assert.deepEqual(
+    parse("?foo=<abc>"),
+    {foo: "abc"},
+    "sanitizes values");
+  assert.deepEqual(
+    parse("?foo=%3Cabc%3E"),
+    {foo: "abc"},
+    "sanitizes escaped values");
 });
 
 test("coerce()", function(assert) {

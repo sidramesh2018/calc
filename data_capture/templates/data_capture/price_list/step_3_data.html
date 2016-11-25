@@ -18,7 +18,7 @@
   <div class="form-button-row clearfix">
     <a href="{% url 'data_capture:step_2' %}" class="button button-previous">Previous</a>
 
-    <a href="{% url 'data_capture:step_3' %}?force=1" class="button button-secondary">Upload revised price list</a>
+    <a href="{% url 'data_capture:step_3' %}?force=on" class="button button-secondary">Upload revised price list</a>
 
     <a href="{% url 'data_capture:step_4' %}?prev={% url 'data_capture:step_3_data' %}" class="button button-primary">
       Next

@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 def add_generic_form_error(request, form):
     messages.add_message(
         request, messages.ERROR,
-        'Oops! Please correct the following error.'
+        'Oops! Please correct the following error{}.'
             .format(pluralize(form.errors))
     )
 

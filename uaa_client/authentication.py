@@ -49,7 +49,7 @@ def exchange_code_for_access_token(request, code):
 
 def get_user_by_email(email):
     try:
-        return User.objects.get(email=email)
+        return User.objects.get(email__iexact=email)
     except User.DoesNotExist:
         return None
 

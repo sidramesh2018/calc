@@ -146,6 +146,52 @@
     </div>
   </div>
 
+  <h3>Existing Filenames</h3>
+
+  <p>
+    In some cases, it may be preferable to indicate to a user that a
+    file upload field is not only optional, but that a default which
+    the user has uploaded earlier will be used if nothing else is
+    provided.
+  </p>
+
+  <expandable-area>
+    <h4>Examples</h4>
+
+    <p>
+      The baseline experience simply explains to the user that leaving
+      the field blank will result in the use of their previously-uploaded
+      file.
+    </p>
+
+    <div class="styleguide-example">
+      <div class="rendering">
+        <h3 class="example-heading">Example (no JavaScript)</h3>
+        {{ existing_filename_upload_form.no_js }}
+      </div>
+    </div>
+
+    <p>
+      The server, of course, will not receive any data if the user
+      doesn't supply a file. Finding and using the previously uploaded
+      file is the server's responsibility.
+    </p>
+
+    <p>
+      However, if proper browser support exists, the user experience is
+      progressively enhanced: the widget will <em>appear</em> populated,
+      but as with the baseline experience, the server will not actually
+      receive any data unless the user explicitly chooses a different file.
+    </p>
+
+    <div class="styleguide-example">
+      <div class="rendering">
+        <h3 class="example-heading">Example</h3>
+        {{ existing_filename_upload_form.js }}
+      </div>
+    </div>
+  </expandable-area>
+
   {% guide_section "Buttons" %}
 
   <p>

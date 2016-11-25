@@ -64,6 +64,12 @@ class AuthenticationTests(TestCase):
         user = User.objects.create_user('foo', 'foo@example.org')
         self.assertEqual(auth.get_user_by_email('foo@example.org'), user)
 
+    def test_get_user_by_email_is_case_insensitive(self):
+        user = User.objects.create_user('foo', 'FOO@example.org')
+        self.assertEqual(auth.get_user_by_email('foo@example.org'), user)
+        user = User.objects.create_user('bar', 'bar@example.org')
+        self.assertEqual(auth.get_user_by_email('BAR@example.org'), user)
+
     def test_get_user_by_email_returns_none_when_user_does_not_exist(self):
         self.assertEqual(auth.get_user_by_email('foo@example.org'), None)
 

@@ -308,7 +308,7 @@ class ContextProcessorTests(DjangoTestCase):
     def test_ga_tracking_id_is_included(self):
         res = self.client.get('/')
         self.assertIn('GA_TRACKING_ID', res.context)
-        self.assertEquals(res.context['GA_TRACKING_ID'], 'boop')
+        self.assertEqual(res.context['GA_TRACKING_ID'], 'boop')
 
     def test_ga_tracking_id_defaults_to_empty_string(self):
         if 'GA_TRACKING_ID' in os.environ:
@@ -317,4 +317,10 @@ class ContextProcessorTests(DjangoTestCase):
             raise SkipTest()
         res = self.client.get('/')
         self.assertIn('GA_TRACKING_ID', res.context)
-        self.assertEquals(res.context['GA_TRACKING_ID'], '')
+        self.assertEqual(res.context['GA_TRACKING_ID'], '')
+
+    @override_settings(ETHNIO_SCREENER_ID='hoopla')
+    def test_ethnio_screener_id_is_included(self):
+        res = self.client.get('/')
+        self.assertIn('ETHNIO_SCREENER_ID', res.context)
+        self.assertEquals(res.context['ETHNIO_SCREENER_ID'], 'hoopla')
