@@ -128,30 +128,8 @@
 </form>
 
 {% if not is_safe_mode_enabled and not show_edit_form %}
-<script>
-$(function() {
-  var editBtn = $('[data-edit-btn]');
-  var contractDetails = $("[data-contract-details]");
-  var editContractDetails = $("[data-edit-contract-details]");
-
-  if (editBtn.length && contractDetails.length &&
-      editContractDetails.length) {
-    editBtn.click(function(e) {
-      contractDetails.slideUp();
-      editContractDetails.slideDown();
-      $('[data-edit-text]').each(function() {
-        $(this).text($(this).attr('data-edit-text'));
-      });
-      e.preventDefault();
-    });
-  } else {
-    console.log(
-      "Warning! Couldn't find edit button and/or related elements, " +
-      "falling back to baseline behavior."
-    );
-  }
-});
-</script>
+{% load staticfiles %}
+<script src= "{% static 'frontend/built/js/data-capture-price-list-upload-step-4/index.min.js' %}"></script>
 {% endif %}
 
 {% endblock %}
