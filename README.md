@@ -321,6 +321,11 @@ string), the boolean is true; otherwise, it's false.
 * `NEW_RELIC_LICENSE_KEY` is the private New Relic license key for this project.
   If it is present, then the WSGI app will be wrapped with the  New Relic agent.
 
+* `TEST_WITH_ROBOBROWSER` is a boolean that indicates whether to run
+  some integration tests using [RoboBrowser][] instead of Selenium/WebDriver.
+  Running tests with RoboBrowser can be much faster and less error-prone
+  than via Selenium, but it also means that the tests are less end-to-end.
+
 ## Authentication and Authorization
 
 We use cloud.gov/Cloud Foundry's User Account and Authentication (UAA)
@@ -511,3 +516,4 @@ for other than small business.
 [pytest]: https://pytest.org/latest/usage.html
 [docker-machine-cloud]: https://docs.docker.com/machine/get-started-cloud/
 [Django Debug Toolbar]: https://github.com/jazzband/django-debug-toolbar/
+[RoboBrowser]: http://robobrowser.readthedocs.io/

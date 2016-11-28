@@ -37,6 +37,10 @@ env:
   - DEBUG=yup
   - DATABASE_URL=postgres://postgres@localhost/hourglass
 
+  # Some of our integration tests either take a really long time to run or
+  # are very error-prone via Selenium, so prefer RoboBrowser for now.
+  - TEST_WITH_ROBOBROWSER=yup
+
   # These environment variables affect the running of Webdriver/Selenium
   # tests. Note that if we're not in a trusted environment (e.g. a PR
   # is being issued from an untrusted fork), we will default to using
