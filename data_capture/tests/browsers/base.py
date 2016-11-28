@@ -41,7 +41,7 @@ class AbstractBrowserForm(abc.ABC):
     @abc.abstractmethod
     def set_radio(self, name, number):
         '''
-        Set a radio button's value, given a its name and its order in the
+        Set a radio button's value, given its name and its order in the
         radio button list.
         '''
 
