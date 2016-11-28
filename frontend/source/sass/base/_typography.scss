@@ -1,8 +1,11 @@
 @import 'variables';
 
-html,
-body {
+html {
   font-size: $em-base;
+}
+
+body {
+  font-size: $base-font-size;
   line-height: $base-line-height;
 }
 
