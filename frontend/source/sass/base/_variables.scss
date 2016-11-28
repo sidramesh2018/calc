@@ -86,3 +86,9 @@ $large-screen:      1201px;
 $border-radius: 0;
 $box-shadow: 0 0 2px rgba(#000, 0.3);
 $focus-shadow: 0 0 3px $color-focus, 0 0 7px $color-focus;
+
+// Neat grid overrides
+$column: 5rem;
+$gutter: 3rem;
+$max-width: 930px;
+
