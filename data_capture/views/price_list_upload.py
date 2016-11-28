@@ -1,10 +1,12 @@
 import json
+import urllib.parse
 
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
 from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.http import is_safe_url
 
@@ -23,6 +25,30 @@ steps = Steps(
         'current_selected_tab': 'upload_price_data'
     }
 )
+
+
+def build_url(viewname, **kwargs):
+    '''
+    Build a URL using the given view name and the given query string
+    arguments, returning the result:
+
+        >>> build_url('data_capture:step_4', a='1')
+        '/data-capture/step/4?a=1'
+
+    Any keyword arguments that are `None` will be excluded, though:
+
+        >>> build_url('data_capture:step_4', a=None)
+        '/data-capture/step/4'
+    '''
+
+    url = reverse(viewname)
+    query = [
+        (key, kwargs[key]) for key in kwargs
+        if kwargs[key] is not None
+    ]
+    if not query:
+        return url
+    return '{}?{}'.format(url, urllib.parse.urlencode(query))
 
 
 def get_nested_item(obj, keys, default=None):
@@ -282,41 +308,76 @@ def step_4(request, step):
         'escalation_rate': step_2_form.cleaned_data['escalation_rate'],
     }
 
+    show_edit_form = (request.GET.get('show_edit_form') == 'on')
+
     if request.method == 'POST':
         if not gleaned_data.valid_rows:
             # Our UI never should've let the user issue a request
             # like this.
             return HttpResponseBadRequest()
-        price_list = step_1_form.save(commit=False)
-        step_2_form = get_step_form_from_session(2, request,
-                                                 instance=price_list)
-        step_2_form.save(commit=False)
-
-        price_list.submitter = request.user
-        price_list.serialized_gleaned_data = json.dumps(
-            session_pl['gleaned_data'])
-
-        # We always want to explicitly set the schedule to the
-        # one that the gleaned data is part of, in case we gracefully
-        # fell back to a schedule other than the one the user chose.
-        price_list.schedule = registry.get_classname(gleaned_data)
-
-        price_list.status = SubmittedPriceList.STATUS_NEW
-        price_list.status_changed_at = timezone.now()
-        price_list.status_changed_by = request.user
-
-        price_list.save()
-        gleaned_data.add_to_price_list(price_list)
-
-        del request.session['data_capture:price_list']
-
-        return redirect('data_capture:step_5')
+        form = forms.Step4Form(request.POST)
+    else:
+        form = forms.Step4Form.from_post_data_subsets(
+            session_pl['step_1_POST'],
+            session_pl['step_2_POST']
+        )
 
     prev_url = request.GET.get('prev')
     if not is_safe_url(prev_url):
         prev_url = None
 
+    step_4_without_edit_url = build_url('data_capture:step_4',
+                                        prev=prev_url)
+    step_4_with_edit_url = build_url('data_capture:step_4',
+                                     prev=prev_url,
+                                     show_edit_form='on')
+
+    if request.method == 'POST':
+        if form.is_valid():
+            if 'save-changes' in request.POST:
+                # There's not a particularly easy way to separate one
+                # step's fields from another, but fortunately that's OK
+                # because Django's Form constructors take only the POST
+                # data they need, and ignore the rest.
+                session_pl['step_1_POST'] = request.POST
+                session_pl['step_2_POST'] = request.POST
+
+                # Changing the value of a subkey doesn't cause the session to
+                # save, so do it manually.
+                request.session.modified = True
+
+                return redirect(step_4_without_edit_url)
+            else:
+                price_list = form.save(commit=False)
+
+                price_list.submitter = request.user
+                price_list.serialized_gleaned_data = json.dumps(
+                    session_pl['gleaned_data'])
+
+                # We always want to explicitly set the schedule to the
+                # one that the gleaned data is part of, in case we gracefully
+                # fell back to a schedule other than the one the user chose.
+                price_list.schedule = registry.get_classname(gleaned_data)
+
+                price_list.status = SubmittedPriceList.STATUS_NEW
+                price_list.status_changed_at = timezone.now()
+                price_list.status_changed_by = request.user
+
+                price_list.save()
+                gleaned_data.add_to_price_list(price_list)
+
+                del request.session['data_capture:price_list']
+
+                return redirect('data_capture:step_5')
+        else:
+            add_generic_form_error(request, form)
+            show_edit_form = True
+
     return step.render(request, {
+        'show_edit_form': show_edit_form,
+        'form': form,
+        'step_4_with_edit_url': step_4_with_edit_url,
+        'step_4_without_edit_url': step_4_without_edit_url,
         'prev_url': prev_url,
         'gleaned_data': gleaned_data,
         'price_list': pl_details,
