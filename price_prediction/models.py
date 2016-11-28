@@ -1,15 +1,19 @@
 from django.db import models
 
+
 class LaborCategoryLookUp(models.Model):
+
     labor_key = models.CharField(max_length=400)
     labor_value = models.CharField(max_length=400)
     start_date = models.DateField()
-    
+
     def __str__(self):
         return self.labor_key + ":" + self.labor_value
 
 class PriceModels(models.Model):
-    # it actually makes sense to make this a foreign key, given the way it's used
+
+    # it actually makes sense to make this a foreign key,
+    # given the way it's used
     # in price_prediction/management/commands/generate_arima_model.py
     labor_key = models.CharField(max_length=400)
     model = models.BinaryField()

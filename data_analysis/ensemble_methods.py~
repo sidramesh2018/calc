@@ -1,0 +1,3 @@
+import statsmodels.api as sm
+import IPython
+IPython.start_ipython()
