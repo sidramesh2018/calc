@@ -6,6 +6,8 @@ export const location = window.history.location || window.location;
 // e.g. if an IE9 user sends a link to a Chrome user, they should see the
 // same stuff.
 
+export const formatCommas = d3.format(',');
+
 export function getUrlParameterByName(name) {
   const cleanedName = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
   const regex = new RegExp(`[\\?&]${cleanedName}=([^&#]*)`);
