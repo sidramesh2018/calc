@@ -1,10 +1,7 @@
 /* global $, window, document, history,
-  d3, formdb, XMLSerializer, canvg, wNumb, saveAs, Image, vex */
+  d3, formdb, wNumb  */
 
 // wNumb is from nouislider
-// saveAs is from FileSaver.js
-// canvg is from canvg.js
-// vex is from vex.combined.min.js
 
 import ga from '../common/ga';
 
@@ -28,6 +25,8 @@ import {
 } from './table';
 
 import updatePriceHistogram from './histogram';
+
+import histogramToImg from './histogram-to-img';
 
 const MAX_EXPERIENCE = 45;
 const HISTOGRAM_BINS = 12;
@@ -314,41 +313,6 @@ function initialize() {
   });
 }
 
-function histogramToImg(e) {
-  e.preventDefault();
-  let svg = document.getElementById('price-histogram');
-  const canvas = document.getElementById('graph');
-  const serializer = new XMLSerializer();
-  let img;
-  let modalImg;
-
-  svg = serializer.serializeToString(svg);
-
-  // convert svg into canvas
-  canvg(canvas, svg, { ignoreMouse: true, scaleWidth: 720, scaleHeight: 300 });
-
-  if (typeof Blob !== 'undefined') {
-    canvas.toBlob((blob) => {
-      saveAs(blob, 'histogram.png');
-    });
-  } else {
-    img = canvas.toDataURL('image/png');
-    modalImg = new Image();
-    modalImg.src = img;
-
-    vex.open({
-      content: 'Please right click the image and select "save as" to download the graph.',
-      afterOpen(content) {
-        return content.append(modalImg);
-      },
-      showCloseButton: true,
-      contentCSS: {
-        width: '800px',
-      },
-    });
-  }
-}
-
 /*
   Dropdown with Multiple checkbox select with jQuery - May 27, 2013
   (c) 2013 @ElmahdiMahmoud
@@ -506,7 +470,13 @@ $('.two-decimal-places').keyup(function onKeyUp() {
 
 window.addEventListener('popstate', popstate);
 
-histogramDownloadLink.addEventListener('click', histogramToImg, false);
+histogramDownloadLink.addEventListener('click', e => {
+  e.preventDefault();
+  histogramToImg(
+    document.getElementById('price-histogram'),
+    document.getElementById('graph')
+  );
+}, false);
 
 form.on('submit', (data, e) => {
   e.preventDefault();
