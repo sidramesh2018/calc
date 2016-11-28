@@ -3,6 +3,7 @@
 import {
   parseSortOrder,
   formatCommas,
+  getFormat,
 } from './util';
 
 const resultsTable = d3.select('#results-table').style('display', 'none');
@@ -194,4 +195,63 @@ export function updateSortOrder(key) {
 
   resultsTable.selectAll('tbody td')
     .classed('sorted', (c) => c.column.key === key);
+}
+
+function setupSortHeaders(form, submit, headers) {
+  function setSortOrder(d, i) {
+    headers.each((c, j) => {
+      if (j !== i) {
+        c.sorted = false; // eslint-disable-line no-param-reassign
+        c.descending = false; // eslint-disable-line no-param-reassign
+      }
+    });
+
+    if (d.sorted) {
+      d.descending = !d.descending; // eslint-disable-line no-param-reassign
+    }
+    d.sorted = true; // eslint-disable-line no-param-reassign
+
+    const sort = (d.descending ? '-' : '') + d.key;
+    form.set('sort', sort);
+
+    updateSortOrder(d.key);
+
+    submit(true);
+  }
+
+  headers
+    .each((d) => {
+      d.sorted = false; // eslint-disable-line no-param-reassign
+      d.descending = false; // eslint-disable-line no-param-reassign
+    })
+    .attr('tabindex', 0)
+    .attr('aria-role', 'button')
+    .on('click.sort', setSortOrder);
+}
+
+export function setupColumnHeader(form, submit, headers) {
+  headers
+    .datum(function setupDatum() {
+      return {
+        key: this.getAttribute('data-key'),
+        title: this.getAttribute('title') || this.textContent,
+        format: getFormat(this.getAttribute('data-format')),
+        sortable: this.classList.contains('sortable'),
+        collapsible: this.classList.contains('collapsible'),
+      };
+    })
+    .each(function addClass(d) {
+      this.classList.add(`column-${d.key}`);
+    });
+
+  // removed temporarily to prevent collision with tooltips [TS]
+  // headers.filter(function(d) { return d.collapsible; })
+  //   .call(setupCollapsibleHeaders);
+
+  headers.filter((d) => d.sortable)
+    .call(setupSortHeaders.bind(this, form, submit));
+}
+
+export function initializeTable(form, submit) {
+  sortHeaders.call(setupColumnHeader.bind(this, form, submit));
 }

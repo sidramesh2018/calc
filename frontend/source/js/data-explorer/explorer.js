@@ -16,7 +16,6 @@ import {
   parseSortOrder,
   arrayToCSV,
   templatize,
-  getFormat,
   formatCommas,
   isNumberOrPeriodKey,
 } from './util';
@@ -26,6 +25,7 @@ import {
   updateResults,
   updateSortOrder,
   sortHeaders,
+  initializeTable,
 } from './table';
 
 const MAX_EXPERIENCE = 45;
@@ -643,61 +643,6 @@ function initialize() {
   });
 }
 
-function setupSortHeaders(headers) {
-  function setSortOrder(d, i) {
-    headers.each((c, j) => {
-      if (j !== i) {
-        c.sorted = false; // eslint-disable-line no-param-reassign
-        c.descending = false; // eslint-disable-line no-param-reassign
-      }
-    });
-
-    if (d.sorted) {
-      d.descending = !d.descending; // eslint-disable-line no-param-reassign
-    }
-    d.sorted = true; // eslint-disable-line no-param-reassign
-
-    const sort = (d.descending ? '-' : '') + d.key;
-    form.set('sort', sort);
-
-    updateSortOrder(d.key);
-
-    submit(true);
-  }
-
-  headers
-    .each((d) => {
-      d.sorted = false; // eslint-disable-line no-param-reassign
-      d.descending = false; // eslint-disable-line no-param-reassign
-    })
-    .attr('tabindex', 0)
-    .attr('aria-role', 'button')
-    .on('click.sort', setSortOrder);
-}
-
-function setupColumnHeader(headers) {
-  headers
-    .datum(function setupDatum() {
-      return {
-        key: this.getAttribute('data-key'),
-        title: this.getAttribute('title') || this.textContent,
-        format: getFormat(this.getAttribute('data-format')),
-        sortable: this.classList.contains('sortable'),
-        collapsible: this.classList.contains('collapsible'),
-      };
-    })
-    .each(function addClass(d) {
-      this.classList.add(`column-${d.key}`);
-    });
-
-  // removed temporarily to prevent collision with tooltips [TS]
-  // headers.filter(function(d) { return d.collapsible; })
-  //   .call(setupCollapsibleHeaders);
-
-  headers.filter((d) => d.sortable)
-    .call(setupSortHeaders);
-}
-
 function histogramToImg(e) {
   e.preventDefault();
   let svg = document.getElementById('price-histogram');
@@ -763,7 +708,7 @@ $('.tooltip').tooltipster({
   },
 });
 
-sortHeaders.call(setupColumnHeader);
+initializeTable(form, submit);
 
 initialize();
 
