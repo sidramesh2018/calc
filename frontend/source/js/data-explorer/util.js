@@ -16,24 +16,6 @@ export function getUrlParameterByName(name) {
     : decodeURIComponent(results[1].replace(/\+/g, ' ')).replace(/[<>]/g, '');
 }
 
-export function parseSortOrder(order) {
-  if (!order) {
-    return { key: null, order: null };
-  }
-  const first = order.charAt(0);
-  const sort = { order: '' };
-  switch (first) {
-    case '-':
-      sort.order = first;
-      order = order.substr(1); // eslint-disable-line no-param-reassign
-      break;
-    default:
-      break;
-  }
-  sort.key = order;
-  return sort;
-}
-
 export function arrayToCSV(data) {
   // turns any array input data into a comma separated string
   // in use for the education filter
