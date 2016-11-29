@@ -6,7 +6,11 @@ import {
   getFormat,
 } from './util';
 
-const resultsTable = d3.select('#results-table').style('display', 'none');
+const RESULTS_TABLE = '#results-table';
+const RESTORE_EXCLUDED = '#restore-excluded';
+const RESULTS_COUNT = '#results-count';
+
+const resultsTable = d3.select(RESULTS_TABLE).style('display', 'none');
 export const sortHeaders = resultsTable.selectAll('thead th');
 
 function getExcludedIds(form) {
@@ -23,7 +27,7 @@ export function updateExcluded(form) {
   const text = len > 0
         ? ['★ Restore', len, rows].join(' ')
         : '';
-  d3.select('#restore-excluded')
+  d3.select(RESTORE_EXCLUDED)
     .style('display', len > 0
       ? null
       : 'none')
@@ -44,7 +48,7 @@ function excludeRow(form, id, submit) {
 
 export function updateResults(form, data, submit) {
   const results = data.results;
-  d3.select('#results-count')
+  d3.select(RESULTS_COUNT)
     .text(formatCommas(data.count));
 
   resultsTable.style('display', null);
