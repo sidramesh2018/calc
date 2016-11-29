@@ -30,8 +30,8 @@ if (typeof window.CustomEvent !== 'function') {
   window.CustomEvent = CustomEvent;
 }
 
-exports.dispatchBubbly = (el, eventType, params) => {
+export default function dispatchBubbly(el, eventType, params) {
   el.dispatchEvent(new window.CustomEvent(eventType, Object.assign({
     bubbles: true,
   }, params || {})));
-};
+}

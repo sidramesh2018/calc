@@ -4,7 +4,7 @@ import 'document-register-element';
 
 import * as supports from './feature-detection';
 
-import { dispatchBubbly } from './custom-event';
+import dispatchBubbly from './custom-event';
 
 const HAS_BROWSER_SUPPORT = supports.dragAndDrop() && supports.formData() &&
                             supports.dataTransfer();
@@ -19,7 +19,7 @@ const HAS_BROWSER_SUPPORT = supports.dragAndDrop() && supports.formData() &&
  * manually submit the `upgradedValue` to a server via ajax.
  */
 
-class UploadInput extends window.HTMLInputElement {
+export class UploadInput extends window.HTMLInputElement {
   createdCallback() {
     this.isUpgraded = false;
     this._upgradedValue = null;
@@ -121,7 +121,7 @@ document.registerElement('upload-input', {
  * submitting the dropped file via ajax.
  */
 
-class UploadWidget extends window.HTMLElement {
+export class UploadWidget extends window.HTMLElement {
   _stopAndPrevent(event) {
     event.stopPropagation();
     event.preventDefault();
@@ -268,6 +268,3 @@ UploadWidget.HAS_BROWSER_SUPPORT = HAS_BROWSER_SUPPORT;
 document.registerElement('upload-widget', {
   prototype: UploadWidget.prototype,
 });
-
-exports.UploadInput = UploadInput;
-exports.UploadWidget = UploadWidget;
