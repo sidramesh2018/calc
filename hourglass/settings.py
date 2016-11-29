@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'styleguide',
     'meta',
     'frontend',
+    'calc_kpi',
 )
 
 MIDDLEWARE_CLASSES = (
