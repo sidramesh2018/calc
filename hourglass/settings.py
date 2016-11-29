@@ -33,6 +33,7 @@ DEBUG = 'DEBUG' in os.environ
 
 HIDE_DEBUG_UI = 'HIDE_DEBUG_UI' in os.environ
 
+#UNDO THIS LATER
 if DEBUG:
     os.environ.setdefault(
         'SECRET_KEY',
@@ -50,7 +51,7 @@ if 'EMAIL_URL' not in os.environ:
     raise Exception('Please define the EMAIL_URL environment variable!')
 
 SEND_TRANSACTIONAL_EMAILS = os.environ['EMAIL_URL'] == 'dummy:'
-
+#UNDO UP TO HERE LATER
 email_config = dj_email_url.config()
 # Sets a number of settings values, as described at
 # https://github.com/migonzalvar/dj-email-url

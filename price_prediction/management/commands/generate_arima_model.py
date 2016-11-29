@@ -5,21 +5,20 @@ import pandas as pd
 import math
 import datetime
 import statsmodels.api as sm
-from scipy.optimize import brute
 import statistics
 from functools import partial
 import code
-
+from scipy.optimize import brute
 from django.core.management import BaseCommand
 from optparse import make_option
-
 
 # this comes from here:
 # http://stackoverflow.com/questions/22770352/auto-arima-equivalent-for-python
 def objective_function(data, order):
     return sm.tsa.ARIMA(data, order).fit().aic
 
-def grid_search(data):
+def grid_search(data,optimizer,**kwargs):
+    print("got here with no errors")
     obj_func = partial(objective_function, data)
     # Back in graduate school professor Lecun said in class that ARIMA models 
     # typically only need a max parameter of 5, so I doubled it just in case.
@@ -33,7 +32,7 @@ def grid_search(data):
             if upper_bound_AR < 0 or upper_bound_I < 0 or upper_bound_MA < 0:
                 grid_not_found = False
             grid = (slice(1, upper_bound_AR, 1),slice(1, upper_bound_I, 1),slice(1, upper_bound_MA, 1))
-            order = brute(obj_func, grid, finish=None)
+            order = optimizer(obj_func, grid, **kwargs)
             return order, obj_func(order)
         except Exception as e: #found here: http://stackoverflow.com/questions/4308182/getting-the-exception-value-in-python
             error_string = str(e)
@@ -60,9 +59,13 @@ def grid_search(data):
             return (0, 0, 1),obj_func((0, 0, 1))
         
 def model_search(data):
+    """
+    Optimizers supported:
+    * brute
+    """
     results = []
-    results.append(grid_search(data)) # grid search order, grid search score
-
+    results.append(grid_search(data,brute,{"finish":None})) # grid search order, grid search score
+    
     min_score = 100000000
     best_order = ()
     for result in results:
@@ -192,6 +195,7 @@ class Command(BaseCommand):
         labor_categories = [elem.labor_key for elem in LaborCategoryLookUp.objects.all()]
         order_terms = []
         for labor_category in labor_categories:
+            print("got here")
             labor_objects = LaborCategoryLookUp.objects.filter(labor_key=labor_category)
             df = pd.DataFrame()
             for labor_object in labor_objects:
@@ -220,7 +224,7 @@ class Command(BaseCommand):
                 except:
                     
                     code.interact(local=locals())
-        code.interact(local=locals())
+        #code.interact(local=locals())
 # results = sm.tsa.ARIMA(dta, (3,1,0)).fit()
 # results.save
 # sm.load()

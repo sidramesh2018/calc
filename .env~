@@ -1,0 +1,4 @@
+DEBUG=yup
+DATABASE_URL=postgres://localhost/hourglass
+DOCKER_EXPOSED_PORT=8000
+EMAIL_URL=dummy
