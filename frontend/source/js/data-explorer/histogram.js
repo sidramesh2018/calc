@@ -5,6 +5,11 @@ import {
   formatCommas,
 } from './util';
 
+const PRICE_HISTOGRAM = '#price-histogram';
+const AVG_PRICE_HIGHLIGHT = '#avg-price-highlight';
+const STDDEV_MINUS_HIGHLIGHT = '#standard-deviation-minus-highlight';
+const STDDEV_PLUS_HIGHLIGHT = '#standard-deviation-plus-highlight';
+
 const formatPrice = d3.format(',.0f');
 
 let histogramUpdated = false;
@@ -17,7 +22,7 @@ export default function updatePriceHistogram(data) {
   const left = pad[3];
   const right = width - pad[1];
   const bottom = height - pad[2];
-  const svg = d3.select('#price-histogram')
+  const svg = d3.select(PRICE_HISTOGRAM)
     .attr('viewBox', [0, 0, width, height].join(' '))
     .attr('preserveAspectRatio', 'xMinYMid meet');
   const formatDollars = (n) => `$${formatPrice(n)}`;
@@ -34,7 +39,7 @@ export default function updatePriceHistogram(data) {
       .domain([0].concat(countExtent))
       .range([0, 1, bottom - top]);
 
-  d3.select('#avg-price-highlight')
+  d3.select(AVG_PRICE_HIGHLIGHT)
     .text(formatDollars(data.average));
 
   let stdDevMin = data.average - data.first_standard_deviation;
@@ -43,10 +48,10 @@ export default function updatePriceHistogram(data) {
   if (isNaN(stdDevMin)) stdDevMin = 0;
   if (isNaN(stdDevMax)) stdDevMax = 0;
 
-  d3.select('#standard-deviation-minus-highlight')
+  d3.select(STDDEV_MINUS_HIGHLIGHT)
     .text(formatDollars(stdDevMin));
 
-  d3.select('#standard-deviation-plus-highlight')
+  d3.select(STDDEV_PLUS_HIGHLIGHT)
     .text(formatDollars(stdDevMax));
 
   let stdDev = svg.select('.stddev');
@@ -100,10 +105,10 @@ export default function updatePriceHistogram(data) {
   }
 
 
-  d3.select('#standard-deviation-minus-highlight')
+  d3.select(STDDEV_MINUS_HIGHLIGHT)
     .text(stdMinus);
 
-  d3.select('#standard-deviation-plus-highlight')
+  d3.select(STDDEV_PLUS_HIGHLIGHT)
     .text(stdPlus);
 
 
