@@ -233,6 +233,8 @@ function popstate() {
 }
 
 function initialize() {
+  initializeTable(form, submit);
+
   popstate();
 
   initializeAutocomplete(form, api, $('#labor_category'));
@@ -267,8 +269,6 @@ $('.tooltip').tooltipster({
     return $(this).attr('aria-label');
   },
 });
-
-initializeTable(form, submit);
 
 initialize();
 
