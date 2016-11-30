@@ -414,6 +414,10 @@ class Step4Tests(PriceListStepTestCase,
         'step_2_POST': Step2Tests.valid_form,
     }
 
+    valid_post_data = {}
+    valid_post_data.update(Step1Tests.valid_form)
+    valid_post_data.update(Step2Tests.valid_form)
+
     def test_get_is_ok(self):
         self.login()
         session = self.client.session
@@ -421,6 +425,7 @@ class Step4Tests(PriceListStepTestCase,
         session.save()
         self.set_fake_gleaned_data(self.rows)
         res = self.client.get(self.url)
+        self.assertFalse(res.context['show_edit_form'])
         self.assertEqual(res.status_code, 200)
 
     def test_context_has_prev_url_if_query_param_present(self):
@@ -473,13 +478,46 @@ class Step4Tests(PriceListStepTestCase,
         res = self.client.post(self.url)
         self.assertEqual(res.status_code, 400)
 
+    def test_saving_changes_saves_and_redirects_back_to_self(self):
+        self.login()
+        session = self.client.session
+        session['data_capture:price_list'] = self.session_data
+        session.save()
+        self.set_fake_gleaned_data(self.rows)
+        data = self.valid_post_data.copy()
+        data['vendor_name'] = 'changed in step 4!'
+        data['contractor_site'] = 'Both'
+        data['save-changes'] = ''
+        res = self.client.post(self.url, data)
+        session_pl = self.client.session['data_capture:price_list']
+        step_1_data = session_pl['step_1_POST']
+        self.assertEqual(step_1_data['schedule'], FAKE_SCHEDULE)
+        self.assertEqual(step_1_data['contract_number'], 'GS-123-4567')
+        self.assertEqual(step_1_data['vendor_name'], 'changed in step 4!')
+        step_2_data = session_pl['step_2_POST']
+        self.assertEqual(step_2_data['contractor_site'], 'Both')
+        self.assertEqual(SubmittedPriceList.objects.all().count(), 0)
+        self.assertRedirects(res, Step4Tests.url)
+
+    def test_invalid_post_shows_errors(self):
+        self.login()
+        session = self.client.session
+        session['data_capture:price_list'] = self.session_data
+        session.save()
+        self.set_fake_gleaned_data(self.rows)
+        data = self.valid_post_data.copy()
+        data['contractor_site'] = 'LOL'
+        res = self.client.post(self.url, data)
+        self.assertTrue(res.context['show_edit_form'])
+        self.assertContains(res, 'LOL is not one of the available choices')
+
     def test_valid_post_creates_models(self):
         user = self.login()
         session = self.client.session
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        self.client.post(self.url)
+        self.client.post(self.url, self.valid_post_data)
         p = SubmittedPriceList.objects.filter(
             contract_number='GS-123-4567'
         )[0]
@@ -498,7 +536,7 @@ class Step4Tests(PriceListStepTestCase,
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        res = self.client.post(self.url)
+        res = self.client.post(self.url, self.valid_post_data)
         assert 'data_capture:price_list' not in self.client.session
         self.assertRedirects(res, Step5Tests.url)
 

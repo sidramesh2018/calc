@@ -1,6 +1,6 @@
 /* global window, document */
 
-import { dispatchBubbly } from './custom-event';
+import dispatchBubbly from './custom-event';
 
 /**
  * AlertsWidget represents an <alerts-widget> web component.

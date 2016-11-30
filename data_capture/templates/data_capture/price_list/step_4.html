@@ -5,41 +5,72 @@
 {% block subtitle %}Verify data{% endblock %}
 
 {% block step_body %}
-{% with rows=gleaned_data.valid_rows %}
-  {% with total=rows|length %}
-    <h2>Verify {{ total }} row{{ total|pluralize }} of data </h2>
-  {% endwith %}
-
-  {{ gleaned_data.to_table|safe }}
-{% endwith %}
+<form method="post">
+  {% csrf_token %}
 
 <h2>Verify vendor and contract details</h2>
-<div class="row">
-  <dl class="contract-details columns eight">
-    <dt>Vendor</dt>
-    <dd>{{ price_list.vendor_name }}</dd>
 
-    <dt>Contract number</dt>
-    <dd>{{ price_list.contract_number }}</dd>
+<div data-edit-contract-details {% if not show_edit_form %}style="display: none"{% endif %}>
 
-    <dt>Small business</dt>
-    <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd>
+  {{ form.non_field_errors }}
 
-    <dt>Contractor worksite</dt>
-    <dd>{{ price_list.contractor_site }}</dd>
+  {% load frontend %}
 
-    <dt>Contract dates</dt>
-    <dd class="contract-details__start-date">{{ price_list.contract_start }}</dd>
-    <dd>{{ price_list.contract_end }}</dd>
+  {{ form.schedule }}
 
-    <dt>Escalation rate</dt>
-    <dd>{{ price_list.escalation_rate }}%</dd>
+  {% fieldset form.contract_number %}
+  {% fieldset form.vendor_name %}
+  {% fieldset form.is_small_business %}
+  {% fieldset form.contractor_site %}
 
-    <dt>Schedule</dt>
-    <dd>{{ gleaned_data.title }}</dd>
-    </dd>
-  </dl>
+  <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+    {% fieldset form.contract_start %}
+    <p>to</p>
+    {% fieldset form.contract_end %}
+  </div>
+
+  {% fieldset form.escalation_rate %}
+
+  <div class="form-button-row clearfix">
+    <div class="submit-group">
+      <button type="submit" class="button" name="save-changes">Save changes</button>
+    </div>
+
+    <a type="submit" href="{{ step_4_without_edit_url }}">Discard changes</a>
+  </div>
+
 </div>
+
+{% if not show_edit_form %}
+<div data-contract-details class="row">
+  <div class="twelve columns">
+    <dl class="contract-details clearfix">
+      <dt>Schedule</dt>
+      <dd>{{ gleaned_data.title }}</dd>
+
+      <dt>Contract number</dt>
+      <dd>{{ price_list.contract_number }}</dd>
+
+      <dt>Vendor</dt>
+      <dd>{{ price_list.vendor_name }}</dd>
+
+      <dt>Small business</dt>
+      <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd>
+
+      <dt>Contractor worksite</dt>
+      <dd>{{ price_list.contractor_site }}</dd>
+
+      <dt>Contract dates</dt>
+      <dd class="contract-details__start-date">{{ price_list.contract_start }}</dd>
+      <dd>{{ price_list.contract_end }}</dd>
+
+      <dt>Escalation rate</dt>
+      <dd>{{ price_list.escalation_rate }}%</dd>
+    </dl>
+    <p><a href="{{ step_4_with_edit_url }}" class="button button-primary" data-edit-btn>Edit</a></p>
+  </div>
+</div>
+{% endif %}
 
 {% if not is_preferred_schedule %}
   <div class="row">
@@ -57,29 +88,47 @@
 {% endif %}
 
 <div class="row">
-  <form method="post">
-    {% csrf_token %}
-    <div class="twelve columns form-button-row clearfix">
-      {% if prev_url %}
-        <a href="{{ prev_url }}" class="button button-previous">Previous</a>
-      {% elif gleaned_data.invalid_rows %}
-        <a href="{% url 'data_capture:step_3_errors' %}" class="button button-outline button-previous">Previous</a>
-      {% else %}
-        <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
-      {% endif %}
+{% with rows=gleaned_data.valid_rows %}
+  {% with total=rows|length %}
+    <h2>Verify {{ total }} row{{ total|pluralize }} of data </h2>
+  {% endwith %}
 
-      {% if gleaned_data.valid_rows %}
-        <div class="submit-group">
-          <button type="submit" class="button-primary">Submit for review</button>
+  {{ gleaned_data.to_table|safe }}
+{% endwith %}
+</div>
+<div class="row">
+  <div class="twelve columns form-button-row clearfix">
+    {% if prev_url %}
+      <a href="{{ prev_url }}" class="button button-outline button-previous">Previous</a>
+    {% elif gleaned_data.invalid_rows %}
+      <a href="{% url 'data_capture:step_3_errors' %}" class="button button-outline button-previous">Previous</a>
+    {% else %}
+      <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
+    {% endif %}
+
+    {% if gleaned_data.valid_rows %}
+      <div class="submit-group">
+        {% if show_edit_form %}
+          <button type="submit" class="button button-primary">Save and submit for review</button>
           <span class="submit-label">
+            Save changes and submit price list data to an administrator for approval.
+          </span>
+        {% else %}
+          <button type="submit" class="button button-primary" data-edit-text="Save and submit for review">Submit for review</button>
+          <span class="submit-label" data-edit-text="Save changes and submit price list data to an administrator for approval.">
             Submit price list data to an administrator for approval.
           </span>
-        </div>
-      {% endif %}
+        {% endif %}
+      </div>
+    {% endif %}
 
-      <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
-    </div>
-  </form>
-</div>
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
+  </div>
+</form>
+
+{% if not is_safe_mode_enabled and not show_edit_form %}
+{% load staticfiles %}
+<script src= "{% static 'frontend/built/js/data-capture-price-list-upload-step-4/index.min.js' %}"></script>
+{% endif %}
 
 {% endblock %}

@@ -3,21 +3,24 @@ from django.test import TestCase, override_settings
 from .common import FAKE_SCHEDULE, uploaded_csv_file, r10_file
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
-from ..forms import Step2Form, Step3Form, Region10BulkUploadForm
+from ..forms import (Step1Form, Step2Form, Step3Form, Step4Form,
+                     Region10BulkUploadForm)
 
 
 class Step2FormTests(TestCase):
+    form_class = Step2Form
+
     def test_clean_escalation_rate_works(self):
-        form = Step2Form({'escalation_rate': None})
+        form = self.form_class({'escalation_rate': None})
         form.is_valid()
         self.assertEqual(form.cleaned_data['escalation_rate'], 0)
 
-        form = Step2Form({'escalation_rate': 2.5})
+        form = self.form_class({'escalation_rate': 2.5})
         form.is_valid()
         self.assertEqual(form.cleaned_data['escalation_rate'], 2.5)
 
     def test_contract_start_and_end_date_is_validated(self):
-        form = Step2Form({
+        form = self.form_class({
             'contract_start_0': '2020',
             'contract_start_1': '01',
             'contract_start_2': '1',
@@ -66,6 +69,23 @@ class Step3FormTests(TestCase):
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data['gleaned_data'].title,
                          FakeSchedulePriceList.title)
+
+
+class Step4FormTests(Step2FormTests):
+    form_class = Step4Form
+
+    def test_meta_fields_are_combination_of_steps_1_and_2(self):
+        self.assertEqual(
+            Step1Form.Meta.fields + Step2Form.Meta.fields,
+            Step4Form.Meta.fields
+        )
+
+    def test_from_post_data_subsets_works(self):
+        form = Step4Form.from_post_data_subsets({'a': 1}, {'b': 2})
+        self.assertEqual(form.data, {
+            'a': 1,
+            'b': 2
+        })
 
 
 class Region10BulkUploadFormTests(TestCase):

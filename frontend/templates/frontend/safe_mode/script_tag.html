@@ -1,5 +1,5 @@
 {% if not is_safe_mode_enabled %}
-<script>
+<script {{ csp_nonce }}>
 {% include 'frontend/safe_mode/script.js' %}
 </script>
 {% endif %}

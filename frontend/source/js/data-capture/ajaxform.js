@@ -6,7 +6,7 @@ import * as supports from './feature-detection';
 
 import ga from '../common/ga';
 
-import { dispatchBubbly } from './custom-event';
+import dispatchBubbly from './custom-event';
 
 const $ = jQuery;
 
