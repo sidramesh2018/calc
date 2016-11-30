@@ -56,29 +56,30 @@
   </div>
 {% endif %}
 
+<div class="row">
+  <form method="post">
+    {% csrf_token %}
+    <div class="twelve columns form-button-row clearfix">
+      {% if prev_url %}
+        <a href="{{ prev_url }}" class="button button-previous">Previous</a>
+      {% elif gleaned_data.invalid_rows %}
+        <a href="{% url 'data_capture:step_3_errors' %}" class="button button-outline button-previous">Previous</a>
+      {% else %}
+        <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
+      {% endif %}
 
-<form method="post">
-  {% csrf_token %}
-  <div class="form-button-row clearfix">
-    {% if prev_url %}
-      <a href="{{ prev_url }}" class="button button-previous">Previous</a>
-    {% elif gleaned_data.invalid_rows %}
-      <a href="{% url 'data_capture:step_3_errors' %}" class="button button-previous">Previous</a>
-    {% else %}
-      <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
-    {% endif %}
+      {% if gleaned_data.valid_rows %}
+        <div class="submit-group">
+          <button type="submit" class="button-primary">Submit for review</button>
+          <span class="submit-label">
+            Submit price list data to an administrator for approval.
+          </span>
+        </div>
+      {% endif %}
 
-    {% if gleaned_data.valid_rows %}
-      <div class="submit-group">
-        <button type="submit" class="button-primary">Submit for review</button>
-        <span class="submit-label">
-          Submit price list data to an administrator for approval.
-        </span>
-      </div>
-    {% endif %}
-
-    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
-  </div>
-</form>
+      <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
+    </div>
+  </form>
+</div>
 
 {% endblock %}
