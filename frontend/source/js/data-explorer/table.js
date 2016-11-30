@@ -1,13 +1,16 @@
 /* global $, d3, document */
 
 import {
-  parseSortOrder,
   formatCommas,
   getFormat,
 } from './util';
 
-const resultsTable = d3.select('#results-table').style('display', 'none');
-export const sortHeaders = resultsTable.selectAll('thead th');
+const RESULTS_TABLE = '#results-table';
+const RESTORE_EXCLUDED = '#restore-excluded';
+const RESULTS_COUNT = '#results-count';
+
+const resultsTable = d3.select(RESULTS_TABLE).style('display', 'none');
+const sortHeaders = resultsTable.selectAll('thead th');
 
 function getExcludedIds(form) {
   const str = form.get('exclude');
@@ -23,7 +26,7 @@ export function updateExcluded(form) {
   const text = len > 0
         ? ['★ Restore', len, rows].join(' ')
         : '';
-  d3.select('#restore-excluded')
+  d3.select(RESTORE_EXCLUDED)
     .style('display', len > 0
       ? null
       : 'none')
@@ -42,9 +45,27 @@ function excludeRow(form, id, submit) {
   submit(true);
 }
 
+function parseSortOrder(order) {
+  if (!order) {
+    return { key: null, order: null };
+  }
+  const first = order.charAt(0);
+  const sort = { order: '' };
+  switch (first) {
+    case '-':
+      sort.order = first;
+      order = order.substr(1); // eslint-disable-line no-param-reassign
+      break;
+    default:
+      break;
+  }
+  sort.key = order;
+  return sort;
+}
+
 export function updateResults(form, data, submit) {
   const results = data.results;
-  d3.select('#results-count')
+  d3.select(RESULTS_COUNT)
     .text(formatCommas(data.count));
 
   resultsTable.style('display', null);
@@ -172,7 +193,7 @@ export function updateResults(form, data, submit) {
     });
 }
 
-export function updateSortOrder(key) {
+function updateSortOrder(key) {
   const title = (d) => {
     if (d.sorted) {
       const order = d.descending ? 'descending' : 'ascending';
@@ -254,4 +275,19 @@ export function setupColumnHeader(form, submit, headers) {
 
 export function initializeTable(form, submit) {
   sortHeaders.call(setupColumnHeader.bind(this, form, submit));
+}
+
+export function updateSort(unparsedSortData) {
+  const sort = parseSortOrder(unparsedSortData);
+  const sortable = (d) => d.sortable;
+  sortHeaders
+    .filter(sortable)
+    .classed('sorted', (d) => {
+      d.sorted = (d.key === sort.key); // eslint-disable-line no-param-reassign
+    })
+    .classed('descending', (d) => {
+      d.descending = (d.sorted && sort.order === '-'); // eslint-disable-line no-param-reassign
+    });
+
+  updateSortOrder(sort.key);
 }

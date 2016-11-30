@@ -10,7 +10,6 @@ import hourglass from '../common/hourglass';
 import {
   location,
   getUrlParameterByName,
-  parseSortOrder,
   arrayToCSV,
   formatCommas,
   isNumberOrPeriodKey,
@@ -19,8 +18,7 @@ import {
 import {
   updateExcluded,
   updateResults,
-  updateSortOrder,
-  sortHeaders,
+  updateSort,
   initializeTable,
 } from './table';
 
@@ -229,23 +227,14 @@ function popstate() {
     submit(true);
   });
 
-  const sort = parseSortOrder(data.sort);
-  const sortable = (d) => d.sortable;
-  sortHeaders
-    .filter(sortable)
-    .classed('sorted', (d) => {
-      d.sorted = (d.key === sort.key); // eslint-disable-line no-param-reassign
-    })
-    .classed('descending', (d) => {
-      d.descending = (d.sorted && sort.order === '-'); // eslint-disable-line no-param-reassign
-    });
-
-  updateSortOrder(sort.key);
+  updateSort(data.sort);
 
   submit(false);
 }
 
 function initialize() {
+  initializeTable(form, submit);
+
   popstate();
 
   initializeAutocomplete(form, api, $('#labor_category'));
@@ -280,8 +269,6 @@ $('.tooltip').tooltipster({
     return $(this).attr('aria-label');
   },
 });
-
-initializeTable(form, submit);
 
 initialize();
 
