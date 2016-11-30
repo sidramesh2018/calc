@@ -42,7 +42,7 @@ const dirs = {
 
 const paths = {
   sass: '**/*.scss',
-  js: '**/*.js',
+  js: '**/*.@(js|jsx)',
 };
 
 const bundles = {
@@ -190,8 +190,9 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
     debug: true,
     cache: {},
     packageCache: {},
+    extensions: ['.jsx'],
   })
-    .transform(babelify.configure({ presets: ['es2015'] }));
+    .transform(babelify.configure({ presets: ['es2015', 'react'] }));
 
   if (isWatching) {
     bundler = watchify(bundler);

@@ -212,7 +212,7 @@ function submit(pushState) {
     }
   }
 
-  updateExcluded(form);
+  updateExcluded(form, submit);
 }
 
 function popstate() {
@@ -436,10 +436,3 @@ search.select('input[type="reset"]')
 inputs.on('change', () => {
   submit(true);
 });
-
-d3.selectAll('a.merge-params')
-  .on('click', () => {
-    d3.event.preventDefault();
-    form.set('exclude', '');
-    submit(true);
-  });

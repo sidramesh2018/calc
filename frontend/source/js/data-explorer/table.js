@@ -1,9 +1,14 @@
 /* global $, d3, document */
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import {
   formatCommas,
   getFormat,
 } from './util';
+
+import RestoreExcluded from './restore-excluded';
 
 const RESULTS_TABLE = '#results-table';
 const RESTORE_EXCLUDED = '#restore-excluded';
@@ -19,19 +24,18 @@ function getExcludedIds(form) {
     : [];
 }
 
-export function updateExcluded(form) {
-  const excluded = getExcludedIds(form);
-  const len = excluded.length;
-  const rows = `row${len === 1 ? '' : 's'}`;
-  const text = len > 0
-        ? ['★ Restore', len, rows].join(' ')
-        : '';
-  d3.select(RESTORE_EXCLUDED)
-    .style('display', len > 0
-      ? null
-      : 'none')
-    .attr('title', `${rows}: ${excluded.join(', ')}`)
-    .text(text);
+export function updateExcluded(form, submit) {
+  ReactDOM.render(
+    React.createElement(RestoreExcluded, {
+      excluded: getExcludedIds(form),
+      onClick: e => {
+        e.preventDefault();
+        form.set('exclude', '');
+        submit(true);
+      },
+    }),
+    $(RESTORE_EXCLUDED)[0]
+  );
 }
 
 function excludeRow(form, id, submit) {
