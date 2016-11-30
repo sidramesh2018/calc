@@ -1,53 +1,17 @@
 /* global $, d3, document */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-
 import {
   formatCommas,
   getFormat,
 } from './util';
 
-import RestoreExcluded from './restore-excluded';
+import { store, excludeRow } from './store';
 
 const RESULTS_TABLE = '#results-table';
-const RESTORE_EXCLUDED = '#restore-excluded';
 const RESULTS_COUNT = '#results-count';
 
 const resultsTable = d3.select(RESULTS_TABLE).style('display', 'none');
 const sortHeaders = resultsTable.selectAll('thead th');
-
-function getExcludedIds(form) {
-  const str = form.get('exclude');
-  return str && str.length
-    ? str.split(',')
-    : [];
-}
-
-export function updateExcluded(form, submit) {
-  ReactDOM.render(
-    React.createElement(RestoreExcluded, {
-      excluded: getExcludedIds(form),
-      onClick: e => {
-        e.preventDefault();
-        form.set('exclude', '');
-        submit(true);
-      },
-    }),
-    $(RESTORE_EXCLUDED)[0]
-  );
-}
-
-function excludeRow(form, id, submit) {
-  const idString = String(id);
-
-  const excluded = getExcludedIds(form);
-  if (excluded.indexOf(idString) === -1) {
-    excluded.push(idString);
-  }
-  form.set('exclude', excluded.join(','));
-  submit(true);
-}
 
 function parseSortOrder(order) {
   if (!order) {
@@ -67,7 +31,7 @@ function parseSortOrder(order) {
   return sort;
 }
 
-export function updateResults(form, data, submit) {
+export function updateResults(form, data) {
   const results = data.results;
   d3.select(RESULTS_COUNT)
     .text(formatCommas(data.count));
@@ -193,7 +157,7 @@ export function updateResults(form, data, submit) {
       const parentTr = this.parentNode.parentNode;
       parentTr.parentNode.removeChild(parentTr);
 
-      excludeRow(form, d.row.id, submit);
+      store.dispatch(excludeRow(d.row.id));
     });
 }
 

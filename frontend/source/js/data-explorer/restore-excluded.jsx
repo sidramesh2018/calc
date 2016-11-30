@@ -1,6 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-export default function RestoreExcluded({ excluded, onClick }) {
+function RestoreExcluded({ excluded, onClick }) {
   const len = excluded.length;
   const rows = `row${len === 1 ? '' : 's'}`;
 
@@ -19,3 +20,11 @@ RestoreExcluded.propTypes = {
   excluded: React.PropTypes.array.isRequired,
   onClick: React.PropTypes.func.isRequired,
 };
+
+function mapStateToProps(state) {
+  return {
+    excluded: state,
+  };
+}
+
+export default connect(mapStateToProps)(RestoreExcluded);

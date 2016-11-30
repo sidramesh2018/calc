@@ -16,7 +16,6 @@ import {
 } from './util';
 
 import {
-  updateExcluded,
   updateResults,
   updateSort,
   initializeTable,
@@ -27,6 +26,10 @@ import updatePriceHistogram from './histogram';
 import histogramToImg from './histogram-to-img';
 
 import initializeAutocomplete from './autocomplete';
+
+import { syncStoreToForm } from './store';
+
+import initReactApp from './app';
 
 const MAX_EXPERIENCE = 45;
 const HISTOGRAM_BINS = 12;
@@ -119,7 +122,7 @@ function updateDescription(res) {
   });
 }
 
-function update(submitFn, error, res) {
+function update(error, res) {
   search.classed('loading', false);
   request = null;
 
@@ -153,14 +156,16 @@ function update(submitFn, error, res) {
 
   if (res && res.results && res.results.length) {
     updatePriceHistogram(res);
-    updateResults(form, res, submitFn);
+    updateResults(form, res);
   } else {
     res = EMPTY_DATA; // eslint-disable-line no-param-reassign
     // updatePriceRange(EMPTY_DATA);
     updatePriceHistogram(res);
-    updateResults(form, res, submitFn);
+    updateResults(form, res);
   }
 }
+
+let updateStore = null;
 
 function submit(pushState) {
   let data = form.getData();
@@ -188,7 +193,7 @@ function submit(pushState) {
   request = api.get({
     uri: 'rates/',
     data: hourglass.extend(defaults, data),
-  }, update.bind(this, submit));
+  }, update);
 
 
   d3.select('#export-data')
@@ -212,8 +217,10 @@ function submit(pushState) {
     }
   }
 
-  updateExcluded(form, submit);
+  updateStore();
 }
+
+updateStore = syncStoreToForm(form, submit);
 
 function popstate() {
   // read the query string and set values accordingly
@@ -435,4 +442,8 @@ search.select('input[type="reset"]')
 
 inputs.on('change', () => {
   submit(true);
+});
+
+initReactApp({
+  restoreExcludedRoot: $('#restore-excluded')[0],
 });
