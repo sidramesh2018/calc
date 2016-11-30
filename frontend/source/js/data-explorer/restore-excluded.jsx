@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { excludeNone } from './store';
+import { excludeNone } from './actions';
 
 function RestoreExcluded({ excluded, onClick }) {
   const len = excluded.length;

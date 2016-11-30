@@ -5,7 +5,7 @@ import {
   getFormat,
 } from './util';
 
-import { store, excludeRow } from './store';
+import { excludeRow } from './actions';
 
 const RESULTS_TABLE = '#results-table';
 const RESULTS_COUNT = '#results-count';
@@ -31,7 +31,7 @@ function parseSortOrder(order) {
   return sort;
 }
 
-export function updateResults(form, data) {
+export function updateResults(store, form, data) {
   const results = data.results;
   d3.select(RESULTS_COUNT)
     .text(formatCommas(data.count));

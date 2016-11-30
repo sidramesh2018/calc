@@ -3,6 +3,8 @@
 
 // wNumb is from nouislider
 
+import { createStore } from 'redux';
+
 import ga from '../common/ga';
 
 import hourglass from '../common/hourglass';
@@ -21,18 +23,21 @@ import {
   initializeTable,
 } from './table';
 
+import appReducer from './reducers';
+
 import updatePriceHistogram from './histogram';
 
 import histogramToImg from './histogram-to-img';
 
 import initializeAutocomplete from './autocomplete';
 
-import { syncStoreToForm } from './store';
+import syncStoreToForm from './sync-store-to-form';
 
 import initReactApp from './app';
 
 const MAX_EXPERIENCE = 45;
 const HISTOGRAM_BINS = 12;
+const store = createStore(appReducer);
 const search = d3.select('#search');
 const form = new formdb.Form(search.node());
 const inputs = search.selectAll('*[name]');
@@ -156,12 +161,12 @@ function update(error, res) {
 
   if (res && res.results && res.results.length) {
     updatePriceHistogram(res);
-    updateResults(form, res);
+    updateResults(store, form, res);
   } else {
     res = EMPTY_DATA; // eslint-disable-line no-param-reassign
     // updatePriceRange(EMPTY_DATA);
     updatePriceHistogram(res);
-    updateResults(form, res);
+    updateResults(store, form, res);
   }
 }
 
@@ -220,7 +225,7 @@ function submit(pushState) {
   updateStore();
 }
 
-updateStore = syncStoreToForm(form, submit);
+updateStore = syncStoreToForm(store, form, submit);
 
 function popstate() {
   // read the query string and set values accordingly
@@ -445,5 +450,6 @@ inputs.on('change', () => {
 });
 
 initReactApp({
+  store,
   restoreExcludedRoot: $('#restore-excluded')[0],
 });
