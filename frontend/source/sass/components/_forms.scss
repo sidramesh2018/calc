@@ -6,7 +6,6 @@ legend {
   font-size: $base-font-size;
 }
 
-
 .filter-block {
   .dropdown {
     margin-bottom: 0;
@@ -137,5 +136,29 @@ dl.contract-details {
       font-weight: normal;
       content: ' to ';
     }
+  }
+}
+
+/* search -- inline form + button */
+input[type].form__inline {
+  display: inline-block;
+  margin: 1rem 0;
+  float: left;
+  border-right: none;
+  &.filter_active {
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+    ~ .button,
+    ~ button,
+    ~ input[type=button] {
+      /*padding-top: 1.1rem;*/
+      /*padding-bottom: 1.1rem; // to accommodate extra border*/
+    }
+  }
+  ~ .button,
+  ~ button,
+  ~ input[type=button] {
+    margin: 1rem 0;
+    display: inline-block;
   }
 }

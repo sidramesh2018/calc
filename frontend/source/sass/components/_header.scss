@@ -70,9 +70,10 @@ header {
 .price-callout {
   p {
     position: relative;
+    margin-top: 0;
     margin-bottom: 0.5em;
-    opacity: 1;
     margin-left: 40px;
+    opacity: 1;
     &:last-child {
       color: rgba(255,255,255,.6);
       font-weight: 300;

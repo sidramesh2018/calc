@@ -55,9 +55,13 @@
     <div class="container">
       <p class="help-text">Enter your search terms below, separated by commas. (For example: Engineer, Consultant)</p>
       <div class="row">
-        <div class="six columns">
-          <input id="labor_category" name="q" placeholder="Type a labor category" class="search u-full-width" type="text">
+        <div class="twelve columns">
+          <input id="labor_category" name="q" placeholder="Type a labor category" class="form__inline" type="text">
           <label for="labor_category" style="display:none;">Type a labor category</label>
+          <button id="submit-button" class="submit button-primary">Search</button>
+          <input id="reset-button" class="reset button" type="reset" value="Clear search">
+        </div>
+        <div class="twelve columns">
           <div id="query-types">
             <input id="query_type_match_all" type="radio" name="query_type" value="match_all" checked>
             <label for="query_type_match_all">Contains words</label>
@@ -68,10 +72,6 @@
             <input id="query_type_match_exact" type="radio" name="query_type" value="match_exact">
             <label for="query_type_match_exact">Exact match</label>
           </div>
-        </div>
-        <div class="six columns">
-          <button id="submit-button" class="submit button-primary">Search</button>
-          <input id="reset-button" class="reset button" type="reset" value="Clear search">
         </div>
       </div><!-- /.row -->
     </div><!-- /.container -->
@@ -93,7 +93,7 @@
 
           <div class="proposed-price">
             <label for="proposed-price" class="sr-only">Proposed price</label>
-            <input type="number" step="0.01" name="proposed-price" placeholder="Proposed price" class="two-decimal-places" />
+            <input type="number" step="0.01" name="proposed-price" placeholder="Proposed price" class="two-decimal-places form__inline" />
             <button class="button-primary go" />Go</button>
           </div>
 
