@@ -101,7 +101,7 @@ span.dollars {
 
 .filter-block {
   background: $color-gray-lightest;
-  border-radius: 4px;
+  border-radius: $border-radius;
   margin-bottom: 0;
   padding: 1rem 2rem;
 }
@@ -169,7 +169,7 @@ dl.dropdown {
     background-repeat: no-repeat;
     background-size: 1.3rem;
     border: 1px solid $color-base;
-    border-radius: 4px;
+    border-radius: $border-radius;
     box-shadow: none;
     box-sizing: border-box;
     display: block;
@@ -235,7 +235,7 @@ input[type="checkbox"]:checked ~ label {
 .price-block {
   background: $color-gray-lightest;
   border: 1px solid $color-gray-lighter;
-  border-radius: 4px;
+  border-radius: $border-radius;
   flex-grow: 9;
   .row {
     display: flex;
@@ -262,7 +262,7 @@ input[type="checkbox"]:checked ~ label {
 .proposed-price-block {
   background: $color-gray-lightest;
   border: 1px solid $color-gray-lighter;
-  border-radius: 4px;
+  border-radius: $border-radius;
   padding: 0.4em 1.8em;
   margin-left: 3rem;
   float: right;
@@ -429,7 +429,7 @@ a.focus-input {
 .contract-year-block {
   background-color: $color-white;
   border: 1px solid $color-gray-lighter;
-  border-radius: 4px;
+  border-radius: $border-radius;
   display: inline-block;
 }
 
@@ -612,11 +612,11 @@ input[type="radio"]:focus + .checkbox-focus {
 }
 
 .contract-current-year-span {
-  border-radius: 4px 0 0 4px
+  border-radius: $border-radius 0 0 $border-radius;
 }
 
 .contract-last-year-span {
-  border-radius: 0 4px 4px 0
+  border-radius: 0 $border-radius $border-radius 0
 }
 
 .contract-year legend {
