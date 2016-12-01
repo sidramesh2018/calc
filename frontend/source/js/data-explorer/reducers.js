@@ -17,8 +17,14 @@ function exclude(state = [], action) {
   }
 }
 
+function contractYear(state = 'current') {
+  // TODO: Create actions to change this.
+  return state;
+}
+
 const combinedReducer = combineReducers({
   exclude,
+  'contract-year': contractYear,
 });
 
 export default (state, action) => {
