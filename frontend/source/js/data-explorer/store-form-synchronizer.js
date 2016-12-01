@@ -1,15 +1,18 @@
-import { excludeSet } from './actions';
+import { setState } from './actions';
 
-function serializeExcludeList(list) {
-  return list.map(String).join(',');
-}
+const serializers = {
+  exclude: list => list.map(String).join(','),
+};
 
-function deserializeExcludeList(list) {
-  return (list || '')
-    .split(',')
-    .map(x => parseInt(x, 10))
-    .filter(x => !isNaN(x));
-}
+const deserializers = {
+  exclude: list =>
+    (list || '')
+      .split(',')
+      .map(x => parseInt(x, 10))
+      .filter(x => !isNaN(x)),
+};
+
+const fields = Object.keys(serializers);
 
 export default class StoreFormSynchronizer {
   constructor(form) {
@@ -24,11 +27,20 @@ export default class StoreFormSynchronizer {
   reflectToFormMiddleware(store) {
     return next => action => {
       const result = next(action);
-      const oldVal = this.form.get('exclude');
-      const newVal = serializeExcludeList(store.getState().exclude);
+      const state = store.getState();
+      let changed = false;
 
-      if (oldVal !== newVal) {
-        this.form.set('exclude', newVal);
+      fields.forEach(field => {
+        const oldVal = this.form.get(field);
+        const newVal = serializers[field](state[field]);
+
+        if (oldVal !== newVal) {
+          this.form.set(field, newVal);
+          changed = true;
+        }
+      });
+
+      if (changed) {
         this.submit(true);
       }
 
@@ -37,12 +49,24 @@ export default class StoreFormSynchronizer {
   }
 
   reflectToStore(store) {
-    const oldVal = serializeExcludeList(store.getState().exclude);
-    const newExcludeList = deserializeExcludeList(this.form.get('exclude'));
-    const newVal = serializeExcludeList(newExcludeList);
+    const state = store.getState();
+    const changes = {};
 
-    if (oldVal !== newVal) {
-      store.dispatch(excludeSet(newExcludeList));
+    fields.forEach(field => {
+      console.log('reflect to store', state, this.form.get(field));
+      console.trace();
+
+      const oldVal = serializers[field](state[field]);
+      const newSerializedVal = deserializers[field](this.form.get(field));
+      const newVal = serializers[field](newSerializedVal);
+
+      if (oldVal !== newVal) {
+        changes[field] = newSerializedVal;
+      }
+    });
+
+    if (Object.keys(changes).length) {
+      store.dispatch(setState(Object.assign({}, state, changes)));
     }
   }
 }

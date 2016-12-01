@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import {
   EXCLUDE_NONE,
   EXCLUDE_ROW,
-  EXCLUDE_SET,
+  SET_STATE,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -12,13 +12,18 @@ function exclude(state = [], action) {
       return [];
     case EXCLUDE_ROW:
       return state.concat(action.rowId);
-    case EXCLUDE_SET:
-      return action.value;
     default:
       return state;
   }
 }
 
-export default combineReducers({
+const combinedReducer = combineReducers({
   exclude,
 });
+
+export default (state, action) => {
+  if (action.type === SET_STATE) {
+    return action.value;
+  }
+  return combinedReducer(state, action);
+};
