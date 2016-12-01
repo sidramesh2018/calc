@@ -2,6 +2,7 @@ import { setState } from './actions';
 
 const serializers = {
   exclude: list => list.map(String).join(','),
+  'contract-year': String,
 };
 
 const deserializers = {
@@ -10,6 +11,7 @@ const deserializers = {
       .split(',')
       .map(x => parseInt(x, 10))
       .filter(x => !isNaN(x)),
+  'contract-year': String,
 };
 
 const fields = Object.keys(serializers);

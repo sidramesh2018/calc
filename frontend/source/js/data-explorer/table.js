@@ -67,7 +67,7 @@ export function updateResults(store, form, data) {
         // check if we need to be loading a future price
         // and, if so, the price value should reflect the filter choice
       if (column.key === 'current_price') {
-        yearField = form.getData()['contract-year'];
+        yearField = store.getState()['contract-year'];
         if (!isNaN(yearField)) {
           value = d[priceFields[yearField]];
         }
