@@ -18,7 +18,6 @@ import {
   location,
   getUrlParameterByName,
   arrayToCSV,
-  formatCommas,
   isNumberOrPeriodKey,
 } from './util';
 
@@ -58,75 +57,6 @@ const loadingIndicator = search.select('.loading-indicator');
 const histogramDownloadLink = document.getElementById('download-histogram');
 
 let request;
-let updateCounter = 0;
-
-function updateDescription(res) {
-  const data = form.getData();
-  const filters = $('.filters');
-  const laborCategoryValue = $('#labor_category').val();
-  const lookup = {
-    education: {
-      label: 'education level',
-      html: $('.multiSel').html(),
-    },
-    min_experience: {
-      label: 'experience',
-      html: `${$('#min_experience option:selected').text()} - ` +
-            `${$('#max_experience option:selected').text()} years`,
-    },
-    site: {
-      label: 'worksite',
-      html: $('.filter-site option:selected').text(),
-    },
-    business_size: {
-      label: 'business size',
-      html: $('.filter-business_size option:selected').text(),
-    },
-    schedule: {
-      label: 'schedule',
-      html: $('.filter-schedule option:selected').text(),
-    },
-  };
-
-  if (updateCounter) {
-    filters.empty().removeClass('hidden').append('with ');
-  }
-
-  // fade effect for transitions during description update
-  $('#description').hide().fadeIn();
-
-  // first count of results
-  d3.select('#description-count')
-    .text(formatCommas(res.results.length));
-
-  // labor category results
-  if (laborCategoryValue) {
-    const laborEl = $(document.createElement('span')).addClass('filter');
-    filters.append(laborEl);
-    laborEl.append(
-      $(document.createElement('a')).addClass('focus-input').attr('href', '#')
-        .html(laborCategoryValue)
-    );
-  }
-
-  Object.keys(data).forEach((dataKey) => {
-    if (lookup[dataKey]) {
-      // create a span element filter label
-      const filterEl = $(document.createElement('span'))
-          .addClass(`filter ${dataKey}-filter`)
-          .html(` ${lookup[dataKey].label}: `);
-
-      filters.append(filterEl);
-
-      // append text of selected filter as anchor elements
-      filterEl.append(
-        $(document.createElement('a')).addClass('focus-input')
-          .attr('href', '#')
-          .html(lookup[dataKey].html)
-      );
-    }
-  });
-}
 
 function update(error, res) {
   search.classed('loading', false);
@@ -150,9 +80,6 @@ function update(error, res) {
 
   store.dispatch(completeRatesRequest(error, res));
   res = store.getState().rates.data;  // eslint-disable-line no-param-reassign
-
-  updateDescription(res);
-  updateCounter++;
 
   let proposedPrice = 0;
 
@@ -451,4 +378,5 @@ inputs.on('change', () => {
 initReactApp({
   store,
   restoreExcludedRoot: $('#restore-excluded')[0],
+  descriptionRoot: $('#description')[0],
 });

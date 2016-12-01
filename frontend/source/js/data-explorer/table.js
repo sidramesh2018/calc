@@ -1,14 +1,12 @@
 /* global $, d3, document */
 
 import {
-  formatCommas,
   getFormat,
 } from './util';
 
 import { excludeRow } from './actions';
 
 const RESULTS_TABLE = '#results-table';
-const RESULTS_COUNT = '#results-count';
 
 const resultsTable = d3.select(RESULTS_TABLE).style('display', 'none');
 const sortHeaders = resultsTable.selectAll('thead th');
@@ -33,8 +31,6 @@ function parseSortOrder(order) {
 
 export function updateResults(store, form, data) {
   const results = data.results;
-  d3.select(RESULTS_COUNT)
-    .text(formatCommas(data.count));
 
   resultsTable.style('display', null);
 
