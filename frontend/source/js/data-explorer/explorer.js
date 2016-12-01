@@ -8,7 +8,6 @@ import { createStore, applyMiddleware } from 'redux';
 import {
   MAX_EXPERIENCE,
   HISTOGRAM_BINS,
-  EMPTY_RATES_DATA,
 } from './constants';
 
 import ga from '../common/ga';
@@ -150,28 +149,23 @@ function update(error, res) {
   search.classed('loaded', true);
 
   store.dispatch(completeRatesRequest(error, res));
+  res = store.getState().rates.data;  // eslint-disable-line no-param-reassign
 
   updateDescription(res);
   updateCounter++;
 
+  let proposedPrice = 0;
+
   if ($('.proposed-price input').val()) {
-    res.proposedPrice = $('.proposed-price input').val(); // eslint-disable-line no-param-reassign
+    proposedPrice = $('.proposed-price input').val();
     $('.proposed-price-highlight').html(`$${$('.proposed-price input').val()}`);
     $('.proposed-price-block').fadeIn();
   } else {
-    res.proposedPrice = 0; // eslint-disable-line no-param-reassign
     $('.proposed-price-block').fadeOut();
   }
 
-  if (res && res.results && res.results.length) {
-    updatePriceHistogram(res);
-    updateResults(store, form, res);
-  } else {
-    res = EMPTY_RATES_DATA; // eslint-disable-line no-param-reassign
-    // updatePriceRange(EMPTY_DATA);
-    updatePriceHistogram(res);
-    updateResults(store, form, res);
-  }
+  updatePriceHistogram(res, proposedPrice);
+  updateResults(store, form, res);
 }
 
 function submit(pushState) {

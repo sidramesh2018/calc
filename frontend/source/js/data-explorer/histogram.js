@@ -14,7 +14,7 @@ const formatPrice = d3.format(',.0f');
 
 let histogramUpdated = false;
 
-export default function updatePriceHistogram(data) {
+export default function updatePriceHistogram(data, proposedPrice) {
   const width = 720;
   const height = 300;
   const pad = [120, 15, 60, 60];
@@ -156,7 +156,7 @@ export default function updatePriceHistogram(data) {
   }
 
   // widen proposed price rect if more than 3 digits long
-  if (data.proposedPrice.toString().replace('.', '').length > 3) {
+  if (proposedPrice.toString().replace('.', '').length > 3) {
     pp.select('rect').attr('width', 130);
     pp.select('text').attr('dx', 10);
   } else {
@@ -168,9 +168,9 @@ export default function updatePriceHistogram(data) {
     .attr('y1', ppOffset)
     .attr('y2', (bottom - top) + 8);
   pp.select('.value')
-    .text(`$${data.proposedPrice} proposed`);
+    .text(`$${proposedPrice} proposed`);
 
-  if (data.proposedPrice === 0) {
+  if (proposedPrice === 0) {
     pp.style('opacity', 0);
   } else {
     pp.style('opacity', 1);
@@ -275,7 +275,7 @@ export default function updatePriceHistogram(data) {
     .attr('transform', `translate(${[~~x(data.average), top]})`);
 
   t.select('.pp')
-    .attr('transform', `translate(${[~~x(data.proposedPrice), top]})`);
+    .attr('transform', `translate(${[~~x(proposedPrice), top]})`);
 
   t.selectAll('.bar')
     .each((d) => {
