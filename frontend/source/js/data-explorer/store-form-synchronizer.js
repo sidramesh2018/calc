@@ -47,6 +47,9 @@ export default class StoreFormSynchronizer {
       const state = store.getState();
       let changed = false;
 
+      // TODO: Remove this logging line eventually.
+      console.log(state);  // eslint-disable-line
+
       fields.forEach(field => {
         const oldVal = serializers[field](
           deserializers[field](this.form.get(field))
