@@ -19,6 +19,8 @@ button,
   }
   &.button-outline {
     border: 1px solid $color-gray;
+    background: $color-white;
+    color: $color-gray;
     &:hover,
     &.button-hover {
       border-color: $color-gray-light;
@@ -30,68 +32,6 @@ button,
 input[type="reset"] {
   padding-top: 0.9rem;
   padding-bottom: 0.9rem; //compensates for the 1px border
-}
-
-// Need to override Skeleton's default button styling
-.button.button-primary,
-button.button-primary,
-input.button-primary[type="submit"],
-input.button-primary[type="reset"],
-input.button-primary[type="button"] {
-  background-color: $color-primary;
-  color: $color-white;
-  border: 0;
-
-  &:hover,
-  &.button-hover {
-    background-color: $color-primary-darker;
-    border-color: $color-primary-darker;
-  }
-
-  &:visited {
-    color: $color-white;
-  }
-
-  &:focus,
-  &.button-focus {
-    background-color: $color-primary-darker;
-    border-color: $color-primary-darker;
-  }
-
-  &:active,
-  &.button-active {
-    background-color: $color-primary-darkest;
-  }
-}
-
-// More Skeleton overrides
-.button.button-secondary,
-button.button-secondary,
-input.button-secondary[type="submit"],
-input.button-secondary[type="reset"],
-input.button-secondary[type="button"] {
-  color: $color-white;
-
-  &:hover,
-  &.button-hover {
-    background-color: $color-secondary-dark;
-    border-color: $color-secondary-dark;
-  }
-
-  &:visited {
-    color: $color-white;
-  }
-
-  &:focus,
-  &.button-focus {
-    background-color: $color-secondary-dark;
-    border-color: $color-secondary-dark;
-  }
-
-  &:active,
-  &.button-active {
-    background-color: $color-secondary-darkest;
-  }
 }
 
 .button-gray,
@@ -106,7 +46,7 @@ button.button-link,
 input.button-link[type="submit"],
 input.button-link[type="reset"],
 input.button-link[type="button"] {
-
+  background-color: $color-white;
   border: none;
   padding-top: 0;
   padding-bottom: 0;
