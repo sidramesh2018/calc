@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import { excludeNone } from './actions';
 
-function RestoreExcluded({ excluded, onClick }) {
-  const len = excluded.length;
+function RestoreExcluded({ exclude, onClick }) {
+  const len = exclude.length;
   const rows = `row${len === 1 ? '' : 's'}`;
   const handleClick = e => {
     e.preventDefault();
@@ -15,7 +15,7 @@ function RestoreExcluded({ excluded, onClick }) {
     <a className="restore"
        href="?exclude="
        style={len === 0 ? { display: 'none' } : null}
-       title={`${rows}: ${excluded.join(', ')}`}
+       title={`${rows}: ${exclude.join(', ')}`}
        onClick={handleClick}>
          {len > 0 ? `★ Restore ${len} ${rows}` : ''}
     </a>
@@ -23,13 +23,13 @@ function RestoreExcluded({ excluded, onClick }) {
 }
 
 RestoreExcluded.propTypes = {
-  excluded: React.PropTypes.array.isRequired,
+  exclude: React.PropTypes.array.isRequired,
   onClick: React.PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
-    excluded: state,
+    exclude: state.exclude,
   };
 }
 

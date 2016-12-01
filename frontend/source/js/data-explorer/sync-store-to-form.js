@@ -14,7 +14,7 @@ function deserializeExcludeList(list) {
 export default function syncStoreToForm(store, form, submit) {
   store.subscribe(() => {
     const oldVal = form.get('exclude');
-    const newVal = serializeExcludeList(store.getState());
+    const newVal = serializeExcludeList(store.getState().exclude);
 
     if (oldVal !== newVal) {
       form.set('exclude', newVal);
@@ -23,7 +23,7 @@ export default function syncStoreToForm(store, form, submit) {
   });
 
   return function updateStore() {
-    const oldVal = serializeExcludeList(store.getState());
+    const oldVal = serializeExcludeList(store.getState().exclude);
     const newExcludeList = deserializeExcludeList(form.get('exclude'));
     const newVal = serializeExcludeList(newExcludeList);
 

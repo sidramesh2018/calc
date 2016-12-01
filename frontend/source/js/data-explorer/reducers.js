@@ -1,10 +1,12 @@
+import { combineReducers } from 'redux';
+
 import {
   EXCLUDE_NONE,
   EXCLUDE_ROW,
   EXCLUDE_SET,
 } from './actions';
 
-export default function exclude(state = [], action) {
+function exclude(state = [], action) {
   switch (action.type) {
     case EXCLUDE_NONE:
       return [];
@@ -16,3 +18,7 @@ export default function exclude(state = [], action) {
       return state;
   }
 }
+
+export default combineReducers({
+  exclude,
+});
