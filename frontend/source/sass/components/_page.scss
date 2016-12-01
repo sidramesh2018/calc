@@ -1,9 +1,11 @@
 @import '../base/variables';
+@import '../base/grid';
 
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: $color-gray-lightest;
 }
 
 main {
@@ -13,4 +15,20 @@ main {
 
 .secondary-step h1 {
   font-size: $h3-font-size;
+}
+
+.card {
+  @include span-columns(8);
+  @include shift(2);
+  background-color: $color-white;
+  padding: $space-8x 0;
+  margin-bottom: $space-half;
+  .card__content {
+    @include span-columns(6 of 8);
+    @include shift-in-context(1 of 8);
+  }
+  &:last-child {
+    border-bottom: $space-half solid $color-gray-light;
+    margin-bottom: $space-10x;
+  }
 }
