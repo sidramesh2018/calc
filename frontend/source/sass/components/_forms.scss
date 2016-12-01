@@ -88,7 +88,9 @@ form > .fieldset-error {
 
 .helptext {
   color: $color-gray;
+  font-size: $small-font-size;
   display: block;
+  margin-top: 0.8em;
   margin-bottom: 0;
 }
 
