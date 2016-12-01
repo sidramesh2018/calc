@@ -18,7 +18,7 @@ const coercedString = val => {
   return String(val);
 };
 
-const coercedExperience = (defaultVal, val) => {
+const coercedExperience = defaultVal => val => {
   const valInt = parseInt(val, 10);
 
   if (isNaN(valInt)) {
@@ -63,8 +63,8 @@ const deserializers = {
   site: stringInSet(SITE_LABELS),
   business_size: stringInSet(BUSINESS_SIZE_LABELS),
   schedule: stringInSet(SCHEDULE_LABELS),
-  min_experience: coercedExperience.bind(null, MIN_EXPERIENCE),
-  max_experience: coercedExperience.bind(null, MAX_EXPERIENCE),
+  min_experience: coercedExperience(MIN_EXPERIENCE),
+  max_experience: coercedExperience(MAX_EXPERIENCE),
 };
 
 const fields = Object.keys(serializers);
