@@ -175,6 +175,8 @@ function update(error, res) {
 }
 
 function submit(pushState) {
+  synchronizer.reflectToStore(store);
+
   let data = form.getData();
 
   data = arrayToCSV(data);
@@ -226,8 +228,6 @@ function submit(pushState) {
       ga('send', 'pageview');
     }
   }
-
-  synchronizer.reflectToStore(store);
 }
 
 synchronizer.setSubmitForm(submit);
