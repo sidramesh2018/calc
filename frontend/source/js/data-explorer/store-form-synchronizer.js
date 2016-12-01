@@ -53,9 +53,6 @@ export default class StoreFormSynchronizer {
     const changes = {};
 
     fields.forEach(field => {
-      console.log('reflect to store', state, this.form.get(field));
-      console.trace();
-
       const oldVal = serializers[field](state[field]);
       const newSerializedVal = deserializers[field](this.form.get(field));
       const newVal = serializers[field](newSerializedVal);
