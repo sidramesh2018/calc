@@ -27,9 +27,15 @@ function q(state = '') {
   return state;
 }
 
+function education(state = []) {
+  // TODO: Create actions to change this.
+  return state;
+}
+
 const combinedReducer = combineReducers({
   exclude,
   q,
+  education,
   'contract-year': contractYear,
 });
 

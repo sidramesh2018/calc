@@ -1,4 +1,5 @@
 import { setState } from './actions';
+import { EDU_LABELS } from './constants';
 
 const coercedString = val => {
   if (val === undefined) {
@@ -9,6 +10,7 @@ const coercedString = val => {
 
 const serializers = {
   exclude: list => list.map(coercedString).join(','),
+  education: list => list.map(coercedString).join(','),
   q: coercedString,
   'contract-year': coercedString,
 };
@@ -19,6 +21,10 @@ const deserializers = {
       .split(',')
       .map(x => parseInt(x, 10))
       .filter(x => !isNaN(x)),
+  education: list =>
+    coercedString(list)
+      .split(',')
+      .filter(x => x in EDU_LABELS),
   q: coercedString,
   'contract-year': coercedString,
 };
