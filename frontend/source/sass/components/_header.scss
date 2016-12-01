@@ -107,6 +107,7 @@ header {
 
 nav {
   flex-grow: 10; // of 12 total, to approximate grid
+  position: relative;
   .nav-content {
     display: inline-block;
     float: right;
@@ -140,6 +141,7 @@ nav {
     padding: 0;
     margin-bottom: 0;
     &.nav-tabs {
+      position: absolute;
       float: none;
       bottom: 0;
       right: 0;
