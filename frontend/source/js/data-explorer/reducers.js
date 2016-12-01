@@ -22,8 +22,14 @@ function contractYear(state = 'current') {
   return state;
 }
 
+function q(state = '') {
+  // TODO: Create actions to change this.
+  return state;
+}
+
 const combinedReducer = combineReducers({
   exclude,
+  q,
   'contract-year': contractYear,
 });
 

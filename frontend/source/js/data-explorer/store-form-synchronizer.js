@@ -1,17 +1,26 @@
 import { setState } from './actions';
 
+const coercedString = val => {
+  if (val === undefined) {
+    return '';
+  }
+  return String(val);
+};
+
 const serializers = {
-  exclude: list => list.map(String).join(','),
-  'contract-year': String,
+  exclude: list => list.map(coercedString).join(','),
+  q: coercedString,
+  'contract-year': coercedString,
 };
 
 const deserializers = {
   exclude: list =>
-    (list || '')
+    coercedString(list)
       .split(',')
       .map(x => parseInt(x, 10))
       .filter(x => !isNaN(x)),
-  'contract-year': String,
+  q: coercedString,
+  'contract-year': coercedString,
 };
 
 const fields = Object.keys(serializers);
@@ -33,7 +42,9 @@ export default class StoreFormSynchronizer {
       let changed = false;
 
       fields.forEach(field => {
-        const oldVal = this.form.get(field);
+        const oldVal = serializers[field](
+          deserializers[field](this.form.get(field))
+        );
         const newVal = serializers[field](state[field]);
 
         if (oldVal !== newVal) {
