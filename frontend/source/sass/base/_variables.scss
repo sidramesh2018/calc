@@ -92,3 +92,13 @@ $column: 5rem;
 $gutter: 3rem;
 $max-width: 930px;
 
+// Spacing units
+$base-spacing-unit: 8px;
+$space-half: $base-spacing-unit/2; // 4px
+$space-1x: $base-spacing-unit;
+$space-2x: $base-spacing-unit * 2; // 16px -- most common unit
+$space-3x: $base-spacing-unit * 3; // 24px
+$space-4x: $base-spacing-unit * 4; // 32px
+$space-6x: $base-spacing-unit * 6; // 48px
+$space-8x: $base-spacing-unit * 8; // 64px
+$space-10x: $base-spacing-unit * 10; // 80px
