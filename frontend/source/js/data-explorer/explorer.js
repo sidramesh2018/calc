@@ -3,7 +3,7 @@
 
 // wNumb is from nouislider
 
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 
 import ga from '../common/ga';
 
@@ -31,15 +31,19 @@ import histogramToImg from './histogram-to-img';
 
 import initializeAutocomplete from './autocomplete';
 
-import syncStoreToForm from './sync-store-to-form';
+import StoreFormSynchronizer from './store-form-synchronizer';
 
 import initReactApp from './app';
 
 const MAX_EXPERIENCE = 45;
 const HISTOGRAM_BINS = 12;
-const store = createStore(appReducer);
 const search = d3.select('#search');
 const form = new formdb.Form(search.node());
+const synchronizer = new StoreFormSynchronizer(form);
+const store = createStore(
+  appReducer,
+  applyMiddleware(synchronizer.reflectToFormMiddleware)
+);
 const inputs = search.selectAll('*[name]');
 const api = new hourglass.API();
 const loadingIndicator = search.select('.loading-indicator');
@@ -170,8 +174,6 @@ function update(error, res) {
   }
 }
 
-let updateStore = null;
-
 function submit(pushState) {
   let data = form.getData();
 
@@ -222,10 +224,10 @@ function submit(pushState) {
     }
   }
 
-  updateStore();
+  synchronizer.reflectToStore(store);
 }
 
-updateStore = syncStoreToForm(store, form, submit);
+synchronizer.setSubmitForm(submit);
 
 function popstate() {
   // read the query string and set values accordingly
