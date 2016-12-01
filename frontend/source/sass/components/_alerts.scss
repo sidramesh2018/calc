@@ -39,8 +39,14 @@ $color-error-bg: #fef5f5;
 alerts-widget:focus {
   outline: none;
 }
+
 .message-error h3 {
   color: $color-secondary-dark;
+  margin-bottom: 0;
+}
+
+.message-info h3 {
+  color: $color-primary-alt-darkest;
   margin-bottom: 0;
 }
 

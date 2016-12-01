@@ -36,37 +36,18 @@
         {% include "price_lists/_details_list.html" %}
       </div>
     </div>
-    <div class="row">
-      {% if price_list_rows %}
+
+    {% if price_list_rows %}
+      <div class="row">
         <div class="columns twelve">
           <h3>Valid price list rows</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>SIN(s)</th>
-                <th>Labor category</th>
-                <th>Minimum education level</th>
-                <th class="number">Minimum years of experience</th>
-                <th class="number">Base year rate (per hour)</th>
-                <th>Is muted</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for row in price_list_rows %}
-                <tr>
-                  <td>{{ row.sin }}</td>
-                  <td>{{ row.labor_category }}</td>
-                  <td>{{ row.get_education_level_display }}</td>
-                  <td class="number">{{ row.min_years_experience }}</td>
-                  <td class="number currency">{{ row.base_year_rate }}</td>
-                  <td>{{ row.is_muted }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          {% include 'price_lists/_price_list_rows_table.html' %}
         </div>
-      {% endif %}
-      {% if gleaned_data.invalid_rows %}
+      </div>
+    {% endif %}
+
+    {% if gleaned_data.invalid_rows %}
+      <div class="row">
         <div class="columns twelve">
           <expandable-area>
             <h3>Invalid price list rows</h3>
@@ -74,7 +55,7 @@
             {{ gleaned_data.to_error_table }}
           </expandable-area>
         </div>
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
   </div>
 {% endblock body %}

@@ -4,11 +4,14 @@ import urllib.parse
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
 from django.http import HttpResponseBadRequest
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.http import is_safe_url
+from django.utils.safestring import mark_safe
+from django.utils.html import escape
 
 from .. import forms
 from ..models import SubmittedPriceList
@@ -124,7 +127,18 @@ def step_1(request, step):
                 'step_1_POST': request.POST,
             }
             return redirect('data_capture:step_2')
-
+        elif form.has_existing_contract_number_error():
+            contract_number = request.POST['contract_number']
+            latest = SubmittedPriceList.get_latest_by_contract_number(
+                contract_number)
+            details_url = reverse('data_capture:price_list_details',
+                                  kwargs={'id': latest.pk})
+            msg = mark_safe(
+                "We found an existing price list for contract number {}.</br>"
+                "If you'd like, you may "
+                "<a href='{}'>see its details</a>.".format(
+                    escape(contract_number), details_url))
+            messages.add_message(request, messages.ERROR, msg)
         else:
             add_generic_form_error(request, form)
 
@@ -299,8 +313,8 @@ def step_4(request, step):
 
     pl_details = {
         'preferred_schedule': step_1_form.cleaned_data['schedule_class'],
-        'vendor_name': step_1_form.cleaned_data['vendor_name'],
         'contract_number': step_1_form.cleaned_data['contract_number'],
+        'vendor_name': step_2_form.cleaned_data['vendor_name'],
         'is_small_business': step_2_form.cleaned_data['is_small_business'],
         'contractor_site': step_2_form.cleaned_data['contractor_site'],
         'contract_start': step_2_form.cleaned_data['contract_start'],

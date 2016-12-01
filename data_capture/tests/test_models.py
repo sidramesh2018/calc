@@ -154,3 +154,21 @@ class ModelsTests(ModelTestCase):
 
     def test_row_stringify_works(self):
         self.assertEqual(str(self.create_row()), 'Submitted price list row')
+
+    def test_get_latest_by_contract_number_works(self):
+        p1 = self.create_price_list()
+        p1.save()
+
+        p2 = self.create_price_list()
+        p2.save()
+
+        latest = SubmittedPriceList.get_latest_by_contract_number(
+            'GS-123-4567')
+        self.assertEqual(p2, latest)
+
+    def test_get_latest_by_contract_number_ignores_case(self):
+        p = self.create_price_list(contract_number='GS-AA-bbbb')
+        p.save()
+        latest = SubmittedPriceList.get_latest_by_contract_number(
+            'gs-AA-bbBB')
+        self.assertEqual(p, latest)

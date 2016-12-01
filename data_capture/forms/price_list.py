@@ -1,11 +1,16 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from ..models import SubmittedPriceList
 from ..schedules import registry
 from frontend.upload import UploadWidget
-from frontend.date import SplitDateField
 from frontend.widgets import UswdsRadioSelect
+from frontend.date import SplitDateField
 from contracts.models import MIN_ESCALATION_RATE, MAX_ESCALATION_RATE
+
+
+class DuplicateContractValidationError(ValidationError):
+    pass
 
 
 def ensure_contract_start_is_before_end(form, cleaned_data):
@@ -47,8 +52,14 @@ class Step1Form(forms.ModelForm):
         fields = [
             'schedule',
             'contract_number',
-            'vendor_name',
         ]
+
+    def has_existing_contract_number_error(self):
+        if 'contract_number' in self.errors:
+            for err in self.errors.as_data()['contract_number']:
+                if isinstance(err, DuplicateContractValidationError):
+                    return True
+        return False
 
     def clean(self):
         cleaned_data = super().clean()
@@ -56,6 +67,22 @@ class Step1Form(forms.ModelForm):
         if schedule:
             cleaned_data['schedule_class'] = registry.get_class(schedule)
         return cleaned_data
+
+    def clean_contract_number(self):
+        '''
+        Raises a DuplicateContractValidationError if a SubmittedPriceList
+        with the same contract number (case-insensitive) already exists.
+        '''
+        value = self.cleaned_data['contract_number']
+
+        is_duplicate = SubmittedPriceList.objects.filter(
+            contract_number__iexact=value).exists()
+        if is_duplicate:
+            raise DuplicateContractValidationError(
+                'A price list with this contract number has '
+                'already been submitted.')
+
+        return value
 
 
 class Step2Form(forms.ModelForm):
@@ -88,6 +115,7 @@ class Step2Form(forms.ModelForm):
     class Meta:
         model = SubmittedPriceList
         fields = [
+            'vendor_name',
             'is_small_business',
             'contractor_site',
             'contract_start',
