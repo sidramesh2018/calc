@@ -5,6 +5,11 @@
 
 import { createStore, applyMiddleware } from 'redux';
 
+import {
+  MAX_EXPERIENCE,
+  HISTOGRAM_BINS,
+} from './constants';
+
 import ga from '../common/ga';
 
 import hourglass from '../common/hourglass';
@@ -35,8 +40,6 @@ import StoreFormSynchronizer from './store-form-synchronizer';
 
 import initReactApp from './app';
 
-const MAX_EXPERIENCE = 45;
-const HISTOGRAM_BINS = 12;
 const search = d3.select('#search');
 const form = new formdb.Form(search.node());
 const synchronizer = new StoreFormSynchronizer(form);

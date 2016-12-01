@@ -1,6 +1,12 @@
 import { combineReducers } from 'redux';
 
 import {
+  MIN_EXPERIENCE,
+  MAX_EXPERIENCE,
+  DEFAULT_CONTRACT_YEAR,
+} from './constants';
+
+import {
   EXCLUDE_NONE,
   EXCLUDE_ROW,
   SET_STATE,
@@ -17,7 +23,7 @@ function exclude(state = [], action) {
   }
 }
 
-function contractYear(state = 'current') {
+function contractYear(state = DEFAULT_CONTRACT_YEAR) {
   // TODO: Create actions to change this.
   return state;
 }
@@ -32,10 +38,22 @@ function education(state = []) {
   return state;
 }
 
+function minExperience(state = MIN_EXPERIENCE) {
+  // TODO: Create actions to change this.
+  return state;
+}
+
+function maxExperience(state = MAX_EXPERIENCE) {
+  // TODO: Create actions to change this.
+  return state;
+}
+
 const combinedReducer = combineReducers({
   exclude,
   q,
   education,
+  min_experience: minExperience,
+  max_experience: maxExperience,
   'contract-year': contractYear,
 });
 

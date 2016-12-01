@@ -1,5 +1,10 @@
 import { setState } from './actions';
-import { EDU_LABELS } from './constants';
+
+import {
+  EDU_LABELS,
+  MIN_EXPERIENCE,
+  MAX_EXPERIENCE,
+} from './constants';
 
 const coercedString = val => {
   if (val === undefined) {
@@ -8,11 +13,23 @@ const coercedString = val => {
   return String(val);
 };
 
+const coercedExperience = (defaultVal, val) => {
+  const valInt = parseInt(val, 10);
+
+  if (isNaN(valInt)) {
+    return defaultVal;
+  }
+
+  return Math.max(Math.min(valInt, MAX_EXPERIENCE), MIN_EXPERIENCE);
+};
+
 const serializers = {
   exclude: list => list.map(coercedString).join(','),
   education: list => list.map(coercedString).join(','),
   q: coercedString,
   'contract-year': coercedString,
+  min_experience: coercedString,
+  max_experience: coercedString,
 };
 
 const deserializers = {
@@ -27,6 +44,8 @@ const deserializers = {
       .filter(x => x in EDU_LABELS),
   q: coercedString,
   'contract-year': coercedString,
+  min_experience: coercedExperience.bind(null, MIN_EXPERIENCE),
+  max_experience: coercedExperience.bind(null, MAX_EXPERIENCE),
 };
 
 const fields = Object.keys(serializers);
