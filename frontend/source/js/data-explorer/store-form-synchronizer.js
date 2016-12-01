@@ -4,6 +4,11 @@ import {
   EDU_LABELS,
   MIN_EXPERIENCE,
   MAX_EXPERIENCE,
+  SITE_LABELS,
+  BUSINESS_SIZE_LABELS,
+  SCHEDULE_LABELS,
+  CONTRACT_YEAR_LABELS,
+  DEFAULT_CONTRACT_YEAR,
 } from './constants';
 
 const coercedString = val => {
@@ -23,11 +28,22 @@ const coercedExperience = (defaultVal, val) => {
   return Math.max(Math.min(valInt, MAX_EXPERIENCE), MIN_EXPERIENCE);
 };
 
+const stringInSet = (choices, defaultVal = '') => val => {
+  if (val in choices) {
+    return val;
+  }
+
+  return defaultVal;
+};
+
 const serializers = {
   exclude: list => list.map(coercedString).join(','),
   education: list => list.map(coercedString).join(','),
   q: coercedString,
   'contract-year': coercedString,
+  site: coercedString,
+  business_size: coercedString,
+  schedule: coercedString,
   min_experience: coercedString,
   max_experience: coercedString,
 };
@@ -43,7 +59,10 @@ const deserializers = {
       .split(',')
       .filter(x => x in EDU_LABELS),
   q: coercedString,
-  'contract-year': coercedString,
+  'contract-year': stringInSet(CONTRACT_YEAR_LABELS, DEFAULT_CONTRACT_YEAR),
+  site: stringInSet(SITE_LABELS),
+  business_size: stringInSet(BUSINESS_SIZE_LABELS),
+  schedule: stringInSet(SCHEDULE_LABELS),
   min_experience: coercedExperience.bind(null, MIN_EXPERIENCE),
   max_experience: coercedExperience.bind(null, MAX_EXPERIENCE),
 };

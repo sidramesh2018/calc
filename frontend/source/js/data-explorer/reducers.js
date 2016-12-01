@@ -48,6 +48,21 @@ function maxExperience(state = MAX_EXPERIENCE) {
   return state;
 }
 
+function site(state = '') {
+  // TODO: Create actions to change this.
+  return state;
+}
+
+function businessSize(state = '') {
+  // TODO: Create actions to change this.
+  return state;
+}
+
+function schedule(state = '') {
+  // TODO: Create actions to change this.
+  return state;
+}
+
 const combinedReducer = combineReducers({
   exclude,
   q,
@@ -55,6 +70,9 @@ const combinedReducer = combineReducers({
   min_experience: minExperience,
   max_experience: maxExperience,
   'contract-year': contractYear,
+  site,
+  business_size: businessSize,
+  schedule,
 });
 
 export default (state, action) => {

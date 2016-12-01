@@ -17,4 +17,33 @@ export const EDU_LABELS = {
   [EDU_PHD]: 'Ph.D',
 };
 
+export const BUSINESS_SIZE_LABELS = {
+  s: 'small business',
+  o: 'other than small',
+};
+
+export const SITE_LABELS = {
+  customer: 'customer',
+  contractor: 'contractor',
+  both: 'both',
+};
+
+export const SCHEDULE_LABELS = {
+  Consolidated: 'Consolidated',
+  FABS: '520 - Legacy FABS',
+  AIMS: '541 - Legacy AIMS',
+  'Language Services': '73802 - Legacy Language',
+  PES: '871 - Legacy PES',
+  MOBIS: '874 - Legacy MOBIS',
+  Logistics: '87405 - Legacy Logistics',
+  Environmental: '899 - Legacy Environmental',
+  'IT Schedule 70': '132 - IT 70',
+};
+
+export const CONTRACT_YEAR_LABELS = {
+  current: 'Current year',
+  1: 'One year out',
+  2: 'Two years out',
+};
+
 export const DEFAULT_CONTRACT_YEAR = 'current';
