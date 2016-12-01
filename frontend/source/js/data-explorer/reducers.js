@@ -4,12 +4,15 @@ import {
   MIN_EXPERIENCE,
   MAX_EXPERIENCE,
   DEFAULT_CONTRACT_YEAR,
+  EMPTY_RATES_DATA,
 } from './constants';
 
 import {
   EXCLUDE_NONE,
   EXCLUDE_ROW,
   SET_STATE,
+  COMPLETE_RATES_REQUEST,
+  START_RATES_REQUEST,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -63,6 +66,35 @@ function schedule(state = '') {
   return state;
 }
 
+function rates(state = {
+  error: null,
+  data: EMPTY_RATES_DATA,
+  inProgress: true,
+}, action) {
+  const normalizeData = d => {
+    if (d && d.results && d.results.length) {
+      return d;
+    }
+    return EMPTY_RATES_DATA;
+  };
+
+  switch (action.type) {
+    case START_RATES_REQUEST:
+      return Object.assign({}, state, {
+        inProgress: true,
+        error: null,
+      });
+    case COMPLETE_RATES_REQUEST:
+      return {
+        inProgress: false,
+        error: action.error,
+        data: normalizeData(action.data),
+      };
+    default:
+      return state;
+  }
+}
+
 const combinedReducer = combineReducers({
   exclude,
   q,
@@ -73,6 +105,7 @@ const combinedReducer = combineReducers({
   site,
   business_size: businessSize,
   schedule,
+  rates,
 });
 
 export default (state, action) => {

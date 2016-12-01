@@ -8,6 +8,7 @@ import { createStore, applyMiddleware } from 'redux';
 import {
   MAX_EXPERIENCE,
   HISTOGRAM_BINS,
+  EMPTY_RATES_DATA,
 } from './constants';
 
 import ga from '../common/ga';
@@ -27,6 +28,11 @@ import {
   updateSort,
   initializeTable,
 } from './table';
+
+import {
+  startRatesRequest,
+  completeRatesRequest,
+} from './actions';
 
 import appReducer from './reducers';
 
@@ -51,17 +57,6 @@ const inputs = search.selectAll('*[name]');
 const api = new hourglass.API();
 const loadingIndicator = search.select('.loading-indicator');
 const histogramDownloadLink = document.getElementById('download-histogram');
-const EMPTY_DATA = {
-  minimum: 0,
-  maximum: 0.001,
-  average: 0,
-  count: 0,
-  proposedPrice: 0,
-  results: [],
-  wage_histogram: [
-    { count: 0, min: 0, max: 0 },
-  ],
-};
 
 let request;
 let updateCounter = 0;
@@ -154,6 +149,8 @@ function update(error, res) {
 
   search.classed('loaded', true);
 
+  store.dispatch(completeRatesRequest(error, res));
+
   updateDescription(res);
   updateCounter++;
 
@@ -170,7 +167,7 @@ function update(error, res) {
     updatePriceHistogram(res);
     updateResults(store, form, res);
   } else {
-    res = EMPTY_DATA; // eslint-disable-line no-param-reassign
+    res = EMPTY_RATES_DATA; // eslint-disable-line no-param-reassign
     // updatePriceRange(EMPTY_DATA);
     updatePriceHistogram(res);
     updateResults(store, form, res);
@@ -200,6 +197,9 @@ function submit(pushState) {
   const defaults = {
     histogram: HISTOGRAM_BINS,
   };
+
+  store.dispatch(startRatesRequest());
+
   request = api.get({
     uri: 'rates/',
     data: hourglass.extend(defaults, data),

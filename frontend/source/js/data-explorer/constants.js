@@ -47,3 +47,15 @@ export const CONTRACT_YEAR_LABELS = {
 };
 
 export const DEFAULT_CONTRACT_YEAR = 'current';
+
+export const EMPTY_RATES_DATA = {
+  minimum: 0,
+  maximum: 0.001,
+  average: 0,
+  count: 0,
+  proposedPrice: 0,
+  results: [],
+  wage_histogram: [
+    { count: 0, min: 0, max: 0 },
+  ],
+};
