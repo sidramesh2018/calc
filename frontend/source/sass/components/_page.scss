@@ -23,12 +23,24 @@ main {
   background-color: $color-white;
   padding: $space-8x 0;
   margin-bottom: $space-half;
-  .card__content {
-    @include span-columns(6 of 8);
-    @include shift-in-context(1 of 8);
-  }
+
   &:last-child {
     border-bottom: $space-half solid $color-gray-light;
-    margin-bottom: $space-10x;
+  }
+}
+
+.card__content {
+  @include span-columns(6 of 8);
+  @include shift-in-context(1 of 8);
+}
+
+.card__footer {
+  @include span-columns(8);
+  @include shift(2);
+  padding: $space-half 0;
+  margin-bottom: $space-10x;
+  button.button-link {
+    font-size: $small-font-size;
+    padding: 0;
   }
 }
