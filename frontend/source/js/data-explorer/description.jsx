@@ -117,7 +117,7 @@ function Description({
   // if needed.
 
   return (
-    <p id="description" className="">
+    <p className="">
       {`Showing ${formatCommas(shownResults)} of `}
       <span className="total">{formatCommas(totalResults)}</span>
       {results}
