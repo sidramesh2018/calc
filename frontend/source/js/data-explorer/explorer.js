@@ -54,6 +54,7 @@ const store = createStore(
 const inputs = search.selectAll('*[name]');
 const api = new hourglass.API();
 const loadingIndicator = search.select('.loading-indicator');
+const histogramSvg = document.getElementById('price-histogram');
 const histogramDownloadLink = document.getElementById('download-histogram');
 
 let request;
@@ -81,7 +82,7 @@ function update(error, res) {
   store.dispatch(completeRatesRequest(error, res));
   res = store.getState().rates.data;  // eslint-disable-line no-param-reassign
 
-  updatePriceHistogram(res, store.getState()['proposed-price']);
+  updatePriceHistogram(histogramSvg, res, store.getState()['proposed-price']);
   updateResults(store, form, res);
 }
 
@@ -302,7 +303,7 @@ window.addEventListener('popstate', popstate);
 histogramDownloadLink.addEventListener('click', e => {
   e.preventDefault();
   histogramToImg(
-    document.getElementById('price-histogram'),
+    histogramSvg,
     document.getElementById('graph')
   );
 }, false);

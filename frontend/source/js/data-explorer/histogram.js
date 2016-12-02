@@ -6,11 +6,9 @@ import {
   formatPrice,
 } from './util';
 
-const PRICE_HISTOGRAM = '#price-histogram';
-
 let histogramUpdated = false;
 
-export default function updatePriceHistogram(data, proposedPrice) {
+export default function updatePriceHistogram(rootEl, data, proposedPrice) {
   const width = 720;
   const height = 300;
   const pad = [120, 15, 60, 60];
@@ -18,7 +16,7 @@ export default function updatePriceHistogram(data, proposedPrice) {
   const left = pad[3];
   const right = width - pad[1];
   const bottom = height - pad[2];
-  const svg = d3.select(PRICE_HISTOGRAM)
+  const svg = d3.select(rootEl)
     .attr('viewBox', [0, 0, width, height].join(' '))
     .attr('preserveAspectRatio', 'xMinYMid meet');
   const formatDollars = (n) => `$${formatPrice(n)}`;
