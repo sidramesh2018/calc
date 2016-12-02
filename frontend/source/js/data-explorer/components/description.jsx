@@ -8,9 +8,9 @@ import {
   SITE_LABELS,
   BUSINESS_SIZE_LABELS,
   SCHEDULE_LABELS,
-} from './constants';
+} from '../constants';
 
-import { formatCommas } from './util';
+import { formatCommas } from '../util';
 
 function Filter({
   extraClassName,

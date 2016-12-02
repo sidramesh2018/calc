@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import {
   formatPrice,
-} from './util';
+} from '../util';
 
 function Highlights({
   stdDeviation,

@@ -2,9 +2,9 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import RestoreExcluded from './restore-excluded';
-import Description from './description';
-import Highlights from './highlights';
+import RestoreExcluded from './components/restore-excluded';
+import Description from './components/description';
+import Highlights from './components/highlights';
 
 export default function init({
   store,
