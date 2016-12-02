@@ -3,26 +3,17 @@
 {% block body_class %}secondary-step{% endblock %}
 
 {% block subtitle %}Upload price list{% endblock %}
-
-{% block step_body %}
+{% block step_heading %}
   <h2>Upload awarded price list</h2>
 
   {% if gleaned_data %}
-    <p>You have already uploaded a price list. <a href="#upload">Upload a new one</a> if you'd like to replace it.</p>
-
-    {% if gleaned_data.valid_rows %}
-      <h3>Valid rows</h3>
-      {{ gleaned_data.to_table|safe }}
-    {% else %}
+    {% if not gleaned_data.valid_rows %}
       <div class="alert alert-error">
         <h3>No valid rows found!</h3>
         <p>Your uploaded price list contains no valid rows. Please fix the errors and try uploading again.</p>
       </div>
-    {% endif %}
-
-    {% if gleaned_data.invalid_rows %}
-      <h3>Invalid rows</h3>
-      {{ gleaned_data.to_error_table|safe }}
+    {% else %}
+      <p>You have already uploaded a price list. <a href="#upload">Upload a new one</a> if you'd like to replace it.</p>
     {% endif %}
   {% endif %}
 
@@ -32,7 +23,8 @@
     <h2 id="upload" tabindex="-1">Want to try that again?</h2>
     <p>Upload a new <strong>final</strong> awarded price list to replace the one you've already added.</p>
   {% endif %}
-
+{% endblock %}
+{% block step_body %}
   {% if upload_example %}
     <expandable-area>
       <p><strong>I don't know what to upload.</strong></p>
@@ -41,5 +33,10 @@
       </div>
     </expandable-area>
   {% endif %}
+
   {% include 'data_capture/price_list/upload_form.html' %}
+{% endblock %}
+{% block card_footer %}
+  <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
+</div>
 {% endblock %}
