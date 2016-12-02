@@ -160,7 +160,7 @@ function initialize() {
 
   popstate();
 
-  initializeAutocomplete(form, api, $('#labor_category'));
+  initializeAutocomplete(store, api, $('#labor_category'));
 }
 
 /*

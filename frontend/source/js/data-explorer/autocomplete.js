@@ -1,6 +1,6 @@
 import hourglass from '../common/hourglass';
 
-export default function initializeAutocomplete(form, api, $field) {
+export default function initializeAutocomplete(store, api, $field) {
   let autoCompReq;
   let searchTerms = '';
 
@@ -16,12 +16,11 @@ export default function initializeAutocomplete(form, api, $field) {
       const lastTerm = hourglass.getLastCommaSeparatedTerm(term);
 
       if (autoCompReq) { autoCompReq.abort(); }
-      const data = form.getData();
       autoCompReq = api.get({
         uri: 'search/',
         data: {
           q: lastTerm,
-          query_type: data.query_type,
+          query_type: store.getState().query_type,
         },
       }, (error, result) => {
         autoCompReq = null;
