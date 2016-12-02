@@ -3,14 +3,10 @@
 import {
   templatize,
   formatCommas,
+  formatPrice,
 } from './util';
 
 const PRICE_HISTOGRAM = '#price-histogram';
-const AVG_PRICE_HIGHLIGHT = '#avg-price-highlight';
-const STDDEV_MINUS_HIGHLIGHT = '#standard-deviation-minus-highlight';
-const STDDEV_PLUS_HIGHLIGHT = '#standard-deviation-plus-highlight';
-
-const formatPrice = d3.format(',.0f');
 
 let histogramUpdated = false;
 
@@ -26,8 +22,6 @@ export default function updatePriceHistogram(data, proposedPrice) {
     .attr('viewBox', [0, 0, width, height].join(' '))
     .attr('preserveAspectRatio', 'xMinYMid meet');
   const formatDollars = (n) => `$${formatPrice(n)}`;
-  let stdMinus;
-  let stdPlus;
 
   const extent = [data.minimum, data.maximum];
   const bins = data.wage_histogram;
@@ -39,20 +33,11 @@ export default function updatePriceHistogram(data, proposedPrice) {
       .domain([0].concat(countExtent))
       .range([0, 1, bottom - top]);
 
-  d3.select(AVG_PRICE_HIGHLIGHT)
-    .text(formatDollars(data.average));
-
   let stdDevMin = data.average - data.first_standard_deviation;
   let stdDevMax = data.average + data.first_standard_deviation;
 
   if (isNaN(stdDevMin)) stdDevMin = 0;
   if (isNaN(stdDevMax)) stdDevMax = 0;
-
-  d3.select(STDDEV_MINUS_HIGHLIGHT)
-    .text(formatDollars(stdDevMin));
-
-  d3.select(STDDEV_PLUS_HIGHLIGHT)
-    .text(formatDollars(stdDevMax));
 
   let stdDev = svg.select('.stddev');
   if (stdDev.empty()) {
@@ -89,28 +74,6 @@ export default function updatePriceHistogram(data, proposedPrice) {
     stdDevLabelsText.append('tspan')
       .attr('class', 'stddev-text-label');
   }
-
-  stdMinus = data.average - data.first_standard_deviation;
-  stdPlus = data.average + data.first_standard_deviation;
-
-  if (isNaN(stdMinus)) {
-    stdMinus = '$0';
-  } else {
-    stdMinus = formatDollars(stdMinus);
-  }
-  if (isNaN(stdPlus)) {
-    stdPlus = '$0';
-  } else {
-    stdPlus = formatDollars(stdPlus);
-  }
-
-
-  d3.select(STDDEV_MINUS_HIGHLIGHT)
-    .text(stdMinus);
-
-  d3.select(STDDEV_PLUS_HIGHLIGHT)
-    .text(stdPlus);
-
 
   let xAxis = svg.select('.axis.x');
   if (xAxis.empty()) {

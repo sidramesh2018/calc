@@ -81,17 +81,7 @@ function update(error, res) {
   store.dispatch(completeRatesRequest(error, res));
   res = store.getState().rates.data;  // eslint-disable-line no-param-reassign
 
-  let proposedPrice = 0;
-
-  if ($('.proposed-price input').val()) {
-    proposedPrice = $('.proposed-price input').val();
-    $('.proposed-price-highlight').html(`$${$('.proposed-price input').val()}`);
-    $('.proposed-price-block').fadeIn();
-  } else {
-    $('.proposed-price-block').fadeOut();
-  }
-
-  updatePriceHistogram(res, proposedPrice);
+  updatePriceHistogram(res, store.getState()['proposed-price']);
   updateResults(store, form, res);
 }
 
@@ -299,30 +289,6 @@ $('.proposed-price input').keypress((e) => {
   }
 });
 
-// trigger proposed button input
-$('.proposed-price button').click(() => {
-  if ($('.proposed-price input').val()) {
-    $('.proposed-price-highlight').html(`$${$('.proposed-price input').val()}`);
-
-    $('.proposed-price-block').fadeIn();
-  } else {
-    $('.proposed-price-block').fadeOut();
-  }
-});
-
-
-if (getUrlParameterByName('proposed-price').length) {
-  $('.proposed-price-highlight').html(`$${getUrlParameterByName('proposed-price')}`);
-  $('.proposed-price-block').show();
-}
-
-$(document).keypress((e) => {
-  // NOTE: JAS: Seems weird to apply this to the entire document
-  if (e.which === 13) {
-    $('.proposed-price button').trigger('click');
-  }
-});
-
 $('.two-decimal-places').keyup(function onKeyUp() {
   // regex checks if there are more than 2 numbers after decimal point
   if (!(/^\d+(\.{0,1}\d{0,2})?$/.test(this.value))) {
@@ -379,4 +345,5 @@ initReactApp({
   store,
   restoreExcludedRoot: $('#restore-excluded')[0],
   descriptionRoot: $('#description')[0],
+  highlightsRoot: $('#highlights')[0],
 });

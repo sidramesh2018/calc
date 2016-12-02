@@ -66,6 +66,11 @@ function schedule(state = '') {
   return state;
 }
 
+function proposedPrice(state = 0) {
+  // TODO: Create actions to change this.
+  return state;
+}
+
 function rates(state = {
   error: null,
   data: EMPTY_RATES_DATA,
@@ -106,6 +111,7 @@ const combinedReducer = combineReducers({
   business_size: businessSize,
   schedule,
   rates,
+  'proposed-price': proposedPrice,
 });
 
 export default (state, action) => {

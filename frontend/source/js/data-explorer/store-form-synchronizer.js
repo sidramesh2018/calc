@@ -11,6 +11,10 @@ import {
   DEFAULT_CONTRACT_YEAR,
 } from './constants';
 
+import {
+  parsePrice,
+} from './util';
+
 const coercedString = val => {
   if (val === undefined) {
     return '';
@@ -46,6 +50,7 @@ const serializers = {
   schedule: coercedString,
   min_experience: coercedString,
   max_experience: coercedString,
+  'proposed-price': coercedString,
 };
 
 const deserializers = {
@@ -65,6 +70,7 @@ const deserializers = {
   schedule: stringInSet(SCHEDULE_LABELS),
   min_experience: coercedExperience(MIN_EXPERIENCE),
   max_experience: coercedExperience(MAX_EXPERIENCE),
+  'proposed-price': parsePrice,
 };
 
 const fields = Object.keys(serializers);

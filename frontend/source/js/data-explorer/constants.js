@@ -52,6 +52,7 @@ export const EMPTY_RATES_DATA = {
   minimum: 0,
   maximum: 0.001,
   average: 0,
+  first_standard_deviation: 0,
   count: 0,
   results: [],
   wage_histogram: [

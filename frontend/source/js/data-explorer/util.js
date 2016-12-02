@@ -7,6 +7,7 @@ export const location = window.history.location || window.location;
 // same stuff.
 
 export const formatCommas = d3.format(',');
+export const formatPrice = d3.format(',.0f');
 
 export function getUrlParameterByName(name) {
   const cleanedName = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
@@ -61,4 +62,14 @@ export function isNumberOrPeriodKey(evt) {
     return false;
   }
   return true;
+}
+
+export function parsePrice(value, defaultValue = 0) {
+  let floatValue = parseFloat(value);
+
+  if (isNaN(floatValue) || floatValue < 0) {
+    floatValue = defaultValue;
+  }
+
+  return floatValue;
 }
