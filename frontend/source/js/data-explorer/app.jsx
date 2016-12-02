@@ -5,12 +5,14 @@ import { Provider } from 'react-redux';
 import RestoreExcluded from './components/restore-excluded';
 import Description from './components/description';
 import Highlights from './components/highlights';
+import Histogram from './components/histogram';
 
 export default function init({
   store,
   restoreExcludedRoot,
   descriptionRoot,
   highlightsRoot,
+  histogramRoot,
 }) {
   ReactDOM.render(
     <Provider store={store}>
@@ -31,5 +33,12 @@ export default function init({
       <Highlights />
     </Provider>,
     highlightsRoot
+  );
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <Histogram />
+    </Provider>,
+    histogramRoot
   );
 }

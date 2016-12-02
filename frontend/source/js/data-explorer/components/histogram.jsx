@@ -1,14 +1,97 @@
 /* global d3 */
 
+import React from 'react';
+import { connect } from 'react-redux';
+
 import {
   templatize,
   formatCommas,
   formatPrice,
-} from './util';
+} from '../util';
 
-let histogramUpdated = false;
+const INLINE_STYLES = `/* styles here for download graph compatibility */
 
-export default function updatePriceHistogram(rootEl, data, proposedPrice) {
+* {
+  vector-effect: non-scaling-stroke;
+}
+
+.stddev-rect {
+  position: absolute;;
+}
+
+.bars .bar rect {
+  fill: #0071bc;
+}
+
+.range-fill {
+  fill: #eeeeee;
+}
+
+.range-rule {
+  stroke: #5b616b;
+  fill: none;
+  stroke-dasharray: 5,5;
+  stroke-width: 1;
+}
+
+.label-rule {
+  stroke: #5b616b;
+}
+
+.stddev-text {
+  fill: #5b616b;
+}
+
+.axis .label {
+  fill: #5b616b;
+  font-style: italic;
+}
+
+.axis line,
+.axis path {
+  fill: none;
+  stroke-width: 1;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-size: 13px;
+}
+
+.stddev-text-label {
+  font-size: 12px;
+  fill: #5b616b;
+}
+
+.avg .value, .pp .value,
+.axis .tick.primary text {
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+.average, .proposed {
+  fill: #fff;
+}
+
+rect {
+  fill: #999;
+  stroke: #fff;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.avg-label-box, .pp-label-box {
+  fill: #212121;
+  stroke: none;
+}
+
+.avg line, .pp line {
+  stroke-width: 1;
+  stroke: #212121;
+}`;
+
+function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   const width = 720;
   const height = 300;
   const pad = [120, 15, 60, 60];
@@ -196,7 +279,7 @@ export default function updatePriceHistogram(rootEl, data, proposedPrice) {
       });
     });
 
-  const t = histogramUpdated
+  const t = showTransition
     ? svg.transition().duration(500)
     : svg;
 
@@ -299,6 +382,51 @@ export default function updatePriceHistogram(rootEl, data, proposedPrice) {
     .attr('transform', `translate(${[-25, (height / 2) + 25]}) rotate(-90)`)
     .attr('text-anchor', 'middle')
     .text('# of results');
-
-  histogramUpdated = true;
 }
+
+class Histogram extends React.Component {
+  updateHistogram(showTransition) {
+    updateHistogram(
+      this.svgEl,
+      this.props.ratesData,
+      this.props.proposedPrice,
+      showTransition
+    );
+  }
+
+  componentDidMount() {
+    this.updateHistogram(false);
+  }
+
+  componentDidUpdate() {
+    this.updateHistogram(true);
+  }
+
+  render() {
+    return (
+      <svg className="graph histogram has-data"
+           ref={ (svg) => { this.svgEl = svg; } }>
+        <title>Price histogram</title>
+        <desc>
+          A histogram showing the distribution of labor category prices.
+          Each bar represents a range within that distribution.
+        </desc>
+        <style>{INLINE_STYLES}</style>
+      </svg>
+    );
+  }
+}
+
+Histogram.propTypes = {
+  ratesData: React.PropTypes.object.isRequired,
+  proposedPrice: React.PropTypes.number.isRequired,
+};
+
+function mapStateToProps(state) {
+  return {
+    ratesData: state.rates.data,
+    proposedPrice: state['proposed-price'],
+  };
+}
+
+export default connect(mapStateToProps)(Histogram);

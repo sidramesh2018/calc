@@ -34,8 +34,6 @@ import {
 
 import appReducer from './reducers';
 
-import updatePriceHistogram from './histogram';
-
 import histogramToImg from './histogram-to-img';
 
 import initializeAutocomplete from './autocomplete';
@@ -54,7 +52,7 @@ const store = createStore(
 const inputs = search.selectAll('*[name]');
 const api = new hourglass.API();
 const loadingIndicator = search.select('.loading-indicator');
-const histogramSvg = document.getElementById('price-histogram');
+const histogramRoot = document.getElementById('price-histogram');
 const histogramDownloadLink = document.getElementById('download-histogram');
 
 let request;
@@ -82,7 +80,6 @@ function update(error, res) {
   store.dispatch(completeRatesRequest(error, res));
   res = store.getState().rates.data;  // eslint-disable-line no-param-reassign
 
-  updatePriceHistogram(histogramSvg, res, store.getState()['proposed-price']);
   updateResults(store, form, res);
 }
 
@@ -303,7 +300,10 @@ window.addEventListener('popstate', popstate);
 histogramDownloadLink.addEventListener('click', e => {
   e.preventDefault();
   histogramToImg(
-    histogramSvg,
+    // TODO: We're reaching into a React component here, which isn't
+    // a great idea. This should get cleaner once we make the download
+    // link a React component too.
+    $(histogramRoot).find('svg')[0],
     document.getElementById('graph')
   );
 }, false);
@@ -347,4 +347,5 @@ initReactApp({
   restoreExcludedRoot: $('#restore-excluded')[0],
   descriptionRoot: $('#description')[0],
   highlightsRoot: $('#highlights')[0],
+  histogramRoot,
 });
