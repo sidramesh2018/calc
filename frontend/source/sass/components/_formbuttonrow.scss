@@ -5,6 +5,9 @@
   margin-top: 4rem;
   text-align: right;
 
+  .button-previous {
+    float: left;
+  }
   button,
   button[type="submit"],
   .button {
@@ -27,7 +30,7 @@
     height: 38px;
     color: $color-gray-medium;
     margin-right: $space-2x;
-    max-width: 160px;
+    max-width: 110px;
     font-size: $small-font-size;
     line-height: $small-line-height;
   }
