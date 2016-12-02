@@ -335,10 +335,6 @@ search.select('input[type="reset"]')
    $('.slider').val([0, 45]);
  });
 
-inputs.on('change', () => {
-  submit(true);
-});
-
 initReactApp({
   store,
   restoreExcludedRoot: $('#restore-excluded')[0],
