@@ -9,11 +9,25 @@ import {
   SCHEDULE_LABELS,
   CONTRACT_YEAR_LABELS,
   DEFAULT_CONTRACT_YEAR,
+  DEFAULT_SORT,
 } from './constants';
 
 import {
   parsePrice,
 } from './util';
+
+const parseSort = val => {
+  if (!val) {
+    return DEFAULT_SORT;
+  }
+
+  // TODO: Ensure the key is valid.
+
+  if (val.charAt(0) === '-') {
+    return { key: val.substr(1), descending: true };
+  }
+  return { key: val, descending: false };
+};
 
 const coercedString = val => {
   if (val === undefined) {
@@ -51,6 +65,7 @@ const serializers = {
   min_experience: coercedString,
   max_experience: coercedString,
   'proposed-price': coercedString,
+  sort: ({ key, descending }) => (descending ? '-' : '') + key,
 };
 
 const deserializers = {
@@ -71,6 +86,7 @@ const deserializers = {
   min_experience: coercedExperience(MIN_EXPERIENCE),
   max_experience: coercedExperience(MAX_EXPERIENCE),
   'proposed-price': parsePrice,
+  sort: parseSort,
 };
 
 const fields = Object.keys(serializers);

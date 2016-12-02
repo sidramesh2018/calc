@@ -5,6 +5,7 @@ import {
   MAX_EXPERIENCE,
   DEFAULT_CONTRACT_YEAR,
   EMPTY_RATES_DATA,
+  DEFAULT_SORT,
 } from './constants';
 
 import {
@@ -13,6 +14,7 @@ import {
   SET_STATE,
   COMPLETE_RATES_REQUEST,
   START_RATES_REQUEST,
+  SET_SORT,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -100,6 +102,13 @@ function rates(state = {
   }
 }
 
+function sort(state = DEFAULT_SORT, action) {
+  if (action.type === SET_SORT) {
+    return { key: action.key, descending: action.descending };
+  }
+  return state;
+}
+
 const combinedReducer = combineReducers({
   exclude,
   q,
@@ -112,6 +121,7 @@ const combinedReducer = combineReducers({
   schedule,
   rates,
   'proposed-price': proposedPrice,
+  sort,
 });
 
 export default (state, action) => {

@@ -4,29 +4,11 @@ import {
   getFormat,
 } from './util';
 
-import { excludeRow } from './actions';
+import { excludeRow, setSort } from './actions';
 
 const getHeaders = table => table.selectAll('thead th');
 
-function parseSortOrder(order) {
-  if (!order) {
-    return { key: null, order: null };
-  }
-  const first = order.charAt(0);
-  const sort = { order: '' };
-  switch (first) {
-    case '-':
-      sort.order = first;
-      order = order.substr(1); // eslint-disable-line no-param-reassign
-      break;
-    default:
-      break;
-  }
-  sort.key = order;
-  return sort;
-}
-
-const updateResults = (resultsTable, store, form) => {
+const updateResults = (resultsTable, store) => {
   const results = store.getState().rates.data.results;
 
   resultsTable.style('display', null);
@@ -77,7 +59,7 @@ const updateResults = (resultsTable, store, form) => {
 
   td.exit().remove();
 
-  const sortKey = parseSortOrder(form.getData().sort).key;
+  const sortKey = store.getState().sort.key;
 
   const enter = td.enter()
       .append((d) => {
@@ -179,7 +161,7 @@ function updateSortOrder(resultsTable, key) {
     .classed('sorted', (c) => c.column.key === key);
 }
 
-function setupSortHeaders(table, form, submit, headers) {
+function setupSortHeaders(store, table, headers) {
   function setSortOrder(d, i) {
     headers.each((c, j) => {
       if (j !== i) {
@@ -193,12 +175,9 @@ function setupSortHeaders(table, form, submit, headers) {
     }
     d.sorted = true; // eslint-disable-line no-param-reassign
 
-    const sort = (d.descending ? '-' : '') + d.key;
-    form.set('sort', sort);
+    store.dispatch(setSort(d));
 
     updateSortOrder(table, d.key);
-
-    submit(true);
   }
 
   headers
@@ -211,7 +190,7 @@ function setupSortHeaders(table, form, submit, headers) {
     .on('click.sort', setSortOrder);
 }
 
-const setupColumnHeader = (table, form, submit) => headers => {
+const setupColumnHeader = (store, table) => headers => {
   headers
     .datum(function setupDatum() {
       return {
@@ -231,11 +210,11 @@ const setupColumnHeader = (table, form, submit) => headers => {
   //   .call(setupCollapsibleHeaders);
 
   headers.filter((d) => d.sortable)
-    .call(setupSortHeaders.bind(this, table, form, submit));
+    .call(setupSortHeaders.bind(this, store, table));
 };
 
-const updateSort = (table, unparsedSortData) => {
-  const sort = parseSortOrder(unparsedSortData);
+const updateSort = (store, table) => {
+  const sort = store.getState().sort;
   const sortable = (d) => d.sortable;
   getHeaders(table)
     .filter(sortable)
@@ -243,7 +222,7 @@ const updateSort = (table, unparsedSortData) => {
       d.sorted = (d.key === sort.key); // eslint-disable-line no-param-reassign
     })
     .classed('descending', (d) => {
-      d.descending = (d.sorted && sort.order === '-'); // eslint-disable-line no-param-reassign
+      d.descending = (d.sorted && sort.descending); // eslint-disable-line no-param-reassign
     });
 
   updateSortOrder(table, sort.key);
@@ -252,17 +231,13 @@ const updateSort = (table, unparsedSortData) => {
 export default function createTable(root) {
   const table = d3.select(root).style('display', 'none');
   let store;
-  let form;
-  let submit;
 
   return {
-    updateSort: sort => updateSort(table, sort),
-    initialize: (newStore, newForm, newSubmit) => {
+    updateSort: () => updateSort(store, table),
+    initialize: (newStore) => {
       store = newStore;
-      form = newForm;
-      submit = newSubmit;
-      getHeaders(table).call(setupColumnHeader(table, form, submit));
+      getHeaders(table).call(setupColumnHeader(store, table));
     },
-    updateResults: () => updateResults(table, store, form),
+    updateResults: () => updateResults(table, store),
   };
 }

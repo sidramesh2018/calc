@@ -83,6 +83,8 @@ function update(error, res) {
 function submit(pushState) {
   synchronizer.reflectToStore(store);
 
+  table.updateSort();
+
   let data = form.getData();
 
   data = arrayToCSV(data);
@@ -150,13 +152,11 @@ function popstate() {
     submit(true);
   });
 
-  table.updateSort(data.sort);
-
   submit(false);
 }
 
 function initialize() {
-  table.initialize(store, form, submit);
+  table.initialize(store);
 
   popstate();
 

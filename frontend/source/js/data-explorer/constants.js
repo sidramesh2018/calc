@@ -59,3 +59,5 @@ export const EMPTY_RATES_DATA = {
     { count: 0, min: 0, max: 0 },
   ],
 };
+
+export const DEFAULT_SORT = { key: 'current_price', descending: false };
