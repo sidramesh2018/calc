@@ -21,11 +21,7 @@ import {
   isNumberOrPeriodKey,
 } from './util';
 
-import {
-  updateResults,
-  updateSort,
-  initializeTable,
-} from './table';
+import createTable from './table';
 
 import {
   startRatesRequest,
@@ -54,6 +50,7 @@ const api = new hourglass.API();
 const loadingIndicator = search.select('.loading-indicator');
 const histogramRoot = document.getElementById('price-histogram');
 const histogramDownloadLink = document.getElementById('download-histogram');
+const table = createTable('#results-table');
 
 let request;
 
@@ -80,7 +77,7 @@ function update(error, res) {
   store.dispatch(completeRatesRequest(error, res));
   res = store.getState().rates.data;  // eslint-disable-line no-param-reassign
 
-  updateResults(store, form, res);
+  table.updateResults();
 }
 
 function submit(pushState) {
@@ -153,13 +150,13 @@ function popstate() {
     submit(true);
   });
 
-  updateSort(data.sort);
+  table.updateSort(data.sort);
 
   submit(false);
 }
 
 function initialize() {
-  initializeTable(form, submit);
+  table.initialize(store, form, submit);
 
   popstate();
 
