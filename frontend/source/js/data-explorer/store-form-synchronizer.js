@@ -10,6 +10,8 @@ import {
   CONTRACT_YEAR_LABELS,
   DEFAULT_CONTRACT_YEAR,
   DEFAULT_SORT,
+  DEFAULT_QUERY_TYPE,
+  QUERY_TYPE_LABELS,
 } from './constants';
 
 import {
@@ -66,6 +68,7 @@ const serializers = {
   max_experience: coercedString,
   'proposed-price': coercedString,
   sort: ({ key, descending }) => (descending ? '-' : '') + key,
+  query_type: coercedString,
 };
 
 const deserializers = {
@@ -87,6 +90,7 @@ const deserializers = {
   max_experience: coercedExperience(MAX_EXPERIENCE),
   'proposed-price': parsePrice,
   sort: parseSort,
+  query_type: stringInSet(QUERY_TYPE_LABELS, DEFAULT_QUERY_TYPE),
 };
 
 const fields = Object.keys(serializers);

@@ -6,6 +6,7 @@ import {
   DEFAULT_CONTRACT_YEAR,
   EMPTY_RATES_DATA,
   DEFAULT_SORT,
+  DEFAULT_QUERY_TYPE,
 } from './constants';
 
 import {
@@ -109,6 +110,11 @@ function sort(state = DEFAULT_SORT, action) {
   return state;
 }
 
+function queryType(state = DEFAULT_QUERY_TYPE) {
+  // TODO: Create actions to change this.
+  return state;
+}
+
 const combinedReducer = combineReducers({
   exclude,
   q,
@@ -122,6 +128,7 @@ const combinedReducer = combineReducers({
   rates,
   'proposed-price': proposedPrice,
   sort,
+  query_type: queryType,
 });
 
 export default (state, action) => {
