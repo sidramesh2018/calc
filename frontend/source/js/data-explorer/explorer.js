@@ -332,7 +332,7 @@ search.select('input[type="reset"]')
    if ($('.multiSelect input:checked').length) {
      $('.multiSelect input:checked').attr('checked', false);
    }
-   $('.slider').val([0, 45]);
+   $('.slider').val([0, MAX_EXPERIENCE]);
  });
 
 initReactApp({
