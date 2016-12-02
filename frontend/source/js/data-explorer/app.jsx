@@ -6,6 +6,7 @@ import RestoreExcluded from './components/restore-excluded';
 import Description from './components/description';
 import Highlights from './components/highlights';
 import Histogram from './components/histogram';
+import ProposedPrice from './components/proposed-price';
 
 export default function init({
   store,
@@ -13,6 +14,7 @@ export default function init({
   descriptionRoot,
   highlightsRoot,
   histogramRoot,
+  proposedPriceRoot,
 }) {
   ReactDOM.render(
     <Provider store={store}>
@@ -40,5 +42,12 @@ export default function init({
       <Histogram />
     </Provider>,
     histogramRoot
+  );
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <ProposedPrice />
+    </Provider>,
+    proposedPriceRoot
   );
 }

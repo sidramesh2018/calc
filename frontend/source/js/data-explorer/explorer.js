@@ -3,6 +3,20 @@
 
 // wNumb is from nouislider
 
+/**
+ * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+ *
+ * At this point one of our form fields is being managed entirely
+ * by React/Redux, but the legacy formdb code is also trying to
+ * manage it, which results in permalinks involving this field
+ * not working properly. We can figure out a temporary
+ * way to fix this until the migration is complete, or we can just
+ * let the problem linger until we've migrated everything else, at
+ * which point it might be easier to solve.
+ *
+ * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+ */
+
 import { createStore, applyMiddleware } from 'redux';
 
 import {
@@ -18,7 +32,6 @@ import {
   location,
   getUrlParameterByName,
   arrayToCSV,
-  isNumberOrPeriodKey,
 } from './util';
 
 import createTable from './table';
@@ -277,21 +290,6 @@ if (getUrlParameterByName('max_experience').length) {
     getUrlParameterByName('max_experience')]);
 }
 
-// restrict proposed price input to be numeric only
-$('.proposed-price input').keypress((e) => {
-  if (!isNumberOrPeriodKey(e)) {
-    e.preventDefault();
-  }
-});
-
-$('.two-decimal-places').keyup(function onKeyUp() {
-  // regex checks if there are more than 2 numbers after decimal point
-  if (!(/^\d+(\.{0,1}\d{0,2})?$/.test(this.value))) {
-    // cut off and prevent user from inputting more than 2 numbers after decimal place
-    this.value = this.value.substring(0, this.value.length - 1);
-  }
-});
-
 window.addEventListener('popstate', popstate);
 
 histogramDownloadLink.addEventListener('click', e => {
@@ -341,4 +339,5 @@ initReactApp({
   descriptionRoot: $('#description')[0],
   highlightsRoot: $('#highlights')[0],
   histogramRoot,
+  proposedPriceRoot: $('#proposed-price')[0],
 });

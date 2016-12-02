@@ -16,6 +16,7 @@ import {
   COMPLETE_RATES_REQUEST,
   START_RATES_REQUEST,
   SET_SORT,
+  SET_PROPOSED_PRICE,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -69,8 +70,10 @@ function schedule(state = '') {
   return state;
 }
 
-function proposedPrice(state = 0) {
-  // TODO: Create actions to change this.
+function proposedPrice(state = 0, action) {
+  if (action.type === SET_PROPOSED_PRICE) {
+    return action.price;
+  }
   return state;
 }
 

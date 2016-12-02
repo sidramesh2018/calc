@@ -199,6 +199,9 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     pp.append('line');
   }
 
+  // TODO: Format the proposed price so that if it has cents, it
+  // always shows two digits of them, e.g. '$25.10' not '$25.1'.
+
   // widen proposed price rect if more than 3 digits long
   if (proposedPrice.toString().replace('.', '').length > 3) {
     pp.select('rect').attr('width', 130);

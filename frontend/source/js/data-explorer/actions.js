@@ -4,6 +4,7 @@ export const SET_STATE = 'SET_STATE';
 export const START_RATES_REQUEST = 'START_RATES_REQUEST';
 export const COMPLETE_RATES_REQUEST = 'COMPLETE_RATES_REQUEST';
 export const SET_SORT = 'SET_SORT';
+export const SET_PROPOSED_PRICE = 'SET_PROPOSED_PRICE';
 
 export function excludeRow(rowId) {
   return { type: EXCLUDE_ROW, rowId };
@@ -35,4 +36,8 @@ export function setSort({ key, descending }) {
     key,
     descending,
   };
+}
+
+export function setProposedPrice(price) {
+  return { type: SET_PROPOSED_PRICE, price };
 }
