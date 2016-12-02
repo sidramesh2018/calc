@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.css" rel="stylesheet" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.4.0/d3.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.js"></script>
+</head>
+<body>
+
+<form action="/calc_kpi/percentage_compare" method="post">
+	{% csrf_token %}
+	<label for="hourly_rate">Please enter an hourly rate for this contractor</label>
+	<input id="hourly_rate" type="text" name="hourly_rate" value="32.75">
+	
+	<label for="total_hours">Please enter the total number of expected hours this contract will be for</label>
+	<input id="total_hours" type="text" name="total_hours" value="2000">
+
+	<label for="labor_category">Please enter a labor category for this contractor</label>
+	<input id="labor_category" type="text" name="labor_category" value="Analyst 1">
+	
+	<input type="submit" value="OK">
+</form>
+
+{% if result %}
+
+<div id="chart"></div>
+
+<p> For the hourly rate of ${{hourly_rate}}, and the labor category of {{labor_category}}, {{percentage}}% of contracts were higher than this one.</p>
+<p> You saved an average of ${{average_savings}} per hour compared to contracts that paid more than this one.</p>
+
+<p> Assuming that the other contracts were for the same number of total hours, as this contract, when this rate was compared with contracts that were more expensive to this one, this contract is ${{average_total_cost_savings}} (average savings * total hours of this contract ) less on average in total cost.</p>
+
+<p> Assuming the hours you entered for this contract, this contract will cost in total ${{total_cost_for_this_contract}} (hourly rate * number of hours)</p>
+
+<script>
+
+var date_range = JSON.parse({{dates}});
+var chart = c3.generate({
+	bindto: "#chart",
+	data: {
+		x: 'x'
+		columns: [
+
+		]
+	}
+});
+{% endif %}
+</body>
+</html>
