@@ -236,6 +236,7 @@ export default function createTable(root) {
     updateSort: () => updateSort(store, table),
     initialize: (newStore) => {
       store = newStore;
+      $(root).find('.tooltip').tooltipster();
       getHeaders(table).call(setupColumnHeader(store, table));
     },
     updateResults: () => updateResults(table, store),

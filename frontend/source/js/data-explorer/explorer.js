@@ -187,7 +187,7 @@ $.fn.tooltipster('setDefaults', {
 });
 
 // initialize tooltipster.js
-$('.tooltip').tooltipster({
+$('.filter.contract-year .tooltip').tooltipster({
   functionInit() {
     return $(this).attr('aria-label');
   },
