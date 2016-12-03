@@ -31,7 +31,6 @@ import hourglass from '../common/hourglass';
 import {
   location,
   getUrlParameterByName,
-  arrayToCSV,
 } from './util';
 
 import createTable from './table';
@@ -98,9 +97,7 @@ function submit(pushState) {
 
   table.updateSort();
 
-  let data = form.getData();
-
-  data = arrayToCSV(data);
+  const data = synchronizer.getRatesParameters(store);
 
   inputs
     .filter(function filter() {
@@ -110,8 +107,6 @@ function submit(pushState) {
       return !!this.value;
     });
 
-  data.experience_range = `${$('#min_experience').val()},${$('#max_experience').val()}`;
-
   search.classed('loaded', false);
   search.classed('loading', true);
 
@@ -119,6 +114,7 @@ function submit(pushState) {
   if (request) request.abort();
   const defaults = {
     histogram: HISTOGRAM_BINS,
+    experience_range: `${data.min_experience},${data.max_experience}`,
   };
 
   store.dispatch(startRatesRequest());

@@ -17,18 +17,6 @@ export function getUrlParameterByName(name) {
     : decodeURIComponent(results[1].replace(/\+/g, ' ')).replace(/[<>]/g, '');
 }
 
-export function arrayToCSV(data) {
-  // turns any array input data into a comma separated string
-  // in use for the education filter
-  Object.keys(data).forEach((k) => {
-    if (Array.isArray(data[k])) {
-      data[k] = data[k].join(','); // eslint-disable-line no-param-reassign
-    }
-  });
-
-  return data;
-}
-
 export function templatize(str, undef) {
   const undefFunc = d3.functor(undef);
   return (d) => str.replace(/{(\w+)}/g, (_, key) => d[key] || undefFunc.call(d, key));

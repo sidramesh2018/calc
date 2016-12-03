@@ -95,6 +95,10 @@ const deserializers = {
 
 const fields = Object.keys(serializers);
 
+const nonRatesFields = ['proposed-price', 'contract-year'];
+
+const ratesFields = fields.filter(f => nonRatesFields.indexOf(f) === -1);
+
 export default class StoreFormSynchronizer {
   constructor(form) {
     this.form = form;
@@ -151,5 +155,20 @@ export default class StoreFormSynchronizer {
     if (Object.keys(changes).length) {
       store.dispatch(setState(Object.assign({}, state, changes)));
     }
+  }
+
+  getRatesParameters(store) {
+    const state = store.getState();
+    const result = {};
+
+    ratesFields.forEach(field => {
+      const val = serializers[field](state[field]);
+
+      if (val.length) {
+        result[field] = val;
+      }
+    });
+
+    return result;
   }
 }
