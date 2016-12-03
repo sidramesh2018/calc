@@ -6,13 +6,9 @@
 /**
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
  *
- * At this point one of our form fields is being managed entirely
- * by React/Redux, but the legacy formdb code is also trying to
- * manage it, which results in permalinks involving this field
- * not working properly. We can figure out a temporary
- * way to fix this until the migration is complete, or we can just
- * let the problem linger until we've migrated everything else, at
- * which point it might be easier to solve.
+ * pushstate/popstate support is currently disabled, as well as
+ * permalinks (i.e. storing the current app parameters in the
+ * querystring).  Need to bring these back ASAP!
  *
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
  */
@@ -24,14 +20,16 @@ import {
   HISTOGRAM_BINS,
 } from './constants';
 
-import ga from '../common/ga';
+// import ga from '../common/ga';
 
 import hourglass from '../common/hourglass';
 
+/*
 import {
   location,
   getUrlParameterByName,
 } from './util';
+*/
 
 import createTable from './table';
 
@@ -46,16 +44,26 @@ import histogramToImg from './histogram-to-img';
 
 import initializeAutocomplete from './autocomplete';
 
-import StoreFormSynchronizer from './store-form-synchronizer';
+import {
+  StoreFormSynchronizer,
+  StoreRatesAutoRequester,
+  StoreStateFieldWatcher,
+} from './store-form-synchronizer';
 
 import initReactApp from './app';
 
 const search = d3.select('#search');
 const form = new formdb.Form(search.node());
-const synchronizer = new StoreFormSynchronizer(form);
+const formSynchronizer = new StoreFormSynchronizer(form);
+const ratesRequester = new StoreRatesAutoRequester();
+const storeWatcher = new StoreStateFieldWatcher();
 const store = createStore(
   appReducer,
-  applyMiddleware(synchronizer.reflectToFormMiddleware)
+  applyMiddleware(
+    formSynchronizer.reflectToFormMiddleware,
+    ratesRequester.middleware,
+    storeWatcher.middleware
+  )
 );
 const inputs = search.selectAll('*[name]');
 const api = new hourglass.API();
@@ -92,12 +100,14 @@ function update(error, res) {
   table.updateResults();
 }
 
-function submit(pushState) {
-  synchronizer.reflectToStore(store);
+storeWatcher.watch('contract-year', () => {
+  table.updateResults();
+});
 
+function submit() {
   table.updateSort();
 
-  const data = synchronizer.getRatesParameters(store);
+  const data = ratesRequester.getRatesParameters(store);
 
   inputs
     .filter(function filter() {
@@ -133,6 +143,7 @@ function submit(pushState) {
       ].join('?');
     });
 
+/*
   if (pushState) {
     const href = `?${hourglass.qs.format(data)}`;
     const didSearchChange = window.location.search !== href;
@@ -145,10 +156,10 @@ function submit(pushState) {
       ga('send', 'pageview');
     }
   }
+*/
 }
 
-synchronizer.setSubmitForm(submit);
-
+/*
 function popstate() {
   // read the query string and set values accordingly
   const data = hourglass.extend(
@@ -163,13 +174,22 @@ function popstate() {
 
   submit(false);
 }
+*/
 
 function initialize() {
   table.initialize(store);
 
-  popstate();
+//  popstate();
 
   initializeAutocomplete(store, api, $('#labor_category'));
+
+  inputs.on('change', () => {
+    formSynchronizer.reflectToStore(store);
+  });
+
+  ratesRequester.initialize(store, () => {
+    submit();
+  });
 }
 
 /*
@@ -230,6 +250,7 @@ $('.multiSelect input[type="checkbox"]').on('click', function onClick() {
   }
 });
 
+/*
 if (getUrlParameterByName('education').length) {
   const parameters = getUrlParameterByName('education').split(',');
 
@@ -244,6 +265,7 @@ if (getUrlParameterByName('education').length) {
     $('.multiSel').append(`<span title="${title}">${title}</span>`);
   });
 }
+*/
 
 $('.slider').noUiSlider({
   start: [0, MAX_EXPERIENCE],
@@ -269,7 +291,7 @@ $('.slider').on({
   set() {
     $('.noUi-horizontal .noUi-handle').removeClass('filter_focus');
 
-    submit(true);
+    formSynchronizer.reflectToStore(store);
 
     if ($('#min_experience').val() === '0' && $('#max_experience').val() === `${MAX_EXPERIENCE}`) {
       $('#min_experience, #max_experience').removeClass('filter_active');
@@ -280,13 +302,15 @@ $('.slider').on({
 // on load remove active class on experience slider
 $('#min_experience, #max_experience').removeClass('filter_active');
 
+/*
 // load experience range if query string exists
 if (getUrlParameterByName('max_experience').length) {
   $('.slider').val([getUrlParameterByName('min_experience'),
     getUrlParameterByName('max_experience')]);
 }
+*/
 
-window.addEventListener('popstate', popstate);
+// window.addEventListener('popstate', popstate);
 
 histogramDownloadLink.addEventListener('click', e => {
   e.preventDefault();
@@ -301,7 +325,7 @@ histogramDownloadLink.addEventListener('click', e => {
 
 form.on('submit', (data, e) => {
   e.preventDefault();
-  submit(true);
+  formSynchronizer.reflectToStore(store);
 });
 
 /*
@@ -318,7 +342,6 @@ search.select('input[type="reset"]')
    search.selectAll('input[type="hidden"]')
      .property('value', '');
 
-   submit(true);
    d3.event.preventDefault();
 
    $('.multiSel').empty();
@@ -327,6 +350,8 @@ search.select('input[type="reset"]')
      $('.multiSelect input:checked').attr('checked', false);
    }
    $('.slider').val([0, MAX_EXPERIENCE]);
+
+   formSynchronizer.reflectToStore(store);
  });
 
 initReactApp({

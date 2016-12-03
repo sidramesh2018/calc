@@ -99,25 +99,103 @@ const nonRatesFields = ['proposed-price', 'contract-year'];
 
 const ratesFields = fields.filter(f => nonRatesFields.indexOf(f) === -1);
 
-export default class StoreFormSynchronizer {
+function autobind(self, names) {
+  const target = self;
+
+  names.forEach(name => {
+    target[name] = target[name].bind(target);
+  });
+}
+
+export function StoreStateFieldWatcher() {
+  const watchers = [];
+
+  return {
+    watch(name, cb) {
+      watchers.push([name, cb]);
+    },
+
+    middleware(store) {
+      return next => action => {
+        const oldState = store.getState();
+        const result = next(action);
+        const newState = store.getState();
+
+        watchers.forEach(([name, cb]) => {
+          if (oldState[name] !== newState[name]) {
+            cb();
+          }
+        });
+
+        return result;
+      };
+    },
+  };
+}
+
+export class StoreRatesAutoRequester {
+  constructor() {
+    autobind(this, ['middleware']);
+  }
+
+  initialize(store, onRatesRequest) {
+    Object.assign(this, {
+      onRatesRequest,
+    });
+
+    // TODO: We should make a separate action for loading rates
+    // if invalid or something.
+    store.dispatch(setState(Object.assign(store.getState())));
+  }
+
+  getRatesParameters(store) {
+    const state = store.getState();
+    const result = {};
+
+    ratesFields.forEach(field => {
+      const val = serializers[field](state[field]);
+
+      if (val.length) {
+        result[field] = val;
+      }
+    });
+
+    return result;
+  }
+
+  middleware(store) {
+    return next => action => {
+      const oldState = store.getState();
+      const result = next(action);
+      const newState = store.getState();
+      const updated = ratesFields.some(
+        field => newState[field] !== oldState[field]
+      );
+
+      if (updated || newState.rates.stale) {
+        this.onRatesRequest(store);
+      }
+
+      return result;
+    };
+  }
+}
+
+export class StoreFormSynchronizer {
   constructor(form) {
     this.form = form;
-    this.reflectToFormMiddleware = this.reflectToFormMiddleware.bind(this);
+
+    autobind(this, ['reflectToFormMiddleware']);
 
     const nonReactFields = form.getInputs().map(e => e.getAttribute('name'));
 
     this.fields = fields.filter(f => nonReactFields.indexOf(f) >= 0);
   }
 
-  setSubmitForm(submit) {
-    this.submit = submit;
-  }
-
   reflectToFormMiddleware(store) {
     return next => action => {
       const result = next(action);
       const state = store.getState();
-      let changed = false;
 
       // TODO: Remove this logging line eventually.
       console.log(state);  // eslint-disable-line
@@ -130,13 +208,8 @@ export default class StoreFormSynchronizer {
 
         if (oldVal !== newVal) {
           this.form.set(field, newVal);
-          changed = true;
         }
       });
-
-      if (changed) {
-        this.submit(true);
-      }
 
       return result;
     };
@@ -159,20 +232,5 @@ export default class StoreFormSynchronizer {
     if (Object.keys(changes).length) {
       store.dispatch(setState(Object.assign({}, state, changes)));
     }
-  }
-
-  getRatesParameters(store) {
-    const state = store.getState();
-    const result = {};
-
-    ratesFields.forEach(field => {
-      const val = serializers[field](state[field]);
-
-      if (val.length) {
-        result[field] = val;
-      }
-    });
-
-    return result;
   }
 }

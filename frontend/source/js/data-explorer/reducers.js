@@ -81,6 +81,7 @@ function rates(state = {
   error: null,
   data: EMPTY_RATES_DATA,
   inProgress: true,
+  stale: true,
 }, action) {
   const normalizeData = d => {
     if (d && d.results && d.results.length) {
@@ -94,12 +95,14 @@ function rates(state = {
       return Object.assign({}, state, {
         inProgress: true,
         error: null,
+        stale: false,
       });
     case COMPLETE_RATES_REQUEST:
       return {
         inProgress: false,
         error: action.error,
         data: normalizeData(action.data),
+        stale: false,
       };
     default:
       return state;
