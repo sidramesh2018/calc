@@ -103,6 +103,10 @@ export default class StoreFormSynchronizer {
   constructor(form) {
     this.form = form;
     this.reflectToFormMiddleware = this.reflectToFormMiddleware.bind(this);
+
+    const nonReactFields = form.getInputs().map(e => e.getAttribute('name'));
+
+    this.fields = fields.filter(f => nonReactFields.indexOf(f) >= 0);
   }
 
   setSubmitForm(submit) {
@@ -118,7 +122,7 @@ export default class StoreFormSynchronizer {
       // TODO: Remove this logging line eventually.
       console.log(state);  // eslint-disable-line
 
-      fields.forEach(field => {
+      this.fields.forEach(field => {
         const oldVal = serializers[field](
           deserializers[field](this.form.get(field))
         );
@@ -142,7 +146,7 @@ export default class StoreFormSynchronizer {
     const state = store.getState();
     const changes = {};
 
-    fields.forEach(field => {
+    this.fields.forEach(field => {
       const oldVal = serializers[field](state[field]);
       const newSerializedVal = deserializers[field](this.form.get(field));
       const newVal = serializers[field](newSerializedVal);
