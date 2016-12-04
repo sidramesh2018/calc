@@ -95,7 +95,6 @@ function update(error, res) {
   search.classed('loaded', true);
 
   store.dispatch(completeRatesRequest(error, res));
-  res = store.getState().rates.data;  // eslint-disable-line no-param-reassign
 
   table.updateResults();
 }
