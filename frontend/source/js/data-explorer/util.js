@@ -9,6 +9,14 @@ export const location = window.history.location || window.location;
 export const formatCommas = d3.format(',');
 export const formatPrice = d3.format(',.0f');
 
+export function autobind(self, names) {
+  const target = self;
+
+  names.forEach(name => {
+    target[name] = target[name].bind(target);
+  });
+}
+
 export function templatize(str, undef) {
   const undefFunc = d3.functor(undef);
   return (d) => str.replace(/{(\w+)}/g, (_, key) => d[key] || undefFunc.call(d, key));

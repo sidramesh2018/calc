@@ -17,6 +17,7 @@ import {
   START_RATES_REQUEST,
   SET_SORT,
   SET_PROPOSED_PRICE,
+  TOGGLE_EDU_LEVEL,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -40,8 +41,13 @@ function q(state = '') {
   return state;
 }
 
-function education(state = []) {
-  // TODO: Create actions to change this.
+function education(state = [], action) {
+  if (action.type === TOGGLE_EDU_LEVEL) {
+    if (state.indexOf(action.level) === -1) {
+      return state.concat(action.level);
+    }
+    return state.filter(lvl => lvl !== action.level);
+  }
   return state;
 }
 

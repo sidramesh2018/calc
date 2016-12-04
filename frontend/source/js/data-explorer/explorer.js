@@ -9,8 +9,6 @@
  * Rudimentary pushstate/popstate support is implemented, but lots
  * of stuff still needs to be fixed:
  *
- *   * Education checkboxes aren't updated properly if multiple
- *     checkboxes are checked.
  *   * `.filter_active` on inputs needs to update properly.
  *   * We should probably remove hourglass.qs.parse and
  *     hourglass.qs.format.
@@ -25,7 +23,6 @@ import {
   MIN_EXPERIENCE,
   MAX_EXPERIENCE,
   HISTOGRAM_BINS,
-  EDU_LABELS,
 } from './constants';
 
 import hourglass from '../common/hourglass';
@@ -182,47 +179,6 @@ $('.filter.contract-year .tooltip').tooltipster({
   },
 });
 
-/*
-  Dropdown with Multiple checkbox select with jQuery - May 27, 2013
-  (c) 2013 @ElmahdiMahmoud
-  license: http://www.opensource.org/licenses/mit-license.php
-  // many edits by xtine
-*/
-$('.dropdown dt a').on('click', (e) => {
-  $('.dropdown dd ul').slideToggle('fast');
-
-  e.preventDefault();
-});
-
-$('.dropdown dd ul li a').on('click', (e) => {
-  $('.dropdown dd ul').hide();
-
-  e.preventDefault();
-});
-
-// Whenever users click outside of our dropdown, hide it.
-$(document).bind('click', (e) => {
-  const $clicked = $(e.target);
-  if (!$clicked.parents().hasClass('dropdown')) $('.dropdown dd ul').hide();
-});
-
-storeWatcher.watch('education', () => {
-  const education = store.getState().education;
-  const instructions = $('.eduSelect');
-  const filterList = $('.multiSel');
-
-  instructions.toggle(education.length === 0);
-  filterList.empty();
-
-  education.forEach(ed => {
-    const item = $('<span></span>');
-    const label = EDU_LABELS[ed];
-    item.attr('title', label);
-    item.text(label);
-    filterList.append(item);
-  });
-});
-
 $('.slider').noUiSlider({
   start: [
     store.getState().min_experience,
@@ -303,4 +259,5 @@ initReactApp({
   highlightsRoot: $('#highlights')[0],
   histogramRoot,
   proposedPriceRoot: $('#proposed-price')[0],
+  educationLevelRoot: $('#education-level')[0],
 });

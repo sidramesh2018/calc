@@ -15,6 +15,7 @@ import {
 } from './constants';
 
 import {
+  autobind,
   parsePrice,
 } from './util';
 
@@ -128,14 +129,6 @@ function getChangedSerializedFields(oldState, newState, fields) {
   });
 
   return result;
-}
-
-function autobind(self, names) {
-  const target = self;
-
-  names.forEach(name => {
-    target[name] = target[name].bind(target);
-  });
 }
 
 // http://stackoverflow.com/a/13419367
