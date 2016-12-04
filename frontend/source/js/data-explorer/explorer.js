@@ -12,14 +12,8 @@
  *   * Education checkboxes aren't updated properly if multiple
  *     checkboxes are checked.
  *   * `.filter_active` on inputs needs to update properly.
- *   * GA needs to be notified on navigation, e.g.:
- *
- *       import ga from '../common/ga';
- *       ga('set', 'page', window.location.pathname +
- *                         window.location.search);
- *       ga('send', 'pageview');
- *
- *   * We should probably remove hourglass.qs.parse.
+ *   * We should probably remove hourglass.qs.parse and
+ *     hourglass.qs.format.
  *   * Make sure this works on IE11, at least.
  *
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
@@ -35,6 +29,8 @@ import {
 } from './constants';
 
 import hourglass from '../common/hourglass';
+
+import ga from '../common/ga';
 
 import createTable from './table';
 
@@ -116,7 +112,10 @@ storeWatcher.watch('contract-year', () => {
 function submit() {
   table.updateSort();
 
-  const data = ratesRequester.getRatesParameters(store);
+  let data = ratesRequester.getRatesParameters(store);
+  data = Object.assign(data, {
+    experience_range: `${data.min_experience},${data.max_experience}`,
+  });
 
   inputs
     .filter(function filter() {
@@ -133,7 +132,6 @@ function submit() {
   if (request) request.abort();
   const defaults = {
     histogram: HISTOGRAM_BINS,
-    experience_range: `${data.min_experience},${data.max_experience}`,
   };
 
   store.dispatch(startRatesRequest());
@@ -162,7 +160,11 @@ function initialize() {
     formSynchronizer.reflectToStore(store);
   });
 
-  historySynchronizer.initialize(store);
+  historySynchronizer.initialize(store, () => {
+    ga('set', 'page', window.location.pathname +
+                      window.location.search);
+    ga('send', 'pageview');
+  });
 
   ratesRequester.initialize(store, () => {
     submit();

@@ -235,11 +235,14 @@ export class StoreHistorySynchronizer {
 
     this.window = window;
     this.isReflectingToStore = false;
+    this.onLoctionChanged = () => {};
   }
 
-  initialize(store) {
+  initialize(store, onLocationChanged) {
+    this.onLocationChanged = onLocationChanged;
     this.window.addEventListener('popstate', () => {
       this.reflectToStore(store);
+      this.onLocationChanged();
     });
     this.reflectToStore(store);
   }
@@ -287,6 +290,7 @@ export class StoreHistorySynchronizer {
         const qs = joinQuery(nonDefaultFields);
 
         this.window.history.pushState(null, null, qs);
+        this.onLocationChanged();
       }
 
       return result;
