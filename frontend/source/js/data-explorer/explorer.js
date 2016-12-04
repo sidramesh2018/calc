@@ -9,7 +9,8 @@
  * Rudimentary pushstate/popstate support is implemented, but lots
  * of stuff still needs to be fixed:
  *
- *   * Slider values need to update properly.
+ *   * Education values need to update properly.
+ *   * `.filter_active` on inputs needs to update properly.
  *   * GA needs to be notified on navigation.
  *   * We should probably remove hourglass.qs.parse.
  *   * Make sure this works on IE11, at least.
@@ -20,6 +21,7 @@
 import { createStore, applyMiddleware } from 'redux';
 
 import {
+  MIN_EXPERIENCE,
   MAX_EXPERIENCE,
   HISTOGRAM_BINS,
 } from './constants';
@@ -230,8 +232,6 @@ $('.filter.contract-year .tooltip').tooltipster({
   },
 });
 
-initialize();
-
 $(document).bind('click', (e) => {
   const $clicked = $(e.target);
   if (!$clicked.parents().hasClass('dropdown')) $('.dropdown dd ul').hide();
@@ -276,14 +276,29 @@ if (getUrlParameterByName('education').length) {
 */
 
 $('.slider').noUiSlider({
-  start: [0, MAX_EXPERIENCE],
+  start: [
+    store.getState().min_experience,
+    store.getState().max_experience
+  ],
   step: 1,
   connect: true,
   range: {
-    min: 0,
+    min: MIN_EXPERIENCE,
     max: MAX_EXPERIENCE,
   },
 });
+
+function onExperienceChange() {
+  const state = store.getState();
+  const min = state.min_experience;
+  const max = state.max_experience;
+
+  $('.slider').val([min, max]);
+}
+
+storeWatcher.watch('min_experience', onExperienceChange);
+
+storeWatcher.watch('max_experience', onExperienceChange);
 
 $('.slider').Link('lower').to($('#min_experience'), null, wNumb({ // eslint-disable-line new-cap
   decimals: 0,
@@ -300,25 +315,8 @@ $('.slider').on({
     $('.noUi-horizontal .noUi-handle').removeClass('filter_focus');
 
     formSynchronizer.reflectToStore(store);
-
-    if ($('#min_experience').val() === '0' && $('#max_experience').val() === `${MAX_EXPERIENCE}`) {
-      $('#min_experience, #max_experience').removeClass('filter_active');
-    }
   },
 });
-
-// on load remove active class on experience slider
-$('#min_experience, #max_experience').removeClass('filter_active');
-
-/*
-// load experience range if query string exists
-if (getUrlParameterByName('max_experience').length) {
-  $('.slider').val([getUrlParameterByName('min_experience'),
-    getUrlParameterByName('max_experience')]);
-}
-*/
-
-// window.addEventListener('popstate', popstate);
 
 histogramDownloadLink.addEventListener('click', e => {
   e.preventDefault();
@@ -357,10 +355,12 @@ search.select('input[type="reset"]')
    if ($('.multiSelect input:checked').length) {
      $('.multiSelect input:checked').attr('checked', false);
    }
-   $('.slider').val([0, MAX_EXPERIENCE]);
+   $('.slider').val([MIN_EXPERIENCE, MAX_EXPERIENCE]);
 
    formSynchronizer.reflectToStore(store);
  });
+
+initialize();
 
 initReactApp({
   store,
