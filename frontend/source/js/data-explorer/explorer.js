@@ -12,7 +12,13 @@
  *   * Education checkboxes aren't updated properly if multiple
  *     checkboxes are checked.
  *   * `.filter_active` on inputs needs to update properly.
- *   * GA needs to be notified on navigation.
+ *   * GA needs to be notified on navigation, e.g.:
+ *
+ *       import ga from '../common/ga';
+ *       ga('set', 'page', window.location.pathname +
+ *                         window.location.search);
+ *       ga('send', 'pageview');
+ *
  *   * We should probably remove hourglass.qs.parse.
  *   * Make sure this works on IE11, at least.
  *
@@ -28,16 +34,7 @@ import {
   EDU_LABELS,
 } from './constants';
 
-// import ga from '../common/ga';
-
 import hourglass from '../common/hourglass';
-
-/*
-import {
-  location,
-  getUrlParameterByName,
-} from './util';
-*/
 
 import createTable from './table';
 
@@ -154,44 +151,10 @@ function submit() {
         hourglass.qs.format(data),
       ].join('?');
     });
-
-/*
-  if (pushState) {
-    const href = `?${hourglass.qs.format(data)}`;
-    const didSearchChange = window.location.search !== href;
-
-    history.pushState(null, null, href);
-
-    if (didSearchChange) {
-      ga('set', 'page', window.location.pathname +
-                        window.location.search);
-      ga('send', 'pageview');
-    }
-  }
-*/
 }
-
-/*
-function popstate() {
-  // read the query string and set values accordingly
-  const data = hourglass.extend(
-    form.getData(),
-    hourglass.qs.parse(location.search)
-  );
-  inputs.on('change', null);
-  form.setData(data);
-  inputs.on('change', () => {
-    submit(true);
-  });
-
-  submit(false);
-}
-*/
 
 function initialize() {
   table.initialize(store);
-
-//  popstate();
 
   initializeAutocomplete(store, api, $('#labor_category'));
 
