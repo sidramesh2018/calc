@@ -6,9 +6,13 @@
 /**
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
  *
- * pushstate/popstate support is currently disabled, as well as
- * permalinks (i.e. storing the current app parameters in the
- * querystring).  Need to bring these back ASAP!
+ * Rudimentary pushstate/popstate support is implemented, but lots
+ * of stuff still needs to be fixed:
+ *
+ *   * Slider values need to update properly.
+ *   * GA needs to be notified on navigation.
+ *   * We should probably remove hourglass.qs.parse.
+ *   * Make sure this works on IE11, at least.
  *
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
  */
@@ -46,6 +50,7 @@ import initializeAutocomplete from './autocomplete';
 
 import {
   StoreFormSynchronizer,
+  StoreHistorySynchronizer,
   StoreRatesAutoRequester,
   StoreStateFieldWatcher,
 } from './store-form-synchronizer';
@@ -55,6 +60,7 @@ import initReactApp from './app';
 const search = d3.select('#search');
 const form = new formdb.Form(search.node());
 const formSynchronizer = new StoreFormSynchronizer(form);
+const historySynchronizer = new StoreHistorySynchronizer(window);
 const ratesRequester = new StoreRatesAutoRequester();
 const storeWatcher = new StoreStateFieldWatcher();
 const store = createStore(
@@ -62,7 +68,8 @@ const store = createStore(
   applyMiddleware(
     formSynchronizer.reflectToFormMiddleware,
     ratesRequester.middleware,
-    storeWatcher.middleware
+    storeWatcher.middleware,
+    historySynchronizer.reflectToHistoryMiddleware
   )
 );
 const inputs = search.selectAll('*[name]');
@@ -185,6 +192,8 @@ function initialize() {
   inputs.on('change', () => {
     formSynchronizer.reflectToStore(store);
   });
+
+  historySynchronizer.initialize(store);
 
   ratesRequester.initialize(store, () => {
     submit();

@@ -93,11 +93,42 @@ const deserializers = {
   query_type: stringInSet(QUERY_TYPE_LABELS, DEFAULT_QUERY_TYPE),
 };
 
-const fields = Object.keys(serializers);
+const allFields = Object.keys(serializers);
 
 const nonRatesFields = ['proposed-price', 'contract-year'];
 
-const ratesFields = fields.filter(f => nonRatesFields.indexOf(f) === -1);
+const ratesFields = allFields.filter(f => nonRatesFields.indexOf(f) === -1);
+
+function getSerializedFields(state, fields, options = {}) {
+  const result = {};
+
+  fields.forEach(field => {
+    const val = serializers[field](state[field]);
+
+    if (options.omitEmpty && !val.length) {
+      return;
+    }
+
+    result[field] = val;
+  });
+
+  return result;
+}
+
+function getChangedSerializedFields(oldState, newState, fields) {
+  const result = {};
+
+  fields.forEach(field => {
+    const oldVal = serializers[field](oldState[field]);
+    const newVal = serializers[field](newState[field]);
+
+    if (oldVal !== newVal) {
+      result[field] = newVal;
+    }
+  });
+
+  return result;
+}
 
 function autobind(self, names) {
   const target = self;
@@ -105,6 +136,30 @@ function autobind(self, names) {
   names.forEach(name => {
     target[name] = target[name].bind(target);
   });
+}
+
+// http://stackoverflow.com/a/13419367
+function parseQuery(qstr) {
+  const query = {};
+  const a = qstr.substr(1).split('&');
+
+  for (let i = 0; i < a.length; i++) {
+    const b = a[i].split('=');
+    query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+  }
+
+  return query;
+}
+
+function joinQuery(query) {
+  const parts = Object.keys(query).map(name => {
+    const encName = encodeURIComponent(name);
+    const encValue = encodeURIComponent(query[name]);
+
+    return `${encName}=${encValue}`;
+  }).join('&');
+
+  return `?${parts}`;
 }
 
 export function StoreStateFieldWatcher() {
@@ -149,18 +204,9 @@ export class StoreRatesAutoRequester {
   }
 
   getRatesParameters(store) {
-    const state = store.getState();
-    const result = {};
-
-    ratesFields.forEach(field => {
-      const val = serializers[field](state[field]);
-
-      if (val.length) {
-        result[field] = val;
-      }
+    return getSerializedFields(store.getState(), ratesFields, {
+      omitEmpty: true,
     });
-
-    return result;
   }
 
   middleware(store) {
@@ -173,7 +219,74 @@ export class StoreRatesAutoRequester {
       );
 
       if (updated || newState.rates.stale) {
-        this.onRatesRequest(store);
+        if (this.onRatesRequest) {
+          this.onRatesRequest(store);
+        }
+      }
+
+      return result;
+    };
+  }
+}
+
+export class StoreHistorySynchronizer {
+  constructor(window) {
+    autobind(this, ['reflectToHistoryMiddleware']);
+
+    this.window = window;
+    this.isReflectingToStore = false;
+  }
+
+  initialize(store) {
+    this.window.addEventListener('popstate', () => {
+      this.reflectToStore(store);
+    });
+    this.reflectToStore(store);
+  }
+
+  reflectToStore(store) {
+    const qsFields = parseQuery(this.window.location.search);
+    const state = store.getState();
+    const changes = {};
+
+    allFields.forEach(field => {
+      const oldVal = serializers[field](state[field]);
+      const newDeserializedVal = deserializers[field](qsFields[field]);
+      const newVal = serializers[field](newDeserializedVal);
+
+      if (oldVal !== newVal) {
+        changes[field] = newDeserializedVal;
+      }
+    });
+
+    if (Object.keys(changes).length) {
+      this.isReflectingToStore = true;
+      store.dispatch(setState(Object.assign({}, state, changes)));
+      this.isReflectingToStore = false;
+    }
+  }
+
+  reflectToHistoryMiddleware(store) {
+    const defaultState = store.getState();
+
+    return next => action => {
+      const oldState = store.getState();
+      const result = next(action);
+      const newState = store.getState();
+      const changed = allFields.some(
+        field => newState[field] !== oldState[field]
+      );
+
+      if (changed && !this.isReflectingToStore) {
+        const nonDefaultFields = getChangedSerializedFields(
+          defaultState,
+          newState,
+          allFields
+        );
+
+        const qs = joinQuery(nonDefaultFields);
+
+        this.window.history.pushState(null, null, qs);
       }
 
       return result;
@@ -189,7 +302,7 @@ export class StoreFormSynchronizer {
 
     const nonReactFields = form.getInputs().map(e => e.getAttribute('name'));
 
-    this.fields = fields.filter(f => nonReactFields.indexOf(f) >= 0);
+    this.fields = allFields.filter(f => nonReactFields.indexOf(f) >= 0);
   }
 
   reflectToFormMiddleware(store) {
@@ -221,11 +334,11 @@ export class StoreFormSynchronizer {
 
     this.fields.forEach(field => {
       const oldVal = serializers[field](state[field]);
-      const newSerializedVal = deserializers[field](this.form.get(field));
-      const newVal = serializers[field](newSerializedVal);
+      const newDeserializedVal = deserializers[field](this.form.get(field));
+      const newVal = serializers[field](newDeserializedVal);
 
       if (oldVal !== newVal) {
-        changes[field] = newSerializedVal;
+        changes[field] = newDeserializedVal;
       }
     });
 

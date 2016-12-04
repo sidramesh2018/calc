@@ -9,14 +9,6 @@ export const location = window.history.location || window.location;
 export const formatCommas = d3.format(',');
 export const formatPrice = d3.format(',.0f');
 
-export function getUrlParameterByName(name) {
-  const cleanedName = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
-  const regex = new RegExp(`[\\?&]${cleanedName}=([^&#]*)`);
-  const results = regex.exec(location.search);
-  return results === null ? ''
-    : decodeURIComponent(results[1].replace(/\+/g, ' ')).replace(/[<>]/g, '');
-}
-
 export function templatize(str, undef) {
   const undefFunc = d3.functor(undef);
   return (d) => str.replace(/{(\w+)}/g, (_, key) => d[key] || undefFunc.call(d, key));
