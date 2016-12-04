@@ -34,6 +34,7 @@ import createTable from './table';
 import {
   startRatesRequest,
   completeRatesRequest,
+  invalidateRates,
   resetState,
 } from './actions';
 
@@ -235,6 +236,7 @@ histogramDownloadLink.addEventListener('click', e => {
 form.on('submit', (data, e) => {
   e.preventDefault();
   formSynchronizer.reflectToStore(store);
+  store.dispatch(invalidateRates());
 });
 
 /*

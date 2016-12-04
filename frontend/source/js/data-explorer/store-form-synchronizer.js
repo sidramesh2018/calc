@@ -1,4 +1,7 @@
-import { setState } from './actions';
+import {
+  setState,
+  invalidateRates,
+} from './actions';
 
 import {
   EDU_LABELS,
@@ -191,9 +194,7 @@ export class StoreRatesAutoRequester {
       onRatesRequest,
     });
 
-    // TODO: We should make a separate action for loading rates
-    // if invalid or something.
-    store.dispatch(setState(Object.assign(store.getState())));
+    store.dispatch(invalidateRates());
   }
 
   getRatesParameters(store) {

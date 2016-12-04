@@ -16,6 +16,7 @@ import {
   RESET_STATE,
   COMPLETE_RATES_REQUEST,
   START_RATES_REQUEST,
+  INVALIDATE_RATES,
   SET_SORT,
   SET_PROPOSED_PRICE,
   TOGGLE_EDU_LEVEL,
@@ -87,7 +88,7 @@ function proposedPrice(state = 0, action) {
 function rates(state = {
   error: null,
   data: EMPTY_RATES_DATA,
-  inProgress: true,
+  inProgress: false,
   stale: true,
 }, action) {
   const normalizeData = d => {
@@ -111,6 +112,13 @@ function rates(state = {
         data: normalizeData(action.data),
         stale: false,
       };
+    case INVALIDATE_RATES:
+      if (state.inProgress) {
+        return state;
+      }
+      return Object.assign({}, state, {
+        stale: true,
+      });
     default:
       return state;
   }
