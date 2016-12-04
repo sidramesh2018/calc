@@ -1,6 +1,7 @@
 export const EXCLUDE_ROW = 'EXCLUDE_ROW';
 export const EXCLUDE_NONE = 'EXCLUDE_NONE';
 export const SET_STATE = 'SET_STATE';
+export const RESET_STATE = 'RESET_STATE';
 export const START_RATES_REQUEST = 'START_RATES_REQUEST';
 export const COMPLETE_RATES_REQUEST = 'COMPLETE_RATES_REQUEST';
 export const SET_SORT = 'SET_SORT';
@@ -17,6 +18,10 @@ export function excludeNone() {
 
 export function setState(value) {
   return { type: SET_STATE, value };
+}
+
+export function resetState() {
+  return { type: RESET_STATE };
 }
 
 export function startRatesRequest() {

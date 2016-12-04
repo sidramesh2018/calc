@@ -34,7 +34,7 @@ import createTable from './table';
 import {
   startRatesRequest,
   completeRatesRequest,
-  setState,
+  resetState,
 } from './actions';
 
 import appReducer from './reducers';
@@ -67,7 +67,6 @@ const store = createStore(
     historySynchronizer.reflectToHistoryMiddleware
   )
 );
-const defaultState = store.getState();
 const inputs = search.selectAll('*[name]');
 const api = new hourglass.API();
 const loadingIndicator = search.select('.loading-indicator');
@@ -247,7 +246,7 @@ form.on('submit', (data, e) => {
 search.select('input[type="reset"]')
  .on('click', () => {
    d3.event.preventDefault();
-   store.dispatch(setState(defaultState));
+   store.dispatch(resetState());
  });
 
 initialize();

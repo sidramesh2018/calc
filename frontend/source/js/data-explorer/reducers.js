@@ -13,6 +13,7 @@ import {
   EXCLUDE_NONE,
   EXCLUDE_ROW,
   SET_STATE,
+  RESET_STATE,
   COMPLETE_RATES_REQUEST,
   START_RATES_REQUEST,
   SET_SORT,
@@ -146,6 +147,9 @@ const combinedReducer = combineReducers({
 export default (state, action) => {
   if (action.type === SET_STATE) {
     return action.value;
+  }
+  if (action.type === RESET_STATE) {
+    return combinedReducer(undefined, action);
   }
   return combinedReducer(state, action);
 };
