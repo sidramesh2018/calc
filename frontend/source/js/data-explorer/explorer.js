@@ -62,6 +62,12 @@ const storeWatcher = new StoreStateFieldWatcher();
 const store = createStore(
   appReducer,
   applyMiddleware(
+    () => next => action => {
+      // TODO: Remove this logging middleware eventually.
+      console.log(action.type, store.getState());  // eslint-disable-line
+
+      return next(action);
+    },
     storeWatcher.middleware,
     formSynchronizer.reflectToFormMiddleware,
     ratesRequester.middleware,
