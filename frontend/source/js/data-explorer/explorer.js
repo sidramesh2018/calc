@@ -9,7 +9,8 @@
  * Rudimentary pushstate/popstate support is implemented, but lots
  * of stuff still needs to be fixed:
  *
- *   * Education values need to update properly.
+ *   * Education checkboxes aren't updated properly if multiple
+ *     checkboxes are checked.
  *   * `.filter_active` on inputs needs to update properly.
  *   * GA needs to be notified on navigation.
  *   * We should probably remove hourglass.qs.parse.
@@ -24,6 +25,7 @@ import {
   MIN_EXPERIENCE,
   MAX_EXPERIENCE,
   HISTOGRAM_BINS,
+  EDU_LABELS,
 } from './constants';
 
 // import ga from '../common/ga';
@@ -42,6 +44,7 @@ import createTable from './table';
 import {
   startRatesRequest,
   completeRatesRequest,
+  setState,
 } from './actions';
 
 import appReducer from './reducers';
@@ -68,12 +71,13 @@ const storeWatcher = new StoreStateFieldWatcher();
 const store = createStore(
   appReducer,
   applyMiddleware(
+    storeWatcher.middleware,
     formSynchronizer.reflectToFormMiddleware,
     ratesRequester.middleware,
-    storeWatcher.middleware,
     historySynchronizer.reflectToHistoryMiddleware
   )
 );
+const defaultState = store.getState();
 const inputs = search.selectAll('*[name]');
 const api = new hourglass.API();
 const loadingIndicator = search.select('.loading-indicator');
@@ -202,6 +206,17 @@ function initialize() {
   });
 }
 
+// set default options for all future tooltip instantiations
+$.fn.tooltipster('setDefaults', {
+  speed: 200,
+});
+
+$('.filter.contract-year .tooltip').tooltipster({
+  functionInit() {
+    return $(this).attr('aria-label');
+  },
+});
+
 /*
   Dropdown with Multiple checkbox select with jQuery - May 27, 2013
   (c) 2013 @ElmahdiMahmoud
@@ -220,65 +235,33 @@ $('.dropdown dd ul li a').on('click', (e) => {
   e.preventDefault();
 });
 
-// set default options for all future tooltip instantiations
-$.fn.tooltipster('setDefaults', {
-  speed: 200,
-});
-
-// initialize tooltipster.js
-$('.filter.contract-year .tooltip').tooltipster({
-  functionInit() {
-    return $(this).attr('aria-label');
-  },
-});
-
+// Whenever users click outside of our dropdown, hide it.
 $(document).bind('click', (e) => {
   const $clicked = $(e.target);
   if (!$clicked.parents().hasClass('dropdown')) $('.dropdown dd ul').hide();
 });
 
+storeWatcher.watch('education', () => {
+  const education = store.getState().education;
+  const instructions = $('.eduSelect');
+  const filterList = $('.multiSel');
 
-$('.multiSelect input[type="checkbox"]').on('click', function onClick() {
-  const title = $(this).next().html();
+  instructions.toggle(education.length === 0);
+  filterList.empty();
 
-  if ($(this).is(':checked')) {
-    const html = `<span title="${title}">${title}</span>`;
-
-    $('.multiSel').append(html);
-    $('.eduSelect').hide();
-  } else {
-    $(`span[title="${title}"]`).remove();
-    $('.dropdown dt a').addClass('hide');
-  }
-
-  if (!$('.multiSelect input:checked').length) {
-    $('.eduSelect').show();
-  } else {
-    $('.eduSelect').hide();
-  }
-});
-
-/*
-if (getUrlParameterByName('education').length) {
-  const parameters = getUrlParameterByName('education').split(',');
-
-  $('.eduSelect').hide();
-
-  parameters.forEach((param) => {
-    const title = $(`.multiSelect input[type=checkbox][value=${param}]`)
-      .attr('checked', true)
-      .next()
-      .html();
-
-    $('.multiSel').append(`<span title="${title}">${title}</span>`);
+  education.forEach(ed => {
+    const item = $('<span></span>');
+    const label = EDU_LABELS[ed];
+    item.attr('title', label);
+    item.text(label);
+    filterList.append(item);
   });
-}
-*/
+});
 
 $('.slider').noUiSlider({
   start: [
     store.getState().min_experience,
-    store.getState().max_experience
+    store.getState().max_experience,
   ],
   step: 1,
   connect: true,
@@ -342,22 +325,8 @@ form.on('submit', (data, e) => {
 */
 search.select('input[type="reset"]')
  .on('click', () => {
-   form.reset();
-   // NB: form.reset() doesn't reset hidden inputs,
-   // so we need to do it ourselves.
-   search.selectAll('input[type="hidden"]')
-     .property('value', '');
-
    d3.event.preventDefault();
-
-   $('.multiSel').empty();
-   $('.eduSelect').show();
-   if ($('.multiSelect input:checked').length) {
-     $('.multiSelect input:checked').attr('checked', false);
-   }
-   $('.slider').val([MIN_EXPERIENCE, MAX_EXPERIENCE]);
-
-   formSynchronizer.reflectToStore(store);
+   store.dispatch(setState(defaultState));
  });
 
 initialize();
