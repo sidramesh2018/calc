@@ -123,9 +123,14 @@ def step_1(request, step):
     else:
         form = forms.Step1Form(request.POST)
         if form.is_valid():
-            request.session['data_capture:price_list'] = {
-                'step_1_POST': request.POST,
-            }
+            sess = request.session
+            if 'data_capture:price_list' in sess:
+                sess['data_capture:price_list']['step_1_POST'] = request.POST
+            else:
+                sess['data_capture:price_list'] = {
+                    'step_1_POST': request.POST,
+                }
+
             return redirect('data_capture:step_2')
         elif form.has_existing_contract_number_error():
             contract_number = request.POST['contract_number']

@@ -77,6 +77,20 @@ class Step1Tests(PriceListStepTestCase):
         self.assertEqual(session_data['schedule'], FAKE_SCHEDULE)
         self.assertEqual(session_data['contract_number'], 'GS-123-4567')
 
+    def test_valid_post_does_not_overwrite_other_step_data_if_exists(self):
+        self.login()
+        # save step 2 data into session before POSTing step 1 data
+        session = self.client.session
+        session['data_capture:price_list'] = {
+            'step_2_POST': Step2Tests.valid_form,
+        }
+        session.save()
+        self.client.post(self.url, self.valid_form)
+        # need to grab session again after POST
+        session = self.client.session
+        self.assertEqual(session['data_capture:price_list']['step_2_POST'],
+                         Step2Tests.valid_form)
+
     def test_valid_post_redirects_to_step_2(self):
         self.login()
         res = self.client.post(self.url, self.valid_form)
