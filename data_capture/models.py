@@ -152,6 +152,12 @@ class SubmittedPriceList(models.Model):
     def __str__(self):
         return "Price List for {}".format(self.contract_number)
 
+    @classmethod
+    def get_latest_by_contract_number(cls, contract_number):
+        return cls.objects.filter(
+            contract_number__iexact=contract_number).latest(
+            'status_changed_at')
+
 
 class SubmittedPriceListRow(models.Model):
     labor_category = models.TextField()

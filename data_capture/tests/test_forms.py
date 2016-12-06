@@ -1,3 +1,4 @@
+from model_mommy import mommy
 from django.test import TestCase, override_settings
 
 from .common import FAKE_SCHEDULE, uploaded_csv_file, r10_file
@@ -5,6 +6,44 @@ from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
 from ..forms import (Step1Form, Step2Form, Step3Form, Step4Form,
                      Region10BulkUploadForm)
+from ..models import SubmittedPriceList
+
+
+@override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
+class Step1FormTests(TestCase):
+    def make_form(self, contract_number='GS-BOOP'):
+        return Step1Form({
+            'contract_number': contract_number,
+            'schedule': FAKE_SCHEDULE,
+        })
+
+    def test_clean_contract_number_works(self):
+        mommy.make(SubmittedPriceList,
+                   contract_number='GS-BOOP')
+        form = self.make_form()
+        self.assertFalse(form.is_valid())
+        self.assertIn('contract_number', form.errors)
+
+        form = self.make_form(contract_number='GS-NOT-DUPE')
+        self.assertTrue(form.is_valid())
+
+    def test_clean_contract_number_is_case_insensitive(self):
+        mommy.make(SubmittedPriceList,
+                   contract_number='GS-BOOP')
+        form = self.make_form(contract_number='gs-boop')
+        self.assertFalse(form.is_valid())
+        self.assertIn('contract_number', form.errors)
+
+    def test_has_existing_contract_number_error_works(self):
+        mommy.make(SubmittedPriceList,
+                   contract_number='GS-BOOP')
+        form = self.make_form()
+        form.is_valid()
+        self.assertTrue(form.has_existing_contract_number_error())
+
+        form = self.make_form('GS-NOT-DUPE')
+        form.is_valid()
+        self.assertFalse(form.has_existing_contract_number_error())
 
 
 class Step2FormTests(TestCase):
