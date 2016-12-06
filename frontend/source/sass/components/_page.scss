@@ -1,11 +1,12 @@
 @import '../base/variables';
 @import '../base/grid';
+$background-color: $color-gray-lightest;
 
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: $color-gray-lightest;
+  background-color: $background-color;
 }
 
 main {
@@ -18,29 +19,65 @@ main {
 }
 
 .card {
-  @include span-columns(8);
-  @include shift(2);
   background-color: $color-white;
   padding: $space-8x 0;
-  margin-bottom: $space-half;
+  border-bottom: $space-half solid $background-color;
 
   &:last-child {
-    border-bottom: $space-half solid $color-gray-light;
+    border-bottom-color: $color-gray-light;
   }
 }
 
-.card__content {
-  @include span-columns(6 of 8);
-  @include shift-in-context(1 of 8);
-}
-
 .card__footer {
-  @include span-columns(8);
-  @include shift(2);
   padding: $space-half 0;
   margin-bottom: $space-10x;
   button.button-link {
+    margin-top: $space-half;
     font-size: $small-font-size;
     padding: 0;
+  }
+}
+
+/* this isn't exactly BEM, but the best way I can find to manage the variable
+ * card widths without duplicating the styles for card, content & footer.
+ * Top level goes in {% body_class %}  */
+.card--narrow {
+  .card {
+    @include span-columns(8);
+    @include shift(2);
+    .card__content {
+      @include span-columns(6 of 8);
+      @include shift-in-context(1 of 8);
+    }
+  }
+  .card__footer {
+    @include span-columns(8);
+    @include shift(2);
+  }
+}
+
+.card--wide {
+  .card {
+    @include span-columns(12);
+
+    .card__content {
+      @include span-columns(10 of 12);
+      @include shift-in-context(1 of 12);
+    }
+  }
+  .card__footer {
+    @include span-columns(10);
+    @include shift(2);
+  }
+}
+
+/* Also a body class. Used in conjunction with the above. */
+.card--no-header {
+  .card:first-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .card:nth-child(2) {
+    padding-top: $space-4x;
   }
 }

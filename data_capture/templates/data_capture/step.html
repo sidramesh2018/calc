@@ -3,7 +3,7 @@
 {% block title %}Add price data to CALC / {{ step.description|capfirst }}: {% block subtitle %}{% endblock %}{% endblock %}
 
 {% block body %}
-  <div class="container {% block body_class %}{% endblock %}">
+  <div class="container {% block body_class %}card--narrow{% endblock %}">
     <div class="row">
       <div class="card">
         <div class="card__content">
@@ -33,7 +33,7 @@
           </h1>
           {% block step_heading %}{% endblock %}
         </div><!--card-content -->
-      </div><!--card-->
+      </div><!--card__header-->
       <div class="card">
         <div class="card__content">
           {% include 'data_capture/messages.html' %}
