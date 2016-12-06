@@ -10,16 +10,16 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 
 
-def ajax_redirect(viewname):
+def ajax_redirect(viewname, **kwargs):
     '''
     Given a viewname returns a JSON response containing an
     object with key called 'redirect_url' used by ajaxform.js
     to redirect the client browser.
     '''
-    return JsonResponse({'redirect_url': reverse(viewname)})
+    return JsonResponse({'redirect_url': reverse(viewname, kwargs=kwargs)})
 
 
-def redirect(request, viewname):
+def redirect(request, viewname, **kwargs):
     '''
     Redirect the request to the given URL pattern name or the callable
     view object.
@@ -30,9 +30,9 @@ def redirect(request, viewname):
     act accordingly.
     '''
     if request.is_ajax():
-        return ajax_redirect(viewname)
+        return ajax_redirect(viewname, **kwargs)
 
-    return HttpResponseRedirect(reverse(viewname))
+    return HttpResponseRedirect(reverse(viewname, kwargs=kwargs))
 
 
 def render(request, context, template_name, ajax_template_name):

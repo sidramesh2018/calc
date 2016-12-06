@@ -117,6 +117,7 @@ dl.contract-details {
   font-size: $h4-font-size;
   margin-bottom: 0;
   margin-top: 0;
+  overflow: auto;
 
   dt, dd {
     float: left;
