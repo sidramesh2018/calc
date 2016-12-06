@@ -1,18 +1,21 @@
-/* global $, window, document, history,
-  d3, formdb, wNumb  */
-
-// wNumb is from nouislider
+/* global $, window, document, d3, formdb */
 
 /**
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
  *
- * Rudimentary pushstate/popstate support is implemented, but lots
- * of stuff still needs to be fixed:
+ * This code was originally jQuery-based and is gradually being
+ * migrated to React + Redux.
  *
- *   * `.filter_active` on inputs needs to update properly.
- *   * We should probably remove hourglass.qs.parse and
- *     hourglass.qs.format.
- *   * Make sure this works on IE11, at least.
+ * To visually see what's been converted, paste the following
+ * into the console:
+ *
+ *   $('[data-reactroot]').css({border: '1px solid green'});
+ *
+ * Things to be fixed include, but are not limited to:
+ *
+ *   * We should probably remove `hourglass.qs.parse` and
+ *     `hourglass.qs.format`.
+ *   * We might want to get rid of `location` in `./util`.
  *
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
  */
@@ -72,7 +75,7 @@ const store = createStore(
     historySynchronizer.reflectToHistoryMiddleware
   )
 );
-const inputs = search.selectAll('*[name]');
+const legacyInputs = search.selectAll('*[name]');
 const loadingIndicator = search.select('.loading-indicator');
 const histogramDownloadLink = document.getElementById('download-histogram');
 const table = createTable('#results-table');
@@ -102,7 +105,7 @@ function onCompleteRatesRequest(error) {
 function onStartRatesRequest() {
   table.updateSort();
 
-  inputs
+  legacyInputs
     .filter(function filter() {
       return this.type !== 'radio' && this.type !== 'checkbox';
     })
@@ -145,7 +148,7 @@ function initialize() {
 
   initializeAutocomplete(store, api, $('#labor_category'));
 
-  inputs.on('change', () => {
+  legacyInputs.on('change', () => {
     formSynchronizer.reflectToStore(store);
   });
 
