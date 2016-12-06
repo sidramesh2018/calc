@@ -19,7 +19,11 @@ import {
 class Experience extends React.Component {
   constructor(props) {
     super(props);
-    autobind(this, ['onSliderSlide', 'onSliderSet']);
+    autobind(this, ['onSliderSlide', 'onSliderChange']);
+    this.state = {
+      isSliding: false,
+      sliderVal: null,
+    };
   }
 
   componentDidMount() {
@@ -42,15 +46,17 @@ class Experience extends React.Component {
     });
     $(this.sliderEl).on({
       slide: this.onSliderSlide,
-      set: this.onSliderSet,
+      change: this.onSliderChange,
     });
   }
 
   componentDidUpdate() {
-    const [min, max] = this.getSliderVal();
+    if (!this.state.isSliding) {
+      const [min, max] = this.getSliderVal();
 
-    if (min !== this.props.min || max !== this.props.max) {
-      $(this.sliderEl).val([this.props.min, this.props.max]);
+      if (min !== this.props.min || max !== this.props.max) {
+        $(this.sliderEl).val([this.props.min, this.props.max]);
+      }
     }
   }
 
@@ -59,17 +65,24 @@ class Experience extends React.Component {
   }
 
   onSliderSlide() {
-    // TODO: We should really be changing the displayed value in our
-    // <select> fields so the user can actually see what they're changing
-    // the setting to.
     $('.noUi-horizontal .noUi-handle', this.rootEl).addClass('filter_focus');
+
+    this.setState({
+      isSliding: true,
+      sliderVal: this.getSliderVal(),
+    });
   }
 
-  onSliderSet() {
+  onSliderChange() {
     $('.noUi-horizontal .noUi-handle', this.rootEl)
       .removeClass('filter_focus');
 
     const [min, max] = this.getSliderVal();
+
+    this.setState({
+      isSliding: false,
+      sliderVal: null,
+    });
 
     if (min !== this.props.min) {
       this.props.dispatch(setExperience('min', min));
@@ -90,8 +103,13 @@ class Experience extends React.Component {
   }
 
   render() {
-    const min = this.props.min;
-    const max = this.props.max;
+    let min = this.props.min;
+    let max = this.props.max;
+
+    if (this.state.isSliding) {
+      [min, max] = this.state.sliderVal;
+    }
+
     const minId = `${this.props.idPrefix}min`;
     const maxId = `${this.props.idPrefix}max`;
     const classes = ['select-small'];
