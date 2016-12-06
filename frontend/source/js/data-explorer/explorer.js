@@ -44,12 +44,14 @@ import histogramToImg from './histogram-to-img';
 
 import initializeAutocomplete from './autocomplete';
 
+import StoreHistorySynchronizer from './history';
+
 import {
   StoreFormSynchronizer,
-  StoreHistorySynchronizer,
-  StoreRatesAutoRequester,
   StoreStateFieldWatcher,
-} from './store-form-synchronizer';
+} from './temp-redux-middleware';
+
+import StoreRatesAutoRequester from './rates-request';
 
 import initReactApp from './app';
 
