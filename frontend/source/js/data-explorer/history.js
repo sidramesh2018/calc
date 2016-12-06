@@ -4,6 +4,8 @@ import {
 
 import {
   autobind,
+  parseQuery,
+  joinQuery,
 } from './util';
 
 import {
@@ -12,30 +14,6 @@ import {
   deserializers,
   getChangedSerializedFields,
 } from './serialization';
-
-// http://stackoverflow.com/a/13419367
-function parseQuery(qstr) {
-  const query = {};
-  const a = qstr.substr(1).split('&');
-
-  for (let i = 0; i < a.length; i++) {
-    const b = a[i].split('=');
-    query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
-  }
-
-  return query;
-}
-
-function joinQuery(query) {
-  const parts = Object.keys(query).map(name => {
-    const encName = encodeURIComponent(name);
-    const encValue = encodeURIComponent(query[name]);
-
-    return `${encName}=${encValue}`;
-  }).join('&');
-
-  return `?${parts}`;
-}
 
 export default class StoreHistorySynchronizer {
   constructor(window) {

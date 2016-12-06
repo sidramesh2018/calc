@@ -115,16 +115,6 @@ function onStartRatesRequest() {
 
   search.classed('loaded', false);
   search.classed('loading', true);
-
-  const data = ratesRequester.getRatesParameters(store);
-
-  d3.select('#export-data')
-    .attr('href', function updateQueryString() {
-      return [
-        this.href.split('?').shift(),
-        hourglass.qs.format(data),
-      ].join('?');
-    });
 }
 
 storeWatcher.watch('rates', () => {

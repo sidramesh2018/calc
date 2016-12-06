@@ -50,3 +50,27 @@ export function parsePrice(value, defaultValue = 0) {
 
   return floatValue;
 }
+
+// http://stackoverflow.com/a/13419367
+export function parseQuery(qstr) {
+  const query = {};
+  const a = qstr.substr(1).split('&');
+
+  for (let i = 0; i < a.length; i++) {
+    const b = a[i].split('=');
+    query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+  }
+
+  return query;
+}
+
+export function joinQuery(query) {
+  const parts = Object.keys(query).map(name => {
+    const encName = encodeURIComponent(name);
+    const encValue = encodeURIComponent(query[name]);
+
+    return `${encName}=${encValue}`;
+  }).join('&');
+
+  return `?${parts}`;
+}

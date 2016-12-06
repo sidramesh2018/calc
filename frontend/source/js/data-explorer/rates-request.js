@@ -20,6 +20,15 @@ const nonRatesFields = ['proposed-price', 'contract-year'];
 
 const ratesFields = allFields.filter(f => nonRatesFields.indexOf(f) === -1);
 
+export function getRatesParameters(state) {
+  const data = getSerializedFields(state, ratesFields, {
+    omitEmpty: true,
+  });
+  return Object.assign(data, {
+    experience_range: `${data.min_experience},${data.max_experience}`,
+  });
+}
+
 export default class StoreRatesAutoRequester {
   constructor(api) {
     this.api = api;
@@ -27,21 +36,12 @@ export default class StoreRatesAutoRequester {
     autobind(this, ['middleware']);
   }
 
-  getRatesParameters(store) {
-    const data = getSerializedFields(store.getState(), ratesFields, {
-      omitEmpty: true,
-    });
-    return Object.assign(data, {
-      experience_range: `${data.min_experience},${data.max_experience}`,
-    });
-  }
-
   _startRatesRequest(store) {
     if (this.request) {
       this.request.abort();
     }
 
-    const data = this.getRatesParameters(store);
+    const data = getRatesParameters(store.getState());
     const defaults = {
       histogram: HISTOGRAM_BINS,
     };
