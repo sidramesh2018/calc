@@ -77,7 +77,6 @@ class Experience extends React.Component {
     if (max !== this.props.max) {
       this.props.dispatch(setExperience('max', max));
     }
-    console.log('SET', min, max);
   }
 
   makeOptions(min, max) {
