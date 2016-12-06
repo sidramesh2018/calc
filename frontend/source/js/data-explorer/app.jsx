@@ -8,6 +8,7 @@ import Highlights from './components/highlights';
 import Histogram from './components/histogram';
 import ProposedPrice from './components/proposed-price';
 import EducationLevel from './components/education-level';
+import Experience from './components/experience';
 
 export default function init({
   store,
@@ -17,6 +18,7 @@ export default function init({
   histogramRoot,
   proposedPriceRoot,
   educationLevelRoot,
+  experienceRoot,
 }) {
   ReactDOM.render(
     <Provider store={store}>
@@ -58,5 +60,12 @@ export default function init({
       <EducationLevel />
     </Provider>,
     educationLevelRoot
+  );
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <Experience />
+    </Provider>,
+    experienceRoot
   );
 }

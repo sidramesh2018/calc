@@ -7,6 +7,7 @@ export const COMPLETE_RATES_REQUEST = 'COMPLETE_RATES_REQUEST';
 export const INVALIDATE_RATES = 'INVALIDATE_RATES';
 export const SET_SORT = 'SET_SORT';
 export const SET_PROPOSED_PRICE = 'SET_PROPOSED_PRICE';
+export const SET_EXPERIENCE = 'SET_EXPERIENCE';
 export const TOGGLE_EDU_LEVEL = 'TOGGLE_EDU_LEVEL';
 
 export function excludeRow(rowId) {
@@ -51,6 +52,10 @@ export function setSort({ key, descending }) {
 
 export function setProposedPrice(price) {
   return { type: SET_PROPOSED_PRICE, price };
+}
+
+export function setExperience(subtype, years) {
+  return { type: SET_EXPERIENCE, subtype, years };
 }
 
 export function toggleEducationLevel(level) {

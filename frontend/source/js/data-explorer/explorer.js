@@ -19,11 +19,6 @@
 
 import { createStore, applyMiddleware } from 'redux';
 
-import {
-  MIN_EXPERIENCE,
-  MAX_EXPERIENCE,
-} from './constants';
-
 import hourglass from '../common/hourglass';
 
 import ga from '../common/ga';
@@ -172,49 +167,6 @@ $('.filter.contract-year .tooltip').tooltipster({
   },
 });
 
-$('.slider').noUiSlider({
-  start: [
-    store.getState().min_experience,
-    store.getState().max_experience,
-  ],
-  step: 1,
-  connect: true,
-  range: {
-    min: MIN_EXPERIENCE,
-    max: MAX_EXPERIENCE,
-  },
-});
-
-function onExperienceChange() {
-  const state = store.getState();
-  const min = state.min_experience;
-  const max = state.max_experience;
-
-  $('.slider').val([min, max]);
-}
-
-storeWatcher.watch('min_experience', onExperienceChange);
-
-storeWatcher.watch('max_experience', onExperienceChange);
-
-$('.slider').Link('lower').to($('#min_experience'), null, wNumb({ // eslint-disable-line new-cap
-  decimals: 0,
-}));
-$('.slider').Link('upper').to($('#max_experience'), null, wNumb({ // eslint-disable-line new-cap
-  decimals: 0,
-}));
-
-$('.slider').on({
-  slide() {
-    $('.noUi-horizontal .noUi-handle').addClass('filter_focus');
-  },
-  set() {
-    $('.noUi-horizontal .noUi-handle').removeClass('filter_focus');
-
-    formSynchronizer.reflectToStore(store);
-  },
-});
-
 histogramDownloadLink.addEventListener('click', e => {
   e.preventDefault();
   histogramToImg(
@@ -254,4 +206,5 @@ initReactApp({
   histogramRoot,
   proposedPriceRoot: $('#proposed-price')[0],
   educationLevelRoot: $('#education-level')[0],
+  experienceRoot: $('#experience')[0],
 });

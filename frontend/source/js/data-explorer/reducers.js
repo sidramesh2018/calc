@@ -19,6 +19,7 @@ import {
   INVALIDATE_RATES,
   SET_SORT,
   SET_PROPOSED_PRICE,
+  SET_EXPERIENCE,
   TOGGLE_EDU_LEVEL,
 } from './actions';
 
@@ -53,13 +54,17 @@ function education(state = [], action) {
   return state;
 }
 
-function minExperience(state = MIN_EXPERIENCE) {
-  // TODO: Create actions to change this.
+function minExperience(state = MIN_EXPERIENCE, action) {
+  if (action.type === SET_EXPERIENCE && action.subtype === 'min') {
+    return action.years;
+  }
   return state;
 }
 
-function maxExperience(state = MAX_EXPERIENCE) {
-  // TODO: Create actions to change this.
+function maxExperience(state = MAX_EXPERIENCE, action) {
+  if (action.type === SET_EXPERIENCE && action.subtype === 'max') {
+    return action.years;
+  }
   return state;
 }
 
