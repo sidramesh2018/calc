@@ -1,3 +1,5 @@
+/* global window */
+
 /**
  * This file contains temporary Redux middleware useful for
  * migrating from legacy CALC 1.0's Data Explorer to the new
@@ -93,4 +95,24 @@ export class StoreFormSynchronizer {
       store.dispatch(setState(Object.assign({}, state, changes)));
     }
   }
+}
+
+export function loggingMiddleware(store) {
+  return next => action => {
+    if (!(window.console && window.console.groupCollapsed)) {
+      return next(action);
+    }
+
+    /* eslint-disable */
+    console.groupCollapsed(action.type);
+    console.log('Begin state', store.getState());
+
+    const result = next(action);
+
+    console.log('End state', store.getState());
+    console.groupEnd();
+    /* eslint-enable */
+
+    return result;
+  };
 }

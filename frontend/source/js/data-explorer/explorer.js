@@ -49,6 +49,7 @@ import StoreHistorySynchronizer from './history';
 import {
   StoreFormSynchronizer,
   StoreStateFieldWatcher,
+  loggingMiddleware,
 } from './temp-redux-middleware';
 
 import StoreRatesAutoRequester from './rates-request';
@@ -63,12 +64,7 @@ const storeWatcher = new StoreStateFieldWatcher();
 const store = createStore(
   appReducer,
   applyMiddleware(
-    () => next => action => {
-      // TODO: Remove this logging middleware eventually.
-      console.log(action.type, store.getState());  // eslint-disable-line
-
-      return next(action);
-    },
+    loggingMiddleware,
     storeWatcher.middleware,
     formSynchronizer.reflectToFormMiddleware,
     ratesRequester.middleware,
