@@ -17,7 +17,12 @@
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
  */
 
+import ReactDOM from 'react-dom';
+import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+
+import * as components from './components';
 
 import hourglass from '../common/hourglass';
 
@@ -45,8 +50,6 @@ import {
 
 import StoreRatesAutoRequester from './rates-request';
 
-import initReactApp from './app';
-
 const api = new hourglass.API();
 const search = d3.select('#search');
 const form = new formdb.Form(search.node());
@@ -71,7 +74,6 @@ const store = createStore(
 );
 const inputs = search.selectAll('*[name]');
 const loadingIndicator = search.select('.loading-indicator');
-const histogramRoot = document.getElementById('price-histogram');
 const histogramDownloadLink = document.getElementById('download-histogram');
 const table = createTable('#results-table');
 
@@ -173,7 +175,7 @@ histogramDownloadLink.addEventListener('click', e => {
     // TODO: We're reaching into a React component here, which isn't
     // a great idea. This should get cleaner once we make the download
     // link a React component too.
-    $(histogramRoot).find('svg')[0],
+    $('[data-embed-jsx="Histogram"]').find('svg')[0],
     document.getElementById('graph')
   );
 }, false);
@@ -198,13 +200,17 @@ search.select('input[type="reset"]')
 
 initialize();
 
-initReactApp({
-  store,
-  restoreExcludedRoot: $('#restore-excluded')[0],
-  descriptionRoot: $('#description')[0],
-  highlightsRoot: $('#highlights')[0],
-  histogramRoot,
-  proposedPriceRoot: $('#proposed-price')[0],
-  educationLevelRoot: $('#education-level')[0],
-  experienceRoot: $('#experience')[0],
+$('[data-embed-jsx]').each(function embedJsx() {
+  const rootEl = this;
+  const name = this.getAttribute('data-embed-jsx');
+
+  if (name in components) {
+    ReactDOM.render(
+      React.createElement(Provider, { store },
+                          React.createElement(components[name])),
+      rootEl
+    );
+  } else {
+    throw new Error(`Unknown component: ${name}`);
+  }
 });

@@ -87,9 +87,9 @@
 
             <h5 class="filter-title">Optional filters</h5>
 
-            <div id="education-level"></div>
+            <div id="education-level" data-embed-jsx="EducationLevel"></div>
 
-            <div id="experience"></div>
+            <div id="experience" data-embed-jsx="Experience"></div>
 
             <div class="filter filter-site">
               <label for="site">Worksite:</label>
@@ -172,11 +172,11 @@
 
         <div class="graph-block columns nine">
           <canvas id="graph" class="hidden" width="710" height="280"></canvas> <!-- for converting the histogram into an img -->
-          <div id="description"></div>
+          <div id="description" data-embed-jsx="Description"></div>
 
           <h4>Hourly rate data</h4>
 
-          <div id="proposed-price"></div>
+          <div id="proposed-price" data-embed-jsx="ProposedPrice"></div>
 
           <div class="loading-indicator">
             <p class="message">Loading results...</p>
@@ -184,10 +184,10 @@
           </div>
 
           <div class="graph">
-            <div id="price-histogram"></div>
+            <div id="price-histogram" data-embed-jsx="Histogram"></div>
           </div>
 
-          <div id="highlights"></div>
+          <div id="highlights" data-embed-jsx="Highlights"></div>
 
           <div class="download-buttons row">
             <div class="four columns">
@@ -210,7 +210,7 @@
           <thead>
             <tr>
               <th scope="col" class="exclude" data-key="exclude" data-format="">
-                <span id="restore-excluded"></span>
+                <span id="restore-excluded" data-embed-jsx="RestoreExcluded"></span>
               </th>
               <th scope="col" class="sortable tooltip" data-key="labor_category">Labor category</th>
               <th scope="col" class="sortable tooltip" data-key="education_level" title="Minimum years of education">Min&nbsp;edu.</th>
