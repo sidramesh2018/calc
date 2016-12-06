@@ -22,7 +22,6 @@ import { createStore, applyMiddleware } from 'redux';
 import {
   MIN_EXPERIENCE,
   MAX_EXPERIENCE,
-  HISTOGRAM_BINS,
 } from './constants';
 
 import hourglass from '../common/hourglass';
@@ -32,8 +31,6 @@ import ga from '../common/ga';
 import createTable from './table';
 
 import {
-  startRatesRequest,
-  completeRatesRequest,
   invalidateRates,
   resetState,
 } from './actions';
@@ -55,11 +52,12 @@ import StoreRatesAutoRequester from './rates-request';
 
 import initReactApp from './app';
 
+const api = new hourglass.API();
 const search = d3.select('#search');
 const form = new formdb.Form(search.node());
 const formSynchronizer = new StoreFormSynchronizer(form);
 const historySynchronizer = new StoreHistorySynchronizer(window);
-const ratesRequester = new StoreRatesAutoRequester();
+const ratesRequester = new StoreRatesAutoRequester(api);
 const storeWatcher = new StoreStateFieldWatcher();
 const store = createStore(
   appReducer,
@@ -77,17 +75,13 @@ const store = createStore(
   )
 );
 const inputs = search.selectAll('*[name]');
-const api = new hourglass.API();
 const loadingIndicator = search.select('.loading-indicator');
 const histogramRoot = document.getElementById('price-histogram');
 const histogramDownloadLink = document.getElementById('download-histogram');
 const table = createTable('#results-table');
 
-let request;
-
-function update(error, res) {
+function onCompleteRatesRequest(error) {
   search.classed('loading', false);
-  request = null;
 
   if (error) {
     if (error === 'abort') {
@@ -105,22 +99,11 @@ function update(error, res) {
 
   search.classed('loaded', true);
 
-  store.dispatch(completeRatesRequest(error, res));
-
   table.updateResults();
 }
 
-storeWatcher.watch('contract-year', () => {
-  table.updateResults();
-});
-
-function submit() {
+function onStartRatesRequest() {
   table.updateSort();
-
-  let data = ratesRequester.getRatesParameters(store);
-  data = Object.assign(data, {
-    experience_range: `${data.min_experience},${data.max_experience}`,
-  });
 
   inputs
     .filter(function filter() {
@@ -133,19 +116,7 @@ function submit() {
   search.classed('loaded', false);
   search.classed('loading', true);
 
-  // cancel the outbound request if there is one
-  if (request) request.abort();
-  const defaults = {
-    histogram: HISTOGRAM_BINS,
-  };
-
-  store.dispatch(startRatesRequest());
-
-  request = api.get({
-    uri: 'rates/',
-    data: hourglass.extend(defaults, data),
-  }, update);
-
+  const data = ratesRequester.getRatesParameters(store);
 
   d3.select('#export-data')
     .attr('href', function updateQueryString() {
@@ -155,6 +126,22 @@ function submit() {
       ].join('?');
     });
 }
+
+storeWatcher.watch('rates', () => {
+  const rates = store.getState().rates;
+
+  if (!rates.stale) {
+    if (rates.inProgress) {
+      onStartRatesRequest();
+    } else {
+      onCompleteRatesRequest(rates.error);
+    }
+  }
+});
+
+storeWatcher.watch('contract-year', () => {
+  table.updateResults();
+});
 
 function initialize() {
   table.initialize(store);
@@ -171,9 +158,7 @@ function initialize() {
     ga('send', 'pageview');
   });
 
-  ratesRequester.initialize(store, () => {
-    submit();
-  });
+  store.dispatch(invalidateRates());
 }
 
 // set default options for all future tooltip instantiations

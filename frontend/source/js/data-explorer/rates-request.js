@@ -1,6 +1,11 @@
 import {
-  invalidateRates,
+  startRatesRequest,
+  completeRatesRequest,
 } from './actions';
+
+import {
+  HISTOGRAM_BINS,
+} from './constants';
 
 import {
   autobind,
@@ -16,21 +21,40 @@ const nonRatesFields = ['proposed-price', 'contract-year'];
 const ratesFields = allFields.filter(f => nonRatesFields.indexOf(f) === -1);
 
 export default class StoreRatesAutoRequester {
-  constructor() {
+  constructor(api) {
+    this.api = api;
+    this.request = null;
     autobind(this, ['middleware']);
   }
 
-  initialize(store, onRatesRequest) {
-    Object.assign(this, {
-      onRatesRequest,
+  getRatesParameters(store) {
+    const data = getSerializedFields(store.getState(), ratesFields, {
+      omitEmpty: true,
     });
-
-    store.dispatch(invalidateRates());
+    return Object.assign(data, {
+      experience_range: `${data.min_experience},${data.max_experience}`,
+    });
   }
 
-  getRatesParameters(store) {
-    return getSerializedFields(store.getState(), ratesFields, {
-      omitEmpty: true,
+  _startRatesRequest(store) {
+    if (this.request) {
+      this.request.abort();
+    }
+
+    const data = this.getRatesParameters(store);
+    const defaults = {
+      histogram: HISTOGRAM_BINS,
+    };
+
+    store.dispatch(startRatesRequest());
+
+    this.request = this.api.get({
+      uri: 'rates/',
+      data: Object.assign(defaults, data),
+    }, (error, res) => {
+      this.request = null;
+
+      store.dispatch(completeRatesRequest(error, res));
     });
   }
 
@@ -44,9 +68,7 @@ export default class StoreRatesAutoRequester {
       );
 
       if (updated || newState.rates.stale) {
-        if (this.onRatesRequest) {
-          this.onRatesRequest(store);
-        }
+        this._startRatesRequest(store);
       }
 
       return result;
