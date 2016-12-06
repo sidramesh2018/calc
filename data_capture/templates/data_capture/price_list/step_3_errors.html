@@ -2,14 +2,13 @@
 
 {% block body_class %}secondary-step card--wide card--no-header{% endblock %}
 
-{% block step_heading %}Review errors{% endblock %}
+{% block step_heading %}<h2>Review errors</h2>{% endblock %}
 {% block step_body %}
-  <h2>Upload awarded price list</h2>
     {% with rows=gleaned_data.invalid_rows %}
 
       {% with total=rows|length %}
 
-      <div class="alert alert-error" role="alert">
+      <div class="message message-error" role="alert">
         {% if not gleaned_data.valid_rows %}
           <h3>No valid rows found!</h3>
           <p>
@@ -17,7 +16,7 @@
             shown below in the original file and <a href="#upload">try uploading it again</a>.
           </p>
         {% else %}
-          <h3>{{ total }} row{{ total|pluralize:" has,s have" }} errors</h3>
+          <h3>We found errors in {{ total }} row{{ total|pluralize:",s" }} of your data</h3>
           <p>
             The row{{ total|pluralize }} below appear{{ total|pluralize:"s," }} to be
             invalid and <strong>will be discarded</strong> when you upload your
@@ -79,8 +78,10 @@
         </div>
       {% endif %}
 
-      <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
     </div>
   </form>
 
 {% endblock step_body %}
+{% block card_footer %}
+      <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
+{% endblock %}

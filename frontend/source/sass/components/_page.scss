@@ -66,8 +66,7 @@ main {
     }
   }
   .card__footer {
-    @include span-columns(10);
-    @include shift(2);
+    @include span-columns(12);
   }
 }
 
