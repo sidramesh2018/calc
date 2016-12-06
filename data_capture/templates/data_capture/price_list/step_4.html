@@ -33,43 +33,42 @@
 
   <div class="form-button-row clearfix">
     <div class="submit-group">
-      <button type="submit" class="button" name="save-changes">Save changes</button>
+      <button type="submit" class="button button-primary" name="save-changes">Save changes</button>
     </div>
 
-    <a type="submit" href="{{ step_4_without_edit_url }}">Discard changes</a>
+    <a type="submit" class="button button-outline" href="{{ step_4_without_edit_url }}">Discard changes</a>
   </div>
 
 </div>
 
 {% if not show_edit_form %}
-<div data-contract-details>
-<div class="row">
-  <dl class="contract-details columns eight">
-    <dt>Schedule</dt>
-    <dd>{{ gleaned_data.title }}</dd>
+<div data-contract-details class="row">
+  <div class="twelve columns">
+    <dl class="contract-details clearfix">
+      <dt>Schedule</dt>
+      <dd>{{ gleaned_data.title }}</dd>
 
-    <dt>Contract number</dt>
-    <dd>{{ price_list.contract_number }}</dd>
+      <dt>Contract number</dt>
+      <dd>{{ price_list.contract_number }}</dd>
 
-    <dt>Vendor</dt>
-    <dd>{{ price_list.vendor_name }}</dd>
+      <dt>Vendor</dt>
+      <dd>{{ price_list.vendor_name }}</dd>
 
-    <dt>Small business</dt>
-    <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd>
+      <dt>Small business</dt>
+      <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd>
 
-    <dt>Contractor worksite</dt>
-    <dd>{{ price_list.contractor_site }}</dd>
+      <dt>Contractor worksite</dt>
+      <dd>{{ price_list.contractor_site }}</dd>
 
-    <dt>Contract dates</dt>
-    <dd class="contract-details__start-date">{{ price_list.contract_start }}</dd>
-    <dd>{{ price_list.contract_end }}</dd>
+      <dt>Contract dates</dt>
+      <dd class="contract-details__start-date">{{ price_list.contract_start }}</dd>
+      <dd>{{ price_list.contract_end }}</dd>
 
-    <dt>Escalation rate</dt>
-    <dd>{{ price_list.escalation_rate }}%</dd>
-  </dl>
-</div>
-
-<p><a href="{{ step_4_with_edit_url }}" class="button" data-edit-btn>Edit</a></p>
+      <dt>Escalation rate</dt>
+      <dd>{{ price_list.escalation_rate }}%</dd>
+    </dl>
+    <p><a href="{{ step_4_with_edit_url }}" class="button button-primary" data-edit-btn>Edit</a></p>
+  </div>
 </div>
 {% endif %}
 
@@ -88,8 +87,7 @@
   </div>
 {% endif %}
 
-<br>
-
+<div class="row">
 {% with rows=gleaned_data.valid_rows %}
   {% with total=rows|length %}
     <h2>Verify {{ total }} row{{ total|pluralize }} of data </h2>
@@ -97,12 +95,13 @@
 
   {{ gleaned_data.to_table|safe }}
 {% endwith %}
-
-  <div class="form-button-row clearfix">
+</div>
+<div class="row">
+  <div class="twelve columns form-button-row clearfix">
     {% if prev_url %}
-      <a href="{{ prev_url }}" class="button button-previous">Previous</a>
+      <a href="{{ prev_url }}" class="button button-outline button-previous">Previous</a>
     {% elif gleaned_data.invalid_rows %}
-      <a href="{% url 'data_capture:step_3_errors' %}" class="button button-previous">Previous</a>
+      <a href="{% url 'data_capture:step_3_errors' %}" class="button button-outline button-previous">Previous</a>
     {% else %}
       <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
     {% endif %}
@@ -110,12 +109,12 @@
     {% if gleaned_data.valid_rows %}
       <div class="submit-group">
         {% if show_edit_form %}
-          <button type="submit" class="button-primary">Save and submit for review</button>
+          <button type="submit" class="button button-primary">Save and submit for review</button>
           <span class="submit-label">
             Save changes and submit price list data to an administrator for approval.
           </span>
         {% else %}
-          <button type="submit" class="button-primary" data-edit-text="Save and submit for review">Submit for review</button>
+          <button type="submit" class="button button-primary" data-edit-text="Save and submit for review">Submit for review</button>
           <span class="submit-label" data-edit-text="Save changes and submit price list data to an administrator for approval.">
             Submit price list data to an administrator for approval.
           </span>

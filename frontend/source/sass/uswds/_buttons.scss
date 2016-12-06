@@ -20,7 +20,6 @@
   }
 }
 
-// Excludes .button-primary classes, as we need to style those more explicitly to override Skeleton
 .button,
 .button:visited,
 button,
@@ -29,10 +28,10 @@ button,
 [type="reset"],
 [type="image"] {
   appearance: none;
-  background-color: $color-white; // use Skeleton's default transparent bg
-  /*border: 0;*/ // use Skeleton's default
+  background-color: $color-primary;
+  border: 0;
   border-radius: $border-radius;
-  color: $color-gray; // use Skeleton's default
+  color: $color-white;
   cursor: pointer;
   display: inline-block;
   font-family: $font-family-main;

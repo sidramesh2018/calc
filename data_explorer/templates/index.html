@@ -55,9 +55,13 @@
     <div class="container">
       <p class="help-text">Enter your search terms below, separated by commas. (For example: Engineer, Consultant)</p>
       <div class="row">
-        <div class="six columns">
-          <input id="labor_category" name="q" placeholder="Type a labor category" class="search u-full-width" type="text">
+        <div class="twelve columns">
+          <input id="labor_category" name="q" placeholder="Type a labor category" class="form__inline" type="text">
           <label for="labor_category" style="display:none;">Type a labor category</label>
+          <button id="submit-button" class="submit button-primary">Search</button>
+          <input id="reset-button" class="reset button" type="reset" value="Clear search">
+        </div>
+        <div class="twelve columns">
           <div id="query-types">
             <input id="query_type_match_all" type="radio" name="query_type" value="match_all" checked>
             <label for="query_type_match_all">Contains words</label>
@@ -69,10 +73,6 @@
             <label for="query_type_match_exact">Exact match</label>
           </div>
         </div>
-        <div class="six columns">
-          <button id="submit-button" class="submit button-primary">Search</button>
-          <input id="reset-button" class="reset button" type="reset" value="Clear search">
-        </div>
       </div><!-- /.row -->
     </div><!-- /.container -->
   </section><!-- /.search -->
@@ -80,252 +80,6 @@
   <section class="results">
     <div class="container">
       <div class="row">
-
-        <div class="filter-container columns three">
-
-          <div class="filter-block">
-
-            <h5 class="filter-title">Optional filters</h5>
-
-            <label>Education level:</label>
-
-            <dl class="dropdown">
-
-              <dt>
-                <a href="">
-                  <span class="eduSelect">Select <span class='sr-only'>to reveal Education Level options</span></span>
-                  <div class="multiSel"></div>
-                </a>
-              </dt>
-
-              <dd>
-                <div class="multiSelect">
-                  <fieldset>
-                    <legend class="sr-only">Education level:</legend>
-                    <ul>
-                      <li>
-                        <input id="high-school" type="checkbox" value="HS" name="education" />
-                        <label for="high-school">High School</label>
-                      </li>
-                      <li>
-                          <input id="associates" type="checkbox" value="AA" name="education" />
-                          <label for="associates">Associates</label>
-                      </li>
-                      <li>
-                          <input id="bachelors-degree" type="checkbox" value="BA" name="education" />
-                          <label for="bachelors-degree">Bachelors Degree</label>
-                      </li>
-                      <li>
-                          <input id="masters-degree" type="checkbox" value="MA" name="education" />
-                          <label for="masters-degree">Masters Degree</label>
-                      </li>
-                      <li>
-                          <input id="phd" type="checkbox" value="PHD" name="education" />
-                          <label for="phd">Ph.D</label>
-                      </li>
-                    </ul>
-                  <fieldset>
-                </div>
-              </dd>
-            </dl>
-
-            <div class="filter">
-              <fieldset>
-                <legend>
-                  <label for="experience_range">Experience:</label>
-                </legend>
-
-                <div class="slider"></div>
-
-                <div class="experience_range">
-
-                  <label for="min_experience" class="sr-only">Minimum Years</label>
-                  <select id="min_experience" name="min_experience" class="select-small">
-                    <option selected value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
-                    <option value="21">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                    <option value="24">24</option>
-                    <option value="25">25</option>
-                    <option value="26">26</option>
-                    <option value="27">27</option>
-                    <option value="28">28</option>
-                    <option value="29">29</option>
-                    <option value="30">30</option>
-                    <option value="31">31</option>
-                    <option value="32">32</option>
-                    <option value="33">33</option>
-                    <option value="34">34</option>
-                    <option value="35">35</option>
-                    <option value="36">36</option>
-                    <option value="37">37</option>
-                    <option value="38">38</option>
-                    <option value="39">39</option>
-                    <option value="40">40</option>
-                    <option value="41">41</option>
-                    <option value="42">42</option>
-                    <option value="43">43</option>
-                    <option value="44">44</option>
-                    <option value="45">45</option>
-                  </select>
-                  -
-                  <label for="max_experience" class="sr-only">Maximum Years</label>
-                  <select id="max_experience" name="max_experience" class="select-small">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
-                    <option value="21">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                    <option value="24">24</option>
-                    <option value="25">25</option>
-                    <option value="26">26</option>
-                    <option value="27">27</option>
-                    <option value="28">28</option>
-                    <option value="29">29</option>
-                    <option value="30">30</option>
-                    <option value="31">31</option>
-                    <option value="32">32</option>
-                    <option value="33">33</option>
-                    <option value="34">34</option>
-                    <option value="35">35</option>
-                    <option value="36">36</option>
-                    <option value="37">37</option>
-                    <option value="38">38</option>
-                    <option value="39">39</option>
-                    <option value="40">40</option>
-                    <option value="41">41</option>
-                    <option value="42">42</option>
-                    <option value="43">43</option>
-                    <option value="44">44</option>
-                    <option selected value="45">45</option>
-                  </select>
-
-                  years
-
-                </div>
-
-              </fieldset>
-
-            </div>
-
-            <div class="filter filter-site">
-              <label for="site">Worksite:</label>
-              <select id="site" name="site">
-                <option value="">(all)</option>
-                <option value="customer">customer</option>
-                <option value="contractor">contractor</option>
-                <option value="both">both</option>
-              </select>
-            </div>
-
-            <div class="filter filter-business_size">
-              <label for="business_size">Business size:</label>
-              <select id="business_size" name="business_size">
-                <option value="">(all)</option>
-                <option value="s" data-label="small">small business</option>
-                <option value="o">other than small</option>
-              </select>
-            </div>
-
-            <div class="filter filter-schedule">
-              <label for="schedule">Schedule:</label>
-              <a href="/about#schedules" class="filter-more-info">What's this?</a>
-              <select id="schedule" name="schedule">
-                <option value="">(all)</option>
-                <option value="Consolidated">Consolidated</option>
-                {% get_schedules as schedules %}
-                {% for schedule in schedules %}
-                  <option value="{{schedule.schedule}}">{{ schedule.SIN }} - {{ schedule.name }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="filter contract-year">
-
-              <fieldset class="fieldset-inputs">
-
-                <legend>Contract year:</legend>
-                <a href="javascript:void(0)" class="tooltip filter-more-info" aria-label="All five years of pricing are available in the export">What's this?</a>
-                <h3 class="sr-only">Contract Year</h3>
-
-                <ul class="contract-year-block">
-                  <li class="contract-list-item">
-                    <label for="current-year" class="radio">
-                      <input id="current-year" type="radio" checked name="contract-year" value="current" tabindex="0">
-                      <span tabindex="-1" class="contract-current-year-span checkbox-focus" aria-hidden="true">Current</span>
-                      <span class="sr-only">Current year</span>
-                    </label>
-                  </li>
-                  <li class="contract-list-item">
-                    <label for="one-year-out" class="radio">
-                      <input id="one-year-out" type="radio" name="contract-year" value="1" tabindex="0">
-                      <span tabindex="-1" class="checkbox-focus" aria-hidden="true">+1</span>
-                      <span class="sr-only">One year out</span>
-                    </label>
-                  </li>
-                  <li class="contract-list-item">
-                    <label for="two-years-out" class="radio">
-                      <input id="two-years-out" type="radio" name="contract-year" value="2" tabindex="0">
-                      <span tabindex="-1" class="contract-last-year-span checkbox-focus" aria-hidden="true">+2</span>
-                      <span class="sr-only">Two years out</span>
-                    </label>
-                  </li>
-                </ul>
-
-              </fieldset>
-
-            </div>
-
-            <!--
-            <div class="filter">
-              <label for="fiscal_year">Fiscal Year:</label>
-              <select id="fiscal_year" name="fiscal_year">
-              </select>
-            </div>
-            -->
-          </div>
-
-        </div>
-
         <div class="graph-block columns nine">
           <canvas id="graph" class="hidden" width="710" height="280"></canvas> <!-- for converting the histogram into an img -->
           <p id="description" class="">
@@ -339,7 +93,7 @@
 
           <div class="proposed-price">
             <label for="proposed-price" class="sr-only">Proposed price</label>
-            <input type="number" step="0.01" name="proposed-price" placeholder="Proposed price" class="two-decimal-places" />
+            <input type="number" step="0.01" name="proposed-price" placeholder="Proposed price" class="two-decimal-places form__inline" />
             <button class="button-primary go" />Go</button>
           </div>
 
@@ -437,7 +191,7 @@
               </style>
 
             </svg>
-          </div>
+          </div><!-- .graph -->
 
           <div class="highlights-container row">
 
@@ -460,16 +214,16 @@
                   <h5 id="standard-deviation-plus-highlight" class="sd-highlight"></h5>
                 </div>
 
-              </div>
+              </div><!-- .row -->
 
-            </div>
+            </div><!-- .price-block -->
 
             <div class="proposed-price-block">
               <h5 class="proposed-price-title">Proposed price</h5>
               <h5 class="proposed-price-highlight"></h5>
             </div>
 
-          </div>
+          </div><!-- .highlights-container .row -->
 
 
           <div class="download-buttons row">
@@ -484,11 +238,256 @@
 
           <p class="help-text">The rates shown here are fully burdened, applicable worldwide, and representative of the current fiscal year. This data represents rates awarded at the master contract level.</p>
 
-        </div><!-- /.div -->
+        </div><!-- .download-buttons.row -->
+      </div><!-- .graph-block -->
+      <div class="filter-container columns three">
 
-      </div><!-- /.row -->
+        <div class="filter-block">
 
-      <div class="table-container">
+          <h5 class="filter-title">Optional filters</h5>
+
+          <label>Education level:</label>
+
+          <dl class="dropdown">
+
+            <dt>
+              <a href="">
+                <span class="eduSelect">Select <span class='sr-only'>to reveal Education Level options</span></span>
+                <div class="multiSel"></div>
+              </a>
+            </dt>
+
+            <dd>
+              <div class="multiSelect">
+                <fieldset>
+                  <legend class="sr-only">Education level:</legend>
+                  <ul>
+                    <li>
+                      <input id="high-school" type="checkbox" value="HS" name="education" />
+                      <label for="high-school">High School</label>
+                    </li>
+                    <li>
+                        <input id="associates" type="checkbox" value="AA" name="education" />
+                        <label for="associates">Associates</label>
+                    </li>
+                    <li>
+                        <input id="bachelors-degree" type="checkbox" value="BA" name="education" />
+                        <label for="bachelors-degree">Bachelors Degree</label>
+                    </li>
+                    <li>
+                        <input id="masters-degree" type="checkbox" value="MA" name="education" />
+                        <label for="masters-degree">Masters Degree</label>
+                    </li>
+                    <li>
+                        <input id="phd" type="checkbox" value="PHD" name="education" />
+                        <label for="phd">Ph.D</label>
+                    </li>
+                  </ul>
+                <fieldset>
+              </div>
+            </dd>
+          </dl>
+
+          <div class="filter">
+            <fieldset>
+              <legend>
+                <label for="experience_range">Experience:</label>
+              </legend>
+
+              <div class="slider"></div>
+
+              <div class="experience_range">
+
+                <label for="min_experience" class="sr-only">Minimum Years</label>
+                <select id="min_experience" name="min_experience" class="select-small">
+                  <option selected value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                  <option value="24">24</option>
+                  <option value="25">25</option>
+                  <option value="26">26</option>
+                  <option value="27">27</option>
+                  <option value="28">28</option>
+                  <option value="29">29</option>
+                  <option value="30">30</option>
+                  <option value="31">31</option>
+                  <option value="32">32</option>
+                  <option value="33">33</option>
+                  <option value="34">34</option>
+                  <option value="35">35</option>
+                  <option value="36">36</option>
+                  <option value="37">37</option>
+                  <option value="38">38</option>
+                  <option value="39">39</option>
+                  <option value="40">40</option>
+                  <option value="41">41</option>
+                  <option value="42">42</option>
+                  <option value="43">43</option>
+                  <option value="44">44</option>
+                  <option value="45">45</option>
+                </select>
+                -
+                <label for="max_experience" class="sr-only">Maximum Years</label>
+                <select id="max_experience" name="max_experience" class="select-small">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                  <option value="24">24</option>
+                  <option value="25">25</option>
+                  <option value="26">26</option>
+                  <option value="27">27</option>
+                  <option value="28">28</option>
+                  <option value="29">29</option>
+                  <option value="30">30</option>
+                  <option value="31">31</option>
+                  <option value="32">32</option>
+                  <option value="33">33</option>
+                  <option value="34">34</option>
+                  <option value="35">35</option>
+                  <option value="36">36</option>
+                  <option value="37">37</option>
+                  <option value="38">38</option>
+                  <option value="39">39</option>
+                  <option value="40">40</option>
+                  <option value="41">41</option>
+                  <option value="42">42</option>
+                  <option value="43">43</option>
+                  <option value="44">44</option>
+                  <option selected value="45">45</option>
+                </select>
+
+                years
+
+              </div>
+
+            </fieldset>
+
+          </div>
+
+          <div class="filter filter-site">
+            <label for="site">Worksite:</label>
+            <select id="site" name="site">
+              <option value="">(all)</option>
+              <option value="customer">customer</option>
+              <option value="contractor">contractor</option>
+              <option value="both">both</option>
+            </select>
+          </div>
+
+          <div class="filter filter-business_size">
+            <label for="business_size">Business size:</label>
+            <select id="business_size" name="business_size">
+              <option value="">(all)</option>
+              <option value="s" data-label="small">small business</option>
+              <option value="o">other than small</option>
+            </select>
+          </div>
+
+          <div class="filter filter-schedule">
+            <label for="schedule">Schedule:</label>
+            <a href="/about#schedules" class="filter-more-info">What's this?</a>
+            <select id="schedule" name="schedule">
+              <option value="">(all)</option>
+              <option value="Consolidated">Consolidated</option>
+              {% get_schedules as schedules %}
+              {% for schedule in schedules %}
+                <option value="{{schedule.schedule}}">{{ schedule.SIN }} - {{ schedule.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="filter contract-year">
+
+            <fieldset class="fieldset-inputs">
+
+              <legend>Contract year:</legend>
+              <a href="javascript:void(0)" class="tooltip filter-more-info" aria-label="All five years of pricing are available in the export">What's this?</a>
+              <h3 class="sr-only">Contract Year</h3>
+
+              <ul class="contract-year-block">
+                <li class="contract-list-item">
+                  <label for="current-year" class="radio">
+                    <input id="current-year" type="radio" checked name="contract-year" value="current" tabindex="0">
+                    <span tabindex="-1" class="contract-current-year-span checkbox-focus" aria-hidden="true">Current</span>
+                    <span class="sr-only">Current year</span>
+                  </label>
+                </li>
+                <li class="contract-list-item">
+                  <label for="one-year-out" class="radio">
+                    <input id="one-year-out" type="radio" name="contract-year" value="1" tabindex="0">
+                    <span tabindex="-1" class="checkbox-focus" aria-hidden="true">+1</span>
+                    <span class="sr-only">One year out</span>
+                  </label>
+                </li>
+                <li class="contract-list-item">
+                  <label for="two-years-out" class="radio">
+                    <input id="two-years-out" type="radio" name="contract-year" value="2" tabindex="0">
+                    <span tabindex="-1" class="contract-last-year-span checkbox-focus" aria-hidden="true">+2</span>
+                    <span class="sr-only">Two years out</span>
+                  </label>
+                </li>
+              </ul>
+
+            </fieldset>
+
+          </div>
+
+          <!--
+          <div class="filter">
+            <label for="fiscal_year">Fiscal Year:</label>
+            <select id="fiscal_year" name="fiscal_year">
+            </select>
+          </div>
+          -->
+        </div>
+
+      </div>
+
+    </div><!-- /.row -->
+
+      <div class="table-container row">
         <table id="results-table" class="results has-data sortable hoverable">
           <thead>
             <tr>

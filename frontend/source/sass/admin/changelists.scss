@@ -12,6 +12,9 @@
       color: $color-base;
       margin-left: 0;
       display: inline-block;
+
+  margin: 1rem 0;
+  float: left;
     }
 
     select {
@@ -19,13 +22,14 @@
     }
 
     button {
-      display: inline ;
+    margin: 1rem 0;
+    display: inline-block;
     }
   }
 }
 
 td.action-checkbox {
-  padding: 0 0 0 0.25em;
+  padding: 0.45em 0 0 0.25em;
   input[type=checkbox],
   input[type=radio]{
     position: static;
@@ -65,4 +69,17 @@ td.action-checkbox {
       }
     }
   }
+}
+
+#changelist-form .actions {
+  max-width: 550px;
+  button {
+    margin: 3.5rem 0 1rem;
+    float: right;
+  }
+}
+.action-counter {
+  font-size: $small-font-size;
+  color: $color-gray;
+  display: block;
 }
