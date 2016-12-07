@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 
 import * as ExcludedColumn from './excluded-column';
 import * as LaborCategoryColumn from './labor-category-column';
+import * as EducationColumn from './education-column';
+
+const NUM_COLUMNS = 3;
 
 class ResultsTable extends React.Component {
   renderHeaderRow() {
@@ -10,6 +13,7 @@ class ResultsTable extends React.Component {
       <tr>
         <ExcludedColumn.HeaderCell />
         <LaborCategoryColumn.HeaderCell />
+        <EducationColumn.HeaderCell />
       </tr>
     );
   }
@@ -26,6 +30,7 @@ class ResultsTable extends React.Component {
       <tr key={result.id}>
         <ExcludedColumn.DataCell result={result} />
         <LaborCategoryColumn.DataCell result={result} />
+        <EducationColumn.DataCell result={result} />
       </tr>
     ));
   }
@@ -33,7 +38,6 @@ class ResultsTable extends React.Component {
   render() {
     const id = `${this.props.idPrefix}results-table`;
     const idHref = `#${id}`;
-    const numColumns = 2;
 
     return (
       <table id={id} className="results has-data sortable hoverable">
@@ -45,7 +49,7 @@ class ResultsTable extends React.Component {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={numColumns}>
+            <td colSpan={NUM_COLUMNS}>
               <a href={idHref}>Return to the top</a>
             </td>
           </tr>
