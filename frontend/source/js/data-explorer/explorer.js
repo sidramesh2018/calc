@@ -31,8 +31,6 @@ import hourglass from '../common/hourglass';
 
 import ga from '../common/ga';
 
-import createTable from './table';
-
 import {
   invalidateRates,
   resetState,
@@ -74,7 +72,6 @@ const store = createStore(
 const legacyInputs = search.selectAll('*[name]');
 const loadingIndicator = search.select('.loading-indicator');
 const histogramDownloadLink = document.getElementById('download-histogram');
-const table = createTable('#results-table');
 
 function onCompleteRatesRequest(error) {
   search.classed('loading', false);
@@ -94,13 +91,9 @@ function onCompleteRatesRequest(error) {
   }
 
   search.classed('loaded', true);
-
-  table.updateResults();
 }
 
 function onStartRatesRequest() {
-  table.updateSort();
-
   legacyInputs
     .filter(function filter() {
       return this.type !== 'radio' && this.type !== 'checkbox';
@@ -125,13 +118,7 @@ storeWatcher.watch('rates', () => {
   }
 });
 
-storeWatcher.watch('contract-year', () => {
-  table.updateResults();
-});
-
 function initialize() {
-  table.initialize(store);
-
   initializeAutocomplete(store, api, $('#labor_category'));
 
   legacyInputs.on('change', () => {
