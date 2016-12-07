@@ -177,7 +177,6 @@ def step_2(request, step):
             return redirect('data_capture:step_3')
         else:
             add_generic_form_error(request, form)
-    print(step_1_data.cleaned_data['schedule_class'])
     return step.render(request, {
         'form': form,
         'preferred_schedule': step_1_data.cleaned_data['schedule_class'],
