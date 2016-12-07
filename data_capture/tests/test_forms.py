@@ -23,6 +23,9 @@ class Step1FormTests(TestCase):
         form = self.make_form()
         self.assertFalse(form.is_valid())
         self.assertIn('contract_number', form.errors)
+        self.assertIn('A price list with this contract number has already '
+                      'been submitted.',
+                      form.errors['contract_number'])
 
         form = self.make_form(contract_number='GS-NOT-DUPE')
         self.assertTrue(form.is_valid())
@@ -33,6 +36,16 @@ class Step1FormTests(TestCase):
         form = self.make_form(contract_number='gs-boop')
         self.assertFalse(form.is_valid())
         self.assertIn('contract_number', form.errors)
+        self.assertIn('A price list with this contract number has already '
+                      'been submitted.',
+                      form.errors['contract_number'])
+
+    def test_contract_number_format_is_validated(self):
+        form = self.make_form(contract_number='***GS-123-BOOP')
+        self.assertFalse(form.is_valid())
+        self.assertIn('contract_number', form.errors)
+        self.assertIn('Please use only letters, numbers, and dashes (-).',
+                      form.errors['contract_number'])
 
     def test_has_existing_contract_number_error_works(self):
         mommy.make(SubmittedPriceList,

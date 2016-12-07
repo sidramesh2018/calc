@@ -1,7 +1,8 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import (MinValueValidator, MaxValueValidator,
+                                    RegexValidator)
 from django.utils import timezone
 
 from contracts.models import (Contract, EDUCATION_CHOICES,
@@ -33,7 +34,10 @@ class SubmittedPriceList(models.Model):
     # This is the equivalent of Contract.idv_piid.
     contract_number = models.CharField(
         max_length=128,
-        help_text='This should be the full contract number, e.g. GS-XXX-XXXX.'
+        help_text='This should be the full contract number, e.g. GS-XXX-XXXX.',
+        validators=[RegexValidator(
+            regex=r'^[a-zA-Z0-9-_]+$',
+            message='Please use only letters, numbers, and dashes (-).')],
     )
     vendor_name = models.CharField(max_length=128)
     schedule = models.CharField(
