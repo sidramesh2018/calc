@@ -2,24 +2,17 @@ import React from 'react';
 
 import createSortableColumn from './sortable-column';
 
-const column = createSortableColumn('labor_category');
+const column = createSortableColumn({
+  key: 'labor_category',
+  title: 'Labor Category',
+});
 
-export const HeaderCell = column.connectHeaderCell(
-  ({ className, toggleSort }) => (
-    <th scope="col"
-        className={className}
-        onClick={toggleSort}>
-      Labor Category
-    </th>
-  )
-);
+export const HeaderCell = column.HeaderCell;
 
 export const DataCell = column.connectDataCell(
-  ({ className, result }) => (
+  ({ className, value }) => (
     <th className={className} scope="row">
-      {result.labor_category}
+      {value}
     </th>
   )
 );
-
-export const [boop, jones] = [1, 2];

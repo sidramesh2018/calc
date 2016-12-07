@@ -17,7 +17,41 @@ const createSortToggler = (key, sort, setSort) => () => {
   });
 };
 
-export default function createSortableColumn(key) {
+const createSortHeaderTooltip = (title, { sorted, descending }) => {
+  if (!sorted) {
+    return `${title}: select to sort ascending`;
+  }
+
+  if (descending) {
+    return `${title}: sorted descending, select to sort ascending`;
+  }
+
+  return `${title}: sorted ascending, select to sort descending`;
+};
+
+function GenericHeaderCell({ className, tooltip, title, toggleSort }) {
+  return (
+    <th scope="col"
+        title={tooltip}
+        className={className}
+        onClick={toggleSort}>
+      {title}
+    </th>
+  );
+}
+
+GenericHeaderCell.propTypes = {
+  className: React.PropTypes.string.isRequired,
+  title: React.PropTypes.string.isRequired,
+  tooltip: React.PropTypes.string.isRequired,
+  toggleSort: React.PropTypes.func.isRequired,
+};
+
+export default function createSortableColumn({
+  description,
+  title,
+  key,
+}) {
   const connectToStore = connect(
     state => ({ sort: state.sort }),
     { setSort: setSortAction }
@@ -42,6 +76,8 @@ export default function createSortableColumn(key) {
       return React.createElement(component, {
         toggleSort: createSortToggler(key, sort, setSort),
         className: classNames(classes),
+        tooltip: createSortHeaderTooltip(description || title, classes),
+        title,
       }, children);
     };
 
@@ -63,6 +99,7 @@ export default function createSortableColumn(key) {
 
       return React.createElement(component, {
         className: classNames(classes),
+        value: result[key],
         result,
       }, children);
     };
@@ -76,5 +113,7 @@ export default function createSortableColumn(key) {
     return connectToStore(wrappedComponent);
   };
 
-  return { connectHeaderCell, connectDataCell };
+  const HeaderCell = connectHeaderCell(GenericHeaderCell);
+
+  return { HeaderCell, connectDataCell };
 }
