@@ -121,11 +121,6 @@ header {
 
 nav {
   position: relative;
-  .nav-content {
-    display: inline-block;
-    float: right;
-  }
-
   &:after {
     content: " ";
     display: table;
@@ -135,16 +130,14 @@ nav {
     @include span-columns(8 of 12);
     @include shift(2);
     list-style: none;
-    display: flex;
+    text-align: center;
     color: $color-white;
     padding: 0;
     margin-bottom: 0;
     li {
       list-style: none;
-      /*padding: .25rem 1rem .75rem;*/
-      /*margin: 0 0.5em;*/
-      flex-grow: 1;
-      text-align: center;
+      display: inline-block;
+      margin: 0 $space-4x;
       &:first-child {
         margin-left: 0rem;
       }
@@ -152,16 +145,18 @@ nav {
         margin-right: 0rem;
       }
       &.selected {
+        border-bottom: $space-1x solid $color-primary-alt;
         a {
-          border-bottom: $space-half solid $color-white;
+          display: block;
+          padding-bottom: $space-half;
           &:hover {
-            border-bottom-color: $color-gray-lightest;
+            border-bottom-color: $color-primary-alt-dark;
           }
         }
       }
       a {
         font-weight: normal;
-        font-size: 11px; // $small-font-size - 2 to accommodate uppercase
+        font-size: $small-font-size;
         text-transform: uppercase;
         color: $color-white;
         /*padding: 0.5rem 1.5rem;*/
@@ -179,11 +174,9 @@ nav {
   }
 
   nav {
-    float: none;
     margin-left: -20px; // to account for container padding
     ul {
       padding: 1rem;
-      float: none;
       margin-top: 1rem;
       width: 100%;
       .nav-user-id {
