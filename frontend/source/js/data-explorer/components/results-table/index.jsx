@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import * as ExcludedColumn from './excluded-column';
 import * as LaborCategoryColumn from './labor-category-column';
 import * as EducationColumn from './education-column';
+import * as ExperienceColumn from './experience-column';
 
-// TODO: min_years_experience
 // TODO: current_price / next_year_price / second_year_price
 // TODO: idv_piid
 // TODO: vendor_name
@@ -15,6 +15,7 @@ const COLUMNS = [
   ExcludedColumn,
   LaborCategoryColumn,
   EducationColumn,
+  ExperienceColumn,
 ];
 
 class ResultsTable extends React.Component {
