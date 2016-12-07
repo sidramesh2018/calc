@@ -1,14 +1,13 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import createSortableColumn from './sortable-column';
 
 const column = createSortableColumn('labor_category');
 
 export const HeaderCell = column.connectHeaderCell(
-  ({ toggleSort, baseClasses }) => (
+  ({ className, toggleSort }) => (
     <th scope="col"
-        className={classNames(baseClasses)}
+        className={className}
         onClick={toggleSort}>
       Labor Category
     </th>
@@ -16,9 +15,11 @@ export const HeaderCell = column.connectHeaderCell(
 );
 
 export const DataCell = column.connectDataCell(
-  ({ baseClasses, result }) => (
-    <th className={classNames(baseClasses)} scope="row">
+  ({ className, result }) => (
+    <th className={className} scope="row">
       {result.labor_category}
     </th>
   )
 );
+
+export const [boop, jones] = [1, 2];

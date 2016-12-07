@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import { setSort as setSortAction } from '../../actions';
 
@@ -40,7 +41,7 @@ export default function createSortableColumn(key) {
 
       return React.createElement(component, {
         toggleSort: createSortToggler(key, sort, setSort),
-        baseClasses: classes,
+        className: classNames(classes),
       }, children);
     };
 
@@ -61,7 +62,7 @@ export default function createSortableColumn(key) {
       }, baseClasses);
 
       return React.createElement(component, {
-        baseClasses: classes,
+        className: classNames(classes),
         result,
       }, children);
     };
