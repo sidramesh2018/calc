@@ -5,8 +5,8 @@ import * as ExcludedColumn from './excluded-column';
 import * as LaborCategoryColumn from './labor-category-column';
 import * as EducationColumn from './education-column';
 import * as ExperienceColumn from './experience-column';
+import * as PriceColumn from './price-column';
 
-// TODO: current_price / next_year_price / second_year_price
 // TODO: idv_piid
 // TODO: vendor_name
 // TODO: schedule
@@ -16,6 +16,7 @@ const COLUMNS = [
   LaborCategoryColumn,
   EducationColumn,
   ExperienceColumn,
+  PriceColumn,
 ];
 
 class ResultsTable extends React.Component {
@@ -57,10 +58,7 @@ class ResultsTable extends React.Component {
 }
 
 ResultsTable.propTypes = {
-  sort: React.PropTypes.object.isRequired,
-  contractYear: React.PropTypes.string.isRequired,
   results: React.PropTypes.array.isRequired,
-  dispatch: React.PropTypes.func.isRequired,
   idPrefix: React.PropTypes.string,
 };
 
@@ -70,8 +68,6 @@ ResultsTable.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    sort: state.sort,
-    contractYear: state['contract-year'],
     results: state.rates.data.results,
   };
 }

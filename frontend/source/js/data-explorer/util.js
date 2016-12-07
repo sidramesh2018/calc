@@ -8,6 +8,7 @@ export const location = window.history.location || window.location;
 
 export const formatCommas = d3.format(',');
 export const formatPrice = d3.format(',.0f');
+export const formatPriceWithCents = d3.format(',.02f');
 
 export function autobind(self, names) {
   const target = self;
