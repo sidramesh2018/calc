@@ -2,21 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as ExcludedColumn from './excluded-column';
+import * as LaborCategoryColumn from './labor-category-column';
 
 class ResultsTable extends React.Component {
   renderHeaderRow() {
     return (
       <tr>
         <ExcludedColumn.HeaderCell />
-        <th scope="col" className="sortable">Labor Category</th>
+        <LaborCategoryColumn.HeaderCell />
       </tr>
     );
   }
 
   renderBodyRows() {
-    return this.props.results.map(result => {
-      const lc = result.labor_category;
-
+    return this.props.results.map(result => (
       // TODO: education_level
       // TODO: min_years_experience
       // TODO: current_price / next_year_price / second_year_price
@@ -24,13 +23,11 @@ class ResultsTable extends React.Component {
       // TODO: vendor_name
       // TODO: schedule
 
-      return (
-        <tr key={result.id}>
-          <ExcludedColumn.DataCell result={result} />
-          <th className="cell column-labor_category" scope="row">{lc}</th>
-        </tr>
-      );
-    });
+      <tr key={result.id}>
+        <ExcludedColumn.DataCell result={result} />
+        <LaborCategoryColumn.DataCell result={result} />
+      </tr>
+    ));
   }
 
   render() {
