@@ -5,32 +5,26 @@ import * as ExcludedColumn from './excluded-column';
 import * as LaborCategoryColumn from './labor-category-column';
 import * as EducationColumn from './education-column';
 
-const NUM_COLUMNS = 3;
+// TODO: min_years_experience
+// TODO: current_price / next_year_price / second_year_price
+// TODO: idv_piid
+// TODO: vendor_name
+// TODO: schedule
+
+const COLUMNS = [
+  ExcludedColumn,
+  LaborCategoryColumn,
+  EducationColumn,
+];
 
 class ResultsTable extends React.Component {
-  renderHeaderRow() {
-    return (
-      <tr>
-        <ExcludedColumn.HeaderCell />
-        <LaborCategoryColumn.HeaderCell />
-        <EducationColumn.HeaderCell />
-      </tr>
-    );
-  }
-
   renderBodyRows() {
     return this.props.results.map(result => (
-      // TODO: education_level
-      // TODO: min_years_experience
-      // TODO: current_price / next_year_price / second_year_price
-      // TODO: idv_piid
-      // TODO: vendor_name
-      // TODO: schedule
 
       <tr key={result.id}>
-        <ExcludedColumn.DataCell result={result} />
-        <LaborCategoryColumn.DataCell result={result} />
-        <EducationColumn.DataCell result={result} />
+        {COLUMNS.map((col, i) => (
+          <col.DataCell result={result} key={i} />
+        ))}
       </tr>
     ));
   }
@@ -42,14 +36,16 @@ class ResultsTable extends React.Component {
     return (
       <table id={id} className="results has-data sortable hoverable">
         <thead>
-          {this.renderHeaderRow()}
+          <tr>
+            {COLUMNS.map((col, i) => (<col.HeaderCell key={i}/>))}
+          </tr>
         </thead>
         <tbody>
           {this.renderBodyRows()}
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={NUM_COLUMNS}>
+            <td colSpan={COLUMNS.length}>
               <a href={idHref}>Return to the top</a>
             </td>
           </tr>
