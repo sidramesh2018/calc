@@ -1,45 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { excludeRow } from '../actions';
-import RestoreExcluded from './restore-excluded';
-
-class ExcludedColumn {
-  renderHeaderCell() {
-    return (
-      <th scope="col" className="exclude">
-        <RestoreExcluded />
-      </th>
-    );
-  }
-
-  renderDataCell(props, result) {
-    const handleExcludeRow = rowId => e => {
-      e.preventDefault();
-      props.dispatch(excludeRow(rowId));
-    };
-
-    // TODO: Tooltip / aria-label on a.exclude-row
-
-    return (
-      <td className="cell column-exclude">
-        <a className="exclude-row" href="#"
-           onClick={handleExcludeRow(result.id)}
-           title={`Exclude ${result.labor_category} from your search`}>
-          &times;
-        </a>
-      </td>
-    );
-  }
-}
-
-const excludedColumn = new ExcludedColumn();
+import * as ExcludedColumn from './excluded-column';
 
 class ResultsTable extends React.Component {
   renderHeaderRow() {
     return (
       <tr>
-        {excludedColumn.renderHeaderCell()}
+        <ExcludedColumn.HeaderCell />
         <th scope="col" className="sortable">Labor Category</th>
       </tr>
     );
@@ -58,7 +26,7 @@ class ResultsTable extends React.Component {
 
       return (
         <tr key={result.id}>
-          {excludedColumn.renderDataCell(this.props, result)}
+          <ExcludedColumn.DataCell result={result} />
           <th className="cell column-labor_category" scope="row">{lc}</th>
         </tr>
       );

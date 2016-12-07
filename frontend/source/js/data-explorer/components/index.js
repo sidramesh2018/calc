@@ -1,4 +1,3 @@
-export { default as RestoreExcluded } from './restore-excluded';
 export { default as Description } from './description';
 export { default as Highlights } from './highlights';
 export { default as Histogram } from './histogram';
