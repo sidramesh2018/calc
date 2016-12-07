@@ -6,14 +6,11 @@
 
 /* nav ul li temp styles until we can get the proper class added in the back end */
 nav ul li {
-  border-radius: 0 ;
-  &:first-child {
-    background: $color-white;
-    a,
-    a:hover {
-      color: $color-primary-darkest;
+    padding-bottom: ($space-1x + $space-half);
+    a[href*="admin"]{
+      padding-bottom: 7px;
+      border-bottom: $space-1x solid $color-primary-alt;
     }
-  }
 }
 /* end temp styles */
 
@@ -25,6 +22,16 @@ nav ul li {
     width: auto;
 }
 /* end USWDS override */
+
+/* messagelist styling */
+.messagelist li {
+  font-size: $h3-font-size;
+  font-weight: $font-weight-bold;
+  .info {
+    color: $color-green;
+  }
+}
+/* end messagelist styling */
 
 label,
 .aligned label {
@@ -51,15 +58,30 @@ form .aligned p.help {
 
 /* groups pages */
 #user-tools ul {
-  text-align: right;
-  margin: 2rem 0;
+  text-align: center;
+  margin: ($space-1x + $space-half) 0 $space-3x;
   li {
     display: inline-block;
     margin: 0 2rem 0 0;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: $small-font-size;
     &:last-child {
       margin-right: 0;
+    }
+  }
+}
+
+.change-form fieldset {
+  max-width: none;
+}
+
+.selector {
+  width: 100% !important;
+  .selector-available,
+  .selector-chosen {
+    width: 45% !important;
+    select {
+      width: 100% !important;
     }
   }
 }

@@ -40,7 +40,8 @@ main {
 
 /* this isn't exactly BEM, but the best way I can find to manage the variable
  * card widths without duplicating the styles for card, content & footer.
- * Top level goes in {% body_class %}  */
+ * Top level goes in {% body_class %} even though that's not a class on <body>.
+ * Ugh. */
 .card--narrow {
   .card {
     @include span-columns(8);
@@ -70,7 +71,7 @@ main {
   }
 }
 
-/* Also a body class. Used in conjunction with the above. */
+/* Also a "body class." Used in conjunction with the above. */
 .card--no-header {
   .card:first-child {
     border-bottom: none;
