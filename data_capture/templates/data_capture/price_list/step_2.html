@@ -3,11 +3,10 @@
 {% block body_class %}secondary-step card--narrow{% endblock %}
 {% block subtitle %}Enter vendor details{% endblock %}
 
-{% block step_heading %}<h2>Enter details for {{ step_1_data.contract_number.value }} ({{ step_1_data.schedule.value }})</h2>
+{% block step_heading %}<h2>Enter details for {{ contract_number }} ({{ preferred_schedule }})</h2>
 <p>We just need a few more details about the vendor and contract.</p>
 {% endblock %}
 {% block step_body %}
-  <h3>{{ step_1_data.vendor_name.value }}</h3>
   <form method="post">
   {% csrf_token %}
 
