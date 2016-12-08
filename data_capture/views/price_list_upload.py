@@ -1,5 +1,4 @@
 import json
-import urllib.parse
 
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
@@ -7,7 +6,6 @@ from django.http import HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
-from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
@@ -18,7 +16,7 @@ from ..models import SubmittedPriceList
 from ..decorators import handle_cancel
 from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
-from .common import add_generic_form_error, Steps
+from .common import add_generic_form_error, build_url, Steps
 from frontend import ajaxform
 
 
@@ -28,30 +26,6 @@ steps = Steps(
         'current_selected_tab': 'upload_price_data'
     }
 )
-
-
-def build_url(viewname, **kwargs):
-    '''
-    Build a URL using the given view name and the given query string
-    arguments, returning the result:
-
-        >>> build_url('data_capture:step_4', a='1')
-        '/data-capture/step/4?a=1'
-
-    Any keyword arguments that are `None` will be excluded, though:
-
-        >>> build_url('data_capture:step_4', a=None)
-        '/data-capture/step/4'
-    '''
-
-    url = reverse(viewname)
-    query = [
-        (key, kwargs[key]) for key in kwargs
-        if kwargs[key] is not None
-    ]
-    if not query:
-        return url
-    return '{}?{}'.format(url, urllib.parse.urlencode(query))
 
 
 def get_nested_item(obj, keys, default=None):
@@ -123,16 +97,21 @@ def step_1(request, step):
     else:
         form = forms.Step1Form(request.POST)
         if form.is_valid():
-            request.session['data_capture:price_list'] = {
-                'step_1_POST': request.POST,
-            }
+            sess = request.session
+            if 'data_capture:price_list' in sess:
+                sess['data_capture:price_list']['step_1_POST'] = request.POST
+            else:
+                sess['data_capture:price_list'] = {
+                    'step_1_POST': request.POST,
+                }
+
             return redirect('data_capture:step_2')
         elif form.has_existing_contract_number_error():
             contract_number = request.POST['contract_number']
             latest = SubmittedPriceList.get_latest_by_contract_number(
                 contract_number)
-            details_url = reverse('data_capture:price_list_details',
-                                  kwargs={'id': latest.pk})
+            details_url = build_url('data_capture:price_list_details',
+                                    reverse_kwargs={'id': latest.pk})
             msg = mark_safe(
                 "We found an existing price list for contract number {}.</br>"
                 "If you'd like, you may "

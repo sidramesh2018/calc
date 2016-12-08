@@ -1,5 +1,5 @@
 @import 'variables.scss';
-@import '../libs/neat/_neat.scss';
+@import 'neat';
 
 .container {
   @include outer-container;

@@ -68,7 +68,7 @@
       <dd>{{ price_list.contract_end }}</dd>
 
       <dt>Escalation rate</dt>
-      <dd>{{ price_list.escalation_rate }}%</dd>
+      <dd>{% if price_list.escalation_rate %}{{ price_list.escalation_rate }}%{% else %}None{% endif %}</dd>
     </dl>
     <p><a href="{{ step_4_with_edit_url }}" class="button button-primary" data-edit-btn>Edit</a></p>
   </div>

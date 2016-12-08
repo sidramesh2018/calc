@@ -10,6 +10,7 @@ const path = require('path');
 
 const gulp = require('gulp');
 const sass = require('gulp-sass');
+const eyeglass = require('eyeglass');
 const cleancss = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
@@ -73,9 +74,6 @@ const bundles = {
   // CALC 2.0 Data Capture scripts
   dataCapture: {
     dirName: 'data-capture',
-  },
-  dataCapturePriceListUploadStep4: {
-    dirName: 'data-capture-price-list-upload-step-4',
   },
   // Styleguide scripts
   styleguide: {},
@@ -156,7 +154,7 @@ gulp.task('clean', () => {
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sourcemaps.init())
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass(eyeglass()).on('error', sass.logError))
     .pipe(rename({ suffix: '.min' }))
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))

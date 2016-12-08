@@ -1,9 +1,12 @@
+import urllib.parse
+
 from functools import wraps
 from django.conf.urls import url
 from django.contrib import messages
 from django.shortcuts import render
 from django.template.defaultfilters import pluralize
 from django.template.loader import render_to_string
+from django.core.urlresolvers import reverse
 
 
 def add_generic_form_error(request, form):
@@ -12,6 +15,37 @@ def add_generic_form_error(request, form):
         'Oops! Please correct the following error{}.'
             .format(pluralize(form.errors))
     )
+
+
+def build_url(viewname, reverse_kwargs=None, **kwargs):
+    '''
+    Build a URL using the given view name and the given query string
+    arguments, returning the result:
+
+        >>> build_url('data_capture:step_4', a='1')
+        '/data-capture/step/4?a=1'
+
+    Any keyword arguments that are `None` will be excluded, though:
+
+        >>> build_url('data_capture:step_4', a=None)
+        '/data-capture/step/4'
+
+    Any value to the  `reverse_kwargs` argument will be passed through as the
+    `kwargs` argument to `reverse`. This is useful for setting url parameters.
+
+        >>> build_url('data_capture:price_list_details',
+        ...           reverse_kwargs={'id': 5})
+        '/data-capture/price-lists/5'
+    '''
+
+    url = reverse(viewname, kwargs=reverse_kwargs)
+    query = [
+        (key, kwargs[key]) for key in kwargs
+        if kwargs[key] is not None
+    ]
+    if not query:
+        return url
+    return '{}?{}'.format(url, urllib.parse.urlencode(query))
 
 
 class Steps:

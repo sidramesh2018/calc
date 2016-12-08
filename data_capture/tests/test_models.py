@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from django.test import override_settings
 from django.utils import timezone
+from django.forms import ValidationError
 
 from hourglass.tests.common import BaseLoginTestCase
 from contracts.models import Contract
@@ -172,3 +173,10 @@ class ModelsTests(ModelTestCase):
         latest = SubmittedPriceList.get_latest_by_contract_number(
             'gs-AA-bbBB')
         self.assertEqual(p, latest)
+
+    def test_contract_number_is_validated(self):
+        p = self.create_price_list(contract_number='***GS-123-3456')
+        with self.assertRaises(ValidationError) as cm:
+            p.full_clean()
+            self.assertIn('Please use only letters, numbers, and dashes (-).',
+                          cm.exception)

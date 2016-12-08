@@ -174,11 +174,7 @@ class Step3Form(forms.Form):
         return cleaned_data
 
 
-class Step4Form(forms.ModelForm):
-    schedule = forms.ChoiceField(
-        choices=registry.get_choices,
-        widget=forms.HiddenInput()
-    )
+class PriceListDetailsForm(forms.ModelForm):
     is_small_business = forms.ChoiceField(
         label='Business size',
         choices=[
@@ -204,6 +200,25 @@ class Step4Form(forms.ModelForm):
         cleaned_data = super().clean()
         ensure_contract_start_is_before_end(self, cleaned_data)
         return cleaned_data
+
+    def is_different_from(self, price_list):
+        my_model = self.save(commit=False)
+        for field in self.Meta.fields:
+            if getattr(my_model, field) != getattr(price_list, field):
+                return True
+        return False
+
+    class Meta:
+        model = SubmittedPriceList
+        fields = ['vendor_name', 'is_small_business', 'contractor_site',
+                  'contract_start', 'contract_end', 'escalation_rate']
+
+
+class Step4Form(PriceListDetailsForm):
+    schedule = forms.ChoiceField(
+        choices=registry.get_choices,
+        widget=forms.HiddenInput()
+    )
 
     class Meta:
         model = SubmittedPriceList

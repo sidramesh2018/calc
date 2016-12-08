@@ -6,6 +6,15 @@ from django.contrib.auth.models import User, Group
 from hourglass.utils import get_permissions_from_ns_codenames
 
 
+class BaseTestCase(TestCase):
+    def assertHasMessage(self, res, tag, content):
+        msgs = list(res.context['messages'])
+        self.assertEqual(len(msgs), 1)
+        m = msgs[0]
+        self.assertEqual(m.tags, tag)
+        self.assertEqual(str(m), content)
+
+
 @override_settings(
     # This will make tests run faster.
     PASSWORD_HASHERS=['django.contrib.auth.hashers.MD5PasswordHasher'],
@@ -13,7 +22,7 @@ from hourglass.utils import get_permissions_from_ns_codenames
     # Django 1.8's login helpers.
     AUTHENTICATION_BACKENDS=['django.contrib.auth.backends.ModelBackend'],
 )
-class BaseLoginTestCase(TestCase):
+class BaseLoginTestCase(BaseTestCase):
     def create_user(self, username, password=None, is_staff=False,
                     is_superuser=False, email=None, groups=()):
         user = User.objects.create_user(
