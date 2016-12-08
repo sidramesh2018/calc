@@ -6,6 +6,7 @@ import * as LaborCategoryColumn from './labor-category-column';
 import * as EducationColumn from './education-column';
 import * as ExperienceColumn from './experience-column';
 import * as PriceColumn from './price-column';
+import * as ContractNumberColumn from './contract-number-column';
 
 // TODO: idv_piid
 // TODO: vendor_name
@@ -17,6 +18,7 @@ const COLUMNS = [
   EducationColumn,
   ExperienceColumn,
   PriceColumn,
+  ContractNumberColumn,
 ];
 
 class ResultsTable extends React.Component {
