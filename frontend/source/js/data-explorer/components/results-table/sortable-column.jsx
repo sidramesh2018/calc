@@ -59,8 +59,8 @@ GenericDataCell.propTypes = {
 
 const getBaseClasses = key => ({ [`column-${key}`]: true });
 
-const createHeaderCellConnector = (description, title, key) => component => {
-  const wrappedComponent = ({ sort, setSort, children }) => {
+const createHeaderCellConnector = (description, title, key) => Component => {
+  const wrappedComponent = ({ sort, setSort }) => {
     // TODO: Tooltip / aria-label
 
     const isSorted = sort.key === key;
@@ -71,41 +71,36 @@ const createHeaderCellConnector = (description, title, key) => component => {
       descending: isSorted && sort.descending,
     }, getBaseClasses(key));
 
-    return React.createElement(component, {
-      toggleSort: createSortToggler(key, sort, setSort),
-      className: classNames(classes),
-      tooltip: createSortHeaderTooltip(description || title, classes),
-      title,
-    }, children);
+    return <Component
+            className={classNames(classes)}
+            toggleSort={createSortToggler(key, sort, setSort)}
+            tooltip={createSortHeaderTooltip(description || title, classes)}
+            title={title} />;
   };
 
   wrappedComponent.propTypes = {
     sort: React.PropTypes.object.isRequired,
     setSort: React.PropTypes.func.isRequired,
-    children: React.PropTypes.any,
   };
 
   return wrappedComponent;
 };
 
-const createDataCellConnector = key => component => {
-  const wrappedComponent = ({ sort, result, children }) => {
+const createDataCellConnector = key => Component => {
+  const wrappedComponent = ({ sort, result }) => {
     const classes = Object.assign({
       cell: true,
       sorted: sort.key === key,
     }, getBaseClasses(key));
 
-    return React.createElement(component, {
-      className: classNames(classes),
-      value: result[key],
-      result,
-    }, children);
+    return <Component className={classNames(classes)}
+                      value={result[key]}
+                      result={result} />;
   };
 
   wrappedComponent.propTypes = {
     sort: React.PropTypes.object.isRequired,
     result: React.PropTypes.object.isRequired,
-    children: React.PropTypes.any,
   };
 
   return wrappedComponent;
