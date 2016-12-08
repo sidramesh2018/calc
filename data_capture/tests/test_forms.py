@@ -5,7 +5,7 @@ from .common import FAKE_SCHEDULE, uploaded_csv_file, r10_file
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
 from ..forms import (Step1Form, Step2Form, Step3Form, Step4Form,
-                     Region10BulkUploadForm)
+                     PriceListDetailsForm, Region10BulkUploadForm)
 from ..models import SubmittedPriceList
 
 
@@ -138,6 +138,18 @@ class Step4FormTests(Step2FormTests):
             'a': 1,
             'b': 2
         })
+
+
+class PriceListDetailsFormTests(TestCase):
+    def test_is_different_from_works(self):
+        price_list = mommy.make(SubmittedPriceList,
+                                vendor_name='Seppi Socks Co.')
+        form = PriceListDetailsForm(instance=price_list)
+        self.assertFalse(form.is_different_from(price_list))
+
+        new_price_list = SubmittedPriceList(price_list)
+        new_price_list.vendor_name = 'Vendy Vend, Inc'
+        self.assertTrue(form.is_different_from(new_price_list))
 
 
 class Region10BulkUploadFormTests(TestCase):

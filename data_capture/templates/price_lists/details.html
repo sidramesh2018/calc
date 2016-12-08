@@ -31,11 +31,57 @@
     <h1>Details for <strong>{{ price_list.vendor_name }}</strong>'s price list</h1>
     <h2>{{ price_list.contract_number }}</h2>
 
-    <div class="row">
-      <div class="columns eight">
-        {% include "price_lists/_details_list.html" %}
-      </div>
+    {% include 'data_capture/messages.html' %}
+
+    <div data-edit-contract-details {% if not show_edit_form %}style="display:none;"{% endif %}>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        {% load frontend %}
+
+        <p>Schedule: {{ price_list.get_schedule_title }}</p>
+
+        {% fieldset form.vendor_name %}
+        {% fieldset form.is_small_business %}
+        {% fieldset form.contractor_site %}
+
+        <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+          {% fieldset form.contract_start %}
+          <p>to</p>
+          {% fieldset form.contract_end %}
+        </div>
+
+        {% fieldset form.escalation_rate %}
+
+        <div class="form-button-row clearfix">
+          <div class="submit-group">
+            <button type="submit" class="button">Save changes</button>
+          </div>
+
+          <a type="submit" href="{{ details_without_edit_url }}">Discard changes</a>
+        </div>
+      </form>
     </div>
+
+    {% if not show_edit_form %}
+      <div data-contract-details>
+        <div class="row">
+          <div class="columns eight">
+            {% include "price_lists/_details_list.html" %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="columns eight">
+            <p><a href="{{ details_with_edit_url }}" class="button" data-edit-btn>Edit</a></p>
+            {% if price_list.get_status_display == 'approved' %}
+              <p class="help-text">Making changes to these details will remove this price list's data from CALC until an administrator reviews it again.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
 
     {% if price_list_rows %}
       <div class="row">

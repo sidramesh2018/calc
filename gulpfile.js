@@ -75,9 +75,6 @@ const bundles = {
   dataCapture: {
     dirName: 'data-capture',
   },
-  dataCapturePriceListUploadStep4: {
-    dirName: 'data-capture-price-list-upload-step-4',
-  },
   // Styleguide scripts
   styleguide: {},
   // CALC 2.0 Tests

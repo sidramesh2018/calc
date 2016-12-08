@@ -65,7 +65,7 @@
       <dd>{{ price_list.contract_end }}</dd>
 
       <dt>Escalation rate</dt>
-      <dd>{{ price_list.escalation_rate }}%</dd>
+      <dd>{% if price_list.escalation_rate %}{{ price_list.escalation_rate }}%{% else %}None{% endif %}</dd>
     </dl>
     <p><a href="{{ step_4_with_edit_url }}" class="button button-primary" data-edit-btn>Edit</a></p>
   </div>
@@ -125,10 +125,4 @@
     <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
   </div>
 </form>
-
-{% if not is_safe_mode_enabled and not show_edit_form %}
-{% load staticfiles %}
-<script src= "{% static 'frontend/built/js/data-capture-price-list-upload-step-4/index.min.js' %}"></script>
-{% endif %}
-
 {% endblock %}
