@@ -47,6 +47,19 @@ GenericHeaderCell.propTypes = {
   toggleSort: React.PropTypes.func.isRequired,
 };
 
+function GenericDataCell({ className, value }) {
+  return (
+    <td className={className}>
+      {value}
+    </td>
+  );
+}
+
+GenericDataCell.propTypes = {
+  className: React.PropTypes.string.isRequired,
+  value: React.PropTypes.any,
+};
+
 export default function createSortableColumn({
   description,
   title,
@@ -114,6 +127,7 @@ export default function createSortableColumn({
   };
 
   const HeaderCell = connectHeaderCell(GenericHeaderCell);
+  const DataCell = connectDataCell(GenericDataCell);
 
-  return { HeaderCell, connectDataCell };
+  return { HeaderCell, DataCell, connectDataCell };
 }

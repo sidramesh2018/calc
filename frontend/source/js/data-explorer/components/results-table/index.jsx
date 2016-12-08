@@ -1,24 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import createSortableColumn from './sortable-column';
 import * as ExcludedColumn from './excluded-column';
 import * as LaborCategoryColumn from './labor-category-column';
-import * as EducationColumn from './education-column';
 import * as ExperienceColumn from './experience-column';
 import * as PriceColumn from './price-column';
 import * as ContractNumberColumn from './contract-number-column';
 
-// TODO: idv_piid
-// TODO: vendor_name
-// TODO: schedule
-
 const COLUMNS = [
   ExcludedColumn,
   LaborCategoryColumn,
-  EducationColumn,
+  createSortableColumn({
+    key: 'education_level',
+    title: 'Min Edu.',
+    description: 'Minimum years of education',
+  }),
   ExperienceColumn,
   PriceColumn,
   ContractNumberColumn,
+  createSortableColumn({
+    key: 'vendor_name',
+    title: 'Vendor',
+  }),
+  createSortableColumn({
+    key: 'schedule',
+    title: 'Schedule',
+  }),
 ];
 
 class ResultsTable extends React.Component {
