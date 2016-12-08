@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { setSort } from '../../actions';
 import createSortableColumn from './sortable-column';
 import * as ExcludedColumn from './excluded-column';
 import * as LaborCategoryColumn from './labor-category-column';
@@ -35,7 +36,7 @@ class ResultsTable extends React.Component {
 
       <tr key={result.id}>
         {COLUMNS.map((col, i) => (
-          <col.DataCell result={result} key={i} />
+          <col.DataCell key={i} sort={this.props.sort} result={result} />
         ))}
       </tr>
     ));
@@ -49,7 +50,10 @@ class ResultsTable extends React.Component {
       <table id={id} className="results has-data sortable hoverable">
         <thead>
           <tr>
-            {COLUMNS.map((col, i) => (<col.HeaderCell key={i}/>))}
+            {COLUMNS.map((col, i) => (
+              <col.HeaderCell key={i} setSort={this.props.setSort}
+                              sort={this.props.sort} />
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -68,6 +72,8 @@ class ResultsTable extends React.Component {
 }
 
 ResultsTable.propTypes = {
+  sort: React.PropTypes.object.isRequired,
+  setSort: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
   idPrefix: React.PropTypes.string,
 };
@@ -78,8 +84,11 @@ ResultsTable.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    sort: state.sort,
     results: state.rates.data.results,
   };
 }
 
-export default connect(mapStateToProps)(ResultsTable);
+const mapDispatchToProps = { setSort };
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResultsTable);

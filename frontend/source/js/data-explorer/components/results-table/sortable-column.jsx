@@ -1,8 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
-
-import { setSort as setSortAction } from '../../actions';
 
 const createSortToggler = (key, sort, setSort) => () => {
   let descending = false;
@@ -88,10 +85,7 @@ const createHeaderCellConnector = (description, title, key) => component => {
     children: React.PropTypes.any,
   };
 
-  return connect(
-    state => ({ sort: state.sort }),
-    { setSort: setSortAction }
-  )(wrappedComponent);
+  return wrappedComponent;
 };
 
 const createDataCellConnector = key => component => {
@@ -114,9 +108,7 @@ const createDataCellConnector = key => component => {
     children: React.PropTypes.any,
   };
 
-  return connect(
-    state => ({ sort: state.sort })
-  )(wrappedComponent);
+  return wrappedComponent;
 };
 
 export default function createSortableColumn({
