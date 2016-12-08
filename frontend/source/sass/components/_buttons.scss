@@ -1,5 +1,8 @@
 @import '../base/variables';
 @import '../uswds/buttons';
+a.button:hover {
+  color: $color-white;
+}
 
 button,
 .button,
@@ -17,6 +20,7 @@ button,
   &:focus {
     box-shadow: $focus-shadow;
   }
+
   &.button-outline {
     border: 1px solid $color-gray;
     background: $color-white;
