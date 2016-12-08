@@ -5,7 +5,7 @@ import {
   formatPrice,
 } from '../util';
 
-function Highlights({
+export function Highlights({
   stdDeviation,
   avgPrice,
   proposedPrice,
