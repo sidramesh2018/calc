@@ -158,7 +158,8 @@ def step_2(request, step):
             add_generic_form_error(request, form)
     return step.render(request, {
         'form': form,
-        'preferred_schedule_title': step_1_data.cleaned_data['schedule_class'].title,
+        'preferred_schedule_title':
+            step_1_data.cleaned_data['schedule_class'].title,
         'contract_number': step_1_data.cleaned_data['contract_number']
     })
 
