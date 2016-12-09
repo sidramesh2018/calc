@@ -76,15 +76,21 @@ GenericDataCell.propTypes = {
 
 const getBaseClasses = key => ({ [`column-${key}`]: true });
 
+const getHeaderCellClasses = (key, sort) => Object.assign({
+  sortable: true,
+  sorted: sort.key === key,
+  ascending: sort.key === key && !sort.descending,
+  descending: sort.key === key && sort.descending,
+}, getBaseClasses(key));
+
+const getDataCellClasses = (key, sort) => Object.assign({
+  cell: true,
+  sorted: sort.key === key,
+}, getBaseClasses(key));
+
 const createHeaderCellConnector = (description, title, key) => Component => {
   const wrappedComponent = ({ sort, setSort }) => {
-    const isSorted = sort.key === key;
-    const classes = Object.assign({
-      sortable: true,
-      sorted: isSorted,
-      ascending: isSorted && !sort.descending,
-      descending: isSorted && sort.descending,
-    }, getBaseClasses(key));
+    const classes = getHeaderCellClasses(key, sort);
 
     return <Component
             className={classNames(classes)}
@@ -102,16 +108,11 @@ const createHeaderCellConnector = (description, title, key) => Component => {
 };
 
 const createDataCellConnector = key => Component => {
-  const wrappedComponent = ({ sort, result }) => {
-    const classes = Object.assign({
-      cell: true,
-      sorted: sort.key === key,
-    }, getBaseClasses(key));
-
-    return <Component className={classNames(classes)}
-                      value={result[key]}
-                      result={result} />;
-  };
+  const wrappedComponent = ({ sort, result }) => (
+    <Component className={classNames(getDataCellClasses(key, sort))}
+               value={result[key]}
+               result={result} />
+  );
 
   wrappedComponent.propTypes = {
     sort: React.PropTypes.object.isRequired,
