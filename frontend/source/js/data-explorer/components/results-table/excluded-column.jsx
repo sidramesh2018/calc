@@ -23,13 +23,13 @@ function BaseDataCell({ dispatch, result }) {
 
   return (
     <td className="cell column-exclude">
-      <a className="exclude-row" href="#"
-         onClick={handleExcludeRow(result.id)}
-         aria-label={tooltip}>
-        <Tooltip text={tooltip}>
-          &times;
-        </Tooltip>
-      </a>
+      <Tooltip text={tooltip}>
+        <a className="exclude-row" href="#"
+           onClick={handleExcludeRow(result.id)}
+           aria-label={tooltip}>
+            &times;
+        </a>
+      </Tooltip>
     </td>
   );
 }
