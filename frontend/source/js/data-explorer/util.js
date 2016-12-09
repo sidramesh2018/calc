@@ -10,11 +10,20 @@ export const formatCommas = d3.format(',');
 export const formatPrice = d3.format(',.0f');
 export const formatPriceWithCents = d3.format(',.02f');
 
-export function isEnterOrSpace(event) {
+function isEnterOrSpace(event) {
   const KEY_ENTER = 13;
   const KEY_SPACE = 32;
 
   return event.keyCode === KEY_ENTER || event.keyCode === KEY_SPACE;
+}
+
+export function handleEnterOrSpace(cb) {
+  return event => {
+    if (isEnterOrSpace(event)) {
+      event.preventDefault();
+      cb(event);
+    }
+  };
 }
 
 export function autobind(self, names) {

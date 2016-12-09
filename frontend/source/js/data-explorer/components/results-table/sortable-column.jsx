@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { isEnterOrSpace } from '../../util';
+import { handleEnterOrSpace } from '../../util';
 import Tooltip from '../tooltip';
 
 const createSortToggler = (key, sort, setSort) => () => {
@@ -44,9 +44,7 @@ class GenericHeaderCell extends React.Component {
           role="button"
           aria-label={this.props.tooltip}
           className={this.props.className}
-          onKeyUp={(e) => {
-            if (isEnterOrSpace(e)) { this.props.toggleSort(); }
-          }}
+          onKeyDown={handleEnterOrSpace(this.props.toggleSort)}
           onClick={this.props.toggleSort}>
         <Tooltip text={this.props.tooltip} show={this.state.focused}>
           {this.props.title}

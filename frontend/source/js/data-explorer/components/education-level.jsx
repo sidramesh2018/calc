@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import {
   autobind,
+  handleEnterOrSpace,
 } from '../util';
 
 import {
@@ -74,10 +75,12 @@ class EducationLevel extends React.Component {
 
   componentDidMount() {
     document.addEventListener('click', this.handleDocumentClick);
+    document.addEventListener('focus', this.handleDocumentClick, true);
   }
 
   componentWillUnmount() {
     document.removeEventListener('click', this.handleDocumentClick);
+    document.removeEventListener('focus', this.handleDocumentClick, true);
   }
 
   render() {
@@ -125,6 +128,9 @@ class EducationLevel extends React.Component {
             ref={(el) => { this.dropdownEl = el; } }>
           <dt>
             <a href="#" onClick={this.handleToggleMenu}
+               role="button"
+               aria-expanded={this.state.expanded.toString()}
+               onKeyDown={handleEnterOrSpace(this.handleToggleMenu)}
                className={levels.length === 0 ? '' : 'filter_active'}>
               {linkContent}
             </a>
