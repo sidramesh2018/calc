@@ -85,10 +85,10 @@ class Experience extends React.Component {
     });
 
     if (min !== this.props.min) {
-      this.props.dispatch(setExperience('min', min));
+      this.props.setExperience('min', min);
     }
     if (max !== this.props.max) {
-      this.props.dispatch(setExperience('max', max));
+      this.props.setExperience('max', max);
     }
   }
 
@@ -120,7 +120,7 @@ class Experience extends React.Component {
       'filter_active',
     ]);
     const onChange = type => e => {
-      this.props.dispatch(setExperience(type, parseInt(e.target.value, 10)));
+      this.props.setExperience(type, parseInt(e.target.value, 10));
     };
 
     return (
@@ -155,7 +155,7 @@ class Experience extends React.Component {
 Experience.propTypes = {
   min: React.PropTypes.number.isRequired,
   max: React.PropTypes.number.isRequired,
-  dispatch: React.PropTypes.func.isRequired,
+  setExperience: React.PropTypes.func.isRequired,
   idPrefix: React.PropTypes.string,
 };
 
@@ -163,11 +163,10 @@ Experience.defaultProps = {
   idPrefix: 'experience-',
 };
 
-function mapStateToProps(state) {
-  return {
+export default connect(
+  state => ({
     min: state.min_experience,
     max: state.max_experience,
-  };
-}
-
-export default connect(mapStateToProps)(Experience);
+  }),
+  { setExperience }
+)(Experience);

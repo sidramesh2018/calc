@@ -70,7 +70,7 @@ class EducationLevel extends React.Component {
   }
 
   handleCheckboxClick(level) {
-    this.props.dispatch(toggleEducationLevel(level));
+    this.props.toggleEducationLevel(level);
   }
 
   componentDidMount() {
@@ -155,17 +155,14 @@ class EducationLevel extends React.Component {
 EducationLevel.propTypes = {
   levels: React.PropTypes.array.isRequired,
   idPrefix: React.PropTypes.string,
-  dispatch: React.PropTypes.func.isRequired,
+  toggleEducationLevel: React.PropTypes.func.isRequired,
 };
 
 EducationLevel.defaultProps = {
   idPrefix: 'education-level-',
 };
 
-function mapStateToProps(state) {
-  return {
-    levels: state.education,
-  };
-}
-
-export default connect(mapStateToProps)(EducationLevel);
+export default connect(
+  state => ({ levels: state.education }),
+  { toggleEducationLevel }
+)(EducationLevel);

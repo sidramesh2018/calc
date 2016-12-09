@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Tooltip from '../tooltip';
-import { excludeRow } from '../../actions';
+import { excludeRow as excludeRowAction } from '../../actions';
 import RestoreExcluded from './restore-excluded';
 
 export function HeaderCell() {
@@ -13,10 +13,10 @@ export function HeaderCell() {
   );
 }
 
-function BaseDataCell({ dispatch, result }) {
+function BaseDataCell({ excludeRow, result }) {
   const handleExcludeRow = rowId => e => {
     e.preventDefault();
-    dispatch(excludeRow(rowId));
+    excludeRow(rowId);
   };
 
   const tooltip = `Exclude ${result.labor_category} from your search`;
@@ -35,8 +35,11 @@ function BaseDataCell({ dispatch, result }) {
 }
 
 BaseDataCell.propTypes = {
-  dispatch: React.PropTypes.func.isRequired,
+  excludeRow: React.PropTypes.func.isRequired,
   result: React.PropTypes.object.isRequired,
 };
 
-export const DataCell = connect()(BaseDataCell);
+export const DataCell = connect(
+  null,
+  { excludeRow: excludeRowAction }
+)(BaseDataCell);

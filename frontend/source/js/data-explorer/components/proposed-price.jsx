@@ -38,7 +38,7 @@ class ProposedPrice extends React.Component {
       const value = this.state.typed;
       const floatValue = value ? parseFloat(value) : 0;
       if (!isNaN(floatValue) && floatValue >= 0) {
-        this.props.dispatch(setProposedPrice(floatValue));
+        this.props.setProposedPrice(floatValue);
       }
     }
   }
@@ -75,7 +75,7 @@ class ProposedPrice extends React.Component {
 
 ProposedPrice.propTypes = {
   proposedPrice: React.PropTypes.number.isRequired,
-  dispatch: React.PropTypes.func.isRequired,
+  setProposedPrice: React.PropTypes.func.isRequired,
   idPrefix: React.PropTypes.string,
 };
 
@@ -83,10 +83,7 @@ ProposedPrice.defaultProps = {
   idPrefix: '',
 };
 
-function mapStateToProps(state) {
-  return {
-    proposedPrice: state['proposed-price'],
-  };
-}
-
-export default connect(mapStateToProps)(ProposedPrice);
+export default connect(
+  state => ({ proposedPrice: state['proposed-price'] }),
+  { setProposedPrice }
+)(ProposedPrice);
