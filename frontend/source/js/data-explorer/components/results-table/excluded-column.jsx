@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Tooltip from '../tooltip';
 import { excludeRow } from '../../actions';
 import RestoreExcluded from './restore-excluded';
 
@@ -18,14 +19,16 @@ function BaseDataCell({ dispatch, result }) {
     dispatch(excludeRow(rowId));
   };
 
-  // TODO: Tooltip / aria-label on a.exclude-row
+  const tooltip = `Exclude ${result.labor_category} from your search`;
 
   return (
     <td className="cell column-exclude">
       <a className="exclude-row" href="#"
          onClick={handleExcludeRow(result.id)}
-         title={`Exclude ${result.labor_category} from your search`}>
-        &times;
+         aria-label={tooltip}>
+        <Tooltip text={tooltip}>
+          &times;
+        </Tooltip>
       </a>
     </td>
   );

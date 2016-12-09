@@ -1,6 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import Tooltip from '../tooltip';
+
 const createSortToggler = (key, sort, setSort) => () => {
   let descending = false;
 
@@ -29,10 +31,12 @@ const createSortHeaderTooltip = (title, { sorted, descending }) => {
 function GenericHeaderCell({ className, tooltip, title, toggleSort }) {
   return (
     <th scope="col"
-        title={tooltip}
+        aria-label={tooltip}
         className={className}
         onClick={toggleSort}>
-      {title}
+      <Tooltip text={tooltip}>
+        {title}
+      </Tooltip>
     </th>
   );
 }
@@ -61,8 +65,6 @@ const getBaseClasses = key => ({ [`column-${key}`]: true });
 
 const createHeaderCellConnector = (description, title, key) => Component => {
   const wrappedComponent = ({ sort, setSort }) => {
-    // TODO: Tooltip / aria-label
-
     const isSorted = sort.key === key;
     const classes = Object.assign({
       sortable: true,
