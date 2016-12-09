@@ -16,12 +16,14 @@ export default class Tooltip extends React.Component {
       .tooltipster('content', this.props.text);
     this.el.addEventListener('focus', this.show, true);
     this.el.addEventListener('blur', this.hide, true);
+    this.syncShowProp();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.text !== prevProps.text) {
       $(this.el).tooltipster('content', this.props.text);
     }
+    this.syncShowProp();
   }
 
   componentWillUnmount() {
@@ -38,6 +40,20 @@ export default class Tooltip extends React.Component {
     $(this.el).tooltipster('hide');
   }
 
+  syncShowProp() {
+    if (typeof this.props.show !== 'boolean') {
+      return;
+    }
+
+    const isHidden = $(this.el).tooltipster('status') === 'hidden';
+
+    if (this.props.show && isHidden) {
+      this.show();
+    } else if (!this.props.show && !isHidden) {
+      this.hide();
+    }
+  }
+
   render() {
     return (
       <span ref={(el) => { this.el = el; }}>
@@ -50,4 +66,5 @@ export default class Tooltip extends React.Component {
 Tooltip.propTypes = {
   children: React.PropTypes.any,
   text: React.PropTypes.string.isRequired,
+  show: React.PropTypes.bool,
 };

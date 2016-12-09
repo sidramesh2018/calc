@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { isEnterOrSpace } from '../../util';
 import Tooltip from '../tooltip';
 
 const createSortToggler = (key, sort, setSort) => () => {
@@ -28,17 +29,31 @@ const createSortHeaderTooltip = (title, { sorted, descending }) => {
   return `${title}: sorted ascending, select to sort descending`;
 };
 
-function GenericHeaderCell({ className, tooltip, title, toggleSort }) {
-  return (
-    <th scope="col"
-        aria-label={tooltip}
-        className={className}
-        onClick={toggleSort}>
-      <Tooltip text={tooltip}>
-        {title}
-      </Tooltip>
-    </th>
-  );
+class GenericHeaderCell extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { focused: false };
+  }
+
+  render() {
+    return (
+      <th scope="col"
+          onFocus={() => { this.setState({ focused: true }); }}
+          onBlur={() => { this.setState({ focused: false }); }}
+          tabIndex="0"
+          role="button"
+          aria-label={this.props.tooltip}
+          className={this.props.className}
+          onKeyUp={(e) => {
+            if (isEnterOrSpace(e)) { this.props.toggleSort(); }
+          }}
+          onClick={this.props.toggleSort}>
+        <Tooltip text={this.props.tooltip} show={this.state.focused}>
+          {this.props.title}
+        </Tooltip>
+      </th>
+    );
+  }
 }
 
 GenericHeaderCell.propTypes = {
