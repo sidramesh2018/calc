@@ -47,6 +47,7 @@
 {% endblock header_extension %}
 
 {% block body %}
+<div class="card">
 <form id="search" class="search" role="form">
   <input type="hidden" name="sort" value="current_price">
   <input type="hidden" name="exclude" value="">
@@ -516,6 +517,7 @@
   </section><!-- /.results -->
 
 </form>
+</div><!-- .card -->
 
 <![if gt IE 8]>
 {# For the list of files included in this built script, see gulpfile.js #}

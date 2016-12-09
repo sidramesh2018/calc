@@ -44,6 +44,7 @@ main {
  * Top level goes in {% body_class %} even though that's not a class on <body>.
  * Ugh. */
 .card--narrow {
+  margin-bottom: $space-10x;
   .card {
     @include span-columns(8);
     @include shift(2);
@@ -53,12 +54,14 @@ main {
     }
   }
   .card__footer {
+    margin-top: -$space-10x; //ugh this is dumb
     @include span-columns(8);
     @include shift(2);
   }
 }
 
 .card--wide {
+  margin-bottom: $space-10x;
   .card {
     @include span-columns(12);
 
@@ -68,6 +71,7 @@ main {
     }
   }
   .card__footer {
+    margin-top: -$space-10x;
     @include span-columns(12);
   }
 }

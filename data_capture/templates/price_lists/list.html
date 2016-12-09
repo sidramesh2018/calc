@@ -3,11 +3,10 @@
 {% block title %}Price Lists{% endblock %}
 
 {% block body %}
-  <div class="container">
-    <h1>Your price lists</h1>
-
-    <div class="row">
-      <div class="columns twelve">
+  <div class="container card--narrow">
+    <div class="row card">
+      <div class="card__content">
+        <h1>Your price lists</h1>
         <h2 id="approved">Approved price lists</h2>
         <p>Price lists that have their data available in CALC.</p>
         {% if approved_price_lists %}
@@ -23,9 +22,9 @@
           <p class="empty-list-note">None of your price lists have been approved yet.</p>
         {% endif %}
       </div>
-    </div>
-    <div class="row">
-      <div class="columns twelve">
+    </div><!--card-->
+    <div class="row card">
+      <div class="card__content">
         <h2 id="new">New price lists</h2>
         <p>Price lists that have been submitted but that are not currently approved.</p>
         {% if new_price_lists %}
@@ -38,12 +37,12 @@
             {% endfor %}
           </ul>
         {% else %}
-          <p class="empty-list-note">You don't have any price lists awaiting review.</p>
+          <p class="empty-list-note">None of your price lists are awaiting review.</p>
         {% endif %}
       </div>
     </div>
-    <div class="row">
-      <div class="columns twelve">
+    <div class="row card">
+      <div class="card__content">
         <h2 id="rejected">Rejected price lists</h2>
         <p>Price lists that have been reviewed but rejected by a CALC administrator.<p>
         {% if rejected_price_lists %}
@@ -56,12 +55,12 @@
             {% endfor %}
           </ul>
         {% else %}
-          <p class="empty-list-note">You don't have any price lists that have been rejected.</p>
+          <p class="empty-list-note">None of your price lists have been rejected.</p>
         {% endif %}
       </div>
     </div>
-    <div class="row">
-      <div class="columns twelve">
+    <div class="row card">
+      <div class="card__content">
         <h2 id="unapproved">Unapproved price lists</h2>
         <p>Price lists that were approved but that have since been unapproved by a CALC administrator.</p>
         {% if unapproved_price_lists %}
@@ -78,6 +77,6 @@
         {% endif %}
       </div>
     </div>
-
   </div>
+</div>
 {% endblock body %}
