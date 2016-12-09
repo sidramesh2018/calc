@@ -12,6 +12,7 @@ body {
 main {
   // https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
   flex: 1 0 auto;
+  margin-top: -$space-4x; //to create "stacked" look
 }
 
 .secondary-step h1 {
