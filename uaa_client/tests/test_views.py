@@ -41,7 +41,8 @@ class ViewTests(TestCase):
         self.assertEqual(get_query(urlinfo), {
             'client_id': 'clientid',
             'response_type': 'code',
-            'state': 'abcd'
+            'state': 'abcd',
+            'redirect_uri': 'http://testserver/auth/callback',
         })
         get_random_string.assert_called_with(length=32)
 

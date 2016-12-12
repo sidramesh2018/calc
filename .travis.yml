@@ -52,17 +52,15 @@ env:
   - WD_SOCKET_TIMEOUT=60
   - SAUCE_USERNAME=atulvarma
   - secure: "RbgG35nc1SHgjdxVbGUDlumePeR/+dXq5fMbfTXOW8uFYw5kGh75px2KdFDkL1JIA1vbfxyNFm09x32uXMcHsBKu9fJS7xbpMrRDbJoV2wVy5wd6qtvZ7yFbR87Fqo3/tuGu13jNNDvUgKjpUlrzLZKaL7qvv5Gd7CVhkySUa1o="
-# The following sections (before_deploy and deploy) have been commented
-# out during penetration testing to avoid automatic deployments
-# before_deploy:
-# - export PATH=$HOME:$PATH
-# - travis_retry curl -L -o $HOME/cf.tgz "https://cli.run.pivotal.io/stable?release=linux64-binary&version=$CF_CLI_VERSION"
-# - tar xzvf $HOME/cf.tgz -C $HOME
-# - travis_retry cf install-plugin autopilot -f -r CF-Community
-# deploy:
-#   provider: script
-#   script: "./deploy-travis.sh"
-#   skip_cleanup: true
-#   on:
-#     branch: develop
+before_deploy:
+- export PATH=$HOME:$PATH
+- travis_retry curl -L -o $HOME/cf.tgz "https://cli.run.pivotal.io/stable?release=linux64-binary&version=$CF_CLI_VERSION"
+- tar xzvf $HOME/cf.tgz -C $HOME
+- travis_retry cf install-plugin autopilot -f -r CF-Community
+deploy:
+  provider: script
+  script: "./deploy-travis.sh"
+  skip_cleanup: true
+  on:
+    branch: develop
 sudo: required

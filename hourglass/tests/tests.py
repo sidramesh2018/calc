@@ -164,7 +164,7 @@ class RedisUrlTests(unittest.TestCase):
 
     def test_noop_when_name_not_in_vcap(self):
         env = make_vcap_services_env({
-            'redis28-swarm': [{
+            'redis28': [{
                 'name': 'a-different-name',
                 'credentials': {
                     'hostname': 'the_host',
@@ -178,7 +178,7 @@ class RedisUrlTests(unittest.TestCase):
 
     def test_redis_url_is_loaded(self):
         env = make_vcap_services_env({
-            'redis28-swarm': [{
+            'redis28': [{
                 'name': 'redis-service',
                 'credentials': {
                     'hostname': 'the_host',
