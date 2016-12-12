@@ -1,0 +1,41 @@
+from price_prediction.models import FittedValuesByCategory
+from price_prediction.models import LaborCategoryLookUp
+from price_prediction.models import PriceModels
+from contracts.models import Contract
+import pandas as pd
+import math
+import datetime
+import code
+from django.core.management import BaseCommand
+from optparse import make_option
+import numpy as np
+import matplotlib.pyplot as plt
+
+class Command(BaseCommand):
+
+    def handle(self, *args, **options):
+        results = Contract.objects.all()
+        print('normality =', scipy.stats.normaltest(array))
+        max = np.amax(array)
+        min = np.amin(array)
+        
+        histo = np.histogram(array, bins=100, range=(min, max))
+        freqs = histo[0]
+        rangebins = (max - min)
+        numberbins = (len(histo[1])-1)
+        interval = (rangebins/numberbins)
+        newbins = np.arange((min), (max), interval)
+        histogram = bar(newbins, freqs, width=0.2, color='gray')
+        plt.show()
+        year_one_prices = []
+        year_two_prices = []
+        year_three_prices = []
+        year_four_prices = []
+        year_five_prices = []
+        for result in results:
+            year_one_prices.append(result.hourly_rate_year1)
+            year_two_prices.append(result.hourly_rate_year2)
+            year_three_prices.append(result.hourly_rate_year3)
+            year_four_prices.append(result.hourly_rate_year4)
+            year_five_prices.append(result.hourly_rate_year5)
+            

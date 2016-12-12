@@ -15,7 +15,7 @@ def save_proposed_data(hourly_rate,number_of_hours,labor_category):
     proposed_data = ProposedContractingData(proposed_price=hourly_rate,proposed_hours=int(number_of_hours),timestamp=timezone.now())
     proposed_data.save()
 
-def you_saved_with_calc_analysis(results,hourly_rate,total_hours):
+def you_saved_with_calc_analysis(results,hourly_rate,total_hours,labor_category):
     """
     This function does a series of calculations used for the analysis of proposed prices in calc
     parameters -
@@ -37,9 +37,10 @@ def you_saved_with_calc_analysis(results,hourly_rate,total_hours):
         "percentage":percentage,
         "hourly_rate":hourly_rate,
         "labor_category":labor_category,
-        "average_savings":average_savings,
+        "average_savings":round(average_savings,2),
+        "count_with_higher_price":count_with_higher_price,
         "total_cost_for_this_contract":total_cost_for_this_contract,
-        "average_total_cost_savings":average_total_cost_savings,
+        "average_total_cost_savings":round(average_total_cost_savings,2),
         "you_saved_with_calc":True,
         "result":True
     }
@@ -64,6 +65,7 @@ def you_could_save_x_with_calc(results,hourly_rate,total_hours,labor_category):
     #should I not find one, I'll use the mean for the measure of central tendency
     #This should be considered as a replacement for mean in the main tool, and I hope to have a substantive discussion
     #around this issue with the group
+    results = [float(result.hourly_rate_year1) for result in results]
     std_dev = statistics.stdev(results)
     mean = statistics.mean(results)
     median = statistics.median(results)
@@ -72,20 +74,23 @@ def you_could_save_x_with_calc(results,hourly_rate,total_hours,labor_category):
     outlier_below = [result for result in results if (std_dev * 3) - mean < result]
     if len(outlier_above) > 0 or len(outlier_below) > 0:
         possible_savings = hourly_rate - median
+        central_tendency = median
     else:
         possible_savings = hourly_rate - mean
+        central_tendency = mean
     total_results = len(results)
-    count_with_lower_price = [float(result.hourly_rate_year1) for result in results if result.hourly_rate_year1 < hourly_rate]
+    count_with_lower_price = len([result for result in results if result < hourly_rate])
     percentage = math.floor(100 * (float(count_with_lower_price)/total_results))
-
+    total_savings = possible_savings * total_hours
     return {
         "percentage":percentage,
+        "central_tendency":central_tendency,
         "hourly_rate":str(hourly_rate),
+        "total_savings":round(total_savings,2),
         "labor_category":str(labor_category),
-        "average_savings":average_savings,
-        "total_cost_for_this_contract":total_cost_for_this_contract,
-        "average_total_cost_savings":average_total_cost_savings,
-        "you_saved_with_calc":True,
+        "possible_savings":round(possible_savings,2),
+        "count_with_lower_price":count_with_lower_price,
+        "you_saved_with_calc":False,
         "result":True
     }
     
@@ -103,8 +108,12 @@ def percentage_compare(request):
             #double checking also adds redundancy and better error checking
             pass
         total_hours = float(post_data_dict["total_hours"])
-        save_proposed_data(hourly_rate,total_hours)
-        
+        labor_category = post_data_dict["labor_category"]
+        save_proposed_data(hourly_rate,total_hours,labor_category)
+        if statistics.mean([result.hourly_rate_year1 for result in results]) > hourly_rate:
+            context = you_saved_with_calc_analysis(results,hourly_rate,total_hours,labor_category)
+        else:
+            context = you_could_save_x_with_calc(results,hourly_rate,total_hours,labor_category)
         return render(request, "calc_kpi/percentage_compare.html",context)
     elif request.method == "GET":
         return render(request, "calc_kpi/percentage_compare.html",{"result":False})

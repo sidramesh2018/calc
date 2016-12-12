@@ -26,25 +26,22 @@
 
 <div id="chart"></div>
 
-<p> For the hourly rate of ${{hourly_rate}}, and the labor category of {{labor_category}}, {{percentage}}% of contracts were higher than this one.</p>
-<p> You saved an average of ${{average_savings}} per hour compared to contracts that paid more than this one.</p>
+	{% if you_saved_with_calc %}
+		<p> For the hourly rate of ${{hourly_rate}}, and the labor category of {{labor_category}}: {{percentage}}% of contracts had higher prices than this one.</p>
+		<p> You saved an average of ${{average_savings}} per hour compared to contracts that paid more than this one.</p>
 
-<p> Assuming that the other contracts were for the same number of total hours, as this contract, when this rate was compared with contracts that were more expensive to this one, this contract is ${{average_total_cost_savings}} (average savings * total hours of this contract ) less on average in total cost.</p>
+		<p> Compared to more expensive contracts, this contract is ${{average_total_cost_savings}} less on average in total cost.</p> 
+		<p> When making this calculation, we used the hours you entered above to figure out total cost for all other contracts</p>
 
-<p> Assuming the hours you entered for this contract, this contract will cost in total ${{total_cost_for_this_contract}} (hourly rate * number of hours)</p>
+		<p> Assuming the hours you entered for this contract, this contract will cost in total ${{total_cost_for_this_contract}} (hourly rate * number of hours)</p>
+		
+	{% else %}
 
-<script>
+		<p> For the hourly rate of ${{hourly_rate}}, and the labor category of {{labor_category}}: {{percentage}}% of contracts had lower prices than this one.</p>
+		<p> If this rate was the average, which happens to be ${{central_tendency}} you could save ${{possible_savings}} per hour.  
+		That translates to a ${{total_savings}} savings over the life time of this contract. </p>
 
-var date_range = JSON.parse({{dates}});
-var chart = c3.generate({
-	bindto: "#chart",
-	data: {
-		x: 'x'
-		columns: [
-
-		]
-	}
-});
+	{% endif %}
 {% endif %}
 </body>
 </html>

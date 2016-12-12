@@ -192,7 +192,7 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        labor_categories = [elem.labor_key for elem in LaborCategoryLookUp.objects.all()]
+        labor_categories = set([elem.labor_key for elem in LaborCategoryLookUp.objects.all()])
         order_terms = []
         for labor_category in labor_categories:
             print("got here")
