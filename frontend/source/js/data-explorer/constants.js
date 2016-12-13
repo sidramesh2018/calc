@@ -5,6 +5,7 @@ export const MIN_EXPERIENCE = 0;
 
 export const HISTOGRAM_BINS = 12;
 
+// TODO: This is duplicated from server-side code; consolidate it.
 export const EDU_HIGH_SCHOOL = 'HS';
 export const EDU_ASSOCIATES = 'AA';
 export const EDU_BACHELORS = 'BA';
@@ -30,6 +31,7 @@ export const SITE_LABELS = {
   both: 'both',
 };
 
+// TODO: This is duplicated from server-side code; consolidate it.
 export const SCHEDULE_LABELS = {
   Consolidated: 'Consolidated',
   FABS: '520 - Legacy FABS',
