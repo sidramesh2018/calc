@@ -21,6 +21,7 @@ import {
   SET_PROPOSED_PRICE,
   SET_EXPERIENCE,
   TOGGLE_EDU_LEVEL,
+  SET_SCHEDULE,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -78,8 +79,11 @@ function businessSize(state = '') {
   return state;
 }
 
-function schedule(state = '') {
-  // TODO: Create actions to change this.
+function schedule(state = '', action) {
+  if (action.type === SET_SCHEDULE) {
+    return action.schedule;
+  }
+
   return state;
 }
 

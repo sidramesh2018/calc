@@ -6,3 +6,4 @@ export { default as EducationLevel } from './education-level';
 export { default as Experience } from './experience';
 export { default as ExportData } from './export-data';
 export { default as ResultsTable } from './results-table';
+export { default as Schedule } from './schedule';

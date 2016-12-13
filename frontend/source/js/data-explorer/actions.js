@@ -9,6 +9,7 @@ export const SET_SORT = 'SET_SORT';
 export const SET_PROPOSED_PRICE = 'SET_PROPOSED_PRICE';
 export const SET_EXPERIENCE = 'SET_EXPERIENCE';
 export const TOGGLE_EDU_LEVEL = 'TOGGLE_EDU_LEVEL';
+export const SET_SCHEDULE = 'SET_SCHEDULE';
 
 export function excludeRow(rowId) {
   return { type: EXCLUDE_ROW, rowId };
@@ -60,4 +61,8 @@ export function setExperience(subtype, years) {
 
 export function toggleEducationLevel(level) {
   return { type: TOGGLE_EDU_LEVEL, level };
+}
+
+export function setSchedule(schedule) {
+  return { type: SET_SCHEDULE, schedule };
 }
