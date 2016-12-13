@@ -31,18 +31,47 @@ export const SITE_LABELS = {
   both: 'both',
 };
 
-// TODO: This is duplicated from server-side code; consolidate it.
+const SCHEDULES = [{
+  SIN: 520,
+  schedule: 'FABS',
+  name: 'Legacy FABS',
+}, {
+  SIN: 541,
+  schedule: 'AIMS',
+  name: 'Legacy AIMS',
+}, {
+  SIN: 73802,
+  schedule: 'Language Services',
+  name: 'Legacy Language',
+}, {
+  SIN: 871,
+  schedule: 'PES',
+  name: 'Legacy PES',
+}, {
+  SIN: 874,
+  schedule: 'MOBIS',
+  name: 'Legacy MOBIS',
+}, {
+  SIN: 87405,
+  schedule: 'Logistics',
+  name: 'Legacy Logistics',
+}, {
+  SIN: 899,
+  schedule: 'Environmental',
+  name: 'Legacy Environmental',
+}, {
+  SIN: 132,
+  schedule: 'IT Schedule 70',
+  name: 'IT 70',
+}];
+
 export const SCHEDULE_LABELS = {
   Consolidated: 'Consolidated',
-  FABS: '520 - Legacy FABS',
-  AIMS: '541 - Legacy AIMS',
-  'Language Services': '73802 - Legacy Language',
-  PES: '871 - Legacy PES',
-  MOBIS: '874 - Legacy MOBIS',
-  Logistics: '87405 - Legacy Logistics',
-  Environmental: '899 - Legacy Environmental',
-  'IT Schedule 70': '132 - IT 70',
 };
+
+SCHEDULES.forEach(({ SIN, schedule, name }) => {
+  SCHEDULE_LABELS[schedule] = `${SIN} - ${name}`;
+});
 
 export const CONTRACT_YEAR_LABELS = {
   current: 'Current year',
