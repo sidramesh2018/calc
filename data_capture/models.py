@@ -68,6 +68,13 @@ class SubmittedPriceList(models.Model):
     status_changed_by = models.ForeignKey(User, related_name='+')
     status_changed_at = models.DateTimeField()
 
+    uploaded_filename = models.CharField(
+        max_length=128,
+        help_text=(
+            'Name of the file that was uploaded, as it was called on '
+            'the uploader\'s system. For display purposes only.'
+        )
+    )
     serialized_gleaned_data = models.TextField(
         help_text=(
             'The JSON-serialized data from the upload, including '

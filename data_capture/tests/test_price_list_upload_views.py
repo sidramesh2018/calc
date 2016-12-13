@@ -33,13 +33,14 @@ class RequireGleanedDataMixin():
 
 class PriceListStepTestCase(StepTestCase):
     # TODO: Move individual setUp functions here if applicable
-    def set_fake_gleaned_data(self, rows):
+    def set_fake_gleaned_data(self, rows, filename='foo.csv'):
         session = self.client.session
         pricelist = FakeSchedulePriceList(rows)
         session['data_capture:price_list']['schedule'] = \
             registry.get_classname(pricelist)
         session['data_capture:price_list']['gleaned_data'] = \
             registry.serialize(pricelist)
+        session['data_capture:price_list']['filename'] = filename
         session.save()
 
     def delete_price_list_from_session(self):
@@ -295,6 +296,7 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
             'sin': '132-40',
             'years_experience': '7'
         }])
+        self.assertEqual(session_pl['filename'], 'foo.csv')
 
     def test_post_with_gleaned_data_and_uploaded_file_checks_validity(self):
         self.login()
@@ -538,6 +540,7 @@ class Step4Tests(PriceListStepTestCase,
         self.assertEqual(p.status_changed_by, user)
         self.assertEqual(p.status, SubmittedPriceList.STATUS_NEW)
         self.assertEqual(p.status_changed_at.date(), datetime.now().date())
+        self.assertEqual(p.uploaded_filename, 'foo.csv')
 
     def test_valid_post_clears_session_and_redirects_to_step_5(self):
         self.login()

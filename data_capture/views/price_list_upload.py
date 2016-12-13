@@ -178,11 +178,15 @@ def step_3(request, step):
     is_file_required = not (gleaned_data and gleaned_data.valid_rows)
 
     if request.method == 'GET':
-        # TODO: Show fake file name if needed.
+        existing_filename = None
+
+        if not is_file_required:
+            existing_filename = session_pl.get('filename')
 
         form = forms.Step3Form(
             schedule=step_1_data['schedule'],
-            is_file_required=is_file_required
+            is_file_required=is_file_required,
+            existing_filename=existing_filename,
         )
     else:  # POST
         form = forms.Step3Form(
@@ -197,6 +201,7 @@ def step_3(request, step):
                 gleaned_data = form.cleaned_data['gleaned_data']
 
                 session_pl['gleaned_data'] = registry.serialize(gleaned_data)
+                session_pl['filename'] = form.cleaned_data['file'].name
                 request.session.modified = True
 
             if gleaned_data.invalid_rows:
@@ -329,6 +334,8 @@ def step_4(request, step):
                 price_list.status = SubmittedPriceList.STATUS_NEW
                 price_list.status_changed_at = timezone.now()
                 price_list.status_changed_by = request.user
+
+                price_list.uploaded_filename = session_pl['filename']
 
                 price_list.save()
                 gleaned_data.add_to_price_list(price_list)
