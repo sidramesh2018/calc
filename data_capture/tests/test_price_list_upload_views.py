@@ -211,6 +211,9 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         'years_experience': '7'
     }]
 
+    invalid_rows = [rows[0].copy()]
+    invalid_rows[0]['education'] = 'Bachelorz'
+
     def setUp(self):
         super().setUp()
         session = self.client.session
@@ -242,23 +245,37 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         res = self.client.get(self.url)
         self.assertRedirects(res, Step2Tests.url, target_status_code=302)
 
-    def test_redirects_if_gleaned_data_in_session_with_valid_rows(self):
-        self.login()
-        self.set_fake_gleaned_data(self.rows)
-        res = self.client.get(self.url)
-        self.assertRedirects(res, Step3DataTests.url)
+    def assertExistingFilename(self, res, value):
+        self.assertEqual(
+            res.context['form'].fields['file'].widget.existing_filename,
+            value
+        )
 
-    def test_doesnt_redirect_if_force_param_is_on(self):
+    def test_not_prefilled_if_no_gleaned_data_in_session(self):
         self.login()
-        self.set_fake_gleaned_data(self.rows)
-        res = self.client.get(self.url+'?force=on')
-        self.assertEqual(res.status_code, 200)
+        self.assertExistingFilename(self.client.get(self.url), None)
 
-    def test_redirects_if_force_param_is_not_on(self):
+    def test_not_prefilled_if_gleaned_data_has_no_valid_rows(self):
+        self.login()
+        self.set_fake_gleaned_data(self.invalid_rows)
+        self.assertExistingFilename(self.client.get(self.url), None)
+
+    def test_prefilled_if_gleaned_data_in_session_with_valid_rows(self):
         self.login()
         self.set_fake_gleaned_data(self.rows)
-        res = self.client.get(self.url+'?force=whatever')
-        self.assertRedirects(res, Step3DataTests.url)
+        self.assertExistingFilename(self.client.get(self.url), 'foo.csv')
+
+    def test_empty_prefilled_post_with_no_invalid_rows_works(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows)
+        res = self.client.post(self.url, {})
+        self.assertRedirects(res, Step4Tests.url)
+
+    def test_empty_prefilled_post_with_some_invalid_rows_works(self):
+        self.login()
+        self.set_fake_gleaned_data(self.rows + self.invalid_rows)
+        res = self.client.post(self.url, {})
+        self.assertRedirects(res, Step3ErrorTests.url)
 
     def test_valid_post_updates_session_data(self):
         self.login()
@@ -353,54 +370,6 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         )
 
 
-class Step3DataTests(PriceListStepTestCase,
-                     RequireGleanedDataMixin,
-                     HandleCancelMixin):
-    url = '/data-capture/step/3/data'
-
-    session_data = {
-        'step_1_POST': Step1Tests.valid_form,
-        'step_2_POST': Step2Tests.valid_form,
-    }
-
-    rows = [{
-        'education': 'Bachelors',
-        'price': '15.00',
-        'service': 'Project Manager',
-        'sin': '132-40',
-        'years_experience': '7'
-    }]
-
-    session_data = {
-        'step_1_POST': Step1Tests.valid_form,
-        'step_2_POST': Step2Tests.valid_form,
-    }
-
-    def setUp(self):
-        super().setUp()
-        session = self.client.session
-        session['data_capture:price_list'] = self.session_data
-        session.save()
-
-    def test_redirects_if_no_gleaned_data(self):
-        self.login()
-        res = self.client.get(self.url)
-        self.assertRedirects(res, Step3Tests.url)
-
-    def test_redirects_if_no_valid_rows(self):
-        self.login()
-        self.set_fake_gleaned_data([])
-        res = self.client.get(self.url)
-        self.assertRedirects(res, Step3Tests.url)
-
-    def test_get_is_ok(self):
-        self.login()
-        self.set_fake_gleaned_data(self.rows)
-        res = self.client.get(self.url)
-        self.assertEqual(res.status_code, 200)
-        self.assertIn('gleaned_data', res.context)
-
-
 class Step3ErrorTests(PriceListStepTestCase,
                       RequireGleanedDataMixin,
                       HandleCancelMixin):
@@ -474,10 +443,10 @@ class Step4Tests(PriceListStepTestCase,
         session['data_capture:price_list'] = self.session_data
         session.save()
         self.set_fake_gleaned_data(self.rows)
-        res = self.client.get(self.url + '?prev={}'.format(Step3DataTests.url))
+        res = self.client.get(self.url + '?prev={}'.format(Step2Tests.url))
         self.assertEqual(res.status_code, 200)
         self.assertIn('prev_url', res.context)
-        self.assertEqual(res.context['prev_url'], '/data-capture/step/3/data')
+        self.assertEqual(res.context['prev_url'], '/data-capture/step/2')
 
     def test_prev_url_is_none_if_query_param_not_safe(self):
         self.login()

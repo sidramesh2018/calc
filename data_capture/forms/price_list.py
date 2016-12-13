@@ -155,6 +155,10 @@ class Step3Form(forms.Form):
         self.fields['file'].required = is_file_required
         self.fields['file'].widget.required = is_file_required
 
+        if not is_file_required:
+            # TODO: Show actual existing filename.
+            self.fields['file'].widget.existing_filename = 'foo.csv'
+
     def clean(self):
         cleaned_data = super().clean()
         file = cleaned_data.get('file')
