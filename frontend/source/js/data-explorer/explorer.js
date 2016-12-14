@@ -139,12 +139,6 @@ $.fn.tooltipster('setDefaults', {
   speed: 200,
 });
 
-$('.filter.contract-year .tooltip').tooltipster({
-  functionInit() {
-    return $(this).attr('aria-label');
-  },
-});
-
 histogramDownloadLink.addEventListener('click', e => {
   e.preventDefault();
   histogramToImg(

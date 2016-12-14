@@ -73,10 +73,14 @@ SCHEDULES.forEach(({ SIN, schedule, name }) => {
   SCHEDULE_LABELS[schedule] = `${SIN} - ${name}`;
 });
 
+export const CONTRACT_YEAR_CURRENT = 'current';
+export const CONTRACT_YEAR_1 = '1';
+export const CONTRACT_YEAR_2 = '2';
+
 export const CONTRACT_YEAR_LABELS = {
-  current: 'Current year',
-  1: 'One year out',
-  2: 'Two years out',
+  [CONTRACT_YEAR_CURRENT]: 'Current year',
+  [CONTRACT_YEAR_1]: 'One year out',
+  [CONTRACT_YEAR_2]: 'Two years out',
 };
 
 export const DEFAULT_CONTRACT_YEAR = 'current';

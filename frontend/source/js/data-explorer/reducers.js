@@ -22,6 +22,7 @@ import {
   SET_EXPERIENCE,
   TOGGLE_EDU_LEVEL,
   SET_SCHEDULE,
+  SET_CONTRACT_YEAR,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -35,8 +36,10 @@ function exclude(state = [], action) {
   }
 }
 
-function contractYear(state = DEFAULT_CONTRACT_YEAR) {
-  // TODO: Create actions to change this.
+function contractYear(state = DEFAULT_CONTRACT_YEAR, action) {
+  if (action.type === SET_CONTRACT_YEAR) {
+    return action.year;
+  }
   return state;
 }
 
