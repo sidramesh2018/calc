@@ -81,35 +81,35 @@ header {
   }
   .icon {
     background-repeat: no-repeat;
-    background-position: center right;
+    background-position: center left;
     display: inline-block;
     opacity: 0.6;
     &.icon-ceiling {
       background-image: url('../../images/price-callout/roof.png');
       background-size: 40px;
       p {
-        padding-right: 55px;
+        padding-left: 55px;
       }
     }
     &.icon-fully-burdened {
       background-image: url('../../images/price-callout/mule.png');
       background-size: 33px;
       p {
-        padding-right: 43px;
+        padding-left: 43px;
       }
     }
     &.icon-professional-services {
       background-image: url('../../images/price-callout/briefcase.png');
       background-size: 28px;
       p {
-        padding-right: 38px;
+        padding-left: 38px;
       }
     }
     &.icon-worldwide-rates {
       background-image: url('../../images/price-callout/globe.png');
       background-size: 28px;
       p {
-        padding-right: 38px;
+        padding-left: 38px;
       }
     }
   }
@@ -135,6 +135,13 @@ header {
   font-weight: normal;
 }
 
+@media all and (max-width: 890px){
+  nav ul {
+    @include span-columns(8 of 12);
+    @include shift(2);
+  }
+}
+
 nav {
   position: relative;
   &:after {
@@ -143,8 +150,8 @@ nav {
     clear: both;
   }
   ul {
-    @include span-columns(8 of 12);
-    @include shift(2);
+    @include span-columns(12 of 12);
+    @include shift(0);
     list-style: none;
     text-align: center;
     color: $color-white;
@@ -154,7 +161,7 @@ nav {
     li {
       list-style: none;
       display: inline-block;
-      margin: 0 $space-4x;
+      margin: 0 $space-3x;
       &:first-child {
         margin-left: 0rem;
       }
