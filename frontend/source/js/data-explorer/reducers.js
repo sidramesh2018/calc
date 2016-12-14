@@ -25,6 +25,7 @@ import {
   SET_CONTRACT_YEAR,
   SET_QUERY_TYPE,
   SET_SITE,
+  SET_BUSINESS_SIZE,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -81,8 +82,10 @@ function site(state = '', action) {
   return state;
 }
 
-function businessSize(state = '') {
-  // TODO: Create actions to change this.
+function businessSize(state = '', action) {
+  if (action.type === SET_BUSINESS_SIZE) {
+    return action.size;
+  }
   return state;
 }
 

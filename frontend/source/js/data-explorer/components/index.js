@@ -10,3 +10,4 @@ export { default as Schedule } from './schedule';
 export { default as ContractYear } from './contract-year';
 export { default as QueryType } from './query-type';
 export { default as Site } from './site';
+export { default as BusinessSize } from './business-size';
