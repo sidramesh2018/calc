@@ -17,6 +17,12 @@ nav ul {
 }
 /* end temp styles */
 
+/* temp header padding override until we create a better subnav style ugh */
+header {
+  padding-bottom: 0;
+}
+/* end temp ugh styles */
+
 /* USWDS override, because we can't control Django's markup easily */
 .field-is_muted input[type=checkbox],
 .field-is_muted input[type=radio] {
