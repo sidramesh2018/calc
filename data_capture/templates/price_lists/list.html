@@ -26,11 +26,11 @@
     </div>
     <div class="row">
       <div class="columns twelve">
-        <h2 id="new">New price lists</h2>
-        <p>Price lists that have been submitted but that are not currently approved.</p>
-        {% if new_price_lists %}
+        <h2 id="unreviewed">Unreviewed price lists</h2>
+        <p>Price lists that have been submitted but that have not yet been reviewed by an administrator.</p>
+        {% if unreviewed_price_lists %}
           <ul class="price-list-list">
-            {% for pl in new_price_lists %}
+            {% for pl in unreviewed_price_lists %}
               <li>
                 <a href="{% url 'data_capture:price_list_details' id=pl.pk %}">{{ pl.contract_number }} &mdash; {{ pl.vendor_name }}</a>
                 <p class="meta-info">Submitted on {{ pl.created_at }}</p>
@@ -62,11 +62,11 @@
     </div>
     <div class="row">
       <div class="columns twelve">
-        <h2 id="unapproved">Unapproved price lists</h2>
-        <p>Price lists that were approved but that have since been unapproved by a CALC administrator.</p>
-        {% if unapproved_price_lists %}
+        <h2 id="retired">Retired price lists</h2>
+        <p>Price lists that were approved but that have since been retired by a CALC administrator.</p>
+        {% if retired_price_lists %}
           <ul class="price-list-list">
-            {% for pl in unapproved_price_lists %}
+            {% for pl in retired_price_lists %}
               <li>
                 <a href="{% url 'data_capture:price_list_details' id=pl.pk %}">{{ pl.contract_number }} &mdash; {{ pl.vendor_name }}</a>
                 <p class="meta-info">Submitted on {{ pl.created_at }}</p>
@@ -74,7 +74,7 @@
             {% endfor %}
           </ul>
         {% else %}
-          <p class="empty-list-note">None of your price lists have been unapproved.</p>
+          <p class="empty-list-note">None of your price lists have been retired.</p>
         {% endif %}
       </div>
     </div>

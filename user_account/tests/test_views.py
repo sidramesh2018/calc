@@ -17,7 +17,7 @@ class AccountTests(ProtectedViewTestCase):
         res = self.client.get(self.url)
         ctx = res.context
         self.assertIn('total_approved', ctx)
-        self.assertIn('total_new', ctx)
+        self.assertIn('total_unreviewed', ctx)
         self.assertIn('total_rejected', ctx)
         self.assertIn('total_submitted', ctx)
         self.assertIn('recently_approved_price_lists', ctx)
@@ -27,7 +27,7 @@ class AccountTests(ProtectedViewTestCase):
         user = self.login()
         mommy.make(SubmittedPriceList,
                    submitter=user,
-                   status=SubmittedPriceList.STATUS_NEW,
+                   status=SubmittedPriceList.STATUS_UNREVIEWED,
                    _quantity=6)
 
         mommy.make(SubmittedPriceList,
@@ -43,7 +43,7 @@ class AccountTests(ProtectedViewTestCase):
         res = self.client.get(self.url)
         ctx = res.context
         self.assertEqual(ctx['total_approved'], 6)
-        self.assertEqual(ctx['total_new'], 6)
+        self.assertEqual(ctx['total_unreviewed'], 6)
         self.assertEqual(ctx['total_rejected'], 1)
         self.assertEqual(ctx['total_submitted'], 13)
 

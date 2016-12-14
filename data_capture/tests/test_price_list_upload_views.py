@@ -567,7 +567,7 @@ class Step4Tests(PriceListStepTestCase,
         self.assertEqual(p.is_small_business, False)
         self.assertEqual(p.submitter, user)
         self.assertEqual(p.status_changed_by, user)
-        self.assertEqual(p.status, SubmittedPriceList.STATUS_NEW)
+        self.assertEqual(p.status, SubmittedPriceList.STATUS_UNREVIEWED)
         self.assertEqual(p.status_changed_at.date(), datetime.now().date())
 
     def test_valid_post_clears_session_and_redirects_to_step_5(self):

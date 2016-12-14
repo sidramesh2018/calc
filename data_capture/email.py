@@ -37,16 +37,16 @@ def price_list_approved(price_list):
     )
 
 
-def price_list_unapproved(price_list):
+def price_list_retired(price_list):
     ctx = {
         'price_list': price_list
     }
-    if price_list.status is not SubmittedPriceList.STATUS_UNAPPROVED:
-        raise AssertionError('price_list.status must be STATUS_UNAPPROVED')
+    if price_list.status is not SubmittedPriceList.STATUS_RETIRED:
+        raise AssertionError('price_list.status must be STATUS_RETIRED')
     result = send_mail(
-        subject='CALC Price List Unapproved',
+        subject='CALC Price List Retired',
         message=render_to_string(
-            'data_capture/email/price_list_unapproved.txt',
+            'data_capture/email/price_list_retired.txt',
             ctx),
         from_email=settings.SYSTEM_EMAIL_ADDRESS,
         recipient_list=[price_list.submitter.email]

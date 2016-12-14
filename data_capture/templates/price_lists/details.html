@@ -11,7 +11,7 @@
         <h3>Approved</h3>
         <p>This price list's data is available in CALC.</p>
       </div>
-    {% elif price_list.get_status_display == 'new' %}
+    {% elif price_list.get_status_display == 'unreviewed' %}
       <div class="alert alert-warning">
         <h3>Not yet approved</h3>
         <p>This price list has not yet been reviewed by a CALC Administrator.</p>
@@ -21,9 +21,9 @@
         <h3>Rejected</h3>
         <p>This price list has been rejected by a CALC Administrator.</p>
       </div>
-    {% elif price_list.get_status_display == 'unapproved' %}
+    {% elif price_list.get_status_display == 'retired' %}
       <div class="alert alert-error">
-        <h3>Unapproved</h3>
+        <h3>Retired</h3>
         <p>This price list has been removed from CALC.</p>
       </div>
     {% endif %}
@@ -71,7 +71,6 @@
             {% include "price_lists/_details_list.html" %}
           </div>
         </div>
-
         <div class="row">
           <div class="columns eight">
             <p><a href="{{ details_with_edit_url }}" class="button" data-edit-btn>Edit</a></p>
