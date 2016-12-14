@@ -23,7 +23,7 @@ def ensure_contract_start_is_before_end(form, cleaned_data):
 
 class EscalationRateField(forms.FloatField):
     def __init__(self):
-        return super().__init__(
+        super().__init__(
             label="Escalation rate (%)",
             help_text='CALC uses the escalation rate (as a percentage) '
                       'to calculate out-year pricing. '

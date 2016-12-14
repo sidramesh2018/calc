@@ -9,9 +9,16 @@ def about(request):
     })
 
 
-def index(request):
+def index(request, template_vars=None):
+    return render(request, 'index.html', template_vars or {})
+
+
+# TODO: Re-enable this eventually. Right now we can't use it because
+# we need to use New Relic for front-end error monitoring, and it doesn't
+# support CSP in any way.
+def index_with_csp(request):
     csp_nonce = get_random_string(length=10)
-    response = render(request, 'index.html', {
+    response = index(request, template_vars={
         'csp_nonce': mark_safe('nonce="{}"'.format(csp_nonce))
     })
     script_src = ' '.join([

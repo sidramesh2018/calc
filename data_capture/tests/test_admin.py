@@ -139,8 +139,8 @@ class NonSuperuserViewTests(DebugAdminTestCase):
         res = self.client.get('/admin/data_capture/submittedpricelistrow/')
         self.assertEqual(res.status_code, 200)
 
-    def test_new_pricelist_list_returns_200(self):
-        res = self.client.get('/admin/data_capture/newpricelist/')
+    def test_unreviewed_pricelist_list_returns_200(self):
+        res = self.client.get('/admin/data_capture/unreviewedpricelist/')
         self.assertEqual(res.status_code, 200)
 
     def test_approved_pricelist_list_returns_200(self):
@@ -148,9 +148,9 @@ class NonSuperuserViewTests(DebugAdminTestCase):
             '/admin/data_capture/approvedpricelist/')
         self.assertEqual(res.status_code, 200)
 
-    def test_unapproved_pricelist_list_returns_200(self):
+    def test_retired_pricelist_list_returns_200(self):
         res = self.client.get(
-            '/admin/data_capture/unapprovedpricelist/')
+            '/admin/data_capture/retiredpricelist/')
         self.assertEqual(res.status_code, 200)
 
     def test_rejected_pricelist_list_returns_200(self):
@@ -158,18 +158,18 @@ class NonSuperuserViewTests(DebugAdminTestCase):
             '/admin/data_capture/rejectedpricelist/')
         self.assertEqual(res.status_code, 200)
 
-    def test_new_pricelist_detail_returns_200(self):
+    def test_unreviewed_pricelist_detail_returns_200(self):
         res = self.client.get(
-            '/admin/data_capture/newpricelist/{}/'.format(
+            '/admin/data_capture/unreviewedpricelist/{}/'.format(
                 self.price_list.id
             )
         )
         self.assertEqual(res.status_code, 200)
 
-    def test_unapproved_pricelist_detail_returns_200(self):
-        self.price_list.unapprove(self.user)
+    def test_retired_pricelist_detail_returns_200(self):
+        self.price_list.retire(self.user)
         res = self.client.get(
-            '/admin/data_capture/unapprovedpricelist/{}/'.format(
+            '/admin/data_capture/retiredpricelist/{}/'.format(
                 self.price_list.id
             )
         )
@@ -210,13 +210,13 @@ class ActionTests(AdminTestCase):
             '0 price list(s) have been approved and added to CALC.'
         )
 
-    def test_unapprove_ignores_unapproved_price_lists(self, mock):
-        admin.unapprove(None, self.request_mock,
-                        SubmittedPriceList.objects.all())
+    def test_retire_ignores_retired_price_lists(self, mock):
+        admin.retire(None, self.request_mock,
+                     SubmittedPriceList.objects.all())
         mock.assert_called_once_with(
             self.request_mock,
             messages.INFO,
-            '0 price list(s) have been unapproved and removed from CALC.'
+            '0 price list(s) have been retired and removed from CALC.'
         )
 
     def test_reject_ignores_rejected_price_lists(self, mock):
@@ -244,23 +244,23 @@ class ActionTests(AdminTestCase):
         self.assertEqual(self.price_list.status,
                          SubmittedPriceList.STATUS_APPROVED)
 
-    def test_unapprove_works(self, msg_mock):
-        with mock.patch.object(email, 'price_list_unapproved',
-                               wraps=email.price_list_unapproved) as em_monkey:
+    def test_retire_works(self, msg_mock):
+        with mock.patch.object(email, 'price_list_retired',
+                               wraps=email.price_list_retired) as em_monkey:
             self.price_list.approve(self.user)
 
-            admin.unapprove(None, self.request_mock,
-                            SubmittedPriceList.objects.all())
+            admin.retire(None, self.request_mock,
+                         SubmittedPriceList.objects.all())
             msg_mock.assert_called_once_with(
                 self.request_mock,
                 messages.INFO,
-                '1 price list(s) have been unapproved and removed from CALC.'
+                '1 price list(s) have been retired and removed from CALC.'
             )
             em_monkey.assert_called_once_with(self.price_list)
 
         self.price_list.refresh_from_db()
         self.assertEqual(self.price_list.status,
-                         SubmittedPriceList.STATUS_UNAPPROVED)
+                         SubmittedPriceList.STATUS_RETIRED)
 
     def test_reject_works(self, msg_mock):
         with mock.patch.object(email, 'price_list_rejected',

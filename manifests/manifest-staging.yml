@@ -4,12 +4,12 @@ services:
 - calc-env
 - calc-redis
 applications:
-- name: calc-dev
+- name: calc-staging
   instances: 1
   memory: 1G
   disk_quota: 1024M
-  host: calc-dev
-  domain: apps.cloud.gov
+  host: calc-staging
+  domain: app.cloud.gov
   buildpack: python_buildpack
   command: bash cf.sh
   stack: cflinuxfs2
@@ -21,6 +21,7 @@ applications:
     NEW_RELIC_LOG: "stdout"
 - name: calc-rqworker
   no-route: true
+  health-check-type: none
   instances: 1
   memory: 512M
   buildpack: python_buildpack
@@ -31,6 +32,7 @@ applications:
     DISABLE_COLLECTSTATIC: "1"
 - name: calc-rqscheduler
   no-route: true
+  health-check-type: none
   instances: 1
   memory: 256M
   buildpack: python_buildpack
