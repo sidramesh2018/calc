@@ -54,16 +54,7 @@
         <div class="six columns">
           <input id="labor_category" name="q" placeholder="Type a labor category" class="search u-full-width" type="text">
           <label for="labor_category" style="display:none;">Type a labor category</label>
-          <div id="query-types">
-            <input id="query_type_match_all" type="radio" name="query_type" value="match_all" checked>
-            <label for="query_type_match_all">Contains words</label>
-
-            <input id="query_type_match_phrase" type="radio" name="query_type" value="match_phrase">
-            <label for="query_type_match_phrase">Contains phrase</label>
-
-            <input id="query_type_match_exact" type="radio" name="query_type" value="match_exact">
-            <label for="query_type_match_exact">Exact match</label>
-          </div>
+          <div id="query-types" data-embed-jsx="QueryType"></div>
         </div>
         <div class="six columns">
           <button id="submit-button" class="submit button-primary">Search</button>

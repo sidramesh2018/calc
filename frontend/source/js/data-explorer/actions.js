@@ -11,6 +11,7 @@ export const SET_EXPERIENCE = 'SET_EXPERIENCE';
 export const TOGGLE_EDU_LEVEL = 'TOGGLE_EDU_LEVEL';
 export const SET_SCHEDULE = 'SET_SCHEDULE';
 export const SET_CONTRACT_YEAR = 'SET_CONTRACT_YEAR';
+export const SET_QUERY_TYPE = 'SET_QUERY_TYPE';
 
 export function excludeRow(rowId) {
   return { type: EXCLUDE_ROW, rowId };
@@ -70,4 +71,8 @@ export function setSchedule(schedule) {
 
 export function setContractYear(year) {
   return { type: SET_CONTRACT_YEAR, year };
+}
+
+export function setQueryType(queryType) {
+  return { type: SET_QUERY_TYPE, queryType };
 }

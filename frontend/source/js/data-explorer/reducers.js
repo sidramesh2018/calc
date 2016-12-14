@@ -23,6 +23,7 @@ import {
   TOGGLE_EDU_LEVEL,
   SET_SCHEDULE,
   SET_CONTRACT_YEAR,
+  SET_QUERY_TYPE,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -143,8 +144,10 @@ function sort(state = DEFAULT_SORT, action) {
   return state;
 }
 
-function queryType(state = DEFAULT_QUERY_TYPE) {
-  // TODO: Create actions to change this.
+function queryType(state = DEFAULT_QUERY_TYPE, action) {
+  if (action.type === SET_QUERY_TYPE) {
+    return action.queryType;
+  }
   return state;
 }
 
