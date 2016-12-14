@@ -9,7 +9,6 @@ export function destroy(el) {
 export function initialize(el, {
   api,
   getQueryType,
-  getFieldValue,
   setFieldValue,
 }) {
   let autoCompReq;
@@ -53,7 +52,7 @@ export function initialize(el, {
         '</div>',
       ].join('');
     },
-    onSelect(e, term, item, autocompleteSuggestion) {
+    onSelect(e, term) {
       let selectedInput;
 
       // check if search field has terms already
@@ -66,10 +65,8 @@ export function initialize(el, {
       // if search field doesn't have terms
       // but has selected an autocomplete suggestion,
       // then just show term and comma delimiter
-      } else if (autocompleteSuggestion) {
-        selectedInput = `${term}, `;
       } else {
-        selectedInput = `${getFieldValue()}, `;
+        selectedInput = `${term}, `;
       }
 
       // update the search input field accordingly

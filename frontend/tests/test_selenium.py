@@ -227,9 +227,7 @@ class DataExplorerTests(SeleniumTestCase):
     def search_for(self, query):
         q = self.driver.find_element_by_name('q')
         q.clear()
-        q.send_keys(query)
-        # XXX oh my god why do we have to do this???
-        self.driver.execute_script('$("[name=q]").blur()')
+        q.send_keys(query + '\n')
 
     def search_for_query_type(self, query, query_type):
         # Important: We want to click the radio before entering the

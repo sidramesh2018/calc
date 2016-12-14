@@ -21,15 +21,18 @@ class LaborCategory extends React.Component {
   }
 
   handleEnter() {
-    this.props.setQuery(this.state.value);
+    if (this.state.value !== this.props.query) {
+      this.props.setQuery(this.state.value);
+    }
   }
 
   componentDidMount() {
     autocomplete.initialize(this.inputEl, {
       api: this.props.api,
       getQueryType: () => this.props.queryType,
-      getFieldValue: () => this.state.value,
-      setFieldValue: value => { this.setState({ value }); },
+      setFieldValue: value => {
+        this.props.setQuery(value);
+      },
     });
   }
 
