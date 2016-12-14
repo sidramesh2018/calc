@@ -90,3 +90,9 @@ main {
     padding-top: $space-4x;
   }
 }
+
+.card--half-padding {
+  .card {
+    padding: $space-4x 0;
+  }
+}
