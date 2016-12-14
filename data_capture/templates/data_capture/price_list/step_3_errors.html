@@ -2,6 +2,7 @@
 
 {% block body_class %}secondary-step card--wide card--no-header{% endblock %}
 
+{% block subtitle %}Errors in price list upload{% endblock %}
 {% block step_heading %}<h2>Review errors</h2>{% endblock %}
 {% block step_body %}
     {% with rows=gleaned_data.invalid_rows %}
@@ -84,6 +85,6 @@
 {% endblock step_body %}
 {% block card_footer %}
   <form method="post">
-    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
   </form>
 {% endblock %}
