@@ -40,8 +40,6 @@ import appReducer from './reducers';
 
 import histogramToImg from './histogram-to-img';
 
-import initializeAutocomplete from './autocomplete';
-
 import StoreHistorySynchronizer from './history';
 
 import {
@@ -119,8 +117,6 @@ storeWatcher.watch('rates', () => {
 });
 
 function initialize() {
-  initializeAutocomplete(store, api, $('#labor_category'));
-
   legacyInputs.on('change', () => {
     formSynchronizer.reflectToStore(store);
   });
@@ -177,7 +173,9 @@ $('[data-embed-jsx]').each(function embedJsx() {
   if (name in components) {
     ReactDOM.render(
       React.createElement(Provider, { store },
-                          React.createElement(components[name])),
+                          React.createElement(components[name], {
+                            api,
+                          })),
       rootEl
     );
   } else {

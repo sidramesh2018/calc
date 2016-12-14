@@ -14,6 +14,7 @@ export const SET_CONTRACT_YEAR = 'SET_CONTRACT_YEAR';
 export const SET_QUERY_TYPE = 'SET_QUERY_TYPE';
 export const SET_SITE = 'SET_SITE';
 export const SET_BUSINESS_SIZE = 'SET_BUSINESS_SIZE';
+export const SET_QUERY = 'SET_QUERY';
 
 export function excludeRow(rowId) {
   return { type: EXCLUDE_ROW, rowId };
@@ -85,4 +86,8 @@ export function setSite(site) {
 
 export function setBusinessSize(size) {
   return { type: SET_BUSINESS_SIZE, size };
+}
+
+export function setQuery(query) {
+  return { type: SET_QUERY, query };
 }

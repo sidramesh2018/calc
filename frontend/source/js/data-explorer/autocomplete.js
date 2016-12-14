@@ -1,10 +1,21 @@
+/* global $ */
+
 import hourglass from '../common/hourglass';
 
-export default function initializeAutocomplete(store, api, $field) {
+export function destroy(el) {
+  $(el).autoComplete('destroy');
+}
+
+export function initialize(el, {
+  api,
+  getQueryType,
+  getFieldValue,
+  setFieldValue,
+}) {
   let autoCompReq;
   let searchTerms = '';
 
-  $field.autoComplete({
+  $(el).autoComplete({
     minChars: 2,
     // delay: 5,
     delay: 0,
@@ -20,7 +31,7 @@ export default function initializeAutocomplete(store, api, $field) {
         uri: 'search/',
         data: {
           q: lastTerm,
-          query_type: store.getState().query_type,
+          query_type: getQueryType(),
         },
       }, (error, result) => {
         autoCompReq = null;
@@ -58,11 +69,11 @@ export default function initializeAutocomplete(store, api, $field) {
       } else if (autocompleteSuggestion) {
         selectedInput = `${term}, `;
       } else {
-        selectedInput = `${$field.val()}, `;
+        selectedInput = `${getFieldValue()}, `;
       }
 
       // update the search input field accordingly
-      $field.val(selectedInput);
+      setFieldValue(selectedInput);
     },
   });
 }

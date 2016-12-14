@@ -26,6 +26,7 @@ import {
   SET_QUERY_TYPE,
   SET_SITE,
   SET_BUSINESS_SIZE,
+  SET_QUERY,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -46,8 +47,10 @@ function contractYear(state = DEFAULT_CONTRACT_YEAR, action) {
   return state;
 }
 
-function q(state = '') {
-  // TODO: Create actions to change this.
+function q(state = '', action) {
+  if (action.type === SET_QUERY) {
+    return action.query;
+  }
   return state;
 }
 
