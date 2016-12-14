@@ -12,3 +12,4 @@ export { default as QueryType } from './query-type';
 export { default as Site } from './site';
 export { default as BusinessSize } from './business-size';
 export { default as LaborCategory } from './labor-category';
+export { default as LoadingIndicator } from './loading-indicator';

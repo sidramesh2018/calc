@@ -63,7 +63,6 @@ const store = createStore(
     historySynchronizer.reflectToHistoryMiddleware
   )
 );
-const loadingIndicator = search.select('.loading-indicator');
 const histogramDownloadLink = document.getElementById('download-histogram');
 
 function onCompleteRatesRequest(error) {
@@ -76,9 +75,6 @@ function onCompleteRatesRequest(error) {
     }
 
     search.classed('error', true);
-
-    loadingIndicator.select('.error-message')
-      .text(error);
   } else {
     search.classed('error', false);
   }
