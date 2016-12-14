@@ -8,23 +8,28 @@
       <div class="card">
         <div class="card__content">
           {% block steps %}
-          <ol class="steps" aria-hidden="true">
-            <li {% if step.number == 1 %}class="current"{% endif %}>
-              <label>Basic information</label>
-            </li>
-            <li {% if step.number == 2 %}class="current"{% endif %}>
-              <label>Vendor details</label>
-            </li>
-            <li {% if step.number == 3 %}class="current"{% endif %}>
-              <label>Price list upload</label>
-            </li>
-            <li {% if step.number == 4 %}class="current"{% endif %}>
-              <label>Data verification</label>
-            </li>
-            <li {% if step.number == 5 %}class="current"{% endif %}>
-              <label>Submit</label>
-            </li>
-          </ol>
+          <div class="step-bar" aria-hidden="true">
+            <label>
+              {% if step.number == 1 %}
+              Basic information
+              {% endif %}
+              {% if step.number == 2 %}
+              Vendor details
+              {% endif %}
+              {% if step.number == 3 %}
+              Price list upload
+              {% endif %}
+              {% if step.number == 4 %}
+              Data verification
+              {% endif %}
+            </label>
+            <ol class="steps">
+              <li {% if step.number == 1 %}class="current"{% endif %}></li>
+              <li {% if step.number == 2 %}class="current"{% endif %}></li>
+              <li {% if step.number == 3 %}class="current"{% endif %}></li>
+              <li {% if step.number == 4 %}class="current"{% endif %}></li>
+            </ol>
+          </div>
           {% endblock %}
 
           <h1>

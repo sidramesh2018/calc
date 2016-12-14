@@ -18,8 +18,20 @@
   }
 }
 
+.step-bar {
+  label {
+    font-weight: 100;
+    margin-top: 0.2rem;
+    font-size: $small-font-size;
+    line-height: 1.2;
+    width: 95%;
+    color: $color-primary;
+    font-weight: $font-weight-bold;
+  }
+}
+
 ol.steps {
-  max-width: $line-length-max-width;
+  max-width: 200px;
   counter-reset: li;
   font-weight: 300;
   padding: 0;
@@ -60,20 +72,7 @@ ol.steps {
     }
 
     &:last-child {
-      border: 0;
-    }
-
-    label {
-      font-weight: 100;
-      margin-top: 0.2rem;
-      font-size: $small-font-size;
-      line-height: 1.2;
-      width: 95%;
-    }
-
-    &.current label {
-      color: $color-primary;
-      font-weight: $font-weight-bold;
+      border-color: transparent;
     }
   }
 }
