@@ -9,6 +9,7 @@ import {
 
 import {
   autobind,
+  filterActive,
 } from '../util';
 
 import {
@@ -112,13 +113,10 @@ class Experience extends React.Component {
 
     const minId = `${this.props.idPrefix}min`;
     const maxId = `${this.props.idPrefix}max`;
-    const classes = ['select-small'];
-    const minClasses = classes.concat(min === MIN_EXPERIENCE ? [] : [
-      'filter_active',
-    ]);
-    const maxClasses = classes.concat(max === MAX_EXPERIENCE ? [] : [
-      'filter_active',
-    ]);
+    const baseClasses = 'select-small';
+    const minClasses = filterActive(min !== MIN_EXPERIENCE, baseClasses);
+    const maxClasses = filterActive(max !== MAX_EXPERIENCE, baseClasses);
+
     const onChange = type => e => {
       this.props.setExperience(type, parseInt(e.target.value, 10));
     };
@@ -134,14 +132,14 @@ class Experience extends React.Component {
             <label htmlFor={minId} className="sr-only">Minimum Years</label>
             <select id={minId} value={min} name="min_experience"
                     onChange={onChange('min')}
-                    className={minClasses.join(' ')}>
+                    className={minClasses}>
               {this.makeOptions(MIN_EXPERIENCE, max)}
             </select>
             {' - '}
             <label htmlFor={maxId} className="sr-only">Maximum Years</label>
             <select id={maxId} value={max} name="max_experience"
                     onChange={onChange('max')}
-                    className={maxClasses.join(' ')}>
+                    className={maxClasses}>
               {this.makeOptions(min, MAX_EXPERIENCE)}
             </select>
             {' years'}

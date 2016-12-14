@@ -1,5 +1,7 @@
 /* global window, d3, event */
 
+import classNames from 'classnames';
+
 // for IE9: History API polyfill
 export const location = window.history.location || window.location;
 // TODO: if location.hash, read that
@@ -76,4 +78,8 @@ export function joinQuery(query) {
   }).join('&');
 
   return `?${parts}`;
+}
+
+export function filterActive(isActive, otherClasses = '') {
+  return classNames(isActive ? 'filter_active' : '', otherClasses);
 }

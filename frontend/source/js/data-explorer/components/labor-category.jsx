@@ -7,6 +7,7 @@ import { setQuery } from '../actions';
 import {
   autobind,
   handleEnter,
+  filterActive,
 } from '../util';
 
 class LaborCategory extends React.Component {
@@ -48,11 +49,13 @@ class LaborCategory extends React.Component {
 
   render() {
     const id = `${this.props.idPrefix}labor_category`;
+    const className = filterActive(this.props.query !== '',
+                                   'search u-full-width');
 
     return (
       <div>
         <input id={id} name="q" placeholder="Type a labor category"
-               className="search u-full-width" type="text"
+               className={className} type="text"
                ref={el => { this.inputEl = el; }}
                value={this.state.value}
                onChange={this.handleChange}

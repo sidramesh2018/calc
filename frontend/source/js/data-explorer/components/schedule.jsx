@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { filterActive } from '../util';
 import { makeOptions } from './util';
 import { setSchedule as setScheduleAction } from '../actions';
 import { SCHEDULE_LABELS } from '../constants';
@@ -16,7 +17,8 @@ function Schedule({ idPrefix, schedule, setSchedule }) {
         What's this?
       </a>
       <select id={id} name="schedule" value={schedule}
-              onChange={handleChange}>
+              onChange={handleChange}
+              className={filterActive(schedule !== '')}>
         {makeOptions(SCHEDULE_LABELS)}
       </select>
     </div>

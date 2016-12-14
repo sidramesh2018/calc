@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   autobind,
   handleEnterOrSpace,
+  filterActive,
 } from '../util';
 
 import {
@@ -131,7 +132,7 @@ class EducationLevel extends React.Component {
                role="button"
                aria-expanded={this.state.expanded.toString()}
                onKeyDown={handleEnterOrSpace(this.handleToggleMenu)}
-               className={levels.length === 0 ? '' : 'filter_active'}>
+               className={filterActive(levels.length !== 0)}>
               {linkContent}
             </a>
           </dt>
