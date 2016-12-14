@@ -10,11 +10,47 @@ import {
   CONTRACT_YEAR_LABELS,
 } from '../constants';
 
+const CONTRACT_INFO = {
+  [CONTRACT_YEAR_CURRENT]: {
+    className: 'contract-current-year-span checkbox-focus',
+    shortLabel: 'Current',
+    idSuffix: 'current-year',
+  },
+  [CONTRACT_YEAR_1]: {
+    className: 'checkbox-focus',
+    shortLabel: '+1',
+    idSuffix: 'one-year-out',
+  },
+  [CONTRACT_YEAR_2]: {
+    className: 'contract-last-year-span checkbox-focus',
+    shortLabel: '+2',
+    idSuffix: 'two-years-out',
+  },
+};
+
 function ContractYear({ idPrefix, contractYear, setContractYear }) {
-  const idCurrent = `${idPrefix}current-year`;
-  const id1 = `${idPrefix}one-year-out`;
-  const id2 = `${idPrefix}two-years-out`;
-  const setYear = year => () => { setContractYear(year); };
+  const listItem = year => {
+    const { className, shortLabel, idSuffix } = CONTRACT_INFO[year];
+    const id = `${idPrefix}${idSuffix}`;
+
+    return (
+      <li className="contract-list-item">
+        <label htmlFor={id} className="radio">
+          <input id={id} type="radio"
+                 checked={contractYear === year}
+                 onChange={() => { setContractYear(year); }}
+                 name="contract-year" value={year}
+                 tabIndex="0" />
+          <span tabIndex="-1"
+                className={className}
+                aria-hidden="true">{shortLabel}</span>
+          <span className="sr-only">
+            {CONTRACT_YEAR_LABELS[year]}
+          </span>
+        </label>
+      </li>
+    );
+  };
 
   return (
     <div className="filter contract-year">
@@ -29,51 +65,9 @@ function ContractYear({ idPrefix, contractYear, setContractYear }) {
         <h3 className="sr-only">Contract Year</h3>
 
         <ul className="contract-year-block">
-          <li className="contract-list-item">
-            <label htmlFor={idCurrent} className="radio">
-              <input id={idCurrent} type="radio"
-                     checked={contractYear === CONTRACT_YEAR_CURRENT}
-                     onChange={setYear(CONTRACT_YEAR_CURRENT)}
-                     name="contract-year" value={CONTRACT_YEAR_CURRENT}
-                     tabIndex="0" />
-              <span tabIndex="-1"
-                    className="contract-current-year-span checkbox-focus"
-                    aria-hidden="true">Current</span>
-              <span className="sr-only">
-                {CONTRACT_YEAR_LABELS[CONTRACT_YEAR_CURRENT]}
-              </span>
-            </label>
-          </li>
-          <li className="contract-list-item">
-            <label htmlFor={id1} className="radio">
-              <input id={id1} type="radio"
-                     checked={contractYear === CONTRACT_YEAR_1}
-                     onChange={setYear(CONTRACT_YEAR_1)}
-                     name="contract-year" value={CONTRACT_YEAR_1}
-                     tabIndex="0" />
-              <span tabIndex="-1"
-                    className="checkbox-focus"
-                    aria-hidden="true">+1</span>
-              <span className="sr-only">
-                {CONTRACT_YEAR_LABELS[CONTRACT_YEAR_1]}
-              </span>
-            </label>
-          </li>
-          <li className="contract-list-item">
-            <label htmlFor={id2} className="radio">
-              <input id={id2} type="radio"
-                     name="contract-year" value={CONTRACT_YEAR_2}
-                     checked={contractYear === CONTRACT_YEAR_2}
-                     onChange={setYear(CONTRACT_YEAR_2)}
-                     tabIndex="0" />
-              <span tabIndex="-1"
-                    className="contract-last-year-span checkbox-focus"
-                    aria-hidden="true">+2</span>
-              <span className="sr-only">
-                {CONTRACT_YEAR_LABELS[CONTRACT_YEAR_2]}
-              </span>
-            </label>
-          </li>
+          {listItem(CONTRACT_YEAR_CURRENT)}
+          {listItem(CONTRACT_YEAR_1)}
+          {listItem(CONTRACT_YEAR_2)}
         </ul>
       </fieldset>
     </div>
