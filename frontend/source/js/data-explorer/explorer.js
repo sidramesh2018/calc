@@ -1,4 +1,4 @@
-/* global $, window, document, d3, formdb */
+/* global $, window, document, d3 */
 
 /**
  * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
@@ -43,7 +43,6 @@ import histogramToImg from './histogram-to-img';
 import StoreHistorySynchronizer from './history';
 
 import {
-  StoreFormSynchronizer,
   StoreStateFieldWatcher,
   loggingMiddleware,
 } from './temp-redux-middleware';
@@ -52,8 +51,6 @@ import StoreRatesAutoRequester from './rates-request';
 
 const api = new hourglass.API();
 const search = d3.select('#search');
-const form = new formdb.Form(search.node());
-const formSynchronizer = new StoreFormSynchronizer(form);
 const historySynchronizer = new StoreHistorySynchronizer(window);
 const ratesRequester = new StoreRatesAutoRequester(api);
 const storeWatcher = new StoreStateFieldWatcher();
@@ -62,12 +59,10 @@ const store = createStore(
   applyMiddleware(
     loggingMiddleware,
     storeWatcher.middleware,
-    formSynchronizer.reflectToFormMiddleware,
     ratesRequester.middleware,
     historySynchronizer.reflectToHistoryMiddleware
   )
 );
-const legacyInputs = search.selectAll('*[name]');
 const loadingIndicator = search.select('.loading-indicator');
 const histogramDownloadLink = document.getElementById('download-histogram');
 
@@ -92,14 +87,6 @@ function onCompleteRatesRequest(error) {
 }
 
 function onStartRatesRequest() {
-  legacyInputs
-    .filter(function filter() {
-      return this.type !== 'radio' && this.type !== 'checkbox';
-    })
-    .classed('filter_active', function classed() {
-      return !!this.value;
-    });
-
   search.classed('loaded', false);
   search.classed('loading', true);
 }
@@ -117,10 +104,6 @@ storeWatcher.watch('rates', () => {
 });
 
 function initialize() {
-  legacyInputs.on('change', () => {
-    formSynchronizer.reflectToStore(store);
-  });
-
   historySynchronizer.initialize(store, () => {
     ga('set', 'page', window.location.pathname +
                       window.location.search);
@@ -146,9 +129,8 @@ histogramDownloadLink.addEventListener('click', e => {
   );
 }, false);
 
-form.on('submit', (data, e) => {
+$('form').on('submit', e => {
   e.preventDefault();
-  formSynchronizer.reflectToStore(store);
   store.dispatch(invalidateRates());
 });
 

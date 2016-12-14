@@ -53,7 +53,6 @@ const bundles = {
       'vendor/d3.v3.min.js',
       'vendor/jquery.min.js',
       'vendor/query.xdomainrequest.min.js',
-      'vendor/formdb.min.js',
       'vendor/jquery.tooltipster.js',
       'vendor/jquery.nouislider.all.min.js',
     ],
