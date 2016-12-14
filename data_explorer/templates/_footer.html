@@ -12,8 +12,9 @@
                 {% endif %}
                 <!-- <li><a href="/docs/">Read the API documentation</a></li> -->
               </ul>
-
-              <p>Icons by Paulo Sá Ferreira, Luis Prado, John Testa, Andrew Forrester from <a href="https://thenounproject.com/">The Noun Project</a>.</p>
+              {% if request.path == "/" %}
+                <p>Icons by Paulo Sá Ferreira, Luis Prado, John Testa, Andrew Forrester from <a href="https://thenounproject.com/">The Noun Project</a>.</p>
+              {% endif %}
             </div><!-- /.footer_nav -->
           </div>
 
