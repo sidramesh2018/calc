@@ -12,6 +12,7 @@ export const TOGGLE_EDU_LEVEL = 'TOGGLE_EDU_LEVEL';
 export const SET_SCHEDULE = 'SET_SCHEDULE';
 export const SET_CONTRACT_YEAR = 'SET_CONTRACT_YEAR';
 export const SET_QUERY_TYPE = 'SET_QUERY_TYPE';
+export const SET_SITE = 'SET_SITE';
 
 export function excludeRow(rowId) {
   return { type: EXCLUDE_ROW, rowId };
@@ -75,4 +76,8 @@ export function setContractYear(year) {
 
 export function setQueryType(queryType) {
   return { type: SET_QUERY_TYPE, queryType };
+}
+
+export function setSite(site) {
+  return { type: SET_SITE, site };
 }

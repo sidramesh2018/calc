@@ -1,18 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { makeOptions } from './util';
 import { setSchedule as setScheduleAction } from '../actions';
 import { SCHEDULE_LABELS } from '../constants';
-
-function makeOptions(labels) {
-  return [
-    { key: '', value: '', label: '(all)' },
-  ].concat(Object.keys(labels).map(
-    value => ({ value, label: labels[value] })
-  )).map(({ value, label }) => (
-    <option key={value} value={value}>{label}</option>
-  ));
-}
 
 function Schedule({ idPrefix, schedule, setSchedule }) {
   const id = `${idPrefix}schedule`;

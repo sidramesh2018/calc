@@ -24,6 +24,7 @@ import {
   SET_SCHEDULE,
   SET_CONTRACT_YEAR,
   SET_QUERY_TYPE,
+  SET_SITE,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -73,8 +74,10 @@ function maxExperience(state = MAX_EXPERIENCE, action) {
   return state;
 }
 
-function site(state = '') {
-  // TODO: Create actions to change this.
+function site(state = '', action) {
+  if (action.type === SET_SITE) {
+    return action.site;
+  }
   return state;
 }
 
