@@ -10,7 +10,7 @@ import {
   CONTRACT_YEAR_LABELS,
 } from '../constants';
 
-const CONTRACT_INFO = {
+const YEAR_LI_INFO = {
   [CONTRACT_YEAR_CURRENT]: {
     className: 'contract-current-year-span checkbox-focus',
     shortLabel: 'Current',
@@ -28,9 +28,11 @@ const CONTRACT_INFO = {
   },
 };
 
+const TOOLTIP = 'All five years of pricing are available in the export.';
+
 function ContractYear({ idPrefix, contractYear, setContractYear }) {
   const listItem = year => {
-    const { className, shortLabel, idSuffix } = CONTRACT_INFO[year];
+    const { className, shortLabel, idSuffix } = YEAR_LI_INFO[year];
     const id = `${idPrefix}${idSuffix}`;
 
     return (
@@ -57,11 +59,16 @@ function ContractYear({ idPrefix, contractYear, setContractYear }) {
       <fieldset className="fieldset-inputs">
 
         <legend>Contract year:</legend>
-        <a href="#" className="tooltip filter-more-info">
-           <Tooltip text="All five years of pricing are available in the export">
-             What's this?
-           </Tooltip>
-        </a>
+
+        <span className="filter-more-info">
+          <Tooltip text={TOOLTIP}>
+            <a href="#" aria-label={TOOLTIP}
+               onClick={e => { e.preventDefault(); }}>
+              What's this?
+            </a>
+          </Tooltip>
+        </span>
+
         <h3 className="sr-only">Contract Year</h3>
 
         <ul className="contract-year-block">
