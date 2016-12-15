@@ -22,9 +22,8 @@
   label {
     font-weight: 100;
     margin-top: 0.2rem;
-    font-size: $small-font-size;
+    font-size: 1.4rem;
     line-height: 1.2;
-    width: 95%;
     color: $color-primary;
     font-weight: $font-weight-bold;
   }
@@ -37,16 +36,21 @@ ol.steps {
   padding: 0;
   list-style-type: none;
   list-style-position: inside;
-  display: flex;
   margin-top: 2rem;
+
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;
+  }
 
   li {
     list-style: none;
     border-top: 2px solid $color-primary;
     padding-top: 14px;
-    flex-grow: 1;
-    flex-basis: 20%;
     position: relative;
+    float: left;
+    width: 46px; // width of :before psuedoclass + $space-3x (22px + 24px)
 
     &:before {
       content: counter(li);
