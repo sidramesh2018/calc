@@ -7,7 +7,10 @@
             <div id="footer_nav">
               <h6>Acquisition professionals</h6>
               {% if not user.is_authenticated %}
-              <a href="{% url 'uaa_client:login' %}">Log in to upload data</a>
+              <p><a href="{% url 'uaa_client:login' %}">Log in to upload data</a></p>
+              {% elif user.is_authenticated %}
+              <p>You are logged in as {{ user.email }}</p>
+              <p><a href="{% url 'user_account:index' %}">View account</a> | <a href="{% url 'uaa_client:logout' %}">Log out</a></p>
               {% endif %}
 
               <h6>Developers</h6>
@@ -16,7 +19,8 @@
                 <!-- <li><a href="/docs/">Read the API documentation</a></li> -->
               </ul>
               {% if request.path == "/" %}
-                <p>Icons by Paulo Sá Ferreira, Luis Prado, John Testa, Andrew Forrester from <a href="https://thenounproject.com/">The Noun Project</a>.</p>
+                <h6>Icon credits</h6>
+                <p class="small">Paulo Sá Ferreira, Luis Prado, John Testa, Andrew Forrester from <a href="https://thenounproject.com/">The Noun Project</a>.</p>
               {% endif %}
             </div><!-- /.footer_nav -->
           </div>
