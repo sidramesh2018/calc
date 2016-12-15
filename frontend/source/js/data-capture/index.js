@@ -14,3 +14,4 @@ require('./expandable-area');
 require('./date');
 require('./smooth-scroll');
 require('./modal-dialogs');
+require('./edit-details-form-enhance.js');

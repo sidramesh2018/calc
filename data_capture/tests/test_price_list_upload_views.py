@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from model_mommy import mommy
 
 from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
@@ -60,8 +61,7 @@ class Step1Tests(PriceListStepTestCase):
 
     valid_form = {
         'schedule': FAKE_SCHEDULE,
-        'contract_number': 'GS-123-4567',
-        'vendor_name': 'foo'
+        'contract_number': 'GS-123-4567'
     }
 
     def test_get_is_ok(self):
@@ -76,7 +76,20 @@ class Step1Tests(PriceListStepTestCase):
         session_data = session_pl['step_1_POST']
         self.assertEqual(session_data['schedule'], FAKE_SCHEDULE)
         self.assertEqual(session_data['contract_number'], 'GS-123-4567')
-        self.assertEqual(session_data['vendor_name'], 'foo')
+
+    def test_valid_post_does_not_overwrite_other_step_data_if_exists(self):
+        self.login()
+        # save step 2 data into session before POSTing step 1 data
+        session = self.client.session
+        session['data_capture:price_list'] = {
+            'step_2_POST': Step2Tests.valid_form,
+        }
+        session.save()
+        self.client.post(self.url, self.valid_form)
+        # need to grab session again after POST
+        session = self.client.session
+        self.assertEqual(session['data_capture:price_list']['step_2_POST'],
+                         Step2Tests.valid_form)
 
     def test_valid_post_redirects_to_step_2(self):
         self.login()
@@ -94,11 +107,36 @@ class Step1Tests(PriceListStepTestCase):
             'Oops! Please correct the following errors.'
         )
 
+    def test_duplicate_contract_post_returns_html(self):
+        mommy.make(SubmittedPriceList,
+                   contract_number='gs-boop')
+        self.login()
+        res = self.client.post(self.url, {
+            'schedule': FAKE_SCHEDULE,
+            'contract_number': 'gs-boop'})
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'A price list with this contract number has '
+                                 'already been submitted.')
+        self.assertContains(res, 'We found an existing price list for '
+                                 'contract number gs-boop.')
+
+    def test_duplicate_contract_post_message_contract_num_is_escaped(self):
+        mommy.make(SubmittedPriceList,
+                   contract_number='<boop>')
+        self.login()
+        res = self.client.post(self.url, {
+            'schedule': FAKE_SCHEDULE,
+            'contract_number': '<boop>'})
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'We found an existing price list for '
+                                 'contract number &lt;boop&gt;.')
+
 
 class Step2Tests(PriceListStepTestCase, HandleCancelMixin):
     url = '/data-capture/step/2'
 
     valid_form = {
+        'vendor_name': 'foo',
         'contractor_site': 'Customer',
         'is_small_business': 'False',
         'contract_start_0': '1985',
@@ -142,6 +180,8 @@ class Step2Tests(PriceListStepTestCase, HandleCancelMixin):
                          self.valid_form['contractor_site'])
         self.assertEqual(posted_data['is_small_business'],
                          self.valid_form['is_small_business'])
+        self.assertEqual(posted_data['vendor_name'],
+                         self.valid_form['vendor_name'])
 
     def test_valid_post_redirects_to_step_3(self):
         self.login()
@@ -527,7 +567,7 @@ class Step4Tests(PriceListStepTestCase,
         self.assertEqual(p.is_small_business, False)
         self.assertEqual(p.submitter, user)
         self.assertEqual(p.status_changed_by, user)
-        self.assertEqual(p.status, SubmittedPriceList.STATUS_NEW)
+        self.assertEqual(p.status, SubmittedPriceList.STATUS_UNREVIEWED)
         self.assertEqual(p.status_changed_at.date(), datetime.now().date())
 
     def test_valid_post_clears_session_and_redirects_to_step_5(self):

@@ -1,11 +1,16 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from ..models import SubmittedPriceList
 from ..schedules import registry
 from frontend.upload import UploadWidget
-from frontend.date import SplitDateField
 from frontend.widgets import UswdsRadioSelect
+from frontend.date import SplitDateField
 from contracts.models import MIN_ESCALATION_RATE, MAX_ESCALATION_RATE
+
+
+class DuplicateContractValidationError(ValidationError):
+    pass
 
 
 def ensure_contract_start_is_before_end(form, cleaned_data):
@@ -18,7 +23,7 @@ def ensure_contract_start_is_before_end(form, cleaned_data):
 
 class EscalationRateField(forms.FloatField):
     def __init__(self):
-        return super().__init__(
+        super().__init__(
             label="Escalation rate (%)",
             help_text='CALC uses the escalation rate (as a percentage) '
                       'to calculate out-year pricing. '
@@ -47,8 +52,14 @@ class Step1Form(forms.ModelForm):
         fields = [
             'schedule',
             'contract_number',
-            'vendor_name',
         ]
+
+    def has_existing_contract_number_error(self):
+        if 'contract_number' in self.errors:
+            for err in self.errors.as_data()['contract_number']:
+                if isinstance(err, DuplicateContractValidationError):
+                    return True
+        return False
 
     def clean(self):
         cleaned_data = super().clean()
@@ -56,6 +67,22 @@ class Step1Form(forms.ModelForm):
         if schedule:
             cleaned_data['schedule_class'] = registry.get_class(schedule)
         return cleaned_data
+
+    def clean_contract_number(self):
+        '''
+        Raises a DuplicateContractValidationError if a SubmittedPriceList
+        with the same contract number (case-insensitive) already exists.
+        '''
+        value = self.cleaned_data['contract_number']
+
+        is_duplicate = SubmittedPriceList.objects.filter(
+            contract_number__iexact=value).exists()
+        if is_duplicate:
+            raise DuplicateContractValidationError(
+                'A price list with this contract number has '
+                'already been submitted.')
+
+        return value
 
 
 class Step2Form(forms.ModelForm):
@@ -88,6 +115,7 @@ class Step2Form(forms.ModelForm):
     class Meta:
         model = SubmittedPriceList
         fields = [
+            'vendor_name',
             'is_small_business',
             'contractor_site',
             'contract_start',
@@ -146,11 +174,7 @@ class Step3Form(forms.Form):
         return cleaned_data
 
 
-class Step4Form(forms.ModelForm):
-    schedule = forms.ChoiceField(
-        choices=registry.get_choices,
-        widget=forms.HiddenInput()
-    )
+class PriceListDetailsForm(forms.ModelForm):
     is_small_business = forms.ChoiceField(
         label='Business size',
         choices=[
@@ -176,6 +200,25 @@ class Step4Form(forms.ModelForm):
         cleaned_data = super().clean()
         ensure_contract_start_is_before_end(self, cleaned_data)
         return cleaned_data
+
+    def is_different_from(self, price_list):
+        my_model = self.save(commit=False)
+        for field in self.Meta.fields:
+            if getattr(my_model, field) != getattr(price_list, field):
+                return True
+        return False
+
+    class Meta:
+        model = SubmittedPriceList
+        fields = ['vendor_name', 'is_small_business', 'contractor_site',
+                  'contract_start', 'contract_end', 'escalation_rate']
+
+
+class Step4Form(PriceListDetailsForm):
+    schedule = forms.ChoiceField(
+        choices=registry.get_choices,
+        widget=forms.HiddenInput()
+    )
 
     class Meta:
         model = SubmittedPriceList

@@ -65,7 +65,6 @@ class DataCaptureTests(BrowserTestCase):
 
         form = self.get_form('form')
         form.set_text('contract_number', 'GS-123-4567')
-        form.set_text('vendor_name', 'Battaglia Sausage Peddlers, Inc.')
         form.submit()
 
         self.assertEqual(
@@ -74,6 +73,7 @@ class DataCaptureTests(BrowserTestCase):
         )
 
         form = self.get_form('form')
+        form.set_text('vendor_name', 'Battaglia Sausage Peddlers, Inc.')
         form.set_radio('is_small_business', 0)
         form.set_radio('contractor_site', 2)
         form.set_date('contract_start', 4, 28, 2016)

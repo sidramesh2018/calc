@@ -1,10 +1,62 @@
+from model_mommy import mommy
 from django.test import TestCase, override_settings
 
 from .common import FAKE_SCHEDULE, uploaded_csv_file, r10_file
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
 from ..forms import (Step1Form, Step2Form, Step3Form, Step4Form,
-                     Region10BulkUploadForm)
+                     PriceListDetailsForm, Region10BulkUploadForm)
+from ..models import SubmittedPriceList
+
+
+@override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
+class Step1FormTests(TestCase):
+    def make_form(self, contract_number='GS-BOOP'):
+        return Step1Form({
+            'contract_number': contract_number,
+            'schedule': FAKE_SCHEDULE,
+        })
+
+    def test_clean_contract_number_works(self):
+        mommy.make(SubmittedPriceList,
+                   contract_number='GS-BOOP')
+        form = self.make_form()
+        self.assertFalse(form.is_valid())
+        self.assertIn('contract_number', form.errors)
+        self.assertIn('A price list with this contract number has already '
+                      'been submitted.',
+                      form.errors['contract_number'])
+
+        form = self.make_form(contract_number='GS-NOT-DUPE')
+        self.assertTrue(form.is_valid())
+
+    def test_clean_contract_number_is_case_insensitive(self):
+        mommy.make(SubmittedPriceList,
+                   contract_number='GS-BOOP')
+        form = self.make_form(contract_number='gs-boop')
+        self.assertFalse(form.is_valid())
+        self.assertIn('contract_number', form.errors)
+        self.assertIn('A price list with this contract number has already '
+                      'been submitted.',
+                      form.errors['contract_number'])
+
+    def test_contract_number_format_is_validated(self):
+        form = self.make_form(contract_number='***GS-123-BOOP')
+        self.assertFalse(form.is_valid())
+        self.assertIn('contract_number', form.errors)
+        self.assertIn('Please use only letters, numbers, and dashes (-).',
+                      form.errors['contract_number'])
+
+    def test_has_existing_contract_number_error_works(self):
+        mommy.make(SubmittedPriceList,
+                   contract_number='GS-BOOP')
+        form = self.make_form()
+        form.is_valid()
+        self.assertTrue(form.has_existing_contract_number_error())
+
+        form = self.make_form('GS-NOT-DUPE')
+        form.is_valid()
+        self.assertFalse(form.has_existing_contract_number_error())
 
 
 class Step2FormTests(TestCase):
@@ -86,6 +138,18 @@ class Step4FormTests(Step2FormTests):
             'a': 1,
             'b': 2
         })
+
+
+class PriceListDetailsFormTests(TestCase):
+    def test_is_different_from_works(self):
+        price_list = mommy.make(SubmittedPriceList,
+                                vendor_name='Seppi Socks Co.')
+        form = PriceListDetailsForm(instance=price_list)
+        self.assertFalse(form.is_different_from(price_list))
+
+        new_price_list = SubmittedPriceList(price_list)
+        new_price_list.vendor_name = 'Vendy Vend, Inc'
+        self.assertTrue(form.is_different_from(new_price_list))
 
 
 class Region10BulkUploadFormTests(TestCase):

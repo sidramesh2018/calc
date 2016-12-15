@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from django.test import override_settings
 from django.utils import timezone
+from django.forms import ValidationError
 
 from hourglass.tests.common import BaseLoginTestCase
 from contracts.models import Contract
@@ -33,7 +34,7 @@ class ModelTestCase(BaseLoginTestCase):
             contract_start=datetime.date(2016, 9, 1),
             contract_end=datetime.date(2021, 9, 1),
             escalation_rate=0,
-            status=SubmittedPriceList.STATUS_NEW,
+            status=SubmittedPriceList.STATUS_UNREVIEWED,
             status_changed_by=self.user,
             status_changed_at=timezone.now(),
         )
@@ -80,7 +81,7 @@ class ModelsTests(ModelTestCase):
     def test_change_status_works(self):
         original_user = self.create_user(username='boop', email="boop@beep")
         p = self.create_price_list(
-            status=SubmittedPriceList.STATUS_NEW,
+            status=SubmittedPriceList.STATUS_UNREVIEWED,
             status_changed_by=original_user,
             status_changed_at=datetime.datetime.now() - datetime.timedelta(
                 days=1))
@@ -128,14 +129,14 @@ class ModelsTests(ModelTestCase):
         self.assertAlmostEqual(
             contract.second_year_price, Decimal(10.20), places=2)
 
-    def test_unapprove_works(self):
+    def test_retire_works(self):
         p = self.create_price_list()
         p.save()
         self.create_row(price_list=p).save()
         self.create_row(price_list=p, is_muted=True).save()
         p.approve(self.user)
-        p.unapprove(self.user)
-        self.assertEqual(p.status, SubmittedPriceList.STATUS_UNAPPROVED)
+        p.retire(self.user)
+        self.assertEqual(p.status, SubmittedPriceList.STATUS_RETIRED)
         self.assertEqual(p.status_changed_by, self.user)
         self.assertEqual(p.status_changed_at.date(), datetime.date.today())
         self.assertEqual(p.rows.all()[0].contract_model, None)
@@ -152,5 +153,50 @@ class ModelsTests(ModelTestCase):
         self.assertEqual(p.rows.all()[0].contract_model, None)
         self.assertEqual(Contract.objects.all().count(), 0)
 
+    def test_reject_raises_when_not_STATUS_UNREVIEWED(self):
+        p = self.create_price_list()
+        p.save()
+        self.create_row(price_list=p).save()
+        p.approve(self.user)
+        with self.assertRaises(AssertionError):
+            p.reject(self.user)
+
+    def test_unreview_works(self):
+        p = self.create_price_list()
+        p.save()
+        self.create_row(price_list=p).save()
+        p.approve(self.user)
+        p.unreview(self.user)
+        self.assertEqual(p.status, SubmittedPriceList.STATUS_UNREVIEWED)
+        self.assertEqual(p.status_changed_by, self.user)
+        self.assertEqual(p.status_changed_at.date(), datetime.date.today())
+        self.assertEqual(p.rows.all()[0].contract_model, None)
+        self.assertEqual(Contract.objects.all().count(), 0)
+
     def test_row_stringify_works(self):
         self.assertEqual(str(self.create_row()), 'Submitted price list row')
+
+    def test_get_latest_by_contract_number_works(self):
+        p1 = self.create_price_list()
+        p1.save()
+
+        p2 = self.create_price_list()
+        p2.save()
+
+        latest = SubmittedPriceList.get_latest_by_contract_number(
+            'GS-123-4567')
+        self.assertEqual(p2, latest)
+
+    def test_get_latest_by_contract_number_ignores_case(self):
+        p = self.create_price_list(contract_number='GS-AA-bbbb')
+        p.save()
+        latest = SubmittedPriceList.get_latest_by_contract_number(
+            'gs-AA-bbBB')
+        self.assertEqual(p, latest)
+
+    def test_contract_number_is_validated(self):
+        p = self.create_price_list(contract_number='***GS-123-3456')
+        with self.assertRaises(ValidationError) as cm:
+            p.full_clean()
+            self.assertIn('Please use only letters, numbers, and dashes (-).',
+                          cm.exception)

@@ -118,17 +118,6 @@ class App extends React.Component {
         <section className="results">
           <div className="container">
             <div className="row">
-              <div className="filter-container columns three">
-                <div className="filter-block">
-                  <h5 className="filter-title">Optional filters</h5>
-                  <EducationLevel />
-                  <Experience />
-                  <Site />
-                  <BusinessSize />
-                  <Schedule />
-                  <ContractYear />
-                </div>
-              </div>
 
               <div className="graph-block columns nine">
                 {/* for converting the histogram into an img --> */}
@@ -179,6 +168,23 @@ class App extends React.Component {
                   </p>
                 </div>
               </div>
+
+
+
+              <div className="filter-container columns three">
+                <div className="filter-block">
+                  <h5 className="filter-title">Optional filters</h5>
+                  <EducationLevel />
+                  <Experience />
+                  <Site />
+                  <BusinessSize />
+                  <Schedule />
+                  <ContractYear />
+                </div>
+              </div>
+
+            </div>
+            <div className="row">
 
               <div className="table-container">
                 <ResultsTable />

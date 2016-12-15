@@ -7,11 +7,17 @@ https://docs.cloud.gov/getting-started/setup/.
 Make sure you are using a version >= v6.17.1, otherwise pushing multiple apps
 at once might not work.
 
-You will also need to install the `autopilot` plugin for Cloud Foundry, which
-is used for zero-downtime deploys. Instructions are at https://github.com/contraband/autopilot.
+You will also need to install the [`autopilot`](https://github.com/contraband/autopilot)
+plugin for Cloud Foundry, which is used for zero-downtime deploys.
+You can install via
+`cf install-plugin autopilot -f -r CF-Community`.
 
-To start, target the org and space you want to work with. For example, if you wanted to work with the staging space:
-`cf target -o oasis -s calc-dev`
+CALC is deployed to the GovCloud instance of cloud.gov. You will need to login
+to via the GovCloud api of cloud.gov:
+`cf login -a api.fr.cloud.gov --sso`
+
+Then target the org and space you want to work with. For example, if you wanted to work with the dev space:
+`cf target -o fas-calc -s dev`
 
 Manifest files, which contain import deploy configuration settings, are located
 in the [manifests](manifests/) directory of this project.
@@ -26,22 +32,28 @@ During deployments, the Cloud Foundry python buildpack uses only `requirements.t
 so only production dependencies will be installed.
 
 ## CF Structure
-- Organization: `oasis`
-- Spaces: `calc-dev` (staging), `calc-prod` (production)
+- cloud.gov environment: `GovCloud`
+- Organization: `fas-calc`
+- Spaces: `dev`, `staging`, `prod`
 - Apps:
-  - `calc-dev` (staging) space:
+  - `dev` space:
     - `calc-dev`
     - `calc-rqworker`
     - `calc-rqscheduler`
-  - `calc-prod` (production) space:
+  - `staging` space:
+    - `calc-staging`
+    - `calc-rqworker`
+    - `calc-rqscheduler`
+  - `prod` space:
     - `calc-prod`
     - `calc-rqworker`
     - `calc-rqscheduler`
     - `calc-maintenance`
 - Routes:
-  - calc-dev.apps.cloud.gov -> `calc-dev` space, `calc-dev` app
-  - calc-prod.apps.cloud.gov -> `calc-prod` space, `calc-prod` app
-  - calc.gsa.gov -> `calc-prod` space, `calc-prod` app
+  - calc-dev.app.cloud.gov -> `dev` space, `calc-dev` app
+  - calc-staging.app.cloud.gov -> `staging` space, `calc-staging` app
+  - calc-prod.app.cloud.gov -> `prod` space, `calc-prod` app
+  - calc.gsa.gov -> `prod` space, `calc-prod` app
     or the maintenance page app, `calc-maintenance`
 
 ## Services
@@ -93,7 +105,7 @@ CALC uses Redis along with [rq](http://python-rq.org/) for scheduling and proces
 asynchronous tasks.
 
 ```sh
-cf create-service redis28-swarm standard calc-redis
+cf create-service redis28 standard calc-redis
 cf bind-service <APP_INSTANCE> calc-redis
 ```
 
@@ -111,10 +123,10 @@ The staging server updates automatically when changes are merged into the
 `develop` branch. Check out the `deploy` section of [.travis.yml](.travis.yml)
 for details and settings.
 
-Should you need to, you can push directly to calc-dev.apps.cloud.gov with:
+Should you need to, you can push directly to calc-dev.app.cloud.gov with:
 
 ```sh
-cf target -o oasis -s calc-dev
+cf target -o fas-calc -s dev
 cf push -f manifests/manifest-staging.yml
 ```
 
@@ -133,7 +145,13 @@ Cloud Foundry [autopilot plugin](https://github.com/contraband/autopilot).
 To deploy, first make sure you are targeting the prod space:
 
 ```sh
-cf target -o oasis -s calc-prod
+cf target -o fas-calc -s prod
+```
+
+Now, if you don't already have the autopilot plugin, you can install it by running:
+
+```sh
+cf install-plugin autopilot -f -r CF-Community
 ```
 
 Then use the autopilot plugin's `zero-downtime-push` command to deploy:
@@ -189,8 +207,16 @@ logs, so you will need to look at each individually.
 After the initial setup of `calc-db` and a production app, you will need to
 create a superuser account, after which you'll be able to login to the
 Django admin panel to add additional user accounts. The easiest way to create
-the initial superuser is to use `cf-ssh` (docs [here](https://docs.cloud.gov/getting-started/one-off-tasks/))
-and run `python manage.py createsuperuser`.
+the initial superuser is to use `cf ssh` to get to the remote host
+and run `python manage.py createsuperuser`. You'll need to do some environment
+setup on the remote host, as described at https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-apps.html#ssh-env:
+
+```sh
+export HOME=/home/vcap/app
+export TMPDIR=/home/vcap/tmp
+cd /home/vcap/app
+source /home/vcap/app/.profile.d/python.sh
+```
 
 ## Setting up the API
 

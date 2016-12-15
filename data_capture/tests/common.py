@@ -79,13 +79,6 @@ def r10_file(content=None, name='r10.xlsx'):
     DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE],
 )
 class StepTestCase(ProtectedViewTestCase):
-    def assertHasMessage(self, res, tag, content):
-        msgs = list(res.context['messages'])
-        self.assertEqual(len(msgs), 1)
-        m = msgs[0]
-        self.assertEqual(m.tags, tag)
-        self.assertEqual(str(m), content)
-
     def test_permission_is_required(self):
         if not self.url:
             raise unittest.SkipTest()

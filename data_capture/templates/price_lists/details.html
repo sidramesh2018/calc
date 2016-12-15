@@ -11,7 +11,7 @@
         <h3>Approved</h3>
         <p>This price list's data is available in CALC.</p>
       </div>
-    {% elif price_list.get_status_display == 'new' %}
+    {% elif price_list.get_status_display == 'unreviewed' %}
       <div class="alert alert-warning">
         <h3>Not yet approved</h3>
         <p>This price list has not yet been reviewed by a CALC Administrator.</p>
@@ -21,9 +21,9 @@
         <h3>Rejected</h3>
         <p>This price list has been rejected by a CALC Administrator.</p>
       </div>
-    {% elif price_list.get_status_display == 'unapproved' %}
+    {% elif price_list.get_status_display == 'retired' %}
       <div class="alert alert-error">
-        <h3>Unapproved</h3>
+        <h3>Retired</h3>
         <p>This price list has been removed from CALC.</p>
       </div>
     {% endif %}
@@ -31,42 +31,68 @@
     <h1>Details for <strong>{{ price_list.vendor_name }}</strong>'s price list</h1>
     <h2>{{ price_list.contract_number }}</h2>
 
-    <div class="row">
-      <div class="columns eight">
-        {% include "price_lists/_details_list.html" %}
-      </div>
+    {% include 'data_capture/messages.html' %}
+
+    <div data-edit-contract-details {% if not show_edit_form %}style="display:none;"{% endif %}>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        {% load frontend %}
+
+        <p>Schedule: {{ price_list.get_schedule_title }}</p>
+
+        {% fieldset form.vendor_name %}
+        {% fieldset form.is_small_business %}
+        {% fieldset form.contractor_site %}
+
+        <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+          {% fieldset form.contract_start %}
+          <p>to</p>
+          {% fieldset form.contract_end %}
+        </div>
+
+        {% fieldset form.escalation_rate %}
+
+        <div class="form-button-row clearfix">
+          <div class="submit-group">
+            <button type="submit" class="button">Save changes</button>
+          </div>
+
+          <a type="submit" href="{{ details_without_edit_url }}">Discard changes</a>
+        </div>
+      </form>
     </div>
-    <div class="row">
-      {% if price_list_rows %}
+
+    {% if not show_edit_form %}
+      <div data-contract-details>
+        <div class="row">
+          <div class="columns eight">
+            {% include "price_lists/_details_list.html" %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="columns eight">
+            <p><a href="{{ details_with_edit_url }}" class="button" data-edit-btn>Edit</a></p>
+            {% if price_list.get_status_display == 'approved' %}
+              <p class="help-text">Making changes to these details will remove this price list's data from CALC until an administrator reviews it again.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if price_list_rows %}
+      <div class="row">
         <div class="columns twelve">
           <h3>Valid price list rows</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>SIN(s)</th>
-                <th>Labor category</th>
-                <th>Minimum education level</th>
-                <th class="number">Minimum years of experience</th>
-                <th class="number">Base year rate (per hour)</th>
-                <th>Is muted</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for row in price_list_rows %}
-                <tr>
-                  <td>{{ row.sin }}</td>
-                  <td>{{ row.labor_category }}</td>
-                  <td>{{ row.get_education_level_display }}</td>
-                  <td class="number">{{ row.min_years_experience }}</td>
-                  <td class="number currency">{{ row.base_year_rate }}</td>
-                  <td>{{ row.is_muted }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          {% include 'price_lists/_price_list_rows_table.html' %}
         </div>
-      {% endif %}
-      {% if gleaned_data.invalid_rows %}
+      </div>
+    {% endif %}
+
+    {% if gleaned_data.invalid_rows %}
+      <div class="row">
         <div class="columns twelve">
           <expandable-area>
             <h3>Invalid price list rows</h3>
@@ -74,7 +100,7 @@
             {{ gleaned_data.to_error_table }}
           </expandable-area>
         </div>
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
   </div>
 {% endblock body %}

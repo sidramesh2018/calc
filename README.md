@@ -341,7 +341,7 @@ Currently, authorization is set up as follows:
   price lists for approval.
 * **Staff users** in the **Data Administrators** group can
   * create and edit users and assign them to groups,
-  * review submitted price lists and approve/unapprove them,
+  * review submitted price lists and approve/reject/retire them,
   * bulk upload data exports (only Region 10 data for now).
 * **Superusers** can do anything, but only infrastructure/operational
   engineers should be given this capability.

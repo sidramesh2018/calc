@@ -101,7 +101,7 @@ span.dollars {
 
 .filter-block {
   background: $color-gray-lightest;
-  border-radius: 4px;
+  border-radius: $border-radius;
   margin-bottom: 0;
   padding: 1rem 2rem;
 }
@@ -169,7 +169,7 @@ dl.dropdown {
     background-repeat: no-repeat;
     background-size: 1.3rem;
     border: 1px solid $color-base;
-    border-radius: 4px;
+    border-radius: $border-radius;
     box-shadow: none;
     box-sizing: border-box;
     display: block;
@@ -235,7 +235,7 @@ input[type="checkbox"]:checked ~ label {
 .price-block {
   background: $color-gray-lightest;
   border: 1px solid $color-gray-lighter;
-  border-radius: 4px;
+  border-radius: $border-radius;
   flex-grow: 9;
   .row {
     display: flex;
@@ -262,7 +262,7 @@ input[type="checkbox"]:checked ~ label {
 .proposed-price-block {
   background: $color-gray-lightest;
   border: 1px solid $color-gray-lighter;
-  border-radius: 4px;
+  border-radius: $border-radius;
   padding: 0.4em 1.8em;
   margin-left: 3rem;
   float: right;
@@ -278,7 +278,6 @@ input[type="checkbox"]:checked ~ label {
     display: inline-block;
   }
   .go {
-    padding: 0 10px;
     cursor: pointer;
     display: block;
     float: right;
@@ -290,8 +289,10 @@ input[type="checkbox"]:checked ~ label {
 .standard-deviation-block,
 .proposed-price-block {
   h5 {
+    margin-top: 0;
     margin-bottom: 0;
     font-weight: 300;
+    line-height: 3.12rem; // to standardize the height of larger and smaller h5s used
   }
 }
 
@@ -435,8 +436,9 @@ a.focus-input {
 .contract-year-block {
   background-color: $color-white;
   border: 1px solid $color-gray-lighter;
-  border-radius: 4px;
+  border-radius: $border-radius;
   display: inline-block;
+  padding-left: 0; // ul default override
 }
 
 .contract-year-item {
@@ -618,11 +620,17 @@ input[type="radio"]:focus + .checkbox-focus {
 }
 
 .contract-current-year-span {
-  border-radius: 4px 0 0 4px
+  border-radius: $border-radius 0 0 $border-radius;
+  &.checkbox-focus {
+    background-color: transparent;
+  }
 }
 
 .contract-last-year-span {
-  border-radius: 0 4px 4px 0
+  border-radius: 0 $border-radius $border-radius 0;
+  &.checkbox-focus {
+    background-color: transparent;
+  }
 }
 
 .contract-year legend {

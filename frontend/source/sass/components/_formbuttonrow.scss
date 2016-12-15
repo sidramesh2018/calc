@@ -3,6 +3,7 @@
 .form-button-row {
   position: relative;
   margin-top: 4rem;
+  font-size: $small-font-size; //so cancel button renders properly
 
   button,
   button[type="submit"],
