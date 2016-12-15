@@ -63,7 +63,9 @@ export function parseQuery(qstr) {
 
   for (let i = 0; i < a.length; i++) {
     const b = a[i].split('=');
-    query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+    query[decodeURIComponent(b[0])] = decodeURIComponent(
+      (b[1] || '').replace(/\+/g, ' ')
+    );
   }
 
   return query;
