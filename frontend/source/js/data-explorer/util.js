@@ -2,12 +2,6 @@
 
 import classNames from 'classnames';
 
-// for IE9: History API polyfill
-export const location = window.history.location || window.location;
-// TODO: if location.hash, read that
-// e.g. if an IE9 user sends a link to a Chrome user, they should see the
-// same stuff.
-
 export const formatCommas = d3.format(',');
 export const formatPrice = d3.format(',.0f');
 export const formatPriceWithCents = d3.format(',.02f');

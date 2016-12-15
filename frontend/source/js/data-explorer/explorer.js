@@ -1,20 +1,5 @@
 /* global $, window, document, d3 */
 
-/**
- * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
- *
- * This code was originally jQuery-based and is gradually being
- * migrated to React + Redux.
- *
- * Things to be fixed include, but are not limited to:
- *
- *   * We should probably remove `hourglass.qs.parse` and
- *     `hourglass.qs.format`.
- *   * We might want to get rid of `location` in `./util`.
- *
- * TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
- */
-
 import ReactDOM from 'react-dom';
 import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
