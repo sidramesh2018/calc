@@ -432,4 +432,9 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Histogram);
+export default connect(
+  mapStateToProps,
+  null,
+  null,
+  { withRef: true }
+)(Histogram);
