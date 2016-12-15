@@ -162,6 +162,7 @@ nav {
       list-style: none;
       display: inline-block;
       margin: 0 $space-3x;
+      border-bottom: $space-1x solid transparent; //so pages with no applicable item still have the right spacing
       &:first-child {
         margin-left: 0rem;
       }
