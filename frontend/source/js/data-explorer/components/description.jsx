@@ -26,9 +26,9 @@ function Filter({
   return (
     <span className={className}>
       {label ? `${label}: ` : null}
-      <a className="focus-input" href="#">
+      <b>
         {children}
-      </a>
+      </b>
     </span>
   );
 }
