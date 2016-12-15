@@ -9,9 +9,10 @@ nav ul {
   margin-top: 0;
   li {
     padding-bottom: ($space-1x + $space-half);
+    border-bottom: 0;
     a[href*="admin"]{
-      padding-bottom: 7px;
       border-bottom: $space-1x solid $color-primary-alt;
+      padding-bottom: 7px;
     }
   }
 }
@@ -72,8 +73,6 @@ form .aligned p.help {
   li {
     display: inline-block;
     margin: 0 2rem 0 0;
-    text-transform: uppercase;
-    font-size: $small-font-size;
     &:last-child {
       margin-right: 0;
     }
