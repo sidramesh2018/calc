@@ -3,13 +3,16 @@
       <div class="container">
         <div class="row">
 
-          <div id="code" class="three columns">
+          <div id="code" class="four columns">
             <div id="footer_nav">
+              <h6>Acquisition professionals</h6>
+              {% if not user.is_authenticated %}
+              <a href="{% url 'uaa_client:login' %}">Log in to upload data</a>
+              {% endif %}
+
+              <h6>Developers</h6>
               <ul>
                 <li><a href="https://github.com/18F/calc"><img alt="GitHub Logo" src="https://mirage-gsa-gov.s3.amazonaws.com:443/mirage_site/images/github_icon.png"> View our code on GitHub</a></li>
-                {% if not user.is_authenticated %}
-                  <li><a href="{% url 'uaa_client:login' %}">Log in</a></li>
-                {% endif %}
                 <!-- <li><a href="/docs/">Read the API documentation</a></li> -->
               </ul>
               {% if request.path == "/" %}
@@ -18,15 +21,15 @@
             </div><!-- /.footer_nav -->
           </div>
 
-          <div id="help-wanted" class="six columns">
+          <div id="help-wanted" class="four columns">
             <h3>Get in touch</h3>
-            <p>We're always looking for feedback on CALC.<br />
+            <p>We're always looking for feedback on CALC.
               Drop us a line to share your thoughts!
            </p>
-              <span class="email_us">Email us at <a href="mailto:calc@gsa.gov">calc@gsa.gov</a></span>
+            <p>Email us at <a href="mailto:calc@gsa.gov">calc@gsa.gov</a></p>
           </div>
 
-          <div id="logos" class="three columns">
+          <div id="logos" class="four columns">
             <a href="http://gsa.gov"><img alt="General Services Administration logo"
               src="{% static 'frontend/images/logo-gsa.png' %}"></a>
             <a href="https://18f.gsa.gov"><img alt="18F logo"
