@@ -1,6 +1,35 @@
-/* global $ */
+/* global $ document */
 
 import hourglass from '../common/hourglass';
+
+export function appendHighlightedTerm($el, term, searchStr) {
+  const sanitizedSearch = searchStr.replace(/[^a-z0-9 ]/gi, '')
+    .trim().split(/[ ]+/).join('|');
+  const re = new RegExp(`(${sanitizedSearch})`, 'gi');
+
+  const plainText = (start, end) => document.createTextNode(
+    term.substring(start, end)
+  );
+  const highlightedText = (start, end) => $('<b></b>').text(
+    term.substring(start, end)
+  )[0];
+
+  let done = false;
+  let lastIndex = 0;
+  while (!done) {
+    const result = re.exec(term);
+    if (result === null) {
+      $el.append(plainText(lastIndex));
+      done = true;
+    } else {
+      $el.append(plainText(lastIndex, result.index));
+      $el.append(highlightedText(result.index, re.lastIndex));
+      lastIndex = re.lastIndex;
+    }
+  }
+
+  return $el;
+}
 
 export function destroy(el) {
   $(el).autoComplete('destroy');
@@ -43,14 +72,19 @@ export function initialize(el, {
       });
     },
     renderItem(item, searchStr) {
-      const re = new RegExp(`(${searchStr.split(' ').join('|')})`, 'gi');
       const term = item.term || item;
-      return [
-        `<div class="autocomplete-suggestion" data-val="${term}">`,
-        '<span class="term">', term.replace(re, '<b>$1</b>'), '</span>',
-        '<span class="count">', item.count, '</span>',
-        '</div>',
-      ].join('');
+      const $div = $('<div class="autocomplete-suggestion"></div>')
+        .attr('data-val', term);
+
+      appendHighlightedTerm(
+        $('<span class="term"></span>').appendTo($div),
+        term,
+        searchStr
+      );
+      $('<span class="count"></span>').text(item.count.toString())
+        .appendTo($div);
+
+      return $('<div></div>').append($div).html();
     },
     onSelect(e, term) {
       let selectedInput;

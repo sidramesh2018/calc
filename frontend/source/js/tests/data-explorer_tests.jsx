@@ -1,9 +1,10 @@
-/* global QUnit document */
+/* global QUnit document $ */
 
 import React from 'react';
 import { render } from 'enzyme';
 
 import { Highlights } from '../data-explorer/components/highlights';
+import { appendHighlightedTerm } from '../data-explorer/autocomplete';
 
 QUnit.module('data-explorer');
 
@@ -19,4 +20,15 @@ QUnit.test('<Highlights> should render prices', assert => {
                'Standard deviation +1 is rendered');
   assert.equal(wrapper.find('.proposed-price-highlight').text(), '$5',
                'Proposed price is rendered');
+});
+
+QUnit.test('appendHighlightedTerm() prevents stored XSS', assert => {
+  assert.equal(
+    appendHighlightedTerm(
+      $('<span></span>'),
+      'Project Manager of <script>alert("DOOM")</script>',
+      'proj manager'
+    ).html(),
+    '<b>Proj</b>ect <b>Manager</b> of &lt;script&gt;alert("DOOM")&lt;/script&gt;'
+  );
 });
