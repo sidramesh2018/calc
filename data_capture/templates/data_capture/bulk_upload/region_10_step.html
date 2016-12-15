@@ -5,15 +5,25 @@
 {% block page_heading %}Upload Region 10 data{% endblock %}
 
 {% block steps %}
-  <ol class="steps" aria-hidden="true">
-    <li {% if step.number == 1 %}class="current"{% endif %}>
-      <label>Upload spreadsheet</label>
-    </li>
-    <li {% if step.number == 2 %}class="current"{% endif %}>
-      <label>Confirm load</label>
-    </li>
-    <li {% if step.number == 3 %}class="current"{% endif %}>
-      <label>Complete</label>
-    </li>
-  </ol>
+<div class="step-bar" aria-hidden="true">
+  <label>
+    {% if step.number == 1 %}
+    Upload spreadsheet
+    {% endif %}
+    {% if step.number == 2 %}
+    Confirm load
+    {% endif %}
+    {% if step.number == 3 %}
+    Complete
+    {% endif %}
+  </label>
+    <ol class="steps">
+      <li {% if step.number == 1 %}class="current"{% endif %}>
+      </li>
+      <li {% if step.number == 2 %}class="current"{% endif %}>
+      </li>
+      <li {% if step.number == 3 %}class="current"{% endif %}>
+      </li>
+    </ol>
+</div>
 {% endblock steps %}

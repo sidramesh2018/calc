@@ -4,6 +4,9 @@
   position: relative;
   margin-top: 4rem;
   text-align: right;
+  &.align-left {
+    text-align: left;
+  }
 
   .button-previous {
     float: left;
