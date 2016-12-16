@@ -86,6 +86,7 @@ input.button-link[type="button"] {
 .button.button-disabled {
   background-color: $color-gray-lighter;
   cursor: default;
+  color: $color-gray;
   &:hover {
     color: $color-gray;
   }
