@@ -12,7 +12,7 @@
           <h2>{{ total_submitted }} price list{{ total_submitted|pluralize }} submitted to date!</h2>
           <ul>
             <li><a href="{% url 'data_capture:price_lists' %}#approved">{{ total_approved }} approved and available in CALC</a></li>
-            <li><a href="{% url 'data_capture:price_lists' %}#new">{{ total_new }} awaiting approval</a></li>
+            <li><a href="{% url 'data_capture:price_lists' %}#unreviewed">{{ total_unreviewed }} awaiting approval</a></li>
             <li><a href="{% url 'data_capture:price_lists' %}#rejected">{{ total_rejected }} rejected</a></li>
           </ul>
           <a class="button button-primary" href="{% url 'data_capture:price_lists' %}">See all</a>
