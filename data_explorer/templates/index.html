@@ -16,38 +16,31 @@
 
 {% block header_extension %}
 <div class="row">
-  <div class="twelve columns">
+  <div class="eight columns">
     <h1 class="description-main">Search awarded ceiling rates for labor categories</h1>
     <h2 class="description-secondary">CALC lets you conduct market research on professional service labor categories quickly and easily, helping you make better informed decisions. Results shown are awarded hourly rates from GSA IDIQ service schedules.</h2>
-
-    <div class="row price-callout">
-      <div class="three columns">
-        <div class="icon icon-ceiling"></div>
-        <p>Ceiling prices</p>
-        <p>Maximum prices paid</p>
-      </div>
-      <div class="three columns">
-        <div class="icon icon-fully-burdened"></div>
-        <p>Fully burdened costs</p>
-        <p>Wages + additional labor costs</p>
-      </div>
-      <div class="three columns">
-        <div class="icon icon-professional-services"></div>
-        <p>Professional services</p>
-        <p>GSA schedule data</p>
-      </div>
-      <div class="three columns">
-        <div class="icon icon-worldwide-rates"></div>
-        <p>Worldwide rates</p>
-        <p>Globally applicable rates</p>
-      </div>
+  </div>
+  <div class="price-callout four columns">
+    <h3>With...</h3>
+    <div class="icon icon-ceiling">
+      <p>Ceiling prices</p>
+    </div>
+    <div class="icon icon-fully-burdened">
+      <p>Fully burdened costs</p>
+    </div>
+    <div class="icon icon-professional-services">
+      <p>Professional services</p>
+    </div>
+    <div class="icon icon-worldwide-rates">
+      <p>Worldwide rates</p>
     </div>
   </div>
 </div>
 {% endblock header_extension %}
 
 {% block body %}
-<form id="search" class="search" role="form">
+<div class="card--half-padding">
+<form id="search" class="card search" role="form">
   <input type="hidden" name="sort" value="current_price">
   <input type="hidden" name="exclude" value="">
 
@@ -516,6 +509,7 @@
   </section><!-- /.results -->
 
 </form>
+</div><!-- .card -->
 
 <![if gt IE 8]>
 {# For the list of files included in this built script, see gulpfile.js #}

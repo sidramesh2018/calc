@@ -2,29 +2,33 @@
 {% load humanize %}
 
 {% block title %}User Account{% endblock %}
-
 {% block body %}
-  <div class="container">
-    {% if total_submitted %}
-      <div class="alert alert-info alert-submitted-price-lists">
-        <h3>{{ total_submitted }} price list{{ total_submitted|pluralize }} submitted to date!</h3>
-        <ul>
-          <li><a href="{% url 'data_capture:price_lists' %}#approved">{{ total_approved }} approved and available in CALC</a></li>
-          <li><a href="{% url 'data_capture:price_lists' %}#unreviewed">{{ total_unreviewed }} awaiting review</a></li>
-          <li><a href="{% url 'data_capture:price_lists' %}#rejected">{{ total_rejected }} rejected</a></li>
-          <li><a href="{% url 'data_capture:price_lists' %}">See all &raquo;</a></li>
-        </ul>
-      </div>
-    {% elif perms.data_capture.add_submittedpricelist %}
-      <div class="alert alert-warning">
-        <h3>You haven't submitted any price lists</h3>
-        <p>Adding your awarded contract data helps all users of CALC. Try <a href="{% url 'data_capture:step_1' %}">adding a price list</a> now!</p>
-      </div>
-    {% endif %}
+  <div class="container card--narrow">
+    <div class="card">
+      <div class="card__content">
+      <h1>Activity summary</h1>
+      {% if total_submitted %}
+        <div class="">
+          <h2>{{ total_submitted }} price list{{ total_submitted|pluralize }} submitted to date!</h2>
+          <ul>
+            <li><a href="{% url 'data_capture:price_lists' %}#approved">{{ total_approved }} approved and available in CALC</a></li>
+            <li><a href="{% url 'data_capture:price_lists' %}#new">{{ total_new }} awaiting approval</a></li>
+            <li><a href="{% url 'data_capture:price_lists' %}#rejected">{{ total_rejected }} rejected</a></li>
+          </ul>
+          <a class="button button-primary" href="{% url 'data_capture:price_lists' %}">See all</a>
+        </div>
+      {% elif perms.data_capture.add_submittedpricelist %}
+        <div class="alert alert-warning">
+          <h2>You haven't submitted any price lists</h2>
+          <p>Adding your awarded contract data helps all users of CALC. Try <a href="{% url 'data_capture:step_1' %}">adding a price list</a> now!</p>
+        </div>
+      {% endif %}
+      </div><!--card__content-->
+    </div><!--card-->
 
     {% if total_submitted %}
-      <div class="row">
-        <div class="columns six">
+      <div class="row card">
+        <div class="card__content">
           <h2>Recently approved price lists</h2>
           {% if recently_approved_price_lists %}
             <ul class="price-list-list">
@@ -40,9 +44,10 @@
             <p>None of your price lists have been approved yet.</p>
           {% endif %}
         </div>
-
-        <div class="columns six">
-          <h2>Recently submitted price lists</h3>
+      </div>
+      <div class="row card">
+        <div class="card__content">
+          <h2>Recently submitted price lists</h2>
           {% if recently_submitted_price_lists %}
             <ul class="price-list-list">
               {% for pl in recently_submitted_price_lists %}
@@ -60,4 +65,5 @@
       </div>
     {% endif %}
   </div>
+  <div class="card__footer"></div>
 {% endblock body %}

@@ -135,6 +135,8 @@ def step_2(request, step):
     # Redirect back to step 1 if we don't have data
     if get_step_form_from_session(1, request) is None:
         return redirect('data_capture:step_1')
+    else:
+        step_1_data = get_step_form_from_session(1, request)
 
     if request.method == 'GET':
         form = forms.Step2Form(data=get_nested_item(
@@ -154,10 +156,11 @@ def step_2(request, step):
             return redirect('data_capture:step_3')
         else:
             add_generic_form_error(request, form)
-
     return step.render(request, {
         'form': form,
-        'step_1_data': get_step_form_from_session(1, request)
+        'preferred_schedule_title':
+            step_1_data.cleaned_data['schedule_class'].title,
+        'contract_number': step_1_data.cleaned_data['contract_number']
     })
 
 

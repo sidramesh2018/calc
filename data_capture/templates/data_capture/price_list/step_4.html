@@ -1,14 +1,18 @@
 {% extends 'data_capture/step.html' %}
 
-{% block body_class %}secondary-step{% endblock %}
-
+{% block body_class %}secondary-step card--wide{% endblock %}
 {% block subtitle %}Verify data{% endblock %}
+
+{% block step_heading %}
+<h2>Double check and submit for review</h2>
+<p>Please verify everything and submit it to be added to CALC.</p>
+{% endblock %}
 
 {% block step_body %}
 <form method="post">
   {% csrf_token %}
 
-<h2>Verify vendor and contract details</h2>
+<h3>Verify vendor and contract details</h3>
 
 <div data-edit-contract-details {% if not show_edit_form %}style="display: none"{% endif %}>
 
@@ -90,7 +94,7 @@
 <div class="row">
 {% with rows=gleaned_data.valid_rows %}
   {% with total=rows|length %}
-    <h2>Verify {{ total }} row{{ total|pluralize }} of data </h2>
+    <h3>Verify {{ total }} row{{ total|pluralize }} of data</h3>
   {% endwith %}
 
   {{ gleaned_data.to_table|safe }}
@@ -121,8 +125,18 @@
         {% endif %}
       </div>
     {% endif %}
-
-    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
   </div>
+</div>
 </form>
+{% if not is_safe_mode_enabled and not show_edit_form %}
+{% load staticfiles %}
+<script src= "{% static 'frontend/built/js/data-capture-price-list-upload-step-4/index.min.js' %}"></script>
+{% endif %}
+
+{% endblock %}
+{% block card_footer %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
+  </form>
 {% endblock %}
