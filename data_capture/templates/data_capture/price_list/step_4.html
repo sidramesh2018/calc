@@ -128,10 +128,6 @@
   </div>
 </div>
 </form>
-{% if not is_safe_mode_enabled and not show_edit_form %}
-{% load staticfiles %}
-<script src= "{% static 'frontend/built/js/data-capture-price-list-upload-step-4/index.min.js' %}"></script>
-{% endif %}
 
 {% endblock %}
 {% block card_footer %}
