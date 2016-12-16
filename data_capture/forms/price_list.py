@@ -139,12 +139,17 @@ class Step3Form(forms.Form):
         indicate whether the file field of this form is required. It
         defaults to True. If it is False, then the file field of this form
         will not be required.
+
+        `existing_filename` may also be passed as a keyword argument
+        to indicate the name of an existing file that was uploaded earlier.
+        It defaults to None.
         '''
 
         self.schedule = kwargs.pop('schedule')
         self.schedule_class = registry.get_class(self.schedule)
 
         is_file_required = kwargs.pop('is_file_required', True)
+        existing_filename = kwargs.pop('existing_filename', None)
 
         super().__init__(*args, **kwargs)
 
@@ -154,6 +159,7 @@ class Step3Form(forms.Form):
 
         self.fields['file'].required = is_file_required
         self.fields['file'].widget.required = is_file_required
+        self.fields['file'].widget.existing_filename = existing_filename
 
     def clean(self):
         cleaned_data = super().clean()
