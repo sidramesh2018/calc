@@ -1,14 +1,9 @@
-{% extends "base.html" %}
-{% load staticfiles %}
+{% extends "styleguide_base.html" %}
 
-{% block body %}
-<div class="container">
+{% block styleguide_body %}
   <h1>Radio and Checkbox Widget Example</h1>
 
   {% include 'data_capture/messages.html' %}
 
   {% include "styleguide_radio_checkbox_example.html" %}
-</div>
-
-<script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
 {% endblock %}
