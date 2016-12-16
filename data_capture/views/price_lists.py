@@ -1,5 +1,6 @@
 import json
 
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
@@ -23,9 +24,9 @@ def list_price_lists(request):
         status=SubmittedPriceList.STATUS_APPROVED).order_by(
             '-status_changed_at')
 
-    new_price_lists = SubmittedPriceList.objects.filter(
+    unreviewed_price_lists = SubmittedPriceList.objects.filter(
         submitter=request.user,
-        status=SubmittedPriceList.STATUS_NEW).order_by(
+        status=SubmittedPriceList.STATUS_UNREVIEWED).order_by(
             '-status_changed_at')
 
     rejected_price_lists = SubmittedPriceList.objects.filter(
@@ -33,21 +34,22 @@ def list_price_lists(request):
         status=SubmittedPriceList.STATUS_REJECTED).order_by(
             '-status_changed_at')
 
-    unapproved_price_lists = SubmittedPriceList.objects.filter(
+    retired_price_lists = SubmittedPriceList.objects.filter(
         submitter=request.user,
-        status=SubmittedPriceList.STATUS_UNAPPROVED).order_by(
+        status=SubmittedPriceList.STATUS_RETIRED).order_by(
             '-status_changed_at')
 
     return render(request, 'price_lists/list.html', {
         'approved_price_lists': approved_price_lists,
-        'new_price_lists': new_price_lists,
+        'unreviewed_price_lists': unreviewed_price_lists,
         'rejected_price_lists': rejected_price_lists,
-        'unapproved_price_lists': unapproved_price_lists,
+        'retired_price_lists': retired_price_lists,
     })
 
 
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+@transaction.atomic
 def price_list_details(request, id):
     '''
     This view shows all the details of a SubmittedPriceList model.
@@ -82,6 +84,7 @@ def price_list_details(request, id):
                     "were found in the submitted form."
                 )
             else:
+                # otherwise, update the price list
                 # Update the submitter to the user that made this request
                 price_list.submitter = request.user
 
@@ -90,8 +93,8 @@ def price_list_details(request, id):
                     request.POST,
                     instance=price_list).save(commit=False)
 
-                # unapprove and save the price_list
-                price_list.unapprove(request.user)  # unapprove also saves
+                # Mark the price list as unreviewed
+                price_list.unreview(request.user)  # unreview also saves
 
                 messages.add_message(
                     request,

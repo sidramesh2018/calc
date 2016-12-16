@@ -331,7 +331,7 @@ def step_4(request, step):
                 # fell back to a schedule other than the one the user chose.
                 price_list.schedule = registry.get_classname(gleaned_data)
 
-                price_list.status = SubmittedPriceList.STATUS_NEW
+                price_list.status = SubmittedPriceList.STATUS_UNREVIEWED
                 price_list.status_changed_at = timezone.now()
                 price_list.status_changed_by = request.user
 

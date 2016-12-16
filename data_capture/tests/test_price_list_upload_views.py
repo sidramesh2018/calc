@@ -538,7 +538,7 @@ class Step4Tests(PriceListStepTestCase,
         self.assertEqual(p.is_small_business, False)
         self.assertEqual(p.submitter, user)
         self.assertEqual(p.status_changed_by, user)
-        self.assertEqual(p.status, SubmittedPriceList.STATUS_NEW)
+        self.assertEqual(p.status, SubmittedPriceList.STATUS_UNREVIEWED)
         self.assertEqual(p.status_changed_at.date(), datetime.now().date())
         self.assertEqual(p.uploaded_filename, 'foo.csv')
 

@@ -10,7 +10,7 @@
         <h3>{{ total_submitted }} price list{{ total_submitted|pluralize }} submitted to date!</h3>
         <ul>
           <li><a href="{% url 'data_capture:price_lists' %}#approved">{{ total_approved }} approved and available in CALC</a></li>
-          <li><a href="{% url 'data_capture:price_lists' %}#new">{{ total_new }} awaiting approval</a></li>
+          <li><a href="{% url 'data_capture:price_lists' %}#unreviewed">{{ total_unreviewed }} awaiting review</a></li>
           <li><a href="{% url 'data_capture:price_lists' %}#rejected">{{ total_rejected }} rejected</a></li>
           <li><a href="{% url 'data_capture:price_lists' %}">See all &raquo;</a></li>
         </ul>
@@ -52,7 +52,7 @@
                 </li>
               {% endfor %}
             </ul>
-            <p><a class="button" href="{% url 'data_capture:price_lists' %}#new">See all</a></p>
+            <p><a class="button" href="{% url 'data_capture:price_lists' %}#unreviewed">See all</a></p>
           {% else %}
             <p>All of your submitted price lists have been approved!</p>
           {% endif %}

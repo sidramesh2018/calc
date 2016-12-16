@@ -30,9 +30,9 @@ class ListViewTests(ProtectedViewTestCase):
         res = self.client.get(self.url)
         ctx = res.context
         self.assertIn('approved_price_lists', ctx)
-        self.assertIn('new_price_lists', ctx)
+        self.assertIn('unreviewed_price_lists', ctx)
         self.assertIn('rejected_price_lists', ctx)
-        self.assertIn('unapproved_price_lists', ctx)
+        self.assertIn('retired_price_lists', ctx)
 
     def test_only_includes_price_lists_for_user(self):
         user = self.login()
@@ -50,9 +50,9 @@ class ListViewTests(ProtectedViewTestCase):
         res = self.client.get(self.url)
         ctx = res.context
         self.assertEqual(len(ctx['approved_price_lists']), 1)
-        self.assertEqual(len(ctx['new_price_lists']), 1)
+        self.assertEqual(len(ctx['unreviewed_price_lists']), 1)
         self.assertEqual(len(ctx['rejected_price_lists']), 1)
-        self.assertEqual(len(ctx['unapproved_price_lists']), 1)
+        self.assertEqual(len(ctx['retired_price_lists']), 1)
 
 
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
@@ -81,19 +81,19 @@ class DetailsViewTests(ProtectedViewTestCase):
         a_user = self.create_user('a_user')
         p = registry.load_from_upload(FAKE_SCHEDULE, uploaded_csv_file())
         serialized = registry.serialize(p)
-        self.price_list = mommy.make(SubmittedPriceList,
-                                     schedule=FAKE_SCHEDULE,
-                                     submitter=a_user,
-                                     contract_number="GS-12-1234",
-                                     serialized_gleaned_data=json.dumps(
-                                        serialized),
-                                     created_at=timezone.now(),
-                                     is_small_business=True,
-                                     contractor_site='Both',
-                                     escalation_rate=1.2,
-                                     contract_start=datetime.date(2016, 2, 11),
-                                     contract_end=datetime.date(2020, 2, 11),
-                                     status=SubmittedPriceList.STATUS_NEW)
+        self.price_list = mommy.make(
+            SubmittedPriceList,
+            schedule=FAKE_SCHEDULE,
+            submitter=a_user,
+            contract_number="GS-12-1234",
+            serialized_gleaned_data=json.dumps(serialized),
+            created_at=timezone.now(),
+            is_small_business=True,
+            contractor_site='Both',
+            escalation_rate=1.2,
+            contract_start=datetime.date(2016, 2, 11),
+            contract_end=datetime.date(2020, 2, 11),
+            status=SubmittedPriceList.STATUS_UNREVIEWED)
         self.url += str(self.price_list.pk)
 
     def test_get_is_ok(self):
@@ -123,7 +123,7 @@ class DetailsViewTests(ProtectedViewTestCase):
 
         pl = SubmittedPriceList.objects.get(id=self.price_list.pk)
         self.assertEqual(pl.status_changed_by, user)
-        self.assertEqual(pl.status, SubmittedPriceList.STATUS_UNAPPROVED)
+        self.assertEqual(pl.status, SubmittedPriceList.STATUS_UNREVIEWED)
         self.assertEqual(pl.status_changed_at.date(),
                          datetime.datetime.now().date())
         self.assertEqual(pl.submitter, user)
@@ -135,8 +135,8 @@ class DetailsViewTests(ProtectedViewTestCase):
         self.assertEqual(pl.contract_end, datetime.date(1989, 4, 14))
         self.assertEqual(pl.escalation_rate, 0)
 
-    @mock.patch.object(SubmittedPriceList, 'unapprove')
-    def test_valid_post_calls_unapprove(self, mock):
+    @mock.patch.object(SubmittedPriceList, 'retire')
+    def test_valid_post_calls_retire(self, mock):
         self.login()
         res = self.client.post(self.url, self.valid_post_data, follow=True)
         self.assertRedirects(res, self.url)
