@@ -27,26 +27,26 @@ class EmailTests(ModelTestCase):
 
     def test_price_list_approved_raises_if_not_approved(self):
         price_list = self.create_price_list(
-            status=SubmittedPriceList.STATUS_NEW)
+            status=SubmittedPriceList.STATUS_UNREVIEWED)
         with self.assertRaises(AssertionError):
             email.price_list_approved(price_list)
 
-    def test_price_list_unapproved(self):
+    def test_price_list_retired(self):
         price_list = self.create_price_list(
-            status=SubmittedPriceList.STATUS_UNAPPROVED)
-        result = email.price_list_unapproved(price_list)
+            status=SubmittedPriceList.STATUS_RETIRED)
+        result = email.price_list_retired(price_list)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
-        self.assertEqual(message.subject, 'CALC Price List Unapproved')
+        self.assertEqual(message.subject, 'CALC Price List Retired')
         self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
         self.assertEqual(result.context['price_list'], price_list)
 
-    def test_price_list_unapproved_raises_if_approved(self):
+    def test_price_list_retired_raises_if_approved(self):
         price_list = self.create_price_list(
             status=SubmittedPriceList.STATUS_APPROVED)
         with self.assertRaises(AssertionError):
-            email.price_list_unapproved(price_list)
+            email.price_list_retired(price_list)
 
     def test_price_list_rejected(self):
         price_list = self.create_price_list(

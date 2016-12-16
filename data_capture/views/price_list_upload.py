@@ -135,6 +135,8 @@ def step_2(request, step):
     # Redirect back to step 1 if we don't have data
     if get_step_form_from_session(1, request) is None:
         return redirect('data_capture:step_1')
+    else:
+        step_1_data = get_step_form_from_session(1, request)
 
     if request.method == 'GET':
         form = forms.Step2Form(data=get_nested_item(
@@ -154,10 +156,11 @@ def step_2(request, step):
             return redirect('data_capture:step_3')
         else:
             add_generic_form_error(request, form)
-
     return step.render(request, {
         'form': form,
-        'step_1_data': get_step_form_from_session(1, request)
+        'preferred_schedule_title':
+            step_1_data.cleaned_data['schedule_class'].title,
+        'contract_number': step_1_data.cleaned_data['contract_number']
     })
 
 
@@ -174,31 +177,35 @@ def step_3(request, step):
     step_1_data = get_step_form_from_session(1, request).cleaned_data
     schedule_class = step_1_data['schedule_class']
 
+    gleaned_data = get_deserialized_gleaned_data(request)
+    is_file_required = not (gleaned_data and gleaned_data.valid_rows)
+
     if request.method == 'GET':
+        existing_filename = None
 
-        gleaned_data = get_deserialized_gleaned_data(request)
-        force_show = (request.GET.get('force') == 'on')
+        if not is_file_required:
+            existing_filename = session_pl.get('filename')
 
-        if not force_show and gleaned_data and gleaned_data.valid_rows:
-            # If gleaned_data is in session and has valid rows
-            # show the step 3 interstitial
-            return redirect('data_capture:step_3_data')
-
-        form = forms.Step3Form(schedule=step_1_data['schedule'])
+        form = forms.Step3Form(
+            schedule=step_1_data['schedule'],
+            is_file_required=is_file_required,
+            existing_filename=existing_filename,
+        )
     else:  # POST
-        gleaned_data = get_deserialized_gleaned_data(request)
-
         form = forms.Step3Form(
             request.POST,
             request.FILES,
-            schedule=step_1_data['schedule']
+            schedule=step_1_data['schedule'],
+            is_file_required=is_file_required
         )
 
         if form.is_valid():
-            gleaned_data = form.cleaned_data['gleaned_data']
+            if 'gleaned_data' in form.cleaned_data:
+                gleaned_data = form.cleaned_data['gleaned_data']
 
-            session_pl['gleaned_data'] = registry.serialize(gleaned_data)
-            request.session.modified = True
+                session_pl['gleaned_data'] = registry.serialize(gleaned_data)
+                session_pl['filename'] = form.cleaned_data['file'].name
+                request.session.modified = True
 
             if gleaned_data.invalid_rows:
                 return ajaxform.redirect(request, 'data_capture:step_3_errors')
@@ -215,31 +222,6 @@ def step_3(request, step):
         template_name=step.template_name,
         ajax_template_name='data_capture/price_list/upload_form.html',
     )
-
-
-@login_required
-@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
-@handle_cancel
-@require_http_methods(["GET"])
-def step_3_data(request):
-    step = steps.get_step_renderer(3)
-    gleaned_data = get_deserialized_gleaned_data(request)
-
-    if not gleaned_data or not gleaned_data.valid_rows:
-        return redirect('data_capture:step_3')
-
-    step_1_form = get_step_form_from_session(1, request)
-
-    preferred_schedule = step_1_form.cleaned_data['schedule_class']
-
-    return render(request,
-                  'data_capture/price_list/step_3_data.html',
-                  step.context({
-                    'gleaned_data': gleaned_data,
-                    'is_preferred_schedule': isinstance(gleaned_data,
-                                                        preferred_schedule),
-                    'preferred_schedule_title': preferred_schedule.title,
-                  }))
 
 
 @login_required
@@ -352,9 +334,11 @@ def step_4(request, step):
                 # fell back to a schedule other than the one the user chose.
                 price_list.schedule = registry.get_classname(gleaned_data)
 
-                price_list.status = SubmittedPriceList.STATUS_NEW
+                price_list.status = SubmittedPriceList.STATUS_UNREVIEWED
                 price_list.status_changed_at = timezone.now()
                 price_list.status_changed_by = request.user
+
+                price_list.uploaded_filename = session_pl['filename']
 
                 price_list.save()
                 gleaned_data.add_to_price_list(price_list)

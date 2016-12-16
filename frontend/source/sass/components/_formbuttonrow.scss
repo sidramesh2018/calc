@@ -3,8 +3,14 @@
 .form-button-row {
   position: relative;
   margin-top: 4rem;
-  font-size: $small-font-size; //so cancel button renders properly
+  text-align: right;
+  &.align-left {
+    text-align: left;
+  }
 
+  .button-previous {
+    float: left;
+  }
   button,
   button[type="submit"],
   .button {
@@ -23,11 +29,11 @@
 
   .submit-label {
     display: block;
-    float: right;
+    float: left;
     height: 38px;
     color: $color-gray-medium;
-    margin-left: 1em;
-    max-width: 160px;
+    margin-right: $space-2x;
+    max-width: 110px;
     font-size: $small-font-size;
     line-height: $small-line-height;
   }

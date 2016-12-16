@@ -14,14 +14,12 @@ services:
 - redis-server
 before_install:
 - pip install codeclimate-test-reporter
-- npm install -g gulp-cli
+- rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 - npm --version
 - node --version
-after_success:
-- codeclimate-test-reporter
 install:
 - pip install -r requirements-dev.txt
-- rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
+- npm install -g gulp-cli
 - npm install
 script:
 - phantomjs --version
@@ -29,11 +27,13 @@ script:
 - echo "For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330"
 - bandit -r .
 - py.test --ignore=frontend/tests/test_selenium.py --cov
+after_success:
+- codeclimate-test-reporter
 env:
   global:
   - TRAVIS_NODE_VERSION=6.5.0
   - PHANTOMJS_TIMEOUT=15
-  - CF_CLI_VERSION=6.22.1
+  - CF_CLI_VERSION=6.22.2
   - DEBUG=yup
   - DATABASE_URL=postgres://postgres@localhost/hourglass
 

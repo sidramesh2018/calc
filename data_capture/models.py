@@ -16,15 +16,15 @@ class SubmittedPriceList(models.Model):
         ('Both', 'Both'),
     ]
 
-    STATUS_NEW = 0
+    STATUS_UNREVIEWED = 0
     STATUS_APPROVED = 1
-    STATUS_UNAPPROVED = 2
+    STATUS_RETIRED = 2
     STATUS_REJECTED = 3
 
     STATUS_CHOICES = (
-        (STATUS_NEW, 'new'),
+        (STATUS_UNREVIEWED, 'unreviewed'),
         (STATUS_APPROVED, 'approved'),
-        (STATUS_UNAPPROVED, 'unapproved'),
+        (STATUS_RETIRED, 'retired'),
         (STATUS_REJECTED, 'rejected'),
     )
 
@@ -64,10 +64,18 @@ class SubmittedPriceList(models.Model):
 
     submitter = models.ForeignKey(User)
 
-    status = models.IntegerField(choices=STATUS_CHOICES, default=STATUS_NEW)
+    status = models.IntegerField(choices=STATUS_CHOICES,
+                                 default=STATUS_UNREVIEWED)
     status_changed_by = models.ForeignKey(User, related_name='+')
     status_changed_at = models.DateTimeField()
 
+    uploaded_filename = models.CharField(
+        max_length=128,
+        help_text=(
+            'Name of the file that was uploaded, as it was called on '
+            'the uploader\'s system. For display purposes only.'
+        )
+    )
     serialized_gleaned_data = models.TextField(
         help_text=(
             'The JSON-serialized data from the upload, including '
@@ -103,6 +111,11 @@ class SubmittedPriceList(models.Model):
         self.status_changed_by = user
 
     def approve(self, user):
+        '''
+        Approve this SubmittedPriceList. This causes its rows of pricing data
+        to be converted to Contract models, which are then accessible via
+        CALC's API and in the Data Explorer.
+        '''
         self._change_status(self.STATUS_APPROVED, user)
 
         for row in self.rows.filter(is_muted=False):
@@ -140,17 +153,41 @@ class SubmittedPriceList(models.Model):
 
         self.save()
 
-    def unapprove(self, user):
-        self._change_status(self.STATUS_UNAPPROVED, user)
+    def unreview(self, user):
+        '''
+        Mark this SubmittedPriceList as "unreviewed" and delete all associated
+        Contract models. An "unreviewed" price list is one that has been
+        either newly submitted or that has had modifications made to it and
+        requires review (to approve or reject it) by an administrator.
+        '''
+        self._change_status(self.STATUS_UNREVIEWED, user)
+        self._delete_associated_contracts()
+        self.save()
 
-        for row in self.rows.filter(is_muted=False):
-            if row.contract_model:
-                row.contract_model.delete()
-
+    def retire(self, user):
+        '''
+        Mark this SubmittedPriceList as "retired" and delete all associated
+        Contract models. Retiring a price list is for removing a once approved
+        price list that is now either out-of-date or now otherwise invalid.
+        '''
+        self._change_status(self.STATUS_RETIRED, user)
+        self._delete_associated_contracts()
         self.save()
 
     def reject(self, user):
+        '''
+        Reject this SubmittedPriceList. This method should be called on
+        "unreviewed" price lists. It is the opposite of approving a price list.
+        '''
+        if self.status is not self.STATUS_UNREVIEWED:
+            raise AssertionError()
         self._change_status(self.STATUS_REJECTED, user)
+        self.save()
+
+    def _delete_associated_contracts(self):
+        for row in self.rows.all():
+            if row.contract_model:
+                row.contract_model.delete()
         self.save()
 
     def __str__(self):

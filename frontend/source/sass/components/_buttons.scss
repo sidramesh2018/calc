@@ -1,6 +1,10 @@
 @import '../base/variables';
 @import '../uswds/buttons';
 
+a.button:hover {
+  color: $color-white;
+}
+
 button,
 .button,
 .button:visited,
@@ -17,6 +21,7 @@ button,
   &:focus {
     box-shadow: $focus-shadow;
   }
+
   &.button-outline {
     border: 1px solid $color-gray;
     background: $color-white;
@@ -46,7 +51,7 @@ button.button-link,
 input.button-link[type="submit"],
 input.button-link[type="reset"],
 input.button-link[type="button"] {
-  background-color: $color-white;
+  background-color: transparent;
   border: none;
   padding-top: 0;
   padding-bottom: 0;
@@ -81,6 +86,7 @@ input.button-link[type="button"] {
 .button.button-disabled {
   background-color: $color-gray-lighter;
   cursor: default;
+  color: $color-gray;
   &:hover {
     color: $color-gray;
   }

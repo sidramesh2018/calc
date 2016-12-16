@@ -6,8 +6,6 @@ urlpatterns = [
     url(r'^step/', include(price_list_upload.steps.urls)),
     url(r'^step/3/errors$', price_list_upload.step_3_errors,
         name='step_3_errors'),
-    url(r'^step/3/data$', price_list_upload.step_3_data,
-        name='step_3_data'),
     url(r'^bulk/region-10/step/', include(bulk_upload.steps.urls)),
     url(r'^price-lists$', price_lists.list_price_lists,
         name="price_lists"),
