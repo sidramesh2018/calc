@@ -130,9 +130,17 @@ INSTALLED_APPS = (
     'frontend',
 )
 
+if DEBUG:
+    STATICFILES_STORAGE = 'frontend.crotchety.CrotchetyStaticFilesStorage'
+    WHITENOISE_MIDDLEWARE = 'frontend.crotchety.CrotchetyWhiteNoiseMiddleware'
+else:
+    STATICFILES_STORAGE = ('whitenoise.storage.'
+                           'CompressedManifestStaticFilesStorage')
+    WHITENOISE_MIDDLEWARE = 'whitenoise.middleware.WhiteNoiseMiddleware'
+
 MIDDLEWARE_CLASSES = (
     'hourglass.middleware.ComplianceMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    WHITENOISE_MIDDLEWARE,
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -180,10 +188,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     # os.path.join(BASE_DIR, 'static'),
 )
-
-if not DEBUG:
-    STATICFILES_STORAGE = ('whitenoise.storage.'
-                           'CompressedManifestStaticFilesStorage')
 
 RQ_QUEUES = {
     'default': {
