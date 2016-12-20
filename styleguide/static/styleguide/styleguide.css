@@ -1,6 +1,6 @@
 .styleguide-toc {
   background-color: #f0f0f0;
-  padding: 1em;
+  padding: 1em 2.5em;
 }
 
 .styleguide-toc li:last-child {
@@ -35,7 +35,7 @@ h3.styleguide-section {
 }
 
 .styleguide-example .rendering {
-  padding: 8px;
+  padding: 1em 2.5em;
 }
 
 .styleguide-example .rendering .example-heading {
