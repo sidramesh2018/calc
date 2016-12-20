@@ -213,17 +213,12 @@
   </p>
 
   <p>
-    The widget extends to the full width of its container, with each
-    step consuming an equal amount of horizontal space.
-  </p>
-
-  <p>
     Use <code>li.current</code> to identify a step as being the current
     one.
   </p>
 
   <p>
-    We recommend adding <code>aria-hidden="true"</code> to the list, as
+    We recommend adding <code>aria-hidden="true"</code> to the widget, as
     there isn't an easy way to communicate the information to vision-impaired
     users without being overly verbose (thus annoying the user) or confusing.
     However, <em>do</em> be sure to repeat the name of the current step
@@ -232,17 +227,16 @@
   </p>
 
   {% example %}
-  <ol class="steps" aria-hidden="true">
-    <li>
-      <label>Upload price list</label>
-    </li>
-    <li class="current">
-      <label>Validate data</label>
-    </li>
-    <li>
-      <label>Submit data</label>
-    </li>
-  </ol>
+  <div class="step-bar" aria-hidden="true">
+    <label>
+      Validate data
+    </label>
+    <ol class="steps">
+      <li></li>
+      <li class="current"></li>
+      <li></li>
+    </ol>
+  </div>
   {% endexample %}
 
   {% guide_section "Alerts" %}
