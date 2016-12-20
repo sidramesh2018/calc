@@ -20,11 +20,15 @@ class CrotchetyWhiteNoiseMiddleware(WhiteNoiseMiddleware):
         return filename
 
 
+class CrotchetyFileNotFoundError(Exception):
+    pass
+
+
 class CrotchetyStaticFilesStorage(StaticFilesStorage):
     def url(self, name):
         foundpath = finders.find(name)
 
         if not foundpath:
-            raise Exception('Cannot find %s' % name)
+            raise CrotchetyFileNotFoundError('Cannot find %s' % name)
 
         return super().url(name)
