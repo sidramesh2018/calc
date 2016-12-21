@@ -26,6 +26,7 @@ script:
 - python manage.py ultratest flake8
 - echo "For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330"
 - bandit -r .
+- npm test
 - py.test --ignore=frontend/tests/test_selenium.py --cov
 after_success:
 - codeclimate-test-reporter
