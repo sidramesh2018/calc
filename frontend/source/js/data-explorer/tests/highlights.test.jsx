@@ -11,18 +11,21 @@ function setup() {
     proposedPrice: 5,
   };
 
-  const enzymeWrapper = render(<Highlights {...props} />);
+  const wrapper = render(<Highlights {...props} />);
 
   return {
     props,
-    enzymeWrapper,
+    wrapper,
   };
 }
 
 describe('<Highlights>', () => {
   it('should render self', () => {
-    const { enzymeWrapper } = setup();
+    const { wrapper } = setup();
 
-    expect(enzymeWrapper.find('.sd-highlight').first().text()).toBe('$1');
+    expect(wrapper.find('.sd-highlight').first().text()).toBe('$1');
+    expect(wrapper.find('.avg-price-highlight').text()).toBe('$2');
+    expect(wrapper.find('.sd-highlight').last().text()).toBe('$3');
+    expect(wrapper.find('.proposed-price-highlight').text()).toBe('$5');
   });
 });
