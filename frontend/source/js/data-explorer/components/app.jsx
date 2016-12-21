@@ -170,7 +170,6 @@ class App extends React.Component {
               </div>
 
 
-
               <div className="filter-container columns three">
                 <div className="filter-block">
                   <h5 className="filter-title">Optional filters</h5>
