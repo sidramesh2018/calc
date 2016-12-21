@@ -1,0 +1,56 @@
+exports[`<Highlights> matches snapshot 1`] = `
+<div
+  class="highlights-container row">
+  <div
+    class="price-block">
+    <div
+      class="row">
+      <div
+        class="standard-deviation-block">
+        <h5
+          class="standard-deviation-title">
+          Std deviation -1
+        </h5>
+        <h5
+          class="sd-highlight">
+          $1
+        </h5>
+      </div>
+      <div
+        class="avg-price-block">
+        <h5
+          class="avg-price-title">
+          Average
+        </h5>
+        <h5
+          class="avg-price-highlight">
+          $2
+        </h5>
+      </div>
+      <div
+        class="standard-deviation-block">
+        <h5
+          class="standard-deviation-title">
+          Std deviation +1
+        </h5>
+        <h5
+          class="sd-highlight">
+          $3
+        </h5>
+      </div>
+    </div>
+  </div>
+  <div
+    class="proposed-price-block"
+    style="display:block;">
+    <h5
+      class="proposed-price-title">
+      Proposed price
+    </h5>
+    <h5
+      class="proposed-price-highlight">
+      $5
+    </h5>
+  </div>
+</div>
+`;
