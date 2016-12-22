@@ -1,23 +1,16 @@
 /* global expect, describe, it, jest */
-import React from 'react';
-
-import { render, mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
 import { QueryType } from '../components/query-type';
+import makeSetup from './testSetup';
 
-function setup() {
-  const props = {
-    queryType: 'match_exact',
-    setQueryType: jest.fn(),
-    idPrefix: 'zzz_',
-  };
+const defaultProps = {
+  queryType: 'match_exact',
+  setQueryType: jest.fn(),
+  idPrefix: 'zzz_',
+};
 
-  const wrapper = render(<QueryType {...props} />);
-  const mounted = mount(<QueryType {...props} />);
-
-  return { props, wrapper, mounted };
-}
+const setup = makeSetup(QueryType, defaultProps);
 
 describe('<QueryType>', () => {
   it('renders correctly', () => {

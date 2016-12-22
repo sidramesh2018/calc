@@ -6,9 +6,9 @@ import { makeOptions } from './util';
 import { setSite as setSiteAction } from '../actions';
 import { SITE_LABELS } from '../constants';
 
-function Site({ idPrefix, site, setSite }) {
+export function Site({ idPrefix, site, setSite }) {
   const id = `${idPrefix}site`;
-  const handleChange = e => { setSite(e.target.value); };
+  const handleChange = (e) => { setSite(e.target.value); };
 
   return (
     <div className="filter filter-site">

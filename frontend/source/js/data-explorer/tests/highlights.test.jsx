@@ -1,24 +1,16 @@
 /* global expect, describe, it */
-import React from 'react';
-import { render } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
 import { Highlights } from '../components/highlights.jsx';
+import makeSetup from './testSetup';
 
-function setup() {
-  const props = {
-    stdDeviation: 1.1,
-    avgPrice: 2.1,
-    proposedPrice: 5,
-  };
+const defaultProps = {
+  stdDeviation: 1.1,
+  avgPrice: 2.1,
+  proposedPrice: 5,
+};
 
-  const wrapper = render(<Highlights {...props} />);
-
-  return {
-    props,
-    wrapper,
-  };
-}
+const setup = makeSetup(Highlights, defaultProps);
 
 describe('<Highlights>', () => {
   it('renders correctly', () => {
