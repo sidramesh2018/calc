@@ -15,9 +15,9 @@ const setup = makeSetup(QueryType, defaultProps);
 describe('<QueryType>', () => {
   it('renders correctly', () => {
     const { wrapper } = setup();
-    expect(wrapper.find('#zzz_match_all').val()).toBe('match_all');
-    expect(wrapper.find('#zzz_match_exact').val()).toBe('match_exact');
-    expect(wrapper.find('#zzz_match_phrase').val()).toBe('match_phrase');
+    expect(wrapper.find('#zzz_match_all').prop('value')).toBe('match_all');
+    expect(wrapper.find('#zzz_match_exact').prop('value')).toBe('match_exact');
+    expect(wrapper.find('#zzz_match_phrase').prop('value')).toBe('match_phrase');
   });
 
   it('matching queryType is checked', () => {

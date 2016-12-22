@@ -1,14 +1,16 @@
 exports[`<Site> matches snapshot 1`] = `
 <div
-  class="filter filter-site">
+  className="filter filter-site">
   <label
-    for="zzz_site">
+    htmlFor="zzz_site">
     Worksite:
   </label>
   <select
-    class="filter_active"
+    className="filter_active"
     id="zzz_site"
-    name="site">
+    name="site"
+    onChange={[Function]}
+    value="contractor">
     <option
       value="">
       (all)
@@ -18,7 +20,6 @@ exports[`<Site> matches snapshot 1`] = `
       customer
     </option>
     <option
-      selected=""
       value="contractor">
       contractor
     </option>

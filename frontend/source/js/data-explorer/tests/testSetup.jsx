@@ -1,6 +1,6 @@
 /* global jest */
 import React from 'react';
-import { render, mount } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 export default function makeSetup(Component, props) {
   return function setup(opts = null) {
@@ -8,7 +8,7 @@ export default function makeSetup(Component, props) {
       Object.assign(props, opts);
     }
 
-    const wrapper = render(<Component {...props} />);
+    const wrapper = shallow(<Component {...props} />);
     const mounted = mount(<Component {...props} />);
 
     return { props, wrapper, mounted };
