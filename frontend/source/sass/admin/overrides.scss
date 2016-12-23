@@ -13,6 +13,7 @@ nav ul {
     a[href*="admin"]{
       border-bottom: $space-1x solid $color-primary-alt;
       padding-bottom: 7px;
+      font-weight: $font-weight-bold;
     }
   }
 }

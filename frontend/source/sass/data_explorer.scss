@@ -10,6 +10,7 @@ body {
 nav li:first-child {
   border-bottom: $space-1x solid $color-primary-alt;
   a {
+    font-weight: $font-weight-bold;
     display: block;
     padding-bottom: $space-half;
   }
@@ -72,7 +73,7 @@ nav li:first-child {
 }
 
 .filter_active  {
-  border: 2px solid $color-gold-light !important;
+  border: 2px solid $color-gold !important;
 }
 
 input[type="text"]:focus,

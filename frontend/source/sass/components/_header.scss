@@ -24,7 +24,7 @@
     #site-status {
       float: right;
       a {
-        color: $color-primary-alt;
+        color: $color-white;
       }
     }
   }
@@ -59,7 +59,7 @@ header {
   margin-bottom: .3em;
 }
 .description-secondary {
-  color: rgba(255,255,255,.6);
+  color: $color-primary-alt-lightest;
   font-size: $h4-font-size;
   font-weight: $font-weight-normal;
   letter-spacing: normal;
@@ -68,13 +68,12 @@ header {
 
 .price-callout {
   p {
-    opacity: 1;
     margin: ($space-1x + $space-half) 0 0;
   }
   h3 {
     font-size: $base-font-size;
     font-weight: $font-weight-normal;
-    border-bottom: 1px solid $color-gray-light;
+    border-bottom: 1px solid #436a79;
     padding-bottom: $space-1x;
     margin-top: $space-1x;
     margin-bottom: 0;
@@ -83,7 +82,7 @@ header {
     background-repeat: no-repeat;
     background-position: center left;
     display: inline-block;
-    opacity: 0.6;
+    color: $color-primary-alt-lightest;
     &.icon-ceiling {
       background-image: url('../../images/price-callout/roof.png');
       background-size: 40px;
@@ -129,7 +128,7 @@ header {
 .user-id__logout a {
   display: inline-block;
   margin-left: $space-1x;
-  color: $color-primary-alt;
+  color: $color-white;
   font-size: $small-font-size;
   text-decoration: underline;
   font-weight: normal;
@@ -172,15 +171,13 @@ nav {
       &.selected {
         border-bottom: $space-1x solid $color-primary-alt;
         a {
+          font-weight: $font-weight-bold;
           display: block;
           padding-bottom: $space-half;
-          &:hover {
-            border-bottom-color: $color-primary-alt-dark;
-          }
         }
       }
       a {
-        font-weight: normal;
+        /*font-weight: normal;*/
         color: $color-white;
         text-decoration: none;
         &:hover {
