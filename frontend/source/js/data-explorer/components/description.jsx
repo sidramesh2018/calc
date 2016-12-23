@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import DescriptionFilter from './description-filter';
+
 import {
   MIN_EXPERIENCE,
   MAX_EXPERIENCE,
@@ -12,34 +14,7 @@ import {
 
 import { formatCommas } from '../util';
 
-function Filter({
-  extraClassName,
-  label,
-  children,
-}) {
-  let className = 'filter';
-
-  if (extraClassName) {
-    className += ` ${extraClassName}`;
-  }
-
-  return (
-    <span className={className}>
-      {label ? `${label}: ` : null}
-      <b>
-        {children}
-      </b>
-    </span>
-  );
-}
-
-Filter.propTypes = {
-  extraClassName: React.PropTypes.string,
-  label: React.PropTypes.string,
-  children: React.PropTypes.any.isRequired,
-};
-
-function Description({
+export function Description({
   shownResults,
   totalResults,
   minExperience,
@@ -55,48 +30,48 @@ function Description({
   const filters = [];
 
   if (laborCategory) {
-    filters.push(<Filter key="lab">{laborCategory}</Filter>);
+    filters.push(<DescriptionFilter key="lab">{laborCategory}</DescriptionFilter>);
   }
 
   if (education.length) {
     filters.push(
-      <Filter key="edu" label="education level"
+      <DescriptionFilter key="edu" label="education level"
               extraClassName="education-filter">
         {education.map(x => EDU_LABELS[x]).join(', ')}
-      </Filter>
+      </DescriptionFilter>
     );
   }
 
   if (minExperience !== MIN_EXPERIENCE ||
       maxExperience !== MAX_EXPERIENCE) {
     filters.push(
-      <Filter key="exp" label="experience">
+      <DescriptionFilter key="exp" label="experience">
         {minExperience} - {maxExperience} years
-      </Filter>
+      </DescriptionFilter>
     );
   }
 
   if (site) {
     filters.push(
-      <Filter key="sit" label="worksite">
+      <DescriptionFilter key="sit" label="worksite">
         {SITE_LABELS[site]}
-      </Filter>
+      </DescriptionFilter>
     );
   }
 
   if (businessSize) {
     filters.push(
-      <Filter key="bus" label="business size">
+      <DescriptionFilter key="bus" label="business size">
         {BUSINESS_SIZE_LABELS[businessSize]}
-      </Filter>
+      </DescriptionFilter>
     );
   }
 
   if (schedule) {
     filters.push(
-      <Filter key="sch" label="schedule">
+      <DescriptionFilter key="sch" label="schedule">
         {SCHEDULE_LABELS[schedule]}
-      </Filter>
+      </DescriptionFilter>
     );
   }
 
