@@ -1,4 +1,4 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from robobrowser import RoboBrowser
 from robobrowser.forms.form import Form
 
@@ -28,7 +28,7 @@ class RoboBrowserForm(base.AbstractBrowserForm):
         self.browser.submit_form(self.form)
 
 
-class RoboBrowserTestCase(LiveServerTestCase, base.AbstractBrowser):
+class RoboBrowserTestCase(StaticLiveServerTestCase, base.AbstractBrowser):
     def setUp(self):
         super().setUp()
         self.browser = RoboBrowser(history=True, parser='html.parser')

@@ -25,7 +25,6 @@ script:
 - phantomjs --version
 - python manage.py ultratest flake8
 - npm run gulp -- build
-- python manage.py collectstatic --noinput --link
 - echo "For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330"
 - bandit -r .
 - py.test --ignore=frontend/tests/test_selenium.py --cov
