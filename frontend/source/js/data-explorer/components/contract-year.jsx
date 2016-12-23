@@ -30,7 +30,7 @@ const YEAR_LI_INFO = {
 
 const TOOLTIP = 'All five years of pricing are available in the export.';
 
-function ContractYear({ idPrefix, contractYear, setContractYear }) {
+export function ContractYear({ idPrefix, contractYear, setContractYear }) {
   const listItem = year => {
     const { className, shortLabel, idSuffix } = YEAR_LI_INFO[year];
     const id = `${idPrefix}${idSuffix}`;
