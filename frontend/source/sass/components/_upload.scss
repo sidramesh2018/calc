@@ -73,6 +73,16 @@ upload-widget[aria-live] {
     position: absolute;
     z-index: -1;
   }
+
+  .upload-current {
+    overflow: hidden; // necessary for ellipsis overflow
+  }
+  .upload-filename {
+    font-family: monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 // Rules specific to non-JS-upgraded widgets.

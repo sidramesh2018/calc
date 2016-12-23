@@ -1,7 +1,7 @@
   <nav class="row">
     <div class="columns twelve">
       <ul>
-        <li><a href="{% url 'index' %}">Explore the data</a></li>
+        <li><a href="{% url 'index' %}">Explore data</a></li>
         {% if user.is_staff %}
         <li><a href="{% url 'admin:index' %}">Site admin</a></li>
         {% endif %}

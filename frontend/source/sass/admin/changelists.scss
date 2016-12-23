@@ -84,6 +84,7 @@ th.action-checkbox-column {
   color: $color-gray;
   display: block;
   // hide .questions, .all, etc. until we can modify the django template
+  // see https://github.com/18F/calc/issues/1134
   ~ span {
     display: none;
   }
