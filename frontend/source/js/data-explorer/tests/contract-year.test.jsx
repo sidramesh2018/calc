@@ -12,7 +12,8 @@ const defaultProps = {
 
 const setup = makeSetup(ContractYear, defaultProps);
 
-// TODO: $ causing problems in tooltip.jsx
+// Mocking the Tooltip component (which is used in ContractYear)
+// since the global $ causes problems in it when testing without jQuery loaded
 jest.mock('../components/tooltip');
 
 describe('<ContractYear>', () => {

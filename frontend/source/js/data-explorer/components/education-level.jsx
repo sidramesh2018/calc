@@ -40,7 +40,7 @@ function elementContains(container, contained) {
  *   license: http://www.opensource.org/licenses/mit-license.php
  */
 
-class EducationLevel extends React.Component {
+export class EducationLevel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
