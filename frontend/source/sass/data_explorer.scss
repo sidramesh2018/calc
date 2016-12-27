@@ -2,6 +2,20 @@
 @import 'base/variables';
 @import 'components/tables';
 
+body {
+  background-color: $color-white; //override to steps.scss
+}
+
+// to fake selection of home link
+nav li:first-child {
+  border-bottom: $space-1x solid $color-primary-alt;
+  a {
+    font-weight: $font-weight-bold;
+    display: block;
+    padding-bottom: $space-half;
+  }
+}
+
 .loading-indicator,
 .has-data {
     -webkit-transition: opacity .5s, height .5s;
@@ -59,7 +73,7 @@
 }
 
 .filter_active  {
-  border: 2px solid $color-gold-light !important;
+  border: 2px solid $color-gold !important;
 }
 
 input[type="text"]:focus,
@@ -454,10 +468,6 @@ a.focus-input {
 .contract-year-selected {
   background-color: $color-primary;
   color: $color-white;
-}
-
-#reset-button {
-  background: $color-white;
 }
 
 .export-data {

@@ -55,6 +55,7 @@ class App extends React.Component {
 
     return {
       search: true,
+      card: true,
       loaded,
       loading,
       error,
@@ -105,9 +106,8 @@ class App extends React.Component {
                 <button className="submit button-primary">
                   Search
                 </button>
-                <input id={prefixId('reset-button')}
-                       onClick={this.handleResetClick}
-                       className="reset button"
+                <input onClick={this.handleResetClick}
+                       className="reset button button-outline"
                        type="reset"
                        value="Clear search" />
               </div>
@@ -168,7 +168,6 @@ class App extends React.Component {
                   </p>
                 </div>
               </div>
-
 
               <div className="filter-container columns three">
                 <div className="filter-block">

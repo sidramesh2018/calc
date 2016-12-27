@@ -29,7 +29,17 @@
   }
 }
 
+.align-left {
+  text-align: left;
+}
+
 .clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@mixin clearfix() {
   content: "";
   display: table;
   clear: both;

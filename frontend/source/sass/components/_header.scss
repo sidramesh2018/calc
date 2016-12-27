@@ -4,16 +4,17 @@
   color: $color-gray-lighter;
   font-size: 85%;
   background: $color-gray-dark;
-  padding: .2rem 0;
+  padding: .2em 0;
   text-align: center;
   p {
     margin: 0;
+    font-size: $small-font-size;
   }
   #usa img {
     vertical-align: baseline;
     position: relative;
     top: 1px;
-    margin-right: .3rem;
+    margin-right: .3em;
   }
   @include media($medium-screen) {
     text-align: left;
@@ -23,7 +24,7 @@
     #site-status {
       float: right;
       a {
-        color: $color-primary-alt;
+        color: $color-white;
       }
     }
   }
@@ -35,149 +36,139 @@ header {
   background-image: url(../../images/background-header.png);
   background-repeat: repeat;
   background-size: auto 100%;
+  padding-bottom: $space-4x; //to create "stacked" look
 }
 
 .base-header {
   display: flex;
-  margin-top: 1.6rem;
+  margin-top: 1.6em;
   + .row {
-    margin-top: 1.6rem;
+    margin-top: 1.6em;
   }
-}
-
-.logo-container {
-  flex-grow: 2; // of 12 total, to approximate grid
 }
 
 .logo {
   display: inline-block;
   width: 140px;
+  padding-bottom: 0;
 }
 .description-main {
   color: $color-white;
   font-size: $h1-font-size;
-  font-weight: $font-weight-normal;
+  margin-top: 0;
   margin-bottom: .3em;
 }
 .description-secondary {
-  color: rgba(255,255,255,.6);
+  color: $color-primary-alt-lightest;
   font-size: $h4-font-size;
   font-weight: $font-weight-normal;
+  line-height: 1.5;
   letter-spacing: normal;
   margin-bottom: 2em;
 }
 
 .price-callout {
   p {
-    position: relative;
-    margin-top: 0;
-    margin-bottom: 0.5em;
-    margin-left: 40px;
     opacity: 1;
-    &:last-child {
-      color: rgba(255,255,255,.6);
-      font-weight: 300;
-    }
+    padding-left: 40px;
+    margin: 0;
+  }
+  h3 {
+    font-size: $base-font-size;
+    font-weight: $font-weight-normal;
+    border-bottom: 1px solid #436a79;
+    padding-bottom: $space-1x;
+    margin-top: $space-1x;
+    margin-bottom: 0;
   }
   .icon {
+    margin: ($space-1x + $space-half) 0 0;
     background-repeat: no-repeat;
-    width: 40px;
-    height: 40px;
-    float: left;
+    background-position: center left;
+    display: inline-block;
     opacity: 0.6;
+    background-size: 30px;
+
     &.icon-ceiling {
       background-image: url('../../images/price-callout/roof.png');
-      background-size: 40px;
-      width: 45px;
     }
     &.icon-fully-burdened {
       background-image: url('../../images/price-callout/mule.png');
-      background-size: 33px;
     }
     &.icon-professional-services {
       background-image: url('../../images/price-callout/briefcase.png');
-      background-size: 28px;
     }
     &.icon-worldwide-rates {
       background-image: url('../../images/price-callout/globe.png');
-      background-size: 28px;
     }
   }
 }
 
-nav {
-  flex-grow: 10; // of 12 total, to approximate grid
-  position: relative;
-  .nav-content {
-    display: inline-block;
-    float: right;
-  }
-  .nav-user-id {
-    margin: 0 0 0.8rem 0;
-    font-size: $base-font-size;
-    font-weight: bold;
-    text-align: right;
+.user-id {
+  margin: 0 0 0.8rem 0;
+  float: right;
+  font-size: 1.5rem;
+  text-align: right;
 
-    > a {
-      color: $color-white;
-    }
+  > a {
+    color: $color-white;
   }
-  .nav-logout a {
-    color: $color-primary-alt;
-    font-size: $small-font-size;
-    text-decoration: underline;
-    font-weight: normal;
+}
+
+.user-id__logout a {
+  display: inline-block;
+  margin-left: $space-1x;
+  color: $color-white;
+  font-size: $small-font-size;
+  text-decoration: underline;
+  font-weight: normal;
+}
+
+@media all and (max-width: 890px){
+  nav ul {
+    @include span-columns(8 of 12);
+    @include shift(2);
   }
+}
+
+nav {
+  position: relative;
   &:after {
     content: " ";
     display: table;
     clear: both;
   }
   ul {
+    @include span-columns(12 of 12);
+    @include shift(0);
     list-style: none;
-    display: flex;
-    float: right;
+    text-align: center;
     color: $color-white;
     padding: 0;
+    margin-top: 0;
     margin-bottom: 0;
-    &.nav-tabs {
-      position: absolute;
-      float: none;
-      bottom: 0;
-      right: 0;
-      li {
-        border-radius: $border-radius $border-radius 0 0;
-      }
-    }
     li {
       list-style: none;
-      padding: .25rem 1rem .75rem;
-      margin: 0 0.5em;
-      flex-grow: 1;
-      background-color: rgba(255, 255, 255, 0.4);
-      text-align: center;
-      border-radius: $border-radius;
+      display: inline-block;
+      margin: 0 $space-3x;
+      border-bottom: $space-1x solid transparent; //so pages with no applicable item still have the right spacing
       &:first-child {
-        margin-left: 0rem;
+        margin-left: 0em;
       }
       &:last-child {
-        margin-right: 0rem;
+        margin-right: 0em;
       }
       &.selected {
-        background: $color-white;
+        border-bottom: $space-1x solid $color-primary-alt;
         a {
-          color: $color-primary-darkest;
-          &:hover {
-            color: $color-primary-darkest;
-          }
+          font-weight: $font-weight-bold;
+          display: block;
+          padding-bottom: $space-half;
         }
       }
       a {
-        font-weight: normal;
-        font-size: 11px; // $small-font-size - 2 to accommodate uppercase
-        text-transform: uppercase;
+        /*font-weight: normal;*/
         color: $color-white;
-        padding: 0.5rem 1.5rem;
         text-decoration: none;
         &:hover {
           color: $color-white;
@@ -192,12 +183,10 @@ nav {
   }
 
   nav {
-    float: none;
     margin-left: -20px; // to account for container padding
     ul {
-      padding: 1rem;
-      float: none;
-      margin-top: 1rem;
+      padding: 1em;
+      margin-top: 1em;
       width: 100%;
       .nav-user-id {
         max-width: 400px;

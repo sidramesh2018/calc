@@ -14,14 +14,14 @@
 
     <form method="post" action="{% url 'data_capture:bulk_region_10_step_2' %}">
       {% csrf_token %}
-      <div class="form-button-row clearfix">
+      <div class="form-button-row align-left clearfix">
         {% if total %}
           <div class="submit-group">
-            <button type="submit" class="button-primary" name="submit">Yes, replace existing data with my file</button>
+            <button type="submit" class="button-primary" name="submit">Yes, replace data</button>
           </div>
-          <button type="submit" class="button-secondary" name="cancel" data-a11y-dialog-show="cancel-dialog">No, keep the existing data</button>
+          <button type="submit" class="button-secondary" name="cancel" data-a11y-dialog-show="cancel-dialog">No, cancel upload</button>
         {% else %}
-          <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog">Cancel</button>
+          <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog">Cancel this upload</button>
         {% endif %}
       </div>
     </form>
