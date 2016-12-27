@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-function LoadingIndicator({ error }) {
+export function LoadingIndicator({ error }) {
   return (
     <div className="loading-indicator">
       <p className="message">Loading results...</p>

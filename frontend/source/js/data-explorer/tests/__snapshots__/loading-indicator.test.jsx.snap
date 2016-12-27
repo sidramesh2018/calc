@@ -1,0 +1,11 @@
+exports[`<LoadingIndicator> matches snapshot 1`] = `
+<div
+  className="loading-indicator">
+  <p
+    className="message">
+    Loading results...
+  </p>
+  <div
+    className="error-message" />
+</div>
+`;
