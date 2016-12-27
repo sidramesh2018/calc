@@ -16,6 +16,11 @@ from contracts.models import BulkUploadContractSource
 
 steps = Steps(
     template_format='data_capture/bulk_upload/region_10_step_{}.html',
+    labels=(
+        'Upload spreadsheet',
+        'Confirm load',
+        'Complete',
+    )
 )
 
 EXAMPLE_SHEET_ROWS = [

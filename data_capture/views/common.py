@@ -1,5 +1,4 @@
 import urllib.parse
-
 from functools import wraps
 from django.conf.urls import url
 from django.contrib import messages
@@ -7,6 +6,8 @@ from django.shortcuts import render
 from django.template.defaultfilters import pluralize
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
+
+from frontend.steps import StepsWidget
 
 
 def add_generic_form_error(request, form):
@@ -136,9 +137,10 @@ class Steps:
         'Hello from step 1 of 2! foo is bar.'
     '''
 
-    def __init__(self, template_format, extra_ctx_vars=None):
+    def __init__(self, template_format, extra_ctx_vars=None, labels=None):
         self.extra_ctx_vars = extra_ctx_vars or {}
         self.template_format = template_format
+        self.labels = labels
         self._views = []
 
     def step(self, func):
@@ -188,6 +190,13 @@ class StepRenderer:
         if context:
             final_ctx.update(context)
         return final_ctx
+
+    @property
+    def widget(self):
+        return StepsWidget(
+            labels=self.steps.labels or (['??'] * self.steps.num_steps),
+            current=self.number
+        )
 
     @property
     def template_name(self):
