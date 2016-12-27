@@ -7,7 +7,7 @@ import { getRatesParameters } from '../rates-request';
 
 import { API_RATES_CSV } from '../constants';
 
-function ExportData({ querystring }) {
+export function ExportData({ querystring }) {
   const href = API_RATES_CSV + querystring;
 
   return (
