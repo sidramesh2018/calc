@@ -65,6 +65,7 @@ class ProposedPrice extends React.Component {
       <div className="proposed-price">
         <label htmlFor={id} className="sr-only">Proposed price</label>
         <input id={id} type="text" name="proposed-price"
+               className="form__inline"
                placeholder="Proposed price" value={this.state.typed}
                onChange={this.handleChange} />
         <button className="button-primary go">Go</button>
