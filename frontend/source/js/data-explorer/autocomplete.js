@@ -4,7 +4,9 @@ import hourglass from '../common/hourglass';
 
 export function appendHighlightedTerm($el, term, searchStr) {
   const sanitizedSearch = searchStr.replace(/[^a-z0-9 ]/gi, '')
-    .trim().split(/[ ]+/).join('|');
+    .trim()
+    .split(/[ ]+/)
+    .join('|');
   const re = new RegExp(`(${sanitizedSearch})`, 'gi');
 
   const plainText = (start, end) => document.createTextNode(
