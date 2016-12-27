@@ -1,0 +1,45 @@
+    {% load staticfiles %}
+    <footer>
+      <div class="container">
+        <div class="row">
+
+          <div id="code" class="four columns">
+            <div id="footer_nav">
+              <h6>Acquisition professionals</h6>
+              {% if not user.is_authenticated %}
+              <p><a href="{% url 'uaa_client:login' %}">Log in to upload data</a></p>
+              {% elif user.is_authenticated %}
+              <p>You are logged in as {{ user.email }}</p>
+              <p><a href="{% url 'user_account:index' %}">View account</a> | <a href="{% url 'uaa_client:logout' %}">Log out</a></p>
+              {% endif %}
+
+              <h6>Developers</h6>
+              <ul>
+                <li><a href="https://github.com/18F/calc"><img alt="GitHub Logo" src="https://mirage-gsa-gov.s3.amazonaws.com:443/mirage_site/images/github_icon.png"> View our code on GitHub</a></li>
+                <!-- <li><a href="/docs/">Read the API documentation</a></li> -->
+              </ul>
+              {% if request.path == "/" %}
+                <h6>Icon credits</h6>
+                <p class="small">Paulo Sá Ferreira, Luis Prado, John Testa, Andrew Forrester from <a href="https://thenounproject.com/">The Noun Project</a>.</p>
+              {% endif %}
+            </div><!-- /.footer_nav -->
+          </div>
+
+          <div id="help-wanted" class="four columns">
+            <h3>Get in touch</h3>
+            <p>We're always looking for feedback on CALC.
+              Drop us a line to share your thoughts!
+           </p>
+            <p>Email us at <a href="mailto:calc@gsa.gov">calc@gsa.gov</a></p>
+          </div>
+
+          <div id="logos" class="four columns">
+            <a href="http://gsa.gov"><img alt="General Services Administration logo"
+              src="{% static 'frontend/images/logo-gsa.png' %}"></a>
+            <a href="https://18f.gsa.gov"><img alt="18F logo"
+              src="{% static 'frontend/images/logo-18f.svg' %}"></a>
+          </div>
+
+        </div>
+      </div>
+    </footer>

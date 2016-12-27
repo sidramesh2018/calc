@@ -39,7 +39,7 @@
     {# For the list of files included in this built script, see gulpfile.js #}
     <script src="{% static 'frontend/built/js/common/vendor.min.js' %}"></script>
     <![endif]>
-    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
     {% block head %}
     {% endblock %}
   </head>
@@ -60,6 +60,7 @@
       {% include '_header.html' %}
       {# Extended header should be placed in this block in descendant templates #}
       {% block header_extension %}{% endblock %}
+      {% include '_nav.html' %}
       </div>
     </header>
 
@@ -69,43 +70,10 @@
     </main>
 
     {% block modals %}{% endblock modals %}
+    {% block footer %}
+      {% include "_footer.html" %}
+    {% endblock %}
 
-    <footer>
-      <div class="container">
-        <div class="row">
-
-          <div id="code" class="three columns">
-            <div id="footer_nav">
-              <ul>
-                <li><a href="https://github.com/18F/calc"><img alt="GitHub Logo" src="https://mirage-gsa-gov.s3.amazonaws.com:443/mirage_site/images/github_icon.png"> View our code on GitHub</a></li>
-                {% if not user.is_authenticated %}
-                  <li><a href="{% url 'uaa_client:login' %}">Log in</a></li>
-                {% endif %}
-                <!-- <li><a href="/docs/">Read the API documentation</a></li> -->
-              </ul>
-
-              <p>Icons by Paulo Sá Ferreira, Luis Prado, John Testa, Andrew Forrester from <a href="https://thenounproject.com/">The Noun Project</a>.</p>
-            </div><!-- /.footer_nav -->
-          </div>
-
-          <div id="help-wanted" class="six columns">
-            <h3>Get in touch</h3>
-            <p>We're always looking for feedback on CALC.<br />
-              Drop us a line to share your thoughts!
-           </p>
-              <span class="email_us">Email us at <a href="mailto:calc@gsa.gov">calc@gsa.gov</a></span>
-          </div>
-
-          <div id="logos" class="three columns">
-            <a href="http://gsa.gov"><img alt="General Services Administration logo"
-              src="{% static 'frontend/images/logo-gsa.png' %}"></a>
-            <a href="https://18f.gsa.gov"><img alt="18F logo"
-              src="{% static 'frontend/images/logo-18f.svg' %}"></a>
-          </div>
-
-        </div>
-      </div>
-    </footer>
 
     {% if not is_safe_mode_enabled %}
       <!-- Digital Analytics Program roll-up, see https://analytics.usa.gov for data -->

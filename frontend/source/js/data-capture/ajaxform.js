@@ -94,9 +94,6 @@ class AjaxForm extends window.HTMLFormElement {
 
       if (el.isUpgraded) {
         formData.append(el.name, el.upgradedValue);
-      } else if (el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
-        // See https://github.com/18F/calc/issues/1006
-        throw new Error(`unsupported form element: ${el.tagName}`);
       } else if (el.type === 'file') {
         for (let j = 0; j < el.files.length; j++) {
           formData.append(el.name, el.files[j]);

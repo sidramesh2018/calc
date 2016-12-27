@@ -1,7 +1,8 @@
 import os
 import subprocess
 
-from django.test import LiveServerTestCase, override_settings
+from django.test import override_settings
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from hourglass.urls import urlpatterns, tests_url
 from .utils import build_static_assets
@@ -17,7 +18,7 @@ if WD_TESTING_BROWSER == 'phantomjs':
                                'vendor', 'runner.js')
 
     @override_settings(ROOT_URLCONF=__name__)
-    class QunitTests(LiveServerTestCase):
+    class QunitTests(StaticLiveServerTestCase):
         '''
         Run QUnit tests directly via phantomjs, bypassing Selenium to
         simplify the test process and reduce the chance of something

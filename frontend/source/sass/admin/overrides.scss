@@ -5,17 +5,25 @@
  * *****************/
 
 /* nav ul li temp styles until we can get the proper class added in the back end */
-nav ul li {
-  border-radius: 0 ;
-  &:first-child {
-    background: $color-white;
-    a,
-    a:hover {
-      color: $color-primary-darkest;
+nav ul {
+  margin-top: 0;
+  li {
+    padding-bottom: ($space-1x + $space-half);
+    border-bottom: 0;
+    a[href*="admin"]{
+      border-bottom: $space-1x solid $color-primary-alt;
+      padding-bottom: 7px;
+      font-weight: $font-weight-bold;
     }
   }
 }
 /* end temp styles */
+
+/* temp header padding override until we create a better subnav style ugh */
+header {
+  padding-bottom: 0;
+}
+/* end temp ugh styles */
 
 /* USWDS override, because we can't control Django's markup easily */
 .field-is_muted input[type=checkbox],
@@ -25,6 +33,16 @@ nav ul li {
     width: auto;
 }
 /* end USWDS override */
+
+/* messagelist styling */
+.messagelist li {
+  font-size: $h3-font-size;
+  font-weight: $font-weight-bold;
+  .info {
+    color: $color-green;
+  }
+}
+/* end messagelist styling */
 
 label,
 .aligned label {
@@ -51,15 +69,28 @@ form .aligned p.help {
 
 /* groups pages */
 #user-tools ul {
-  text-align: right;
-  margin: 2rem 0;
+  text-align: center;
+  margin: ($space-1x + $space-half) 0 $space-3x;
   li {
     display: inline-block;
     margin: 0 2rem 0 0;
-    text-transform: uppercase;
-    font-size: 11px;
     &:last-child {
       margin-right: 0;
+    }
+  }
+}
+
+.change-form fieldset {
+  max-width: none;
+}
+
+.selector {
+  width: 100% !important;
+  .selector-available,
+  .selector-chosen {
+    width: 45% !important;
+    select {
+      width: 100% !important;
     }
   }
 }

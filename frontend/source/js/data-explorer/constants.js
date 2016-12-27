@@ -32,46 +32,46 @@ export const SITE_LABELS = {
 };
 
 const SCHEDULES = [{
-  SIN: 520,
-  schedule: 'FABS',
-  name: 'Legacy FABS',
-}, {
-  SIN: 541,
-  schedule: 'AIMS',
-  name: 'Legacy AIMS',
-}, {
-  SIN: 73802,
-  schedule: 'Language Services',
-  name: 'Legacy Language',
-}, {
-  SIN: 871,
-  schedule: 'PES',
-  name: 'Legacy PES',
-}, {
-  SIN: 874,
-  schedule: 'MOBIS',
-  name: 'Legacy MOBIS',
+  SIN: 899,
+  schedule: 'Environmental',
+  name: 'Legacy Environmental',
 }, {
   SIN: 87405,
   schedule: 'Logistics',
   name: 'Legacy Logistics',
 }, {
-  SIN: 899,
-  schedule: 'Environmental',
-  name: 'Legacy Environmental',
+  SIN: 874,
+  schedule: 'MOBIS',
+  name: 'Legacy MOBIS',
+}, {
+  SIN: 871,
+  schedule: 'PES',
+  name: 'Legacy PES',
+}, {
+  SIN: 73802,
+  schedule: 'Language Services',
+  name: 'Legacy Language',
+}, {
+  SIN: 541,
+  schedule: 'AIMS',
+  name: 'Legacy AIMS',
+}, {
+  SIN: 520,
+  schedule: 'FABS',
+  name: 'Legacy FABS',
 }, {
   SIN: 132,
   schedule: 'IT Schedule 70',
   name: 'IT 70',
 }];
 
-export const SCHEDULE_LABELS = {
-  Consolidated: 'Consolidated',
-};
+export const SCHEDULE_LABELS = {};
 
 SCHEDULES.forEach(({ SIN, schedule, name }) => {
   SCHEDULE_LABELS[schedule] = `${SIN} - ${name}`;
 });
+
+SCHEDULE_LABELS.Consolidated = 'Consolidated';
 
 export const CONTRACT_YEAR_CURRENT = 'current';
 export const CONTRACT_YEAR_1 = '1';

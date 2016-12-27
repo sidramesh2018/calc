@@ -28,7 +28,8 @@
   }
 }
 
-td.action-checkbox {
+td.action-checkbox,
+th.action-checkbox-column {
   padding: 0.45em 0 0 0.25em;
   input[type=checkbox],
   input[type=radio]{
@@ -82,4 +83,10 @@ td.action-checkbox {
   font-size: $small-font-size;
   color: $color-gray;
   display: block;
+  // hide .questions, .all, etc. until we can modify the django template
+  // see https://github.com/18F/calc/issues/1134
+  ~ span {
+    display: none;
+  }
 }
+

@@ -12,7 +12,7 @@ function Schedule({ idPrefix, schedule, setSchedule }) {
 
   return (
     <div className="filter filter-schedule">
-      <label htmlFor={id}>Schedule:</label>
+      <label htmlFor={id}>SIN / Schedule:</label>
       <a href="/about#schedules" className="filter-more-info">
         What's this?
       </a>
