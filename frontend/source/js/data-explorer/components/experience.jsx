@@ -17,7 +17,7 @@ import {
   MAX_EXPERIENCE,
 } from '../constants';
 
-class Experience extends React.Component {
+export class Experience extends React.Component {
   constructor(props) {
     super(props);
     autobind(this, ['onSliderSlide', 'onSliderChange']);
