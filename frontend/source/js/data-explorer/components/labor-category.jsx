@@ -50,7 +50,7 @@ class LaborCategory extends React.Component {
   render() {
     const id = `${this.props.idPrefix}labor_category`;
     const className = filterActive(this.props.query !== '',
-                                   'search u-full-width');
+                                   'form__inline');
 
     return (
       <div>
@@ -61,6 +61,7 @@ class LaborCategory extends React.Component {
                onChange={this.handleChange}
                onKeyDown={handleEnter(this.handleEnter)} />
         <label htmlFor={id} className="sr-only">Type a labor category</label>
+        {this.props.children}
       </div>
     );
   }
@@ -72,6 +73,7 @@ LaborCategory.propTypes = {
   queryType: React.PropTypes.string.isRequired,
   setQuery: React.PropTypes.func.isRequired,
   api: React.PropTypes.object.isRequired,
+  children: React.PropTypes.any,
 };
 
 LaborCategory.defaultProps = {

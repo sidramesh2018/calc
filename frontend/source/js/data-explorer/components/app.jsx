@@ -96,20 +96,22 @@ class App extends React.Component {
               (For example: Engineer, Consultant)
             </p>
             <div className="row">
-              <div className="six columns">
-                <LaborCategory api={this.props.api} />
+              <div className="twelve columns">
+                <LaborCategory api={this.props.api}>
+                  <button className="submit button-primary">
+                    Search
+                  </button>
+                  {' '}
+                  <input onClick={this.handleResetClick}
+                         className="reset button button-outline"
+                         type="reset"
+                         value="Clear search" />
+                </LaborCategory>
+              </div>
+              <div className="twelve columns">
                 <div id={prefixId('query-types')}>
                   <QueryType />
                 </div>
-              </div>
-              <div className="six columns">
-                <button className="submit button-primary">
-                  Search
-                </button>
-                <input onClick={this.handleResetClick}
-                       className="reset button button-outline"
-                       type="reset"
-                       value="Clear search" />
               </div>
             </div>
           </div>
