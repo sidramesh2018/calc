@@ -20,15 +20,23 @@ class StepsWidget:
         self.labels = labels
         self.current = current
 
-    def render(self):
+    def build_context(self):
         steps = [
             Step(label=label, number=i, current=(i == self.current))
             for label, i in zip(self.labels, range(1, len(self.labels) + 1))
         ]
-        return render_to_string('frontend/steps.html', {
-            'current_step': steps[self.current - 1],
-            'steps': steps,
-        })
+        return dict(
+            current_step=steps[self.current - 1],
+            steps=steps
+        )
 
-    def __str__(self):
+    def render(self):
+        return render_to_string('frontend/steps.html', self.build_context())
+
+    def __call__(self):
+        '''
+        A convenience for rendering the widget directly from a Django
+        template.
+        '''
+
         return self.render()
