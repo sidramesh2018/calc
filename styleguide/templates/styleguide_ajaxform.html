@@ -1,12 +1,7 @@
-{% extends "base.html" %}
-{% load staticfiles %}
+{% extends "styleguide_base.html" %}
 
-{% block body %}
-<div class="container">
+{% block styleguide_body %}
   <h1>Ajax Form Example</h1>
 
   {% include "styleguide_ajaxform_example.html" %}
-</div>
-
-<script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
 {% endblock %}

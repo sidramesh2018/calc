@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}CALC Style Guide{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'frontend/built/style/data_capture.min.css' %}">
+<link rel="stylesheet" href="{% static 'styleguide/styleguide.css' %}">
+<link rel="stylesheet" href="{% static 'styleguide/vendor/prism.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="container card--wide">
+<div class="row">
+  <div class="card">
+    <div class="card__content">
+    {% block styleguide_body %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+{% if not is_safe_mode_enabled %}
+<script src="{% static 'styleguide/vendor/prism.js' %}"></script>
+<script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
+<script src="{% static 'frontend/built/js/styleguide/index.min.js' %}"></script>
+{% endif %}
+{% include 'frontend/safe_mode/ui.html' %}
+
+{% endblock %}
