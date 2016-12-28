@@ -79,4 +79,16 @@ button,
       background-color: $color-base;
     }
   }
+
+  &.button-footer {
+    background-color: $color-white;
+    border-radius: 4px;
+    color: $color-gray-medium-dark;
+
+    &:hover,
+    &.button-hover {
+      background-color: $color-gray-lighter;
+      color: $color-gray-medium-dark;
+    }
+  }
 }

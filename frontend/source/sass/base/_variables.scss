@@ -19,6 +19,7 @@ $color-white:                #ffffff;
 $color-base:                 #212121;
 $color-black:                #000000;
 $color-gray-dark:            #323a45;
+$color-gray-medium-dark:     #4E565F; // new for footer eg, likely temporary
 $color-gray:                 #5b616b; // lighten($color-gray-dark, 20%)
 $color-gray-medium:          #757575; // lightest gray that passes color contrast
 $color-gray-light:           #aeb0b5; // lighten($color-gray-dark, 60%)
@@ -40,6 +41,7 @@ $color-error-bg: #fef5f5;
 // Fonts
 $em-base:             10px;
 $base-font-size:      rem(16px);
+$medium-font-size:    rem(14px);
 $small-font-size:     rem(12px);
 $h1-font-size:        rem(34px);
 $h2-font-size:        rem(28px);
