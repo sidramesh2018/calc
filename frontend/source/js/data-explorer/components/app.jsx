@@ -154,8 +154,12 @@ class App extends React.Component {
                     </a>
                   </div>
 
-                  <div id={prefixId('results-actions')}
-                       className="four columns">
+                  {/* TODO: The following id actually reproduces a bug from
+                    * the legacy implementation that this is based on.
+                    * It's actually required to maintain the same
+                    * layout as the legacy version, so we're keeping
+                    * it for now, but we should eventually fix it! */}
+                  <div id={prefixId('results-actions four columns')}>
                     <ExportData />
                   </div>
 
