@@ -6,7 +6,7 @@ import { makeOptions } from './util';
 import { setSchedule as setScheduleAction } from '../actions';
 import { SCHEDULE_LABELS } from '../constants';
 
-function Schedule({ idPrefix, schedule, setSchedule }) {
+export function Schedule({ idPrefix, schedule, setSchedule }) {
   const id = `${idPrefix}schedule`;
   const handleChange = e => { setSchedule(e.target.value); };
 
