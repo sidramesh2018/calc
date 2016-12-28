@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { setProposedPrice } from '../actions';
 
-class ProposedPrice extends React.Component {
+export class ProposedPrice extends React.Component {
   constructor(props) {
     super(props);
     this.state = { typed: this.props.proposedPrice || '' };
