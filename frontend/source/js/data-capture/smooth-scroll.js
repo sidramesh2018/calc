@@ -124,8 +124,7 @@ export function getOrCreateVisitId(window) {
 export function activateManualScrollRestoration(window) {
   const doc = window.document;
   const storage = window.sessionStorage;
-  const visitId = getOrCreateVisitId(window);
-  const scrollKey = () => `visit_${visitId}_scrollTop`;
+  const scrollKey = () => `visit_${getOrCreateVisitId(window)}_scrollTop`;
   const scrollTop = parseInt(storage[scrollKey()], 10);
 
   window.history.scrollRestoration = 'manual';   // eslint-disable-line no-param-reassign
