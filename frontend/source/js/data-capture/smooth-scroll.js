@@ -39,10 +39,14 @@ const DEFAULT_SCROLL_MS = 500;
 // support smooth scrolling.
 export const IS_SUPPORTED = window.history && window.history.replaceState;
 
+function buildPageState(object) {
+  return Object.assign({}, window.history.state || {}, object);
+}
+
 function rememberCurrentScrollPosition(window) {
-  window.history.replaceState({
+  window.history.replaceState(buildPageState({
     pageYOffset: window.pageYOffset,
-  }, '');
+  }), '');
 }
 
 function changeHash(window, hash, cb) {
@@ -90,13 +94,11 @@ function smoothScroll(window, scrollTop, scrollMs, cb) {
  **/
 export function activateManualScrollRestoration(window) {
   const doc = window.document;
-  const storage = window.sessionStorage;
-  const scrollKey = () => `${window.location}_scrollTop`;
-  const scrollTop = parseInt(storage[scrollKey()], 10);
+  const scrollTop = window.history.state && window.history.state.scrollTop;
 
   window.history.scrollRestoration = 'manual';   // eslint-disable-line no-param-reassign
 
-  if (!isNaN(scrollTop)) {
+  if (typeof scrollTop === 'number' && !isNaN(scrollTop)) {
     const doScroll = () => {
       doc.documentElement.scrollTop = doc.body.scrollTop = scrollTop;
     };
@@ -109,8 +111,9 @@ export function activateManualScrollRestoration(window) {
   }
 
   window.addEventListener('beforeunload', () => {
-    storage[scrollKey()] = doc.documentElement.scrollTop ||
-                           doc.body.scrollTop;
+    window.history.replaceState(buildPageState({
+      scrollTop: doc.documentElement.scrollTop || doc.body.scrollTop,
+    }), '');
   }, false);
 
   return window;

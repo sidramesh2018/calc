@@ -36,14 +36,18 @@ function addHashChangePolyfill(window) {
 class FakeWindow {
   constructor(options = {}) {
     Object.assign(this, {
-      history: {},
+      history: {
+        state: options.state || null,
+        replaceState(state) {
+          this.state = state;
+        },
+      },
       location: 'http://foo/',
       document: {
         body: { scrollTop: 0 },
         documentElement: { scrollTop: 0 },
         readyState: options.readyState || 'loading',
       },
-      sessionStorage: options.sessionStorage || {},
       listeners: {},
     });
   }
@@ -76,12 +80,12 @@ test('amsr remembers scrollTop on window unload', assert => {
   const win = activateManualScrollRestoration(new FakeWindow());
   win.document.body.scrollTop = 5;
   win.listeners.beforeunload();
-  assert.equal(win.sessionStorage['http://foo/_scrollTop'], '5');
+  assert.equal(win.history.state.scrollTop, 5);
 });
 
 test('amsr scrolls to last scrollTop on DOMContentLoaded', assert => {
   const win = activateManualScrollRestoration(new FakeWindow({
-    sessionStorage: { 'http://foo/_scrollTop': '20' },
+    state: { scrollTop: 20 },
   }));
   assert.equal(win.getScrollTop(), 0);
   win.listeners.DOMContentLoaded();   // eslint-disable-line new-cap
@@ -90,7 +94,7 @@ test('amsr scrolls to last scrollTop on DOMContentLoaded', assert => {
 
 test('amsr scrolls to last scrollTop if readyState=interactive', assert => {
   const win = activateManualScrollRestoration(new FakeWindow({
-    sessionStorage: { 'http://foo/_scrollTop': '20' },
+    state: { scrollTop: 20 },
     readyState: 'interactive',
   }));
   assert.equal(win.getScrollTop(), 20);
@@ -98,7 +102,7 @@ test('amsr scrolls to last scrollTop if readyState=interactive', assert => {
 
 test('amsr scrolls to last scrollTop if readyState=complete', assert => {
   const win = activateManualScrollRestoration(new FakeWindow({
-    sessionStorage: { 'http://foo/_scrollTop': '20' },
+    state: { scrollTop: 20 },
     readyState: 'complete',
   }));
   assert.equal(win.getScrollTop(), 20);
@@ -106,7 +110,7 @@ test('amsr scrolls to last scrollTop if readyState=complete', assert => {
 
 test('amsr does not set scrollTop if last value was corrupt', assert => {
   const win = activateManualScrollRestoration(new FakeWindow({
-    sessionStorage: { 'http://foo/_scrollTop': 'LOL' },
+    state: { scrollTop: 'LOL' },
     readyState: 'complete',
   }));
   assert.equal(win.getScrollTop(), 0);
