@@ -41,8 +41,11 @@ describe('<EducationLevel>', () => {
   });
 
   it('has filter_active class when levels are selected', () => {
-    const { wrapper } = setup({ levels: [] });
-    expect(wrapper.find('a.filter_active').exists()).toBeFalsy()
+    let { wrapper } = setup({ levels: [] });
+    expect(wrapper.find('a.filter_active').exists()).toBeFalsy();
+
+    ({ wrapper } = setup({ levels: ['HS'] }));
+    expect(wrapper.find('a.filter_active').exists()).toBeTruthy();
   });
 
   it('calls toggleEducationLevel when checkbox is clicked', () => {
