@@ -39,10 +39,14 @@ const DEFAULT_SCROLL_MS = 500;
 // support smooth scrolling.
 export const IS_SUPPORTED = window.history && window.history.replaceState;
 
+function buildPageState(object) {
+  return Object.assign({}, window.history.state || {}, object);
+}
+
 function rememberCurrentScrollPosition(window) {
-  window.history.replaceState({
+  window.history.replaceState(buildPageState({
     pageYOffset: window.pageYOffset,
-  }, '');
+  }), '');
 }
 
 function changeHash(window, hash, cb) {
@@ -78,6 +82,35 @@ function smoothScroll(window, scrollTop, scrollMs, cb) {
 }
 
 /**
+ * Generate or retrieve an integer uniquely identifying this particular
+ * page visit. The number will be the same if the user navigates back
+ * to this page in the future.
+ **/
+export function getOrCreateVisitId(window) {
+  const VISIT_ID_COUNTER = 'smoothScrollLatestVisitId';
+  const VISIT_ID = 'smoothScrollVisitId';
+
+  if (window.history.state && VISIT_ID in window.history.state) {
+    return window.history.state[VISIT_ID];
+  }
+
+  const storage = window.sessionStorage;
+  let latestVisitId = parseInt(storage[VISIT_ID_COUNTER], 10);
+
+  if (isNaN(latestVisitId)) {
+    latestVisitId = 0;
+  }
+
+  storage[VISIT_ID_COUNTER] = ++latestVisitId;
+
+  window.history.replaceState(buildPageState({
+    [VISIT_ID]: latestVisitId,
+  }), '');
+
+  return latestVisitId;
+}
+
+/**
  * Some modern browsers support the scroll restoration API, which lets
  * us have full control over how the web page scrolls, eliminating
  * flicker caused by our code and the browser trying to "fight over"
@@ -91,7 +124,7 @@ function smoothScroll(window, scrollTop, scrollMs, cb) {
 export function activateManualScrollRestoration(window) {
   const doc = window.document;
   const storage = window.sessionStorage;
-  const scrollKey = () => `${window.location}_scrollTop`;
+  const scrollKey = () => `visit_${getOrCreateVisitId(window)}_scrollTop`;
   const scrollTop = parseInt(storage[scrollKey()], 10);
 
   window.history.scrollRestoration = 'manual';   // eslint-disable-line no-param-reassign
@@ -109,6 +142,8 @@ export function activateManualScrollRestoration(window) {
   }
 
   window.addEventListener('beforeunload', () => {
+    // We can't store the position in window.history.state here because
+    // this will make some browsers flicker the URL in the address bar.
     storage[scrollKey()] = doc.documentElement.scrollTop ||
                            doc.body.scrollTop;
   }, false);
