@@ -4,7 +4,7 @@ from django.test import TestCase, override_settings
 from .common import FAKE_SCHEDULE, uploaded_csv_file, r10_file
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
-from ..forms import (Step1Form, Step2Form, Step3Form, Step4Form,
+from ..forms import (Step1Form, Step2Form, PriceListUploadForm, Step4Form,
                      PriceListDetailsForm, Region10BulkUploadForm)
 from ..models import SubmittedPriceList
 
@@ -89,21 +89,22 @@ class Step2FormTests(TestCase):
 
 
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
-class Step3FormTests(TestCase):
+class PriceListUploadFormTests(TestCase):
     def setUp(self):
         registry._init()
 
     def test_invalid_when_file_is_missing(self):
-        form = Step3Form({}, schedule=FAKE_SCHEDULE)
+        form = PriceListUploadForm({}, schedule=FAKE_SCHEDULE)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['file'][0], 'This field is required.')
 
     def test_valid_when_file_is_missing_and_not_required(self):
-        form = Step3Form({}, schedule=FAKE_SCHEDULE, is_file_required=False)
+        form = PriceListUploadForm(
+            {}, schedule=FAKE_SCHEDULE, is_file_required=False)
         self.assertTrue(form.is_valid())
 
     def test_invalid_when_file_cannot_be_gleaned(self):
-        form = Step3Form({}, {
+        form = PriceListUploadForm({}, {
             'file': uploaded_csv_file(b'i cannot be gleaned')
         }, schedule=FAKE_SCHEDULE)
         self.assertFalse(form.is_valid())
@@ -115,7 +116,7 @@ class Step3FormTests(TestCase):
         })
 
     def test_clean_sets_gleaned_data(self):
-        form = Step3Form({}, {
+        form = PriceListUploadForm({}, {
             'file': uploaded_csv_file()
         }, schedule=FAKE_SCHEDULE)
         self.assertTrue(form.is_valid())

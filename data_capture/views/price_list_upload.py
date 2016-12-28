@@ -16,7 +16,8 @@ from ..models import SubmittedPriceList
 from ..decorators import handle_cancel
 from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
-from .common import add_generic_form_error, build_url, Steps
+from .common import (add_generic_form_error, build_url,
+                     Steps, get_nested_item, get_deserialized_gleaned_data)
 from frontend import ajaxform
 
 
@@ -26,27 +27,6 @@ steps = Steps(
         'current_selected_tab': 'upload_price_data'
     }
 )
-
-
-def get_nested_item(obj, keys, default=None):
-    '''
-    Get a nested item from a nested structure of dictionary-like objects,
-    returning a default value if any expected keys are not present.
-
-    Examples:
-
-        >>> d = {'foo': {'bar': 'baz'}}
-        >>> get_nested_item(d, ('foo', 'bar'))
-        'baz'
-        >>> get_nested_item(d, ('foo', 'blarg'))
-    '''
-
-    key = keys[0]
-    if key not in obj:
-        return default
-    if len(keys) > 1:
-        return get_nested_item(obj[key], keys[1:], default)
-    return obj[key]
 
 
 def get_step_form_from_session(step_number, request, **kwargs):
@@ -70,18 +50,6 @@ def get_step_form_from_session(step_number, request, **kwargs):
             'invalid step {} data in session'.format(step_number)
         )
     return form
-
-
-def get_deserialized_gleaned_data(request):
-    '''
-    Gets 'gleaned_data' from session and uses the registry to deserialize
-    it. Returns None if 'gleaned_data' is not in session.
-    '''
-    serialized_gleaned_data = get_nested_item(request.session, (
-        'data_capture:price_list', 'gleaned_data'))
-    if serialized_gleaned_data:
-        return registry.deserialize(serialized_gleaned_data)
-    return None
 
 
 @steps.step
@@ -186,13 +154,15 @@ def step_3(request, step):
         if not is_file_required:
             existing_filename = session_pl.get('filename')
 
-        form = forms.Step3Form(
+        form = forms.PriceListUploadForm(
             schedule=step_1_data['schedule'],
             is_file_required=is_file_required,
             existing_filename=existing_filename,
         )
     else:  # POST
-        form = forms.Step3Form(
+        gleaned_data = get_deserialized_gleaned_data(request)
+
+        form = forms.PriceListUploadForm(
             request.POST,
             request.FILES,
             schedule=step_1_data['schedule'],
@@ -240,7 +210,8 @@ def step_3_errors(request):
 
     preferred_schedule = step_1_form.cleaned_data['schedule_class']
 
-    form = forms.Step3Form(schedule=step_1_form.cleaned_data['schedule'])
+    form = forms.PriceListUploadForm(
+        schedule=step_1_form.cleaned_data['schedule'])
 
     return render(request,
                   'data_capture/price_list/step_3_errors.html',
