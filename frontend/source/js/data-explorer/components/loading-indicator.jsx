@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-function LoadingIndicator({ error, inProgress }) {
+export function LoadingIndicator({ error, inProgress }) {
   let errorMessage = null;
   let ariaStatus = inProgress ? 'Loading results' : 'Results loaded.';
 

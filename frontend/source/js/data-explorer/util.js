@@ -1,10 +1,11 @@
-/* global window, d3, event */
+/* global event */
 
 import classNames from 'classnames';
+import { format } from 'd3-format';
 
-export const formatCommas = d3.format(',');
-export const formatPrice = d3.format(',.0f');
-export const formatPriceWithCents = d3.format(',.02f');
+export const formatCommas = format(',');
+export const formatPrice = format(',.0f');
+export const formatPriceWithCents = format(',.02f');
 
 const KEY_ENTER = 13;
 const KEY_SPACE = 32;
@@ -36,7 +37,7 @@ export function autobind(self, names) {
 }
 
 export function templatize(str, undef) {
-  const undefFunc = d3.functor(undef);
+  const undefFunc = () => undef;
   return (d) => str.replace(/{(\w+)}/g, (_, key) => d[key] || undefFunc.call(d, key));
 }
 

@@ -21,7 +21,7 @@ const INPUT_INFOS = {
   },
 };
 
-function QueryType({ queryType, setQueryType, idPrefix }) {
+export function QueryType({ queryType, setQueryType, idPrefix }) {
   const input = type => {
     const { idSuffix } = INPUT_INFOS[type];
     const id = `${idPrefix}${idSuffix}`;

@@ -6,7 +6,7 @@ import { makeOptions } from './util';
 import { setBusinessSize as setBusinessSizeAction } from '../actions';
 import { BUSINESS_SIZE_LABELS } from '../constants';
 
-function BusinessSize({ idPrefix, size, setSize }) {
+export function BusinessSize({ idPrefix, size, setSize }) {
   const id = `${idPrefix}business_size`;
   const handleChange = e => { setSize(e.target.value); };
 

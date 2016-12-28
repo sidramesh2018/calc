@@ -1,0 +1,9 @@
+exports[`<DescriptionFilter> matches snapshot 1`] = `
+<span
+  className="filter extra-class">
+  A Label: 
+  <b>
+    children
+  </b>
+</span>
+`;
