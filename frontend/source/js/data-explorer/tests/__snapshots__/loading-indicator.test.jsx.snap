@@ -1,11 +1,18 @@
 exports[`<LoadingIndicator> matches snapshot 1`] = `
-<div
-  className="loading-indicator">
-  <p
-    className="message">
-    Loading results...
-  </p>
+<div>
   <div
-    className="error-message" />
+    aria-live="polite"
+    className="sr-only"
+    role="status">
+    Results loaded.
+  </div>
+  <div
+    aria-hidden="true"
+    className="loading-indicator">
+    <p
+      className="message">
+      Loading results...
+    </p>
+  </div>
 </div>
 `;
