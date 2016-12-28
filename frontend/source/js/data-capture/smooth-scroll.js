@@ -82,6 +82,35 @@ function smoothScroll(window, scrollTop, scrollMs, cb) {
 }
 
 /**
+ * Generate or retrieve an integer uniquely identifying this particular
+ * page visit. The number will be the same if the user navigates back
+ * to this page in the future.
+ **/
+export function getOrCreateVisitId(window) {
+  const VISIT_ID_COUNTER = 'smoothScrollLatestVisitId';
+  const VISIT_ID = 'smoothScrollVisitId';
+
+  if (window.history.state && VISIT_ID in window.history.state) {
+    return window.history.state[VISIT_ID];
+  }
+
+  const storage = window.sessionStorage;
+  let latestVisitId = parseInt(storage[VISIT_ID_COUNTER], 10);
+
+  if (isNaN(latestVisitId)) {
+    latestVisitId = 0;
+  }
+
+  storage[VISIT_ID_COUNTER] = ++latestVisitId;
+
+  window.history.replaceState(buildPageState({
+    [VISIT_ID]: latestVisitId,
+  }), '');
+
+  return latestVisitId;
+}
+
+/**
  * Some modern browsers support the scroll restoration API, which lets
  * us have full control over how the web page scrolls, eliminating
  * flicker caused by our code and the browser trying to "fight over"
@@ -94,11 +123,14 @@ function smoothScroll(window, scrollTop, scrollMs, cb) {
  **/
 export function activateManualScrollRestoration(window) {
   const doc = window.document;
-  const scrollTop = window.history.state && window.history.state.scrollTop;
+  const storage = window.sessionStorage;
+  const visitId = getOrCreateVisitId(window);
+  const scrollKey = () => `visit_${visitId}_scrollTop`;
+  const scrollTop = parseInt(storage[scrollKey()], 10);
 
   window.history.scrollRestoration = 'manual';   // eslint-disable-line no-param-reassign
 
-  if (typeof scrollTop === 'number' && !isNaN(scrollTop)) {
+  if (!isNaN(scrollTop)) {
     const doScroll = () => {
       doc.documentElement.scrollTop = doc.body.scrollTop = scrollTop;
     };
@@ -111,9 +143,10 @@ export function activateManualScrollRestoration(window) {
   }
 
   window.addEventListener('beforeunload', () => {
-    window.history.replaceState(buildPageState({
-      scrollTop: doc.documentElement.scrollTop || doc.body.scrollTop,
-    }), '');
+    // We can't store the position in window.history.state here because
+    // this will make some browsers flicker the URL in the address bar.
+    storage[scrollKey()] = doc.documentElement.scrollTop ||
+                           doc.body.scrollTop;
   }, false);
 
   return window;
