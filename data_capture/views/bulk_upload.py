@@ -9,8 +9,9 @@ from .. import forms, jobs
 from ..r10_spreadsheet_converter import Region10SpreadsheetConverter
 from ..management.commands.initgroups import BULK_UPLOAD_PERMISSION
 from ..decorators import handle_cancel
-from .common import add_generic_form_error, Steps
+from .common import add_generic_form_error
 from frontend import ajaxform
+from frontend.steps import Steps
 from contracts.models import BulkUploadContractSource
 
 

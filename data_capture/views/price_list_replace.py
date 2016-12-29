@@ -8,13 +8,15 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import SuspiciousOperation
 
-from .common import (Steps, add_generic_form_error, get_nested_item,
+from .common import (add_generic_form_error, get_nested_item,
                      get_deserialized_gleaned_data, add_change_success_message)
 from .. import forms
 from ..schedules import registry
 from ..models import SubmittedPriceList
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from frontend import ajaxform
+from frontend.steps import Steps
+
 
 SESSION_KEY = 'data_capture:replace_price_list'
 
