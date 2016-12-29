@@ -117,15 +117,6 @@ header {
   }
 }
 
-.user-id__logout a {
-  display: inline-block;
-  margin-left: $space-1x;
-  color: $color-white;
-  font-size: $small-font-size;
-  text-decoration: underline;
-  font-weight: normal;
-}
-
 @media all and (max-width: 890px){
   nav ul {
     @include span-columns(8 of 12);

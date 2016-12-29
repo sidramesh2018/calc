@@ -3,7 +3,7 @@
   <a class="logo-container columns two" href="{% url 'index' %}"><img class="logo" src="{% static 'frontend/images/calc_logo.png' %}" alt="CALC: Contract Awarded Labor Category Tool"></a>
   <div class="columns ten">
     {% if user.is_authenticated %}
-    <p class="user-id">Hello, <a href="{% url 'user_account:index' %}">{{ user.email }}</a> <span class="user-id__logout"><a href="{% url 'uaa_client:logout' %}">Log out</a></span></p>
+    <p class="user-id">Hello, <a href="{% url 'user_account:index' %}">{{ user.email }}</a></p>
     {% endif %}
   </div>
 </div>
