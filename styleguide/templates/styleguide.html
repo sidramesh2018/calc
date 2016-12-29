@@ -212,31 +212,22 @@
   </p>
 
   <p>
-    Use <code>li.current</code> to identify a step as being the current
-    one.
+    Users assisted by screen readers will hear an audio description of the
+    visualization, e.g. "Step 2 of 3", followed by the name of the
+    current step.
   </p>
 
   <p>
-    We recommend adding <code>aria-hidden="true"</code> to the widget, as
-    there isn't an easy way to communicate the information to vision-impaired
-    users without being overly verbose (thus annoying the user) or confusing.
-    However, <em>do</em> be sure to repeat the name of the current step
-    elsewhere in a header, so that the user knows what step they're currently
-    on.
+    Rather than writing out the raw HTML of the steps widget, we
+    recommend using {% pyobjname 'frontend.steps.StepsWidget' %}.
   </p>
 
-  {% example %}
-  <div class="step-bar" aria-hidden="true">
-    <label>
-      Validate data
-    </label>
-    <ol class="steps">
-      <li></li>
-      <li class="current"></li>
-      <li></li>
-    </ol>
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example</h3>
+      {{ steps_widget }}
+    </div>
   </div>
-  {% endexample %}
 
   {% guide_section "Alerts" %}
 

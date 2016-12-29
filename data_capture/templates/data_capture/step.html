@@ -8,28 +8,7 @@
       <div class="card">
         <div class="card__content">
           {% block steps %}
-          <div class="step-bar" aria-hidden="true">
-            <label>
-              {% if step.number == 1 %}
-              Basic information
-              {% endif %}
-              {% if step.number == 2 %}
-              Vendor details
-              {% endif %}
-              {% if step.number == 3 %}
-              Price list upload
-              {% endif %}
-              {% if step.number == 4 %}
-              Data verification
-              {% endif %}
-            </label>
-            <ol class="steps">
-              <li {% if step.number == 1 %}class="current"{% endif %}></li>
-              <li {% if step.number == 2 %}class="current"{% endif %}></li>
-              <li {% if step.number == 3 %}class="current"{% endif %}></li>
-              <li {% if step.number == 4 %}class="current"{% endif %}></li>
-            </ol>
-          </div>
+          {{ step.widget }}
           {% endblock %}
 
           <h1>

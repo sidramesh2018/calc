@@ -25,7 +25,7 @@ steps = Steps(
     template_format='data_capture/price_list/step_{}.html',
     extra_ctx_vars={
         'current_selected_tab': 'upload_price_data'
-    }
+    },
 )
 
 
@@ -52,7 +52,7 @@ def get_step_form_from_session(step_number, request, **kwargs):
     return form
 
 
-@steps.step
+@steps.step(label='Basic information')
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
@@ -94,7 +94,7 @@ def step_1(request, step):
     })
 
 
-@steps.step
+@steps.step(label='Vendor details')
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
@@ -132,7 +132,7 @@ def step_2(request, step):
     })
 
 
-@steps.step
+@steps.step(label='Price list upload')
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
@@ -224,7 +224,7 @@ def step_3_errors(request):
                   }))
 
 
-@steps.step
+@steps.step(label='Data verification')
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
@@ -335,7 +335,7 @@ def step_4(request, step):
     })
 
 
-@steps.step
+@steps.step(label='Complete')
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 def step_5(request, step):
