@@ -17,21 +17,14 @@ class StepsWidget:
     '''
 
     def __init__(self, labels, current):
-        self.labels = labels
-        self.current = current
-
-    def build_context(self):
-        steps = [
-            Step(label=label, number=i, current=(i == self.current))
-            for label, i in zip(self.labels, range(1, len(self.labels) + 1))
+        self.steps = [
+            Step(label=label, number=i, current=(i == current))
+            for label, i in zip(labels, range(1, len(labels) + 1))
         ]
-        return dict(
-            current_step=steps[self.current - 1],
-            steps=steps
-        )
+        self.current_step = self.steps[current - 1]
 
     def render(self):
-        return render_to_string('frontend/steps.html', self.build_context())
+        return render_to_string('frontend/steps.html', self.__dict__)
 
     def __call__(self):
         '''
@@ -40,3 +33,11 @@ class StepsWidget:
         '''
 
         return self.render()
+
+    def __repr__(self):
+        return '<{} for step {} of {}: {}>'.format(
+            self.__class__.__name__,
+            self.current_step.number,
+            len(self.steps),
+            self.current_step.label
+        )

@@ -237,10 +237,14 @@ class StepRenderer:
 
     @property
     def widget(self):
-        return StepsWidget(
-            labels=self.steps.labels or (['??'] * self.steps.num_steps),
-            current=self.number
-        )
+        labels = self.steps.labels or []
+        num_steps = self.steps.num_steps
+        if (num_steps != len(labels)):
+            raise Exception(
+                'Mismatch between number of steps ({}) and '
+                'number of labels ({})'.format(num_steps, len(labels))
+            )
+        return StepsWidget(labels=labels, current=self.number)
 
     @property
     def template_name(self):

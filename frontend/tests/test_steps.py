@@ -4,18 +4,17 @@ from frontend.steps import StepsWidget, Step
 
 
 class StepsWidgetTests(SimpleTestCase):
-    def test_context_works(self):
+    def test_attrs_work(self):
         steps = StepsWidget(
             labels=('foo', 'bar', 'baz'),
             current=2
         )
-        ctx = steps.build_context()
-        self.assertEqual(ctx['steps'], [
+        self.assertEqual(steps.steps, [
             Step('foo', 1, False),
             Step('bar', 2, True),
             Step('baz', 3, False),
         ])
-        self.assertEqual(ctx['current_step'], ctx['steps'][1])
+        self.assertEqual(steps.current_step, steps.steps[1])
 
     def test_rendering_works(self):
         steps = StepsWidget(
