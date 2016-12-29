@@ -6,8 +6,7 @@ footer {
   padding: 4rem 0 4rem 0;
   line-height: 1.4;
   font-weight: $font-weight-light;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  @include antialias();
 
   a {
     color: $color-white;

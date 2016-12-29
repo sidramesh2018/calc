@@ -46,7 +46,7 @@ button,
   text-align: center;
   text-decoration: none;
   width: 100%;
-  -webkit-font-smoothing: antialiased;
+  @include antialias();
 
   @include media($small-screen) {
     width: auto;

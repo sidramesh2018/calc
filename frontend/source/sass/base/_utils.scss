@@ -146,3 +146,10 @@ th:hover.tooltips span {
 .no-scroll {
   overflow: hidden;
 }
+
+@mixin antialias {
+  // Use this mixin when there is light text on a dark background to help
+  // with font legibility.
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
