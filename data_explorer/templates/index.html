@@ -38,7 +38,13 @@
 {% endblock header_extension %}
 
 {% block body %}
-<div data-embed-jsx-app-here class="card--half-padding"></div>
+<div data-embed-jsx-app-here class="card--half-padding">
+  <noscript>
+    <div class="card">
+      Please enable JavaScript to use this page's functionality.
+    </div>
+  </noscript>
+</div>
 
 <![if gt IE 8]>
 {# For the list of files included in this built script, see gulpfile.js #}
