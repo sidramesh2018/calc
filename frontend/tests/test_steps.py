@@ -26,5 +26,5 @@ class StepsWidgetTests(SimpleTestCase):
             current=2
         )
         html = steps()
-        assert 'bar' in html
-        assert 'Step 2 of 3' in html
+        self.assertRegexpMatches(html, 'bar')
+        self.assertRegexpMatches(html, 'Step 2 of 3')
