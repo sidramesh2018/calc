@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 class Steps:
     '''
-    The `Steps` class makes it easier to consolidate the logic of
+    The `Steps` class makes it easier to consolidate the view logic of
     multi-step workflows.
 
     The `Steps` constructor takes a format string representing what
@@ -106,6 +106,9 @@ class Steps:
         >>> ctx = steps.get_step_renderer(1).context()
         >>> ctx['step'].widget
         <StepsWidget for step 1 of 1: foo>
+
+    The widget is a callable that returns HTML, so you can use it
+    in templates with something like {{ step.widget }}.
     '''
 
     def __init__(self, template_format, extra_ctx_vars=None):
@@ -162,6 +165,14 @@ class Steps:
 
 
 class StepRenderer:
+    '''
+    An object representing a particular step of a multi-step
+    workflow, used to easily access commonly-used view logic.
+
+    It's created automatically by `Steps`--you'll never
+    need to manually call the constructor yourself.
+    '''
+
     def __init__(self, steps, step_number):
         self.steps = steps
         self.number = step_number
