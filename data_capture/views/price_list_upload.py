@@ -17,8 +17,9 @@ from ..decorators import handle_cancel
 from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from .common import (add_generic_form_error, build_url,
-                     Steps, get_nested_item, get_deserialized_gleaned_data)
+                     get_nested_item, get_deserialized_gleaned_data)
 from frontend import ajaxform
+from frontend.steps import Steps
 
 
 steps = Steps(

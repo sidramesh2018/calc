@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 
-from frontend.steps import StepsWidget, Step
+from frontend.steps import StepsWidget
 
 
 class StepsWidgetTests(SimpleTestCase):
@@ -14,9 +14,9 @@ class StepsWidgetTests(SimpleTestCase):
             current=2
         )
         self.assertEqual(steps.steps, [
-            Step('foo', 1, False),
-            Step('bar', 2, True),
-            Step('baz', 3, False),
+            StepsWidget._Step('foo', 1, False),
+            StepsWidget._Step('bar', 2, True),
+            StepsWidget._Step('baz', 3, False),
         ])
         self.assertEqual(steps.current_step, steps.steps[1])
 
