@@ -22,6 +22,11 @@ class StepsWidget:
             for label, i in zip(labels, range(1, len(labels) + 1))
         ]
         self.current_step = self.steps[current - 1]
+        for step in self.steps:
+            if not step.label:
+                raise ValueError('Step {} has no label'.format(
+                    step.number
+                ))
 
     def render(self):
         return render_to_string('frontend/steps.html', self.__dict__)

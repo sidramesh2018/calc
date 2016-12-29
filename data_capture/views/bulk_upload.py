@@ -16,11 +16,6 @@ from contracts.models import BulkUploadContractSource
 
 steps = Steps(
     template_format='data_capture/bulk_upload/region_10_step_{}.html',
-    labels=(
-        'Upload spreadsheet',
-        'Confirm load',
-        'Complete',
-    )
 )
 
 EXAMPLE_SHEET_ROWS = [
@@ -72,7 +67,7 @@ def render_r10_spreadsheet_example(request=None):
         request=request)
 
 
-@steps.step
+@steps.step(label='Upload spreadsheet')
 @login_required
 @permission_required(BULK_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
@@ -117,7 +112,7 @@ def bulk_region_10_step_1(request, step):
     )
 
 
-@steps.step
+@steps.step(label='Confirm load')
 @login_required
 @permission_required(BULK_UPLOAD_PERMISSION, raise_exception=True)
 @handle_cancel
@@ -153,7 +148,7 @@ def bulk_region_10_step_2(request, step):
     return redirect('data_capture:bulk_region_10_step_3')
 
 
-@steps.step
+@steps.step(label='Complete')
 @login_required
 @permission_required(BULK_UPLOAD_PERMISSION, raise_exception=True)
 def bulk_region_10_step_3(request, step):

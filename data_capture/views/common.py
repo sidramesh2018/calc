@@ -179,15 +179,29 @@ class Steps:
 
         >>> step1.render_to_string({'foo': 'bar'})
         'Hello from step 1 of 2! foo is bar.'
+
+    Optionally, labels can be assigned to steps, which makes it
+    easy to create widgets that indicate the current step to
+    end-users:
+
+        >>> steps = Steps('step_{}.html')
+
+        >>> @steps.step(label='foo')
+        ... def step_1(request, step): pass
+
+    The widget is easily accessible from templates:
+
+        >>> ctx = steps.get_step_renderer(1).context()
+        >>> ctx['step'].widget
+        <StepsWidget for step 1 of 1: foo>
     '''
 
-    def __init__(self, template_format, extra_ctx_vars=None, labels=None):
+    def __init__(self, template_format, extra_ctx_vars=None):
         self.extra_ctx_vars = extra_ctx_vars or {}
         self.template_format = template_format
-        self.labels = labels
         self._views = []
 
-    def step(self, func):
+    def _build_step_view(self, func, label=None):
         step_number = self.num_steps + 1
 
         if not func.__name__.endswith(str(step_number)):
@@ -201,11 +215,23 @@ class Steps:
             kwargs['step'] = self.get_step_renderer(step_number)
             return func(*args, **kwargs)
 
+        wrapper.label = label
         self._views.append(wrapper)
         return wrapper
 
+    def step(self, func=None, **kwargs):
+        if func is None:
+            # We were called in the form `@step()` w/ possible kwargs.
+            return lambda f: self._build_step_view(f, **kwargs)
+        # We were called in the form `@step`, w/o kwargs.
+        return self._build_step_view(func)
+
     def get_step_renderer(self, step_number):
         return StepRenderer(self, step_number)
+
+    @property
+    def labels(self):
+        return [view.label for view in self._views]
 
     @property
     def urls(self):
@@ -237,14 +263,7 @@ class StepRenderer:
 
     @property
     def widget(self):
-        labels = self.steps.labels or []
-        num_steps = self.steps.num_steps
-        if (num_steps != len(labels)):
-            raise Exception(
-                'Mismatch between number of steps ({}) and '
-                'number of labels ({})'.format(num_steps, len(labels))
-            )
-        return StepsWidget(labels=labels, current=self.number)
+        return StepsWidget(labels=self.steps.labels, current=self.number)
 
     @property
     def template_name(self):

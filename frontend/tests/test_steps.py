@@ -4,6 +4,10 @@ from frontend.steps import StepsWidget, Step
 
 
 class StepsWidgetTests(SimpleTestCase):
+    def test_exception_thrown_when_labels_are_falsy(self):
+        with self.assertRaisesRegexp(ValueError, 'Step 2 has no label'):
+            StepsWidget(('foo', '', 'baz'), 2)
+
     def test_attrs_work(self):
         steps = StepsWidget(
             labels=('foo', 'bar', 'baz'),
