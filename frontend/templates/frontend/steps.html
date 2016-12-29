@@ -7,7 +7,8 @@
   </label>
   <ol class="steps" aria-hidden="true">
     {% for step in steps %}
-      <li{% if step.current %} class="current"{% endif %}></li>
+      <li title="{{ step.label }}"
+      {% if step.current %} class="current"{% endif %}></li>
     {% endfor %}
   </ol>
 </div>
