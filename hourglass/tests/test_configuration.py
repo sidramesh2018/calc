@@ -51,5 +51,5 @@ class PythonVersionTests(TestCase):
 
     def test_travis_yml(self):
         with open(path('.travis.yml')) as f:
-            data = yaml.load(f)
+            data = yaml.safe_load(f)
             self.assertEqual(data['python'], [float(self.version)])
