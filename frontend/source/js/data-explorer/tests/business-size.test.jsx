@@ -57,7 +57,7 @@ describe('<BusinessSize>', () => {
   });
 
   it('matches snapshot', () => {
-    const { wrapper } = setup();
+    const { wrapper } = setup({ size: 'contractor' });
     expect(toJson(wrapper)).toMatchSnapshot();
   });
 });
