@@ -1,4 +1,3 @@
-/* global expect, describe, it, jest */
 import { serializers, deserializers } from '../serialization';
 import { DEFAULT_SORT } from '../constants';
 

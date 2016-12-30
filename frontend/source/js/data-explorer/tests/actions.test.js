@@ -1,4 +1,3 @@
-/* global expect, describe, it, jest */
 import * as actions from '../actions';
 
 describe('actions', () => {
