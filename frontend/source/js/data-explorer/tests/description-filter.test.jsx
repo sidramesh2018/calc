@@ -1,4 +1,3 @@
-/* global expect, describe, it, jest */
 import toJson from 'enzyme-to-json';
 
 import DescriptionFilter from '../components/description-filter';

@@ -1,4 +1,3 @@
-/* global expect, describe, it */
 import toJson from 'enzyme-to-json';
 
 import { Highlights } from '../components/highlights.jsx';

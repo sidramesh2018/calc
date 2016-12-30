@@ -1,4 +1,3 @@
-/* global expect, describe, it, jest */
 import React from 'react';
 
 import * as EducationColumn from '../components/results-table/education-column';
