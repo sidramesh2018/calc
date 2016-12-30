@@ -2,7 +2,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-export default function makeSetup(Component, defaultProps, options = {}) {
+export default function makeSetup(Component, defaultProps = {}, options = {}) {
   const createElement = options.createElement || React.createElement;
 
   return function setup(extraProps = {}) {
