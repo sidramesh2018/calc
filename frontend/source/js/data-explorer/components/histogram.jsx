@@ -186,14 +186,15 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('y', ppOffset - 25)
       .attr('x', -55)
       .attr('class', 'pp-label-box')
-      .attr('width', 110)
       .attr('height', 26)
+      .attr('width', 130)
       .attr('rx', 4)
       .attr('ry', 4);
 
     pp.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', ppOffset - 6)
+      .attr('dx', 10)
       .attr('class', 'value proposed');
 
     pp.append('line');
@@ -204,11 +205,11 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
 
   // widen proposed price rect if more than 3 digits long
   if (proposedPrice.toString().replace('.', '').length > 3) {
+    pp.select('rect').attr('width', 150);
+    pp.select('text').attr('dx', 20);
+  } else {
     pp.select('rect').attr('width', 130);
     pp.select('text').attr('dx', 10);
-  } else {
-    pp.select('rect').attr('width', 110);
-    pp.select('text').attr('dx', 0);
   }
 
   pp.select('line')
@@ -234,7 +235,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('y', avgOffset - 25)
       .attr('x', -55)
       .attr('class', 'avg-label-box')
-      .attr('width', 110)
+      .attr('width', 116)
       .attr('height', 26)
       .attr('rx', 4)
       .attr('ry', 4);
@@ -242,6 +243,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     avg.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', avgOffset - 7)
+      .attr('dx', 3)
       .attr('class', 'value average');
 
     avg.append('line');

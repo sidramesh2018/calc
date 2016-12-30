@@ -43,11 +43,14 @@ class FakeWindow {
           this.state = state;
         },
       },
-      location: 'http://foo/',
+      location: {
+        hash: '',
+      },
       document: {
         body: { scrollTop: 0 },
         documentElement: { scrollTop: 0 },
         readyState: options.readyState || 'loading',
+        getElementById() { return null; },
       },
       sessionStorage: options.sessionStorage || {},
       listeners: {},
