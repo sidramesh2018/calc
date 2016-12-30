@@ -1,3 +1,15 @@
+/**
+ * This module provides functionality that makes it possible
+ * to synchronize the current URL's querystring with the current
+ * state of the Redux store via the HTML5 History API.
+ *
+ * This ultimately allows users to treat every change of a
+ * search parameter in the Data Explorer as a separate page view,
+ * thus allowing them to use their browser's back button to
+ * undo changes to their search query. It also allows them to
+ * easily share their searches with others.
+ */
+
 import {
   setState,
 } from './actions';
@@ -21,7 +33,7 @@ export default class StoreHistorySynchronizer {
 
     this.window = window;
     this.isReflectingToStore = false;
-    this.onLoctionChanged = () => {};
+    this.onLocationChanged = () => {};
   }
 
   initialize(store, onLocationChanged) {

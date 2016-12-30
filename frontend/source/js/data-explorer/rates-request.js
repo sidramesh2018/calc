@@ -1,3 +1,10 @@
+/**
+ * This module provides a Redux middleware that watches the store
+ * for any state changes that would necessitate the fetching of
+ * rates data from the server. If new data is needed, it will
+ * automatically be requested from the server.
+ */
+
 import {
   startRatesRequest,
   completeRatesRequest,

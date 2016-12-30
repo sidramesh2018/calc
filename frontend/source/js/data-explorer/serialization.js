@@ -1,3 +1,10 @@
+/**
+ * This module provides functionality for serializing/deserializing
+ * Data Explorer search query parameters to/from strings in a
+ * secure way. Ultimately, this allows the search query to be
+ * represented in the current URL's querystring.
+ */
+
 import {
   EDU_LABELS,
   MIN_EXPERIENCE,
