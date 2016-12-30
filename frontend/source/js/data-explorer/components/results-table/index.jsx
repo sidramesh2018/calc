@@ -5,6 +5,7 @@ import { setSort } from '../../actions';
 import createSortableColumn from './sortable-column';
 import * as ExcludedColumn from './excluded-column';
 import * as LaborCategoryColumn from './labor-category-column';
+import * as EducationColumn from './education-column';
 import * as ExperienceColumn from './experience-column';
 import * as PriceColumn from './price-column';
 import * as ContractNumberColumn from './contract-number-column';
@@ -12,11 +13,7 @@ import * as ContractNumberColumn from './contract-number-column';
 const COLUMNS = [
   ExcludedColumn,
   LaborCategoryColumn,
-  createSortableColumn({
-    key: 'education_level',
-    title: 'Min Edu.',
-    description: 'Minimum years of education',
-  }),
+  EducationColumn,
   ExperienceColumn,
   PriceColumn,
   ContractNumberColumn,
