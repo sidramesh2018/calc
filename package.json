@@ -41,6 +41,7 @@
     "react-dom": "^15.4.1",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
+    "redux-logger": "^2.7.4",
     "sinon": "1.17.5",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",

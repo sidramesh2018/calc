@@ -17,20 +17,27 @@ import appReducer from './reducers';
 
 import StoreHistorySynchronizer from './history';
 
-import loggingMiddleware from './logging-middleware';
-
 import StoreRatesAutoRequester from './rates-request';
 
 const api = new hourglass.API();
 const historySynchronizer = new StoreHistorySynchronizer(window);
 const ratesRequester = new StoreRatesAutoRequester(api);
+const middlewares = [
+  ratesRequester.middleware,
+  historySynchronizer.reflectToHistoryMiddleware,
+];
+
+if (process.env.NODE_ENV !== 'production') {
+  // We only want to include logging middleware code in non-production
+  // JS bundles, so we're going to conditionally require it here.
+  const createLogger = require('redux-logger');  // eslint-disable-line global-require
+
+  middlewares.push(createLogger());
+}
+
 const store = createStore(
   appReducer,
-  applyMiddleware(
-    loggingMiddleware,
-    ratesRequester.middleware,
-    historySynchronizer.reflectToHistoryMiddleware
-  )
+  applyMiddleware(...middlewares)
 );
 
 // set default options for all future tooltip instantiations
