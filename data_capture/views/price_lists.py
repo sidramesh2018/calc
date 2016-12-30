@@ -9,7 +9,8 @@ from .. import forms
 from ..schedules import registry
 from ..models import SubmittedPriceList
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
-from .common import add_generic_form_error, build_url
+from .common import (add_generic_form_error, build_url,
+                     add_change_success_message)
 
 
 @login_required
@@ -96,12 +97,7 @@ def price_list_details(request, id):
                 # Mark the price list as unreviewed
                 price_list.unreview(request.user)  # unreview also saves
 
-                messages.add_message(
-                    request,
-                    messages.SUCCESS,
-                    "Your changes have been submitted. An administrator will "
-                    "review them before they are live in CALC."
-                )
+                add_change_success_message(request)
             # redirect back either way
             return redirect('data_capture:price_list_details',
                             id=price_list.pk)

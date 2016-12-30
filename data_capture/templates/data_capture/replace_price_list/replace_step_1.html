@@ -1,0 +1,23 @@
+{% extends 'data_capture/replace_price_list/replace_step.html' %}
+
+{% block card_width_class %}card--narrow{% endblock %}
+
+{% block subtitle %}Upload price list{% endblock %}
+{% block page_heading %}
+  Upload replacement awarded price list
+{% endblock %}
+{% block step_heading %}
+  <p>
+    Use this form to upload a replacement price list for <strong>{{ price_list.contract_number }}</strong>.
+  </p>
+  {% if price_list.uploaded_filename %}
+    <p>
+      The original file uploaded for this contract was named <strong>{{ price_list.uploaded_filename }}</strong>.
+    </p>
+  {% endif %}
+{% endblock step_heading %}
+
+{% block step_body %}
+  {% include 'data_capture/_upload_example.html' %}
+  {% include 'data_capture/replace_price_list/upload_form.html' %}
+{% endblock step_body %}

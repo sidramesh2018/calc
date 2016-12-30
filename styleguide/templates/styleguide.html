@@ -1,18 +1,7 @@
-{% extends "base.html" %}
-{% load staticfiles %}
+{% extends "styleguide_base.html" %}
 {% load styleguide %}
 
-{% block title %}Style Guide{% endblock %}
-
-{% block head %}
-<link rel="stylesheet" href="{% static 'frontend/built/style/data_explorer.min.css' %}">
-<link rel="stylesheet" href="{% static 'frontend/built/style/data_capture.min.css' %}">
-<link rel="stylesheet" href="{% static 'styleguide/styleguide.css' %}">
-<link rel="stylesheet" href="{% static 'styleguide/vendor/prism.css' %}">
-{% endblock %}
-
-{% block body %}
-<div class="container">
+{% block styleguide_body %}
   <h1>CALC Style Guide</h1>
 
   {% guide %}
@@ -30,7 +19,8 @@
   </p>
 
   <p>
-    CALC uses <a href="http://getskeleton.com/">Skeleton</a> as the foundation
+    CALC uses <a href="http://bourbon.io/">Bourbon</a> and
+    <a href="http://neat.bourbon.io/">Neat</a> as the foundation
     for its styles, with alterations based on the
     <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
   </p>
@@ -195,9 +185,7 @@
   {% guide_section "Buttons" %}
 
   <p>
-    Unless otherwise specified buttons take after Skeleton's default, which is
-    white with a gray border and uppercase text. The color of primary, secondary,
-    disabled and gray buttons matches the
+    The color of primary, secondary, disabled and gray buttons matches the
     <a href="https://standards.usa.gov/buttons/">primary colors</a>
     of the USWDS. Use primary buttons to indicate primary actions, default to
     indicate less important actions, and secondary to indicate actions such as
@@ -224,37 +212,22 @@
   </p>
 
   <p>
-    The widget extends to the full width of its container, with each
-    step consuming an equal amount of horizontal space.
+    Users assisted by screen readers will hear an audio description of the
+    visualization, e.g. "Step 2 of 3", followed by the name of the
+    current step.
   </p>
 
   <p>
-    Use <code>li.current</code> to identify a step as being the current
-    one.
+    Rather than writing out the raw HTML of the steps widget, we
+    recommend using {% pyobjname 'frontend.steps.StepsWidget' %}.
   </p>
 
-  <p>
-    We recommend adding <code>aria-hidden="true"</code> to the list, as
-    there isn't an easy way to communicate the information to vision-impaired
-    users without being overly verbose (thus annoying the user) or confusing.
-    However, <em>do</em> be sure to repeat the name of the current step
-    elsewhere in a header, so that the user knows what step they're currently
-    on.
-  </p>
-
-  {% example %}
-  <ol class="steps" aria-hidden="true">
-    <li>
-      <label>Upload price list</label>
-    </li>
-    <li class="current">
-      <label>Validate data</label>
-    </li>
-    <li>
-      <label>Submit data</label>
-    </li>
-  </ol>
-  {% endexample %}
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example</h3>
+      {{ steps_widget }}
+    </div>
+  </div>
 
   {% guide_section "Alerts" %}
 
@@ -731,11 +704,4 @@
   {% endif %}
 
   {% endguide %}
-</div>
-{% if not is_safe_mode_enabled %}
-<script src="{% static 'styleguide/vendor/prism.js' %}"></script>
-<script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
-<script src="{% static 'frontend/built/js/styleguide/index.min.js' %}"></script>
-{% endif %}
-{% include 'frontend/safe_mode/ui.html' %}
 {% endblock %}

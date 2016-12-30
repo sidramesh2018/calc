@@ -8,14 +8,8 @@
 {% endblock %}
 {% block step_body %}
   <p>Choose the <strong>final</strong> awarded price list you'd like to add to CALC.</p>
-  {% if upload_example %}
-    <expandable-area>
-      <p><strong>I don't know what to upload.</strong></p>
-      <div>
-        {{ upload_example }}
-      </div>
-    </expandable-area>
-  {% endif %}
+
+  {% include 'data_capture/_upload_example.html' %}
 
   {% include 'data_capture/price_list/upload_form.html' %}
 {% endblock %}

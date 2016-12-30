@@ -124,7 +124,7 @@ class Step2Form(forms.ModelForm):
         ]
 
 
-class Step3Form(forms.Form):
+class PriceListUploadForm(forms.Form):
     file = forms.FileField(widget=UploadWidget())
 
     def __init__(self, *args, **kwargs):
