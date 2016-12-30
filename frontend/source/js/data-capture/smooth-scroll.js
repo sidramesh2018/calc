@@ -110,6 +110,29 @@ export function getOrCreateVisitId(window) {
   return latestVisitId;
 }
 
+function onPageReady(window, cb) {
+  const doc = window.document;
+
+  if (doc.readyState === 'interactive' || doc.readyState === 'complete') {
+    cb();
+  } else {
+    window.addEventListener('DOMContentLoaded', cb, false);
+  }
+}
+
+function smoothlyScrollToLocationHash(window, scrollMs) {
+  onPageReady(window, () => {
+    const id = window.location.hash.slice(1);
+    const scrollTarget = window.document.getElementById(id);
+
+    if (!scrollTarget) {
+      return;
+    }
+
+    smoothScroll(window, $(scrollTarget).offset().top, scrollMs);
+  });
+}
+
 /**
  * Some modern browsers support the scroll restoration API, which lets
  * us have full control over how the web page scrolls, eliminating
@@ -121,7 +144,7 @@ export function getOrCreateVisitId(window) {
  * such as auto-scrolling to the last known scroll position when the
  * user reloads or navigates back to our page from somewhere else.
  **/
-export function activateManualScrollRestoration(window) {
+export function activateManualScrollRestoration(window, scrollMs) {
   const doc = window.document;
   const storage = window.sessionStorage;
   const scrollKey = () => `visit_${getOrCreateVisitId(window)}_scrollTop`;
@@ -129,16 +152,12 @@ export function activateManualScrollRestoration(window) {
 
   window.history.scrollRestoration = 'manual';   // eslint-disable-line no-param-reassign
 
-  if (!isNaN(scrollTop)) {
-    const doScroll = () => {
+  if (isNaN(scrollTop)) {
+    smoothlyScrollToLocationHash(window, scrollMs);
+  } else {
+    onPageReady(window, () => {
       doc.documentElement.scrollTop = doc.body.scrollTop = scrollTop;
-    };
-
-    if (doc.readyState === 'interactive' || doc.readyState === 'complete') {
-      doScroll();
-    } else {
-      window.addEventListener('DOMContentLoaded', doScroll, false);
-    }
+    });
   }
 
   window.addEventListener('beforeunload', () => {
@@ -179,7 +198,7 @@ export function activate(window, options = {}) {
 
   // https://developers.google.com/web/updates/2015/09/history-api-scroll-restoration
   if ('scrollRestoration' in window.history) {
-    activateManualScrollRestoration(window);
+    activateManualScrollRestoration(window, scrollMs);
   }
 }
 
