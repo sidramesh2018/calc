@@ -17,6 +17,7 @@ import {
   DEFAULT_SORT,
   DEFAULT_QUERY_TYPE,
   QUERY_TYPE_LABELS,
+  SORT_KEYS,
 } from './constants';
 
 import {
@@ -24,16 +25,21 @@ import {
 } from './util';
 
 const parseSort = val => {
-  if (!val) {
-    return DEFAULT_SORT;
+  if (val) {
+    let key = val;
+    let descending = false;
+
+    if (val.charAt(0) === '-') {
+      key = val.substr(1);
+      descending = true;
+    }
+
+    if (SORT_KEYS.indexOf(key) !== -1) {
+      return { key, descending };
+    }
   }
 
-  // TODO: Ensure the key is valid.
-
-  if (val.charAt(0) === '-') {
-    return { key: val.substr(1), descending: true };
-  }
-  return { key: val, descending: false };
+  return DEFAULT_SORT;
 };
 
 const coercedString = val => {

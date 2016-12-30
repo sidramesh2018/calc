@@ -99,6 +99,16 @@ export const EMPTY_RATES_DATA = {
 
 export const DEFAULT_SORT = { key: 'current_price', descending: false };
 
+export const SORT_KEYS = [
+  'labor_category',
+  'education_level',
+  'min_years_experience',
+  'current_price',
+  'idv_piid',
+  'vendor_name',
+  'schedule',
+];
+
 export const QUERY_TYPE_MATCH_ALL = 'match_all';
 
 export const QUERY_TYPE_MATCH_PHRASE = 'match_phrase';
