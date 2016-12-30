@@ -4,22 +4,22 @@ import React from 'react';
 import * as EducationColumn from '../components/results-table/education-column';
 import makeSetup from './testSetup';
 
+// We need this to avoid a validateDOMNesting warning.
 const createDataCell = (Component, props) => (
   <table><tbody><tr><Component {...props}/></tr></tbody></table>
 );
 
-describe('<EducationColumn.DataCell>', () => {
-  const key = 'education_level';
-  const defaultProps = {
-    sort: {},
-    result: { [key]: '' },
-  };
-  const setup = makeSetup(EducationColumn.DataCell, defaultProps, {
+const makeDataCellSetup = (column, defaultProps) => makeSetup(
+  column.DataCell.WrappedComponent, defaultProps, {
     createElement: createDataCell,
-  });
+  }
+);
+
+describe('<EducationColumn.DataCell>', () => {
+  const setup = makeDataCellSetup(EducationColumn, { value: '' });
 
   it('contains the value when value is non-empty', () => {
-    const { mounted } = setup({ result: { [key]: 'High School' } });
+    const { mounted } = setup({ value: 'High School' });
     expect(mounted.text()).toBe('High School');
   });
 

@@ -19,6 +19,9 @@ export const createDataCellConnector = key => Component => {
     result: React.PropTypes.object.isRequired,
   };
 
+  // Let's use the same naming convention as react-redux here.
+  wrappedComponent.WrappedComponent = Component;
+
   return wrappedComponent;
 };
 
