@@ -277,6 +277,9 @@ CSRF_COOKIE_HTTPONLY = True
 # Amazon ELBs pass on X-Forwarded-Proto.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+# Amazon also sets X-Forwarded-Host.
+USE_X_FORWARDED_HOST = True
+
 SECRET_KEY = os.environ['SECRET_KEY']
 
 ENABLE_SEO_INDEXING = 'ENABLE_SEO_INDEXING' in os.environ
