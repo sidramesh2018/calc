@@ -1,0 +1,59 @@
+# Change Log
+
+All notable changes to this project will be documented in this file,
+which uses the format described in
+[keepachangelog.com](http://keepachangelog.com/). This project adheres
+to [Semantic Versioning](http://semver.org/).
+
+## [Unreleased][unreleased]
+
+### Added
+
+- The new data capture functionality has been added, allowing COs
+  to log in (via cloud.gov) and submit their approved price lists.
+  Data administrators can then review these price lists and add
+  their data into CALC.
+
+## [1.2.0][] - 2015-07-21
+
+- filtering empty list items out of query building
+
+## [1.1.2][] - 2015-07-14
+
+- Merge pull request #224 from 18F/ethnio
+- Add ethnio screener
+
+## [1.1.1][] - 2015-07-08
+
+- hide proposed price field so that we may deploy to production
+  everything but this feature
+
+## [1.1.0][] - 2015-07-07
+
+- Merge pull request #211 from 18F/add-histogram-design
+- Updates to histogram
+
+## [1.0.1][] - 2015-06-29
+
+- Merge pull request #205 from 18F/search-bug
+- Strip non-alpha numeric or whitespace chars out of search query
+
+## 1.0.0 - 2015-06-24
+
+- adds hidden proposed price starting functionality
+- adds standard deviation callouts
+- adds icons in header
+- workflow documentation
+- bug fix for stacked histogram labels
+- removing python 2.7 support
+- script to run django migrations on cloud foundry
+- slider and drop downs to replace single drop down for years experience
+- refining header wording
+- replace drop down for education with multi select
+
+[unreleased]: https://github.com/18F/calc/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/18F/calc/compare/v1.1.2...v1.2.0
+[1.1.2]: https://github.com/18F/calc/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/18F/calc/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/18F/calc/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/18F/calc/compare/v1.0.0...v1.0.1
