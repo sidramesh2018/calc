@@ -27,7 +27,6 @@
     "gulp-sourcemaps": "1.6.0",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "jquery-tablesort": "0.0.9",
     "sinon": "1.17.5",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
