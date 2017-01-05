@@ -268,10 +268,9 @@
   {% endexample %}
 
   {% guide_section "Tables" %}
-  <p>There are two tables, sortable and non-sortable, both with rows that highlight on hover.</p>
-  <p>Static tables look like this:</p>
+  <p>When displaying data in tables, be sure to add the <code>number</code> class to cells that contain numbers. This will monospace and right-align those columns. For dollar amounts, you'll need to also add the <code>currency</code> class to get the dollar sign to appear. You can add a highlight-on-hover effect to a table's rows by including the <code>hoverable</code> class on the table.</p>
   {% example %}
-    <table>
+    <table class="hoverable">
       <thead>
         <tr>
           <th>SIN</th>
@@ -320,58 +319,6 @@
       </tbody>
     </table>
   {% endexample %}
-  <p>Sortable tables are used for displaying large quantities of data and are usually sorted by default on the price column. <strong>Make sure to include the correct classes on columns containing numbers, or they will be sorted as strings.</strong> We use <a href="https://www.npmjs.com/package/jquery-tablesort">jQuery Tablesort</a> for this. (The exception is on the CALC homepage, where sorting is built into the table with D3.) Sortable tables look like this:</p>
-  {% example %}
-    <table class="table-sortable">
-      <thead>
-        <tr>
-          <th class="sortable">SIN</th>
-          <th class="sortable">Service proposed</th>
-          <th class="no-sort">Minimum education</th>
-          <th class="sortable js-int number">Minimum years of experience</th>
-          <th class="sortable sorted js-float js-default-sort number">Price offered to GSA (including IFF)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>132-51</td>
-          <td>Project Manager</td>
-          <td>Bachelors</td>
-          <td class="number">5</td>
-          <td class="number currency">115.99</td>
-        </tr>
-        <tr>
-          <td>132-17</td>
-          <td>Software Programmer, Associate</td>
-          <td>Bachelors</td>
-          <td class="number">0</td>
-          <td class="number currency">37.59</td>
-        </tr>
-        <tr>
-          <td>132-17</td>
-          <td>Software Programmer I</td>
-          <td>Bachelors</td>
-          <td class="number">3</td>
-          <td class="number currency">41.59</td>
-        </tr>
-        <tr>
-          <td>132-17</td>
-          <td>Software Programmer II</td>
-          <td>Bachelors</td>
-          <td class="number">5</td>
-          <td class="number currency">52.03</td>
-        </tr>
-        <tr>
-          <td>132-17</td>
-          <td>Software Programmer III</td>
-          <td>Bachelors</td>
-          <td class="number">7</td>
-          <td class="number currency">65.72</td>
-        </tr>
-      </tbody>
-    </table>
-
-    {% endexample %}
 
   {% guide_section "Excel Tables" %}
 
