@@ -52,6 +52,19 @@ export class ProposedPrice extends React.Component {
     }
   }
 
+  handleGoClick(e) {
+    // Don't do anything for now; the legacy front-end caused the
+    // proposed price to be displayed on this histogram when this was
+    // clicked, but since we do that on a per-keystroke basis, there's
+    // no need to do it here. At the same time, though, we're concerned
+    // that removing the "Go" button could make things even more confusing
+    // than they already are, so for now we'll do a no-op.
+    //
+    // Note also that we *do* need to prevent the default behavior here, or
+    // else the form will be submitted.
+    e.preventDefault();
+  }
+
   render() {
     // Note that Chrome has issues with number input, so we're just
     // going to use a standard text field here. This is unfortunate for
@@ -68,7 +81,8 @@ export class ProposedPrice extends React.Component {
                className="form__inline"
                placeholder="Proposed price" value={this.state.typed}
                onChange={this.handleChange} />
-        <button className="button-primary go">Go</button>
+        <button className="button-primary go"
+                onClick={this.handleGoClick}>Go</button>
       </div>
     );
   }
