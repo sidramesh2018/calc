@@ -85,12 +85,6 @@ export function Description({
   // whenever it changed. We might want to do that too, or choose
   // a different animation.
 
-  // TODO: The original version of this didn't show the filters on
-  // the very first request (it also kept track of how many requests
-  // had been made) but I'm not sure why that was good for usability,
-  // so I've left the functionality out for now. We can bring it back
-  // if needed.
-
   return (
     <p className="">
       {`Showing ${formatCommas(shownResults)} of `}
