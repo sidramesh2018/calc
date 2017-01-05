@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { ResultsTable } from '../components/results-table';
 import * as EducationColumn from '../components/results-table/education-column';
 import * as ExperienceColumn from '../components/results-table/experience-column';
 import makeSetup from './testSetup';
@@ -14,6 +15,26 @@ const makeDataCellSetup = (column, defaultProps) => makeSetup(
     createElement: createDataCell,
   }
 );
+
+describe('<ResultsTable>', () => {
+  const setup = makeSetup(ResultsTable, {
+    sort: { key: 'current_price', descending: false },
+    setSort() {},
+    results: [],
+    contractYear: 'current',
+  }, { wrapperOnly: true });
+
+  it('filters out rows with null prices', () => {
+    const { wrapper } = setup({
+      results: [
+        { id: 1, current_price: null },
+        { id: 2, current_price: 1 },
+      ],
+    });
+
+    expect(wrapper.find('tbody tr').length).toBe(1);
+  });
+});
 
 describe('<EducationColumn.DataCell>', () => {
   const setup = makeDataCellSetup(EducationColumn);

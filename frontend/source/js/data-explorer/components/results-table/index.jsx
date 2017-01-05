@@ -27,16 +27,19 @@ const COLUMNS = [
   }),
 ];
 
-class ResultsTable extends React.Component {
-  renderBodyRows() {
-    return this.props.results.map(result => (
+const { priceForContractYear } = PriceColumn;
 
-      <tr key={result.id}>
-        {COLUMNS.map((col, i) => (
-          <col.DataCell key={i} sort={this.props.sort} result={result} />
-        ))}
-      </tr>
-    ));
+export class ResultsTable extends React.Component {
+  renderBodyRows() {
+    return this.props.results
+      .filter(r => !!priceForContractYear(this.props.contractYear, r))
+      .map(result => (
+        <tr key={result.id}>
+          {COLUMNS.map((col, i) => (
+            <col.DataCell key={i} sort={this.props.sort} result={result} />
+          ))}
+        </tr>
+      ));
   }
 
   render() {
@@ -72,6 +75,7 @@ ResultsTable.propTypes = {
   sort: React.PropTypes.object.isRequired,
   setSort: React.PropTypes.func.isRequired,
   results: React.PropTypes.array.isRequired,
+  contractYear: React.PropTypes.string.isRequired,
   idPrefix: React.PropTypes.string,
 };
 
@@ -83,6 +87,7 @@ function mapStateToProps(state) {
   return {
     sort: state.sort,
     results: state.rates.data.results,
+    contractYear: state['contract-year'],
   };
 }
 
