@@ -7,6 +7,7 @@ import {
   templatize,
   formatCommas,
   formatPrice,
+  formatFriendlyPrice,
 } from '../util';
 
 const INLINE_STYLES = `/* styles here for download graph compatibility */
@@ -200,11 +201,10 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     pp.append('line');
   }
 
-  // TODO: Format the proposed price so that if it has cents, it
-  // always shows two digits of them, e.g. '$25.10' not '$25.1'.
+  const proposedPriceStr = formatFriendlyPrice(proposedPrice);
 
-  // widen proposed price rect if more than 3 digits long
-  if (proposedPrice.toString().replace('.', '').length > 3) {
+  // widen proposed price rect if more than a few characters long
+  if (proposedPriceStr.length > 3) {
     pp.select('rect').attr('width', 150);
     pp.select('text').attr('dx', 20);
   } else {
@@ -216,7 +216,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     .attr('y1', ppOffset)
     .attr('y2', (bottom - top) + 8);
   pp.select('.value')
-    .text(`$${proposedPrice} proposed`);
+    .text(`$${proposedPriceStr} proposed`);
 
   if (proposedPrice === 0) {
     pp.style('opacity', 0);

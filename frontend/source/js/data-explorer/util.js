@@ -6,6 +6,12 @@ import { format } from 'd3-format';
 export const formatCommas = format(',');
 export const formatPrice = format(',.0f');
 export const formatPriceWithCents = format(',.02f');
+export const formatFriendlyPrice = price => {
+  if (Math.floor(price) === price) {
+    return formatPrice(price);
+  }
+  return formatPriceWithCents(price);
+};
 
 const KEY_ENTER = 13;
 const KEY_SPACE = 32;
