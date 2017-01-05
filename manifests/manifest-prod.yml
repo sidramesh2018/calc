@@ -5,11 +5,12 @@ services:
 - calc-redis
 applications:
 - name: calc-prod
-  host: calc-prod
   instances: 2
   memory: 1G
   disk_quota: 1024M
-  domain: app.cloud.gov
+  routes:
+    - route: calc.gsa.gov
+    - route: calc-prod.app.cloud.gov
   buildpack: python_buildpack
   command: bash cf.sh
   stack: cflinuxfs2
