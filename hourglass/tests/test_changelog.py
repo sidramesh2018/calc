@@ -1,7 +1,7 @@
 import os
 import datetime
 from unittest import TestCase
-from packaging.version import parse
+from semantic_version import Version
 import markdown
 from bs4 import BeautifulSoup
 
@@ -51,7 +51,7 @@ class ChangelogTests(TestCase):
         for h in version_headers:
             version, date = h.get_text().split(' - ')
             if last_version is not None:
-                self.assertLess(parse(last_version), parse(version))
+                self.assertLess(Version(last_version), Version(version))
                 self.assertLess(parsedate(last_date), parsedate(date))
                 self.assertEqual(
                     h.find('a').get('href'),
