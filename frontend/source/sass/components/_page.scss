@@ -80,6 +80,11 @@ main {
   }
 }
 
+.card .card__content:first-child h2:first-child {
+  // The first header on a card has too much space.
+  margin-top: 0;
+}
+
 /* Also a "body class." Used in conjunction with the above. */
 .card--no-header {
   .card:first-child {
