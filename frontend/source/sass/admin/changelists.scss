@@ -81,7 +81,7 @@ th.action-checkbox-column {
     }
   }
   .paginator {
-    background-color: $color-gray!important;
+    background: linear-gradient(180deg,$color-gray 1.5em,white 1.5em)!important;
     color: $color-white;
     font-weight: $font-weight-bold;
     text-align: center;
