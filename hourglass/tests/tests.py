@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.conf.urls import url
 
-from .. import healthcheck
+from .. import healthcheck, __version__
 from ..urls import urlpatterns
 from ..decorators import staff_login_required
 from ..settings_utils import (load_cups_from_vcap_services,
@@ -74,6 +74,7 @@ class HealthcheckTests(DjangoTestCase):
         res = self.client.get('/healthcheck/')
         self.assertEqual(res.status_code, 200)
         self.assertJSONEqual(str(res.content, encoding='utf8'), {
+            'version': __version__,
             'is_database_synchronized': True,
             'rq_jobs': 0
         })
@@ -84,6 +85,7 @@ class HealthcheckTests(DjangoTestCase):
         res = self.client.get('/healthcheck/')
         self.assertEqual(res.status_code, 500)
         self.assertJSONEqual(str(res.content, encoding='utf8'), {
+            'version': __version__,
             'is_database_synchronized': False,
             'rq_jobs': 0
         })

@@ -1,5 +1,4 @@
 from django.core import mail
-from django.conf import settings
 from django.test import override_settings
 from django.contrib.auth.models import User
 
@@ -9,7 +8,8 @@ from .common import create_bulk_upload_contract_source, FAKE_SCHEDULE
 from .test_models import ModelTestCase
 
 
-@override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
+@override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE],
+                   DEFAULT_FROM_EMAIL='hi@hi.com')
 class EmailTests(ModelTestCase):
     '''Tests for email sending functions'''
 
@@ -22,7 +22,7 @@ class EmailTests(ModelTestCase):
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
         self.assertEqual(message.subject, 'CALC Price List Approved')
-        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(message.from_email, 'hi@hi.com')
         self.assertEqual(result.context['price_list'], price_list)
 
     def test_price_list_approved_raises_if_not_approved(self):
@@ -39,7 +39,7 @@ class EmailTests(ModelTestCase):
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
         self.assertEqual(message.subject, 'CALC Price List Retired')
-        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(message.from_email, 'hi@hi.com')
         self.assertEqual(result.context['price_list'], price_list)
 
     def test_price_list_retired_raises_if_approved(self):
@@ -56,7 +56,7 @@ class EmailTests(ModelTestCase):
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
         self.assertEqual(message.subject, 'CALC Price List Rejected')
-        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(message.from_email, 'hi@hi.com')
         self.assertEqual(result.context['price_list'], price_list)
 
     def test_price_list_rejected_raises_if_wrong_status(self):
@@ -74,7 +74,7 @@ class EmailTests(ModelTestCase):
         self.assertEqual(
             message.subject,
             'CALC Region 10 bulk data results - upload #{}'.format(src.pk))
-        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(message.from_email, 'hi@hi.com')
         self.assertEqual(result.context['num_contracts'], 5)
         self.assertEqual(result.context['num_bad_rows'], 2)
 
@@ -87,7 +87,7 @@ class EmailTests(ModelTestCase):
         self.assertEqual(
             message.subject,
             'CALC Region 10 bulk data results - upload #{}'.format(src.pk))
-        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(message.from_email, 'hi@hi.com')
         self.assertEqual(result.context['traceback'], 'traceback_contents')
 
     def test_approval_reminder(self):
@@ -104,5 +104,5 @@ class EmailTests(ModelTestCase):
             message.subject,
             'CALC Reminder - {} price lists not reviewed'.format(count)
         )
-        self.assertEqual(message.from_email, settings.SYSTEM_EMAIL_ADDRESS)
+        self.assertEqual(message.from_email, 'hi@hi.com')
         self.assertEqual(result.context['count_unreviewed'], count)
