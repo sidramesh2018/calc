@@ -72,11 +72,20 @@ th.action-checkbox-column {
   }
 }
 
-#changelist-form .actions {
-  max-width: 550px;
-  button {
-    margin: 3.5rem 0 1rem;
-    float: right;
+#changelist-form {
+  .actions {
+    max-width: 550px;
+    button {
+      margin: 3.5rem 0 1rem;
+      float: right;
+    }
+  }
+  .paginator {
+    background: linear-gradient(180deg,$color-gray 1.5em,white 1.5em)!important;
+    color: $color-white;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    max-width: none;
   }
 }
 .action-counter {
@@ -89,4 +98,3 @@ th.action-checkbox-column {
     display: none;
   }
 }
-
