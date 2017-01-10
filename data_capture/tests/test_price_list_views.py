@@ -135,13 +135,13 @@ class DetailsViewTests(ProtectedViewTestCase):
         self.assertEqual(pl.contract_end, datetime.date(1989, 4, 14))
         self.assertEqual(pl.escalation_rate, 0)
 
-    @mock.patch.object(SubmittedPriceList, 'retire')
-    def test_valid_post_calls_retire(self, mock):
+    @mock.patch.object(SubmittedPriceList, 'unreview')
+    def test_valid_post_calls_unreview(self, mock):
         self.login()
         res = self.client.post(self.url, self.valid_post_data, follow=True)
         self.assertRedirects(res, self.url)
         self.assertEqual(res.status_code, 200)
-        mock.assert_called_once()
+        self.assertEqual(mock.call_count, 1)
 
     def test_invalid_post_shows_errors(self):
         self.login()
