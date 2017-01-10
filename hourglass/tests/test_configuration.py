@@ -37,7 +37,7 @@ class PythonVersionTests(TestCase):
     Ensure all our configuration files specify the same Python version.
     '''
 
-    version = Version('3.4.5')
+    version = Version('3.5.2')
 
     def test_runtime_txt(self):
         with open(path('runtime.txt')) as f:
