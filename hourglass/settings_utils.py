@@ -3,8 +3,11 @@ import sys
 import json
 from typing import List, Optional
 
+Environ = os._Environ
 
-def load_cups_from_vcap_services(name='calc-env', env=os.environ) -> None:
+
+def load_cups_from_vcap_services(name: str='calc-env',
+                                 env: Environ=os.environ) -> None:
     '''
     Detects if VCAP_SERVICES exists in the environment; if so, parses
     it and imports all the credentials from the given custom
@@ -26,7 +29,7 @@ def load_cups_from_vcap_services(name='calc-env', env=os.environ) -> None:
                 env[key] = value
 
 
-def get_whitelisted_ips(env=os.environ) -> Optional[List[str]]:
+def get_whitelisted_ips(env: Environ=os.environ) -> Optional[List[str]]:
     '''
     Detects if WHITELISTED_IPS is in the environment; if not,
     returns None. if so, parses WHITELISTED_IPS as a comma-separated
@@ -38,7 +41,8 @@ def get_whitelisted_ips(env=os.environ) -> Optional[List[str]]:
     return [s.strip() for s in env['WHITELISTED_IPS'].split(',')]
 
 
-def load_redis_url_from_vcap_services(name: str, env=os.environ) -> None:
+def load_redis_url_from_vcap_services(name: str,
+                                      env: Environ=os.environ) -> None:
     '''
     Detects if a redis28 service instance with the given name
     is present in VCAP_SERVICES.
@@ -63,7 +67,7 @@ def load_redis_url_from_vcap_services(name: str, env=os.environ) -> None:
             return
 
 
-def is_running_tests(argv=sys.argv) -> bool:
+def is_running_tests(argv: List[str]=sys.argv) -> bool:
     '''
     Returns whether or not we're running tests.
     '''

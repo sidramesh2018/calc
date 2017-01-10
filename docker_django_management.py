@@ -69,6 +69,9 @@ import time
 import signal
 import subprocess
 
+if False:
+    # This is just needed so mypy will work; it's never executed.
+    from typing import Iterator, Any  # NOQA
 
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
 HOST_UID = os.stat(MY_DIR).st_uid
@@ -107,14 +110,14 @@ def setup_docker_sigterm_handler():  # type: () -> None
     shuts them down, which provides a quick graceful exit from Docker.
     '''
 
-    def get_children():
+    def get_children():  # type: () -> Iterator[int]
         output = subprocess.check_output(
             "ps --ppid=%d -o pid | awk 'NR>1' | xargs echo" % os.getpid(),
             shell=True
         )
         return map(int, output.split())
 
-    def handler(signum, frame):
+    def handler(signum, frame):  # type: (int, Any) -> None
         for child_pid in get_children():
             try:
                 os.kill(child_pid, signal.SIGTERM)
