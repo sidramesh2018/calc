@@ -37,7 +37,7 @@ def get_whitelisted_ips(env=os.environ):
     return [s.strip() for s in env['WHITELISTED_IPS'].split(',')]
 
 
-def load_redis_url_from_vcap_services(name, env=os.environ):
+def load_redis_url_from_vcap_services(name: str, env=os.environ):
     '''
     Detects if a redis28 service instance with the given name
     is present in VCAP_SERVICES.
