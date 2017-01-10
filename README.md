@@ -190,6 +190,14 @@ All the project's dependencies, such as those mentioned in `requirements.txt`,
 are contained in Docker container images.  Whenever these dependencies change,
 you'll want to re-run `docker-compose build` to rebuild the containers.
 
+### Reading email
+
+In the development Docker configuration, we use a container with
+[MailCatcher][] to make it easy to read the emails sent by the app. You
+can view it at port 1080 of your Docker host.
+
+[MailCatcher]: https://mailcatcher.me/
+
 ### Deploying to cloud environments
 
 The Docker setup can also be used to deploy to cloud environments.
