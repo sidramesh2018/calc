@@ -83,9 +83,8 @@ def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
         'num_bad_rows': num_bad_rows,
     }
     result = send_mail(
-        subject='CALC Region 10 bulk data results - upload #%d' % (
-            upload_source.id,
-        ),
+        subject='CALC Region 10 bulk data results - upload #{}'.format(
+            upload_source.id),
         message=render_to_string(
             'data_capture/email/bulk_upload_succeeded.txt',
             ctx
@@ -105,8 +104,8 @@ def bulk_upload_failed(upload_source, traceback):
         'traceback': traceback,
     }
     result = send_mail(
-        subject='CALC Region 10 bulk data results - upload #%d' % (
-            upload_source.id,
+        subject='CALC Region 10 bulk data results - upload #{}'.format(
+            upload_source.id
         ),
         message=render_to_string(
             'data_capture/email/bulk_upload_failed.txt',

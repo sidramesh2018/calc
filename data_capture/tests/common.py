@@ -26,18 +26,20 @@ XLSX_CONTENT_TYPE = ('application/vnd.openxmlformats-'
                      'officedocument.spreadsheetml.sheet')
 
 
-def create_bulk_upload_contract_source(user):
+def create_bulk_upload_contract_source(user, **kwargs):
     if isinstance(user, str):
         user = User.objects.create_user('testuser', email=user)
+
     with open(R10_XLSX_PATH, 'rb') as f:
-        src = BulkUploadContractSource.objects.create(
+        final_kwargs = dict(
             submitter=user,
             has_been_loaded=False,
             original_file=f.read(),
             file_mime_type=XLSX_CONTENT_TYPE,
             procurement_center=BulkUploadContractSource.REGION_10,
         )
-    return src
+        final_kwargs.update(kwargs)
+        return BulkUploadContractSource(**final_kwargs)
 
 
 def uploaded_csv_file(content=None):

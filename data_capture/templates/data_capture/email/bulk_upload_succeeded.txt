@@ -1,7 +1,8 @@
 {% load humanize %}
+{% load data_capture %}
 
 This message is in regards to Region 10 CALC data upload #{{ upload_source.id }},
-uploaded by {{ upload_source.submitter.email }} on {{ upload_source.created_at }}.
+uploaded by {{ upload_source.submitter.email }} on {{ upload_source.created_at|tz_timestamp }}.
 
 The upload was successful!
 
