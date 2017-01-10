@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% load data_capture %}
 
 {% block title %}User Account{% endblock %}
 {% block body %}
@@ -35,7 +36,7 @@
               {% for pl in recently_approved_price_lists %}
                 <li>
                   <a href="{% url 'data_capture:price_list_details' id=pl.pk %}">{{ pl.contract_number }} &mdash; {{ pl.vendor_name }}</a>
-                  <p class="meta-info">Approved on {{ pl.status_changed_at }} by {{ pl.status_changed_by.email }}</p>
+                  <p class="meta-info">Approved on {{ pl.status_changed_at|tz_timestamp }} by {{ pl.status_changed_by.email }}</p>
                 </li>
               {% endfor %}
             </ul>
@@ -53,7 +54,7 @@
               {% for pl in recently_submitted_price_lists %}
                 <li>
                   <a href="{% url 'data_capture:price_list_details' id=pl.pk %}">{{ pl.contract_number }} &mdash; {{ pl.vendor_name }}</a>
-                  <p class="meta-info">Submitted on {{ pl.status_changed_at }}</p>
+                  <p class="meta-info">Submitted on {{ pl.status_changed_at|tz_timestamp }}</p>
                 </li>
               {% endfor %}
             </ul>

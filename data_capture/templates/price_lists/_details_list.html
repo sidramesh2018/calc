@@ -1,3 +1,4 @@
+{% load data_capture %}
 <dl class="contract-details">
   <dt>Vendor</dt>
   <dd>{{ price_list.vendor_name }}</dd>
@@ -29,7 +30,7 @@
   {% endif %}
 
   <dt>Created at</dt>
-  <dd>{{ price_list.created_at }}</dd>
+  <dd>{{ price_list.created_at|tz_timestamp }}</dd>
 
   <dt>Status</dt>
   <dd>{{ price_list.get_status_display }}</dd>
@@ -38,5 +39,5 @@
   <dd>{{ price_list.status_changed_by.email }}</dd>
 
   <dt>Status changed at</dt>
-  <dd>{{ price_list.status_changed_at }}</dd>
+  <dd>{{ price_list.status_changed_at|tz_timestamp }}</dd>
 </dl>
