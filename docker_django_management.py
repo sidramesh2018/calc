@@ -78,7 +78,7 @@ CONTAINER_NAME = os.environ.get('DDM_CONTAINER_NAME')
 IS_RUNNING_IN_DOCKER = 'DDM_IS_RUNNING_IN_DOCKER' in os.environ
 
 
-def info(msg):
+def info(msg):  # type: (str) -> None
     '''
     Prints a message.
     '''
@@ -87,7 +87,7 @@ def info(msg):
     sys.stderr.flush()
 
 
-def warn(msg):
+def warn(msg):  # type: (str) -> None
     '''
     Prints a warning message in red.
     '''
@@ -99,7 +99,7 @@ def warn(msg):
     )
 
 
-def setup_docker_sigterm_handler():
+def setup_docker_sigterm_handler():  # type: () -> None
     '''
     'manage.py runserver' is not set up to deal with a SIGTERM signal,
     and instead expects a Ctrl-C to come to its child process. So we'll
@@ -128,6 +128,7 @@ def setup_docker_sigterm_handler():
 
 
 def wait_for_db(max_attempts=15, seconds_between_attempts=1):
+    # type: (int, int) -> None
     '''
     Some manage.py commands interact with the database, and we want
     them to be directly callable from `docker-compose run`. However,
@@ -160,7 +161,7 @@ def wait_for_db(max_attempts=15, seconds_between_attempts=1):
     info("Connection to database established.")
 
 
-def execute_from_command_line(argv):
+def execute_from_command_line(argv):  # type: (List[str]) -> None
     '''
     This is like django.core.management.execute_from_command_line,
     but if the django package is unavailable, the script executes itself
@@ -208,7 +209,7 @@ def execute_from_command_line(argv):
     execute_from_command_line(argv)
 
 
-def does_username_exist(username):
+def does_username_exist(username):  # type: (str) -> bool
     '''
     Returns True if the given OS username exists, False otherwise.
     '''
@@ -220,7 +221,7 @@ def does_username_exist(username):
         return False
 
 
-def does_uid_exist(uid):
+def does_uid_exist(uid):  # type: (int) -> bool
     '''
     Returns True if the given OS user id exists, False otherwise.
     '''
@@ -232,7 +233,7 @@ def does_uid_exist(uid):
         return False
 
 
-def entrypoint(argv):
+def entrypoint(argv):  # type: (List[str]) -> None
     '''
     This is a Docker entrypoint that configures the container to run
     as the same uid of the user on the host container, rather than
