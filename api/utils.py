@@ -1,7 +1,7 @@
 from typing import List, SupportsFloat
 
 
-def get_histogram(values: List[SupportsFloat], num_bins: int=10):
+def get_histogram(values: List[SupportsFloat], num_bins: int=10) -> List[dict]:
     """
     Get a histogram of a list of numeric values.
     Returns array of "bin" dicts with keys `count`, `max`, and `min`.
