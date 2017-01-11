@@ -206,9 +206,13 @@ To do this, you'll first need to
 [configure Docker Machine for the cloud][docker-machine-cloud],
 which involves provisioning a host on a cloud provider and setting up
 your local environment to make Docker's command-line tools use that
-host.
+host. For example, to do this on Amazon EC2, you might use:
 
-Firstly, unlike local development, cloud deploys don't support an
+```
+docker-machine create aws16 --driver=amazonec2 --amazonec2-instance-type=t2.large
+```
+
+Also, unlike local development, cloud deploys don't support an
 `.env` file. So you'll want to create a custom
 `docker-compose.override.yml` file that defines the app's
 environment variables:
