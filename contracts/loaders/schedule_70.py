@@ -17,18 +17,19 @@ class Schedule70Loader(object):
     schedule_name = 'IT Schedule 70'
     header_rows = 1
 
-    def load(self, filename, replace=True, strict=False):
+    def load(self, filename, replace=True, strict=False, upload_source=None):
         logger.info('begin load_s70 task')
 
         logger.info('reading data')
-        contracts = list(self.parse_file(filename, strict=strict))
+        contracts = list(self.parse_file(filename, strict=strict,
+                                         upload_source=upload_source))
 
         logger.info('inserting data')
         self.insert(contracts, replace=replace)
 
         logger.info('end load_s70 task')
 
-    def parse_file(self, filename, strict=False):
+    def parse_file(self, filename, strict=False, upload_source=None):
         with open(filename, 'rU') as f:
             reader = csv.reader(f)
 
@@ -38,7 +39,7 @@ class Schedule70Loader(object):
             count = skipped = 0
             for row in reader:
                 try:
-                    yield self.make_contract(row)
+                    yield self.make_contract(row, upload_source=upload_source)
                     count += 1
                 except (ValueError, ValidationError) as e:
                     if strict:
@@ -51,7 +52,7 @@ class Schedule70Loader(object):
             logger.info('rows skipped: {}'.format(skipped))
 
     @classmethod
-    def make_contract(cls, row):
+    def make_contract(cls, row, upload_source=None):
         schedule = row[9]
         if schedule != cls.schedule_name:
             raise ValueError('skipping schedule: {}'.format(schedule))
@@ -85,6 +86,9 @@ class Schedule70Loader(object):
             business_size=row[8],
             sin=row[0]
         )
+
+        if upload_source is not None:
+            contract.upload_source = upload_source
 
         contract.full_clean(exclude=['piid'])
 

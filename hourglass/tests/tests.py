@@ -1,5 +1,7 @@
+import os
 import unittest
 import json
+from unittest import SkipTest
 from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
@@ -7,7 +9,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.conf.urls import url
 
-from .. import healthcheck
+from .. import healthcheck, __version__
 from ..urls import urlpatterns
 from ..decorators import staff_login_required
 from ..settings_utils import (load_cups_from_vcap_services,
@@ -72,6 +74,7 @@ class HealthcheckTests(DjangoTestCase):
         res = self.client.get('/healthcheck/')
         self.assertEqual(res.status_code, 200)
         self.assertJSONEqual(str(res.content, encoding='utf8'), {
+            'version': __version__,
             'is_database_synchronized': True,
             'rq_jobs': 0
         })
@@ -82,6 +85,7 @@ class HealthcheckTests(DjangoTestCase):
         res = self.client.get('/healthcheck/')
         self.assertEqual(res.status_code, 500)
         self.assertJSONEqual(str(res.content, encoding='utf8'), {
+            'version': __version__,
             'is_database_synchronized': False,
             'rq_jobs': 0
         })
@@ -162,7 +166,7 @@ class RedisUrlTests(unittest.TestCase):
 
     def test_noop_when_name_not_in_vcap(self):
         env = make_vcap_services_env({
-            'redis28-swarm': [{
+            'redis28': [{
                 'name': 'a-different-name',
                 'credentials': {
                     'hostname': 'the_host',
@@ -176,7 +180,7 @@ class RedisUrlTests(unittest.TestCase):
 
     def test_redis_url_is_loaded(self):
         env = make_vcap_services_env({
-            'redis28-swarm': [{
+            'redis28': [{
                 'name': 'redis-service',
                 'credentials': {
                     'hostname': 'the_host',
@@ -306,9 +310,19 @@ class ContextProcessorTests(DjangoTestCase):
     def test_ga_tracking_id_is_included(self):
         res = self.client.get('/')
         self.assertIn('GA_TRACKING_ID', res.context)
-        self.assertEquals(res.context['GA_TRACKING_ID'], 'boop')
+        self.assertEqual(res.context['GA_TRACKING_ID'], 'boop')
 
     def test_ga_tracking_id_defaults_to_empty_string(self):
+        if 'GA_TRACKING_ID' in os.environ:
+            # Oof, GA_TRACKING_ID is defined in our outside environment,
+            # so we can't actually test this.
+            raise SkipTest()
         res = self.client.get('/')
         self.assertIn('GA_TRACKING_ID', res.context)
-        self.assertEquals(res.context['GA_TRACKING_ID'], '')
+        self.assertEqual(res.context['GA_TRACKING_ID'], '')
+
+    @override_settings(ETHNIO_SCREENER_ID='hoopla')
+    def test_ethnio_screener_id_is_included(self):
+        res = self.client.get('/')
+        self.assertIn('ETHNIO_SCREENER_ID', res.context)
+        self.assertEquals(res.context['ETHNIO_SCREENER_ID'], 'hoopla')

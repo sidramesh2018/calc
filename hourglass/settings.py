@@ -44,7 +44,8 @@ if DEBUG:
         # explicitly defined either.
         os.environ.setdefault('REDIS_TEST_URL', 'redis://localhost:6379/1')
     os.environ.setdefault('REDIS_URL', 'redis://localhost:6379/0')
-    os.environ.setdefault('SYSTEM_EMAIL_ADDRESS', 'dev@localhost')
+    os.environ.setdefault('DEFAULT_FROM_EMAIL', 'noreply@localhost')
+    os.environ.setdefault('SERVER_EMAIL', 'system@localhost')
 
 if 'EMAIL_URL' not in os.environ:
     raise Exception('Please define the EMAIL_URL environment variable!')
@@ -56,11 +57,14 @@ email_config = dj_email_url.config()
 # https://github.com/migonzalvar/dj-email-url
 vars().update(email_config)
 
-SYSTEM_EMAIL_ADDRESS = os.environ['SYSTEM_EMAIL_ADDRESS']
+DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+SERVER_EMAIL = os.environ['SERVER_EMAIL']
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 
 GA_TRACKING_ID = os.environ.get('GA_TRACKING_ID', '')
+
+ETHNIO_SCREENER_ID = os.environ.get('ETHNIO_SCREENER_ID')
 
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,6 +77,7 @@ TEMPLATES = [{
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
             'hourglass.context_processors.google_analytics_tracking_id',
+            'hourglass.context_processors.ethnio_screener_id',
             'frontend.context_processors.is_safe_mode_enabled',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",
@@ -127,9 +132,17 @@ INSTALLED_APPS = (
     'frontend',
 )
 
+if DEBUG:
+    STATICFILES_STORAGE = 'frontend.crotchety.CrotchetyStaticFilesStorage'
+    WHITENOISE_MIDDLEWARE = 'frontend.crotchety.CrotchetyWhiteNoiseMiddleware'
+else:
+    STATICFILES_STORAGE = ('whitenoise.storage.'
+                           'CompressedManifestStaticFilesStorage')
+    WHITENOISE_MIDDLEWARE = 'whitenoise.middleware.WhiteNoiseMiddleware'
+
 MIDDLEWARE_CLASSES = (
     'hourglass.middleware.ComplianceMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    WHITENOISE_MIDDLEWARE,
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -177,10 +190,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     # os.path.join(BASE_DIR, 'static'),
 )
-
-if not DEBUG:
-    STATICFILES_STORAGE = ('whitenoise.storage.'
-                           'CompressedManifestStaticFilesStorage')
 
 RQ_QUEUES = {
     'default': {
@@ -270,6 +279,9 @@ CSRF_COOKIE_HTTPONLY = True
 # Amazon ELBs pass on X-Forwarded-Proto.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+# Amazon also sets X-Forwarded-Host.
+USE_X_FORWARDED_HOST = True
+
 SECRET_KEY = os.environ['SECRET_KEY']
 
 ENABLE_SEO_INDEXING = 'ENABLE_SEO_INDEXING' in os.environ
@@ -285,9 +297,9 @@ if DEBUG and not HIDE_DEBUG_UI:
         'data_capture.schedules.fake_schedule.FakeSchedulePriceList',
     )
 
-UAA_AUTH_URL = 'https://login.cloud.gov/oauth/authorize'
+UAA_AUTH_URL = 'https://login.fr.cloud.gov/oauth/authorize'
 
-UAA_TOKEN_URL = 'https://uaa.cloud.gov/oauth/token'
+UAA_TOKEN_URL = 'https://uaa.fr.cloud.gov/oauth/token'
 
 UAA_CLIENT_ID = os.environ.get('UAA_CLIENT_ID', 'calc-dev')
 

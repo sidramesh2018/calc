@@ -17,6 +17,13 @@ class UploadTestsForm(forms.Form):
 
 class AjaxformTestsForm(forms.Form):
     foo = forms.CharField()
+    a_radio = forms.ChoiceField(choices=((1, "one"), (2, "two")),
+                                widget=forms.RadioSelect)
+    some_checkboxes = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=(('a', 'Option A'), ('b', 'Option B'), ('c', 'Option C')))
+
     file = forms.FileField(widget=UploadWidget(
         accept=''
     ))

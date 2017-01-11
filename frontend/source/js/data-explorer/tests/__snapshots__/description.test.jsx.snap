@@ -1,0 +1,39 @@
+exports[`<Description> matches snapshot 1`] = `
+<p
+  className="">
+  Showing 101 of 
+  <span
+    className="total">
+    5,000
+  </span>
+   results with 
+  <span
+    className="filters">
+    <DescriptionFilter>
+      Systems Analyst
+    </DescriptionFilter>
+    <DescriptionFilter
+      extraClassName="education-filter"
+      label="education level" />
+    <DescriptionFilter
+      label="experience">
+      5
+       - 
+      10
+       years
+    </DescriptionFilter>
+    <DescriptionFilter
+      label="worksite">
+      both
+    </DescriptionFilter>
+    <DescriptionFilter
+      label="business size">
+      small business
+    </DescriptionFilter>
+    <DescriptionFilter
+      label="schedule">
+      132 - IT 70
+    </DescriptionFilter>
+  </span>
+</p>
+`;

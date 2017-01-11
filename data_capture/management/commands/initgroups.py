@@ -18,9 +18,9 @@ ROLES['Data Administrators'] = set([
     BULK_UPLOAD_PERMISSION,
     'data_capture.change_submittedpricelist',
     'data_capture.change_submittedpricelistrow',
-    'data_capture.change_newpricelist',
+    'data_capture.change_unreviewedpricelist',
     'data_capture.change_approvedpricelist',
-    'data_capture.change_unapprovedpricelist',
+    'data_capture.change_retiredpricelist',
     'data_capture.change_rejectedpricelist',
 ])
 

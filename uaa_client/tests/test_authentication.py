@@ -28,8 +28,9 @@ class AuthenticationTests(TestCase):
         def mock_404_response(url, request):
             return httmock.response(404, "nope")
 
+        req = mock.MagicMock()
         with httmock.HTTMock(mock_404_response):
-            self.assertEqual(auth.exchange_code_for_access_token(None, 'u'),
+            self.assertEqual(auth.exchange_code_for_access_token(req, 'u'),
                              None)
         m.assert_called_with('POST https://example.org/token returned 404 '
                              'w/ content b\'nope\'')
@@ -43,7 +44,8 @@ class AuthenticationTests(TestCase):
                 'client_id': 'clientid',
                 'client_secret': 'clientsecret',
                 'grant_type': 'authorization_code',
-                'response_type': 'token'
+                'redirect_uri': 'https://redirect_uri',
+                'response_type': 'token',
             })
             return httmock.response(200, {
                 'access_token': 'lol',
@@ -53,6 +55,7 @@ class AuthenticationTests(TestCase):
             })
 
         req = mock.MagicMock()
+        req.build_absolute_uri.return_value = 'https://redirect_uri'
 
         with httmock.HTTMock(mock_200_response):
             self.assertEqual(auth.exchange_code_for_access_token(req, 'foo'),
@@ -63,6 +66,12 @@ class AuthenticationTests(TestCase):
     def test_get_user_by_email_returns_existing_user(self):
         user = User.objects.create_user('foo', 'foo@example.org')
         self.assertEqual(auth.get_user_by_email('foo@example.org'), user)
+
+    def test_get_user_by_email_is_case_insensitive(self):
+        user = User.objects.create_user('foo', 'FOO@example.org')
+        self.assertEqual(auth.get_user_by_email('foo@example.org'), user)
+        user = User.objects.create_user('bar', 'bar@example.org')
+        self.assertEqual(auth.get_user_by_email('BAR@example.org'), user)
 
     def test_get_user_by_email_returns_none_when_user_does_not_exist(self):
         self.assertEqual(auth.get_user_by_email('foo@example.org'), None)

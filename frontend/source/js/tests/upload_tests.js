@@ -11,7 +11,7 @@ import { UploadWidget } from '../data-capture/upload';
   let upload;
   let input;
 
-  function makeWidget(isDegraded, cb) {
+  function makeWidget(isDegraded, cb, options = {}) {
     const div = document.createElement('div');
 
     $parentDiv = $(div);
@@ -30,6 +30,11 @@ import { UploadWidget } from '../data-capture/upload';
     // could synchronously upgrade the elements.
     div.innerHTML = UPLOAD_HTML;
 
+    if (options.fakeInitialFilename) {
+      $('upload-widget', div).attr('data-fake-initial-filename',
+                                   options.fakeInitialFilename);
+    }
+
     // This will cause the attached/connected callbacks (depending on
     // version of custom elements spec) to be triggered.
     document.body.appendChild(div);
@@ -46,7 +51,7 @@ import { UploadWidget } from '../data-capture/upload';
     });
   }
 
-  function advancedTest(name, cb) {
+  function advancedTest(name, cb, options = {}) {
     if (!UploadWidget.HAS_BROWSER_SUPPORT) {
       return QUnit.skip(name, cb);
     }
@@ -56,7 +61,7 @@ import { UploadWidget } from '../data-capture/upload';
       makeWidget(false, () => {
         cb(assert);
         done();
-      });
+      }, options);
     });
   }
 
@@ -137,6 +142,16 @@ import { UploadWidget } from '../data-capture/upload';
 
   advancedTest('advanced upload sets aria-live', (assert) => {
     assert.equal(upload.attr('aria-live'), 'polite');
+  });
+
+  advancedTest('advanced upload sets fake filename if provided', (assert) => {
+    assert.equal(upload.find('.upload-filename').text(), 'boop.csv');
+  }, {
+    fakeInitialFilename: 'boop.csv',
+  });
+
+  advancedTest('advanced upload does not set filename by default', (assert) => {
+    assert.equal(upload.find('.upload-filename').text(), '');
   });
 
   advancedTest('advanced upload does not allow non-accepted file types', (assert) => {

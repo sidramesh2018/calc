@@ -13,6 +13,7 @@ from django.contrib.auth.forms import UserChangeForm
 from . import email
 from .schedules import registry
 from .models import SubmittedPriceList, SubmittedPriceListRow
+from .templatetags.data_capture import tz_timestamp
 
 
 class UniqueEmailFormMixin:
@@ -24,7 +25,7 @@ class UniqueEmailFormMixin:
     '''
 
     def clean_email(self):
-        qs = User.objects.filter(email=self.cleaned_data['email'])
+        qs = User.objects.filter(email__iexact=self.cleaned_data['email'])
         if self.instance:
             qs = qs.exclude(pk=self.instance.pk)
         if qs.count():
@@ -169,9 +170,9 @@ class SubmittedPriceListRowInline(admin.TabularInline):
 
 @transaction.atomic
 def approve(modeladmin, request, queryset):
-    unapproved = queryset.exclude(status=SubmittedPriceList.STATUS_APPROVED)
-    count = unapproved.count()
-    for price_list in unapproved:
+    not_approved = queryset.exclude(status=SubmittedPriceList.STATUS_APPROVED)
+    count = not_approved.count()
+    for price_list in not_approved:
         price_list.approve(request.user)
         email.price_list_approved(price_list)
 
@@ -190,31 +191,31 @@ approve.short_description = (
 
 
 @transaction.atomic
-def unapprove(modeladmin, request, queryset):
+def retire(modeladmin, request, queryset):
     approved = queryset.filter(status=SubmittedPriceList.STATUS_APPROVED)
     count = approved.count()
     for price_list in approved:
-        price_list.unapprove(request.user)
-        email.price_list_unapproved(price_list)
+        price_list.retire(request.user)
+        email.price_list_retired(price_list)
     messages.add_message(
         request,
         messages.INFO,
-        '{} price list(s) have been unapproved and removed from CALC.'.format(
+        '{} price list(s) have been retired and removed from CALC.'.format(
             count
         )
     )
 
 
-unapprove.short_description = (
-    'Unapprove selected price lists (remove their data from CALC)'
+retire.short_description = (
+    'Retire selected price lists (remove their data from CALC)'
 )
 
 
 @transaction.atomic
 def reject(modeladmin, request, queryset):
-    new_pricelists = queryset.filter(status=SubmittedPriceList.STATUS_NEW)
-    count = new_pricelists.count()
-    for price_list in new_pricelists:
+    unreviewed = queryset.filter(status=SubmittedPriceList.STATUS_UNREVIEWED)
+    count = unreviewed.count()
+    for price_list in unreviewed:
         price_list.reject(request.user)
         email.price_list_rejected(price_list)
     messages.add_message(
@@ -248,8 +249,8 @@ class UndeletableModelAdmin(admin.ModelAdmin):
 
 class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
-                    'created_at', 'status_changed_by_email',
-                    'status_changed_at')
+                    'tz_created_at', 'status_changed_by_email',
+                    'tz_status_changed_at')
 
     fields = (
         'contract_number',
@@ -260,20 +261,20 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
         'contract_start',
         'contract_end',
         'submitter',
-        'created_at',
-        'updated_at',
+        'tz_created_at',
+        'tz_updated_at',
         'current_status',
-        'status_changed_at',
+        'tz_status_changed_at',
         'status_changed_by_email',
     )
 
     readonly_fields = (
         'schedule_title',
-        'created_at',
-        'updated_at',
+        'tz_created_at',
+        'tz_updated_at',
         'current_status',
         'submitter',
-        'status_changed_at',
+        'tz_status_changed_at',
         'status_changed_by_email',
     )
 
@@ -294,11 +295,11 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
         if instance.status is SubmittedPriceList.STATUS_APPROVED:
             content += ("<span style=\"color: green\">"
                         "This price list has been approved, so its data is "
-                        "now in CALC. To unapprove it, you will need to use "
-                        "the 'Unapprove selected price lists' action from the "
+                        "now in CALC. To retire it, you will need to use "
+                        "the 'Retire selected price lists' action from the "
                         "<a href=\"..\">list view</a>. Note also that in "
                         "order to edit the fields in this price list, you "
-                        "will first need to unapprove it.")
+                        "will first need to retire it.")
         else:
             content += ("<span style=\"color: red\">"
                         "This price list is not currently approved, so its "
@@ -307,6 +308,21 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
                         "the <a href=\"..\">list view</a>.")
 
         return mark_safe(content)
+
+    def tz_created_at(self, instance):
+        return tz_timestamp(instance.created_at)
+
+    tz_created_at.short_description = 'Created at'
+
+    def tz_updated_at(self, instance):
+        return tz_timestamp(instance.updated_at)
+
+    tz_updated_at.short_description = 'Updated at'
+
+    def tz_status_changed_at(self, instance):
+        return tz_timestamp(instance.status_changed_at)
+
+    tz_status_changed_at.short_description = 'Status changed at'
 
     def schedule_title(self, instance):
         return registry.get_class(instance.schedule).title
@@ -329,25 +345,25 @@ class ApprovedPriceList(SubmittedPriceList):
 
 @admin.register(ApprovedPriceList)
 class ApprovedPriceListAdmin(BaseSubmittedPriceListAdmin):
-    actions = [unapprove]
+    actions = [retire]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(status=SubmittedPriceList.STATUS_APPROVED)
 
 
-class NewPriceList(SubmittedPriceList):
+class UnreviewedPriceList(SubmittedPriceList):
     class Meta:
         proxy = True
 
 
-@admin.register(NewPriceList)
-class NewPriceListAdmin(BaseSubmittedPriceListAdmin):
+@admin.register(UnreviewedPriceList)
+class UnreviewedPriceListAdmin(BaseSubmittedPriceListAdmin):
     actions = [approve, reject]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(status=SubmittedPriceList.STATUS_NEW)
+        return qs.filter(status=SubmittedPriceList.STATUS_UNREVIEWED)
 
 
 class RejectedPriceList(SubmittedPriceList):
@@ -364,18 +380,18 @@ class RejectedPriceListAdmin(BaseSubmittedPriceListAdmin):
         return qs.filter(status=SubmittedPriceList.STATUS_REJECTED)
 
 
-class UnapprovedPriceList(SubmittedPriceList):
+class RetiredPriceList(SubmittedPriceList):
     class Meta:
         proxy = True
 
 
-@admin.register(UnapprovedPriceList)
-class UnapprovedPriceListAdmin(BaseSubmittedPriceListAdmin):
+@admin.register(RetiredPriceList)
+class RetiredPriceListAdmin(BaseSubmittedPriceListAdmin):
     actions = [approve]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(status=SubmittedPriceList.STATUS_UNAPPROVED)
+        return qs.filter(status=SubmittedPriceList.STATUS_RETIRED)
 
 
 @admin.register(SubmittedPriceListRow)

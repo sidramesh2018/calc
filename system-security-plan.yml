@@ -26,11 +26,11 @@ staff:
     unit: TTS
     email: devops@gsa.gov
   system-owner:
-    name: Noah Kunin
-    title: TTS Infrastructure Director
+    name: James Seppi
+    title: CALC System Owner
     org: General Services Administration
-    unit: TTS
-    email: devops@gsa.gov
+    unit: 18F
+    email: james.seppi@gsa.gov
   system-management:
     name: Noah Kunin
     title: TTS Infrastructure Director
@@ -53,7 +53,6 @@ leveraged-authorizations:
 - https://www.fedramp.gov/marketplace/compliant-systems/amazon-web-services-aws-eastwest-us-public-cloud/
 purpose: https://github.com/18F/calc/blob/develop/README.md
 components:
-- https://18f.gsa.gov/project/calc/
 - https://github.com/18f/calc
 
 # these will be the same unless your architecture is especially complex

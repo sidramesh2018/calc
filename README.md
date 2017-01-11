@@ -7,6 +7,12 @@
 
 CALC (formerly known as "Hourglass"), which stands for Contracts Awarded Labor Category, is a tool to help contracting personnel estimate their per-hour labor costs for a contract, based on historical pricing information. The tool is live at [https://calc.gsa.gov](https://calc.gsa.gov). You can track our progress on our [trello board](https://trello.com/b/LjXJaVbZ/prices) or file an issue on this repo.
 
+## Related repositories
+
+* [18F/calc-analysis](https://github.com/18F/calc-analysis) contains
+  data science experiments and other analyses that use CALC
+  data.
+
 ## Setup
 
 To install the requirements, use:
@@ -28,6 +34,16 @@ search functionality.
 
 You'll also want to make sure you have a local instance of redis running,
 on its default port, as we use it for CALC's task queue.
+
+Here's some guidance on installing Redis:
+
+* [Installing Redis on Mac OSX](https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298#.fa2s6i1my)
+
+* [Installing Redis on Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04)
+
+Assuming you have Postgres installed you can create the database:
+
+`createdb hourglass`
 
 Now run:
 
@@ -126,6 +142,11 @@ ln -sf docker-compose.local.yml docker-compose.override.yml
 docker-compose build
 docker-compose run app python manage.py syncdb
 docker-compose run app python manage.py initgroups
+```
+
+You can optionally load some data into your dockerized database with:
+
+```sh
 docker-compose run app python manage.py load_data
 docker-compose run app python manage.py load_s70
 ```
@@ -168,6 +189,14 @@ if it detects that Django isn't installed.
 All the project's dependencies, such as those mentioned in `requirements.txt`,
 are contained in Docker container images.  Whenever these dependencies change,
 you'll want to re-run `docker-compose build` to rebuild the containers.
+
+### Reading email
+
+In the development Docker configuration, we use a container with
+[MailCatcher][] to make it easy to read the emails sent by the app. You
+can view it at port 1080 of your Docker host.
+
+[MailCatcher]: https://mailcatcher.me/
 
 ### Deploying to cloud environments
 
@@ -247,8 +276,13 @@ string), the boolean is true; otherwise, it's false.
   The setting can easily be manually tested via the `manage.py sendtestemail`
   command.
 
-* `SYSTEM_EMAIL_ADDRESS` is the email from-address to use in all system
-  generated emails. When `DEBUG` is true, this defaults to `dev@localhost`.
+* `DEFAULT_FROM_EMAIL` is the email from-address to use in all system
+  generated emails to users. It corresponds to Django's [`DEFAULT_FROM_EMAIL`][]
+  setting. It defaults to `noreply@localhost` when `DEBUG=True`.
+
+* `SERVER_EMAIL` is the email from-address to use in all system generated
+  emails to managers and admins. It corresponds to Django's [`SERVER_EMAIL`][]
+  setting. It defaults to `system@localhost` when `DEBUG=True`.
 
 * `REDIS_URL` is the URL for redis, which is used by the task queue.
   When `DEBUG` is true, it defaults to `redis://localhost:6379/0`.
@@ -293,8 +327,17 @@ string), the boolean is true; otherwise, it's false.
   for the associated Google Analytics account.
   It will default to the empty string if not found in the environment.
 
+* `ETHNIO_SCREENER_ID` is the ID for the https://ethn.io screener script to
+  include on CALC pages. If it is not present, then the ethn.io script will not
+  be included.
+
 * `NEW_RELIC_LICENSE_KEY` is the private New Relic license key for this project.
   If it is present, then the WSGI app will be wrapped with the  New Relic agent.
+
+* `TEST_WITH_ROBOBROWSER` is a boolean that indicates whether to run
+  some integration tests using [RoboBrowser][] instead of Selenium/WebDriver.
+  Running tests with RoboBrowser can be much faster and less error-prone
+  than via Selenium, but it also means that the tests are less end-to-end.
 
 ## Authentication and Authorization
 
@@ -311,7 +354,7 @@ Currently, authorization is set up as follows:
   price lists for approval.
 * **Staff users** in the **Data Administrators** group can
   * create and edit users and assign them to groups,
-  * review submitted price lists and approve/unapprove them,
+  * review submitted price lists and approve/reject/retire them,
   * bulk upload data exports (only Region 10 data for now).
 * **Superusers** can do anything, but only infrastructure/operational
   engineers should be given this capability.
@@ -478,7 +521,9 @@ for other than small business.
 [18F Docker guide]: https://pages.18f.gov/dev-environment-standardization/virtualization/docker/
 [Docker]: https://www.docker.com/
 [Docker Compose]: https://docs.docker.com/compose/
-[`SECRET_KEY`]: https://docs.djangoproject.com/en/1.9/ref/settings/#secret-key
+[`SECRET_KEY`]: https://docs.djangoproject.com/en/1.8/ref/settings/#secret-key
+[`DEFAULT_FROM_EMAIL`]: https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-DEFAULT_FROM_EMAIL
+[`SERVER_EMAIL`]: https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-SERVER_EMAIL
 [SASS]: http://sass-lang.com/
 [`deploy.md`]: https://github.com/18F/calc/blob/master/deploy.md
 [DJ-Database-URL schema]: https://github.com/kennethreitz/dj-database-url#url-schema
@@ -486,3 +531,4 @@ for other than small business.
 [pytest]: https://pytest.org/latest/usage.html
 [docker-machine-cloud]: https://docs.docker.com/machine/get-started-cloud/
 [Django Debug Toolbar]: https://github.com/jazzband/django-debug-toolbar/
+[RoboBrowser]: http://robobrowser.readthedocs.io/

@@ -5,7 +5,7 @@ from django.contrib import messages
 
 from frontend import ajaxform
 from frontend.upload import UploadWidget
-
+from frontend.widgets import UswdsRadioSelect, UswdsCheckbox
 
 CHOICE_REDIRECT = 'redirect'
 CHOICE_500 = '500'
@@ -23,6 +23,16 @@ class ExampleForm(forms.Form):
             (CHOICE_WEIRD, 'Return an unexpected response')
         ]
     )
+
+    some_radios = forms.ChoiceField(
+        widget=UswdsRadioSelect,
+        choices=((1, "one"), (2, "two"))
+    )
+
+    some_checkboxes = forms.MultipleChoiceField(
+        required=False,
+        widget=UswdsCheckbox,
+        choices=(('a', 'Option A'), ('b', 'Option B'), ('c', 'Option C')))
 
     file = forms.FileField(widget=UploadWidget(
         accept=('.csv',),

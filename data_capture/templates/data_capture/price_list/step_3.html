@@ -1,19 +1,21 @@
 {% extends 'data_capture/step.html' %}
 
-{% block body_class %}secondary-step{% endblock %}
+{% block body_class %}secondary-step card--narrow card--no-header{% endblock %}
 
 {% block subtitle %}Upload price list{% endblock %}
-
+{% block step_heading %}
+  <h2>Upload awarded price list</h2>
+{% endblock %}
 {% block step_body %}
-<h2>Upload awarded price list</h2>
-<p>Choose the <strong>final</strong> awarded price list you'd like to add to CALC.</p>
-{% if upload_example %}
-<expandable-area>
-  <p><strong>I don't know what to upload.</strong></p>
-  <div>
-    {{ upload_example }}
-  </div>
-</expandable-area>
-{% endif %}
-{% include 'data_capture/price_list/upload_form.html' %}
+  <p>Choose the <strong>final</strong> awarded price list you'd like to add to CALC.</p>
+
+  {% include 'data_capture/_upload_example.html' %}
+
+  {% include 'data_capture/price_list/upload_form.html' %}
+{% endblock %}
+{% block card_footer %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
+  </form>
 {% endblock %}

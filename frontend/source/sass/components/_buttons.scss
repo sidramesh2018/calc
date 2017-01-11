@@ -1,7 +1,9 @@
 @import '../base/variables';
 @import '../uswds/buttons';
 
-$font-size-button: rem(11px); // with the all-caps, even the small font size is overly large
+a.button:hover {
+  color: $color-white;
+}
 
 button,
 .button,
@@ -12,77 +14,29 @@ button,
   // WDS override
   margin-bottom: 0;
   margin-top: 0;
-  font-size: $font-size-button;
+  font-size: $small-font-size;
+  text-transform: uppercase;
+  font-weight: $font-weight-bold;
 
   &:focus {
     box-shadow: $focus-shadow;
   }
-}
 
-// Need to override Skeleton's default button styling
-.button.button-primary,
-button.button-primary,
-input.button-primary[type="submit"],
-input.button-primary[type="reset"],
-input.button-primary[type="button"] {
-  background-color: $color-primary;
-  color: $color-white;
-  border: 0;
-  //necessary here to override Skeleton's input width
-  @include media($small-screen) {
-    width: auto;
-  }
-
-  &:hover,
-  &.button-hover {
-    background-color: $color-primary-darker;
-    border-color: $color-primary-darker;
-  }
-
-  &:visited {
-    color: $color-white;
-  }
-
-  &:focus,
-  &.button-focus {
-    background-color: $color-primary-darker;
-    border-color: $color-primary-darker;
-  }
-
-  &:active,
-  &.button-active {
-    background-color: $color-primary-darkest;
+  &.button-outline {
+    border: 1px solid $color-gray;
+    background: $color-white;
+    color: $color-gray;
+    &:hover,
+    &.button-hover {
+      border-color: $color-gray-light;
+    }
   }
 }
 
-// More Skeleton overrides
-.button.button-secondary,
-button.button-secondary,
-input.button-secondary[type="submit"],
-input.button-secondary[type="reset"],
-input.button-secondary[type="button"] {
-  border: 0;
-
-  &:hover,
-  &.button-hover {
-    background-color: $color-secondary-dark;
-    border-color: $color-secondary-dark;
-  }
-
-  &:visited {
-    color: $color-white;
-  }
-
-  &:focus,
-  &.button-focus {
-    background-color: $color-secondary-dark;
-    border-color: $color-secondary-dark;
-  }
-
-  &:active,
-  &.button-active {
-    background-color: $color-secondary-darkest;
-  }
+.button.reset,
+input[type="reset"] {
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem; //compensates for the 1px border
 }
 
 .button-gray,
@@ -97,7 +51,7 @@ button.button-link,
 input.button-link[type="submit"],
 input.button-link[type="reset"],
 input.button-link[type="button"] {
-
+  background-color: transparent;
   border: none;
   padding-top: 0;
   padding-bottom: 0;
@@ -132,6 +86,7 @@ input.button-link[type="button"] {
 .button.button-disabled {
   background-color: $color-gray-lighter;
   cursor: default;
+  color: $color-gray;
   &:hover {
     color: $color-gray;
   }

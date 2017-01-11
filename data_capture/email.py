@@ -1,7 +1,6 @@
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.template.defaultfilters import pluralize
 
 from .models import SubmittedPriceList
@@ -28,7 +27,7 @@ def price_list_approved(price_list):
         message=render_to_string(
             'data_capture/email/price_list_approved.txt',
             ctx),
-        from_email=settings.SYSTEM_EMAIL_ADDRESS,
+        from_email=None,
         recipient_list=[price_list.submitter.email]
     )
     return EmailResult(
@@ -37,18 +36,18 @@ def price_list_approved(price_list):
     )
 
 
-def price_list_unapproved(price_list):
+def price_list_retired(price_list):
     ctx = {
         'price_list': price_list
     }
-    if price_list.status is not SubmittedPriceList.STATUS_UNAPPROVED:
-        raise AssertionError('price_list.status must be STATUS_UNAPPROVED')
+    if price_list.status is not SubmittedPriceList.STATUS_RETIRED:
+        raise AssertionError('price_list.status must be STATUS_RETIRED')
     result = send_mail(
-        subject='CALC Price List Unapproved',
+        subject='CALC Price List Retired',
         message=render_to_string(
-            'data_capture/email/price_list_unapproved.txt',
+            'data_capture/email/price_list_retired.txt',
             ctx),
-        from_email=settings.SYSTEM_EMAIL_ADDRESS,
+        from_email=None,
         recipient_list=[price_list.submitter.email]
     )
     return EmailResult(
@@ -66,7 +65,7 @@ def price_list_rejected(price_list):
         message=render_to_string(
             'data_capture/email/price_list_rejected.txt',
             ctx),
-        from_email=settings.SYSTEM_EMAIL_ADDRESS,
+        from_email=None,
         recipient_list=[price_list.submitter.email]
     )
     if price_list.status is not SubmittedPriceList.STATUS_REJECTED:
@@ -84,14 +83,13 @@ def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
         'num_bad_rows': num_bad_rows,
     }
     result = send_mail(
-        subject='CALC Region 10 bulk data results - upload #%d' % (
-            upload_source.id,
-        ),
+        subject='CALC Region 10 bulk data results - upload #{}'.format(
+            upload_source.id),
         message=render_to_string(
             'data_capture/email/bulk_upload_succeeded.txt',
             ctx
         ),
-        from_email=settings.SYSTEM_EMAIL_ADDRESS,
+        from_email=None,
         recipient_list=[upload_source.submitter.email]
     )
     return EmailResult(
@@ -106,14 +104,14 @@ def bulk_upload_failed(upload_source, traceback):
         'traceback': traceback,
     }
     result = send_mail(
-        subject='CALC Region 10 bulk data results - upload #%d' % (
-            upload_source.id,
+        subject='CALC Region 10 bulk data results - upload #{}'.format(
+            upload_source.id
         ),
         message=render_to_string(
             'data_capture/email/bulk_upload_failed.txt',
             ctx
         ),
-        from_email=settings.SYSTEM_EMAIL_ADDRESS,
+        from_email=None,
         recipient_list=[upload_source.submitter.email]
     )
     return EmailResult(
@@ -135,7 +133,7 @@ def approval_reminder(count_unreviewed):
             'data_capture/email/approval_reminder.txt',
             ctx
         ),
-        from_email=settings.SYSTEM_EMAIL_ADDRESS,
+        from_email=None,
         recipient_list=recipients
     )
     return EmailResult(

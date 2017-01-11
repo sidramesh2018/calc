@@ -1,9 +1,10 @@
 import os
+import subprocess
 from django.conf import settings
 from django.core import management
 from django.test import TestCase, override_settings
 
-from .utils import build_static_asset_prerequisites, remove_static_assets
+from .utils import build_static_assets
 
 
 @override_settings(
@@ -20,6 +21,6 @@ class CompressedCollectStaticTests(TestCase):
     '''
 
     def test_it_works(self):
-        build_static_asset_prerequisites()
+        build_static_assets()
         management.call_command('collectstatic', '--noinput', verbosity=0)
-        remove_static_assets()
+        subprocess.check_call(['rm', '-rf', settings.STATIC_ROOT])

@@ -1,18 +1,7 @@
-{% extends "base.html" %}
-{% load staticfiles %}
+{% extends "styleguide_base.html" %}
 {% load styleguide %}
 
-{% block title %}Style Guide{% endblock %}
-
-{% block head %}
-<link rel="stylesheet" href="{% static 'frontend/built/style/data_explorer.min.css' %}">
-<link rel="stylesheet" href="{% static 'frontend/built/style/data_capture.min.css' %}">
-<link rel="stylesheet" href="{% static 'styleguide/styleguide.css' %}">
-<link rel="stylesheet" href="{% static 'styleguide/vendor/prism.css' %}">
-{% endblock %}
-
-{% block body %}
-<div class="container">
+{% block styleguide_body %}
   <h1>CALC Style Guide</h1>
 
   {% guide %}
@@ -30,7 +19,8 @@
   </p>
 
   <p>
-    CALC uses <a href="http://getskeleton.com/">Skeleton</a> as the foundation
+    CALC uses <a href="http://bourbon.io/">Bourbon</a> and
+    <a href="http://neat.bourbon.io/">Neat</a> as the foundation
     for its styles, with alterations based on the
     <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
   </p>
@@ -146,14 +136,56 @@
     </div>
   </div>
 
+  <h3>Existing Filenames</h3>
+
+  <p>
+    In some cases, it may be preferable to indicate to a user that a
+    file upload field is not only optional, but that a default which
+    the user has uploaded earlier will be used if nothing else is
+    provided.
+  </p>
+
+  <expandable-area>
+    <h4>Examples</h4>
+
+    <p>
+      The baseline experience simply explains to the user that leaving
+      the field blank will result in the use of their previously-uploaded
+      file.
+    </p>
+
+    <div class="styleguide-example">
+      <div class="rendering">
+        <h3 class="example-heading">Example (no JavaScript)</h3>
+        {{ existing_filename_upload_form.no_js }}
+      </div>
+    </div>
+
+    <p>
+      The server, of course, will not receive any data if the user
+      doesn't supply a file. Finding and using the previously uploaded
+      file is the server's responsibility.
+    </p>
+
+    <p>
+      However, if proper browser support exists, the user experience is
+      progressively enhanced: the widget will <em>appear</em> populated,
+      but as with the baseline experience, the server will not actually
+      receive any data unless the user explicitly chooses a different file.
+    </p>
+
+    <div class="styleguide-example">
+      <div class="rendering">
+        <h3 class="example-heading">Example</h3>
+        {{ existing_filename_upload_form.js }}
+      </div>
+    </div>
+  </expandable-area>
+
   {% guide_section "Buttons" %}
 
   <p>
-    Unless otherwise specified buttons take after Skeleton's default, which is
-    white with a gray border and uppercase text. The color of primary, secondary,
-    disabled and gray buttons matches the
-    <a href="https://standards.usa.gov/buttons/">primary colors</a>
-    of the USWDS. Use primary buttons to indicate primary actions, default to
+    Use primary buttons to indicate primary actions, default to
     indicate less important actions, and secondary to indicate actions such as
     cancelling a process or deleting information.
   </p>
@@ -178,37 +210,22 @@
   </p>
 
   <p>
-    The widget extends to the full width of its container, with each
-    step consuming an equal amount of horizontal space.
+    Users assisted by screen readers will hear an audio description of the
+    visualization, e.g. "Step 2 of 3", followed by the name of the
+    current step.
   </p>
 
   <p>
-    Use <code>li.current</code> to identify a step as being the current
-    one.
+    Rather than writing out the raw HTML of the steps widget, we
+    recommend using {% pyobjname 'frontend.steps.StepsWidget' %}.
   </p>
 
-  <p>
-    We recommend adding <code>aria-hidden="true"</code> to the list, as
-    there isn't an easy way to communicate the information to vision-impaired
-    users without being overly verbose (thus annoying the user) or confusing.
-    However, <em>do</em> be sure to repeat the name of the current step
-    elsewhere in a header, so that the user knows what step they're currently
-    on.
-  </p>
-
-  {% example %}
-  <ol class="steps" aria-hidden="true">
-    <li>
-      <label>Upload price list</label>
-    </li>
-    <li class="current">
-      <label>Validate data</label>
-    </li>
-    <li>
-      <label>Submit data</label>
-    </li>
-  </ol>
-  {% endexample %}
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example</h3>
+      {{ steps_widget }}
+    </div>
+  </div>
 
   {% guide_section "Alerts" %}
 
@@ -219,57 +236,20 @@
   <p>
     These are similar to the
     <a href="https://standards.usa.gov/alerts/">US Web Design Standards</a>,
-    but add a stroke and the CALC standard border radius. We do not color the
-    background of the error alert because the red background would make it
-    difficult to examine the amount of information being displayed.
+    but add a stroke and the CALC standard border radius.
   </p>
 
   {% example %}
   <div class="alert alert-error" role="alert">
-    <h3>2 rows have errors</h3>
-    <p>The rows below appear to be invalid and <strong>will be discarded</strong> when you upload your price list. If you'd like, you may correct these rows in your original spreadsheet and <a href="foo">try uploading it again</a>.</p>
-    <table>
-      <thead>
-        <tr>
-          <th>SIN</th>
-          <th>Service proposed</th>
-          <th>Minimum education</th>
-          <th>Minimum years of experience</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>132-51</td>
-          <td>Project Manager</td>
-          <td class="error">BA
-            <ul class="errorlist">
-              <li>This field must contain one of the following values: Bachelors, Masters, Associates, Ph.D., High School.</li>
-            </ul>
-          </td>
-          <td>5</td>
-          <td>$115.99</td>
-        </tr>
-        <tr>
-          <td class="error">32-17
-            <ul class="errorlist">
-              <li>SIN not recognized.</li>
-            </ul>
-          </td>
-          <td>Software Programmer, Associate</td>
-          <td>Bachelors</td>
-          <td>0</td>
-          <td>$37.59</td>
-        </tr>
-      </tbody>
-    </table>
+    <h3>Error!</h3>
+    <p>Better get out your eraser.</p>
   </div>
   {% endexample %}
 
   {% example %}
   <div class="alert alert-success" role="alert">
     <h3>Success alert</h3>
-    <p>Success!</p>
+    <p>Hooray!</p>
   </div>
   {% endexample %}
 
@@ -288,17 +268,16 @@
   {% endexample %}
 
   {% guide_section "Tables" %}
-  <p>There are two tables, sortable and non-sortable, both with rows that highlight on hover.</p>
-  <p>Static tables look like this:</p>
+  <p>When displaying data in tables, be sure to add the <code>number</code> class to cells that contain numbers. This will monospace and right-align those columns. For dollar amounts, you'll need to also add the <code>currency</code> class to get the dollar sign to appear. You can add a highlight-on-hover effect to a table's rows by including the <code>hoverable</code> class on the table.</p>
   {% example %}
-    <table>
+    <table class="hoverable">
       <thead>
         <tr>
           <th>SIN</th>
           <th>Service proposed</th>
           <th>Minimum education</th>
-          <th>Minimum years of experience</th>
-          <th>Price</th>
+          <th class="number">Minimum years of experience</th>
+          <th class="number">Price offered to GSA (including IFF)</th>
         </tr>
       </thead>
       <tbody>
@@ -306,92 +285,40 @@
           <td>132-51</td>
           <td>Project Manager</td>
           <td>Bachelors</td>
-          <td>5</td>
-          <td>$115.99</td>
+          <td class="number">5</td>
+          <td class="number currency">115.99</td>
         </tr>
         <tr>
           <td>132-17</td>
           <td>Software Programmer, Associate</td>
           <td>Bachelors</td>
-          <td>0</td>
-          <td>$37.59</td>
+          <td class="number">0</td>
+          <td class="number currency">37.59</td>
         </tr>
         <tr>
           <td>132-17</td>
           <td>Software Programmer I</td>
           <td>Bachelors</td>
-          <td>3</td>
-          <td>$41.59</td>
+          <td class="number">3</td>
+          <td class="number currency">41.59</td>
         </tr>
         <tr>
           <td>132-17</td>
           <td>Software Programmer II</td>
           <td>Bachelors</td>
-          <td>5</td>
-          <td>$52.03</td>
+          <td class="number">5</td>
+          <td class="number currency">52.03</td>
         </tr>
         <tr>
           <td>132-17</td>
           <td>Software Programmer III</td>
           <td>Bachelors</td>
-          <td>7</td>
-          <td>$65.72</td>
+          <td class="number">7</td>
+          <td class="number currency">65.72</td>
         </tr>
       </tbody>
     </table>
   {% endexample %}
-  <p>Sortable tables are used for displaying large quantities of data and are usually sorted by default on the price column. <strong>Make sure to include the correct classes on columns containing numbers, or they will be sorted as strings.</strong> We use <a href="https://www.npmjs.com/package/jquery-tablesort">jQuery Tablesort</a> for this. (The exception is on the CALC homepage, where sorting is built into the table with D3.) Sortable tables look like this:</p>
-  {% example %}
-    <table class="table-sortable">
-      <thead>
-        <tr>
-          <th class="sortable">SIN</th>
-          <th class="sortable">Service proposed</th>
-          <th class="no-sort">Minimum education</th>
-          <th class="sortable js-int">Minimum years of experience</th>
-          <th class="sortable sorted js-float js-default-sort">Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>132-51</td>
-          <td>Project Manager</td>
-          <td>Bachelors</td>
-          <td>5</td>
-          <td>115.99</td>
-        </tr>
-        <tr>
-          <td>132-17</td>
-          <td>Software Programmer, Associate</td>
-          <td>Bachelors</td>
-          <td>0</td>
-          <td>37.59</td>
-        </tr>
-        <tr>
-          <td>132-17</td>
-          <td>Software Programmer I</td>
-          <td>Bachelors</td>
-          <td>3</td>
-          <td>41.59</td>
-        </tr>
-        <tr>
-          <td>132-17</td>
-          <td>Software Programmer II</td>
-          <td>Bachelors</td>
-          <td>5</td>
-          <td>52.03</td>
-        </tr>
-        <tr>
-          <td>132-17</td>
-          <td>Software Programmer III</td>
-          <td>Bachelors</td>
-          <td>7</td>
-          <td>65.72</td>
-        </tr>
-      </tbody>
-    </table>
-
-    {% endexample %}
 
   {% guide_section "Excel Tables" %}
 
@@ -459,14 +386,11 @@
   <label for="input-has_focus">Text input focused</label>
   <input class="input-focus" id="input-focus" name="input-focus" type="text">
 
-  <div class="input-has_error">
-    <label class="input-error-label" for="input-error">Text input error</label>
+  <fieldset class="fieldset-error">
     <span class="input-error-message" id="input-error-message" role="alert">Helpful error message</span>
+    <label class="input-error-label" for="input-error">Text input error</label>
     <input id="input-error" name="input-error" type="text" aria-describedby="input-error-message">
-  </div>
-
-  <label for="input-has_success">Text input success</label>
-  <input class="input-has_success" id="input-success" name="input-success" type="text">
+  </fieldset>
 
   <label for="input-type-textarea">Text area label</label>
   <textarea id="input-type-textarea" name="input-type-textarea"></textarea>
@@ -481,27 +405,28 @@
   </select>
   {% endexample %}
 
-  {% guide_section "Radio Buttons" %}
+  {% guide_section "Radio Buttons and Checkboxes" %}
 
   <p>
     Because USWDS uses a slightly different HTML structure for
-    radio buttons than Django, we need to use a custom
-    {% pyobjname 'frontend.radio.UswdsRadioSelect' %} widget.
+    radio buttons and checkboxes from Django, we need to use custom
+    widgets: {% pyobjname 'frontend.widgets.UswdsRadioSelect' %} and
+    {% pyobjname 'frontend.widgets.UswdsCheckbox' %}.
   </p>
 
   <p>
     For a simple code example, see
-    {% pathname 'styleguide/radio_example.py' %} and
-    {% pathname 'styleguide/templates/styleguide_radio_example.html' %}.
+    {% pathname 'styleguide/radio_checkbox_example.py' %} and
+    {% pathname 'styleguide/templates/styleguide_radio_checkbox_example.html' %}.
   </p>
 
   <div class="styleguide-example">
     <div class="rendering">
       <h3 class="example-heading">
         Example
-        <a href="{% url 'styleguide:radio' %}" target="_blank" title="Open in new tab"></a>
+        <a href="{% url 'styleguide:radio-checkbox' %}" target="_blank" title="Open in new tab"></a>
       </h3>
-      {% include "styleguide_radio_example.html" %}
+      {% include "styleguide_radio_checkbox_example.html" %}
     </div>
   </div>
 
@@ -542,7 +467,7 @@
 
   {% example %}
   <div class="form-button-row clearfix">
-    <a href="#" class="button button-previous">Previous</a>
+    <a href="#" class="button button-outline button-previous">Previous</a>
 
 
     <div class="submit-group">
@@ -552,7 +477,6 @@
       </span>
     </div>
 
-    <button type="submit" name="cancel" class="button-link" formnovalidate>Cancel</button>
   </div>
   {% endexample %}
 
@@ -684,11 +608,4 @@
   {% endif %}
 
   {% endguide %}
-</div>
-{% if not is_safe_mode_enabled %}
-<script src="{% static 'styleguide/vendor/prism.js' %}"></script>
-<script src="{% static 'frontend/built/js/data-capture/index.min.js' %}"></script>
-<script src="{% static 'frontend/built/js/styleguide/index.min.js' %}"></script>
-{% endif %}
-{% include 'frontend/safe_mode/ui.html' %}
 {% endblock %}

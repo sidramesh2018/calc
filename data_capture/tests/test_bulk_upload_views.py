@@ -33,24 +33,15 @@ class R10StepTestCase(StepTestCase):
 
     def setup_upload_source(self, user):
         src = create_bulk_upload_contract_source(user)
+        src.save()
         session = self.client.session
         session['data_capture:upload_source_id'] = src.pk
         session.save()
         return src
 
-    def test_permission_is_required(self):
-        if not self.url:
-            raise unittest.SkipTest()
-        super().login()
-        res = self.client.get(self.url)
-        self.assertEqual(res.status_code, 403)
-
 
 class Region10UploadStep1Tests(R10StepTestCase):
     url = '/data-capture/bulk/region-10/step/1'
-
-    def test_login_is_required(self):
-        self.assertRedirectsToLogin(self.url)
 
     def test_get_is_ok(self):
         self.login()
@@ -124,9 +115,6 @@ class Region10UploadStep1Tests(R10StepTestCase):
 class Region10UploadStep2Tests(R10StepTestCase):
     url = '/data-capture/bulk/region-10/step/2'
 
-    def test_login_is_required(self):
-        self.assertRedirectsToLogin(self.url)
-
     def test_session_source_id_is_required(self):
         self.login()
         res = self.client.get(self.url)
@@ -189,9 +177,6 @@ class Region10UploadStep2Tests(R10StepTestCase):
 
 class Region10UploadStep3Tests(R10StepTestCase):
     url = '/data-capture/bulk/region-10/step/3'
-
-    def test_login_is_required(self):
-        self.assertRedirectsToLogin(self.url)
 
     def test_get_is_ok(self):
         self.login()

@@ -3,10 +3,9 @@
 upload-widget {
   margin: 3rem 0;
   display: flex;
-  height: 6em;
   position: relative;
   align-items: center;
-  padding: 0 3em;
+  padding: 1rem 3em;
   background-color: $color-gray-lightest;
   transition: background-color 0.5s, border-color 0.5s;
   -webkit-transition: background-color 0.5s, border-color 0.5s;
@@ -47,7 +46,12 @@ upload-widget {
         visibility: hidden;
       }
       &:before {
-        content: "Drop file here!"
+        content: "Drop file here!";
+        font-weight: $font-weight-bold;
+        color: $color-primary;
+        display: block;
+        position: absolute;
+        margin-top: 0rem;
       }
     }
   }
@@ -55,6 +59,12 @@ upload-widget {
 
 // Rules specific to JS-upgraded widgets.
 upload-widget[aria-live] {
+  height: 6em;
+
+  .nojs-preamble {
+    display: none;
+  }
+
   input {
     width: 0.1px;
     height: 0.1px;
@@ -63,6 +73,16 @@ upload-widget[aria-live] {
     position: absolute;
     z-index: -1;
   }
+
+  .upload-current {
+    overflow: hidden; // necessary for ellipsis overflow
+  }
+  .upload-filename {
+    font-family: monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 // Rules specific to non-JS-upgraded widgets.
@@ -70,6 +90,8 @@ upload-widget:not([aria-live]) {
   font-size: 1.3rem;
   display: block;
   border: none;
+  padding-top: 1em;
+  padding-bottom: 1em;
 
   input {
     border: none;

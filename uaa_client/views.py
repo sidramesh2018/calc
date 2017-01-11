@@ -1,8 +1,10 @@
 from urllib.parse import urlencode
+
 import django.contrib.auth
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url, render
+from django.core.urlresolvers import reverse
 from django.utils.crypto import get_random_string
 from django.utils.http import is_safe_url
 
@@ -21,11 +23,13 @@ def logout(request):
 
 
 def login(request):
+    redirect_uri = request.build_absolute_uri(reverse('uaa_client:callback'))
     request.session['oauth2_next_url'] = request.GET.get('next', '')
     request.session['oauth2_state'] = get_random_string(length=32)
     url = get_auth_url(request) + '?' + urlencode({
         'client_id': settings.UAA_CLIENT_ID,
         'response_type': 'code',
+        'redirect_uri': redirect_uri,
         'state': request.session['oauth2_state'],
     })
 

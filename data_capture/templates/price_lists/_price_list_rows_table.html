@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    <tr>
+      <th>SIN(s)</th>
+      <th>Labor category</th>
+      <th>Minimum education level</th>
+      <th class="number">Minimum years of experience</th>
+      <th class="number">Base year rate (per hour)</th>
+      <th>Is muted</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in price_list_rows %}
+      <tr>
+        <td>{{ row.sin }}</td>
+        <td>{{ row.labor_category }}</td>
+        <td>{{ row.get_education_level_display }}</td>
+        <td class="number">{{ row.min_years_experience }}</td>
+        <td class="number currency">{{ row.base_year_rate }}</td>
+        <td>{{ row.is_muted }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

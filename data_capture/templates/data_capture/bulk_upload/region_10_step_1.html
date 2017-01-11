@@ -8,14 +8,7 @@
 {% endblock step_heading %}
 
 {% block step_body %}
-  {% if upload_example %}
-  <expandable-area>
-    <p><strong>I don't know what to upload.</strong></p>
-    <div>
-      {{ upload_example }}
-    </div>
-  </expandable-area>
-  {% endif %}
+  {% include 'data_capture/_upload_example.html' %}
 
   {% include 'data_capture/bulk_upload/region_10_step_1_form.html' %}
 

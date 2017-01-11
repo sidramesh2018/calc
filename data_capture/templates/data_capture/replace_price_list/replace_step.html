@@ -1,0 +1,11 @@
+{% extends 'data_capture/step.html' %}
+
+{% block title %}Replace Price List / {{ step.description|capfirst }}: {% block subtitle %}{% endblock %}{% endblock %}
+
+{% block body_class %}secondary-step {% block card_width_class %}card--wide{% endblock %} card--no-header card--half-padding{% endblock %}
+
+
+{% block steps %}
+{# Intentionally left empty because we don't want to render #}
+{# Steps Widget for this flow since we only have 2 steps. #}
+{% endblock steps %}

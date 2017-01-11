@@ -16,6 +16,8 @@
   {% with form=ajaxform_form %}
     {{ form.non_field_errors }}
     {% fieldset form.question %}
+    {% fieldset form.some_checkboxes %}
+    {% fieldset form.some_radios %}
     {% fieldset form.on_valid_submit %}
     {{ form.file.errors }}
     {{ form.file }}

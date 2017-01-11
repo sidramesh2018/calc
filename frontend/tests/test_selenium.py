@@ -14,7 +14,7 @@ test_contract_link
 8/25/15 [TS]
 """
 
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
@@ -82,7 +82,7 @@ def _get_webdriver(name):
     raise 'No such webdriver: "%s"' % name
 
 
-class SeleniumTestCase(LiveServerTestCase):
+class SeleniumTestCase(StaticLiveServerTestCase):
     connect = None
     driver = None
     screenshot_filename = 'selenium_tests/screenshot.png'
@@ -227,9 +227,7 @@ class DataExplorerTests(SeleniumTestCase):
     def search_for(self, query):
         q = self.driver.find_element_by_name('q')
         q.clear()
-        q.send_keys(query)
-        # XXX oh my god why do we have to do this???
-        self.driver.execute_script('$("[name=q]").blur()')
+        q.send_keys(query + '\n')
 
     def search_for_query_type(self, query, query_type):
         # Important: We want to click the radio before entering the

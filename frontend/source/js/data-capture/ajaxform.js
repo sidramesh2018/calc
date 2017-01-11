@@ -6,7 +6,7 @@ import * as supports from './feature-detection';
 
 import ga from '../common/ga';
 
-import { dispatchBubbly } from './custom-event';
+import dispatchBubbly from './custom-event';
 
 const $ = jQuery;
 
@@ -94,9 +94,6 @@ class AjaxForm extends window.HTMLFormElement {
 
       if (el.isUpgraded) {
         formData.append(el.name, el.upgradedValue);
-      } else if (el.type === 'radio' || el.type === 'checked') {
-        // https://github.com/18F/calc/issues/570
-        throw new Error(`unsupported input type: ${el.type}`);
       } else if (el.type === 'file') {
         for (let j = 0; j < el.files.length; j++) {
           formData.append(el.name, el.files[j]);
@@ -107,6 +104,12 @@ class AjaxForm extends window.HTMLFormElement {
         // is triggered in browsers by being the first in the DOM tree,
         // has no 'name' value associated with it.
         if (document.activeElement === el) {
+          formData.append(el.name, el.value);
+        }
+      } else if (el.type === 'radio' || el.type === 'checkbox') {
+        // only append the radio or checkbox value if its `checked` property
+        // is true
+        if (el.checked) {
           formData.append(el.name, el.value);
         }
       } else {

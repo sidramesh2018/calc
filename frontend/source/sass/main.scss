@@ -1,10 +1,11 @@
 @charset 'utf-8';
-@import 'libs/skeleton/normalize';
-@import 'libs/skeleton/skeleton';
 @import 'libs/tooltipster';
 @import 'base/variables';
 @import 'base/reset';
+@import 'base/typography';
 @import 'base/utils';
+@import 'base/grid';
+@import 'base/debug';
 @import 'components/alerts';
 @import 'components/buttons';
 @import 'components/footer';
@@ -21,5 +22,3 @@
 @import 'components/date';
 @import 'components/dialogs';
 @import 'components/pricelistlist';
-/* for some reason this must be last to override skeleton's h rules?! */
-@import 'base/typography';

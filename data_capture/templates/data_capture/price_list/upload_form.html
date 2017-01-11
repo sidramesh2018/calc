@@ -15,8 +15,7 @@
 {{ form.file }}
 
 <div class="form-button-row clearfix">
-  <a href="{% url 'data_capture:step_2' %}" class="button button-previous">Previous</a>
-
+  <a href="{% url 'data_capture:step_2' %}" class="button button-outline button-previous">Previous</a>
 
   <div class="submit-group">
     <button type="submit" class="button-primary">Next</button>
@@ -24,8 +23,6 @@
       Double check your data and fix any errors.
     </span>
   </div>
-
-  <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
 </div>
 
 </form>

@@ -1,22 +1,24 @@
 {% extends 'data_capture/step.html' %}
 {% load frontend %}
-{% block body_class %}secondary-step{% endblock %}
+{% block body_class %}secondary-step card--narrow{% endblock %}
 {% block subtitle %}Enter vendor details{% endblock %}
 
-{% block step_heading %}<h2>Enter details for <strong>{{ step_1_data.vendor_name.value }}</strong>'s price list</h2>{% endblock %}
+{% block step_heading %}<h2>Enter details for this price list</h2>
+<p>We need a little more information about the vendor and contract.</p>
+{% endblock %}
 {% block step_body %}
-<div class="row">
-  <form method="post" class="columns nine">
+  <form method="post">
   {% csrf_token %}
 
   {{ form.non_field_errors }}
-
+  <h3>{{ contract_number }}</h3>
+  <h3>{{ preferred_schedule_title }}</h3>
+  {% fieldset form.vendor_name %}
   {% fieldset form.is_small_business %}
   {% fieldset form.contractor_site %}
 
   <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
     {% fieldset form.contract_start %}
-    <p>to</p>
     {% fieldset form.contract_end %}
   </div>
 
@@ -32,9 +34,14 @@
       </span>
     </div>
 
-    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
   </div>
 
   </form>
-</div>
+
+{% endblock %}
+{% block card_footer %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
+  </form>
 {% endblock %}

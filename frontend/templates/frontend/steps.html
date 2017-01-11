@@ -1,0 +1,14 @@
+<div class="step-bar">
+  <label>
+    <span class="sr-only">
+      Step {{ current_step.number }} of {{ steps|length }}:
+    </span>
+    {{ current_step.label }}
+  </label>
+  <ol class="steps" aria-hidden="true">
+    {% for step in steps %}
+      <li title="{{ step.label }}"
+      {% if step.current %} class="current"{% endif %}></li>
+    {% endfor %}
+  </ol>
+</div>
