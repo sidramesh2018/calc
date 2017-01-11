@@ -4,6 +4,7 @@ import os
 from django.core.management import BaseCommand
 from optparse import make_option
 
+from contracts.models import BulkUploadContractSource
 from contracts.loaders.schedule_70 import Schedule70Loader
 
 logger = logging.getLogger(__name__)
@@ -59,8 +60,18 @@ class Command(BaseCommand):
         if not filename or not os.path.exists(filename):
             raise ValueError('invalid filename')
 
+        # create BulkUploadContractSource to associate with the new Contracts
+        with open(filename, 'rb') as f:
+            upload_source = BulkUploadContractSource.objects.create(
+                has_been_loaded=True,
+                original_file=f.read(),
+                file_mime_type="text/csv",
+                procurement_center=BulkUploadContractSource.SCHEDULE_70
+            )
+
         Schedule70Loader().load(
             filename,
+            upload_source=upload_source,
             replace=options['replace'],
             strict=options['strict']
         )

@@ -14,7 +14,7 @@
 
 <h3>Verify vendor and contract details</h3>
 
-<div data-edit-contract-details {% if not show_edit_form %}style="display: none"{% endif %}>
+<div data-edit-contract-details class="clearfix" {% if not show_edit_form %}style="display: none"{% endif %}>
 
   {{ form.non_field_errors }}
 
@@ -46,7 +46,7 @@
 </div>
 
 {% if not show_edit_form %}
-<div data-contract-details class="row">
+<div data-contract-details class="row clearfix">
   <div class="twelve columns">
     <dl class="contract-details clearfix">
       <dt>Schedule</dt>

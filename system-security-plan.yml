@@ -53,7 +53,6 @@ leveraged-authorizations:
 - https://www.fedramp.gov/marketplace/compliant-systems/amazon-web-services-aws-eastwest-us-public-cloud/
 purpose: https://github.com/18F/calc/blob/develop/README.md
 components:
-- https://18f.gsa.gov/project/calc/
 - https://github.com/18f/calc
 
 # these will be the same unless your architecture is especially complex

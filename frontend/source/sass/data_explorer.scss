@@ -288,7 +288,7 @@ input[type="checkbox"]:checked ~ label {
   float: right;
   input {
     margin: 0;
-    width: 135px;
+    width: 155px;
     display: inline-block;
   }
   .go {
@@ -642,4 +642,5 @@ input[type="radio"]:focus + .checkbox-focus {
 .contract-year legend {
   float: left;
   margin-bottom: 10px;
+  font-size: $small-font-size;
 }

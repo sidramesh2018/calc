@@ -3,10 +3,8 @@
 // this is where modules should be `require(...)`'d
 
 require('babel-polyfill/dist/polyfill.js');
-require('jquery-tablesort');
 
 require('../common/dap-hacks');
-require('./tablesort');
 require('./upload');
 require('./ajaxform');
 require('./alerts');

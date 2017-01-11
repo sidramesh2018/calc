@@ -39,6 +39,7 @@ RAINBOW_COLORS = [
     ]
 ]
 
+
 RESET_COLORS = "\033[m"
 
 ASCII_ART_LOGO = """\
@@ -50,9 +51,35 @@ ASCII_ART_LOGO = """\
   \____/|_|\__|_|  \__,_|_|\___||___/\__|"""
 
 
+FAIL_TEXT = """\
+  _____ _    ___ _     _
+ |  ___/ \  |_ _| |   | |
+ | |_ / _ \  | || |   | |
+ |  _/ ___ \ | || |___|_|
+ |_|/_/   \_\___|_____(_)"""
+
+
+SUCCESS_TEXT = """\
+  ____  _   _  ____ ____ _____ ____ ____  _
+ / ___|| | | |/ ___/ ___| ____/ ___/ ___|| |
+ \___ \| | | | |  | |   |  _| \___ \___ \| |
+  ___) | |_| | |__| |___| |___ ___) |__) |_|
+ |____/ \___/ \____\____|_____|____/____/(_)"""
+
+
 def print_with_rainbow_colors(ascii_art):
     for color, line in zip(RAINBOW_COLORS, ascii_art.splitlines()):
         print(color + line)
+    print(RESET_COLORS)
+
+
+def print_big_fail():
+    print('\033[91m' + FAIL_TEXT)
+    print(RESET_COLORS)
+
+
+def print_big_success():
+    print('\033[92m' + SUCCESS_TEXT)
     print(RESET_COLORS)
 
 
@@ -206,8 +233,11 @@ def command(verbosity, testtype):
             echo('\n', 0)
 
     if len(failures) > 0:
+        print_big_fail()
         echo('Failing tests: {}'.format(', '.join(failures)), 0)
         exit_code = 1
+    else:
+        print_big_success()
 
     if report_coverage:
         coverage_after = get_coverage()

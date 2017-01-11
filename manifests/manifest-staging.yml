@@ -8,8 +8,8 @@ applications:
   instances: 1
   memory: 1G
   disk_quota: 1024M
-  host: calc-staging
-  domain: app.cloud.gov
+  routes:
+    - route: calc-staging.app.cloud.gov
   buildpack: python_buildpack
   command: bash cf.sh
   stack: cflinuxfs2

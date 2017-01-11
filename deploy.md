@@ -154,6 +154,15 @@ Now, if you don't already have the autopilot plugin, you can install it by runni
 cf install-plugin autopilot -f -r CF-Community
 ```
 
+At the time of writing, we did not have enough memory allocated to do a `zero-downtime-push`
+(which effectively doubles memory usage since it spins up another app instance)
+without first decreasing the memory footprint. This can be accomplished by scaling
+down the number of app instances:
+
+```sh
+cf scale -i 1 calc-prod
+```
+
 Then use the autopilot plugin's `zero-downtime-push` command to deploy:
 
 ```sh

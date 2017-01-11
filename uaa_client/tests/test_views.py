@@ -99,5 +99,5 @@ class ViewTests(TestCase):
     def test_logout(self):
         with mock.patch('django.contrib.auth.logout') as logout_mock:
             response = self.client.get('/auth/logout')
-            logout_mock.assert_called()
+            self.assertEqual(logout_mock.call_count, 1)
             self.assertEqual(response.status_code, 200)

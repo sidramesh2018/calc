@@ -190,6 +190,14 @@ All the project's dependencies, such as those mentioned in `requirements.txt`,
 are contained in Docker container images.  Whenever these dependencies change,
 you'll want to re-run `docker-compose build` to rebuild the containers.
 
+### Reading email
+
+In the development Docker configuration, we use a container with
+[MailCatcher][] to make it easy to read the emails sent by the app. You
+can view it at port 1080 of your Docker host.
+
+[MailCatcher]: https://mailcatcher.me/
+
 ### Deploying to cloud environments
 
 The Docker setup can also be used to deploy to cloud environments.
@@ -268,8 +276,13 @@ string), the boolean is true; otherwise, it's false.
   The setting can easily be manually tested via the `manage.py sendtestemail`
   command.
 
-* `SYSTEM_EMAIL_ADDRESS` is the email from-address to use in all system
-  generated emails. When `DEBUG` is true, this defaults to `dev@localhost`.
+* `DEFAULT_FROM_EMAIL` is the email from-address to use in all system
+  generated emails to users. It corresponds to Django's [`DEFAULT_FROM_EMAIL`][]
+  setting. It defaults to `noreply@localhost` when `DEBUG=True`.
+
+* `SERVER_EMAIL` is the email from-address to use in all system generated
+  emails to managers and admins. It corresponds to Django's [`SERVER_EMAIL`][]
+  setting. It defaults to `system@localhost` when `DEBUG=True`.
 
 * `REDIS_URL` is the URL for redis, which is used by the task queue.
   When `DEBUG` is true, it defaults to `redis://localhost:6379/0`.
@@ -508,7 +521,9 @@ for other than small business.
 [18F Docker guide]: https://pages.18f.gov/dev-environment-standardization/virtualization/docker/
 [Docker]: https://www.docker.com/
 [Docker Compose]: https://docs.docker.com/compose/
-[`SECRET_KEY`]: https://docs.djangoproject.com/en/1.9/ref/settings/#secret-key
+[`SECRET_KEY`]: https://docs.djangoproject.com/en/1.8/ref/settings/#secret-key
+[`DEFAULT_FROM_EMAIL`]: https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-DEFAULT_FROM_EMAIL
+[`SERVER_EMAIL`]: https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-SERVER_EMAIL
 [SASS]: http://sass-lang.com/
 [`deploy.md`]: https://github.com/18F/calc/blob/master/deploy.md
 [DJ-Database-URL schema]: https://github.com/kennethreitz/dj-database-url#url-schema

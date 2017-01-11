@@ -44,7 +44,8 @@ if DEBUG:
         # explicitly defined either.
         os.environ.setdefault('REDIS_TEST_URL', 'redis://localhost:6379/1')
     os.environ.setdefault('REDIS_URL', 'redis://localhost:6379/0')
-    os.environ.setdefault('SYSTEM_EMAIL_ADDRESS', 'dev@localhost')
+    os.environ.setdefault('DEFAULT_FROM_EMAIL', 'noreply@localhost')
+    os.environ.setdefault('SERVER_EMAIL', 'system@localhost')
 
 if 'EMAIL_URL' not in os.environ:
     raise Exception('Please define the EMAIL_URL environment variable!')
@@ -56,7 +57,8 @@ email_config = dj_email_url.config()
 # https://github.com/migonzalvar/dj-email-url
 vars().update(email_config)
 
-SYSTEM_EMAIL_ADDRESS = os.environ['SYSTEM_EMAIL_ADDRESS']
+DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+SERVER_EMAIL = os.environ['SERVER_EMAIL']
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 
@@ -276,6 +278,9 @@ CSRF_COOKIE_HTTPONLY = True
 
 # Amazon ELBs pass on X-Forwarded-Proto.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Amazon also sets X-Forwarded-Host.
+USE_X_FORWARDED_HOST = True
 
 SECRET_KEY = os.environ['SECRET_KEY']
 

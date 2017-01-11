@@ -95,7 +95,7 @@ def get_contracts_queryset(request_params, wage_field):
     if min_experience:
         contracts = contracts.filter(min_years_experience__gte=min_experience)
 
-    if max_experience:
+    if max_experience is not None:
         contracts = contracts.filter(min_years_experience__lte=max_experience)
 
     if min_education:

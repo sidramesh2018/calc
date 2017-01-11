@@ -4,7 +4,7 @@ cache:
   directories:
   - node_modules
 python:
-- 3.4
+- 3.5
 addons:
   postgresql: 9.3
   sauce_connect: true

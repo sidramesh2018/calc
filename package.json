@@ -35,7 +35,6 @@
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
     "jest": "^18.0.0",
-    "jquery-tablesort": "0.0.9",
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
     "react-dom": "^15.4.1",

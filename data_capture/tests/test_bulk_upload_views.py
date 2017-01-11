@@ -33,6 +33,7 @@ class R10StepTestCase(StepTestCase):
 
     def setup_upload_source(self, user):
         src = create_bulk_upload_contract_source(user)
+        src.save()
         session = self.client.session
         session['data_capture:upload_source_id'] = src.pk
         session.save()

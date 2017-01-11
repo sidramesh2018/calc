@@ -128,9 +128,11 @@ class BulkUploadContractSource(models.Model):
     Model to store provenance of bulk-uploaded contract data
     '''
     REGION_10 = 'R10'
+    SCHEDULE_70 = 'S70'
 
     PROCUREMENT_CENTER_CHOICES = (
         (REGION_10, 'Region 10'),
+        (SCHEDULE_70, 'Schedule 70'),
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

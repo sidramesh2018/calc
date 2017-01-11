@@ -3,6 +3,8 @@ from django.db.migrations.executor import MigrationExecutor
 from django.db import connections, DEFAULT_DB_ALIAS
 import django_rq
 
+from hourglass import __version__
+
 
 def is_database_synchronized(database=DEFAULT_DB_ALIAS):
     connection = connections[database]
@@ -14,6 +16,7 @@ def is_database_synchronized(database=DEFAULT_DB_ALIAS):
 
 def healthcheck(request):
     results = {
+        'version': __version__,
         'is_database_synchronized': is_database_synchronized(),
         'rq_jobs': len(django_rq.get_queue().jobs),
     }
