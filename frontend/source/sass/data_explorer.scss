@@ -318,7 +318,7 @@ input[type="checkbox"]:checked ~ label {
   }
 }
 
-#avg-price-highlight,
+.avg-price-highlight,
 h5.sd-highlight,
 h5.proposed-price-highlight {
   color: $color-primary;
@@ -409,8 +409,13 @@ td.column-idv_piid {
 }
 
 td.column-min_years_experience .years {
+  display: none;
   font-style: italic;
   color: $color-gray;
+}
+
+tr:hover td.column-min_years_experience .years {
+  display: inline;
 }
 
 .document-icon {
@@ -465,7 +470,7 @@ a.focus-input {
   color: $color-white;
 }
 
-#export-data {
+.export-data {
   margin: 0;
 }
 
@@ -479,10 +484,6 @@ a.focus-input {
   .empty .not-empty {
     display: none;
   }
-}
-
-#results-actions {
-  text-align: right;
 }
 
 #labor_category {
@@ -501,7 +502,7 @@ a.focus-input {
   }
 }
 
-#price-histogram {
+#price-histogram svg {
   max-height: 300px;
 }
 

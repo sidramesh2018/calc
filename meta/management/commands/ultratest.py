@@ -122,6 +122,10 @@ TESTTYPES = [
         'name': 'py.test',
         'cmd': 'py.test --cov-report xml --cov-report term --cov'
     },
+    {
+        'name': 'jest',
+        'cmd': 'npm test'
+    },
 ]
 
 

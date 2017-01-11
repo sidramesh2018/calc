@@ -1,10 +1,51 @@
+/* global $ document */
+
 import hourglass from '../common/hourglass';
 
-export default function initializeAutocomplete(form, api, $field) {
+export function appendHighlightedTerm($el, term, searchStr) {
+  const sanitizedSearch = searchStr.replace(/[^a-z0-9 ]/gi, '')
+    .trim()
+    .split(/[ ]+/)
+    .join('|');
+  const re = new RegExp(`(${sanitizedSearch})`, 'gi');
+
+  const plainText = (start, end) => document.createTextNode(
+    term.substring(start, end)
+  );
+  const highlightedText = (start, end) => $('<b></b>').text(
+    term.substring(start, end)
+  )[0];
+
+  let done = false;
+  let lastIndex = 0;
+  while (!done) {
+    const result = re.exec(term);
+    if (result === null) {
+      $el.append(plainText(lastIndex));
+      done = true;
+    } else {
+      $el.append(plainText(lastIndex, result.index));
+      $el.append(highlightedText(result.index, re.lastIndex));
+      lastIndex = re.lastIndex;
+    }
+  }
+
+  return $el;
+}
+
+export function destroy(el) {
+  $(el).autoComplete('destroy');
+}
+
+export function initialize(el, {
+  api,
+  getQueryType,
+  setFieldValue,
+}) {
   let autoCompReq;
   let searchTerms = '';
 
-  $field.autoComplete({
+  $(el).autoComplete({
     minChars: 2,
     // delay: 5,
     delay: 0,
@@ -16,12 +57,11 @@ export default function initializeAutocomplete(form, api, $field) {
       const lastTerm = hourglass.getLastCommaSeparatedTerm(term);
 
       if (autoCompReq) { autoCompReq.abort(); }
-      const data = form.getData();
       autoCompReq = api.get({
         uri: 'search/',
         data: {
           q: lastTerm,
-          query_type: data.query_type,
+          query_type: getQueryType(),
         },
       }, (error, result) => {
         autoCompReq = null;
@@ -34,16 +74,21 @@ export default function initializeAutocomplete(form, api, $field) {
       });
     },
     renderItem(item, searchStr) {
-      const re = new RegExp(`(${searchStr.split(' ').join('|')})`, 'gi');
       const term = item.term || item;
-      return [
-        `<div class="autocomplete-suggestion" data-val="${term}">`,
-        '<span class="term">', term.replace(re, '<b>$1</b>'), '</span>',
-        '<span class="count">', item.count, '</span>',
-        '</div>',
-      ].join('');
+      const $div = $('<div class="autocomplete-suggestion"></div>')
+        .attr('data-val', term);
+
+      appendHighlightedTerm(
+        $('<span class="term"></span>').appendTo($div),
+        term,
+        searchStr
+      );
+      $('<span class="count"></span>').text(item.count.toString())
+        .appendTo($div);
+
+      return $('<div></div>').append($div).html();
     },
-    onSelect(e, term, item, autocompleteSuggestion) {
+    onSelect(e, term) {
       let selectedInput;
 
       // check if search field has terms already
@@ -56,14 +101,12 @@ export default function initializeAutocomplete(form, api, $field) {
       // if search field doesn't have terms
       // but has selected an autocomplete suggestion,
       // then just show term and comma delimiter
-      } else if (autocompleteSuggestion) {
-        selectedInput = `${term}, `;
       } else {
-        selectedInput = `${$field.val()}, `;
+        selectedInput = `${term}, `;
       }
 
       // update the search input field accordingly
-      $field.val(selectedInput);
+      setFieldValue(selectedInput);
     },
   });
 }

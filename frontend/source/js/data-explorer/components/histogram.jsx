@@ -1,20 +1,98 @@
 /* global d3 */
 
+import React from 'react';
+import { connect } from 'react-redux';
+
 import {
   templatize,
   formatCommas,
-} from './util';
+  formatPrice,
+  formatFriendlyPrice,
+} from '../util';
 
-const PRICE_HISTOGRAM = '#price-histogram';
-const AVG_PRICE_HIGHLIGHT = '#avg-price-highlight';
-const STDDEV_MINUS_HIGHLIGHT = '#standard-deviation-minus-highlight';
-const STDDEV_PLUS_HIGHLIGHT = '#standard-deviation-plus-highlight';
+const INLINE_STYLES = `/* styles here for download graph compatibility */
 
-const formatPrice = d3.format(',.0f');
+* {
+  vector-effect: non-scaling-stroke;
+}
 
-let histogramUpdated = false;
+.stddev-rect {
+  position: absolute;;
+}
 
-export default function updatePriceHistogram(data) {
+.bars .bar rect {
+  fill: #0071bc;
+}
+
+.range-fill {
+  fill: #eeeeee;
+}
+
+.range-rule {
+  stroke: #5b616b;
+  fill: none;
+  stroke-dasharray: 5,5;
+  stroke-width: 1;
+}
+
+.label-rule {
+  stroke: #5b616b;
+}
+
+.stddev-text {
+  fill: #5b616b;
+}
+
+.axis .label {
+  fill: #5b616b;
+  font-style: italic;
+}
+
+.axis line,
+.axis path {
+  fill: none;
+  stroke-width: 1;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-size: 13px;
+}
+
+.stddev-text-label {
+  font-size: 12px;
+  fill: #5b616b;
+}
+
+.avg .value, .pp .value,
+.axis .tick.primary text {
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+.average, .proposed {
+  fill: #fff;
+}
+
+rect {
+  fill: #999;
+  stroke: #fff;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.avg-label-box, .pp-label-box {
+  fill: #212121;
+  stroke: none;
+}
+
+.avg line, .pp line {
+  stroke-width: 1;
+  stroke: #212121;
+}`;
+
+function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   const width = 720;
   const height = 300;
   const pad = [120, 15, 60, 60];
@@ -22,12 +100,10 @@ export default function updatePriceHistogram(data) {
   const left = pad[3];
   const right = width - pad[1];
   const bottom = height - pad[2];
-  const svg = d3.select(PRICE_HISTOGRAM)
+  const svg = d3.select(rootEl)
     .attr('viewBox', [0, 0, width, height].join(' '))
     .attr('preserveAspectRatio', 'xMinYMid meet');
   const formatDollars = (n) => `$${formatPrice(n)}`;
-  let stdMinus;
-  let stdPlus;
 
   const extent = [data.minimum, data.maximum];
   const bins = data.wage_histogram;
@@ -39,20 +115,11 @@ export default function updatePriceHistogram(data) {
       .domain([0].concat(countExtent))
       .range([0, 1, bottom - top]);
 
-  d3.select(AVG_PRICE_HIGHLIGHT)
-    .text(formatDollars(data.average));
-
   let stdDevMin = data.average - data.first_standard_deviation;
   let stdDevMax = data.average + data.first_standard_deviation;
 
   if (isNaN(stdDevMin)) stdDevMin = 0;
   if (isNaN(stdDevMax)) stdDevMax = 0;
-
-  d3.select(STDDEV_MINUS_HIGHLIGHT)
-    .text(formatDollars(stdDevMin));
-
-  d3.select(STDDEV_PLUS_HIGHLIGHT)
-    .text(formatDollars(stdDevMax));
 
   let stdDev = svg.select('.stddev');
   if (stdDev.empty()) {
@@ -89,28 +156,6 @@ export default function updatePriceHistogram(data) {
     stdDevLabelsText.append('tspan')
       .attr('class', 'stddev-text-label');
   }
-
-  stdMinus = data.average - data.first_standard_deviation;
-  stdPlus = data.average + data.first_standard_deviation;
-
-  if (isNaN(stdMinus)) {
-    stdMinus = '$0';
-  } else {
-    stdMinus = formatDollars(stdMinus);
-  }
-  if (isNaN(stdPlus)) {
-    stdPlus = '$0';
-  } else {
-    stdPlus = formatDollars(stdPlus);
-  }
-
-
-  d3.select(STDDEV_MINUS_HIGHLIGHT)
-    .text(stdMinus);
-
-  d3.select(STDDEV_PLUS_HIGHLIGHT)
-    .text(stdPlus);
-
 
   let xAxis = svg.select('.axis.x');
   if (xAxis.empty()) {
@@ -156,8 +201,10 @@ export default function updatePriceHistogram(data) {
     pp.append('line');
   }
 
-  // widen proposed price rect if more than 3 digits long
-  if (data.proposedPrice.toString().replace('.', '').length > 3) {
+  const proposedPriceStr = formatFriendlyPrice(proposedPrice);
+
+  // widen proposed price rect if more than a few characters long
+  if (proposedPriceStr.length > 3) {
     pp.select('rect').attr('width', 150);
     pp.select('text').attr('dx', 20);
   } else {
@@ -169,9 +216,9 @@ export default function updatePriceHistogram(data) {
     .attr('y1', ppOffset)
     .attr('y2', (bottom - top) + 8);
   pp.select('.value')
-    .text(`$${data.proposedPrice} proposed`);
+    .text(`$${proposedPriceStr} proposed`);
 
-  if (data.proposedPrice === 0) {
+  if (proposedPrice === 0) {
     pp.style('opacity', 0);
   } else {
     pp.style('opacity', 1);
@@ -237,7 +284,7 @@ export default function updatePriceHistogram(data) {
       });
     });
 
-  const t = histogramUpdated
+  const t = showTransition
     ? svg.transition().duration(500)
     : svg;
 
@@ -277,7 +324,7 @@ export default function updatePriceHistogram(data) {
     .attr('transform', `translate(${[~~x(data.average), top]})`);
 
   t.select('.pp')
-    .attr('transform', `translate(${[~~x(data.proposedPrice), top]})`);
+    .attr('transform', `translate(${[~~x(proposedPrice), top]})`);
 
   t.selectAll('.bar')
     .each((d) => {
@@ -340,6 +387,56 @@ export default function updatePriceHistogram(data) {
     .attr('transform', `translate(${[-25, (height / 2) + 25]}) rotate(-90)`)
     .attr('text-anchor', 'middle')
     .text('# of results');
-
-  histogramUpdated = true;
 }
+
+class Histogram extends React.Component {
+  updateHistogram(showTransition) {
+    updateHistogram(
+      this.svgEl,
+      this.props.ratesData,
+      this.props.proposedPrice,
+      showTransition
+    );
+  }
+
+  componentDidMount() {
+    this.updateHistogram(false);
+  }
+
+  componentDidUpdate() {
+    this.updateHistogram(true);
+  }
+
+  render() {
+    return (
+      <svg className="graph histogram has-data"
+           ref={ (svg) => { this.svgEl = svg; } }>
+        <title>Price histogram</title>
+        <desc>
+          A histogram showing the distribution of labor category prices.
+          Each bar represents a range within that distribution.
+        </desc>
+        <style>{INLINE_STYLES}</style>
+      </svg>
+    );
+  }
+}
+
+Histogram.propTypes = {
+  ratesData: React.PropTypes.object.isRequired,
+  proposedPrice: React.PropTypes.number.isRequired,
+};
+
+function mapStateToProps(state) {
+  return {
+    ratesData: state.rates.data,
+    proposedPrice: state['proposed-price'],
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  null,
+  null,
+  { withRef: true }
+)(Histogram);

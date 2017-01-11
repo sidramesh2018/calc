@@ -1,64 +1,88 @@
-/* global window, d3, event */
+/* global event */
 
-// for IE9: History API polyfill
-export const location = window.history.location || window.location;
-// TODO: if location.hash, read that
-// e.g. if an IE9 user sends a link to a Chrome user, they should see the
-// same stuff.
+import classNames from 'classnames';
+import { format } from 'd3-format';
 
-export const formatCommas = d3.format(',');
-
-export function getUrlParameterByName(name) {
-  const cleanedName = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
-  const regex = new RegExp(`[\\?&]${cleanedName}=([^&#]*)`);
-  const results = regex.exec(location.search);
-  return results === null ? ''
-    : decodeURIComponent(results[1].replace(/\+/g, ' ')).replace(/[<>]/g, '');
-}
-
-export function arrayToCSV(data) {
-  // turns any array input data into a comma separated string
-  // in use for the education filter
-  Object.keys(data).forEach((k) => {
-    if (Array.isArray(data[k])) {
-      data[k] = data[k].join(','); // eslint-disable-line no-param-reassign
-    }
-  });
-
-  return data;
-}
-
-export function templatize(str, undef) {
-  const undefFunc = d3.functor(undef);
-  return (d) => str.replace(/{(\w+)}/g, (_, key) => d[key] || undefFunc.call(d, key));
-}
-
-export function getFormat(spec) {
-  if (!spec) {
-    return (d) => d;
+export const formatCommas = format(',');
+export const formatPrice = format(',.0f');
+export const formatPriceWithCents = format(',.02f');
+export const formatFriendlyPrice = price => {
+  if (Math.floor(price) === price) {
+    return formatPrice(price);
   }
+  return formatPriceWithCents(price);
+};
 
-  const index = spec.indexOf('%');
-  if (index === -1) {
-    return d3.format(spec);
-  }
-  const prefix = spec.substr(0, index);
-  const format = d3.format(spec.substr(index + 1));
-  return (str) => {
-    if (!str) {
-      return '';
+const KEY_ENTER = 13;
+const KEY_SPACE = 32;
+
+export function handleEnter(cb) {
+  return event => {
+    if (event.keyCode === KEY_ENTER) {
+      event.preventDefault();
+      cb(event);
     }
-    return prefix + format(+str);
   };
 }
 
-export function isNumberOrPeriodKey(evt) {
-  const charCode = (evt.which) ? evt.which : event.keyCode;
-  if (charCode === 46) {
-    return true;
+export function handleEnterOrSpace(cb) {
+  return event => {
+    if (event.keyCode === KEY_ENTER || event.keyCode === KEY_SPACE) {
+      event.preventDefault();
+      cb(event);
+    }
+  };
+}
+
+export function autobind(self, names) {
+  const target = self;
+
+  names.forEach(name => {
+    target[name] = target[name].bind(target);
+  });
+}
+
+export function templatize(str, undef) {
+  const undefFunc = () => undef;
+  return (d) => str.replace(/{(\w+)}/g, (_, key) => d[key] || undefFunc.call(d, key));
+}
+
+export function parsePrice(value, defaultValue = 0) {
+  let floatValue = parseFloat(value);
+
+  if (isNaN(floatValue) || floatValue < 0) {
+    floatValue = defaultValue;
   }
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    return false;
+
+  return floatValue;
+}
+
+// http://stackoverflow.com/a/13419367
+export function parseQuery(qstr) {
+  const query = {};
+  const a = qstr.substr(1).split('&');
+
+  for (let i = 0; i < a.length; i++) {
+    const b = a[i].split('=');
+    query[decodeURIComponent(b[0])] = decodeURIComponent(
+      (b[1] || '').replace(/\+/g, ' ')
+    );
   }
-  return true;
+
+  return query;
+}
+
+export function joinQuery(query) {
+  const parts = Object.keys(query).map(name => {
+    const encName = encodeURIComponent(name);
+    const encValue = encodeURIComponent(query[name]);
+
+    return `${encName}=${encValue}`;
+  }).join('&');
+
+  return `?${parts}`;
+}
+
+export function filterActive(isActive, otherClasses = '') {
+  return classNames(isActive ? 'filter_active' : '', otherClasses);
 }
