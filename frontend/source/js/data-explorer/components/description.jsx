@@ -14,6 +14,11 @@ import {
 
 import { formatCommas } from '../util';
 
+function stripTrailingComma(str) {
+  // Removes trailing comma and whitespace from given string
+  return str.replace(/,\s*$/, '');
+}
+
 export function Description({
   shownResults,
   totalResults,
@@ -30,7 +35,11 @@ export function Description({
   const filters = [];
 
   if (laborCategory) {
-    filters.push(<DescriptionFilter key="lab">{laborCategory}</DescriptionFilter>);
+    filters.push(
+      <DescriptionFilter key="lab">
+        {stripTrailingComma(laborCategory)}
+      </DescriptionFilter>
+    );
   }
 
   if (education.length) {

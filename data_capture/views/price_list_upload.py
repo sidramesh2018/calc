@@ -81,7 +81,7 @@ def step_1(request, step):
                 contract_number)
             details_url = build_url('data_capture:price_list_details',
                                     reverse_kwargs={'id': latest.pk})
-            msg = mark_safe(
+            msg = mark_safe(  # nosec
                 "We found an existing price list for contract number {}.</br>"
                 "If you'd like, you may "
                 "<a href='{}'>see its details</a>.".format(
