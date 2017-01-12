@@ -6,8 +6,6 @@ import pexpect
 
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
-# This script was taken directly from:
-# https://github.com/travis-ci/travis-build/blob/master/lib/travis/build/addons/sauce_connect/templates/sauce_connect.sh
 SAUCE_CONNECT_SH_PATH = os.path.join(MY_DIR, 'sauce_connect.sh')
 
 PROMPT = "BASH IS READY > "

@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# This script was taken directly from:
+#
+#   https://github.com/travis-ci/travis-build/blob/master/lib/travis/build/addons/sauce_connect/templates/sauce_connect.sh
+#
+# It is Copyright (c) 2016 Travis CI GmbH and licensed under the MIT license,
+# which can be viewed at:
+#
+#   https://github.com/travis-ci/travis-build/blob/master/LICENSE
+
 export _SC_PID=unset
 
 function travis_start_sauce_connect() {
