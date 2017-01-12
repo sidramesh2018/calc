@@ -24,6 +24,7 @@ install:
 script:
 - phantomjs --version
 - python manage.py ultratest flake8
+- python manage.py ultratest mypy
 - npm run gulp -- build
 - echo "For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330"
 - bandit -r .

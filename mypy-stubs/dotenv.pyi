@@ -1,0 +1,3 @@
+from typing import Optional
+
+def load_dotenv(dotenv_path: str) -> Optional[bool]: ...
