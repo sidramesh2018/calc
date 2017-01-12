@@ -8,6 +8,8 @@ MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
 SAUCE_CONNECT_SH_PATH = os.path.join(MY_DIR, 'sauce_connect.sh')
 
+LOAD_SAUCE_CONNECT = 'source {}'.format(SAUCE_CONNECT_SH_PATH)
+
 PROMPT = "BASH IS READY > "
 
 TIMEOUT = 30  # In seconds.
@@ -22,7 +24,8 @@ def get_last_exitcode(child):
 
 
 class SauceConnectTunnel:
-    def __init__(self):
+    def __init__(self, load_cmd=LOAD_SAUCE_CONNECT):
+        self.load_cmd = load_cmd
         self.child = None
 
     def safe_start(self):
@@ -58,7 +61,7 @@ class SauceConnectTunnel:
         child.logfile = sys.stdout
 
         child.expect(PROMPT)
-        child.sendline('source {}'.format(SAUCE_CONNECT_SH_PATH))
+        child.sendline(self.load_cmd)
         child.expect(PROMPT)
         child.sendline('travis_start_sauce_connect')
         child.expect(PROMPT)
@@ -71,19 +74,26 @@ class SauceConnectTunnel:
         return False
 
     def stop(self):
-        child = self.child
-        self.child = None
-        if child is not None:
-            child.sendline('travis_stop_sauce_connect')
-            child.expect(PROMPT)
-            child.close()
+        if self.child is None:
+            return False
+
+        self.child.sendline('travis_stop_sauce_connect')
+        self.child.expect(PROMPT)
+        exitcode = get_last_exitcode(self.child)
+
+        if exitcode == 0:
+            self.child.close()
+            self.child = None
+            return True
+
+        return False
 
 
-def maybe_run_with_tunnel(args):
-    env = {}
-    env.update(os.environ)
+def maybe_run_with_tunnel(args, tunnel=None, env=os.environ):
+    env = env.copy()
 
-    tunnel = SauceConnectTunnel()
+    if tunnel is None:
+        tunnel = SauceConnectTunnel()
     started = tunnel.safe_start()
 
     if started:
@@ -106,11 +116,11 @@ def maybe_run_with_tunnel(args):
 
     tunnel.safe_stop()
 
-    sys.exit(returncode)
+    return returncode
 
 
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
         print("usage: {} <command>".format(sys.argv[0]))
 
-    maybe_run_with_tunnel(sys.argv[1:])
+    sys.exit(maybe_run_with_tunnel(sys.argv[1:]))
