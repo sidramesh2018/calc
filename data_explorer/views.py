@@ -19,7 +19,7 @@ def index(request, template_vars=None):
 def index_with_csp(request):
     csp_nonce = get_random_string(length=10)
     response = index(request, template_vars={
-        'csp_nonce': mark_safe('nonce="{}"'.format(csp_nonce))
+        'csp_nonce': mark_safe('nonce="{}"'.format(csp_nonce))  # nosec
     })
     script_src = ' '.join([
         "'self'",
