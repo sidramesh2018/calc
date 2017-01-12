@@ -11,30 +11,12 @@
   <tbody>
   {% for row in rows %}
     <tr>
-      <td class="{% if row.sin.errors %}error{% endif %}">
-        {{ row.sin.value }}
-        {{ row.sin.errors }}
+    {% for col in row %}
+      <td class="{% if col.errors %}error{% endif %} {% if col.name == 'education' %}number{% elif col.name == 'price_including_iff' %}number currency{% endif %}">
+        {{ col.value }}
+        {% if col.errors %}<span class="tooltip">{{ col.errors }}</span>{% endif %}
       </td>
-      <td class="{% if row.service.errors %}error{% endif %}">
-        {{ row.service.value }}
-        {{ row.service.errors }}
-      </td>
-      <td class="{% if row.education.errors %}error{% endif %}">
-        {{ row.education.value }}
-        {{ row.education.errors }}
-      </td>
-      <td class="number {% if row.years_experience.errors %}error{% endif %}">
-        {{ row.years_experience.value }}
-        {{ row.years_experience.errors }}
-      </td>
-      <td class="number {% if row.price_including_iff.errors %}error{% else %}currency{% endif %}">
-        {% if row.price.errors %}
-          {{ row.price.value }}
-          {{ row.price.errors }}
-        {% else %}
-          {{ row.price.value|floatformat:2 }}
-        {% endif %}
-      </td>
+    {% endfor %}
     </tr>
   {% endfor %}
   </tbody>
