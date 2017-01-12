@@ -109,7 +109,6 @@ def maybe_run_with_tunnel(args, tunnel=None, env=os.environ):
     returncode = subprocess.call(
         args,
         env=env,
-        stdin=sys.stdin,
         stdout=sys.stdout,
         stderr=sys.stderr
         )
