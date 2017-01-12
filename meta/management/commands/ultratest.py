@@ -126,6 +126,10 @@ TESTTYPES = [
         'name': 'mypy',
         'cmd': 'mypy @mypy-files.txt'
     },
+    {
+        'name': 'jest',
+        'cmd': 'npm test'
+    },
 ]
 
 

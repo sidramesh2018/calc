@@ -9,3 +9,4 @@ require('./smooth-scroll_tests');
 require('./ga_tests');
 require('./hourglass_tests');
 require('./dap-hacks_tests');
+require('./data-explorer_tests');

@@ -13,6 +13,7 @@ from django.contrib.auth.forms import UserChangeForm
 from . import email
 from .schedules import registry
 from .models import SubmittedPriceList, SubmittedPriceListRow
+from .templatetags.data_capture import tz_timestamp
 
 
 class UniqueEmailFormMixin:
@@ -248,8 +249,8 @@ class UndeletableModelAdmin(admin.ModelAdmin):
 
 class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
     list_display = ('contract_number', 'vendor_name', 'submitter',
-                    'created_at', 'status_changed_by_email',
-                    'status_changed_at')
+                    'tz_created_at', 'status_changed_by_email',
+                    'tz_status_changed_at')
 
     fields = (
         'contract_number',
@@ -260,20 +261,20 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
         'contract_start',
         'contract_end',
         'submitter',
-        'created_at',
-        'updated_at',
+        'tz_created_at',
+        'tz_updated_at',
         'current_status',
-        'status_changed_at',
+        'tz_status_changed_at',
         'status_changed_by_email',
     )
 
     readonly_fields = (
         'schedule_title',
-        'created_at',
-        'updated_at',
+        'tz_created_at',
+        'tz_updated_at',
         'current_status',
         'submitter',
-        'status_changed_at',
+        'tz_status_changed_at',
         'status_changed_by_email',
     )
 
@@ -306,7 +307,22 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
                         "use the 'Approve selected price lists' action from "
                         "the <a href=\"..\">list view</a>.")
 
-        return mark_safe(content)
+        return mark_safe(content)  # nosec
+
+    def tz_created_at(self, instance):
+        return tz_timestamp(instance.created_at)
+
+    tz_created_at.short_description = 'Created at'
+
+    def tz_updated_at(self, instance):
+        return tz_timestamp(instance.updated_at)
+
+    tz_updated_at.short_description = 'Updated at'
+
+    def tz_status_changed_at(self, instance):
+        return tz_timestamp(instance.status_changed_at)
+
+    tz_status_changed_at.short_description = 'Status changed at'
 
     def schedule_title(self, instance):
         return registry.get_class(instance.schedule).title

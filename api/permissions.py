@@ -4,24 +4,26 @@ from django.conf import settings
 
 class WhiteListPermission(permissions.BasePermission):
     """
-        Global permission check for api.data.gov IPs
+    This class is used in our Django Rest Framework to check
+    that the incoming request is from a whitelisted IP.
+
+    In practice, it is used to only allow requests to our backend API
+    to come directly from an api.data.gov proxy.
     """
 
     def has_permission(self, request, view):
-        ip_addr = None
+        if not settings.REST_FRAMEWORK['WHITELIST']:
+            # if no WHITELIST, then permission is allowed
+            return True
+
         forwarded = request.META.get('HTTP_X_FORWARDED_FOR')
         if forwarded:
-            try:
-                ip_addr = forwarded.split(',')[-2].strip()
-            except:
-                ip_addr = forwarded
+            ip_addresses = [f.strip() for f in forwarded.split(',')]
         else:
-            ip_addr = request.META['REMOTE_ADDR']
+            ip_addresses = [request.META['REMOTE_ADDR']]
 
-        if settings.REST_FRAMEWORK['WHITELIST']:
-            if ip_addr in settings.REST_FRAMEWORK['WHITELIST']:
+        for ip in ip_addresses:
+            if ip in settings.REST_FRAMEWORK['WHITELIST']:
                 return True
-            else:
-                return False
-        else:
-            return True
+
+        return False

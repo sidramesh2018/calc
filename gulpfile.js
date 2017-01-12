@@ -43,7 +43,7 @@ const dirs = {
 
 const paths = {
   sass: '**/*.scss',
-  js: '**/*.js',
+  js: '**/*.@(js|jsx)',
 };
 
 const bundles = {
@@ -54,7 +54,6 @@ const bundles = {
       'vendor/d3.v3.min.js',
       'vendor/jquery.min.js',
       'vendor/query.xdomainrequest.min.js',
-      'vendor/formdb.min.js',
       'vendor/jquery.tooltipster.js',
       'vendor/jquery.nouislider.all.min.js',
     ],
@@ -188,8 +187,20 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
     debug: true,
     cache: {},
     packageCache: {},
-  })
-    .transform(babelify.configure({ presets: ['es2015'] }));
+    extensions: ['.jsx'],
+  });
+
+  // Some modules are referenced in the source code for
+  // Enzyme, but they're never actually loaded because they're only
+  // needed for older versions of React, so we'll explicitly tell
+  // Browserify to ignore them here.
+  bundler = bundler
+    .exclude('react/addons')
+    .exclude('react/lib/ReactContext')
+    .exclude('react/lib/ExecutionEnvironment');
+
+  bundler = bundler
+    .transform(babelify.configure({ presets: ['es2015', 'react'] }));
 
   if (isWatching) {
     bundler = watchify(bundler);
