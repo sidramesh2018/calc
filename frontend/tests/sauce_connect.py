@@ -4,6 +4,10 @@ import subprocess
 import traceback
 import pexpect
 
+if False:
+    # This is just needed so mypy will work; it's never executed.
+    from typing import Optional  # NOQA
+
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
 SAUCE_CONNECT_SH_PATH = os.path.join(MY_DIR, 'sauce_connect.sh')
@@ -15,7 +19,7 @@ PROMPT = "BASH IS READY > "
 TIMEOUT = 30  # In seconds.
 
 
-def get_last_exitcode(child):
+def get_last_exitcode(child):  # type: (pexpect.spawn) -> int
     child.sendline('echo $?')
     child.readline()
     exitcode = int(child.readline())
@@ -24,25 +28,26 @@ def get_last_exitcode(child):
 
 
 class SauceConnectTunnel:
-    def __init__(self, load_cmd=LOAD_SAUCE_CONNECT):
+    def __init__(self, load_cmd=LOAD_SAUCE_CONNECT):  # type: (str) -> None
         self.load_cmd = load_cmd
-        self.child = None
+        self.child = None  # type: Optional[pexpect.spawn]
 
-    def safe_start(self):
+    def safe_start(self):  # type: () -> bool
         try:
             return self.start()
         except Exception:
             traceback.print_exc()
             return False
 
-    def safe_stop(self):
+    def safe_stop(self):  # type: () -> bool
         try:
-            self.stop()
+            return self.stop()
         except Exception:
             traceback.print_exc()
+            return False
 
-    def start(self):
-        env = {}
+    def start(self):  # type: () -> bool
+        env = {}  # type: Dict[str, str]
         env.update(os.environ)
         env['PS1'] = PROMPT
 
@@ -73,7 +78,7 @@ class SauceConnectTunnel:
 
         return False
 
-    def stop(self):
+    def stop(self):  # type: () -> bool
         if self.child is None:
             return False
 
@@ -89,12 +94,21 @@ class SauceConnectTunnel:
         return False
 
 
-def maybe_run_with_tunnel(args, tunnel=None, env=os.environ):
-    env = env.copy()
+def copy_os_environ():  # type: () -> Dict[str, str]
+    e = {}  # type: Dict[str, str]
+    e.update(os.environ)
+    return e
+
+
+def maybe_run_with_tunnel(args, tunnel=None, env=None):
+    # type: (List[str], SauceConnectTunnel, Dict[str, str]) -> int
 
     if tunnel is None:
         tunnel = SauceConnectTunnel()
     started = tunnel.safe_start()
+
+    if env is None:
+        env = copy_os_environ()
 
     if started:
         print("Successfully established Sauce Connect tunnel. Amazing.")
