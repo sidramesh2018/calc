@@ -61,9 +61,22 @@ before_deploy:
 - tar xzvf $HOME/cf.tgz -C $HOME
 - travis_retry cf install-plugin autopilot -f -r CF-Community
 deploy:
-  provider: script
-  script: "./deploy-travis.sh"
-  skip_cleanup: true
-  on:
-    branch: develop
+  - provider: script
+    script: DEPLOY_ENV=dev ./deploy-travis.sh
+    skip_cleanup: true
+    on:
+      branch: develop
+  - provider: script
+    script: DEPLOY_ENV=staging ./deploy-travis.sh
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: DEPLOY_ENV=prod ./deploy-travis.sh
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+      # Only deploy when tag looks like a semver version, e.g.: "v1.2.3"
+      condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
 sudo: required
