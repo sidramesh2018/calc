@@ -123,6 +123,10 @@ TESTTYPES = [
         'cmd': 'py.test --cov-report xml --cov-report term --cov'
     },
     {
+        'name': 'mypy',
+        'cmd': 'mypy @mypy-files.txt'
+    },
+    {
         'name': 'jest',
         'cmd': 'npm test'
     },
