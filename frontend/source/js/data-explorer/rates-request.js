@@ -66,12 +66,12 @@ export default class StoreRatesAutoRequester {
   }
 
   middleware(store) {
-    return next => action => {
+    return next => (action) => {
       const oldState = store.getState();
       const result = next(action);
       const newState = store.getState();
       const updated = ratesFields.some(
-        field => newState[field] !== oldState[field]
+        field => newState[field] !== oldState[field],
       );
 
       if (updated || newState.rates.stale) {

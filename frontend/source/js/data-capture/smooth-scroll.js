@@ -174,7 +174,7 @@ export function activate(window, options = {}) {
   const scrollMs = options.scrollMs || DEFAULT_SCROLL_MS;
   const onScroll = options.onScroll || (() => {});
 
-  $('html', window.document).on('click', 'a[href^="#"]', e => {
+  $('html', window.document).on('click', 'a[href^="#"]', (e) => {
     const scrollId = $(e.target).attr('href').slice(1);
     const scrollTarget = window.document.getElementById(scrollId);
 
@@ -190,7 +190,7 @@ export function activate(window, options = {}) {
     }
   });
 
-  window.addEventListener('popstate', e => {
+  window.addEventListener('popstate', (e) => {
     if (e.state && 'pageYOffset' in e.state) {
       smoothScroll(window, e.state.pageYOffset, scrollMs, onScroll);
     }

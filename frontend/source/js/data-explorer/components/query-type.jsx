@@ -22,15 +22,17 @@ const INPUT_INFOS = {
 };
 
 export function QueryType({ queryType, setQueryType, idPrefix }) {
-  const input = type => {
+  const input = (type) => {
     const { idSuffix } = INPUT_INFOS[type];
     const id = `${idPrefix}${idSuffix}`;
 
     return (
       <span>
-        <input id={id} type="radio" name="query_type" value={type}
-               checked={type === queryType}
-               onChange={() => { setQueryType(type); }}/>
+        <input
+          id={id} type="radio" name="query_type" value={type}
+          checked={type === queryType}
+          onChange={() => { setQueryType(type); }}
+        />
         <label htmlFor={id}>
           {QUERY_TYPE_LABELS[type]}
         </label>
@@ -59,5 +61,5 @@ QueryType.defaultProps = {
 
 export default connect(
   state => ({ queryType: state.query_type }),
-  { setQueryType: setQueryTypeAction }
+  { setQueryType: setQueryTypeAction },
 )(QueryType);

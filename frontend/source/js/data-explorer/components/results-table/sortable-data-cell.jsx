@@ -7,11 +7,13 @@ const getDataCellClasses = (key, sort) => ({
   [`column-${key}`]: true,
 });
 
-export const createDataCellConnector = key => Component => {
+export const createDataCellConnector = key => (Component) => {
   const wrappedComponent = ({ sort, result }) => (
-    <Component className={classNames(getDataCellClasses(key, sort))}
-               value={result[key]}
-               result={result} />
+    <Component
+      className={classNames(getDataCellClasses(key, sort))}
+      value={result[key]}
+      result={result}
+    />
   );
 
   wrappedComponent.propTypes = {
@@ -22,21 +24,25 @@ export const createDataCellConnector = key => Component => {
   // Let's use the same naming convention as react-redux here.
   wrappedComponent.WrappedComponent = Component;
 
+  wrappedComponent.cellKey = key;
+
   return wrappedComponent;
 };
 
-export class GenericDataCell extends React.Component {
-  render() {
-    return (
-      <td className={this.props.className}>
-        {this.props.value}
-      </td>
-    );
-  }
+
+export function GenericDataCell({ className, value }) {
+  return (
+    <td className={className}>
+      {value}
+    </td>
+  );
 }
 
 GenericDataCell.propTypes = {
   className: React.PropTypes.string.isRequired,
-  result: React.PropTypes.object.isRequired,
   value: React.PropTypes.any,
+};
+
+GenericDataCell.defaultProps = {
+  value: null,
 };

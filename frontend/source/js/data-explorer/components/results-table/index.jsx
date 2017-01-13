@@ -35,9 +35,12 @@ export class ResultsTable extends React.Component {
       .filter(r => !!priceForContractYear(this.props.contractYear, r))
       .map(result => (
         <tr key={result.id}>
-          {COLUMNS.map((col, i) => (
-            <col.DataCell key={i} sort={this.props.sort} result={result} />
-          ))}
+          {COLUMNS.map((col) => {
+            const cellKey = `${result.id}-${col.DataCell.cellKey}`;
+            return (
+              <col.DataCell key={cellKey} sort={this.props.sort} result={result} />
+            );
+          })}
         </tr>
       ));
   }
@@ -50,9 +53,12 @@ export class ResultsTable extends React.Component {
       <table id={id} className="results has-data sortable hoverable">
         <thead>
           <tr>
-            {COLUMNS.map((col, i) => (
-              <col.HeaderCell key={i} setSort={this.props.setSort}
-                              sort={this.props.sort} />
+            {COLUMNS.map(col => (
+              <col.HeaderCell
+                key={`header-${col.DataCell.cellKey}`}
+                setSort={this.props.setSort}
+                sort={this.props.sort}
+              />
             ))}
           </tr>
         </thead>

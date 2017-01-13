@@ -63,9 +63,9 @@ export function hackilyNotifyAutoTrackerOfNewLinks(initAutoTracker, links) {
 
 export function observe(
   parentEl = window.document.documentElement,
-  getInitAutoTracker = () => window[DEFAULT_INIT_AUTO_TRACKER_NAME]
+  getInitAutoTracker = () => window[DEFAULT_INIT_AUTO_TRACKER_NAME],
 ) {
-  const observer = new window.MutationObserver(mutations => {
+  const observer = new window.MutationObserver((mutations) => {
     const initAutoTracker = getInitAutoTracker();
 
     if (window.document.readyState === 'loading' ||

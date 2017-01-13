@@ -7,8 +7,6 @@ import xml.etree.ElementTree as etree
 from django.core.management.base import CommandError
 from typing import List, Any
 
-from docker_django_management import IS_RUNNING_IN_DOCKER
-
 
 # This is based on:
 #
@@ -100,24 +98,17 @@ def get_coverage() -> float:
     return 0.0
 
 TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
-ESLINT_CMD = 'npm run failable-eslint'
-
-if IS_RUNNING_IN_DOCKER:
-    # Until https://github.com/benmosher/eslint-plugin-import/issues/142
-    # is fixed, we need to disable the following rule for Docker support.
-    ESLINT_CMD = ('eslint --rule "import/no-unresolved: off" '
-                  '--max-warnings 0 .')
 
 TestType = namedtuple('TestType', ['name', 'cmd'])
 
 TESTTYPES = [
     TestType(name='flake8', cmd='flake8 --exclude=node_modules,migrations .'),
-    TestType(name='eslint', cmd=ESLINT_CMD),
+    TestType(name='eslint', cmd='npm run failable-eslint'),
     TestType(name='bandit', cmd='bandit -r .'),
-    TestType(name='py.test',
-             cmd='py.test --cov-report xml --cov-report term --cov'),
     TestType(name='mypy', cmd='mypy @mypy-files.txt'),
     TestType(name='jest', cmd='npm test'),
+    TestType(name='py.test',
+             cmd='py.test --cov-report xml --cov-report term --cov'),
 ]
 
 

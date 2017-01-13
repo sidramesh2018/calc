@@ -23,5 +23,5 @@ export const DataCell = column.connectDataCell(
         {value} {years}
       </td>
     );
-  }
+  },
 );

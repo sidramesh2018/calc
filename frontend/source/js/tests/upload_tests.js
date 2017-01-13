@@ -20,7 +20,7 @@ import { UploadWidget } from '../data-capture/upload';
       div.setAttribute('data-force-degradation', '');
     }
 
-    div.addEventListener('uploadwidgetready', e => {
+    div.addEventListener('uploadwidgetready', (e) => {
       upload = $(e.target);
       input = upload.find('input');
       cb();
@@ -80,11 +80,11 @@ import { UploadWidget } from '../data-capture/upload';
     assert.equal(typeof UploadWidget.HAS_BROWSER_SUPPORT, 'boolean');
   });
 
-  test('widget w/ non-ajaxform form is always degraded', assert => {
+  test('widget w/ non-ajaxform form is always degraded', (assert) => {
     const div = document.createElement('div');
     const done = assert.async();
 
-    div.addEventListener('uploadwidgetready', e => {
+    div.addEventListener('uploadwidgetready', (e) => {
       assert.ok(e.target.isDegraded);
       done();
     });
@@ -95,14 +95,14 @@ import { UploadWidget } from '../data-capture/upload';
     document.body.appendChild(div);
   });
 
-  test('upload-input removes "required" attr on upgrade', assert => {
+  test('upload-input removes "required" attr on upgrade', (assert) => {
     upload = document.createElement('input', { is: 'upload-input' });
     upload.setAttribute('required', '');
     upload.upgrade();
     assert.ok(!upload.hasAttribute('required'));
   });
 
-  test('upload-input calls setCustomValidity() if required', assert => {
+  test('upload-input calls setCustomValidity() if required', (assert) => {
     upload = document.createElement('input', { is: 'upload-input' });
     upload.setAttribute('required', '');
     upload.setCustomValidity = sinon.spy();
@@ -118,7 +118,7 @@ import { UploadWidget } from '../data-capture/upload';
     assert.ok(upload.upgradedValue, 'fakefile');
   });
 
-  test('upload-input works when setCustomValidity is undefined', assert => {
+  test('upload-input works when setCustomValidity is undefined', (assert) => {
     upload = document.createElement('input', { is: 'upload-input' });
     upload.setAttribute('required', '');
     upload.setCustomValidity = undefined;
@@ -198,7 +198,7 @@ import { UploadWidget } from '../data-capture/upload';
       originalEvent: { dataTransfer: { files: [fakeFile] } },
     });
 
-    upload.on('changefile', e => {
+    upload.on('changefile', (e) => {
       assert.strictEqual(e.originalEvent.detail, fakeFile);
     });
     upload.trigger(evt);

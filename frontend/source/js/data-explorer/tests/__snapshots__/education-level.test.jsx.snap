@@ -1,15 +1,17 @@
 exports[`<EducationLevel> matches snapshot 1`] = `
 <div>
-  <label>
+  <label
+    htmlFor="zzz_education_level">
     Education level:
   </label>
   <dl
-    className="dropdown">
+    className="dropdown"
+    id="zzz_education_level">
     <dt>
       <a
         aria-expanded="false"
         className="filter_active"
-        href="#"
+        href=""
         onClick={[Function]}
         onKeyDown={[Function]}
         role="button">
@@ -36,71 +38,31 @@ exports[`<EducationLevel> matches snapshot 1`] = `
           </legend>
           <ul
             style={null}>
-            <li>
-              <input
-                checked={false}
-                id="zzz_HS"
-                name="education"
-                onChange={[Function]}
-                type="checkbox"
-                value="HS" />
-              <label
-                htmlFor="zzz_HS">
-                High School
-              </label>
-            </li>
-            <li>
-              <input
-                checked={false}
-                id="zzz_AA"
-                name="education"
-                onChange={[Function]}
-                type="checkbox"
-                value="AA" />
-              <label
-                htmlFor="zzz_AA">
-                Associates
-              </label>
-            </li>
-            <li>
-              <input
-                checked={false}
-                id="zzz_BA"
-                name="education"
-                onChange={[Function]}
-                type="checkbox"
-                value="BA" />
-              <label
-                htmlFor="zzz_BA">
-                Bachelors Degree
-              </label>
-            </li>
-            <li>
-              <input
-                checked={true}
-                id="zzz_MA"
-                name="education"
-                onChange={[Function]}
-                type="checkbox"
-                value="MA" />
-              <label
-                htmlFor="zzz_MA">
-                Masters Degree
-              </label>
-            </li>
-            <li>
-              <input
-                checked={true}
-                id="zzz_PHD"
-                name="education"
-                onChange={[Function]}
-                type="checkbox"
-                value="PHD" />
-              <label
-                htmlFor="zzz_PHD">
-                Ph.D
-              </label>
-            </li>
+            <EducationLevelItem
+              checked={false}
+              id="zzz_HS"
+              onCheckboxClick={[Function]}
+              value="HS" />
+            <EducationLevelItem
+              checked={false}
+              id="zzz_AA"
+              onCheckboxClick={[Function]}
+              value="AA" />
+            <EducationLevelItem
+              checked={false}
+              id="zzz_BA"
+              onCheckboxClick={[Function]}
+              value="BA" />
+            <EducationLevelItem
+              checked={true}
+              id="zzz_MA"
+              onCheckboxClick={[Function]}
+              value="MA" />
+            <EducationLevelItem
+              checked={true}
+              id="zzz_PHD"
+              onCheckboxClick={[Function]}
+              value="PHD" />
           </ul>
         </fieldset>
       </div>

@@ -26,7 +26,7 @@ $(document).ready(() => {
         $('body').removeClass('no-scroll');
       });
 
-      $el.click((e) => e.preventDefault());
+      $el.click(e => e.preventDefault());
     }
   });
 });

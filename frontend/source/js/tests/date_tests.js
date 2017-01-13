@@ -13,7 +13,7 @@ function makeDate() {
   return { date, input1, input2 };
 }
 
-QUnit.test('input focus changed on "/"', assert => {
+QUnit.test('input focus changed on "/"', (assert) => {
   const { date, input1, input2 } = makeDate();
   let defaultPrevented = false;
 
@@ -28,7 +28,7 @@ QUnit.test('input focus changed on "/"', assert => {
   });
 });
 
-QUnit.test('input focus not changed when on last input', assert => {
+QUnit.test('input focus not changed when on last input', (assert) => {
   const { date, input1, input2 } = makeDate();
   let defaultPrevented = false;
 

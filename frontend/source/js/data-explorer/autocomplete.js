@@ -10,10 +10,10 @@ export function appendHighlightedTerm($el, term, searchStr) {
   const re = new RegExp(`(${sanitizedSearch})`, 'gi');
 
   const plainText = (start, end) => document.createTextNode(
-    term.substring(start, end)
+    term.substring(start, end),
   );
   const highlightedText = (start, end) => $('<b></b>').text(
-    term.substring(start, end)
+    term.substring(start, end),
   )[0];
 
   let done = false;
@@ -66,7 +66,7 @@ export function initialize(el, {
       }, (error, result) => {
         autoCompReq = null;
         if (error) { return done([]); }
-        const categories = result.slice(0, 20).map((d) => ({
+        const categories = result.slice(0, 20).map(d => ({
           term: d.labor_category,
           count: d.count,
         }));
@@ -81,7 +81,7 @@ export function initialize(el, {
       appendHighlightedTerm(
         $('<span class="term"></span>').appendTo($div),
         term,
-        searchStr
+        searchStr,
       );
       $('<span class="count"></span>').text(item.count.toString())
         .appendTo($div);

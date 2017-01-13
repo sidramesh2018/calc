@@ -2,7 +2,7 @@
 
 QUnit.module('alerts');
 
-QUnit.test('sets tabindex=-1 and focuses itself when attached', assert => {
+QUnit.test('sets tabindex=-1 and focuses itself when attached', (assert) => {
   const alerts = document.createElement('alerts-widget');
   alerts.focus = () => {
     assert.equal(alerts.getAttribute('tabindex'), '-1');
@@ -10,7 +10,7 @@ QUnit.test('sets tabindex=-1 and focuses itself when attached', assert => {
   alerts.attachedCallback();
 });
 
-QUnit.test('emits alertswidgetready event', assert => {
+QUnit.test('emits alertswidgetready event', (assert) => {
   const done = assert.async();
 
   const fixture = document.getElementById('qunit-fixture');

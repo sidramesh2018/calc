@@ -9,13 +9,16 @@ exports[`<Description> matches snapshot 1`] = `
    results with 
   <span
     className="filters">
-    <DescriptionFilter>
+    <DescriptionFilter
+      extraClassName={null}
+      label={null}>
       Systems Analyst
     </DescriptionFilter>
     <DescriptionFilter
       extraClassName="education-filter"
       label="education level" />
     <DescriptionFilter
+      extraClassName={null}
       label="experience">
       5
        - 
@@ -23,14 +26,17 @@ exports[`<Description> matches snapshot 1`] = `
        years
     </DescriptionFilter>
     <DescriptionFilter
+      extraClassName={null}
       label="worksite">
       both
     </DescriptionFilter>
     <DescriptionFilter
+      extraClassName={null}
       label="business size">
       small business
     </DescriptionFilter>
     <DescriptionFilter
+      extraClassName={null}
       label="schedule">
       132 - IT 70
     </DescriptionFilter>

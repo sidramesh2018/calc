@@ -91,14 +91,12 @@ export class UploadInput extends window.HTMLInputElement {
     }
     const fileType = file.type.toLowerCase();
     const fileName = file.name.toLowerCase();
-    const acceptsList = accepts.split(',').map((s) => s.trim().toLowerCase());
-    for (const extOrType of acceptsList) {
-      if (fileType === extOrType || fileName.lastIndexOf(extOrType,
-        fileName.length - extOrType.length) !== -1) {
-        return true;
-      }
-    }
-    return false;
+    const acceptsList = accepts.split(',').map(s => s.trim().toLowerCase());
+
+    return acceptsList.some(extOrType => (
+      (fileType === extOrType) ||
+      (fileName.lastIndexOf(extOrType, fileName.length - extOrType.length) !== -1)
+    ));
   }
 }
 
@@ -122,7 +120,7 @@ document.registerElement('upload-input', {
  */
 
 export class UploadWidget extends window.HTMLElement {
-  _stopAndPrevent(event) {
+  static stopAndPrevent(event) {
     event.stopPropagation();
     event.preventDefault();
   }
@@ -134,7 +132,7 @@ export class UploadWidget extends window.HTMLElement {
         window.console.log(
           'Warning: <upload-widget> must have a ' +
           '<form is="ajax-form"> parent in order to support ' +
-          'drag-and-drop.'
+          'drag-and-drop.',
         );
       }
       return false;
@@ -166,7 +164,7 @@ export class UploadWidget extends window.HTMLElement {
         '<div class="upload-filename"></div>' +
         '<div class="upload-changer">Not right? ' +
         '<label>Choose a different file</label> or drag and drop here.' +
-        '</div></div>'
+        '</div></div>',
       );
       $('label', current).attr('for', id);
       $('.upload-filename', current).text(filename);
@@ -198,7 +196,7 @@ export class UploadWidget extends window.HTMLElement {
         '<div class="upload-error">' +
         '<div class="upload-error-message">Sorry, that type of file is not allowed.</div>' +
         'Please <label>choose a different file</label> or drag and drop one here.' +
-        '</div></div>'
+        '</div></div>',
       );
       $('label', err).attr('for', id);
       $el.append(err);
@@ -219,8 +217,8 @@ export class UploadWidget extends window.HTMLElement {
     // not the widget has actually been upgraded by JS.
     $el.attr('aria-live', 'polite');
 
-    $el.on('dragenter', e => {
-      this._stopAndPrevent(e);
+    $el.on('dragenter', (e) => {
+      UploadWidget.stopAndPrevent(e);
 
       // Firefox spuriously fires multiple `dragenter` events, which
       // we need to work around by keeping track of the most recent
@@ -241,9 +239,9 @@ export class UploadWidget extends window.HTMLElement {
         $el.removeClass('dragged-over');
       }
     });
-    $el.on('dragover', this._stopAndPrevent.bind(this));
-    $el.on('drop', e => {
-      this._stopAndPrevent(e);
+    $el.on('dragover', UploadWidget.stopAndPrevent.bind(this));
+    $el.on('drop', (e) => {
+      UploadWidget.stopAndPrevent(e);
       $el.removeClass('dragged-over');
       dragCounter = 0;
       lastDragEnterTarget = null;
@@ -253,7 +251,7 @@ export class UploadWidget extends window.HTMLElement {
 
     $input.on('invalidfile', showInvalidFileMessage);
 
-    $input.on('changefile', e => {
+    $input.on('changefile', (e) => {
       setCurrentFilename(e.originalEvent.detail.name);
     });
 

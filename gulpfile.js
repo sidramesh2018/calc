@@ -83,7 +83,7 @@ const bundles = {
 const browserifiedBundles = [];
 const vendoredBundles = [];
 
-Object.keys(bundles).forEach(name => {
+Object.keys(bundles).forEach((name) => {
   const options = bundles[name];
   const dirName = options.dirName || name;
   const noBrowserify = options.noBrowserify;
@@ -99,27 +99,25 @@ Object.keys(bundles).forEach(name => {
     paths[outfileName] = 'index.min.js';
 
     gulp.task(browserifiedBundleName, () =>
-      browserifyBundle(  // eslint-disable-line
+      browserifyBundle( // eslint-disable-line no-use-before-define
         path.join(dirs.src.scripts, paths[entryName]),
         dirs.dest.scripts[name],
-        paths[outfileName]
-      )
-    );
+        paths[outfileName]));
+
     browserifiedBundles.push(browserifiedBundleName);
   }
 
   if (vendor.length) {
     const vendoredBundleName = `js:${dirName}:vendor`;
-    gulp.task(vendoredBundleName, () => concatAndMapSources(  // eslint-disable-line
-      'vendor.min.js',
-      vendor.map((p) => dirs.src.scripts + p),
-      dirs.dest.scripts[name]
-    ));
+    gulp.task(vendoredBundleName, () =>
+      concatAndMapSources(  // eslint-disable-line no-use-before-define
+        'vendor.min.js',
+        vendor.map(p => dirs.src.scripts + p),
+        dirs.dest.scripts[name]));
+
     vendoredBundles.push(vendoredBundleName);
   }
 });
-
-const isInDocker = ('DDM_IS_RUNNING_IN_DOCKER' in process.env);
 
 // default task
 // running `gulp` will default to watching and dist'ing files
@@ -141,7 +139,7 @@ gulp.task('watch', ['set-watching', 'sass', 'js'], () => {
 
 gulp.task('clean', () => {
   function getPaths(obj) {
-    return Object.keys(obj).map((k) => path.join(obj[k], '**/*'));
+    return Object.keys(obj).map(k => path.join(obj[k], '**/*'));
   }
 
   const styleDirs = getPaths(dirs.dest.style);
@@ -157,8 +155,7 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
     .pipe(rename({ suffix: '.min' }))
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest(dirs.dest.style.built))
-);
+  .pipe(gulp.dest(dirs.dest.style.built)));
 
 // Compile and lint JavaScript sources
 gulp.task('js', ['lint', 'js:legacy'].concat(browserifiedBundles));
@@ -178,7 +175,6 @@ function concatAndMapSources(name, sources, dest) {
 let isWatching = false;
 gulp.task('set-watching', () => {
   isWatching = true;
-  return;
 });
 
 function browserifyBundle(entryPath, outputPath, outputFile) {
@@ -221,7 +217,7 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
         .pipe(gulpif(process.env.NODE_ENV === 'production', uglify()))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest(outputPath))
-      .on('data', file => {
+      .on('data', (file) => {
         const pathname = path.relative(__dirname, file.path);
 
         gutil.log(`Wrote ${pathname}.`);
@@ -239,20 +235,9 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
   return bundler;
 }
 
-gulp.task('lint', () => {
-  const opts = {};
-  if (isInDocker) {
-    opts.rules = {
-      // Until https://github.com/benmosher/eslint-plugin-import/issues/142
-      // is fixed, we need to disable the following rule for Docker support.
-      'import/no-unresolved': 0,
-    };
-  }
-
-  return gulp.src(path.join(dirs.src.scripts, paths.js))
-    .pipe(eslint(opts))
-    .pipe(eslint.format());
-});
+gulp.task('lint', () => gulp.src(path.join(dirs.src.scripts, paths.js))
+    .pipe(eslint())
+    .pipe(eslint.format()));
 
 // set up a SIGTERM handler for quick graceful exit from docker
 process.on('SIGTERM', () => {

@@ -9,11 +9,11 @@ $(document).ready(() => {
 
   const requiredElements = [editBtn, contractDetails, editContractDetails];
 
-  const hasAll = requiredElements.every(($el) => $el.length);
-  const hasAny = requiredElements.some(($el) => $el.length);
+  const hasAll = requiredElements.every($el => $el.length);
+  const hasAny = requiredElements.some($el => $el.length);
 
   if (hasAll) {
-    editBtn.click(e => {
+    editBtn.click((e) => {
       contractDetails.slideUp();
       editContractDetails.slideDown();
       $('[data-edit-text]').each((_, el) => {
@@ -24,7 +24,7 @@ $(document).ready(() => {
   } else if (hasAny) {
     throw new Error(
       'Warning! Couldn\'t find edit button and/or related elements, ' +
-      'falling back to baseline behavior.'
+      'falling back to baseline behavior.',
     );
   }
 });

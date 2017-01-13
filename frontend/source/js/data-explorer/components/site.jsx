@@ -13,8 +13,10 @@ export function Site({ idPrefix, site, setSite }) {
   return (
     <div className="filter filter-site">
       <label htmlFor={id}>Worksite:</label>
-      <select id={id} name="site" value={site} onChange={handleChange}
-              className={filterActive(site !== '')}>
+      <select
+        id={id} name="site" value={site} onChange={handleChange}
+        className={filterActive(site !== '')}
+      >
         {makeOptions(SITE_LABELS)}
       </select>
     </div>
@@ -33,5 +35,5 @@ Site.defaultProps = {
 
 export default connect(
   state => ({ site: state.site }),
-  { setSite: setSiteAction }
+  { setSite: setSiteAction },
 )(Site);

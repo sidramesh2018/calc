@@ -25,7 +25,7 @@ export function priceForContractYear(contractYear, result) {
 export const HeaderCell = column.HeaderCell;
 
 export const DataCell = column.connectDataCell(connect(
-  state => ({ contractYear: state['contract-year'] })
+  state => ({ contractYear: state['contract-year'] }),
 )(
   ({ className, result, contractYear }) => {
     const price = priceForContractYear(contractYear, result);
@@ -35,5 +35,5 @@ export const DataCell = column.connectDataCell(connect(
         ${formatPriceWithCents(price)}
       </td>
     );
-  }
+  },
 ));

@@ -26,3 +26,8 @@ DescriptionFilter.propTypes = {
   label: React.PropTypes.string,
   children: React.PropTypes.any.isRequired,
 };
+
+DescriptionFilter.defaultProps = {
+  extraClassName: null,
+  label: null,
+};

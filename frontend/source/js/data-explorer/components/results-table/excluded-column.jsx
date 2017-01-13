@@ -14,7 +14,7 @@ export function HeaderCell() {
 }
 
 function BaseDataCell({ excludeRow, result }) {
-  const handleExcludeRow = rowId => e => {
+  const handleExcludeRow = rowId => (e) => {
     e.preventDefault();
     excludeRow(rowId);
   };
@@ -24,15 +24,19 @@ function BaseDataCell({ excludeRow, result }) {
   return (
     <td className="cell column-exclude">
       <Tooltip text={tooltip}>
-        <a className="exclude-row" href="#"
-           onClick={handleExcludeRow(result.id)}
-           aria-label={tooltip}>
+        <a
+          className="exclude-row" href=""
+          onClick={handleExcludeRow(result.id)}
+          aria-label={tooltip}
+        >
             &times;
         </a>
       </Tooltip>
     </td>
   );
 }
+
+BaseDataCell.cellKey = 'exclude';
 
 BaseDataCell.propTypes = {
   excludeRow: React.PropTypes.func.isRequired,
@@ -41,5 +45,5 @@ BaseDataCell.propTypes = {
 
 export const DataCell = connect(
   null,
-  { excludeRow: excludeRowAction }
+  { excludeRow: excludeRowAction },
 )(BaseDataCell);

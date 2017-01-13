@@ -14,5 +14,5 @@ export const DataCell = column.connectDataCell(
     <th className={className} scope="row">
       {value}
     </th>
-  )
+  ),
 );

@@ -76,7 +76,7 @@ class App extends React.Component {
     e.preventDefault();
     histogramToImg(
       this.histogram.getWrappedInstance().svgEl,
-      this.canvasEl
+      this.canvasEl,
     );
   }
 
@@ -84,10 +84,12 @@ class App extends React.Component {
     const prefixId = name => `${this.props.idPrefix}${name}`;
 
     return (
-      <form id={prefixId('search')}
-            className={classNames(this.getContainerClassNames())}
-            onSubmit={this.handleSubmit}
-            role="form">
+      <form
+        id={prefixId('search')}
+        className={classNames(this.getContainerClassNames())}
+        onSubmit={this.handleSubmit}
+        role="form"
+      >
         <section className="search">
           <div className="container">
             <p className="help-text">
@@ -102,10 +104,12 @@ class App extends React.Component {
                     Search
                   </button>
                   {' '}
-                  <input onClick={this.handleResetClick}
-                         className="reset button button-outline"
-                         type="reset"
-                         value="Clear search" />
+                  <input
+                    onClick={this.handleResetClick}
+                    className="reset button button-outline"
+                    type="reset"
+                    value="Clear search"
+                  />
                 </LaborCategory>
               </div>
               <div className="twelve columns">
@@ -123,9 +127,11 @@ class App extends React.Component {
 
               <div className="graph-block columns nine">
                 {/* for converting the histogram into an img --> */}
-                <canvas ref={el => { this.canvasEl = el; }}
-                        id={prefixId('graph') /* Selenium needs it. */}
-                        className="hidden" width="710" height="280" />
+                <canvas
+                  ref={(el) => { this.canvasEl = el; }}
+                  id={prefixId('graph') /* Selenium needs it. */}
+                  className="hidden" width="710" height="280"
+                />
 
                 <div id={prefixId('description')}>
                   <Description />
@@ -138,7 +144,7 @@ class App extends React.Component {
 
                 <div className="graph">
                   <div id={prefixId('price-histogram')}>
-                    <Histogram ref={el => { this.histogram = el; }} />
+                    <Histogram ref={(el) => { this.histogram = el; }} />
                   </div>
                 </div>
 
@@ -146,10 +152,12 @@ class App extends React.Component {
 
                 <div className="download-buttons row">
                   <div className="four columns">
-                    <a className="button button-primary"
-                       id={prefixId('download-histogram') /* Selenium needs it. */}
-                       href="#"
-                       onClick={this.handleDownloadClick}>
+                    <a
+                      className="button button-primary"
+                      id={prefixId('download-histogram') /* Selenium needs it. */}
+                      href=""
+                      onClick={this.handleDownloadClick}
+                    >
                       ⬇ Download graph
                     </a>
                   </div>
@@ -208,6 +216,7 @@ App.propTypes = {
 
 App.defaultProps = {
   idPrefix: '',
+  ratesError: null,
 };
 
 export default connect(
@@ -215,5 +224,5 @@ export default connect(
     ratesInProgress: state.rates.inProgress,
     ratesError: state.rates.error,
   }),
-  { resetState, invalidateRates }
+  { resetState, invalidateRates },
 )(App);

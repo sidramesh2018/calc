@@ -11,12 +11,12 @@ QUnit.module('ga', {
   },
 });
 
-QUnit.test('ga does not throw when window.ga is undefined', assert => {
+QUnit.test('ga does not throw when window.ga is undefined', (assert) => {
   ga();
   assert.ok(true, 'calling ga() does not throw');
 });
 
-QUnit.test('ga calls window.ga when it is a function', assert => {
+QUnit.test('ga calls window.ga when it is a function', (assert) => {
   window.ga = (...args) => {
     assert.deepEqual(args, [1, 2, 3]);
   };

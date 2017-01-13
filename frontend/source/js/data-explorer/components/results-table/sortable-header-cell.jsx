@@ -38,16 +38,17 @@ const getHeaderCellClasses = (key, sort) => ({
 });
 
 export function createHeaderCellConnector(description, title, key) {
-  return Component => {
+  return (Component) => {
     const wrappedComponent = ({ sort, setSort }) => {
       const classes = getHeaderCellClasses(key, sort);
 
-      return <Component
-              className={classNames(classes)}
-              toggleSort={createSortToggler(key, sort, setSort)}
-              tooltip={createSortHeaderTooltip(description || title,
+      return (<Component
+        className={classNames(classes)}
+        toggleSort={createSortToggler(key, sort, setSort)}
+        tooltip={createSortHeaderTooltip(description || title,
                                                classes)}
-              title={title} />;
+        title={title}
+      />);
     };
 
     wrappedComponent.propTypes = {
@@ -67,15 +68,17 @@ export class GenericHeaderCell extends React.Component {
 
   render() {
     return (
-      <th scope="col"
-          onFocus={() => { this.setState({ focused: true }); }}
-          onBlur={() => { this.setState({ focused: false }); }}
-          tabIndex="0"
-          role="button"
-          aria-label={this.props.tooltip}
-          className={this.props.className}
-          onKeyDown={handleEnterOrSpace(this.props.toggleSort)}
-          onClick={this.props.toggleSort}>
+      <th // eslint-disable-line jsx-a11y/no-static-element-interactions
+        scope="col"
+        onFocus={() => { this.setState({ focused: true }); }}
+        onBlur={() => { this.setState({ focused: false }); }}
+        tabIndex="0"
+        role="button"
+        aria-label={this.props.tooltip}
+        className={this.props.className}
+        onKeyDown={handleEnterOrSpace(this.props.toggleSort)}
+        onClick={this.props.toggleSort}
+      >
         <Tooltip text={this.props.tooltip} show={this.state.focused}>
           {this.props.title}
         </Tooltip>

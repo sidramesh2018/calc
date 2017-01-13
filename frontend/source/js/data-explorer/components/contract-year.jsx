@@ -31,21 +31,25 @@ const YEAR_LI_INFO = {
 const TOOLTIP = 'All five years of pricing are available in the export.';
 
 export function ContractYear({ idPrefix, contractYear, setContractYear }) {
-  const listItem = year => {
+  const listItem = (year) => {
     const { className, shortLabel, idSuffix } = YEAR_LI_INFO[year];
     const id = `${idPrefix}${idSuffix}`;
 
     return (
       <li className="contract-list-item">
         <label htmlFor={id} className="radio">
-          <input id={id} type="radio"
-                 checked={contractYear === year}
-                 onChange={() => { setContractYear(year); }}
-                 name="contract-year" value={year}
-                 tabIndex="0" />
-          <span tabIndex="-1"
-                className={className}
-                aria-hidden="true">{shortLabel}</span>
+          <input
+            id={id} type="radio"
+            checked={contractYear === year}
+            onChange={() => { setContractYear(year); }}
+            name="contract-year" value={year}
+            tabIndex="0"
+          />
+          <span
+            tabIndex="-1"
+            className={className}
+            aria-hidden="true"
+          >{shortLabel}</span>
           <span className="sr-only">
             {CONTRACT_YEAR_LABELS[year]}
           </span>
@@ -62,9 +66,11 @@ export function ContractYear({ idPrefix, contractYear, setContractYear }) {
 
         <span className="filter-more-info">
           <Tooltip text={TOOLTIP}>
-            <a href="#" aria-label={TOOLTIP}
-               onClick={e => { e.preventDefault(); }}>
-              What's this?
+            <a
+              href="" aria-label={TOOLTIP}
+              onClick={(e) => { e.preventDefault(); }}
+            >
+              What&apos;s this?
             </a>
           </Tooltip>
         </span>
@@ -93,5 +99,5 @@ ContractYear.defaultProps = {
 
 export default connect(
   state => ({ contractYear: state['contract-year'] }),
-  { setContractYear: setContractYearAction }
+  { setContractYear: setContractYearAction },
 )(ContractYear);

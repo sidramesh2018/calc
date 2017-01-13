@@ -15,5 +15,5 @@ export const DataCell = column.connectDataCell(
     <td className={className}>
       {value || 'N/A'}
     </td>
-  )
+  ),
 );
