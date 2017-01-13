@@ -23,6 +23,7 @@ const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const browserify = require('browserify');
 const watchify = require('watchify');
+const envify = require('envify/custom');
 const babelify = require('babelify');
 const del = require('del');
 
@@ -196,6 +197,7 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
     .exclude('react/lib/ExecutionEnvironment');
 
   bundler = bundler
+    .transform(envify({ NODE_ENV: process.env.NODE_ENV }), { global: true })
     .transform(babelify.configure({ presets: ['es2015', 'react'] }));
 
   if (isWatching) {
