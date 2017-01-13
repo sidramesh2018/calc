@@ -77,7 +77,7 @@ class ConcreteBasePriceListMethods:
             return render_to_string(cls.upload_example_template,
                                     cls.get_upload_example_context(),
                                     request=request)
-        return mark_safe('')
+        return mark_safe('')  # nosec
 
 
 class BasePriceList(ConcreteBasePriceListMethods, metaclass=abc.ABCMeta):
