@@ -109,6 +109,8 @@ td.error {
   span {
     border-bottom: 1px dotted $color-secondary-dark;
     margin-right: 28px;
+    position: relative;
+    /* This is the red circle with the question mark -- the "info badge." */
     &:after {
       height: 17px;
       width: 17px;
@@ -122,8 +124,26 @@ td.error {
       margin-right: -28px;
       font-family: $font-family-main;
     }
+    /* this is the tooltip's bottom arrow. It needs to be part of the span so
+     * it is aware of the span's width. This is the only way I know of to position
+     * the arrow over the info-badge (defined as the :after element) when the
+     * span is of variable width. */
+    &:before {
+      display: none;
+      position: absolute;
+      bottom: 18px;
+      right: -31px;
+      border-top: 12px solid $color-secondary-lightest;
+      border-right: 12px solid transparent;
+      border-left: 12px solid transparent;
+      content: " ";
+    }
+
     &:hover {
       cursor: pointer;
+      &:before {
+        display: block;
+      }
       + [role=tooltip] {
         display: block;
       }
@@ -139,15 +159,6 @@ td.error {
     background-color: $color-secondary-lightest;
     padding: $space-2x;
     border-radius: 4px;
-    &:after {
-      position: absolute;
-      bottom: -7px;
-      right: 6px;
-      border-top: 12px solid $color-secondary-lightest;
-      border-right: 12px solid transparent;
-      border-left: 12px solid transparent;
-      content: " ";
-    }
   }
   .errorlist {
     color: $color-secondary-dark;
