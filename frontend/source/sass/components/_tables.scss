@@ -2,6 +2,7 @@
 table {
   width: 100%;
   margin-top: 2rem;
+  font-size: $small-font-size;
   caption {
     color: $color-gray;
     text-align: left;
@@ -19,7 +20,15 @@ table {
       }
     }
     th {
-      font-weight: normal;
+      /* for ths within tbodys */
+      font-weight: $font-weight-normal;
+    }
+  }
+  th {
+    font-weight: $font-weight-bold;
+    span {
+      display: block;
+      font-weight: $font-weight-normal;
     }
   }
 
@@ -85,7 +94,7 @@ th,
 th:first-child,
 th:last-child {
   position: relative;
-  padding: .25em .5em;
+  padding: .75em .5em;
   vertical-align: top;
 }
 
@@ -98,41 +107,47 @@ td.error {
   color: $color-secondary-dark;
   font-weight: $font-weight-bold;
   span {
-    display: block;
-    padding-right: $space-4x;
-    background-image: url('../../images/uswds/alerts/error.png');
-    background-image: url('../../images/uswds/alerts/error.svg');
-    background-size: $space-3x;
-    background-repeat: no-repeat;
-    background-position: top 3px right;
+    border-bottom: 1px dotted $color-secondary-dark;
+    margin-right: 28px;
+    &:after {
+      height: 17px;
+      width: 17px;
+      content: "?";
+      background-color: $color-secondary-dark;
+      color: $color-white;
+      text-align: center;
+      margin-left: $space-1x;
+      border-radius: 17px;
+      display: inline-block;
+      margin-right: -28px;
+      font-family: $font-family-main;
+    }
+    &:hover {
+      cursor: pointer;
+      + [role=tooltip] {
+        display: block;
+      }
+    }
   }
 
   [role=tooltip] {
     display: none;
     position: absolute;
     right: 0;
-    bottom: $space-4x;
+    bottom: 100%;
     left: 0;
-    padding: $space-1x;
     background-color: $color-secondary-lightest;
     padding: $space-2x;
     border-radius: 4px;
     &:after {
       position: absolute;
       bottom: -7px;
-      right: 8px;
-      margin-left: -5px;
-      width: 0;
+      right: 6px;
       border-top: 12px solid $color-secondary-lightest;
       border-right: 12px solid transparent;
       border-left: 12px solid transparent;
       content: " ";
-      font-size: 0;
-      line-height: 0;
     }
-  }
-  span:hover + [role=tooltip] {
-    display: block;
   }
   .errorlist {
     color: $color-secondary-dark;
@@ -177,11 +192,6 @@ td.number {
   text-align: right;
 }
 
-.price-list-table {
-  th, td {
-    vertical-align: bottom;
-  }
-}
 
 /* Not used because the corresponding JS conflicts with the tooltips. Only here for future reference. */
 th.collapsible {

@@ -13,8 +13,8 @@
     <tr>
     {% for col in row %}
       <td class="{% if col.errors %}error{% endif %} {% if col.name == 'education' %}number{% elif col.name == 'price_including_iff' %}number currency{% endif %}">
-        {{ col.value }}
         {% if col.errors %}<span class="tooltip">{{ col.errors }}</span>{% endif %}
+        {{ col.value }}
       </td>
     {% endfor %}
     </tr>
