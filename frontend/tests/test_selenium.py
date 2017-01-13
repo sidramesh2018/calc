@@ -44,7 +44,9 @@ WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
 
 
 if os.environ.get('TRAVIS') == 'true':
-    if os.environ.get('TRAVIS_SECURE_ENV_VARS') == 'true':
+    if os.environ.get('TRAVIS_SECURE_ENV_VARS') == 'true' and \
+            'SAUCE_USERNAME' in os.environ \
+            and 'SAUCE_ACCESS_KEY' in os.environ:
         # We're running in a trusted environment, so use Sauce Labs
         # if it's available.
         WD_TUNNEL_ID = os.environ['TRAVIS_JOB_NUMBER']

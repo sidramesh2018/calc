@@ -7,7 +7,6 @@ python:
 - 3.5
 addons:
   postgresql: 9.3
-  sauce_connect: true
 matrix:
   fast_finish: true
 services:
@@ -28,7 +27,7 @@ script:
 - echo "For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330"
 - bandit -r .
 - npm test
-- py.test --ignore=frontend/tests/test_selenium.py --cov
+- python frontend/tests/sauce_connect.py py.test --ignore=frontend/tests/test_selenium.py --cov
 after_success:
 - codeclimate-test-reporter
 env:
