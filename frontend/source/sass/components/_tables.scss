@@ -95,24 +95,32 @@ td.sorted {
 
 /* used on price list upload error page */
 td.error {
-  border-left: 2px solid $color-secondary-dark;
-  background-color: $color-error-bg;
   color: $color-secondary-dark;
   font-weight: $font-weight-bold;
-  padding-left: 2.5rem;
+  padding-right: 3rem;
+  margin-right: -3rem;
+  background-image: url('../../images/uswds/alerts/error.png');
+  background-image: url('../../images/uswds/alerts/error.svg');
+  background-size: 3rem;
+  background-repeat: no-repeat;
+  background-position: center right;
 
+  [role=tooltip] {
+    display: none;
+    position: absolute;
+    bottom: $space-4x;
+    left: 0;
+    padding: $space-1x;
+    background-color: $color-secondary-lightest;
+  }
+  span:hover + [role=tooltip] {
+    display: block;
+  }
   .errorlist {
     color: $color-base;
     font-weight: $font-weight-normal;
     font-size: $small-font-size;
     border: none;
-    background-image: url('../../images/uswds/alerts/error.png');
-    background-image: url('../../images/uswds/alerts/error.svg');
-    background-size: 2.5rem;
-    background-repeat: no-repeat;
-    background-position: top 3px left;
-    padding-left: 2.5rem;
-    margin-left: -2.5rem;
     max-width: 220px;
   }
 }
