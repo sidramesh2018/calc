@@ -131,7 +131,7 @@ td.error {
     &:before {
       display: none;
       position: absolute;
-      bottom: 18px;
+      bottom: 100%;
       right: -31px;
       border-top: 12px solid $color-secondary-lightest;
       border-right: 12px solid transparent;
