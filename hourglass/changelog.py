@@ -1,6 +1,9 @@
 import re
 import datetime
 import pathlib
+from django.shortcuts import render
+from django.utils.safestring import mark_safe
+import markdown
 
 
 PATH = pathlib.Path(__file__).resolve().parent.parent / 'CHANGELOG.md'
@@ -18,6 +21,11 @@ UNRELEASED_LINK_RE = re.compile(
     )
 
 UNRELEASED_HEADER = '## [Unreleased][unreleased]'
+
+
+def django_view(request):
+    html = mark_safe(markdown.markdown(get_contents()))  # nosec
+    return render(request, 'changelog.html', dict(html=html))
 
 
 def get_contents():
