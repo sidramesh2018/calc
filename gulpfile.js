@@ -200,6 +200,12 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
     .transform(envify({ NODE_ENV: process.env.NODE_ENV }), { global: true })
     .transform(babelify.configure({ presets: ['es2015', 'react'] }));
 
+  if (process.env.NODE_ENV === 'production') {
+    bundler = bundler.transform({
+      global: true
+    }, 'uglifyify');
+  }
+
   if (isWatching) {
     bundler = watchify(bundler);
   }
