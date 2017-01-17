@@ -202,7 +202,7 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
 
   if (process.env.NODE_ENV === 'production') {
     bundler = bundler.transform({
-      global: true
+      global: true,
     }, 'uglifyify');
   }
 
