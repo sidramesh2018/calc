@@ -11,7 +11,6 @@ selenium==2.53.6
 model-mommy==1.2.6
 robobrowser==0.5.3
 beautifulsoup4==4.5.1
-Markdown==2.6.7
 semantic_version==2.6.0
 freezegun==0.3.8
 pexpect==4.2.1

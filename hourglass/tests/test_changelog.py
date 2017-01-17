@@ -2,6 +2,7 @@ import datetime
 from textwrap import dedent
 from unittest import TestCase
 from semantic_version import Version
+from django.test import TestCase as DjangoTestCase
 import markdown
 from bs4 import BeautifulSoup
 
@@ -83,6 +84,13 @@ class UtilTests(TestCase):
             changelog.RELEASE_HEADER_RE.search('## [1.2.3][]').group(1),
             '1.2.3'
             )
+
+
+class DjangoViewTests(DjangoTestCase):
+    def test_it_works(self):
+        res = self.client.get('/updates/')
+        self.assertContains(res, 'Change Log')
+        self.assertEqual(res.status_code, 200)
 
 
 class ChangelogMdTests(TestCase):
