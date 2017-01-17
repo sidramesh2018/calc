@@ -201,6 +201,12 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
     .transform(babelify.configure({ presets: ['es2015', 'react'] }));
 
   if (process.env.NODE_ENV === 'production') {
+    // Here we use uglifyify--not to be confused with uglify--to uglify
+    // each individual module by itself, which allows us to excise
+    // unused dependencies based on our build configuration. We are
+    // also passing arguments to bundler.transform() in a weird order,
+    // but it's what uglifyify's docs recommend and it seems to work,
+    // so whatever.
     bundler = bundler.transform({
       global: true,
     }, 'uglifyify');
