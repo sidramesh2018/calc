@@ -59,6 +59,9 @@ before_deploy:
 - travis_retry curl -L -o $HOME/cf.tgz "https://cli.run.pivotal.io/stable?release=linux64-binary&version=$CF_CLI_VERSION"
 - tar xzvf $HOME/cf.tgz -C $HOME
 - travis_retry cf install-plugin autopilot -f -r CF-Community
+# Run gulp build in production mode
+- unset DEBUG
+- npm run gulp -- build
 deploy:
   - provider: script
     script: DEPLOY_ENV=dev ./deploy-travis.sh

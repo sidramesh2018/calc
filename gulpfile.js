@@ -29,6 +29,9 @@ const del = require('del');
 
 const BUILT_FRONTEND_DIR = 'frontend/static/frontend/built';
 
+const isProd = process.env.NODE_ENV === 'production';
+gutil.log(`Gulp is running in ${isProd ? 'production' : 'development'} mode`);
+
 const dirs = {
   src: {
     style: 'frontend/source/sass/',
@@ -228,7 +231,7 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
       .pipe(source(outputFile))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(gulpif(process.env.NODE_ENV === 'production', uglify()))
+        .pipe(gulpif(isProd, uglify()))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest(outputPath))
       .on('data', (file) => {
