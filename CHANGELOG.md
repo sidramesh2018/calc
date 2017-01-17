@@ -14,6 +14,32 @@ to [Semantic Versioning](http://semver.org/).
   Data administrators can then review these price lists and add
   their data into CALC.
 
+### Changed
+
+- The "Schedule" filter in the data explorer (front page of CALC) has
+  been renamed to the "SIN / Schedule" filter, and allows rates to be
+  filtered by SIN number.
+
+- Searching for multiple words in the data explorer's search field
+  now produces expected autocompletion results.
+
+- The data explorer is now much more keyboard-accessible and
+  screenreader-friendly.
+
+- The "proposed price" field in the data explorer automatically
+  updates the histogram on a per-keypress basis; there is no longer
+  any need to click the "Go" button.
+
+- Sharing CALC links with the "Education" field filled out now works
+  properly.
+
+- The CALC banner has been redesigned to be less confusing and easier
+  to read.
+
+- Google Analytics for CALC now properly track new searches in the
+  data explorer as page views. We also track clicks on links in the
+  "Contract #" column of the data explorer results table.
+
 ## [1.2.0][] - 2015-07-21
 
 - filtering empty list items out of query building
