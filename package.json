@@ -46,6 +46,7 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "envify": "^4.0.0",
+    "uglifyify": "^3.0.4",
     "watchify": "^3.7.0"
   },
   "scripts": {
