@@ -1,0 +1,11 @@
+{% extends "styleguide_base.html" %}
+
+{% block styleguide_body %}
+  <h1>Date Widget Example</h1>
+
+  {% if date_form_is_valid %}
+    <p>Form submitted successfully.</p>
+  {% endif %}
+
+  {% include "styleguide_date_example.html" %}
+{% endblock %}

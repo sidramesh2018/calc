@@ -1,0 +1,82 @@
+@import '../uswds/alerts';
+//TODO: rewrite alerts so the new styles are here
+/*$color-error-bg: #f9f0f0;*/
+$color-error-bg: #fef5f5;
+.alert {
+  margin: 1rem 0;
+
+  td, th {
+    border-color: $color-gray-dark;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+
+  thead th {
+    color: $color-black;
+  }
+
+  tbody tr {
+    &:nth-child(odd) {
+      background-color: inherit;
+    }
+    &:hover > * {
+      background: inherit !important;
+    }
+  }
+}
+
+.alert-error {
+  border: 2px solid $color-secondary-dark;
+  background-color: $color-error-bg;
+  h3 {
+    color: $color-secondary-dark;
+  }
+}
+
+alerts-widget:focus {
+  outline: none;
+}
+
+
+// TODO: style these the same as alerts?
+// or perhaps just use alert classes in messages.html
+.message-error h3 {
+  color: $color-secondary-dark;
+}
+.message-success h3 {
+  color: $color-green;
+  margin-bottom: 0;
+}
+.message-info h3 {
+  /*color: $color-primary-alt-darkest;*/
+  margin-bottom: 0;
+}
+
+.alert-submitted-price-lists {
+  ul {
+    list-style: none;
+    margin-bottom: 0;
+
+    > li {
+      display: inline-block;
+      white-space: nowrap;
+      margin-right: 2rem;
+    }
+  }
+}
+
+/* for Django admin */
+.messagelist li {
+  @extend .alert;
+}
+
+.messagelist li.success {
+  @extend .alert-success;
+}
+
+.errornote {
+  @extend .alert-error;
+}

@@ -1,0 +1,16 @@
+<table>
+  <thead>
+    <tr>
+      <th>Job</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for job, time in scheduled_jobs %}
+      <tr class="{% cycle 'djDebugOdd' 'djDebugEven' %}">
+        <td>{{ job.description|escape }}</td>
+        <td>{{ time|escape }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

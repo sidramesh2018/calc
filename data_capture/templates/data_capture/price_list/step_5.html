@@ -1,0 +1,15 @@
+{% extends 'data_capture/step.html' %}
+{% block body_class %}secondary-step card--narrow card--no-header{% endblock %}
+{% block subtitle %}Data submitted for review!{% endblock%}
+{% block step_heading %}<h2>Price list submitted!</h2>{% endblock %}
+
+{% block step_body %}
+  <p>
+    A CALC administrator will review your submitted data and include it in CALC if all looks good. Thank you!
+  </p>
+
+  <div class="form-button-row clearfix">
+    <a href="{% url 'index' %}" class="button button-outline">CALC home</a>
+    <a href="{% url 'data_capture:step_1' %}" class="button button-primary">Add another price list</a>
+  </div>
+{% endblock %}

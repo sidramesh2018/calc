@@ -1,0 +1,43 @@
+{% load data_capture %}
+<dl class="contract-details">
+  <dt>Vendor</dt>
+  <dd>{{ price_list.vendor_name }}</dd>
+
+  <dt>Contract number</dt>
+  <dd>{{ price_list.contract_number }}</dd>
+
+  <dt>Schedule</dt>
+  <dd>{{ price_list.get_schedule_title }}</dd>
+
+  <dt>Small business</dt>
+  {# NOTE: in step_4.html we check is_small_business == 'True' as a string #}
+  {# but here it is a real boolean since it is coming from a committed model #}
+  <dd>{% if price_list.is_small_business %}Yes{% else %}No{% endif %}</dd>
+
+  <dt>Contractor worksite</dt>
+  <dd>{{ price_list.contractor_site }}</dd>
+
+  <dt>Contract dates</dt>
+  <dd class="contract-details__start-date">{{ price_list.contract_start }}</dd>
+  <dd>{{ price_list.contract_end }}</dd>
+
+  <dt>Escalation rate</dt>
+  <dd>{% if price_list.escalation_rate %}{{ price_list.escalation_rate }}%{% else %}None{% endif %}</dd>
+
+  {% if price_list.created_at %}
+    <dt>Submitted by</dt>
+    <dd>{{ price_list.submitter.email }}</dd>
+  {% endif %}
+
+  <dt>Created at</dt>
+  <dd>{{ price_list.created_at|tz_timestamp }}</dd>
+
+  <dt>Status</dt>
+  <dd>{{ price_list.get_status_display }}</dd>
+
+  <dt>Status changed by</dt>
+  <dd>{{ price_list.status_changed_by.email }}</dd>
+
+  <dt>Status changed at</dt>
+  <dd>{{ price_list.status_changed_at|tz_timestamp }}</dd>
+</dl>

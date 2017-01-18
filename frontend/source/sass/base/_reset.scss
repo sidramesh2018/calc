@@ -1,0 +1,72 @@
+@import 'variables';
+
+body {
+  font-family: $font-family-main;
+  margin: 0;
+}
+
+* {
+          box-sizing: border-box;
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+main {
+  /*margin: 2rem 0;*/
+}
+
+a {
+  color: $color-primary;
+
+  &:hover {
+    color: $color-primary-darker;
+  }
+}
+
+input,
+select {
+  font-size: inherit;
+  line-height: normal;
+}
+
+::-webkit-input-placeholder {
+  color: $color-gray-dark;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  color: $color-gray-dark;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  color: $color-gray-dark;
+}
+
+:-ms-input-placeholder {
+  color: $color-gray-dark;
+}
+
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+button,
+[type="button"],
+[type="submit"],
+[type="reset"],
+[type="image"] {
+  appearance: none;
+}
+
+table {
+  border-collapse: collapse;
+  th, td {
+    text-align: left;
+  }
+}
+
+ul {
+  margin-left: 0;
+  padding-left: 0;
+}

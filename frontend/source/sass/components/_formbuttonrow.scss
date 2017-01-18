@@ -1,0 +1,40 @@
+@import '../base/variables';
+
+.form-button-row {
+  position: relative;
+  margin-top: 4rem;
+  text-align: right;
+  &.align-left {
+    text-align: left;
+  }
+
+  .button-previous {
+    float: left;
+  }
+  button,
+  button[type="submit"],
+  .button {
+    display: inline-block;
+    margin: 0 2em 0 0;
+  }
+
+  .submit-group {
+    display: inline-block;
+
+    button,
+    .button {
+      margin: 0;
+    }
+  }
+
+  .submit-label {
+    display: block;
+    float: left;
+    height: 38px;
+    color: $color-gray-medium;
+    margin-right: $space-2x;
+    max-width: 110px;
+    font-size: $small-font-size;
+    line-height: $small-line-height;
+  }
+}

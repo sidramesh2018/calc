@@ -1,23 +1,73 @@
 {
   "name": "calc",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An estimator for hourly rates on professional services contracts",
+  "dependencies": {
+    "a11y-dialog": "2.5.2",
+    "babel-jest": "^18.0.0",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.16.0",
+    "babelify": "^7.3.0",
+    "bourbon-neat": "1.8.0",
+    "browserify": "^13.0.1",
+    "classnames": "^2.2.5",
+    "d3-format": "^1.0.2",
+    "del": "^2.2.1",
+    "document-register-element": "^1.0.0",
+    "dotenv": "^2.0.0",
+    "enzyme": "^2.7.0",
+    "enzyme-to-json": "^1.4.5",
+    "eslint": "^3.13.0",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-react": "^6.9.0",
+    "eyeglass": "1.1.2",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.11",
+    "gulp-concat": "^2.6.0",
+    "gulp-eslint": "^3.0.1",
+    "gulp-if": "^2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "1.6.0",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "jest": "^18.0.0",
+    "react": "^15.4.1",
+    "react-addons-test-utils": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-redux": "^4.4.6",
+    "redux": "^3.6.0",
+    "redux-logger": "^2.7.4",
+    "sinon": "1.17.5",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "envify": "^4.0.0",
+    "uglifyify": "^3.0.4",
+    "watchify": "^3.7.0"
+  },
   "scripts": {
-    "test": "make test-frontend"
+    "gulp": "gulp",
+    "eslint": "eslint --ext .jsx --ext .js . || true",
+    "failable-eslint": "eslint --max-warnings 0 --ext .jsx --ext .js .",
+    "test": "jest",
+    "test:watch": "npm test -- --watch"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/18F/calc.git"
+    "url": "git+https://github.com/18F/CALC.git"
   },
   "author": "18F",
-  "license": "CC0",
+  "license": "CC0-1.0",
   "bugs": {
-    "url": "https://github.com/18F/calc/issues"
+    "url": "https://github.com/18F/CALC/issues"
   },
-  "homepage": "https://github.com/18F/calc",
-  "dependencies": {
-    "localtunnel-runner": "^1.0.0",
-    "yargs": "^3.6.0"
+  "homepage": "https://github.com/18F/CALC#readme",
+  "engines": {
+    "node": ">=6.0 <7.0",
+    "npm": ">=3.8.0"
   }
 }

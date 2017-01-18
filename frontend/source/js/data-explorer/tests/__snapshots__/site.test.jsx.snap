@@ -1,0 +1,32 @@
+exports[`<Site> matches snapshot 1`] = `
+<div
+  className="filter filter-site">
+  <label
+    htmlFor="zzz_site">
+    Worksite:
+  </label>
+  <select
+    className="filter_active"
+    id="zzz_site"
+    name="site"
+    onChange={[Function]}
+    value="contractor">
+    <option
+      value="">
+      (all)
+    </option>
+    <option
+      value="customer">
+      customer
+    </option>
+    <option
+      value="contractor">
+      contractor
+    </option>
+    <option
+      value="both">
+      both
+    </option>
+  </select>
+</div>
+`;

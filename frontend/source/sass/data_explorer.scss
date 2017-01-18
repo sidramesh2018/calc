@@ -1,0 +1,646 @@
+@import 'libs/no-ui';
+@import 'base/variables';
+@import 'components/tables';
+
+body {
+  background-color: $color-white; //override to steps.scss
+}
+
+// to fake selection of home link
+nav li:first-child {
+  border-bottom: $space-1x solid $color-primary-alt;
+  a {
+    font-weight: $font-weight-bold;
+    display: block;
+    padding-bottom: $space-half;
+  }
+}
+
+.loading-indicator,
+.has-data {
+    -webkit-transition: opacity .5s, height .5s;
+       -moz-transition: opacity .5s, height .5s;
+            transition: opacity .5s, height .5s;
+    clear: both;
+}
+
+.autocomplete-suggestions {
+  position: absolute;
+  display: none;
+  z-index: 9999;
+  overflow: hidden;
+  background: $color-white;
+  max-height: 29.4rem;
+  overflow: hidden;
+  overflow-y: auto;
+  border: 1px solid $color-gray-lighter;
+}
+
+.autocomplete-suggestion {
+  position: relative;
+  padding: .25em .5em;
+  &.selected {
+    color: $color-white;
+    background: $color-primary-alt;
+  }
+  .count {
+    position: absolute;
+    right: .5em;
+    text-align: right;
+  }
+}
+
+.loading {
+  .has-data {
+    opacity: .2;
+  }
+  .loading-indicator {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+  }
+}
+
+.loading-indicator {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+  max-height: 200px;
+  overflow-y: hidden;
+  & > * {
+    margin: 0;
+  }
+}
+
+.filter_active  {
+  border: 2px solid $color-gold !important;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  box-shadow: $focus-shadow;
+}
+
+.filter_focus {
+  border: 2px solid $color-focus !important;
+}
+
+input.price,
+input#min_experience {
+  width: 4em;
+  margin-right: .3em;
+}
+
+input.price {
+  margin-left: .3em;
+}
+
+span.dollars {
+  color: $color-gray;
+}
+
+.filter-more-info {
+  float: right;
+  font-size: 70%;
+}
+
+.graph-block {
+  margin-left: 0;
+}
+
+.filter-title {
+  padding-bottom: 0;
+}
+
+.filter-block {
+  background: $color-gray-lightest;
+  border-radius: $border-radius;
+  margin-bottom: 0;
+  padding: 1rem 2rem;
+}
+
+
+@media (min-width: 550px) {
+  .filter-container {
+    float: right;
+    margin-bottom: 1em;
+  }
+}
+
+/* multiselect filter */
+dl.dropdown {
+  margin-bottom: 1.5rem;
+  margin-top: .2em;
+  dd,
+  dt {
+    margin:0px;
+    padding:0px;
+  }
+  dd {
+    position:relative;
+    ul {
+      background-color: $color-white;
+      border:0;
+      color:#000;
+      display:none;
+      left:0px;
+      padding: 2px 15px 2px 5px;
+      position:absolute;
+      z-index: 999;
+      top:2px;
+      list-style:none;
+      height: auto;
+      overflow: auto;
+      width: 100%;
+      li {
+        margin-bottom: 0;
+        a {
+          padding:5px;
+          display:block;
+          margin-bottom: 0;
+          &:hover {
+            background-color:$color-white;
+          }
+        }
+      }
+    }
+  }
+  ul {
+    margin: -1px 0 0 0;
+  }
+  a,
+  a:visited {
+    color:#000;
+    text-decoration:none;
+    outline:none;
+    font-size: 14px;
+  }
+  dt a {
+    background-color: $color-white;
+    background-image: url(../../images/uswds/arrow-down.svg);
+    background-position: right 1.3rem center;
+    background-repeat: no-repeat;
+    background-size: 1.3rem;
+    border: 1px solid $color-base;
+    border-radius: $border-radius;
+    box-shadow: none;
+    box-sizing: border-box;
+    display: block;
+    min-height: 38px;
+    line-height: 24px;
+    overflow: hidden;
+    padding: 6px 10px;
+    &:focus {
+      border: 1px solid $color-primary-alt !important;
+      box-shadow: $focus-shadow;
+    }
+  }
+  span.value {
+    display:none;
+  }
+  input {
+    margin-bottom: 0;
+    margin-right: 6px;
+    width: auto;
+  }
+}
+
+.multiSelect label {
+  font-weight: 400;
+  display: inline;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.multiSel,
+.mutliSelect fieldset {
+  margin-bottom: 0;
+  width: auto;
+}
+
+input[type="checkbox"]:checked ~ label {
+  font-weight: 600;
+}
+
+.dropdown dt a span,
+.multiSel span {
+  cursor:pointer;
+  display:inline-block;
+  padding: 0 3px 2px 0;
+}
+.multiSel span:after {
+  content: ",";
+}
+.multiSel span:last-child:after {
+  content: "";
+}
+
+.highlights-container {
+  margin-bottom: 2em;
+  margin-top: 1em;
+  text-align: center;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.price-block {
+  background: $color-gray-lightest;
+  border: 1px solid $color-gray-lighter;
+  border-radius: $border-radius;
+  flex-grow: 9;
+  .row {
+    display: flex;
+    align-items: flex-end;
+    div {
+      flex-grow: 1;
+    }
+  }
+}
+
+@media (min-width: 550px) {
+  .price-block {
+    max-width: 65.5%;
+  }
+}
+.avg-price-block,
+.standard-deviation-block {
+  display: inline-block;
+  margin: 0 auto;
+  padding: .4em;
+  text-align: center;
+}
+
+.proposed-price-block {
+  background: $color-gray-lightest;
+  border: 1px solid $color-gray-lighter;
+  border-radius: $border-radius;
+  padding: 0.4em 1.8em;
+  margin-left: 3rem;
+  float: right;
+  display: none;
+  flex-grow: 1;
+}
+
+.proposed-price {
+  float: right;
+  input {
+    margin: 0;
+    width: 155px;
+    display: inline-block;
+  }
+  .go {
+    cursor: pointer;
+    display: block;
+    float: right;
+    margin-left: 0.4rem;
+  }
+}
+
+.avg-price-block,
+.standard-deviation-block,
+.proposed-price-block {
+  h5 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: 300;
+    line-height: 3.12rem; // to standardize the height of larger and smaller h5s used
+  }
+}
+
+.avg-price-block {
+    border-right: 1px solid $color-gray-lighter;
+    border-left: 1px solid $color-gray-lighter;
+  h5 {
+    font-size: 2.4rem;
+  }
+}
+
+.avg-price-highlight,
+h5.sd-highlight,
+h5.proposed-price-highlight {
+  color: $color-primary;
+  font-weight: 400;
+  font-size: 2.4rem;
+}
+
+.slider {
+  margin: 5px 0 5px 0;
+}
+
+section.search {
+  padding: .5rem 0 3rem 0;
+}
+
+.results {
+  padding: 1rem 0;
+}
+
+.results h4 {
+  margin-bottom: 0;
+  float: left;
+}
+
+.filter {
+  .experience_range select {
+    width: auto;
+    height: auto;
+    margin: 15px 0;
+    min-width: 51px;
+    display: inline-block;
+  }
+  select {
+      width: 100%;
+  }
+}
+div.filters .filter {
+  width: 50%;
+  float: left;
+}
+.filters {
+  text-transform: lowercase;
+  .education-filter a {
+    text-transform: none;
+  }
+  .filter:after,
+  .education-filter span:after {
+    content: ", ";
+  }
+  .filter:last-child:after,
+  .education-filter span:last-child:after {
+    content: "";
+  }
+}
+
+.labor-category a:before {
+  content: '“';
+}
+.labor-category a:after {
+  content : '”'
+}
+
+label[for=schedule] {
+  display: inline-block;
+}
+
+.table-container {
+  width: 100%;
+  overflow: scroll;
+  clear: both;
+}
+
+th.column-exclude {               width:  2%; }
+th.column-labor_category {        width: 23%; }
+th.column-education_level {       width: 10%; }
+th.column-min_years_experience {  width: 10%; }
+th.column-wage {                  width:  8%; }
+th.column-idv_piid {              width: 12%; }
+th.column-vendor_name {           width: 25%; }
+th.column-schedule {              width: 10%; }
+
+th.column-education_level {
+  color-white-space: nowrap;
+}
+
+td.column-idv_piid {
+  color-white-space: nowrap;
+}
+
+td.column-min_years_experience .years {
+  display: none;
+  font-style: italic;
+  color: $color-gray;
+}
+
+tr:hover td.column-min_years_experience .years {
+  display: inline;
+}
+
+.document-icon {
+  fill: $color-primary;
+  height: 12px;
+  margin-left: 3px;
+  width: 12px;
+}
+
+.column-idv_piid:hover .document-icon {
+  fill: $color-primary-darker;
+}
+
+a.focus-input {
+  text-decoration: none;
+  border-bottom: 1px dotted;
+}
+
+.contract-year {
+  ul {
+    list-style: none;
+  }
+  li {
+    display: inline-block;
+  }
+  input {
+    margin-bottom: 1rem;
+    margin-right: 10px;
+  }
+}
+
+.contract-year-block {
+  background-color: $color-white;
+  border: 1px solid $color-gray-lighter;
+  border-radius: $border-radius;
+  display: inline-block;
+  padding-left: 0; // ul default override
+}
+
+.contract-year-item {
+  border-right: 1px solid $color-gray-lighter;
+  margin-bottom: 0;
+  padding: 1px 8px;
+}
+
+.contract-year-item:last-of-type {
+  border: none;
+}
+
+.contract-year-selected {
+  background-color: $color-primary;
+  color: $color-white;
+}
+
+.export-data {
+  margin: 0;
+}
+
+#description {
+  color: $color-gray-dark;
+  font-weight: normal;
+  font-size: 2rem;
+  .total {
+    font-weight: bold;
+  }
+  .empty .not-empty {
+    display: none;
+  }
+}
+
+#labor_category {
+  margin-bottom: .5rem;
+}
+
+#query-types {
+  padding: 0 1rem;
+  label {
+    display: inline-block;
+    font-weight: normal;
+    margin: 0 1rem 0 0;
+    input {
+      margin-right: .5rem;
+    }
+  }
+}
+
+#price-histogram svg {
+  max-height: 300px;
+}
+
+/* graph container */
+.graph {
+  position: relative;
+  margin: 1rem 0;
+}
+
+svg.graph {
+  display: block;
+  margin: 0;
+  width: 100%;
+  height: auto;
+}
+
+.graph > .title {
+  position: absolute;
+}
+
+.selenium #search[class="search"] {
+  border: 10px solid orange;
+}
+
+.selenium #search.error { border-color: red; }
+.selenium #search.loaded { border-color: green; }
+
+/* Contract Year Filter */
+
+label.checkbox,
+label.radio {
+  display: inline-block;
+  font-weight: 400;
+  margin-bottom: 0.5em;
+  input[type="checkbox"] + span {
+    border-radius: 0.4rem;
+    display: inline-block;
+    height: 1.8rem;
+    margin-top: 0;
+    margin-right: 0.5em;
+    margin-bottom: 0;
+    vertical-align: -4px;
+    padding-top: 4px;
+    width: 1.8rem;
+  }
+  input[type="radio"] + span {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+label.checkbox :checked + span {
+  background-color: $color-primary;
+  box-shadow: 0 0 0 0 $color-white;
+  position: relative;
+  &:after {
+    color: $color-white;
+    font-family: "FontAwesome";
+    content: x;
+    position: relative;
+    left: 2px;
+    top: -5px;
+  }
+}
+
+label.radio :checked + span {
+  background-color: $color-primary;
+  color: $color-white;
+  position: relative;
+}
+
+.contract-list-item input[type="checkbox"],
+.contract-list-item input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  display: inline-block;
+  height: 1.8rem;
+  width: 1.8rem;
+  vertical-align: -4px;
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+input[type="checkbox"]:focus + .checkbox-focus,
+input[type="radio"]:focus + .checkbox-focus {
+  -webkit-box-shadow: 0px 0px 5px 2px $color-focus;
+  -moz-box-shadow: 0px 0px 5px 2px $color-focus;
+  box-shadow: 0px 0px 5px 2px $color-focus;
+}
+
+.fieldset-inputs label {
+  margin: 0;
+  cursor: pointer;
+}
+
+.checkbox-focus {
+  background-color: $color-white;
+  padding: 1px 8px;
+}
+
+.contract-list-item {
+  margin-bottom: 0;
+  border-right: 1px solid $color-gray-lighter;
+  &:last-of-type {
+    border: none;
+    margin-right: -1px;
+  }
+  &:not(:first-child) {
+    margin-left: -3px
+  }
+}
+
+.contract-current-year-span {
+  border-radius: $border-radius 0 0 $border-radius;
+  &.checkbox-focus {
+    background-color: transparent;
+  }
+}
+
+.contract-last-year-span {
+  border-radius: 0 $border-radius $border-radius 0;
+  &.checkbox-focus {
+    background-color: transparent;
+  }
+}
+
+.contract-year legend {
+  float: left;
+  margin-bottom: 10px;
+  font-size: $small-font-size;
+}

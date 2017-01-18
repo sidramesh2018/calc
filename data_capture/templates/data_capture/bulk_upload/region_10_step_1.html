@@ -1,0 +1,15 @@
+{% extends 'data_capture/bulk_upload/region_10_step.html' %}
+
+{% block subtitle %}Select file{% endblock %}
+
+{% block step_heading %}
+<p>Start here to upload an exported Region 10 pricing database spreadsheet into CALC, which will <strong>delete and replace</strong> all of the existing Region 10 data.</p>
+<p>Please be patient during this process as it may take several minutes to load large data files.</p>
+{% endblock step_heading %}
+
+{% block step_body %}
+  {% include 'data_capture/_upload_example.html' %}
+
+  {% include 'data_capture/bulk_upload/region_10_step_1_form.html' %}
+
+{% endblock step_body %}

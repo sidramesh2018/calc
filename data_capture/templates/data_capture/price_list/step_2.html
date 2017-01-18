@@ -1,0 +1,47 @@
+{% extends 'data_capture/step.html' %}
+{% load frontend %}
+{% block body_class %}secondary-step card--narrow{% endblock %}
+{% block subtitle %}Enter vendor details{% endblock %}
+
+{% block step_heading %}<h2>Enter details for this price list</h2>
+<p>We need a little more information about the vendor and contract.</p>
+{% endblock %}
+{% block step_body %}
+  <form method="post">
+  {% csrf_token %}
+
+  {{ form.non_field_errors }}
+  <h3>{{ contract_number }}</h3>
+  <h3>{{ preferred_schedule_title }}</h3>
+  {% fieldset form.vendor_name %}
+  {% fieldset form.is_small_business %}
+  {% fieldset form.contractor_site %}
+
+  <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+    {% fieldset form.contract_start %}
+    {% fieldset form.contract_end %}
+  </div>
+
+  {% fieldset form.escalation_rate %}
+
+  <div class="form-button-row clearfix">
+    <a href="{% url 'data_capture:step_1' %}" class="button button-outline button-previous">Previous</a>
+
+    <div class="submit-group">
+      <button type="submit" class="button-primary">Next</button>
+      <span class="submit-label">
+        Choose the awarded price list to upload.
+      </span>
+    </div>
+
+  </div>
+
+  </form>
+
+{% endblock %}
+{% block card_footer %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,190 @@
+@import '../base/variables';
+
+#banner {
+  color: $color-gray-lighter;
+  font-size: 85%;
+  background: $color-gray-dark;
+  padding: .2em 0;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: $small-font-size;
+  }
+  #usa img {
+    vertical-align: baseline;
+    position: relative;
+    top: 1px;
+    margin-right: .3em;
+  }
+  @include media($medium-screen) {
+    text-align: left;
+    #usa {
+      float: left;
+    }
+    #site-status {
+      float: right;
+      a {
+        color: $color-white;
+      }
+    }
+  }
+}
+
+header {
+  color: $color-white;
+  background: $color-primary-darker;
+  background-image: url(../../images/background-header.png);
+  background-repeat: repeat;
+  background-size: auto 100%;
+  padding-bottom: $space-4x; //to create "stacked" look
+  @include antialias();
+}
+
+.base-header {
+  display: flex;
+  margin-top: 1.6em;
+  + .row {
+    margin-top: 1.6em;
+  }
+}
+
+.logo {
+  display: inline-block;
+  width: 140px;
+  padding-bottom: 0;
+}
+.description-main {
+  color: $color-white;
+  font-size: $h1-font-size;
+  margin-top: 0;
+  margin-bottom: .3em;
+}
+.description-secondary {
+  color: $color-primary-alt-lightest;
+  font-size: $h4-font-size;
+  font-weight: $font-weight-normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  margin-bottom: 2em;
+}
+
+.price-callout {
+  p {
+    opacity: 1;
+    padding-left: 40px;
+    margin: 0;
+  }
+  h3 {
+    font-size: $base-font-size;
+    font-weight: $font-weight-normal;
+    border-bottom: 1px solid #436a79;
+    padding-bottom: $space-1x;
+    margin-top: $space-1x;
+    margin-bottom: 0;
+  }
+  .icon {
+    margin: ($space-1x + $space-half) 0 0;
+    background-repeat: no-repeat;
+    background-position: center left;
+    display: inline-block;
+    opacity: 0.6;
+    background-size: 30px;
+
+    &.icon-ceiling {
+      background-image: url('../../images/price-callout/roof.png');
+    }
+    &.icon-fully-burdened {
+      background-image: url('../../images/price-callout/mule.png');
+    }
+    &.icon-professional-services {
+      background-image: url('../../images/price-callout/briefcase.png');
+    }
+    &.icon-worldwide-rates {
+      background-image: url('../../images/price-callout/globe.png');
+    }
+  }
+}
+
+.user-id {
+  margin: 0 0 0.8rem 0;
+  float: right;
+  font-size: 1.5rem;
+  text-align: right;
+
+  > a {
+    color: $color-white;
+  }
+}
+
+@media all and (max-width: 890px){
+  nav ul {
+    @include span-columns(8 of 12);
+    @include shift(2);
+  }
+}
+
+nav {
+  position: relative;
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;
+  }
+  ul {
+    @include span-columns(12 of 12);
+    @include shift(0);
+    list-style: none;
+    text-align: center;
+    color: $color-white;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    li {
+      list-style: none;
+      display: inline-block;
+      margin: 0 $space-3x;
+      border-bottom: $space-1x solid transparent; //so pages with no applicable item still have the right spacing
+      &:first-child {
+        margin-left: 0em;
+      }
+      &:last-child {
+        margin-right: 0em;
+      }
+      &.selected {
+        border-bottom: $space-1x solid $color-primary-alt;
+        a {
+          font-weight: $font-weight-bold;
+          display: block;
+          padding-bottom: $space-half;
+        }
+      }
+      a {
+        /*font-weight: normal;*/
+        color: $color-white;
+        text-decoration: none;
+        &:hover {
+          color: $color-white;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $medium-screen) {
+  .logo-container {
+  }
+
+  nav {
+    margin-left: -20px; // to account for container padding
+    ul {
+      padding: 1em;
+      margin-top: 1em;
+      width: 100%;
+      .nav-user-id {
+        max-width: 400px;
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{% extends 'data_capture/step.html' %}
+{% load frontend %}
+{% block subtitle %}Upload price list{% endblock %}
+{% block page_heading %}
+Add awarded price data to CALC
+{% endblock %}
+{% block step_heading %}
+<p>
+  Start here to add finalized price list data to CALC.
+  Your price lists help make CALC a more robust tool, and sharing them is easy.
+</p>
+<p>
+  We'll ask you for a few details, make sure we understand your data, and send the submitted data to a CALC administrator for approval.
+  The admin will check the data and publish it in CALC for all to use.
+</p>
+{% endblock %}
+
+{% block step_body %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+  {% fieldset form.contract_number %}
+  {% fieldset form.schedule %}
+
+  <div class="form-button-row clearfix">
+    <div class="submit-group">
+      <span class="submit-label">
+        Provide some basic details about the contract.
+      </span>
+      <button type="submit" class="button-primary">Next</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

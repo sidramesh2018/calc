@@ -1,0 +1,113 @@
+@import "../base/variables";
+
+upload-widget {
+  margin: 3rem 0;
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding: 1rem 3em;
+  background-color: $color-gray-lightest;
+  transition: background-color 0.5s, border-color 0.5s;
+  -webkit-transition: background-color 0.5s, border-color 0.5s;
+  -moz-transition: background-color 0.5s, border-color 0.5s;
+  -o-transition: background-color 0.5s, border-color 0.5s;
+  border: 2px dashed $color-gray;
+  color: $color-gray;
+  font-size: 2rem;
+
+  label {
+    color: $color-primary;
+    font-weight: bold;
+    display: inline;
+    cursor: pointer;
+  }
+
+  label:hover {
+    text-decoration: underline;
+  }
+
+  input:focus + div.upload-chooser label,
+  input:focus + div.upload-current label {
+    outline: 1px dotted $color-black;
+    outline: -webkit-focus-ring-color auto 5px;
+  }
+
+  .upload-changer {
+    position: absolute;
+    font-size: 1.25rem;
+    bottom: 0.5rem;
+  }
+
+  &.dragged-over {
+    background-color: $color-green-lightest;
+    border: 2px dashed $color-green;
+    .upload-chooser {
+      * {
+        visibility: hidden;
+      }
+      &:before {
+        content: "Drop file here!";
+        font-weight: $font-weight-bold;
+        color: $color-primary;
+        display: block;
+        position: absolute;
+        margin-top: 0rem;
+      }
+    }
+  }
+}
+
+// Rules specific to JS-upgraded widgets.
+upload-widget[aria-live] {
+  height: 6em;
+
+  .nojs-preamble {
+    display: none;
+  }
+
+  input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .upload-current {
+    overflow: hidden; // necessary for ellipsis overflow
+  }
+  .upload-filename {
+    font-family: monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// Rules specific to non-JS-upgraded widgets.
+upload-widget:not([aria-live]) {
+  font-size: 1.3rem;
+  display: block;
+  border: none;
+  padding-top: 1em;
+  padding-bottom: 1em;
+
+  input {
+    border: none;
+    font-size: 1.3rem;
+    color: $color-primary;
+    font-weight: $font-weight-bold;
+    padding: 1.5rem 0 1rem;
+    // TODO: This is just clearing out the margin-bottom from our standard
+    // CSS, which feels like a hack.
+    margin-bottom: 0;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  label {
+    display: none;
+  }
+}

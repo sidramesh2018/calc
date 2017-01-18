@@ -20,25 +20,29 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='contract',
             name='hourly_rate_year2',
-            field=models.DecimalField(decimal_places=2, null=True, blank=True, max_digits=10),
+            field=models.DecimalField(
+                decimal_places=2, null=True, blank=True, max_digits=10),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='contract',
             name='hourly_rate_year3',
-            field=models.DecimalField(decimal_places=2, null=True, blank=True, max_digits=10),
+            field=models.DecimalField(
+                decimal_places=2, null=True, blank=True, max_digits=10),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='contract',
             name='hourly_rate_year4',
-            field=models.DecimalField(decimal_places=2, null=True, blank=True, max_digits=10),
+            field=models.DecimalField(
+                decimal_places=2, null=True, blank=True, max_digits=10),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='contract',
             name='hourly_rate_year5',
-            field=models.DecimalField(decimal_places=2, null=True, blank=True, max_digits=10),
+            field=models.DecimalField(
+                decimal_places=2, null=True, blank=True, max_digits=10),
             preserve_default=True,
         ),
     ]

@@ -1,0 +1,25 @@
+<form enctype="multipart/form-data" method="post"
+      is="ajax-form"
+      action="{% url 'data_capture:bulk_region_10_step_1' %}">
+
+  {% csrf_token %}
+
+  {% if request.is_ajax %}
+  {% include 'data_capture/messages.html' %}
+  {% endif %}
+
+  {{ form.non_field_errors }}
+
+  {{ form.file.errors }}
+
+  {{ form.file }}
+
+  <div class="form-button-row clearfix">
+    <div class="submit-group">
+      <button type="submit" class="button-primary">Next</button>
+      <span class="submit-label">
+        Confirm you want to replace existing data.
+      </span>
+    </div>
+  </div>
+</form>

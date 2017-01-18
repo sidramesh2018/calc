@@ -5,9 +5,8 @@ from datetime import date
 from django.core.management import call_command
 from django.test import TestCase
 
-from contracts.management.commands.load_s70 import (
-    FEDERAL_MIN_CONTRACT_RATE, Schedule70Loader
-)
+from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
+from contracts.loaders.schedule_70 import Schedule70Loader
 from contracts.models import Contract
 from contracts.mommy_recipes import get_contract_recipe
 
@@ -41,7 +40,7 @@ class LoadS70TestCase(TestCase):
         self.assertEquals(Contract.objects.count(), 20)
 
     def test_loads_bad_sample_and_warns(self):
-        output = self.load(self.bad_filename)
+        self.load(self.bad_filename)
         self.assertEquals(Contract.objects.count(), 18)
 
     def test_strict_mode_fails(self):

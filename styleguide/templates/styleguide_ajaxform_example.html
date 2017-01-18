@@ -1,0 +1,29 @@
+<form enctype="multipart/form-data" method="post"
+
+      {# The line below is VERY important, as it tells the browser #}
+      {# to progressively enhance the form into an ajax form. #}
+
+      is="ajax-form"
+
+      action="{% url 'styleguide:ajaxform' %}">
+  {% csrf_token %}
+  {% load frontend %}
+
+  {% if request.is_ajax %}
+  {% include 'data_capture/messages.html' %}
+  {% endif %}
+
+  {% with form=ajaxform_form %}
+    {{ form.non_field_errors }}
+    {% fieldset form.question %}
+    {% fieldset form.some_checkboxes %}
+    {% fieldset form.some_radios %}
+    {% fieldset form.on_valid_submit %}
+    {{ form.file.errors }}
+    {{ form.file }}
+  {% endwith %}
+
+  <button type="submit" class="button-primary" style="display: inline-block">Submit</button>
+
+  <button type="submit" class="button-secondary" name="cancel" formnovalidate style="display: inline-block">Cancel</button>
+</form>

@@ -1,0 +1,88 @@
+{% extends 'data_capture/step.html' %}
+
+{% block body_class %}secondary-step card--wide card--no-header{% endblock %}
+
+{% block subtitle %}Errors in price list upload{% endblock %}
+{% block step_heading %}<h2>Review errors</h2>{% endblock %}
+{% block step_body %}
+    {% with rows=gleaned_data.invalid_rows %}
+
+      {% with total=rows|length %}
+
+      <div class="message message-error" role="alert">
+        {% if not gleaned_data.valid_rows %}
+          <h3>No valid rows found!</h3>
+          <p>
+            Your uploaded price list contains no valid rows. Please fix the errors
+            shown below in the original file and <a href="#upload">try uploading it again</a>.
+          </p>
+        {% else %}
+          <h3>We found errors in {{ total }} row{{ total|pluralize }} of your data</h3>
+          <p>
+            The row{{ total|pluralize }} below appear{{ total|pluralize:"s," }} to be
+            invalid and <strong>will be discarded</strong> when you upload your
+            price list.
+            If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
+            in your original spreadsheet and <a href="#upload">try uploading it again</a>.
+          </p>
+        {% endif %}
+
+        {% if not is_preferred_schedule %}
+        <hr />
+        <p>
+          <strong>Note:</strong> You specified that the price list you were
+          uploading was for <em>{{ preferred_schedule_title }}</em>, but it
+          appears to be for <em>{{ gleaned_data.title }}</em>. If this is
+          incorrect, please upload a different file.
+        </p>
+        {% endif %}
+      </div>
+      {% endwith %}
+      {{ gleaned_data.to_error_table|safe }}
+    {% endwith %}
+
+  <h2 id="upload" tabindex="-1">Want to try that again?</h2>
+
+  <p>
+    If you'd like to fix the errors above in your spreadsheet,
+    you can try uploading it again here.
+    {% if gleaned_data.valid_rows %}
+      Otherwise, we'll discard the rows with problems when we upload
+      your original spreadsheet.
+    {% endif %}
+  </p>
+
+  <form enctype="multipart/form-data" method="post"
+        is="ajax-form"
+        action="{% url 'data_capture:step_3' %}">
+    {% csrf_token %}
+
+    {{ form.file }}
+
+    <div class="form-button-row clearfix">
+      <a href="{% url 'data_capture:step_3' %}" class="button button-outline button-previous">Previous</a>
+
+      <button type="submit" class="button-primary">
+        Upload revised price list
+      </button>
+
+      {% if gleaned_data.valid_rows %}
+        <a href="{% url 'data_capture:step_4' %}" class="button button-secondary">
+          Continue without these rows
+        </a>
+      {% else %}
+        <div class="submit-group">
+          <div class="button button-disabled">Continue without these rows</div>
+        </div>
+      {% endif %}
+
+    </div>
+  </form>
+
+{% endblock step_body %}
+{% block card_footer %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
+  </form>
+{% endblock %}

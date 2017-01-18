@@ -1,0 +1,213 @@
+@import '../base/variables';
+table {
+  width: 100%;
+  margin-top: 2rem;
+  caption {
+    color: $color-gray;
+    text-align: left;
+    font-weight: bold;
+    padding-bottom: 1.5em;
+    vertical-align: bottom;
+  }
+  tbody {
+    tr {
+      &:nth-child(odd) {
+        background: #f9f9f9;
+        td.sorted {
+          background: #f0f0f0;
+        }
+      }
+    }
+    th {
+      font-weight: normal;
+    }
+  }
+
+  /* NOTE: #result_list is for Django admin changelists */
+  &.sortable,
+  &.price-list-table,
+  &#result_list {
+    thead {
+      th {
+        position: relative;
+        vertical-align: bottom;
+        color: $color-gray;
+        border-bottom: 1px solid;
+        &.sortable {
+          text-decoration: underline;
+          cursor: pointer;
+          padding-right: 1.5em;
+          &:after {
+            display: inline-block;
+            line-height: 1em;
+            height: 1em;
+            position: absolute;
+            bottom: .4em;
+            right: 0;
+            margin-top: -.5em;
+            margin-right: .25em;
+            content: "▽";
+            font-weight: normal;
+            font-size: .9em;
+          }
+        }
+        &.sorted {
+          color: $color-black;
+          background: #f8f8f8;
+          position: relative;
+          &:after {
+            content: "▲";
+            font-size: 1em;
+          }
+          &.descending:after {
+            content: "▼";
+          }
+        }
+      }
+    }
+  }
+
+  &.hoverable {
+    tbody {
+      tr {
+        &:hover > * {
+          background: $color-gold-lightest !important;
+        }
+      }
+    }
+  }
+}
+
+td,
+td:first-child,
+td:last-child,
+th,
+th:first-child,
+th:last-child {
+  position: relative;
+  padding: .25em .5em;
+  vertical-align: top;
+}
+
+td.sorted {
+  background: #fafafa;
+}
+
+/* used on price list upload error page */
+td.error {
+  border-left: 2px solid $color-secondary-dark;
+  background-color: $color-error-bg;
+  color: $color-secondary-dark;
+  font-weight: $font-weight-bold;
+  padding-left: 2.5rem;
+
+  .errorlist {
+    color: $color-base;
+    font-weight: $font-weight-normal;
+    font-size: $small-font-size;
+    border: none;
+    background-image: url('../../images/uswds/alerts/error.png');
+    background-image: url('../../images/uswds/alerts/error.svg');
+    background-size: 2.5rem;
+    background-repeat: no-repeat;
+    background-position: top 3px left;
+    padding-left: 2.5rem;
+    margin-left: -2.5rem;
+    max-width: 220px;
+  }
+}
+
+th.exclude a.restore {
+  position: absolute;
+  font-size: 1rem;
+  padding: 2px 0;
+  text-transform: uppercase;
+  text-decoration: underline;
+  color: $color-gray;
+  white-space: nowrap;
+  vertical-align: bottom;
+  bottom: 100%;
+  left: 0;
+}
+
+td.column-exclude a {
+  color: $color-gray;
+  font-size: 1.2em;
+  line-height: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  &:hover {
+    color: $color-black;
+  }
+}
+
+th.number {
+  text-align: left;
+}
+
+td.number {
+  font-family: $font-family-mono;
+  text-align: right;
+}
+
+.price-list-table {
+  th, td {
+    vertical-align: bottom;
+  }
+}
+
+/* Not used because the corresponding JS conflicts with the tooltips. Only here for future reference. */
+th.collapsible {
+  position: relative;
+  &.collapsed {
+    width: 0;
+    font-size: 0;
+  }
+  &:last-child a.toggle-collapse {
+    left: auto;
+    right: 0;
+    text-align: right;
+  }
+}
+th.collapsed,
+td.collapsed {
+  width: 1.5em !important;
+  border-left: 1px dotted $color-gray-lightest;
+}
+
+/* Some labor categories (especially the "interpreter" categories)
+ * are incredibly long, so we should limit the width. */
+th.column-labor_category {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 22rem;
+}
+
+@media all and (min-width: 400px) {
+  td.number.currency:before {
+    content: '$';
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+    color: $color-gray-medium;
+  }
+}
+
+@media all and (min-width: 500px) {
+  td.number.currency:before {
+    left: 12%;
+  }
+}
+
+@media all and (min-width: 650px) {
+  td.number.currency:before {
+    left: 30%;
+  }
+}
+
+@media all and (min-width: 880px) {
+  td.number.currency:before {
+    left: 45%;
+  }
+}

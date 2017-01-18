@@ -1,0 +1,611 @@
+{% extends "styleguide_base.html" %}
+{% load styleguide %}
+
+{% block styleguide_body %}
+  <h1>CALC Style Guide</h1>
+
+  {% guide %}
+
+  {% guide_section "Introduction" %}
+
+  <p>
+    Welcome to the CALC Style Guide!
+  </p>
+
+  <p>
+    CALC's content is structured using 18F's standard voice, which is
+    described in the <a href="https://pages.18f.gov/content-guide/">18F
+    Content Guide</a>.
+  </p>
+
+  <p>
+    CALC uses <a href="http://bourbon.io/">Bourbon</a> and
+    <a href="http://neat.bourbon.io/">Neat</a> as the foundation
+    for its styles, with alterations based on the
+    <a href="https://standards.usa.gov/">U.S. Web Design Standards (USWDS)</a>.
+  </p>
+
+  <p>
+    While not all parts of the site adhere to a single unifying
+    philosophy, we try to build new parts in accordance with
+    Aaron Gustafson's <a href="http://adaptivewebdesign.info/1st-edition/read/chapter-4.html#planning-and-restraint">three maxims for progressive enhancement
+    with JavaScript</a>:
+  </p>
+
+  <ol>
+    <li>Make sure all content is accessible and all necessary tasks can be completed without JavaScript turned on.</li>
+    <li>Use JavaScript to generate any additional markup it needs.
+</li>
+    <li>Apply no style before its time.</li>
+  </ol>
+
+  {% guide_section "Typography" %}
+
+  {% example %}
+  <h1>Heading 1</h1>
+  <h2>Heading 2</h2>
+  <h3>Heading 3</h3>
+  <h4>Heading 4</h4>
+  <h5>Heading 5</h5>
+  <h6>Heading 6</h6>
+  <p>Paragraph body text go paragraph body text go. Paragraph body text go. Paragraph body text go paragraph body text go. Paragraph body text go. Paragraph body text go paragraph body text go. Paragraph body text go. Paragraph body text go paragraph body text go. Paragraph body text go.Paragraph body text go paragraph body text go. Paragraph body text go.</p>
+  <ul>
+    <li>An unordered list</li>
+    <li>Organizing many things</li>
+    <li>Order from chaos</li>
+  </ul>
+  {% endexample %}
+
+  {% guide_section "Ajax Form + Upload Widget" %}
+
+  <p>
+    Our upload widget is implemented using the techniques outlined in
+    <a href="http://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/">Styling &amp; Customizing File Inputs the Smart Way</a> and
+    <a href="https://css-tricks.com/drag-and-drop-file-uploading/">Drag
+    and Drop File Uploading</a> by Osvaldas Valutis.
+  </p>
+
+  <p>
+    We use an {% webcomponent '<upload-widget>' %} with a nested
+    {% webcomponent '<input is="upload-input">' %} to progressively enhance
+    the front-end. However, using them is rarely needed in practice, as
+    {% pyobjname 'frontend.upload.UploadWidget' %} contains the Django
+    widget for rendering all the required HTML.
+  </p>
+
+  <h3>Form Submission</h3>
+
+  <p>
+    Due to the technical limitations of HTML5, forms containing the
+    progressively-enhanced upload widget must be submitted via ajax. This can
+    be accomplished via a custom {% webcomponent '<form is="ajax-form">' %}
+    web component.
+  </p>
+
+  <p>
+    {% pyobjname 'frontend.ajaxform' %} contains utilities for processing
+    forms submitted by this web component in a progressively-enhanced way.
+  </p>
+
+  <p>
+    For a simple ajax form code example that also embeds an upload
+    widget, see
+    {% pathname 'styleguide/ajaxform_example.py' %} and
+    {% pathname 'styleguide/templates/styleguide_ajaxform_example.html' %}.
+  </p>
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">
+        Example
+        <a href="{% url 'styleguide:ajaxform' %}" target="_blank" title="Open in new tab"></a>
+      </h3>
+
+      {% include "styleguide_ajaxform_example.html" %}
+    </div>
+  </div>
+
+  <h3>Accessibility</h3>
+
+  <p>
+    Any response from the ajax form that dynamically updates content on
+    the page instead of redirecting the user to a new page should
+    contain an {% webcomponent '<alerts-widget>' %} which wraps
+    a message to inform users about what just happened. This will
+    automatically be focused when the content is injected into the
+    page, allowing screen readers to announce it.
+  </p>
+
+  <p>
+    To experience this in action, try submitting invalid data into the
+    example form above.
+  </p>
+
+  <h3>Graceful Degradation</h3>
+
+  <p>
+    Note that the upload widget gracefully degrades to a standard HTML
+    file input if either JS is disabled or any required HTML5 features
+    are unavailable:
+  </p>
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example (no JavaScript)</h3>
+      {{ degraded_upload_widget }}
+    </div>
+  </div>
+
+  <h3>Existing Filenames</h3>
+
+  <p>
+    In some cases, it may be preferable to indicate to a user that a
+    file upload field is not only optional, but that a default which
+    the user has uploaded earlier will be used if nothing else is
+    provided.
+  </p>
+
+  <expandable-area>
+    <h4>Examples</h4>
+
+    <p>
+      The baseline experience simply explains to the user that leaving
+      the field blank will result in the use of their previously-uploaded
+      file.
+    </p>
+
+    <div class="styleguide-example">
+      <div class="rendering">
+        <h3 class="example-heading">Example (no JavaScript)</h3>
+        {{ existing_filename_upload_form.no_js }}
+      </div>
+    </div>
+
+    <p>
+      The server, of course, will not receive any data if the user
+      doesn't supply a file. Finding and using the previously uploaded
+      file is the server's responsibility.
+    </p>
+
+    <p>
+      However, if proper browser support exists, the user experience is
+      progressively enhanced: the widget will <em>appear</em> populated,
+      but as with the baseline experience, the server will not actually
+      receive any data unless the user explicitly chooses a different file.
+    </p>
+
+    <div class="styleguide-example">
+      <div class="rendering">
+        <h3 class="example-heading">Example</h3>
+        {{ existing_filename_upload_form.js }}
+      </div>
+    </div>
+  </expandable-area>
+
+  {% guide_section "Buttons" %}
+
+  <p>
+    Use primary buttons to indicate primary actions, default to
+    indicate less important actions, and secondary to indicate actions such as
+    cancelling a process or deleting information.
+  </p>
+
+  {% example %}
+  <button>Default button</button>
+  <a class="button button-primary" href="#">Link</a>
+  <button class="button-primary">Button</button>
+  <input class="button-primary" type="button" value="Input">
+  <input class="button-primary" type="submit" value="Submit">
+  <button class="button-disabled">Disabled button</button>
+  <button class="button-secondary">Secondary button</button>
+  <button class="button-gray">Gray button</button>
+  <button class="button-link">Link button</button>
+  {% endexample %}
+
+  {% guide_section "Steps Widget" %}
+
+  <p>
+    The steps widget can be used to visualize the user's progress through a
+    multi-step process.
+  </p>
+
+  <p>
+    Users assisted by screen readers will hear an audio description of the
+    visualization, e.g. "Step 2 of 3", followed by the name of the
+    current step.
+  </p>
+
+  <p>
+    Rather than writing out the raw HTML of the steps widget, we
+    recommend using {% pyobjname 'frontend.steps.StepsWidget' %}.
+  </p>
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example</h3>
+      {{ steps_widget }}
+    </div>
+  </div>
+
+  {% guide_section "Alerts" %}
+
+  <p>
+    Defined in {% pathname 'frontend/source/sass/components/_alerts.scss' %}.</p>
+  </p>
+
+  <p>
+    These are similar to the
+    <a href="https://standards.usa.gov/alerts/">US Web Design Standards</a>,
+    but add a stroke and the CALC standard border radius.
+  </p>
+
+  {% example %}
+  <div class="alert alert-error" role="alert">
+    <h3>Error!</h3>
+    <p>Better get out your eraser.</p>
+  </div>
+  {% endexample %}
+
+  {% example %}
+  <div class="alert alert-success" role="alert">
+    <h3>Success alert</h3>
+    <p>Hooray!</p>
+  </div>
+  {% endexample %}
+
+  {% example %}
+  <div class="alert alert-warning" role="alert">
+    <h3>Warning alert</h3>
+    <p>Danger, danger, Will Robinson!</p>
+  </div>
+  {% endexample %}
+
+  {% example %}
+  <div class="alert alert-info" role="alert">
+    <h3>Info alert</h3>
+    <p>Now you have The Information!</p>
+  </div>
+  {% endexample %}
+
+  {% guide_section "Tables" %}
+  <p>When displaying data in tables, be sure to add the <code>number</code> class to cells that contain numbers. This will monospace and right-align those columns. For dollar amounts, you'll need to also add the <code>currency</code> class to get the dollar sign to appear. You can add a highlight-on-hover effect to a table's rows by including the <code>hoverable</code> class on the table.</p>
+  {% example %}
+    <table class="hoverable">
+      <thead>
+        <tr>
+          <th>SIN</th>
+          <th>Service proposed</th>
+          <th>Minimum education</th>
+          <th class="number">Minimum years of experience</th>
+          <th class="number">Price offered to GSA (including IFF)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>132-51</td>
+          <td>Project Manager</td>
+          <td>Bachelors</td>
+          <td class="number">5</td>
+          <td class="number currency">115.99</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer, Associate</td>
+          <td>Bachelors</td>
+          <td class="number">0</td>
+          <td class="number currency">37.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer I</td>
+          <td>Bachelors</td>
+          <td class="number">3</td>
+          <td class="number currency">41.59</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer II</td>
+          <td>Bachelors</td>
+          <td class="number">5</td>
+          <td class="number currency">52.03</td>
+        </tr>
+        <tr>
+          <td>132-17</td>
+          <td>Software Programmer III</td>
+          <td>Bachelors</td>
+          <td class="number">7</td>
+          <td class="number currency">65.72</td>
+        </tr>
+      </tbody>
+    </table>
+  {% endexample %}
+
+  {% guide_section "Excel Tables" %}
+
+  <p>Defined in {% pathname 'frontend/source/sass/components/_exceltables.scss' %}.</p>
+
+  <p>
+    Sometimes we need to display "screenshots" of Microsoft Excel tables
+    to users, to communicate what kind of spreadsheet they need to upload.
+    Doing this with standard HTML tables that are styled to look like
+    excel tables allows us to accomplish this in an accessible and
+    easily changeable way.
+  </p>
+
+  <p>
+    The base class just styles the table to look like a standard Excel
+    sheet without any styling:
+  </p>
+
+  {% example %}
+  <div class="excel-wrapper">
+    <table class="excel">
+      <tr><td>A1</td><td>B1</td></tr>
+      <tr><td>A2</td><td>B2</td></tr>
+    </table>
+  </div>
+  {% endexample %}
+
+  <p>
+    But we have extra classes that we can layer on top to emulate the
+    styling of specific contract vehicle spreadsheets.
+  </p>
+
+  <p>For example, here's a style for Schedule 70 proposed price lists:</p>
+
+  {% example %}
+  <div class="excel-wrapper">
+    <table class="excel excel-schedule-70">
+      <tr>
+        <td>SIN(s) PROPOSED</td>
+        <td>SERVICE PROPOSED (e.g. Job Title/Task)</td>
+        <td>MINIMUM EDUCATION/CERTIFICATION LEVEL</td>
+        <td>MINIMUM YEARS OF EXPERIENCE</td>
+        <td>COMMERCIAL LIST PRICE (CPL) OR MARKET PRICES</td>
+        <td>UNIT OF ISSUE (e.g. Hour, Task, Sq ft)</td>
+        <td>MOST FAVORED CUSTOMER (MFC)</td>
+      </tr>
+      <tr>
+        <td>132-51</td>
+        <td>Project Manager</td>
+        <td>Bachelors</td>
+        <td>5</td>
+        <td>$125</td>
+        <td>Hour</td>
+        <td>All Commercial</td>
+      </tr>
+    </table>
+  </div>
+  {% endexample %}
+
+  {% guide_section "Forms" %}
+  {% example %}
+  <label for="input-type-text">Text input label</label>
+  <input id="input-type-text" name="input-type-text" type="text">
+
+  <label for="input-has_focus">Text input focused</label>
+  <input class="input-focus" id="input-focus" name="input-focus" type="text">
+
+  <fieldset class="fieldset-error">
+    <span class="input-error-message" id="input-error-message" role="alert">Helpful error message</span>
+    <label class="input-error-label" for="input-error">Text input error</label>
+    <input id="input-error" name="input-error" type="text" aria-describedby="input-error-message">
+  </fieldset>
+
+  <label for="input-type-textarea">Text area label</label>
+  <textarea id="input-type-textarea" name="input-type-textarea"></textarea>
+  {% endexample %}
+
+  {% example %}
+  <label for="options">Dropdown label</label>
+  <select name="options" id="options">
+    <option value="value1">Option A</option>
+    <option value="value2">Option B</option>
+    <option value="value3">Option C</option>
+  </select>
+  {% endexample %}
+
+  {% guide_section "Radio Buttons and Checkboxes" %}
+
+  <p>
+    Because USWDS uses a slightly different HTML structure for
+    radio buttons and checkboxes from Django, we need to use custom
+    widgets: {% pyobjname 'frontend.widgets.UswdsRadioSelect' %} and
+    {% pyobjname 'frontend.widgets.UswdsCheckbox' %}.
+  </p>
+
+  <p>
+    For a simple code example, see
+    {% pathname 'styleguide/radio_checkbox_example.py' %} and
+    {% pathname 'styleguide/templates/styleguide_radio_checkbox_example.html' %}.
+  </p>
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">
+        Example
+        <a href="{% url 'styleguide:radio-checkbox' %}" target="_blank" title="Open in new tab"></a>
+      </h3>
+      {% include "styleguide_radio_checkbox_example.html" %}
+    </div>
+  </div>
+
+  {% guide_section "Dates" %}
+
+  <p>
+    {% pyobjname 'frontend.date.SplitDateField' %} is a custom Django form
+    field and widget that offers three separate text fields for users to enter
+    dates, as per the <a href="https://standards.usa.gov/form-controls/#date-input">USWDS section on date input</a>.
+  </p>
+  <p>
+    We use a {% webcomponent '<uswds-date>' %} to provide some optional
+    dynamic functionality, such as automatically advancing focus to the
+    next input field in the date whenever <kbd>/</kbd>,
+    <kbd>.</kbd>, or <kbd>-</kbd> is pressed.
+  </p>
+  <p>
+    For a simple code example, see
+    {% pathname 'styleguide/date_example.py' %} and
+    {% pathname 'styleguide/templates/styleguide_date_example.html' %}.
+  </p>
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">
+        Example
+        <a href="{% url 'styleguide:date' %}" target="_blank" title="Open in new tab"></a>
+      </h3>
+      {% include "styleguide_date_example.html" %}
+    </div>
+  </div>
+
+  {% guide_section "Form Button Row" %}
+
+  <p>Defined in {% pathname 'frontend/source/sass/components/_formbuttonrow.scss' %}.</p>
+
+  <p>The form-button-row widget is used to add common buttons to the bottom of forms in a multi-step process, such as the Data Capture Upload flow.</p>
+
+  {% example %}
+  <div class="form-button-row clearfix">
+    <a href="#" class="button button-outline button-previous">Previous</a>
+
+
+    <div class="submit-group">
+      <button type="submit" class="button-primary">Next</button>
+      <span class="submit-label">
+        Provide details about the contract.
+      </span>
+    </div>
+
+  </div>
+  {% endexample %}
+
+  {% guide_section "Expandable Area" %}
+
+  <p>
+    The {% webcomponent '<expandable-area>' %} web component makes it possible
+    to progressively enhance an area to be initially collapsed, and expandable
+    via user interaction. The first child
+    element is assumed to be the expander (which is dynamically given the
+    <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role">button role</a>) while all of its siblings are
+    the expandable content.
+  </p>
+
+  {% example %}
+  <expandable-area>
+    <h6>Why are computers so hard to use?</h6>
+    <p>Here is a paragraph of explanatory text.</p>
+    <p>Here is another paragraph of explanatory text.</p>
+  </expandable-area>
+  {% endexample %}
+
+  <p>
+    When JavaScript isn't available, the hidden content is always shown:
+  </p>
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example (no JavaScript)</h3>
+      <expandable-area data-force-degradation>
+        <h6>Why are computers so hard to use?</h6>
+        <p>Here is a paragraph of explanatory text.</p>
+        <p>Here is another paragraph of explanatory text.</p>
+      </expandable-area>
+    </div>
+  </div>
+
+  <p>
+    Styling for this component can be found in
+    {% pathname 'frontend/source/sass/components/_expandablearea.scss' %}.
+  </p>
+
+  {% guide_section "Modal Dialogs" %}
+
+  <p>
+    Modal dialogs provide a way of display a dialog, such as a confirmation
+    message, and associated actions in a visually-pleasing, styleable manner.
+    We use the <a href="https://github.com/edenspiekermann/a11y-dialog">a11y-dialog</a> library for modal dialog support.
+  </p>
+
+  <p>
+    Due to the way <code>a11y-dialog</code> works, markup for the modals needs
+    to be placed outside of the page's <code>&lt;main&gt;</code> element in order
+    to be read properly by screenreaders. In templates, place modal markup in the
+    <code>{% templatetag openblock %} block modals {% templatetag closeblock %}</code>
+    block.
+  </p>
+
+  {% example %}
+  <button data-a11y-dialog-show="example-dialog">Open Dialog</button>
+
+  <!-- Note that any modal markup should be placed in {% templatetag openblock %} block modals {% templatetag closeblock %}
+  otherwise screenreading will not work properly.
+  Screenreading will not work properly in this example for instance. -->
+  <div id="example-dialog" aria-hidden="true" class="dialog">
+    <div class="dialog-overlay" tabindex="-1" data-a11y-dialog-hide></div>
+    <div class="dialog-content" role="dialog" aria-labelledby="example-dialog-title" aria-describedby="example-dialog-description">
+      <div role="document">
+        <h1 id="example-dialog-title">
+          This is an example dialog title
+        </h1>
+
+        <p id="example-dialog-description">
+          Here is some content in the dialog.
+          Click "Dismiss Dialog" or anywhere outside of this dialog to close me.
+        </p>
+
+        <div class="dialog-buttons">
+          <button class="button-primary" data-a11y-dialog-hide>
+            Dismiss dialog
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endexample %}
+
+  <p>When JavaScript is not available, the activator element will do whatever it previously did before being modified to open a dialog.</p>
+
+  {% guide_section "Compatibility Mode" %}
+
+  <p>
+    Because we're designing the new parts of CALC to be progressively enhanced,
+    they can actually work without JavaScript. One advantage of this approach
+    is that in the rare case that the site doesn't work, a user can disable
+    JavaScript in their browser and reload the page&mdash;it can potentially
+    fix things.
+  </p>
+
+  <p>
+    However, there's a few problems with this:
+  </p>
+
+  <ol>
+    <li>Most users don't know what JavaScript is, much less how to disable it.</li>
+    <li>Even if a user knows what JavaScript is and how to disable it in their
+    browser, they have no idea when a JavaScript error has actually occurred.</li>
+  </ol>
+
+  <p>
+    Fortunately, it <em>is</em> possible to use JavaScript to detect when a
+    JavaScript error has occurred, so we do this on progressively
+    enhanced CALC pages. Whenever a JS error occurs, a warning appears
+    that allows users to opt-in to <em>compatibility mode</em>. If the
+    user opts-in, the server will stop sending JS to the client, ensuring
+    a baseline experience.
+  </p>
+
+  {% if not is_safe_mode_enabled %}
+  <p>
+    To see what this looks like in action, you can forcibly trigger a JS error
+    on this page via the button below.
+  </p>
+
+  <button class="button-secondary"
+          onclick="throw new Error('I am an intentional error')">
+    Trigger JavaScript Error
+  </button>
+  {% endif %}
+
+  {% endguide %}
+{% endblock %}

@@ -1,0 +1,23 @@
+aside.safe-mode {
+  position: fixed;
+  background-color: $color-secondary-darkest;
+  color: $color-white;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1em;
+  z-index: 10000;
+
+  form {
+    margin-bottom: 0;
+  }
+
+  button {
+    margin: 0 0 0 1em;
+    float: right;
+  }
+}
+
+aside.safe-mode.safe-mode-disable {
+  background-color: transparentize($color-black, 0.2);
+}

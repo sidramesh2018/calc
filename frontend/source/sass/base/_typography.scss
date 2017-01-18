@@ -1,0 +1,118 @@
+@import 'variables';
+
+html {
+  font-size: $em-base;
+}
+
+body {
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+}
+
+h1 {
+  .site-title {
+    display: block;
+  }
+
+  .site-subtitle {
+    display: block;
+    font-size: 2rem;
+  }
+}
+
+h1 {
+  font-size: $h1-font-size;
+  line-height: $heading-line-height;
+}
+
+h2 {
+  font-size: $h2-font-size;
+  line-height: $heading-line-height;
+}
+
+h3,
+.dialog-content h1 {
+  font-size: $h3-font-size;
+  line-height: $heading-line-height;
+  font-weight: $font-weight-bold;
+}
+
+h4 {
+  font-size: $h4-font-size;
+  line-height: $heading-line-height;
+  font-weight: $font-weight-bold;
+}
+
+h5 {
+  font-size: $h5-font-size;
+  line-height: $heading-line-height;
+  font-weight: $font-weight-bold;
+  letter-spacing: auto;
+}
+
+h6 {
+  font-size: $h6-font-size;
+  font-weight: $font-weight-bold;
+  line-height: $heading-line-height - .05; // should be 1.25
+  text-transform: uppercase;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  &[id][tabindex="-1"]:focus {
+    // The tabindex="-1" has only been provided to work around a
+    // hasLayout bug in IE that prevents sequential keyboard navigation
+    // on named anchors from working properly. We don't want non-IE
+    // browsers to actually provide a focus outline on these elements,
+    // because the elements aren't actually interactive and browsers
+    // don't provide focus styling on named anchors by default.
+    //
+    // For more information on the IE bug, see:
+    //
+    // http://juicystudio.com/article/ie-keyboard-navigation.php
+
+    outline: none;
+  }
+}
+
+p {
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+  max-width: $line-length-max-width;
+  &.small {
+    font-size: $base-font-size - 0.2;
+  }
+  &.large {
+    font-size: $base-font-size + 0.4;
+  }
+}
+
+.help-text {
+  clear: both;
+  color: $color-gray;
+  margin-bottom: 1em;
+}
+
+.dev-note {
+  color: $color-gray-medium;
+}
+
+.schedule {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+ol.steps li {
+  font-family: $font-family-main;
+}
+
+//the buttons that download a graph on the main page
+.download-buttons p {
+  margin-top: 2rem;
+}
+
+.empty-list-note {
+  color: $color-gray;
+  font-size: $h3-font-size;
+  font-weight: $font-weight-bold;
+}

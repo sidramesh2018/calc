@@ -1,6 +1,16 @@
 [run]
 branch = True
-source = hourglass
+source = .
+omit =
+  fake_uaa_provider/*
+  docker_django_management.py
+  manage.py
+  */migrations/*
+  */mommy_recipes.py
+  */tests.py
+  */tests/*
+  hourglass/wsgi.py
+  meta/management/commands/*
 [report]
 exclude_lines =
     pragma: no cover

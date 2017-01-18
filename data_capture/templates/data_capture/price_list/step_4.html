@@ -1,0 +1,138 @@
+{% extends 'data_capture/step.html' %}
+
+{% block body_class %}secondary-step card--wide{% endblock %}
+{% block subtitle %}Verify data{% endblock %}
+
+{% block step_heading %}
+<h2>Double check and submit for review</h2>
+<p>Please verify everything and submit it to be added to CALC.</p>
+{% endblock %}
+
+{% block step_body %}
+<form method="post">
+  {% csrf_token %}
+
+<h3>Verify vendor and contract details</h3>
+
+<div data-edit-contract-details class="clearfix" {% if not show_edit_form %}style="display: none"{% endif %}>
+
+  {{ form.non_field_errors }}
+
+  {% load frontend %}
+
+  {{ form.schedule }}
+
+  {% fieldset form.contract_number %}
+  {% fieldset form.vendor_name %}
+  {% fieldset form.is_small_business %}
+  {% fieldset form.contractor_site %}
+
+  <div class="date-range {% if form.contract_start.errors or form.contract_end.errors%}fieldset-error{% endif %}">
+    {% fieldset form.contract_start %}
+    <p>to</p>
+    {% fieldset form.contract_end %}
+  </div>
+
+  {% fieldset form.escalation_rate %}
+
+  <div class="form-button-row clearfix">
+    <div class="submit-group">
+      <button type="submit" class="button button-primary" name="save-changes">Save changes</button>
+    </div>
+
+    <a type="submit" class="button button-outline" href="{{ step_4_without_edit_url }}">Discard changes</a>
+  </div>
+
+</div>
+
+{% if not show_edit_form %}
+<div data-contract-details class="row clearfix">
+  <div class="twelve columns">
+    <dl class="contract-details clearfix">
+      <dt>Schedule</dt>
+      <dd>{{ gleaned_data.title }}</dd>
+
+      <dt>Contract number</dt>
+      <dd>{{ price_list.contract_number }}</dd>
+
+      <dt>Vendor</dt>
+      <dd>{{ price_list.vendor_name }}</dd>
+
+      <dt>Small business</dt>
+      <dd>{% if price_list.is_small_business == 'True' %}Yes{% else %}No{% endif %}</dd>
+
+      <dt>Contractor worksite</dt>
+      <dd>{{ price_list.contractor_site }}</dd>
+
+      <dt>Contract dates</dt>
+      <dd class="contract-details__start-date">{{ price_list.contract_start }}</dd>
+      <dd>{{ price_list.contract_end }}</dd>
+
+      <dt>Escalation rate</dt>
+      <dd>{% if price_list.escalation_rate %}{{ price_list.escalation_rate }}%{% else %}None{% endif %}</dd>
+    </dl>
+    <p><a href="{{ step_4_with_edit_url }}" class="button button-primary" data-edit-btn>Edit</a></p>
+  </div>
+</div>
+{% endif %}
+
+{% if not is_preferred_schedule %}
+  <div class="row">
+    <div class="columns eight">
+      <div class="alert alert-warning">
+        <p>
+          <strong>Note:</strong> You specified that the price list you were
+          uploading was for <em>{{ preferred_schedule_title }}</em>, but it
+          appears to be for <em>{{ gleaned_data.title }}</em>. If this is
+          incorrect, please upload a different file.
+        </p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="row">
+{% with rows=gleaned_data.valid_rows %}
+  {% with total=rows|length %}
+    <h3>Verify {{ total }} row{{ total|pluralize }} of data</h3>
+  {% endwith %}
+
+  {{ gleaned_data.to_table|safe }}
+{% endwith %}
+</div>
+<div class="row">
+  <div class="twelve columns form-button-row clearfix">
+    {% if prev_url %}
+      <a href="{{ prev_url }}" class="button button-outline button-previous">Previous</a>
+    {% elif gleaned_data.invalid_rows %}
+      <a href="{% url 'data_capture:step_3_errors' %}" class="button button-outline button-previous">Previous</a>
+    {% else %}
+      <a href="{% url 'data_capture:step_3' %}" class="button button-previous">Previous</a>
+    {% endif %}
+
+    {% if gleaned_data.valid_rows %}
+      <div class="submit-group">
+        {% if show_edit_form %}
+          <button type="submit" class="button button-primary">Save and submit for review</button>
+          <span class="submit-label">
+            Save changes and submit price list data to an administrator for approval.
+          </span>
+        {% else %}
+          <button type="submit" class="button button-primary" data-edit-text="Save and submit for review">Submit for review</button>
+          <span class="submit-label" data-edit-text="Save changes and submit price list data to an administrator for approval.">
+            Submit price list data to an administrator for approval.
+          </span>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+</form>
+
+{% endblock %}
+{% block card_footer %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
+  </form>
+{% endblock %}

@@ -1,5 +1,7 @@
 # CALC Data Imports
 
+**NOTE:** This document is out-of-date and pending [review/removal](https://github.com/18F/calc/issues/840)
+
 ## About the data
 https://github.com/18F/calc/tree/master/contracts/docs has all versions of the data that has been imported to date. https://github.com/18F/calc/blob/master/contracts/docs/hourly_prices.csv is the most recent data set.
 
@@ -116,7 +118,7 @@ This will replace all existing Schedule 70 records with the ones in the CSV.
 
 For more information on the Schedule 70 data loader and its configuration options, run `./manage.py load_s70 --help`
 
-Should the format of the file we import ever change, run `./manage.py makemigrations` and alert the team that they will need to run migrations on their local environments. 
+Should the format of the file we import ever change, run `./manage.py makemigrations` and alert the team that they will need to run migrations on their local environments.
 
 ## Updating data on Cloud Foundry
 Before pushing to an app, edit the `manifest.yml` and under the environment you want to push to, add `command: bash cf.sh`.

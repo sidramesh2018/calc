@@ -1,0 +1,12 @@
+base_app:
+  build: .
+  environment:
+    - DDM_HOST_USER=calc_user
+    - PYTHONUNBUFFERED=yup
+    - DATABASE_URL=postgres://calc_user@db/calc
+    - REDIS_URL=redis://redis:6379/0
+    - REDIS_TEST_URL=redis://redis:6379/1
+    # This *must* be at least 2 in order for the fake authentication
+    # server to work, as it makes the app connect to itself (which will
+    # cause the app to hang if only one worker exists).
+    - WEB_CONCURRENCY=2

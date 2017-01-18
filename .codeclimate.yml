@@ -3,12 +3,24 @@ languages:
   JavaScript: true
   Python: true
 exclude_paths:
-- "hourglass_site/static/hourglass_site/js/vendor/*"
-- "contracts/migrations/*"
-- "hourglass_site/static/hourglass_site/tests/*"
-- "selenium_tests/*"
+- "frontend/tests/*"
+- "frontend/source/js/vendor/*"
+- "frontend/source/style/libs/*"
+- "styleguide/static/styleguide/vendor/*"
+- "**/migrations/*"
+- "**/vendor/*"
 engines:
   eslint:
     enabled: true
-  csslint:
+    channel: "eslint-3"
+    checks:
+      import/no-unresolved:
+        enabled: false
+    extensions:
+    - .js
+    - .jsx
+  pep8:
     enabled: true
+ratings:
+  paths:
+  - "**.py"

@@ -1,0 +1,67 @@
+{% extends 'data_capture/base.html' %}
+
+{% block title %}Add price data to CALC / {{ step.description|capfirst }}: {% block subtitle %}{% endblock %}{% endblock %}
+
+{% block body %}
+  <div class="container {% block body_class %}card--narrow{% endblock %}">
+    <div class="row">
+      <div class="card">
+        <div class="card__content">
+          {% block steps %}
+          {{ step.widget }}
+          {% endblock %}
+
+          <h1>
+            {% block page_heading %}{% endblock %}
+            <span class="sr-only">{{ step.description }}</span>
+          </h1>
+          {% block step_heading %}{% endblock %}
+        </div><!--card-content -->
+      </div><!--card__header-->
+      <div class="card">
+        <div class="card__content">
+          {% include 'data_capture/messages.html' %}
+        </div>
+
+        <div class="card__content">
+          {% block step_body %}{% endblock %}
+        </div>
+      </div><!--card-->
+    </div><!-- .row -->
+    <div class="row">
+      <div class="card__footer">
+        {% block card_footer %}{% endblock %}
+      </div>
+    </div>
+  </div><!-- container -->
+{% endblock %}
+
+{% block modals %}
+  {{ block.super }}
+  <div id="cancel-dialog" aria-hidden="true" class="dialog">
+    <div class="dialog-overlay" tabindex="-1" data-a11y-dialog-hide></div>
+    <div class="dialog-content" role="dialog" aria-labelledby="cancel-dialog-title" aria-describedby="cancel-dialog-content">
+      <div role="document">
+        <h1 id="cancel-dialog-title">
+          Are you sure you'd like to cancel?
+        </h1>
+
+        <p id="cancel-dialog-content">
+          If you choose to cancel, CALC will discard all of the information you've entered.
+        </p>
+
+        <div class="dialog-buttons">
+          <button class="button-primary" data-a11y-dialog-hide>
+            No, keep working
+          </button>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="cancel" class="button-secondary">
+              Yes, discard my work
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock modals %}

@@ -1,0 +1,71 @@
+---
+name: CALC
+uniqueID: MB18FIX019268-2
+version: 2.0.0
+# descriptions:
+# https://18f.gsa.gov/dashboard/
+phase: live
+# `D26 Civilian Operations` is most common for 18F projects.
+# http://csrc.nist.gov/publications/nistpubs/800-60-rev1/SP800-60_Vol1-Rev1.pdf#page=23
+information-types:
+- D26 Civilian Operations
+
+# https://pages.18f.gov/before-you-ship/ato/levels/
+confidentiality: low
+integrity: low
+availability: low
+security-baseline: low
+
+system-type: minor
+level-of-identity-assurance: https://compliance.cloud.gov/
+staff:
+  authorizing-official:
+    name: Noah Kunin
+    title: TTS Infrastructure Director
+    org: General Services Administration
+    unit: TTS
+    email: devops@gsa.gov
+  system-owner:
+    name: James Seppi
+    title: CALC System Owner
+    org: General Services Administration
+    unit: 18F
+    email: james.seppi@gsa.gov
+  system-management:
+    name: Noah Kunin
+    title: TTS Infrastructure Director
+    org: General Services Administration
+    unit: TTS
+    email: devops@gsa.gov
+  system-security-officer:
+    name: Noah Kunin
+    title: TTS Infrastructure Director
+    org: General Services Administration
+    unit: TTS
+    email: devops@gsa.gov
+  technical-lead:
+    name: Atul Varma
+    title: Technical Lead
+    org: General Services Administration
+    unit: 18F
+    email: atul.varma@gsa.gov
+leveraged-authorizations:
+- https://www.fedramp.gov/marketplace/compliant-systems/amazon-web-services-aws-eastwest-us-public-cloud/
+purpose: https://github.com/18F/calc/blob/develop/README.md
+components:
+- https://github.com/18f/calc
+
+# these will be the same unless your architecture is especially complex
+system-diagram: https://docs.google.com/drawings/d/1k1wykk5PbLKSNJj8FyZbIlpX0D8r1q3-w-uRK_WWt9g/edit
+network-diagram: https://docs.google.com/drawings/d/1k1wykk5PbLKSNJj8FyZbIlpX0D8r1q3-w-uRK_WWt9g/edit
+
+environments:
+- Cloud Foundry
+- Amazon Web Services East
+user-types:
+  developer:
+    functions:
+    - deployment
+    - engineering
+controls:
+- https://github.com/18F/calc/blob/develop/compliance/component.yaml

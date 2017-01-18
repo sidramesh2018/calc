@@ -1,0 +1,42 @@
+{% extends 'data_capture/replace_price_list/replace_step.html' %}
+
+{% block subtitle %}Verify data{% endblock %}
+
+{% block step_heading %}
+  <h2>Double check and submit for review</h2>
+  <p>Please verify the uploaded price list rows and submit your changes for review.</p>
+{% endblock %}
+
+{% block step_body %}
+  <div class="row">
+    {% with rows=gleaned_data.valid_rows %}
+      {% with total=rows|length %}
+        <h3>Verify {{ total }} row{{ total|pluralize }} of data</h3>
+      {% endwith %}
+
+      {{ gleaned_data.to_table|safe }}
+    {% endwith %}
+  </div>
+
+  <div class="row">
+    <div class="twelve columns form-button-row clearfix">
+      <form method="post" action="{% url 'data_capture:replace_step_2' id=price_list.pk %}">
+        {% csrf_token %}
+        {% if gleaned_data.valid_rows %}
+          <div class="submit-group">
+            <button type="submit" class="button button-primary">Submit for review</button>
+            <span class="submit-label">
+              Submit price list data to an administrator for approval.
+            </span>
+          </div>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+{% endblock step_body %}
+{% block card_footer %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
+  </form>
+{% endblock card_footer %}

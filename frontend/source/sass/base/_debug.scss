@@ -1,0 +1,8 @@
+/*override USWDS input settings for Django toolbar*/
+#djDebug #djDebugToolbar input[type=checkbox] {
+  float: right;
+  margin: 10px;
+  position: relative;
+  left: auto;
+  width: auto;
+}

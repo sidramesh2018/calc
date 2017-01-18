@@ -1,20 +1,35 @@
 app:
-  build: .
-  volumes:
-    - .:/calc
+  extends:
+    file: docker-services.yml
+    service: base_app
   links:
     - db
-  working_dir: /calc
-  entrypoint: python /calc/entrypoint.py
-  environment:
-    - IS_RUNNING_IN_DOCKER=yup
-    - PYTHONUNBUFFERED=yup
-    - DATABASE_URL=postgres://calc_user@db/calc
-  command: python manage.py runserver 0.0.0.0:8000
+    - redis
+  command: sh -c "python manage.py collectstatic --noinput ; gunicorn -b :${DOCKER_EXPOSED_PORT} hourglass.wsgi:application"
   ports:
-    - "8000:8000"
+    - "${DOCKER_EXPOSED_PORT}:${DOCKER_EXPOSED_PORT}"
 db:
   image: postgres:9.4
   environment:
     - POSTGRES_DB=calc
     - POSTGRES_USER=calc_user
+redis:
+  image: redis:3.0.7-alpine
+rq_worker:
+  extends:
+    file: docker-services.yml
+    service: base_app
+  links:
+    - db
+    - redis
+  command: python manage.py rqworker
+rq_scheduler:
+  extends:
+    file: docker-services.yml
+    service: base_app
+  links:
+    - db
+    - redis
+  command: python manage.py rqscheduler
+  environment:
+    - IS_RQ_SCHEDULER=yup

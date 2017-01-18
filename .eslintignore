@@ -1,0 +1,5 @@
+/static/
+htmlcov/
+vendor/
+
+frontend/static/frontend/built/
