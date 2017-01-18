@@ -108,7 +108,6 @@ if 'IS_RQ_SCHEDULER' in os.environ:
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
