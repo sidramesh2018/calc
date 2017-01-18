@@ -94,7 +94,8 @@ th,
 th:first-child,
 th:last-child {
   position: relative;
-  padding: .75em .5em;
+  /*padding: .75em .5em;*/
+  padding: $space-2x $space-1x;
   vertical-align: top;
 }
 
@@ -108,21 +109,20 @@ td.error {
   font-weight: $font-weight-bold;
   span {
     border-bottom: 1px dotted $color-secondary-dark;
-    margin-right: 28px;
+    margin-right: 22px; /* hack to underline span text only */
     position: relative;
     /* This is the red circle with the question mark -- the "info badge." */
     &:after {
-      height: 17px;
-      width: 17px;
-      content: "?";
-      background-color: $color-secondary-dark;
-      color: $color-white;
-      text-align: center;
-      margin-left: $space-1x;
-      border-radius: 17px;
+      height: 15px;
+      width: 15px;
+      content: " ";
+      margin-left: $space-half;
       display: inline-block;
-      margin-right: -28px;
-      font-family: $font-family-main;
+      margin-right: -22px; /* hack to underline span text only */
+      background-image: url("../../images/icon-info-BC1630.svg");
+      background-size: 15px 15px;
+      background-repeat: no-repeat;
+      position: absolute;
     }
     /* this is the tooltip's bottom arrow. It needs to be part of the span so
      * it is aware of the span's width. This is the only way I know of to position
@@ -131,9 +131,9 @@ td.error {
     &:before {
       display: none;
       position: absolute;
-      bottom: 100%;
-      right: -31px;
-      border-top: 12px solid $color-secondary-lightest;
+      bottom: 150%;
+      right: -23px; /* positions the tooltip arrow over the info badge */
+      border-top: 15px solid $color-secondary-lightest;
       border-right: 12px solid transparent;
       border-left: 12px solid transparent;
       content: " ";
@@ -141,8 +141,12 @@ td.error {
 
     &:hover {
       cursor: pointer;
+      border-bottom-color: transparent;
       &:before {
         display: block;
+      }
+      &:after {
+        background-image: url("../../images/icon-info-BC1630-outline.svg");
       }
       + [role=tooltip] {
         display: block;
