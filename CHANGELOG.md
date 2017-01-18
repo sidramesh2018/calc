@@ -10,9 +10,46 @@ to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - The new data capture functionality has been added, allowing COs
-  to log in (via cloud.gov) and submit their approved price lists.
-  Data administrators can then review these price lists and add
-  their data into CALC.
+  to log in (via cloud.gov) and submit their approved Schedule 70
+  price lists. Data administrators can then review these price lists and
+  add their data into CALC.
+
+- Additionally, data administrators can directly upload Region 10
+  bulk data. The uploaded data will then replace all existing Region 10
+  data in CALC.
+
+### Changed
+
+- In October 2015, the schedules represented in CALC were consolidated
+  into the [Professional Services Schedule][pss] to give federal agency
+  acquisition professionals the ability to obtain total contract solutions
+  for their professional services requirements using one contract vehicle.
+
+  Consequently, the "Schedule" filter in the data explorer has
+  been renamed to the "SIN / Schedule" filter, and allows rates to be
+  filtered by SIN number.
+
+- Searching for multiple words in the data explorer's search field
+  now produces expected autocompletion results.
+
+- The data explorer is now much more keyboard-accessible and
+  screenreader-friendly.
+
+- The "proposed price" field in the data explorer automatically
+  updates the histogram on a per-keypress basis; there is no longer
+  any need to click the "Go" button.
+
+- Sharing CALC links with the "Education" field filled out now works
+  properly.
+
+- The CALC banner has been redesigned to be less confusing and easier
+  to read.
+
+- Google Analytics for CALC now properly track new searches in the
+  data explorer as page views. We also track clicks on links in the
+  "Contract #" column of the data explorer results table.
+
+[pss]: https://www.gsa.gov/portal/content/246403
 
 ## [1.2.0][] - 2015-07-21
 
