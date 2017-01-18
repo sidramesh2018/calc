@@ -10,9 +10,13 @@ to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - The new data capture functionality has been added, allowing COs
-  to log in (via cloud.gov) and submit their approved price lists.
-  Data administrators can then review these price lists and add
-  their data into CALC.
+  to log in (via cloud.gov) and submit their approved Schedule 70
+  price lists. Data administrators can then review these price lists and
+  add their data into CALC.
+
+- Additionally, data administrators can directly upload Region 10
+  bulk data. The uploaded data will then replace all existing Region 10
+  data in CALC.
 
 ### Changed
 
