@@ -1,0 +1,23 @@
+exports[`<ProposedPrice> matches snapshot 1`] = `
+<div
+  className="proposed-price">
+  <label
+    className="sr-only"
+    htmlFor="zzz_proposed-price">
+    Proposed price
+  </label>
+  <input
+    className="form__inline"
+    id="zzz_proposed-price"
+    name="proposed-price"
+    onChange={[Function]}
+    placeholder="Proposed price"
+    type="text"
+    value={120.49} />
+  <button
+    className="button-primary go"
+    onClick={[Function]}>
+    Go
+  </button>
+</div>
+`;

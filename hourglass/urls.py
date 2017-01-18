@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from .decorators import staff_login_required
 from .healthcheck import healthcheck
 from .robots import robots_txt
+from .changelog import django_view as view_changelog
 
 # Wrap the admin site login with our staff_login_required decorator,
 # which will raise a PermissionDenied exception if a logged-in, but non-staff
@@ -27,6 +28,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^styleguide/', include('styleguide.urls', namespace='styleguide')),
     url(r'^robots.txt$', robots_txt),
+    url(r'^updates/$', view_changelog),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
     url(r'^account/', include('user_account.urls', namespace='user_account')),
 ]

@@ -7,7 +7,6 @@ python:
 - 3.5
 addons:
   postgresql: 9.3
-  sauce_connect: true
 matrix:
   fast_finish: true
 services:
@@ -23,11 +22,12 @@ install:
 - npm install
 script:
 - phantomjs --version
-- python manage.py ultratest flake8
+- python manage.py ultratest flake8 eslint mypy
 - npm run gulp -- build
 - echo "For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330"
 - bandit -r .
-- py.test --ignore=frontend/tests/test_selenium.py --cov
+- npm test
+- python frontend/tests/sauce_connect.py py.test --ignore=frontend/tests/test_selenium.py --cov
 after_success:
 - codeclimate-test-reporter
 env:
@@ -59,10 +59,26 @@ before_deploy:
 - travis_retry curl -L -o $HOME/cf.tgz "https://cli.run.pivotal.io/stable?release=linux64-binary&version=$CF_CLI_VERSION"
 - tar xzvf $HOME/cf.tgz -C $HOME
 - travis_retry cf install-plugin autopilot -f -r CF-Community
+# Run gulp build in production mode
+- unset DEBUG
+- npm run gulp -- build
 deploy:
-  provider: script
-  script: "./deploy-travis.sh"
-  skip_cleanup: true
-  on:
-    branch: develop
+  - provider: script
+    script: DEPLOY_ENV=dev ./deploy-travis.sh
+    skip_cleanup: true
+    on:
+      branch: develop
+  - provider: script
+    script: DEPLOY_ENV=staging ./deploy-travis.sh
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: script
+    script: DEPLOY_ENV=prod ./deploy-travis.sh
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+      # Only deploy when tag looks like a semver version, e.g.: "v1.2.3"
+      condition: $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
 sudo: required

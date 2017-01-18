@@ -2,33 +2,35 @@ from unittest.mock import patch
 from unittest import TestCase
 
 from ..schedules import base
-from ..schedules.base import BasePriceList
+from ..schedules.base import ConcreteBasePriceListMethods
 
 
-class BasePriceListTests(TestCase):
+class ConcreteBasePriceListMethodsTests(TestCase):
     def test_is_empty_returns_true_when_empty(self):
-        pl = BasePriceList()
+        pl = ConcreteBasePriceListMethods()
         self.assertTrue(pl.is_empty())
 
     def test_is_empty_returns_false_when_valid_rows_exist(self):
-        pl = BasePriceList()
+        pl = ConcreteBasePriceListMethods()
         pl.valid_rows = ['blah']
         self.assertFalse(pl.is_empty())
 
     def test_is_empty_returns_false_when_invalid_rows_exist(self):
-        pl = BasePriceList()
+        pl = ConcreteBasePriceListMethods()
         pl.invalid_rows = ['blah']
         self.assertFalse(pl.is_empty())
 
     def test_render_upload_example_returns_empty_string_by_default(self):
-        self.assertEqual(BasePriceList.render_upload_example(), '')
+        self.assertEqual(ConcreteBasePriceListMethods.render_upload_example(),
+                         '')
 
     def test_get_upload_example_context_returns_none_by_default(self):
-        self.assertEqual(BasePriceList.get_upload_example_context(), None)
+        self.assertEqual(
+            ConcreteBasePriceListMethods.get_upload_example_context(), None)
 
     @patch.object(base, 'render_to_string')
     def test_render_upload_example_calls_render_to_string(self, r):
-        class FunkyPriceList(BasePriceList):
+        class FunkyPriceList(ConcreteBasePriceListMethods):
             upload_example_template = 'foo/bar.html'
 
         r.return_value = 'blah'
@@ -39,7 +41,7 @@ class BasePriceListTests(TestCase):
 
     @patch.object(base, 'render_to_string')
     def test_render_upload_example_calls_get_upload_example_context(self, r):
-        class FunkyPriceList(BasePriceList):
+        class FunkyPriceList(ConcreteBasePriceListMethods):
             upload_example_template = 'foo/bar.html'
 
             @classmethod

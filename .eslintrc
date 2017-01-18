@@ -1,7 +1,10 @@
 {
-  "extends": "airbnb-base",
+  "extends": "airbnb",
   "rules": {
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],
-    "import/named": 2
+    "no-plusplus": [0],
+    # disabled per https://github.com/benmosher/eslint-plugin-import/issues/544#issuecomment-244976007
+    "import/no-named-as-default": [0],
+    "react/forbid-prop-types": [0],
   }
 }

@@ -1,11 +1,11 @@
 import sys
 import tempfile
 import subprocess
-import djclick as click
+from collections import namedtuple
+import djclick as click  # type: ignore
 import xml.etree.ElementTree as etree
 from django.core.management.base import CommandError
-
-from docker_django_management import IS_RUNNING_IN_DOCKER
+from typing import List, Any
 
 
 # This is based on:
@@ -67,75 +67,63 @@ SUCCESS_TEXT = """\
  |____/ \___/ \____\____|_____|____/____/(_)"""
 
 
-def print_with_rainbow_colors(ascii_art):
+def print_with_rainbow_colors(ascii_art: str) -> None:
     for color, line in zip(RAINBOW_COLORS, ascii_art.splitlines()):
         print(color + line)
     print(RESET_COLORS)
 
 
-def print_big_fail():
+def print_big_fail() -> None:
     print('\033[91m' + FAIL_TEXT)
     print(RESET_COLORS)
 
 
-def print_big_success():
+def print_big_success() -> None:
     print('\033[92m' + SUCCESS_TEXT)
     print(RESET_COLORS)
 
 
-def get_coverage():
+def get_coverage() -> float:
     COVERAGE_FILE = 'coverage.xml'
 
     try:
         tree = etree.parse(COVERAGE_FILE)
         root = tree.getroot()
         package = root.find('packages/package')
-        return float(package.attrib['branch-rate'])
+        if package is not None:
+            return float(package.attrib['branch-rate'])
     except Exception as e:
-        return None
+        return 0.0
 
-    return None
+    return 0.0
 
 TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
-ESLINT_CMD = 'npm run failable-eslint'
 
-if IS_RUNNING_IN_DOCKER:
-    # Until https://github.com/benmosher/eslint-plugin-import/issues/142
-    # is fixed, we need to disable the following rule for Docker support.
-    ESLINT_CMD = ('eslint --rule "import/no-unresolved: off" '
-                  '--max-warnings 0 .')
+TestType = namedtuple('TestType', ['name', 'cmd'])
 
 TESTTYPES = [
-    {
-        'name': 'flake8',
-        'cmd': 'flake8 --exclude=node_modules,migrations .'
-    },
-    {
-        'name': 'eslint',
-        'cmd': ESLINT_CMD
-    },
-    {
-        'name': 'bandit',
-        'cmd': 'bandit -r .'
-    },
-    {
-        'name': 'py.test',
-        'cmd': 'py.test --cov-report xml --cov-report term --cov'
-    },
+    TestType(name='flake8', cmd='flake8 --exclude=node_modules,migrations .'),
+    TestType(name='eslint', cmd='npm run failable-eslint'),
+    TestType(name='bandit', cmd='bandit -r .'),
+    TestType(name='mypy', cmd='mypy @mypy-files.txt'),
+    TestType(name='jest', cmd='npm test'),
+    TestType(name='py.test',
+             cmd='py.test --cov-report xml --cov-report term --cov'),
 ]
 
 
-def get_testtype_names(testtypes=None, joiner=", "):
+def get_testtype_names(testtypes: List[TestType]=None,
+                       joiner: str=", ") -> str:
     if not testtypes:
         testtypes = TESTTYPES
     return joiner.join([
-        t['name'] for t in testtypes
+        t.name for t in testtypes
     ])
 
 
-def get_testtype(name):
+def get_testtype(name: str) -> TestType:
     for t in TESTTYPES:
-        if t['name'] == name:
+        if t.name == name:
             return t
     raise CommandError(
         '"{}" is not a valid test type. Please choose from {}.'.format(
@@ -149,7 +137,7 @@ def get_testtype(name):
 @click.pass_verbosity
 @click.argument('testtype', nargs=-1,
                 metavar='[{}]'.format(get_testtype_names(joiner="|")))
-def command(verbosity, testtype):
+def command(verbosity: int, testtype: List[str]) -> None:
     '''
     Test and lint everything!
 
@@ -163,7 +151,7 @@ def command(verbosity, testtype):
     testtype_names = testtype
     del testtype
 
-    def echo(msg, v_level, **kwargs):
+    def echo(msg: str, v_level: int, **kwargs: Any) -> None:
         if verbosity < v_level:
             return
         click.secho(msg, **kwargs)
@@ -183,7 +171,7 @@ def command(verbosity, testtype):
     report_coverage = False
 
     for t in to_run:
-        if t['name'] in TESTTYPES_TO_REPORT_COVERAGE_ON:
+        if t.name in TESTTYPES_TO_REPORT_COVERAGE_ON:
             report_coverage = True
 
     if report_coverage:
@@ -196,18 +184,18 @@ def command(verbosity, testtype):
 
     try:
         for entry in to_run:
-            echo('-> {} '.format(entry['name']), 1, nl=is_verbose)
+            echo('-> {} '.format(entry.name), 1, nl=is_verbose)
 
-            echo('Running "{}"'.format(entry['cmd']), 2)
+            echo('Running "{}"'.format(entry.cmd), 2)
 
             out = None if is_verbose else tempfile.TemporaryFile()
 
             result = subprocess.call(
-                entry['cmd'], stdout=out, stderr=subprocess.STDOUT, shell=True
+                entry.cmd, stdout=out, stderr=subprocess.STDOUT, shell=True
             )
 
             if result is not 0:
-                failures.append(entry['name'])
+                failures.append(entry.name)
                 if out is not None:
                     out.seek(0)
                     failure_outputs.append(out.read())

@@ -9,7 +9,7 @@ import {
 
 QUnit.module('dap-hacks');
 
-QUnit.test('findLinksInNodeList() finds top-level links', assert => {
+QUnit.test('findLinksInNodeList() finds top-level links', (assert) => {
   const a = document.createElement('a');
   const links = findLinksInNodeList([a]);
 
@@ -17,7 +17,7 @@ QUnit.test('findLinksInNodeList() finds top-level links', assert => {
   assert.strictEqual(links[0], a);
 });
 
-QUnit.test('findLinksInNodeList() finds inner links', assert => {
+QUnit.test('findLinksInNodeList() finds inner links', (assert) => {
   const div = document.createElement('div');
 
   div.innerHTML = '<p>hello <a href="http://boop">there</a></p>';
@@ -28,7 +28,7 @@ QUnit.test('findLinksInNodeList() finds inner links', assert => {
   assert.equal(links[0].getAttribute('href'), 'http://boop');
 });
 
-QUnit.test('hack horribly hacks getElementsByTagName()', assert => {
+QUnit.test('hack horribly hacks getElementsByTagName()', (assert) => {
   const originalGebtn = document.getElementsByTagName;
   const links = [1, 2, 3];
   hackilyNotifyAutoTrackerOfNewLinks(() => {
@@ -37,7 +37,7 @@ QUnit.test('hack horribly hacks getElementsByTagName()', assert => {
   assert.strictEqual(document.getElementsByTagName, originalGebtn);
 });
 
-QUnit.test('hack restores getElementsByTagName() on err', assert => {
+QUnit.test('hack restores getElementsByTagName() on err', (assert) => {
   const originalGebtn = document.getElementsByTagName;
   const kaboom = new Error();
 
@@ -59,7 +59,7 @@ function advancedTest(name, cb) {
   }
 }
 
-advancedTest('observe() works', assert => {
+advancedTest('observe() works', (assert) => {
   const div = document.createElement('div');
   const done = assert.async();
   const a = document.createElement('a');

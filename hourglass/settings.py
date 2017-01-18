@@ -13,6 +13,7 @@ import os
 import dj_database_url
 import dj_email_url
 from dotenv import load_dotenv
+from typing import Tuple  # NOQA
 
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
@@ -130,7 +131,7 @@ INSTALLED_APPS = (
     'styleguide',
     'meta',
     'frontend',
-)
+)  # type: Tuple[str, ...]
 
 if DEBUG:
     STATICFILES_STORAGE = 'frontend.crotchety.CrotchetyStaticFilesStorage'
@@ -290,7 +291,7 @@ SECURITY_HEADERS_ON_ERROR_ONLY = 'SECURITY_HEADERS_ON_ERROR_ONLY' in os.environ
 
 DATA_CAPTURE_SCHEDULES = (
     'data_capture.schedules.s70.Schedule70PriceList',
-)
+)  # type: Tuple[str, ...]
 
 if DEBUG and not HIDE_DEBUG_UI:
     DATA_CAPTURE_SCHEDULES += (

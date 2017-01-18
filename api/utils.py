@@ -1,6 +1,7 @@
+from typing import List, SupportsFloat
 
 
-def get_histogram(values, num_bins=10):
+def get_histogram(values: List[SupportsFloat], num_bins: int=10) -> List[dict]:
     """
     Get a histogram of a list of numeric values.
     Returns array of "bin" dicts with keys `count`, `max`, and `min`.
@@ -10,15 +11,15 @@ def get_histogram(values, num_bins=10):
         raise ValueError('num_bins must be greater than 0')
 
     # convert values to floats
-    values = [float(v) for v in values]
+    fvalues = [float(v) for v in values]
 
     # When input array is empty, can't determine range so use 0.0 - 1.0
     # as numpy.histogram does
-    if (len(values) == 0):
+    if (len(fvalues) == 0):
         mn, mx = 0.0, 1.0
     else:
         # find the min and max
-        mn, mx = min(values), max(values)
+        mn, mx = min(fvalues), max(fvalues)
 
     # Adjust mn and mx if they are equivalent (ie, the input array
     # values are all the same number)
@@ -36,7 +37,7 @@ def get_histogram(values, num_bins=10):
     } for i in range(0, num_bins)]
 
     # bin the values
-    for val in values:
+    for val in fvalues:
         for b in bins:
             if (val >= b['min'] and val < b['max']):
                 b['count'] += 1

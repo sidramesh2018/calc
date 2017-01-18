@@ -12,10 +12,13 @@ exclude_paths:
 engines:
   eslint:
     enabled: true
-    channel: "eslint-2"
+    channel: "eslint-3"
     checks:
       import/no-unresolved:
         enabled: false
+    extensions:
+    - .js
+    - .jsx
   pep8:
     enabled: true
 ratings:

@@ -44,7 +44,9 @@ WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
 
 
 if os.environ.get('TRAVIS') == 'true':
-    if os.environ.get('TRAVIS_SECURE_ENV_VARS') == 'true':
+    if os.environ.get('TRAVIS_SECURE_ENV_VARS') == 'true' and \
+            'SAUCE_USERNAME' in os.environ \
+            and 'SAUCE_ACCESS_KEY' in os.environ:
         # We're running in a trusted environment, so use Sauce Labs
         # if it's available.
         WD_TUNNEL_ID = os.environ['TRAVIS_JOB_NUMBER']
@@ -227,9 +229,7 @@ class DataExplorerTests(SeleniumTestCase):
     def search_for(self, query):
         q = self.driver.find_element_by_name('q')
         q.clear()
-        q.send_keys(query)
-        # XXX oh my god why do we have to do this???
-        self.driver.execute_script('$("[name=q]").blur()')
+        q.send_keys(query + '\n')
 
     def search_for_query_type(self, query, query_type):
         # Important: We want to click the radio before entering the

@@ -23,10 +23,14 @@ const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const browserify = require('browserify');
 const watchify = require('watchify');
+const envify = require('envify/custom');
 const babelify = require('babelify');
 const del = require('del');
 
 const BUILT_FRONTEND_DIR = 'frontend/static/frontend/built';
+
+const isProd = process.env.NODE_ENV === 'production';
+gutil.log(`Gulp is running in ${isProd ? 'production' : 'development'} mode`);
 
 const dirs = {
   src: {
@@ -43,7 +47,7 @@ const dirs = {
 
 const paths = {
   sass: '**/*.scss',
-  js: '**/*.js',
+  js: '**/*.@(js|jsx)',
 };
 
 const bundles = {
@@ -54,7 +58,6 @@ const bundles = {
       'vendor/d3.v3.min.js',
       'vendor/jquery.min.js',
       'vendor/query.xdomainrequest.min.js',
-      'vendor/formdb.min.js',
       'vendor/jquery.tooltipster.js',
       'vendor/jquery.nouislider.all.min.js',
     ],
@@ -84,7 +87,7 @@ const bundles = {
 const browserifiedBundles = [];
 const vendoredBundles = [];
 
-Object.keys(bundles).forEach(name => {
+Object.keys(bundles).forEach((name) => {
   const options = bundles[name];
   const dirName = options.dirName || name;
   const noBrowserify = options.noBrowserify;
@@ -100,27 +103,25 @@ Object.keys(bundles).forEach(name => {
     paths[outfileName] = 'index.min.js';
 
     gulp.task(browserifiedBundleName, () =>
-      browserifyBundle(  // eslint-disable-line
+      browserifyBundle( // eslint-disable-line no-use-before-define
         path.join(dirs.src.scripts, paths[entryName]),
         dirs.dest.scripts[name],
-        paths[outfileName]
-      )
-    );
+        paths[outfileName]));
+
     browserifiedBundles.push(browserifiedBundleName);
   }
 
   if (vendor.length) {
     const vendoredBundleName = `js:${dirName}:vendor`;
-    gulp.task(vendoredBundleName, () => concatAndMapSources(  // eslint-disable-line
-      'vendor.min.js',
-      vendor.map((p) => dirs.src.scripts + p),
-      dirs.dest.scripts[name]
-    ));
+    gulp.task(vendoredBundleName, () =>
+      concatAndMapSources(  // eslint-disable-line no-use-before-define
+        'vendor.min.js',
+        vendor.map(p => dirs.src.scripts + p),
+        dirs.dest.scripts[name]));
+
     vendoredBundles.push(vendoredBundleName);
   }
 });
-
-const isInDocker = ('DDM_IS_RUNNING_IN_DOCKER' in process.env);
 
 // default task
 // running `gulp` will default to watching and dist'ing files
@@ -142,7 +143,7 @@ gulp.task('watch', ['set-watching', 'sass', 'js'], () => {
 
 gulp.task('clean', () => {
   function getPaths(obj) {
-    return Object.keys(obj).map((k) => path.join(obj[k], '**/*'));
+    return Object.keys(obj).map(k => path.join(obj[k], '**/*'));
   }
 
   const styleDirs = getPaths(dirs.dest.style);
@@ -158,8 +159,7 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
     .pipe(rename({ suffix: '.min' }))
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest(dirs.dest.style.built))
-);
+  .pipe(gulp.dest(dirs.dest.style.built)));
 
 // Compile and lint JavaScript sources
 gulp.task('js', ['lint', 'js:legacy'].concat(browserifiedBundles));
@@ -179,7 +179,6 @@ function concatAndMapSources(name, sources, dest) {
 let isWatching = false;
 gulp.task('set-watching', () => {
   isWatching = true;
-  return;
 });
 
 function browserifyBundle(entryPath, outputPath, outputFile) {
@@ -188,8 +187,33 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
     debug: true,
     cache: {},
     packageCache: {},
-  })
-    .transform(babelify.configure({ presets: ['es2015'] }));
+    extensions: ['.jsx'],
+  });
+
+  // Some modules are referenced in the source code for
+  // Enzyme, but they're never actually loaded because they're only
+  // needed for older versions of React, so we'll explicitly tell
+  // Browserify to ignore them here.
+  bundler = bundler
+    .exclude('react/addons')
+    .exclude('react/lib/ReactContext')
+    .exclude('react/lib/ExecutionEnvironment');
+
+  bundler = bundler
+    .transform(envify({ NODE_ENV: process.env.NODE_ENV }), { global: true })
+    .transform(babelify.configure({ presets: ['es2015', 'react'] }));
+
+  if (process.env.NODE_ENV === 'production') {
+    // Here we use uglifyify--not to be confused with uglify--to uglify
+    // each individual module by itself, which allows us to excise
+    // unused dependencies based on our build configuration. We are
+    // also passing arguments to bundler.transform() in a weird order,
+    // but it's what uglifyify's docs recommend and it seems to work,
+    // so whatever.
+    bundler = bundler.transform({
+      global: true,
+    }, 'uglifyify');
+  }
 
   if (isWatching) {
     bundler = watchify(bundler);
@@ -207,10 +231,10 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
       .pipe(source(outputFile))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(gulpif(process.env.NODE_ENV === 'production', uglify()))
+        .pipe(gulpif(isProd, uglify()))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest(outputPath))
-      .on('data', file => {
+      .on('data', (file) => {
         const pathname = path.relative(__dirname, file.path);
 
         gutil.log(`Wrote ${pathname}.`);
@@ -228,20 +252,9 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
   return bundler;
 }
 
-gulp.task('lint', () => {
-  const opts = {};
-  if (isInDocker) {
-    opts.rules = {
-      // Until https://github.com/benmosher/eslint-plugin-import/issues/142
-      // is fixed, we need to disable the following rule for Docker support.
-      'import/no-unresolved': 0,
-    };
-  }
-
-  return gulp.src(path.join(dirs.src.scripts, paths.js))
-    .pipe(eslint(opts))
-    .pipe(eslint.format());
-});
+gulp.task('lint', () => gulp.src(path.join(dirs.src.scripts, paths.js))
+    .pipe(eslint())
+    .pipe(eslint.format()));
 
 // set up a SIGTERM handler for quick graceful exit from docker
 process.on('SIGTERM', () => {

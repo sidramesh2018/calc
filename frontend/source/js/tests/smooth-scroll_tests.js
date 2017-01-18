@@ -5,7 +5,7 @@ import {
   activate,
   activateManualScrollRestoration,
   getOrCreateVisitId,
-} from '../data-capture/smooth-scroll.js';
+} from '../data-capture/smooth-scroll';
 
 const IS_PHANTOM = /PhantomJS/.test(window.navigator.userAgent);
 
@@ -76,18 +76,18 @@ class FakeWindow {
   }
 }
 
-test('getOrCreateVisitId() returns existing visit id', assert => {
+test('getOrCreateVisitId() returns existing visit id', (assert) => {
   const win = new FakeWindow({ state: { smoothScrollVisitId: 5 } });
   assert.equal(getOrCreateVisitId(win), 5);
 });
 
-test('getOrCreateVisitId() creates new visit id', assert => {
+test('getOrCreateVisitId() creates new visit id', (assert) => {
   const win = new FakeWindow();
   assert.equal(getOrCreateVisitId(win), 1);
   assert.equal(win.history.state.smoothScrollVisitId, 1);
 });
 
-test('getOrCreateVisitId() updates latest visit id counter', assert => {
+test('getOrCreateVisitId() updates latest visit id counter', (assert) => {
   const win = new FakeWindow({
     sessionStorage: { smoothScrollLatestVisitId: '300' },
   });
@@ -95,19 +95,19 @@ test('getOrCreateVisitId() updates latest visit id counter', assert => {
   assert.equal(win.sessionStorage.smoothScrollLatestVisitId, '301');
 });
 
-test('amsr sets history.scrollRestoration', assert => {
+test('amsr sets history.scrollRestoration', (assert) => {
   const win = activateManualScrollRestoration(new FakeWindow());
   assert.equal(win.history.scrollRestoration, 'manual');
 });
 
-test('amsr remembers scrollTop on window unload', assert => {
+test('amsr remembers scrollTop on window unload', (assert) => {
   const win = activateManualScrollRestoration(new FakeWindow());
   win.document.body.scrollTop = 5;
   win.listeners.beforeunload();
   assert.equal(win.sessionStorage.visit_1_scrollTop, '5');
 });
 
-test('amsr scrolls to last scrollTop on DOMContentLoaded', assert => {
+test('amsr scrolls to last scrollTop on DOMContentLoaded', (assert) => {
   const win = activateManualScrollRestoration(new FakeWindow({
     state: { smoothScrollVisitId: 201 },
     sessionStorage: { visit_201_scrollTop: '20' },
@@ -117,7 +117,7 @@ test('amsr scrolls to last scrollTop on DOMContentLoaded', assert => {
   assert.equal(win.getScrollTop(), 20);
 });
 
-test('amsr scrolls to last scrollTop if readyState=interactive', assert => {
+test('amsr scrolls to last scrollTop if readyState=interactive', (assert) => {
   const win = activateManualScrollRestoration(new FakeWindow({
     state: { smoothScrollVisitId: 201 },
     sessionStorage: { visit_201_scrollTop: '20' },
@@ -126,7 +126,7 @@ test('amsr scrolls to last scrollTop if readyState=interactive', assert => {
   assert.equal(win.getScrollTop(), 20);
 });
 
-test('amsr scrolls to last scrollTop if readyState=complete', assert => {
+test('amsr scrolls to last scrollTop if readyState=complete', (assert) => {
   const win = activateManualScrollRestoration(new FakeWindow({
     state: { smoothScrollVisitId: 201 },
     sessionStorage: { visit_201_scrollTop: '20' },
@@ -135,7 +135,7 @@ test('amsr scrolls to last scrollTop if readyState=complete', assert => {
   assert.equal(win.getScrollTop(), 20);
 });
 
-test('amsr does not set scrollTop if last value was corrupt', assert => {
+test('amsr does not set scrollTop if last value was corrupt', (assert) => {
   const win = activateManualScrollRestoration(new FakeWindow({
     state: { smoothScrollVisitId: 201 },
     sessionStorage: { visit_201_scrollTop: 'LOL' },
@@ -144,7 +144,7 @@ test('amsr does not set scrollTop if last value was corrupt', assert => {
   assert.equal(win.getScrollTop(), 0);
 });
 
-test('activate() works', assert => {
+test('activate() works', (assert) => {
   const iframe = document.createElement('iframe');
   const getScrollTop = () =>
     $('body', iframe.contentDocument).scrollTop() ||

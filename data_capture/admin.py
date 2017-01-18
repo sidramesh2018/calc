@@ -307,7 +307,7 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
                         "use the 'Approve selected price lists' action from "
                         "the <a href=\"..\">list view</a>.")
 
-        return mark_safe(content)
+        return mark_safe(content)  # nosec
 
     def tz_created_at(self, instance):
         return tz_timestamp(instance.created_at)
