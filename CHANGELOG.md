@@ -16,7 +16,12 @@ to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- The "Schedule" filter in the data explorer (front page of CALC) has
+- In October 2015, the schedules represented in CALC were consolidated
+  into the [Professional Services Schedule][pss] to give federal agency
+  acquisition professionals the ability to obtain total contract solutions
+  for their professional services requirements using one contract vehicle.
+
+  Consequently, the "Schedule" filter in the data explorer has
   been renamed to the "SIN / Schedule" filter, and allows rates to be
   filtered by SIN number.
 
@@ -39,6 +44,8 @@ to [Semantic Versioning](http://semver.org/).
 - Google Analytics for CALC now properly track new searches in the
   data explorer as page views. We also track clicks on links in the
   "Contract #" column of the data explorer results table.
+
+[pss]: https://www.gsa.gov/portal/content/246403
 
 ## [1.2.0][] - 2015-07-21
 
