@@ -24,7 +24,8 @@ UNRELEASED_HEADER = '## [Unreleased][unreleased]'
 
 
 def django_view(request):
-    html = mark_safe(markdown.markdown(get_contents()))  # nosec
+    contents = strip_preamble(get_contents())
+    html = mark_safe(markdown.markdown(contents))  # nosec
     return render(request, 'changelog.html', dict(html=html))
 
 
@@ -57,6 +58,20 @@ def get_latest_release(contents):
     '''
 
     return RELEASE_HEADER_RE.search(contents).group(1)
+
+
+def strip_preamble(contents):
+    '''
+    Removes any expository text before the beginning of the
+    "Unreleased" section, if it's non-empty.  If the "Unreleased" section
+    is empty, it is removed as well.
+    '''
+
+    if get_unreleased_notes(contents).strip():
+        result = contents[contents.index(UNRELEASED_HEADER):]
+    else:
+        result = contents[RELEASE_HEADER_RE.search(contents).start():]
+    return result
 
 
 def bump_version(contents, new_version, date=None):
