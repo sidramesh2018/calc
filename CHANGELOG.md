@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.0.0][] - 2017-01-18
+
 ### Added
 
 - The new data capture functionality has been added, allowing COs
@@ -88,7 +90,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v1.2.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/18F/calc/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/18F/calc/compare/v1.1.2...v1.2.0
 [1.1.2]: https://github.com/18F/calc/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/18F/calc/compare/v1.1.0...v1.1.1
