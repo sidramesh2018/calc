@@ -142,7 +142,16 @@ td.error {
         display: block;
       }
       + [role=tooltip] {
-        display: block;
+        overflow: auto;
+        height: auto;
+        width: auto;
+        margin: 0;
+        padding: $space-2x;
+        right: 0;
+        bottom: 100%;
+        left: 0;
+        background-color: $color-secondary-lightest;
+        border-radius: 4px;
       }
       p {
         border-bottom-color: transparent;
@@ -154,14 +163,16 @@ td.error {
   }
 
   [role=tooltip] {
-    display: none;
+    /* make tooltip readable to screen readers */
     position: absolute;
-    right: 0;
-    bottom: 100%;
-    left: 0;
-    background-color: $color-secondary-lightest;
-    padding: $space-2x;
-    border-radius: 4px;
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+
+
   }
   .errorlist {
     color: $color-secondary-dark;
