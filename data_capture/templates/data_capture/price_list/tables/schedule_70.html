@@ -15,9 +15,7 @@
     <tr>
     {% for col in row %}
       <td class="{% if col.errors %}error{% endif %} {% if col.name == 'min_years_experience' or col.name == 'price_including_iff' %}number{% endif %}">
-        <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>
-          <p>{% if col.name == 'price_including_iff' %}${% endif %}{{ col.value }}</p>
-        </span>
+        <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>{% if col.name == 'price_including_iff' %}${% endif %}{{ col.value }}</span>
         {% if col.errors %}<div class="error__tooltip" role="tooltip" id="error__row-{{ row_count}}__col-{{ forloop.counter }}">{{ col.errors }}</div>{% endif %}
       </td>
     {% endfor %}

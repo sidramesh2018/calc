@@ -98,7 +98,6 @@ th,
 th:first-child,
 th:last-child {
   position: relative;
-  /*padding: .75em .5em;*/
   padding: $space-2x $space-1x;
   vertical-align: top;
 }
@@ -112,33 +111,36 @@ td.error {
   color: $color-secondary-dark;
   font-weight: $font-weight-bold;
   span {
-    display: inline-block;
-    padding-right: 22px;
+    line-height: 1.2;
+    padding-right: 18px; /* to give the info badge space */
     position: relative;
-    background-image: url("../../images/icon-info-BC1630.svg");
-    background-size: 15px 15px;
+    background-image: url("../../images/info-badge-filled.svg");
+    background-size: 13px 13px;
     background-repeat: no-repeat;
-    background-position: top 2px right; /* the 1px accommodates the underlined text next to the badge */
+    background-position: top right;
+    border-bottom: 1px dotted $color-secondary-dark;
     /* this is the tooltip's bottom arrow. It needs to be part of the span so
      * it is aware of the span's width. This is the only way I know of to position
-     * the arrow over the info-badge (defined as the :after element) when the
+     * the arrow over the info-badge (a background image on the span) when the
      * span is of variable width. */
-    &:before {
+    &:after {
       display: none;
       position: absolute;
-      bottom: 120%;
-      right: -6px; /* positions the tooltip arrow over the info badge */
-      border-top: 15px solid $color-secondary-lightest;
-      border-right: 12px solid transparent;
-      border-left: 12px solid transparent;
+      top: -$space-2x;
+      right: -3px; /* positions the tooltip arrow over the info badge */
+      border-top: 12px solid $color-secondary-lightest;
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent;
       content: " ";
     }
 
     &:hover {
       cursor: pointer;
       border-bottom-color: transparent;
-      background-image: url("../../images/icon-info-BC1630-outline.svg");
-      &:before {
+      background-image: url("../../images/info-badge-outline.svg");
+      border-bottom-color: transparent;
+      /* tooltip arrow */
+      &:after {
         display: block;
       }
       + [role=tooltip] {
@@ -148,17 +150,11 @@ td.error {
         margin: 0;
         padding: $space-2x;
         right: 0;
-        bottom: 100%;
+        bottom: 95%;
         left: 0;
         background-color: $color-secondary-lightest;
         border-radius: 4px;
       }
-      p {
-        border-bottom-color: transparent;
-      }
-    }
-    p {
-      border-bottom: 1px dotted $color-secondary-dark;
     }
   }
 
