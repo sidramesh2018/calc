@@ -1,4 +1,6 @@
 from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
+from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.template.defaultfilters import pluralize
@@ -15,18 +17,27 @@ class EmailResult():
         self.context = context or {}
 
 
-def price_list_approved(price_list):
+def price_list_approved(price_list, request):
+    details_link = request.build_absolute_uri(
+        reverse('data_capture:price_list_details',
+                kwargs={'id': price_list.pk}))
+
     ctx = {
-        'price_list': price_list
+        'price_list': price_list,
+        'details_link': details_link,
     }
+
     if price_list.status is not SubmittedPriceList.STATUS_APPROVED:
         raise AssertionError('price_list.status must be STATUS_APPROVED')
 
+    rendered_email = render_to_string(
+        'data_capture/email/price_list_approved.html',
+        ctx)
+
     result = send_mail(
         subject='CALC Price List Approved',
-        message=render_to_string(
-            'data_capture/email/price_list_approved.txt',
-            ctx),
+        message=strip_tags(rendered_email),
+        html_message=rendered_email,
         from_email=None,
         recipient_list=[price_list.submitter.email]
     )
@@ -36,17 +47,26 @@ def price_list_approved(price_list):
     )
 
 
-def price_list_retired(price_list):
+def price_list_retired(price_list, request):
+    details_link = request.build_absolute_uri(
+        reverse('data_capture:price_list_details',
+                kwargs={'id': price_list.pk}))
+
     ctx = {
-        'price_list': price_list
+        'price_list': price_list,
+        'details_link': details_link,
     }
     if price_list.status is not SubmittedPriceList.STATUS_RETIRED:
         raise AssertionError('price_list.status must be STATUS_RETIRED')
+
+    rendered_email = render_to_string(
+        'data_capture/email/price_list_retired.html',
+        ctx)
+
     result = send_mail(
         subject='CALC Price List Retired',
-        message=render_to_string(
-            'data_capture/email/price_list_retired.txt',
-            ctx),
+        message=strip_tags(rendered_email),
+        html_message=rendered_email,
         from_email=None,
         recipient_list=[price_list.submitter.email]
     )
@@ -56,15 +76,24 @@ def price_list_retired(price_list):
     )
 
 
-def price_list_rejected(price_list):
+def price_list_rejected(price_list, request):
+    details_link = request.build_absolute_uri(
+        reverse('data_capture:price_list_details',
+                kwargs={'id': price_list.pk}))
+
     ctx = {
-        'price_list': price_list
+        'price_list': price_list,
+        'details_link': details_link,
     }
+
+    rendered_email = render_to_string(
+        'data_capture/email/price_list_rejected.html',
+        ctx)
+
     result = send_mail(
         subject='CALC Price List Rejected',
-        message=render_to_string(
-            'data_capture/email/price_list_rejected.txt',
-            ctx),
+        message=strip_tags(rendered_email),
+        html_message=rendered_email,
         from_email=None,
         recipient_list=[price_list.submitter.email]
     )
