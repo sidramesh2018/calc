@@ -142,6 +142,7 @@ else:
     WHITENOISE_MIDDLEWARE = 'whitenoise.middleware.WhiteNoiseMiddleware'
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'hourglass.middleware.ComplianceMiddleware',
     WHITENOISE_MIDDLEWARE,
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -157,6 +158,7 @@ MIDDLEWARE_CLASSES = (
     # when the ProfilingPanel is enabled
     # http://django-debug-toolbar.readthedocs.io/en/stable/panels.html#profiling
     'hourglass.middleware.DebugOnlyDebugToolbarMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -309,6 +311,15 @@ UAA_CLIENT_SECRET = os.environ.get('UAA_CLIENT_SECRET')
 LOGIN_URL = 'uaa_client:login'
 
 LOGIN_REDIRECT_URL = '/'
+
+# We *always* want to send a Cache-Control header downstream, especially
+# in the event where we've got a reverse proxy with aggressive caching
+# defaults like Amazon CloudFront in front of us.
+#
+# For now we're just going to tell any downstream caches to never cache
+# any dynamic content we give them, to ensure that stale content never
+# gets served to end-users.
+CACHE_MIDDLEWARE_SECONDS = 0
 
 if DEBUG:
     INSTALLED_APPS += ('fake_uaa_provider',)

@@ -305,6 +305,12 @@ class StaffLoginRequiredTests(DjangoTestCase):
         self.assertEqual(403, res.status_code)
 
 
+class CachingTests(DjangoTestCase):
+    def test_max_age_defaults_to_zero(self):
+        res = self.client.get('/')
+        self.assertEqual(res['Cache-Control'], 'max-age=0')
+
+
 class ContextProcessorTests(DjangoTestCase):
     @override_settings(GA_TRACKING_ID='boop')
     def test_ga_tracking_id_is_included(self):
