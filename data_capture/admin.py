@@ -123,6 +123,10 @@ class CustomUserAdmin(UserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        UserAdmin.list_display = ('email', 'is_staff')
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if not request.user.is_superuser:

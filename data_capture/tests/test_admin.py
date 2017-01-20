@@ -108,9 +108,10 @@ class SuperuserViewTests(DebugAdminTestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_can_see_superusers(self):
-        self.create_user(username='superdawg', is_superuser=True)
+        self.create_user(username='superdawg', email="superdawg@super.dawg",
+                         is_superuser=True)
         res = self.client.get('/admin/auth/user/')
-        self.assertContains(res, 'superdawg')
+        self.assertContains(res, 'superdawg@super.dawg')
         self.assertEqual(res.status_code, 200)
 
 
