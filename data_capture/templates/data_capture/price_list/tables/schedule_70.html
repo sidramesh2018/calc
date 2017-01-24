@@ -1,12 +1,12 @@
 <table class="price-list-table">
   <thead>
     <tr>
-      <th>SIN(s) proposed</th>
-      <th>Service proposed <span>(e.g. job title/task)</span></th>
-      <th>Minimum education <br/>/ certification level</th>
-      <th class="number">Minimum years <br/>of experience</th>
-      <th>Unit of issue</th>
-      <th class="number">Price offered to GSA <span>(including IFF)</span></th>
+      {% for field in header %}
+        <th {% if field.name == 'min_years_experience' or field.name == 'price_including_iff' %}class="number"{% endif %}>
+          {{ field.label }}
+          {% if field.help_text %}<span>({{ field.help_text }})</span>{% endif %}
+        </th>
+      {% endfor %}
     </tr>
   </thead>
   <tbody>
