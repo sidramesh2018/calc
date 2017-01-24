@@ -2,12 +2,12 @@
   <caption class="sr-only">Review submitted price list data</caption>
   <thead>
     <tr role="row">
-      <th scope="col" role="columnheader">SIN(s) proposed</th>
-      <th scope="col" role="columnheader">Service proposed <span>(e.g. job title/task)</span></th>
-      <th scope="col" role="columnheader">Minimum education <br/>/ certification level</th>
-      <th scope="col" role="columnheader" class="number">Minimum years <br/>of experience</th>
-      <th scope="col" role="columnheader">Unit of issue</th>
-      <th scope="col" role="columnheader" class="number">Price offered to GSA <span>(including IFF)</span></th>
+      {% for field in header %}
+        <th scope="col" role="columnheader" {% if field.name == 'min_years_experience' or field.name == 'price_including_iff' %}class="number"{% endif %}>
+          {{ field.label }}
+          {% if field.help_text %}<span>({{ field.help_text }})</span>{% endif %}
+        </th>
+      {% endfor %}
     </tr>
   </thead>
   <tbody>
