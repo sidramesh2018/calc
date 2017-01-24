@@ -321,67 +321,13 @@
   {% endexample %}
 
   <p>When errors are displayed in tables, they look like this. Note that this markup is automatically generated on Step 3.</p>
-  {% example %}
-  <table class="price-list-table">
-    <thead>
-      <tr>
-        <th>SIN(s) proposed</th>
-        <th>Service proposed <span>(e.g. job title/task)</span></th>
-        <th>Minimum education <br>/ certification level</th>
-        <th class="number">Minimum years <br>of experience</th>
-        <th>Unit of issue</th>
-        <th class="number">Price offered to GSA <span>(including IFF)</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class=" ">
-          <span>none</span>
-        </td>
-        <td class=" ">
-          <span>Button Presser</span>
-        </td>
-        <td class="error ">
-          <span aria-describedby="error__row-1__col-3">NA</span>
-          <div class="error__tooltip" role="tooltip" id="error__row-1__col-3"><ul class="errorlist"><li>This field must contain one of the following values: High School, Associates, Bachelors, Masters, Ph.D.</li></ul></div>
-        </td>
-        <td class=" number">
-          <span>1</span>
-        </td>
-        <td class=" ">
-          <span>Hour</span>
-        </td>
-        <td class="error number">
-          <span aria-describedby="error__row-1__col-6">$9.0</span>
-          <div class="error__tooltip" role="tooltip" id="error__row-1__col-6"><ul class="errorlist"><li>Price must be at least the federal contractor minimum wage ($10.10)</li></ul></div>
-        </td>
-      </tr>
-      <tr>
-        <td class=" ">
-          <span>none</span>
-        </td>
-        <td class=" ">
-          <span>Button Presser</span>
-        </td>
-        <td class="error ">
-          <span aria-describedby="error__row-2__col-3">NA</span>
-          <div class="error__tooltip" role="tooltip" id="error__row-2__col-3"><ul class="errorlist"><li>This field must contain one of the following values: High School, Associates, Bachelors, Masters, Ph.D.</li></ul></div>
-        </td>
-        <td class="error number">
-          <span aria-describedby="error__row-2__col-4">all of them</span>
-          <div class="error__tooltip" role="tooltip" id="error__row-2__col-4"><ul class="errorlist"><li>Enter a whole number.</li></ul></div>
-        </td>
-        <td class=" ">
-          <span>Hour</span>
-        </td>
-        <td class="error number">
-          <span aria-describedby="error__row-2__col-6">$9.0</span>
-          <div class="error__tooltip" role="tooltip" id="error__row-2__col-6"><ul class="errorlist"><li>Price must be at least the federal contractor minimum wage ($10.10)</li></ul></div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  {% endexample %}
+
+  <div class="styleguide-example">
+    <div class="rendering">
+      <h3 class="example-heading">Example</h3>
+      {{ s70_error_table }}
+    </div>
+  </div>
 
   {% guide_section "Excel Tables" %}
 
