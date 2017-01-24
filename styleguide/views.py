@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 from frontend.upload import UploadWidget
 from frontend.steps import StepsWidget
+from data_capture.schedules.s70 import Schedule70PriceList
 from . import ajaxform_example, date_example, radio_checkbox_example
 
 
@@ -28,8 +29,30 @@ def get_existing_filename_upload_form():
     return MyForm()
 
 
+def get_s70_pricelist_error_table():
+    return Schedule70PriceList([
+        {
+            'sin': 'none',
+            'labor_category': 'Button Presser',
+            'education_level': 'NA',
+            'min_years_experience': '1',
+            'unit_of_issue': 'Hour',
+            'price_including_iff': '9.0',
+        },
+        {
+            'sin': 'none',
+            'labor_category': 'Button Presser',
+            'education_level': 'NA',
+            'min_years_experience': 'all of them',
+            'unit_of_issue': 'Hour',
+            'price_including_iff': '9.0',
+        }
+    ]).to_error_table()
+
+
 def index(request):
     ctx = {
+        's70_error_table': get_s70_pricelist_error_table(),
         'degraded_upload_widget': get_degraded_upload_widget(),
         'existing_filename_upload_form': get_existing_filename_upload_form(),
         'steps_widget': StepsWidget(
