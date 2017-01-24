@@ -157,7 +157,29 @@ td.error {
       }
     }
   }
-
+  &:focus {
+    span {
+      border-bottom-color: transparent;
+      background-image: url("../../images/info-badge-outline.svg");
+      border-bottom-color: transparent;
+      /* tooltip arrow */
+      &:after {
+        display: block;
+      }
+      + [role=tooltip] {
+        overflow: auto;
+        height: auto;
+        width: auto;
+        margin: 0;
+        padding: $space-2x;
+        right: 0;
+        bottom: 95%;
+        left: 0;
+        background-color: $color-secondary-lightest;
+        border-radius: 4px;
+      }
+    }
+  }
   [role=tooltip] {
     /* make tooltip readable to screen readers */
     position: absolute;
