@@ -1,14 +1,12 @@
 import json
 import copy
 
-from copy import deepcopy
 from decimal import Decimal
 from unittest.mock import Mock, MagicMock, patch
 from django.test import TestCase, override_settings
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
 
-from .common import path, XLSX_CONTENT_TYPE
+from .common import path, uploaded_xlsx_file, FakeWorkbook, FakeSheet
 from .test_models import ModelTestCase
 from ..schedules import s70, registry
 
@@ -16,58 +14,6 @@ from ..schedules import s70, registry
 S70 = '%s.Schedule70PriceList' % s70.__name__
 
 S70_XLSX_PATH = path('static', 'data_capture', 's70_example.xlsx')
-
-
-def uploaded_xlsx_file(path=S70_XLSX_PATH, content=None):
-    if content is None:
-        with open(path, 'rb') as f:
-            content = f.read()
-
-    return SimpleUploadedFile(
-        'foo.xlsx',
-        content,
-        content_type=XLSX_CONTENT_TYPE
-    )
-
-
-class FakeCell:
-    def __init__(self, val):
-        self._val = val
-
-    @property
-    def value(self):
-        return self._val
-
-
-class FakeSheet:
-    def __init__(self, name=s70.DEFAULT_SHEET_NAME, cells=None):
-        if cells is None:
-            cells = deepcopy(s70.EXAMPLE_SHEET_ROWS)
-        self.name = name
-        self._cells = cells
-
-    @property
-    def nrows(self):
-        return len(self._cells)
-
-    def cell_value(self, rownum, colnum):
-        return self._cells[rownum][colnum]
-
-    def row(self, rownum):
-        return [FakeCell(c) for c in self._cells[rownum]]
-
-
-class FakeWorkbook:
-    def __init__(self, sheets=None):
-        if sheets is None:
-            sheets = [FakeSheet()]
-        self._sheets = sheets
-
-    def sheet_names(self):
-        return [sheet.name for sheet in self._sheets]
-
-    def sheet_by_name(self, name):
-        return [sheet for sheet in self._sheets if sheet.name == name][0]
 
 
 class SafeCellStrValueTests(TestCase):
@@ -102,37 +48,6 @@ class SafeCellStrValueTests(TestCase):
         self.assertEqual(s70.safe_cell_str_value(s, 1, 1, int), '5')
 
 
-class TestGenerateColumnIndexMap(TestCase):
-    def setUp(self):
-        self.heading_row = [
-            Mock(value='HEADING 2'),
-            Mock(value='heading 1'),
-            Mock(value='  Heading 3  '),
-        ]
-
-        self.field_title_map = {
-            'field_1': 'heading 1',
-            'field_2': 'heading 2',
-            'field_3': 'heading 3',
-        }
-
-    def test_generate_column_index_map_works(self):
-        col_idx_map = s70.generate_column_index_map(
-            self.heading_row, field_title_map=self.field_title_map)
-        self.assertEqual(col_idx_map, {
-            'field_1': 1,
-            'field_2': 0,
-            'field_3': 2,
-        })
-
-    def test_raises_on_missing_field(self):
-        map_with_additional_field = copy.copy(self.field_title_map)
-        map_with_additional_field['missing_field'] = 'BOOP'
-        with self.assertRaises(ValidationError):
-            s70.generate_column_index_map(
-                self.heading_row, field_title_map=map_with_additional_field)
-
-
 class FindHeaderRowTests(TestCase):
 
     def return_heading_on_row_4(self, row, col):
@@ -159,7 +74,8 @@ class FindHeaderRowTests(TestCase):
 
 class GleanLaborCategoriesTests(TestCase):
     def test_rows_are_returned(self):
-        rows = s70.glean_labor_categories_from_file(uploaded_xlsx_file())
+        rows = s70.glean_labor_categories_from_file(
+            uploaded_xlsx_file(S70_XLSX_PATH))
         self.assertEqual(rows, [{
             'sin': '132-51',
             'labor_category': 'Project Manager',
@@ -170,7 +86,8 @@ class GleanLaborCategoriesTests(TestCase):
         }])
 
     def test_text_formatted_prices_are_gleaned(self):
-        book = FakeWorkbook()
+        book = FakeWorkbook(sheets=[
+            FakeSheet(s70.DEFAULT_SHEET_NAME, s70.EXAMPLE_SHEET_ROWS)])
         book._sheets[0]._cells[1][11] = '$  1,107.50 '
 
         rows = s70.glean_labor_categories_from_book(book)
@@ -179,7 +96,8 @@ class GleanLaborCategoriesTests(TestCase):
         self.assertEqual(row['price_including_iff'], '1107.50')
 
     def test_min_education_is_gleaned_from_text(self):
-        book = FakeWorkbook()
+        book = FakeWorkbook(sheets=[
+            FakeSheet(s70.DEFAULT_SHEET_NAME, s70.EXAMPLE_SHEET_ROWS)])
         book._sheets[0]._cells[1][2] = 'GED or high school diploma'
 
         rows = s70.glean_labor_categories_from_book(book)
@@ -187,7 +105,8 @@ class GleanLaborCategoriesTests(TestCase):
         self.assertEqual(rows[0]['education_level'], 'High School')
 
     def test_unit_of_issue_is_gleaned_to_hour(self):
-        book = FakeWorkbook()
+        book = FakeWorkbook(sheets=[
+            FakeSheet(s70.DEFAULT_SHEET_NAME, s70.EXAMPLE_SHEET_ROWS)])
         book._sheets[0]._cells[1][5] = 'Hourly'
 
         rows = s70.glean_labor_categories_from_book(book)
@@ -200,7 +119,7 @@ class GleanLaborCategoriesTests(TestCase):
             r'There is no sheet in the workbook called "foo"'
         ):
             s70.glean_labor_categories_from_file(
-                uploaded_xlsx_file(),
+                uploaded_xlsx_file(S70_XLSX_PATH),
                 sheet_name='foo'
             )
 
@@ -211,10 +130,11 @@ class LoadFromUploadValidationErrorTests(TestCase):
         m.side_effect = ValidationError('foo')
 
         with self.assertRaisesRegexp(ValidationError, r'foo'):
-            s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+            s70.Schedule70PriceList.load_from_upload(
+                uploaded_xlsx_file(S70_XLSX_PATH))
 
     def test_raises_validation_error_on_corrupt_files(self):
-        f = uploaded_xlsx_file(content=b'foo')
+        f = uploaded_xlsx_file(S70_XLSX_PATH, content=b'foo')
 
         with self.assertRaisesRegexp(
             ValidationError,
@@ -228,7 +148,8 @@ class S70Tests(ModelTestCase):
     DEFAULT_SCHEDULE = S70
 
     def test_valid_rows_are_populated(self):
-        p = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+        p = s70.Schedule70PriceList.load_from_upload(
+            uploaded_xlsx_file(S70_XLSX_PATH))
 
         self.assertEqual(len(p.valid_rows), 1)
         self.assertEqual(p.invalid_rows, [])
@@ -280,7 +201,8 @@ class S70Tests(ModelTestCase):
         self.assertNotIn('unit_of_issue', p.invalid_rows[0])
 
     def test_add_to_price_list_works(self):
-        s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+        s = s70.Schedule70PriceList.load_from_upload(
+            uploaded_xlsx_file(S70_XLSX_PATH))
 
         p = self.create_price_list()
         p.save()
@@ -298,7 +220,8 @@ class S70Tests(ModelTestCase):
         row.full_clean()
 
     def test_serialize_and_deserialize_work(self):
-        s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+        s = s70.Schedule70PriceList.load_from_upload(
+            uploaded_xlsx_file(S70_XLSX_PATH))
 
         saved = json.dumps(registry.serialize(s))
         restored = registry.deserialize(json.loads(saved))
@@ -307,13 +230,15 @@ class S70Tests(ModelTestCase):
         self.assertEqual(s.rows, restored.rows)
 
     def test_to_table_works(self):
-        s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+        s = s70.Schedule70PriceList.load_from_upload(
+            uploaded_xlsx_file(S70_XLSX_PATH))
         table_html = s.to_table()
         self.assertIsNotNone(table_html)
         self.assertTrue(isinstance(table_html, str))
 
     def test_to_error_table_works(self):
-        s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
+        s = s70.Schedule70PriceList.load_from_upload(
+            uploaded_xlsx_file(S70_XLSX_PATH))
         table_html = s.to_error_table()
         self.assertIsNotNone(table_html)
         self.assertTrue(isinstance(table_html, str))
