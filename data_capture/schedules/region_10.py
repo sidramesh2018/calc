@@ -3,7 +3,8 @@ import xlrd
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .base import BasePriceList
+from .base import (BasePriceList, hourly_rates_only_validator,
+                   min_price_validator)
 from .spreadsheet_utils import generate_column_index_map
 
 
@@ -89,5 +90,19 @@ class Region10PriceList(BasePriceList):
 class Region10PriceListRow(forms.Form):
     sin = forms.CharField(label='SIN(s) Proposed')
     labor_category = forms.CharField(
-        label='Service Proposed (e.g. Labor Category or Job Title/Task)'
+        label="Service Proposed (e.g. Labor Category or Job Title/Task)"
+    )
+    education_level = forms.CharField(
+        label="Minimum Education / Certification Level"
+    )
+    min_years_experience = forms.IntegerField(
+        label="Minimum Years of Experience (cannot be a range)"
+    )
+    unit_of_issue = forms.CharField(
+        label="Unit of issue",
+        validators=[hourly_rates_only_validator]
+    )
+    price_including_iff = forms.DecimalField(
+        label='Price Offered to GSA (including IFF)',
+        validators=[min_price_validator]
     )
