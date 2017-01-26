@@ -10,6 +10,12 @@ from .base import (BasePriceList, hourly_rates_only_validator,
 from .spreadsheet_utils import generate_column_index_map, safe_cell_str_value
 from .coercers import (strip_non_numeric, extract_min_education,
                        extract_hour_unit_of_issue)
+from contracts.models import EDUCATION_CHOICES
+
+
+# TODO: Left out logger in this file. We have it in s70.py
+# but I dont think we actually use it. If we do use that log output,
+# then we should include it here also
 
 
 DEFAULT_SHEET_NAME = 'Service Pricing'
@@ -140,6 +146,17 @@ class Region10PriceListRow(forms.Form):
         validators=[min_price_validator]
     )
 
+    def contract_model_education_level(self):
+        # Note that due to the way we've cleaned education_level, this
+        # code is guaranteed to work.
+        return [
+            code for code, name in EDUCATION_CHOICES
+            if name == self.cleaned_data['education_level']
+        ][0]
+
+    def contract_model_base_year_rate(self):
+        return self.cleaned_data['price_including_iff']
+
 
 class Region10PriceList(BasePriceList):
     # TODO: This class should be DRY'd out since it is nearly verbatim
@@ -164,6 +181,19 @@ class Region10PriceList(BasePriceList):
             else:
                 self.invalid_rows.append(form)
 
+    def add_to_price_list(self, price_list):
+        for row in self.valid_rows:
+            price_list.add_row(
+                labor_category=row.cleaned_data['labor_category'],
+                education_level=row.contract_model_education_level(),
+                min_years_experience=row.cleaned_data['min_years_experience'],
+                base_year_rate=row.contract_model_base_year_rate(),
+                sin=row.cleaned_data['sin']
+            )
+
+    def serialize(self):
+        return self.rows
+
     def to_table(self):
         return render_to_string(self.table_template,
                                 {'rows': self.valid_rows})
@@ -171,3 +201,26 @@ class Region10PriceList(BasePriceList):
     def to_error_table(self):
         return render_to_string(self.table_template,
                                 {'rows': self.valid_rows})
+
+    @classmethod
+    def get_upload_example_context(cls):
+        return {
+            'sheet_name': DEFAULT_SHEET_NAME,
+            'sheet_rows': EXAMPLE_SHEET_ROWS,
+        }
+
+    @classmethod
+    def deserialize(cls, rows):
+        return cls(rows)
+
+    @classmethod
+    def load_from_upload(cls, f):
+        try:
+            rows = glean_labor_categories_from_file(f)
+            return Region10PriceList(rows)
+        except ValidationError:
+            raise
+        except Exception as e:
+            raise ValidationError(
+                "An error occurred when reading your Excel data."
+            )
