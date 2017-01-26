@@ -41,7 +41,7 @@ EXAMPLE_SHEET_ROWS = [
     [
         r'123-1',
         r'Consultant II',
-        r'Professional Certification',
+        r'Bachelors',
         r'2',
         r'Both',
         r'Domestic Only',
@@ -146,6 +146,17 @@ class Region10PriceListRow(forms.Form):
         validators=[min_price_validator]
     )
 
+    def clean_education_level(self):
+        value = self.cleaned_data['education_level']
+
+        values = [choice[1] for choice in EDUCATION_CHOICES]
+
+        if value not in values:
+            raise ValidationError('This field must contain one of the '
+                                  'following values: %s' % (', '.join(values)))
+
+        return value
+
     def contract_model_education_level(self):
         # Note that due to the way we've cleaned education_level, this
         # code is guaranteed to work.
@@ -165,8 +176,9 @@ class Region10PriceList(BasePriceList):
 
     title = 'Region 10'  # TODO: unsure of title
 
-    # TODO: create these templates
     table_template = 'data_capture/price_list/tables/region_10.html'
+
+    # TODO: create the upload example template
     upload_example_template = ('data_capture/price_list/upload_examples/'
                                'region_10.html')
     upload_widget_extra_instructions = 'XLS or XLSX format, please.'
