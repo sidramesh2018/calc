@@ -12,9 +12,9 @@ $color-primary-alt:          #00c6f3;
 $color-primary-alt-lightest: #c5d6de;
 
 $color-secondary:            #e31c3d;
-$color-secondary-dark:       #cd2026;
+$color-secondary-dark:       #BC1630;
 $color-secondary-darkest:    #981b1e;
-$color-secondary-lightest:   #f9dede; // lighten($color-secondary, 90%)
+$color-secondary-lightest:   #FAD0D0;
 
 $color-white:                #ffffff;
 $color-base:                 #212121;
@@ -79,7 +79,7 @@ $gutter: 3rem;
 $max-width: 930px;
 
 // Spacing units
-$base-spacing-unit: 8px;
+$base-spacing-unit: .8rem; //8px
 $space-half: $base-spacing-unit/2; // 4px
 $space-1x: $base-spacing-unit;
 $space-2x: $base-spacing-unit * 2; // 16px -- most common unit
