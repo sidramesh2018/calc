@@ -108,9 +108,10 @@ class SuperuserViewTests(DebugAdminTestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_can_see_superusers(self):
-        self.create_user(username='superdawg', is_superuser=True)
+        self.create_user(username='superdawg', email="superdawg@super.dawg",
+                         is_superuser=True)
         res = self.client.get('/admin/auth/user/')
-        self.assertContains(res, 'superdawg')
+        self.assertContains(res, 'superdawg@super.dawg')
         self.assertEqual(res.status_code, 200)
 
 
@@ -238,7 +239,8 @@ class ActionTests(AdminTestCase):
                 messages.INFO,
                 '1 price list(s) have been approved and added to CALC.'
             )
-            em_monkey.assert_called_once_with(self.price_list)
+            em_monkey.assert_called_once_with(self.price_list,
+                                              self.request_mock.get_host())
 
         self.price_list.refresh_from_db()
         self.assertEqual(self.price_list.status,
@@ -256,7 +258,8 @@ class ActionTests(AdminTestCase):
                 messages.INFO,
                 '1 price list(s) have been retired and removed from CALC.'
             )
-            em_monkey.assert_called_once_with(self.price_list)
+            em_monkey.assert_called_once_with(self.price_list,
+                                              self.request_mock.get_host())
 
         self.price_list.refresh_from_db()
         self.assertEqual(self.price_list.status,
@@ -272,7 +275,8 @@ class ActionTests(AdminTestCase):
                 messages.INFO,
                 '1 price list(s) have been rejected.'
             )
-            em_monkey.assert_called_once_with(self.price_list)
+            em_monkey.assert_called_once_with(self.price_list,
+                                              self.request_mock.get_host())
         self.price_list.refresh_from_db()
         self.assertEqual(self.price_list.status,
                          SubmittedPriceList.STATUS_REJECTED)

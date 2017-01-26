@@ -73,6 +73,18 @@ class UtilTests(TestCase):
             ''
             )
 
+    def test_strip_preamble_includes_unreleased_when_nonempty(self):
+        self.assertEqual(
+            changelog.strip_preamble('BLARG\n' + self.BEFORE_BUMP)[:10],
+            '## [Unrele'
+            )
+
+    def test_strip_preamble_removes_unreleased_when_empty(self):
+        self.assertEqual(
+            changelog.strip_preamble('BLARG\n' + self.AFTER_BUMP)[:10],
+            '## [1.0.1]'
+            )
+
     def test_release_header_re_matches_unbracketed_version(self):
         self.assertEqual(
             changelog.RELEASE_HEADER_RE.search('## 1.2.3 ').group(1),
@@ -89,7 +101,7 @@ class UtilTests(TestCase):
 class DjangoViewTests(DjangoTestCase):
     def test_it_works(self):
         res = self.client.get('/updates/')
-        self.assertContains(res, 'Change Log')
+        self.assertContains(res, 'Updates')
         self.assertEqual(res.status_code, 200)
 
 
