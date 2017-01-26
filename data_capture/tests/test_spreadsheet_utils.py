@@ -1,10 +1,43 @@
 import copy
 
-from unittest.mock import Mock
+from unittest.mock import Mock, MagicMock
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from ..schedules.spreadsheet_utils import generate_column_index_map
+from ..schedules.spreadsheet_utils import (
+    generate_column_index_map, safe_cell_str_value)
+
+
+class SafeCellStrValueTests(TestCase):
+    def test_cell_value_index_errors_are_ignored(self):
+        s = MagicMock()
+        s.cell_value.side_effect = IndexError()
+
+        self.assertEqual(safe_cell_str_value(s, 99, 99), '')
+        self.assertEqual(s.cell_value.call_count, 1)
+
+    def test_coercer_value_errors_are_ignored(self):
+        s = MagicMock()
+        s.cell_value.return_value = 'blah'
+
+        c = Mock()
+        c.side_effect = ValueError()
+
+        self.assertEqual(safe_cell_str_value(s, 99, 99, c), 'blah')
+        self.assertEqual(s.cell_value.call_count, 1)
+        self.assertEqual(c.call_count, 1)
+
+    def test_result_is_stringified(self):
+        s = MagicMock()
+        s.cell_value.return_value = 5
+
+        self.assertEqual(safe_cell_str_value(s, 1, 1), '5')
+
+    def test_coercer_is_used(self):
+        s = MagicMock()
+        s.cell_value.return_value = 5.0
+
+        self.assertEqual(safe_cell_str_value(s, 1, 1, int), '5')
 
 
 class TestGenerateColumnIndexMap(TestCase):

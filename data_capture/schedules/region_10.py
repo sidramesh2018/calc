@@ -101,9 +101,10 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
         price_including_iff = cval(col_idx_map['price_including_iff'],
                                    coercer=strip_non_numeric)
 
-        # We basically just keep going until we run into a row that
-        # doesn't have a SIN or price including IFF.
-        if not sin.strip() and not price_including_iff.strip():
+        is_price_ok = (price_including_iff.strip() and
+                       float(price_including_iff) > 0)
+
+        if not sin.strip() and not is_price_ok:
             break
 
         cat = {}
