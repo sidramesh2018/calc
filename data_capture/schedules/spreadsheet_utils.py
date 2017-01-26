@@ -3,6 +3,23 @@ import re
 from django.core.exceptions import ValidationError
 
 
+def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
+    val = ''
+
+    try:
+        val = sheet.cell_value(rownum, colnum)
+    except IndexError:
+        pass
+
+    if coercer is not None:
+        try:
+            val = coercer(val)
+        except ValueError:
+            pass
+
+    return str(val)
+
+
 def generate_column_index_map(heading_row, field_title_map):
     def normalize(s):
         return re.sub(r'\s+', '', str(s).lower())

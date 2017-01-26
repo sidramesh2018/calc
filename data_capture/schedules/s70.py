@@ -10,7 +10,7 @@ from .base import (BasePriceList, min_price_validator,
                    hourly_rates_only_validator)
 from .coercers import (strip_non_numeric, extract_min_education,
                        extract_hour_unit_of_issue)
-from .spreadsheet_utils import generate_column_index_map
+from .spreadsheet_utils import generate_column_index_map, safe_cell_str_value
 from contracts.models import EDUCATION_CHOICES
 
 
@@ -59,23 +59,6 @@ DEFAULT_FIELD_TITLE_MAP = {
 }
 
 logger = logging.getLogger(__name__)
-
-
-def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
-    val = ''
-
-    try:
-        val = sheet.cell_value(rownum, colnum)
-    except IndexError:
-        pass
-
-    if coercer is not None:
-        try:
-            val = coercer(val)
-        except ValueError:
-            pass
-
-    return str(val)
 
 
 def find_header_row(sheet, row_threshold=50):
@@ -130,7 +113,6 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
         'min_years_experience': int,
         'education_level': extract_min_education,
         'unit_of_issue': extract_hour_unit_of_issue,
-        'price_excluding_iff': strip_non_numeric
     }
 
     while True:
