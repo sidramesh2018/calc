@@ -30,7 +30,8 @@ table {
   }
   th {
     font-weight: $font-weight-bold;
-    span {
+    /* the front page table headers are spans with the .tooltipstered class */
+    span:not(.tooltipstered) {
       display: block;
       font-weight: $font-weight-normal;
     }
@@ -90,16 +91,32 @@ table {
     }
   }
 }
+.price-list-table {
+  td,
+  td:first-child,
+  td:last-child,
+  th,
+  th:first-child,
+  th:last-child {
+    position: relative;
+    padding: $space-2x $space-1x;
+  }
+  td {
+    vertical-align: top;
+  }
+}
 
-td,
-td:first-child,
-td:last-child,
-th,
-th:first-child,
-th:last-child {
-  position: relative;
-  padding: $space-2x $space-1x;
-  vertical-align: top;
+.sortable {
+  td,
+  td:first-child,
+  td:last-child,
+  th,
+  th:first-child,
+  th:last-child {
+    position: relative;
+    padding: $space-2x $space-1x $space-half;
+    vertical-align: bottom;
+  }
 }
 
 td.sorted {
@@ -261,33 +278,4 @@ th.column-labor_category {
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 22rem;
-}
-
-@media all and (min-width: 400px) {
-  td.number.currency:before {
-    content: '$';
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    left: 0;
-    color: $color-gray-medium;
-  }
-}
-
-@media all and (min-width: 500px) {
-  td.number.currency:before {
-    left: 12%;
-  }
-}
-
-@media all and (min-width: 650px) {
-  td.number.currency:before {
-    left: 30%;
-  }
-}
-
-@media all and (min-width: 880px) {
-  td.number.currency:before {
-    left: 45%;
-  }
 }
