@@ -333,15 +333,10 @@ def analyze_contract_row(row):
             )
 
 
-@register.filter
-def analyze_r10_contract_row(row):
+@register.assignment_tag(takes_context=True)
+def analyze_r10_row(context, row):
     # TODO: Currently this only works w/ region 10 schedule rows. Should
-    # figure out how to make it work independent of schedules; that
-    # might mean abandoning this weird template filter approach.
-
-    # TODO: It would be great if we could get an existing DB cursor
-    # from somewhere else and/or cache the vocabulary here; otherwise
-    # each call to this template filter could be fairly expensive.
+    # figure out how to make it work independent of schedules.
 
     if (row['price_including_iff'].errors or
             row['min_years_experience'].errors or
@@ -349,12 +344,20 @@ def analyze_r10_contract_row(row):
             row['labor_category'].errors):
         return None
 
-    with connection.cursor() as cursor:
-        return describe(
-                cursor,
-                Vocabulary.from_db(cursor),
-                row['labor_category'].value(),
-                int(row['min_years_experience'].value()),
-                EDU_LEVELS[row['education_level'].value()],
-                float(row['price_including_iff'].value())
-            )
+    if '__analyze_contract' not in context:
+        # Cache our DB connection and vocabulary so that every time we're
+        # run on a row, we're not rebuilding stuff from scratch.
+        cursor = connection.cursor()
+        vocab = Vocabulary.from_db(cursor)
+        context['__analyze_contract'] = (cursor, vocab)
+
+    cursor, vocab = context['__analyze_contract']
+
+    return describe(
+        cursor,
+        vocab,
+        row['labor_category'].value(),
+        int(row['min_years_experience'].value()),
+        EDU_LEVELS[row['education_level'].value()],
+        float(row['price_including_iff'].value())
+    )

@@ -43,11 +43,10 @@
         {% endif %}
       </td>
       {% load analyze_contract %}
-      {% with analysis=row|analyze_r10_contract_row %}
+      {% analyze_r10_row row as analysis %}
       <td {% if analysis.severe %}class="error"{% endif %}>
         {{ analysis.description }}
       </td>
-      {% endwith %}
     </tr>
   {% endfor %}
   </tbody>
