@@ -103,14 +103,14 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   const svg = d3.select(rootEl)
     .attr('viewBox', [0, 0, width, height].join(' '))
     .attr('preserveAspectRatio', 'xMinYMid meet');
-  const formatDollars = (n) => `$${formatPrice(n)}`;
+  const formatDollars = n => `$${formatPrice(n)}`;
 
   const extent = [data.minimum, data.maximum];
   const bins = data.wage_histogram;
   const x = d3.scale.linear()
       .domain(extent)
       .range([left, right]);
-  const countExtent = d3.extent(bins, (d) => d.count);
+  const countExtent = d3.extent(bins, d => d.count);
   const heightScale = d3.scale.linear()
       .domain([0].concat(countExtent))
       .range([0, 1, bottom - top]);
@@ -140,7 +140,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .enter()
       .append('g')
         .attr('transform', 'translate(0,0)')
-        .attr('class', (d) => `label ${d.type}`);
+        .attr('class', d => `label ${d.type}`);
     stdDevLabels.append('line')
       .attr('class', 'label-rule')
       .attr({
@@ -148,7 +148,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
         y2: 5,
       });
     const stdDevLabelsText = stdDevLabels.append('text')
-      .attr('text-anchor', (d) => d.anchor)
+      .attr('text-anchor', d => d.anchor)
       .attr('dx', (d, i) => 8 * (i ? 1 : -1));
 
     stdDevLabelsText.append('tspan')
@@ -320,11 +320,18 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   stdDev.select('.label.max .stddev-text')
     .text(formatDollars(stdDevMax));
 
+  const trunc = (num) => {
+    if (num < 0) {
+      return Math.ceil(num);
+    }
+    return Math.floor(num);
+  };
+
   t.select('.avg')
-    .attr('transform', `translate(${[~~x(data.average), top]})`);
+    .attr('transform', `translate(${[trunc(x(data.average)), top]})`);
 
   t.select('.pp')
-    .attr('transform', `translate(${[~~x(proposedPrice), top]})`);
+    .attr('transform', `translate(${[trunc(x(proposedPrice)), top]})`);
 
   t.selectAll('.bar')
     .each((d) => {
@@ -334,12 +341,12 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       d.y = bottom - d.height; // eslint-disable-line no-param-reassign
     })
     .select('rect')
-      .attr('x', (d) => d.x)
-      .attr('y', (d) => d.y)
-      .attr('height', (d) => d.height)
-      .attr('width', (d) => d.width);
+      .attr('x', d => d.x)
+      .attr('y', d => d.y)
+      .attr('height', d => d.height)
+      .attr('width', d => d.width);
 
-  const ticks = bins.map((d) => d.min)
+  const ticks = bins.map(d => d.min)
     .concat([data.maximum]);
 
   const xa = d3.svg.axis()
@@ -390,15 +397,6 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
 }
 
 class Histogram extends React.Component {
-  updateHistogram(showTransition) {
-    updateHistogram(
-      this.svgEl,
-      this.props.ratesData,
-      this.props.proposedPrice,
-      showTransition
-    );
-  }
-
   componentDidMount() {
     this.updateHistogram(false);
   }
@@ -407,10 +405,21 @@ class Histogram extends React.Component {
     this.updateHistogram(true);
   }
 
+  updateHistogram(showTransition) {
+    updateHistogram(
+      this.svgEl,
+      this.props.ratesData,
+      this.props.proposedPrice,
+      showTransition,
+    );
+  }
+
   render() {
     return (
-      <svg className="graph histogram has-data"
-           ref={ (svg) => { this.svgEl = svg; } }>
+      <svg
+        className="graph histogram has-data"
+        ref={(svg) => { this.svgEl = svg; }}
+      >
         <title>Price histogram</title>
         <desc>
           A histogram showing the distribution of labor category prices.
@@ -438,5 +447,5 @@ export default connect(
   mapStateToProps,
   null,
   null,
-  { withRef: true }
+  { withRef: true },
 )(Histogram);

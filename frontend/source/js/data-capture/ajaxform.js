@@ -30,7 +30,7 @@ class Delegate {
     //
     // For more details, see: http://stackoverflow.com/a/13123626
 
-    this.window.onpageshow = e => {
+    this.window.onpageshow = (e) => {
       if (e.persisted) {
         this.window.location.reload();
       }
@@ -46,7 +46,7 @@ class Delegate {
 
 let delegate = new Delegate(window);
 
-exports.setDelegate = newDelegate => {
+exports.setDelegate = (newDelegate) => {
   delegate = newDelegate;
   return delegate;
 };

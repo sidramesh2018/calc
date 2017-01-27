@@ -14,6 +14,11 @@ import {
 
 import { formatCommas } from '../util';
 
+function stripTrailingComma(str) {
+  // Removes trailing comma and whitespace from given string
+  return str.replace(/,\s*$/, '');
+}
+
 export function Description({
   shownResults,
   totalResults,
@@ -30,15 +35,21 @@ export function Description({
   const filters = [];
 
   if (laborCategory) {
-    filters.push(<DescriptionFilter key="lab">{laborCategory}</DescriptionFilter>);
+    filters.push(
+      <DescriptionFilter key="lab">
+        {stripTrailingComma(laborCategory)}
+      </DescriptionFilter>,
+    );
   }
 
   if (education.length) {
     filters.push(
-      <DescriptionFilter key="edu" label="education level"
-              extraClassName="education-filter">
+      <DescriptionFilter
+        key="edu" label="education level"
+        extraClassName="education-filter"
+      >
         {education.map(x => EDU_LABELS[x]).join(', ')}
-      </DescriptionFilter>
+      </DescriptionFilter>,
     );
   }
 
@@ -47,7 +58,7 @@ export function Description({
     filters.push(
       <DescriptionFilter key="exp" label="experience">
         {minExperience} - {maxExperience} years
-      </DescriptionFilter>
+      </DescriptionFilter>,
     );
   }
 
@@ -55,7 +66,7 @@ export function Description({
     filters.push(
       <DescriptionFilter key="sit" label="worksite">
         {SITE_LABELS[site]}
-      </DescriptionFilter>
+      </DescriptionFilter>,
     );
   }
 
@@ -63,7 +74,7 @@ export function Description({
     filters.push(
       <DescriptionFilter key="bus" label="business size">
         {BUSINESS_SIZE_LABELS[businessSize]}
-      </DescriptionFilter>
+      </DescriptionFilter>,
     );
   }
 
@@ -71,7 +82,7 @@ export function Description({
     filters.push(
       <DescriptionFilter key="sch" label="schedule">
         {SCHEDULE_LABELS[schedule]}
-      </DescriptionFilter>
+      </DescriptionFilter>,
     );
   }
 

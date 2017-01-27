@@ -47,4 +47,4 @@ def qunit_fixture_data_json():
         'AJAXFORM_TESTS_HTML': AjaxformTestsForm().render()
     }
 
-    return mark_safe(json.dumps(data))
+    return mark_safe(json.dumps(data))  # nosec

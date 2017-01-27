@@ -9,10 +9,11 @@ exports[`<ContractYear> matches snapshot 1`] = `
     <span
       className="filter-more-info">
       <Tooltip
+        show={false}
         text="All five years of pricing are available in the export.">
         <a
           aria-label="All five years of pricing are available in the export."
-          href="#"
+          href=""
           onClick={[Function]}>
           What\'s this?
         </a>

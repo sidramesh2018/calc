@@ -1,47 +1,27 @@
 <table class="price-list-table">
+  <caption class="sr-only">Review submitted price list data</caption>
   <thead>
     <tr>
-      <th>SIN(s) proposed</th>
-      <th>Service proposed (e.g. job title/task)</th>
-      <th>Minimum education / certification level</th>
-      <th class="number">Minimum years of experience</th>
-      <th>Unit of issue</th>
-      <th class="number">Price offered to GSA (including IFF)</th>
+      {% for field in header %}
+        <th {% if field.name == 'min_years_experience' or field.name == 'price_including_iff' %}class="number"{% endif %}>
+          {{ field.label }}
+          {% if field.help_text %}<span>({{ field.help_text }})</span>{% endif %}
+        </th>
+      {% endfor %}
     </tr>
   </thead>
   <tbody>
   {% for row in rows %}
+    {% with row_count=forloop.counter %}
     <tr>
-      <td class="{% if row.sin.errors %}error{% endif %}">
-        {{ row.sin.value }}
-        {{ row.sin.errors }}
+    {% for col in row %}
+      <td class="{% if col.errors %}error{% endif %} {% if col.name == 'min_years_experience' or col.name == 'price_including_iff' %}number{% endif %}" {% if col.errors %}tabindex="0"{% endif %}>
+        <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>{% if col.name == 'price_including_iff' %}${% endif %}{{ col.value }}</span>
+        {% if col.errors %}<div class="error__tooltip" role="tooltip" id="error__row-{{ row_count}}__col-{{ forloop.counter }}">{{ col.errors }}</div>{% endif %}
       </td>
-      <td class="{% if row.labor_category.errors %}error{% endif %}">
-        {{ row.labor_category.value }}
-        {{ row.labor_category.errors }}
-      </td>
-      <td class="{% if row.education_level.errors %}error{% endif %}">
-        {{ row.education_level.value }}
-        {{ row.education_level.errors }}
-      </td>
-      <td class="number {% if row.min_years_experience.errors %}error{% endif %}">
-        {{ row.min_years_experience.value }}
-        {{ row.min_years_experience.errors }}
-      </td>
-
-      <td class="{% if row.unit_of_issue.errors %}error{% endif %}">
-        {{ row.unit_of_issue.value }}
-        {{ row.unit_of_issue.errors }}
-      </td>
-      <td class="number {% if row.price_including_iff.errors %}error{% else %}currency{% endif %}">
-        {% if row.price_including_iff.errors %}
-          {{ row.price_including_iff.value }}
-          {{ row.price_including_iff.errors }}
-        {% else %}
-          {{ row.price_including_iff.value|floatformat:2 }}
-        {% endif %}
-      </td>
+    {% endfor %}
     </tr>
+    {% endwith %}
   {% endfor %}
   </tbody>
 </table>

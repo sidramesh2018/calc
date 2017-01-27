@@ -24,7 +24,7 @@ import {
   parsePrice,
 } from './util';
 
-const parseSort = val => {
+const parseSort = (val) => {
   if (val) {
     let key = val;
     let descending = false;
@@ -42,14 +42,14 @@ const parseSort = val => {
   return DEFAULT_SORT;
 };
 
-const coercedString = val => {
+const coercedString = (val) => {
   if (val === undefined) {
     return '';
   }
   return String(val);
 };
 
-const coercedExperience = defaultVal => val => {
+const coercedExperience = defaultVal => (val) => {
   const valInt = parseInt(val, 10);
 
   if (isNaN(valInt)) {
@@ -59,7 +59,7 @@ const coercedExperience = defaultVal => val => {
   return Math.max(Math.min(valInt, MAX_EXPERIENCE), MIN_EXPERIENCE);
 };
 
-const stringInSet = (choices, defaultVal = '') => val => {
+const stringInSet = (choices, defaultVal = '') => (val) => {
   if (val in choices) {
     return val;
   }
@@ -109,7 +109,7 @@ export const allFields = Object.keys(serializers);
 export function getSerializedFields(state, fields, options = {}) {
   const result = {};
 
-  fields.forEach(field => {
+  fields.forEach((field) => {
     const val = serializers[field](state[field]);
 
     if (options.omitEmpty && !val.length) {
@@ -125,7 +125,7 @@ export function getSerializedFields(state, fields, options = {}) {
 export function getChangedSerializedFields(oldState, newState, fields) {
   const result = {};
 
-  fields.forEach(field => {
+  fields.forEach((field) => {
     const oldVal = serializers[field](oldState[field]);
     const newVal = serializers[field](newState[field]);
 

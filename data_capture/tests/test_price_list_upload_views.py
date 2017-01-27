@@ -1,6 +1,9 @@
 import json
 from datetime import datetime
+
 from model_mommy import mommy
+from django.utils import timezone
+from freezegun import freeze_time
 
 from ..models import SubmittedPriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
@@ -8,6 +11,9 @@ from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from .common import (StepTestCase, FAKE_SCHEDULE, uploaded_csv_file,
                      create_csv_content)
+
+
+frozen_datetime = datetime(2016, 11, 16, 12, 30, 30)
 
 
 class HandleCancelMixin():
@@ -522,6 +528,7 @@ class Step4Tests(PriceListStepTestCase,
         self.assertTrue(res.context['show_edit_form'])
         self.assertContains(res, 'LOL is not one of the available choices')
 
+    @freeze_time(frozen_datetime)
     def test_valid_post_creates_models(self):
         user = self.login()
         session = self.client.session
@@ -539,7 +546,8 @@ class Step4Tests(PriceListStepTestCase,
         self.assertEqual(p.submitter, user)
         self.assertEqual(p.status_changed_by, user)
         self.assertEqual(p.status, SubmittedPriceList.STATUS_UNREVIEWED)
-        self.assertEqual(p.status_changed_at.date(), datetime.now().date())
+        self.assertEqual(p.status_changed_at,
+                         timezone.make_aware(frozen_datetime))
         self.assertEqual(p.uploaded_filename, 'foo.csv')
 
     def test_valid_post_clears_session_and_redirects_to_step_5(self):

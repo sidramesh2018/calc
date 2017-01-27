@@ -206,9 +206,13 @@ To do this, you'll first need to
 [configure Docker Machine for the cloud][docker-machine-cloud],
 which involves provisioning a host on a cloud provider and setting up
 your local environment to make Docker's command-line tools use that
-host.
+host. For example, to do this on Amazon EC2, you might use:
 
-Firstly, unlike local development, cloud deploys don't support an
+```
+docker-machine create aws16 --driver=amazonec2 --amazonec2-instance-type=t2.large
+```
+
+Also, unlike local development, cloud deploys don't support an
 `.env` file. So you'll want to create a custom
 `docker-compose.override.yml` file that defines the app's
 environment variables:
@@ -283,6 +287,11 @@ string), the boolean is true; otherwise, it's false.
 * `SERVER_EMAIL` is the email from-address to use in all system generated
   emails to managers and admins. It corresponds to Django's [`SERVER_EMAIL`][]
   setting. It defaults to `system@localhost` when `DEBUG=True`.
+
+* `HELP_EMAIL` is the email  used as the reply-to address in system
+  generated emails to users. It is also the email address used in the site
+  footer and for other contact purposes. It should refer to an inbox that is
+  monitored. If not set, it will use the same value as `DEFAULT_FROM_EMAIL`.
 
 * `REDIS_URL` is the URL for redis, which is used by the task queue.
   When `DEBUG` is true, it defaults to `redis://localhost:6379/0`.

@@ -7,18 +7,18 @@ import {
 
 QUnit.module('data-explorer');
 
-QUnit.test('appendHighlightedTerm() prevents stored XSS', assert => {
+QUnit.test('appendHighlightedTerm() prevents stored XSS', (assert) => {
   assert.equal(
     appendHighlightedTerm(
       $('<span></span>'),
       'Project Manager of <script>alert("DOOM")</script>',
-      'proj manager'
+      'proj manager',
     ).html(),
-    '<b>Proj</b>ect <b>Manager</b> of &lt;script&gt;alert("DOOM")&lt;/script&gt;'
+    '<b>Proj</b>ect <b>Manager</b> of &lt;script&gt;alert("DOOM")&lt;/script&gt;',
   );
 });
 
-QUnit.test('parseQuery() works', assert => {
+QUnit.test('parseQuery() works', (assert) => {
   assert.deepEqual(
     parseQuery('?foo=bar'),
     { foo: 'bar' },
@@ -37,7 +37,7 @@ QUnit.test('parseQuery() works', assert => {
     'parses "%20" as spaces');
 });
 
-QUnit.test('joinQuery() works', assert => {
+QUnit.test('joinQuery() works', (assert) => {
   assert.equal(joinQuery({ foo: 'bar', baz: 'quux hi' }),
                '?foo=bar&baz=quux%20hi');
 });

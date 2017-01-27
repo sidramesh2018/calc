@@ -1,9 +1,18 @@
 import re
-
+import abc
+from typing import Dict, Any, Optional
 from django.template.loader import render_to_string
-from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import (  # type: ignore
+    MinValueValidator, RegexValidator)
+from django.http import HttpRequest
+from django.utils.safestring import SafeString, mark_safe
+from django.core.files.uploadedfile import UploadedFile
 
 from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
+from ..models import SubmittedPriceList
+
+if False:
+    from django.forms import Form  # NOQA
 
 min_price_validator = MinValueValidator(
     FEDERAL_MIN_CONTRACT_RATE,
@@ -17,72 +26,36 @@ hourly_rates_only_validator = RegexValidator(
     hour_regex, 'Value must be "Hour" or "Hourly"')
 
 
-class BasePriceList:
+class ConcreteBasePriceListMethods:
     '''
-    Abstract base class for price lists being imported into CALC.
-    '''
+    Concrete methods for all price lists being imported into CALC.
 
-    # Human-readable name of the schedule to which the price list
-    # belongs. Subclasses should override this.
-    title = 'Unknown Schedule'
+    We're separating these from the abstract methods so they can
+    be easily tested on their own.
+    '''
 
     # Path to the template used for presenting an example of
     # what to upload.
-    upload_example_template = None
+    upload_example_template = None  # type: Optional[str]
 
-    # Extra instructions text to use for the upload widget.
-    upload_widget_extra_instructions = None
-
-    def __init__(self):
+    def __init__(self) -> None:
         # This is a list of Django Form objects representing
         # valid rows in the price list.
-        self.valid_rows = []
+        self.valid_rows = []  # type: List[Form]
 
         # This is a list of Django Form objects representing
         # invalid rows in the price list.
-        self.invalid_rows = []
+        self.invalid_rows = []  # type: List[Form]
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         '''
         Returns whether the price list contains no data.
         '''
 
         return not (self.valid_rows or self.invalid_rows)
 
-    def add_to_price_list(self, price_list):
-        '''
-        Adds the price list's valid rows to the given
-        data_capture.models.SubmittedPriceList model.
-        '''
-
-        raise NotImplementedError()
-
-    def serialize(self):
-        '''
-        Returns a JSON-serializable representation of the
-        price list.
-        '''
-
-        raise NotImplementedError()
-
-    def to_table(self):
-        '''
-        Returns a string of the HTML table representation of the valid rows
-        of the price list
-        '''
-
-        raise NotImplementedError()
-
-    def to_error_table(self):
-        '''
-        Returns a string of the HTML table representation of the invalid
-        rows of the price list
-        '''
-
-        raise NotImplementedError()
-
     @classmethod
-    def get_upload_example_context(cls):
+    def get_upload_example_context(cls) -> Optional[Dict[str, Any]]:
         '''
         Returns a dictionary to use as the context for the upload example
         template.
@@ -91,7 +64,7 @@ class BasePriceList:
         return None
 
     @classmethod
-    def render_upload_example(cls, request=None):
+    def render_upload_example(cls, request: HttpRequest=None) -> SafeString:
         '''
         Returns the HTML containing an example of what the schedule
         expects the user to upload, along with any other pertinent
@@ -104,10 +77,60 @@ class BasePriceList:
             return render_to_string(cls.upload_example_template,
                                     cls.get_upload_example_context(),
                                     request=request)
-        return ''
+        return mark_safe('')  # nosec
+
+
+class BasePriceList(ConcreteBasePriceListMethods, metaclass=abc.ABCMeta):
+    '''
+    Abstract base class for price lists being imported into CALC.
+    '''
+
+    # Human-readable name of the schedule to which the price list
+    # belongs. Subclasses should override this.
+    title = 'Unknown Schedule'
+
+    # Extra instructions text to use for the upload widget.
+    upload_widget_extra_instructions = None  # type: Optional[str]
+
+    @abc.abstractmethod
+    def add_to_price_list(self, price_list: SubmittedPriceList) -> None:
+        '''
+        Adds the price list's valid rows to the given
+        data_capture.models.SubmittedPriceList model.
+        '''
+
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def serialize(self) -> Any:
+        '''
+        Returns a JSON-serializable representation of the
+        price list.
+        '''
+
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def to_table(self) -> SafeString:
+        '''
+        Returns a string of the HTML table representation of the valid rows
+        of the price list
+        '''
+
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def to_error_table(self) -> SafeString:
+        '''
+        Returns a string of the HTML table representation of the invalid
+        rows of the price list
+        '''
+
+        raise NotImplementedError()
 
     @classmethod
-    def deserialize(cls, obj):
+    @abc.abstractmethod
+    def deserialize(cls, obj: Any) -> 'BasePriceList':
         '''
         Given an object previously returned by serialize(),
         Return a BasePriceList subclass.
@@ -116,7 +139,8 @@ class BasePriceList:
         raise NotImplementedError()
 
     @classmethod
-    def load_from_upload(cls, f):
+    @abc.abstractmethod
+    def load_from_upload(cls, f: UploadedFile) -> 'BasePriceList':
         '''
         Given an UploadedFile, return a BasePriceList
         subclass that represents the price list. If the file could not

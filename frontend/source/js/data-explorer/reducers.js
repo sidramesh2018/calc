@@ -113,7 +113,7 @@ function rates(state = {
   inProgress: false,
   stale: true,
 }, action) {
-  const normalizeData = d => {
+  const normalizeData = (d) => {
     if (d && d.results && d.results.length) {
       return d;
     }

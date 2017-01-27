@@ -1,6 +1,7 @@
-import datetime
+from datetime import datetime, date
 from decimal import Decimal
 
+from freezegun import freeze_time
 from django.test import override_settings
 from django.utils import timezone
 from django.forms import ValidationError
@@ -11,6 +12,9 @@ from ..schedules import registry
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..models import SubmittedPriceList, SubmittedPriceListRow
 from .common import FAKE_SCHEDULE
+
+
+frozen_datetime = datetime(2017, 1, 12, 9, 15, 20)
 
 
 class ModelTestCase(BaseLoginTestCase):
@@ -31,8 +35,8 @@ class ModelTestCase(BaseLoginTestCase):
             contract_number='GS-123-4567',
             vendor_name='UltraCorp',
             schedule=self.DEFAULT_SCHEDULE,
-            contract_start=datetime.date(2016, 9, 1),
-            contract_end=datetime.date(2021, 9, 1),
+            contract_start=date(2016, 9, 1),
+            contract_end=date(2021, 9, 1),
             escalation_rate=0,
             status=SubmittedPriceList.STATUS_UNREVIEWED,
             status_changed_by=self.user,
@@ -78,18 +82,20 @@ class ModelsTests(ModelTestCase):
         p.is_small_business = True
         self.assertEqual(p.get_business_size_string(), 'S')
 
+    @freeze_time(frozen_datetime)
     def test_change_status_works(self):
         original_user = self.create_user(username='boop', email="boop@beep")
         p = self.create_price_list(
             status=SubmittedPriceList.STATUS_UNREVIEWED,
-            status_changed_by=original_user,
-            status_changed_at=datetime.datetime.now() - datetime.timedelta(
-                days=1))
+            status_changed_by=original_user)
         p._change_status(SubmittedPriceList.STATUS_APPROVED, self.user)
         self.assertEqual(p.status, SubmittedPriceList.STATUS_APPROVED)
         self.assertEqual(p.status_changed_by, self.user)
-        self.assertEqual(p.status_changed_at.date(), datetime.date.today())
+        self.assertEqual(
+            p.status_changed_at,
+            timezone.make_aware(frozen_datetime))
 
+    @freeze_time(frozen_datetime)
     def test_approve_works(self):
         p = self.create_price_list(
             contract_number='GS-123-4568',
@@ -106,7 +112,8 @@ class ModelsTests(ModelTestCase):
         self.assertEqual(Contract.objects.all().count(), 1)
         self.assertEqual(p.status, SubmittedPriceList.STATUS_APPROVED)
         self.assertEqual(p.status_changed_by, self.user)
-        self.assertEqual(p.status_changed_at.date(), datetime.date.today())
+        self.assertEqual(p.status_changed_at,
+                         timezone.make_aware(frozen_datetime))
 
         contract = p.rows.all()[0].contract_model
         self.assertEqual(contract.idv_piid, 'GS-123-4568')
@@ -129,6 +136,7 @@ class ModelsTests(ModelTestCase):
         self.assertAlmostEqual(
             contract.second_year_price, Decimal(10.20), places=2)
 
+    @freeze_time(frozen_datetime)
     def test_retire_works(self):
         p = self.create_price_list()
         p.save()
@@ -138,10 +146,12 @@ class ModelsTests(ModelTestCase):
         p.retire(self.user)
         self.assertEqual(p.status, SubmittedPriceList.STATUS_RETIRED)
         self.assertEqual(p.status_changed_by, self.user)
-        self.assertEqual(p.status_changed_at.date(), datetime.date.today())
+        self.assertEqual(p.status_changed_at,
+                         timezone.make_aware(frozen_datetime))
         self.assertEqual(p.rows.all()[0].contract_model, None)
         self.assertEqual(Contract.objects.all().count(), 0)
 
+    @freeze_time(frozen_datetime)
     def test_reject_works(self):
         p = self.create_price_list()
         p.save()
@@ -149,7 +159,8 @@ class ModelsTests(ModelTestCase):
         p.reject(self.user)
         self.assertEqual(p.status, SubmittedPriceList.STATUS_REJECTED)
         self.assertEqual(p.status_changed_by, self.user)
-        self.assertEqual(p.status_changed_at.date(), datetime.date.today())
+        self.assertEqual(p.status_changed_at,
+                         timezone.make_aware(frozen_datetime))
         self.assertEqual(p.rows.all()[0].contract_model, None)
         self.assertEqual(Contract.objects.all().count(), 0)
 
@@ -161,6 +172,7 @@ class ModelsTests(ModelTestCase):
         with self.assertRaises(AssertionError):
             p.reject(self.user)
 
+    @freeze_time(frozen_datetime)
     def test_unreview_works(self):
         p = self.create_price_list()
         p.save()
@@ -169,7 +181,8 @@ class ModelsTests(ModelTestCase):
         p.unreview(self.user)
         self.assertEqual(p.status, SubmittedPriceList.STATUS_UNREVIEWED)
         self.assertEqual(p.status_changed_by, self.user)
-        self.assertEqual(p.status_changed_at.date(), datetime.date.today())
+        self.assertEqual(p.status_changed_at,
+                         timezone.make_aware(frozen_datetime))
         self.assertEqual(p.rows.all()[0].contract_model, None)
         self.assertEqual(Contract.objects.all().count(), 0)
 

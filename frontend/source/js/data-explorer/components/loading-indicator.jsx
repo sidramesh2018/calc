@@ -38,9 +38,13 @@ LoadingIndicator.propTypes = {
   inProgress: React.PropTypes.bool.isRequired,
 };
 
+LoadingIndicator.defaultProps = {
+  error: null,
+};
+
 export default connect(
   state => ({
     error: state.rates.error,
     inProgress: state.rates.inProgress,
-  })
+  }),
 )(LoadingIndicator);

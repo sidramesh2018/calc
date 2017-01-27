@@ -17,14 +17,13 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get update && \
   apt-get install -y nodejs postgresql-client
 
-COPY package.json /node/
+COPY package.json /calc/
 
-WORKDIR /node
+WORKDIR /calc
 
 RUN npm install
 
-ENV PATH /node/node_modules/.bin:$PATH
-ENV NODE_PATH /node/node_modules
+ENV PATH /calc/node_modules/.bin:$PATH
 ENV DDM_IS_RUNNING_IN_DOCKER yup
 
 COPY requirements.txt /calc/
@@ -40,8 +39,6 @@ RUN python -m nltk.downloader averaged_perceptron_tagger -d /usr/local/share/nlt
 # directory will be superseded by a folder share.
 
 COPY . /calc/
-
-WORKDIR /calc
 
 RUN gulp build
 

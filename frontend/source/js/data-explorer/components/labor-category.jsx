@@ -17,6 +17,26 @@ class LaborCategory extends React.Component {
     autobind(this, ['handleChange', 'handleEnter']);
   }
 
+  componentDidMount() {
+    autocomplete.initialize(this.inputEl, {
+      api: this.props.api,
+      getQueryType: () => this.props.queryType,
+      setFieldValue: (value) => {
+        this.props.setQuery(value);
+      },
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.query !== this.props.query) {
+      this.setState({ value: nextProps.query });
+    }
+  }
+
+  componentWillUnmount() {
+    autocomplete.destroy(this.inputEl);
+  }
+
   handleChange(e) {
     this.setState({ value: e.target.value });
   }
@@ -27,26 +47,6 @@ class LaborCategory extends React.Component {
     }
   }
 
-  componentDidMount() {
-    autocomplete.initialize(this.inputEl, {
-      api: this.props.api,
-      getQueryType: () => this.props.queryType,
-      setFieldValue: value => {
-        this.props.setQuery(value);
-      },
-    });
-  }
-
-  componentWillUnmount() {
-    autocomplete.destroy(this.inputEl);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.query !== this.props.query) {
-      this.setState({ value: nextProps.query });
-    }
-  }
-
   render() {
     const id = `${this.props.idPrefix}labor_category`;
     const className = filterActive(this.props.query !== '',
@@ -54,12 +54,14 @@ class LaborCategory extends React.Component {
 
     return (
       <div>
-        <input id={id} name="q" placeholder="Type a labor category"
-               className={className} type="text"
-               ref={el => { this.inputEl = el; }}
-               value={this.state.value}
-               onChange={this.handleChange}
-               onKeyDown={handleEnter(this.handleEnter)} />
+        <input
+          id={id} name="q" placeholder="Type a labor category"
+          className={className} type="text"
+          ref={(el) => { this.inputEl = el; }}
+          value={this.state.value}
+          onChange={this.handleChange}
+          onKeyDown={handleEnter(this.handleEnter)}
+        />
         <label htmlFor={id} className="sr-only">Type a labor category</label>
         {this.props.children}
       </div>
@@ -78,6 +80,7 @@ LaborCategory.propTypes = {
 
 LaborCategory.defaultProps = {
   idPrefix: '',
+  children: null,
 };
 
 export default connect(
@@ -85,5 +88,5 @@ export default connect(
     query: state.q,
     queryType: state.query_type,
   }),
-  { setQuery }
+  { setQuery },
 )(LaborCategory);

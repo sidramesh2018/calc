@@ -68,10 +68,10 @@ function makeFormHtml(extraOptions) {
 
   // Same as above for setting the `checked` attributes of the selected
   // checkbox values
-  for (const val of checkboxValues) {
+  checkboxValues.forEach((val) => {
     $form.find(`input[name='some_checkboxes'][value=${val}]`)
       .attr('checked', true);
-  }
+  });
 
   return $form.html();
 }
@@ -84,7 +84,7 @@ function addForm(extraOptions, cb) {
   Promise.all([
     new Promise(resolve => div.one('uploadwidgetready', resolve)),
     new Promise(resolve => div.one('ajaxformready', resolve)),
-  ]).then(results => {
+  ]).then((results) => {
     cb({
       uploadinput: results[0].target.uploadInput,
       ajaxform: results[1].target,
@@ -105,9 +105,9 @@ function formTest(name, options, originalCb) {
     cb = extraOptions;
     extraOptions = undefined;
   }
-  return QUnit.test(name, assert => {
+  return QUnit.test(name, (assert) => {
     const done = assert.async();
-    addForm(extraOptions, s => {
+    addForm(extraOptions, (s) => {
       cb(assert, s);
       done();
     });
@@ -143,7 +143,7 @@ formTest('degraded form has truthy .isDegraded', {
 formTest('degraded form does not cancel form submission', {
   isDegraded: true,
 }, (assert, s) => {
-  $(s.ajaxform).on('submit', e => {
+  $(s.ajaxform).on('submit', (e) => {
     assert.ok(!e.isDefaultPrevented());
     e.preventDefault();
   });
@@ -151,7 +151,7 @@ formTest('degraded form does not cancel form submission', {
   $(s.ajaxform).submit();
 });
 
-test('Delegate.redirect() works', assert => {
+test('Delegate.redirect() works', (assert) => {
   const fakeWindow = {};
   const delegate = new ajaxform.Delegate(fakeWindow);
   let reloadCalled = false;
@@ -163,7 +163,7 @@ test('Delegate.redirect() works', assert => {
   assert.ok(reloadCalled);
 });
 
-test('Delegate.alert() works', assert => {
+test('Delegate.alert() works', (assert) => {
   const messages = [];
   const fakeWindow = { alert(msg) { messages.push(msg); } };
   const delegate = new ajaxform.Delegate(fakeWindow);
@@ -172,7 +172,7 @@ test('Delegate.alert() works', assert => {
   assert.deepEqual(messages, ['boop']);
 });
 
-test('populateFormData() works w/ non-upgraded file inputs', assert => {
+test('populateFormData() works w/ non-upgraded file inputs', (assert) => {
   const formData = ajaxform.AjaxForm.prototype.populateFormData.call({
     elements: [{
       type: 'file',
@@ -206,7 +206,7 @@ advancedTest('custom submit btn info only included when ' +
 });
 
 advancedTest('submit triggers ajax w/ form data', (assert, s) => {
-  $(s.ajaxform).on('submit', e => {
+  $(s.ajaxform).on('submit', (e) => {
     assert.ok(e.isDefaultPrevented());
     assert.equal(server.requests.length, 1);
 
@@ -260,7 +260,7 @@ advancedTest('form_html replaces form & rebinds it', {
     { 'Content-Type': 'application/json' },
     JSON.stringify({
       form_html: makeFormHtml({ fooValue: 'blargyblarg' }),
-    })
+    }),
   );
 
   const newForm = getForm();
@@ -280,7 +280,7 @@ advancedTest('redirect_url redirects browser', (assert, s) => {
     { 'Content-Type': 'application/json' },
     JSON.stringify({
       redirect_url: 'http://boop',
-    })
+    }),
   );
 
   assert.ok(delegate.redirect.calledWith('http://boop'));

@@ -37,7 +37,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const store = createStore(
   appReducer,
-  applyMiddleware(...middlewares)
+  applyMiddleware(...middlewares),
 );
 
 // set default options for all future tooltip instantiations
@@ -57,7 +57,7 @@ ReactDOM.render(
   React.createElement(
     Provider,
     { store },
-    React.createElement(App, { api })
+    React.createElement(App, { api }),
   ),
-  $('[data-embed-jsx-app-here]')[0]
+  $('[data-embed-jsx-app-here]')[0],
 );

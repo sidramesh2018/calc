@@ -1,6 +1,6 @@
 import toJson from 'enzyme-to-json';
 
-import { Highlights } from '../components/highlights.jsx';
+import { Highlights } from '../components/highlights';
 import makeSetup from './testSetup';
 
 const defaultProps = {

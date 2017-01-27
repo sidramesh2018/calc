@@ -17,6 +17,16 @@ import {
   MAX_EXPERIENCE,
 } from '../constants';
 
+function makeOptions(min, max) {
+  const options = [];
+
+  for (let i = min; i <= max; i++) {
+    options.push(<option key={i} value={i}>{i}</option>);
+  }
+
+  return options;
+}
+
 export class Experience extends React.Component {
   constructor(props) {
     super(props);
@@ -61,10 +71,6 @@ export class Experience extends React.Component {
     }
   }
 
-  getSliderVal() {
-    return $(this.sliderEl).val().map(x => parseInt(x, 10));
-  }
-
   onSliderSlide() {
     $('.noUi-horizontal .noUi-handle', this.rootEl).addClass('filter_focus');
 
@@ -93,14 +99,8 @@ export class Experience extends React.Component {
     }
   }
 
-  makeOptions(min, max) {
-    const options = [];
-
-    for (let i = min; i <= max; i++) {
-      options.push(<option key={i} value={i}>{i}</option>);
-    }
-
-    return options;
+  getSliderVal() {
+    return $(this.sliderEl).val().map(x => parseInt(x, 10));
   }
 
   render() {
@@ -117,7 +117,7 @@ export class Experience extends React.Component {
     const minClasses = filterActive(min !== MIN_EXPERIENCE, baseClasses);
     const maxClasses = filterActive(max !== MAX_EXPERIENCE, baseClasses);
 
-    const onChange = type => e => {
+    const onChange = type => (e) => {
       this.props.setExperience(type, parseInt(e.target.value, 10));
     };
 
@@ -130,17 +130,21 @@ export class Experience extends React.Component {
           <div className="slider" ref={(el) => { this.sliderEl = el; }} />
           <div className="experience_range">
             <label htmlFor={minId} className="sr-only">Minimum Years</label>
-            <select id={minId} value={min} name="min_experience"
-                    onChange={onChange('min')}
-                    className={minClasses}>
-              {this.makeOptions(MIN_EXPERIENCE, max)}
+            <select
+              id={minId} value={min} name="min_experience"
+              onChange={onChange('min')}
+              className={minClasses}
+            >
+              {makeOptions(MIN_EXPERIENCE, max)}
             </select>
             {' - '}
             <label htmlFor={maxId} className="sr-only">Maximum Years</label>
-            <select id={maxId} value={max} name="max_experience"
-                    onChange={onChange('max')}
-                    className={maxClasses}>
-              {this.makeOptions(min, MAX_EXPERIENCE)}
+            <select
+              id={maxId} value={max} name="max_experience"
+              onChange={onChange('max')}
+              className={maxClasses}
+            >
+              {makeOptions(min, MAX_EXPERIENCE)}
             </select>
             {' years'}
           </div>
@@ -166,5 +170,5 @@ export default connect(
     min: state.min_experience,
     max: state.max_experience,
   }),
-  { setExperience }
+  { setExperience },
 )(Experience);

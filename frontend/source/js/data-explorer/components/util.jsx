@@ -10,7 +10,7 @@ export function makeOptions(labels) {
   return [
     { key: '', value: '', label: '(all)' },
   ].concat(Object.keys(labels).map(
-    value => ({ value, label: labels[value] })
+    value => ({ value, label: labels[value] }),
   )).map(({ value, label }) => (
     <option key={value} value={value}>{label}</option>
   ));

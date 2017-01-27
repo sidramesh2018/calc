@@ -68,3 +68,8 @@ Tooltip.propTypes = {
   text: React.PropTypes.string.isRequired,
   show: React.PropTypes.bool,
 };
+
+Tooltip.defaultProps = {
+  children: null,
+  show: false,
+};

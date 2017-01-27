@@ -6,7 +6,7 @@ import { format } from 'd3-format';
 export const formatCommas = format(',');
 export const formatPrice = format(',.0f');
 export const formatPriceWithCents = format(',.02f');
-export const formatFriendlyPrice = price => {
+export const formatFriendlyPrice = (price) => {
   if (Math.floor(price) === price) {
     return formatPrice(price);
   }
@@ -17,7 +17,7 @@ const KEY_ENTER = 13;
 const KEY_SPACE = 32;
 
 export function handleEnter(cb) {
-  return event => {
+  return (event) => {
     if (event.keyCode === KEY_ENTER) {
       event.preventDefault();
       cb(event);
@@ -26,7 +26,7 @@ export function handleEnter(cb) {
 }
 
 export function handleEnterOrSpace(cb) {
-  return event => {
+  return (event) => {
     if (event.keyCode === KEY_ENTER || event.keyCode === KEY_SPACE) {
       event.preventDefault();
       cb(event);
@@ -37,14 +37,14 @@ export function handleEnterOrSpace(cb) {
 export function autobind(self, names) {
   const target = self;
 
-  names.forEach(name => {
+  names.forEach((name) => {
     target[name] = target[name].bind(target);
   });
 }
 
 export function templatize(str, undef) {
   const undefFunc = () => undef;
-  return (d) => str.replace(/{(\w+)}/g, (_, key) => d[key] || undefFunc.call(d, key));
+  return d => str.replace(/{(\w+)}/g, (_, key) => d[key] || undefFunc.call(d, key));
 }
 
 export function parsePrice(value, defaultValue = 0) {
@@ -65,7 +65,7 @@ export function parseQuery(qstr) {
   for (let i = 0; i < a.length; i++) {
     const b = a[i].split('=');
     query[decodeURIComponent(b[0])] = decodeURIComponent(
-      (b[1] || '').replace(/\+/g, ' ')
+      (b[1] || '').replace(/\+/g, ' '),
     );
   }
 
@@ -73,7 +73,7 @@ export function parseQuery(qstr) {
 }
 
 export function joinQuery(query) {
-  const parts = Object.keys(query).map(name => {
+  const parts = Object.keys(query).map((name) => {
     const encName = encodeURIComponent(name);
     const encValue = encodeURIComponent(query[name]);
 

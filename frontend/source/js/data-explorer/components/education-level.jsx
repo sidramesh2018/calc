@@ -3,6 +3,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import EducationLevelItem from './education-level-item';
+
 import {
   autobind,
   handleEnterOrSpace,
@@ -46,7 +48,18 @@ export class EducationLevel extends React.Component {
     this.state = {
       expanded: false,
     };
-    autobind(this, ['handleToggleMenu', 'handleDocumentClick']);
+    autobind(this, ['handleToggleMenu', 'handleDocumentClick',
+      'handleCheckboxClick']);
+  }
+
+  componentDidMount() {
+    document.addEventListener('click', this.handleDocumentClick);
+    document.addEventListener('focus', this.handleDocumentClick, true);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleDocumentClick);
+    document.removeEventListener('focus', this.handleDocumentClick, true);
   }
 
   handleDocumentClick(e) {
@@ -74,34 +87,17 @@ export class EducationLevel extends React.Component {
     this.props.toggleEducationLevel(level);
   }
 
-  componentDidMount() {
-    document.addEventListener('click', this.handleDocumentClick);
-    document.addEventListener('focus', this.handleDocumentClick, true);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleDocumentClick);
-    document.removeEventListener('focus', this.handleDocumentClick, true);
-  }
-
   render() {
     const levels = this.props.levels;
     const idPrefix = this.props.idPrefix;
     const ddStyle = this.state.expanded ? { display: 'block' } : null;
-    const inputs = Object.keys(EDU_LABELS).map(value => {
+    const inputs = Object.keys(EDU_LABELS).map((value) => {
       const id = idPrefix + value;
-
       return (
-        <li key={value}>
-          <input
-            id={id}
-            type="checkbox"
-            value={value}
-            checked={levels.indexOf(value) >= 0}
-            onChange={this.handleCheckboxClick.bind(this, value)}
-            name="education" />
-          <label htmlFor={id}>{EDU_LABELS[value]}</label>
-        </li>
+        <EducationLevelItem
+          key={value} id={id} checked={levels.indexOf(value) >= 0}
+          value={value} onCheckboxClick={this.handleCheckboxClick}
+        />
       );
     });
     let linkContent;
@@ -113,7 +109,7 @@ export class EducationLevel extends React.Component {
         </span>
       );
     } else {
-      const selectedLevels = levels.map(value => {
+      const selectedLevels = levels.map((value) => {
         const label = EDU_LABELS[value];
         return <span key={value} title={label}>{label}</span>;
       });
@@ -122,17 +118,23 @@ export class EducationLevel extends React.Component {
       );
     }
 
+    const eduLevelId = `${this.props.idPrefix}education_level`;
     return (
       <div>
-        <label>Education level:</label>
-        <dl className="dropdown"
-            ref={(el) => { this.dropdownEl = el; } }>
+        <label htmlFor={eduLevelId}>Education level:</label>
+        <dl
+          id={eduLevelId}
+          className="dropdown"
+          ref={(el) => { this.dropdownEl = el; }}
+        >
           <dt>
-            <a href="#" onClick={this.handleToggleMenu}
-               role="button"
-               aria-expanded={this.state.expanded.toString()}
-               onKeyDown={handleEnterOrSpace(this.handleToggleMenu)}
-               className={filterActive(levels.length !== 0)}>
+            <a
+              href="" onClick={this.handleToggleMenu}
+              role="button"
+              aria-expanded={this.state.expanded.toString()}
+              onKeyDown={handleEnterOrSpace(this.handleToggleMenu)}
+              className={filterActive(levels.length !== 0)}
+            >
               {linkContent}
             </a>
           </dt>
@@ -165,5 +167,5 @@ EducationLevel.defaultProps = {
 
 export default connect(
   state => ({ levels: state.education }),
-  { toggleEducationLevel }
+  { toggleEducationLevel },
 )(EducationLevel);

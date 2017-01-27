@@ -50,7 +50,7 @@ export default class StoreHistorySynchronizer {
     const state = store.getState();
     const changes = {};
 
-    allFields.forEach(field => {
+    allFields.forEach((field) => {
       const oldVal = serializers[field](state[field]);
       const newDeserializedVal = deserializers[field](qsFields[field]);
       const newVal = serializers[field](newDeserializedVal);
@@ -70,19 +70,19 @@ export default class StoreHistorySynchronizer {
   reflectToHistoryMiddleware(store) {
     const defaultState = store.getState();
 
-    return next => action => {
+    return next => (action) => {
       const oldState = store.getState();
       const result = next(action);
       const newState = store.getState();
       const changed = allFields.some(
-        field => newState[field] !== oldState[field]
+        field => newState[field] !== oldState[field],
       );
 
       if (changed && !this.isReflectingToStore) {
         const nonDefaultFields = getChangedSerializedFields(
           defaultState,
           newState,
-          allFields
+          allFields,
         );
 
         const qs = joinQuery(nonDefaultFields);

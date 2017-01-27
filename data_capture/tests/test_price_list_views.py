@@ -1,7 +1,8 @@
 import json
-import datetime
 import unittest.mock as mock
+from datetime import datetime, date
 
+from freezegun import freeze_time
 from model_mommy import mommy
 from django.test import override_settings
 from django.utils import timezone
@@ -11,6 +12,9 @@ from ..models import SubmittedPriceList
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from .common import FAKE_SCHEDULE, uploaded_csv_file
 from ..schedules import registry
+
+
+frozen_datetime = datetime(2016, 2, 11, 15, 20, 31)
 
 
 class ListViewTests(ProtectedViewTestCase):
@@ -91,8 +95,8 @@ class DetailsViewTests(ProtectedViewTestCase):
             is_small_business=True,
             contractor_site='Both',
             escalation_rate=1.2,
-            contract_start=datetime.date(2016, 2, 11),
-            contract_end=datetime.date(2020, 2, 11),
+            contract_start=date(2016, 2, 11),
+            contract_end=date(2020, 2, 11),
             status=SubmittedPriceList.STATUS_UNREVIEWED)
         self.url += str(self.price_list.pk)
 
@@ -110,6 +114,7 @@ class DetailsViewTests(ProtectedViewTestCase):
         self.assertIn('gleaned_data', ctx)
         self.assertEqual(ctx['price_list'], self.price_list)
 
+    @freeze_time(frozen_datetime)
     def test_post_updates_price_list(self):
         user = self.login()
         res = self.client.post(self.url, self.valid_post_data, follow=True)
@@ -124,15 +129,16 @@ class DetailsViewTests(ProtectedViewTestCase):
         pl = SubmittedPriceList.objects.get(id=self.price_list.pk)
         self.assertEqual(pl.status_changed_by, user)
         self.assertEqual(pl.status, SubmittedPriceList.STATUS_UNREVIEWED)
-        self.assertEqual(pl.status_changed_at.date(),
-                         datetime.datetime.now().date())
+        self.assertEqual(
+            pl.status_changed_at,
+            timezone.make_aware(frozen_datetime))
         self.assertEqual(pl.submitter, user)
         self.assertEqual(pl.vendor_name, self.valid_post_data['vendor_name'])
         self.assertEqual(pl.is_small_business, False)
         self.assertEqual(pl.contractor_site,
                          self.valid_post_data['contractor_site'])
-        self.assertEqual(pl.contract_start, datetime.date(1985, 7, 8))
-        self.assertEqual(pl.contract_end, datetime.date(1989, 4, 14))
+        self.assertEqual(pl.contract_start, date(1985, 7, 8))
+        self.assertEqual(pl.contract_end, date(1989, 4, 14))
         self.assertEqual(pl.escalation_rate, 0)
 
     @mock.patch.object(SubmittedPriceList, 'unreview')

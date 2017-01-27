@@ -17,20 +17,17 @@ describe('<EducationLevel>', () => {
     const { wrapper } = setup();
 
     Object.keys(EDU_LABELS).forEach((key) => {
-      const checkbox = wrapper.find(`input[value="${key}"][type="checkbox"]`);
-      expect(checkbox.exists()).toBeTruthy();
+      const eduLevelItem = wrapper.find(`EducationLevelItem[value="${key}"]`);
+      expect(eduLevelItem.exists()).toBeTruthy();
+
       const id = `zzz_${key}`;
-      expect(checkbox.prop('id')).toBe(id);
+      expect(eduLevelItem.prop('id')).toBe(id);
 
       if (defaultProps.levels.indexOf(key) >= 0) {
-        expect(checkbox.prop('checked')).toBeTruthy();
+        expect(eduLevelItem.prop('checked')).toBeTruthy();
       } else {
-        expect(checkbox.prop('checked')).toBeFalsy();
+        expect(eduLevelItem.prop('checked')).toBeFalsy();
       }
-
-      const label = wrapper.find(`label[htmlFor="${id}"]`);
-      expect(label.exists()).toBeTruthy();
-      expect(label.text()).toBe(EDU_LABELS[key]);
     });
   });
 

@@ -4,6 +4,8 @@ from datetime import datetime
 from model_mommy import mommy
 from django.test import override_settings
 from django.core.urlresolvers import reverse
+from django.utils import timezone
+from freezegun import freeze_time
 
 from .common import (StepTestCase, FAKE_SCHEDULE, uploaded_csv_file,
                      create_csv_content)
@@ -12,6 +14,9 @@ from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..models import SubmittedPriceList
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from ..views.price_list_replace import SESSION_KEY
+
+
+frozen_datetime = datetime(2016, 4, 23, 10, 55, 16)
 
 
 class HandleCancelMixin():
@@ -264,6 +269,7 @@ class ReplaceStep2Tests(ReplaceStepTest, HandleCancelMixin,
             "review them before they are live in CALC."
         )
 
+    @freeze_time(frozen_datetime)
     def test_valid_post_updates_model_and_clears_session(self):
         user = self.login()
         self.client.post(self.url, follow=True)
@@ -272,7 +278,8 @@ class ReplaceStep2Tests(ReplaceStepTest, HandleCancelMixin,
         self.assertEqual(pl.submitter, user)
         self.assertEqual(pl.status, SubmittedPriceList.STATUS_UNREVIEWED)
         self.assertEqual(pl.status_changed_by, user)
-        self.assertEqual(pl.status_changed_at.date(), datetime.now().date())
+        self.assertEqual(pl.status_changed_at,
+                         timezone.make_aware(frozen_datetime))
         self.assertEqual(pl.uploaded_filename, 'bar.csv')
         self.assertEqual(pl.contract_number, 'GS-12-1234')  # unchanged
         self.assertEqual(len(pl.rows.all()), len(self.rows))

@@ -35,7 +35,7 @@ class ExpandableArea extends window.HTMLElement {
       this.expander.setAttribute('role', 'button');
       this.expander.setAttribute('tabindex', '0');
       this.expander.onclick = this.toggle.bind(this);
-      this.expander.onkeyup = e => {
+      this.expander.onkeyup = (e) => {
         if (e.keyCode === KEY_SPACE || e.keyCode === KEY_ENTER) {
           this.toggle();
         }
