@@ -212,7 +212,7 @@ class Region10PriceList(BasePriceList):
 
     def to_error_table(self):
         return render_to_string(self.table_template,
-                                {'rows': self.valid_rows})
+                                {'rows': self.invalid_rows})
 
     @classmethod
     def get_upload_example_context(cls):
