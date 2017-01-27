@@ -312,6 +312,19 @@ class S70Tests(ModelTestCase):
         self.assertIsNotNone(table_html)
         self.assertTrue(isinstance(table_html, str))
 
+    def test_to_table_renders_price_correctly(self):
+        book = FakeWorkbook()
+        book._sheets[0]._cells[1][11] = '$  45.15923 '
+
+        rows = s70.glean_labor_categories_from_book(book)
+        s = s70.Schedule70PriceList(rows)
+
+        table_html = s.to_table()
+        self.assertIsNotNone(table_html)
+        self.assertTrue(isinstance(table_html, str))
+        self.assertNotIn('45.15923', table_html)
+        self.assertIn('$45.16', table_html)
+
     def test_to_error_table_works(self):
         s = s70.Schedule70PriceList.load_from_upload(uploaded_xlsx_file())
         table_html = s.to_error_table()
