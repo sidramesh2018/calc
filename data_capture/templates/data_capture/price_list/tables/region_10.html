@@ -7,6 +7,7 @@
       <th class="number">Minimum Years of Experience (cannot be a range)</th>
       <th>Unit of Issue (e.g. Hour, Task, Sq Ft)</th>
       <th class="number">Price Offered to GSA (including IFF)</th>
+      <th>Analysis</th>
     </tr>
   </thead>
   <tbody>
@@ -41,6 +42,12 @@
           {{ row.price_including_iff.value|floatformat:2 }}
         {% endif %}
       </td>
+      {% load analyze_contract %}
+      {% with analysis=row|analyze_r10_contract_row %}
+      <td {% if analysis.severe %}class="error"{% endif %}>
+        {{ analysis.description }}
+      </td>
+      {% endwith %}
     </tr>
   {% endfor %}
   </tbody>

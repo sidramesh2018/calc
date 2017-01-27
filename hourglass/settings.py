@@ -294,6 +294,7 @@ ENABLE_SEO_INDEXING = 'ENABLE_SEO_INDEXING' in os.environ
 SECURITY_HEADERS_ON_ERROR_ONLY = 'SECURITY_HEADERS_ON_ERROR_ONLY' in os.environ
 
 DATA_CAPTURE_SCHEDULES = (
+    'data_capture.schedules.region_10.Region10PriceList',
     'data_capture.schedules.s70.Schedule70PriceList',
 )  # type: Tuple[str, ...]
 

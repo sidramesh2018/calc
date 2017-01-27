@@ -331,3 +331,30 @@ def analyze_contract_row(row):
                 EDU_LEVELS[row['education'].value()],
                 float(row['price'].value())
             )
+
+
+@register.filter
+def analyze_r10_contract_row(row):
+    # TODO: Currently this only works w/ region 10 schedule rows. Should
+    # figure out how to make it work independent of schedules; that
+    # might mean abandoning this weird template filter approach.
+
+    # TODO: It would be great if we could get an existing DB cursor
+    # from somewhere else and/or cache the vocabulary here; otherwise
+    # each call to this template filter could be fairly expensive.
+
+    if (row['price_including_iff'].errors or
+            row['min_years_experience'].errors or
+            row['education_level'].errors or
+            row['labor_category'].errors):
+        return None
+
+    with connection.cursor() as cursor:
+        return describe(
+                cursor,
+                Vocabulary.from_db(cursor),
+                row['labor_category'].value(),
+                int(row['min_years_experience'].value()),
+                EDU_LEVELS[row['education_level'].value()],
+                float(row['price_including_iff'].value())
+            )
