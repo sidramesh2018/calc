@@ -184,7 +184,6 @@ class EmailTests(ModelTestCase):
         self.assertEqual(message.from_email, 'hi@hi.com')
         self.assertHasOneHtmlAlternative(message)
         self.assertHasReplyTo(message)
-        self.assertEqual(result.context['count_unreviewed'], count)
         self.assertHasLink(
             message,
             'http://test.com/admin/data_capture/unreviewedpricelist/')
