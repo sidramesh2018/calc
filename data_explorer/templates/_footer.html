@@ -16,9 +16,18 @@
 
           <div class="five columns divider_footer">
             <h2>Get in touch</h2>
-            <p>We're always looking for feedback on CALC!<br>
-              To share your thoughts, email us at <a href="mailto:{{ HELP_EMAIL }}">{{ HELP_EMAIL }}</a>.</p>
-            <p class="github"><a href="https://github.com/18F/calc">View our code on GitHub</a></p>
+            <p>
+              We're always looking for feedback on CALC!<br>
+              To share your thoughts, email us at <a href="mailto:{{ HELP_EMAIL }}">{{ HELP_EMAIL }}</a>.
+            </p>
+            <div class="footer_extra">
+              <p class="small">
+                <a href="{% url 'updates' %}">Read about recent updates to CALC</a>
+              </p>
+              <p class="small">
+                <a href="https://github.com/18F/calc">View our code on GitHub</a>
+              </p>
+            </div>
           </div>
 
           <div id="logos" class="three columns">

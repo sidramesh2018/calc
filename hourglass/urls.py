@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^styleguide/', include('styleguide.urls', namespace='styleguide')),
     url(r'^robots.txt$', robots_txt),
-    url(r'^updates/$', view_changelog),
+    url(r'^updates/$', view_changelog, name='updates'),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
     url(r'^account/', include('user_account.urls', namespace='user_account')),
 ]
