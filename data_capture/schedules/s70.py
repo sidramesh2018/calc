@@ -181,7 +181,8 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
 class Schedule70Row(forms.Form):
     sin = forms.CharField(label="SIN(s) proposed")
     labor_category = forms.CharField(
-        label="Service proposed (e.g. job title/task)"
+        label="Service proposed",
+        help_text="e.g. job title/task"
     )
     education_level = forms.CharField(
         label="Minimum education / certification level",
@@ -194,7 +195,8 @@ class Schedule70Row(forms.Form):
         validators=[hourly_rates_only_validator]
     )
     price_including_iff = forms.DecimalField(
-        label="Price offered to GSA (including IFF)",
+        label="Price offered to GSA",
+        help_text="including IFF",
         validators=[min_price_validator]
     )
 
@@ -256,11 +258,13 @@ class Schedule70PriceList(BasePriceList):
 
     def to_table(self):
         return render_to_string(self.table_template,
-                                {'rows': self.valid_rows})
+                                {'rows': self.valid_rows,
+                                 'header': Schedule70Row()})
 
     def to_error_table(self):
         return render_to_string(self.table_template,
-                                {'rows': self.invalid_rows})
+                                {'rows': self.invalid_rows,
+                                 'header': Schedule70Row()})
 
     @classmethod
     def get_upload_example_context(cls):

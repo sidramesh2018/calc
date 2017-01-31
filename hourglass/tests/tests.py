@@ -305,6 +305,12 @@ class StaffLoginRequiredTests(DjangoTestCase):
         self.assertEqual(403, res.status_code)
 
 
+class CachingTests(DjangoTestCase):
+    def test_max_age_defaults_to_zero(self):
+        res = self.client.get('/')
+        self.assertEqual(res['Cache-Control'], 'max-age=0')
+
+
 class ContextProcessorTests(DjangoTestCase):
     @override_settings(GA_TRACKING_ID='boop')
     def test_ga_tracking_id_is_included(self):
@@ -326,3 +332,9 @@ class ContextProcessorTests(DjangoTestCase):
         res = self.client.get('/')
         self.assertIn('ETHNIO_SCREENER_ID', res.context)
         self.assertEquals(res.context['ETHNIO_SCREENER_ID'], 'hoopla')
+
+    @override_settings(HELP_EMAIL='help@calc.com')
+    def test_help_email_is_included(self):
+        res = self.client.get('/')
+        self.assertIn('HELP_EMAIL', res.context)
+        self.assertEquals(res.context['HELP_EMAIL'], 'help@calc.com')

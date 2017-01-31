@@ -64,16 +64,20 @@ To release version 0.0.4 of CALC:
     ```
 
 8.  Merge the PR into `master`. Once Travis CI is finished, the site
-    will be deployed to production.
+    will be deployed to staging.
 
-9.  Tag the release and push it to the official repository:
+9.  Visit the [staging instance][staging] and make sure all is functioning as
+    expected.
+
+10. Tag the release and push it to the official repository, which will trigger
+    Travis CI to deploy the site to [production][production]:
 
     ```
     git tag -a v0.0.4 -F tag-message-v0.0.4.txt
     git push https://github.com/18F/calc.git v0.0.4
     ```
 
-10. Merge `v0.0.4-rc` into `develop` on the official repository:
+11. Merge `v0.0.4-rc` into `develop` on the official repository:
 
     ```
     git checkout develop
@@ -86,3 +90,5 @@ Hooray, you're done!
 
 [unreleased]: https://github.com/18F/calc/blob/develop/CHANGELOG.md#unreleased
 [pr]: https://github.com/18F/calc/compare/master...v0.0.4-rc
+[staging]: https://calc-staging.app.cloud.gov
+[production]: https://calc.gsa.gov

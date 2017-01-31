@@ -123,6 +123,10 @@ class CustomUserAdmin(UserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        UserAdmin.list_display = ('email', 'is_staff')
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if not request.user.is_superuser:
@@ -174,7 +178,7 @@ def approve(modeladmin, request, queryset):
     count = not_approved.count()
     for price_list in not_approved:
         price_list.approve(request.user)
-        email.price_list_approved(price_list)
+        email.price_list_approved(price_list, request.get_host())
 
     messages.add_message(
         request,
@@ -196,7 +200,7 @@ def retire(modeladmin, request, queryset):
     count = approved.count()
     for price_list in approved:
         price_list.retire(request.user)
-        email.price_list_retired(price_list)
+        email.price_list_retired(price_list, request.get_host())
     messages.add_message(
         request,
         messages.INFO,
@@ -217,7 +221,7 @@ def reject(modeladmin, request, queryset):
     count = unreviewed.count()
     for price_list in unreviewed:
         price_list.reject(request.user)
-        email.price_list_rejected(price_list)
+        email.price_list_rejected(price_list, request.get_host())
     messages.add_message(
         request,
         messages.INFO,

@@ -1,4 +1,5 @@
 <table class="price-list-table">
+  <caption class="sr-only">Review submitted price list data</caption>
   <thead>
     <tr>
       <th>SIN</th>
@@ -10,32 +11,22 @@
   </thead>
   <tbody>
   {% for row in rows %}
+    {% with row_count=forloop.counter %}
     <tr>
-      <td class="{% if row.sin.errors %}error{% endif %}">
-        {{ row.sin.value }}
-        {{ row.sin.errors }}
+    {% for col in row %}
+      <td class="{% if col.errors %}error{% endif %} {% if col.name == 'min_years_experience' or col.name == 'price' %}number{% endif %}">
+        <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>
+          {% if col.name == 'price' %}
+            ${{ col.value|floatformat:2 }}
+          {% else %}
+            {{ col.value }}
+          {% endif %}
+        </span>
+        {% if col.errors %}<div class="error__tooltip" role="tooltip" id="error__row-{{ row_count}}__col-{{ forloop.counter }}">{{ col.errors }}</div>{% endif %}
       </td>
-      <td class="{% if row.service.errors %}error{% endif %}">
-        {{ row.service.value }}
-        {{ row.service.errors }}
-      </td>
-      <td class="{% if row.education.errors %}error{% endif %}">
-        {{ row.education.value }}
-        {{ row.education.errors }}
-      </td>
-      <td class="number {% if row.years_experience.errors %}error{% endif %}">
-        {{ row.years_experience.value }}
-        {{ row.years_experience.errors }}
-      </td>
-      <td class="number {% if row.price_including_iff.errors %}error{% else %}currency{% endif %}">
-        {% if row.price.errors %}
-          {{ row.price.value }}
-          {{ row.price.errors }}
-        {% else %}
-          {{ row.price.value|floatformat:2 }}
-        {% endif %}
-      </td>
+    {% endfor %}
     </tr>
+    {% endwith %}
   {% endfor %}
   </tbody>
 </table>

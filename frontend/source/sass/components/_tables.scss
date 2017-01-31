@@ -2,12 +2,17 @@
 table {
   width: 100%;
   margin-top: 2rem;
+  font-size: $small-font-size;
   caption {
     color: $color-gray;
     text-align: left;
     font-weight: bold;
     padding-bottom: 1.5em;
     vertical-align: bottom;
+  }
+  p {
+    font-size: $medium-font-size;
+    margin: 0;
   }
   tbody {
     tr {
@@ -19,7 +24,15 @@ table {
       }
     }
     th {
-      font-weight: normal;
+      /* for ths within tbodys */
+      font-weight: $font-weight-normal;
+    }
+  }
+  th {
+    font-weight: $font-weight-bold;
+    span {
+      display: block;
+      font-weight: $font-weight-normal;
     }
   }
 
@@ -85,7 +98,7 @@ th,
 th:first-child,
 th:last-child {
   position: relative;
-  padding: .25em .5em;
+  padding: $space-2x $space-1x;
   vertical-align: top;
 }
 
@@ -95,25 +108,97 @@ td.sorted {
 
 /* used on price list upload error page */
 td.error {
-  border-left: 2px solid $color-secondary-dark;
-  background-color: $color-error-bg;
   color: $color-secondary-dark;
   font-weight: $font-weight-bold;
-  padding-left: 2.5rem;
+  span {
+    line-height: 1.2;
+    padding-right: 18px; /* to give the info badge space */
+    position: relative;
+    background-image: url("../../images/info-badge-filled.svg");
+    background-size: 13px 13px;
+    background-repeat: no-repeat;
+    background-position: top right;
+    border-bottom: 1px dotted $color-secondary-dark;
+    /* this is the tooltip's bottom arrow. It needs to be part of the span so
+     * it is aware of the span's width. This is the only way I know of to position
+     * the arrow over the info-badge (a background image on the span) when the
+     * span is of variable width. */
+    &:after {
+      display: none;
+      position: absolute;
+      top: -$space-2x;
+      right: -3px; /* positions the tooltip arrow over the info badge */
+      border-top: 12px solid $color-secondary-lightest;
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent;
+      content: " ";
+    }
 
+    &:hover {
+      cursor: pointer;
+      border-bottom-color: transparent;
+      background-image: url("../../images/info-badge-outline.svg");
+      border-bottom-color: transparent;
+      /* tooltip arrow */
+      &:after {
+        display: block;
+      }
+      + [role=tooltip] {
+        overflow: auto;
+        height: auto;
+        width: auto;
+        margin: 0;
+        padding: $space-2x;
+        right: 0;
+        bottom: 95%;
+        left: 0;
+        background-color: $color-secondary-lightest;
+        border-radius: 4px;
+      }
+    }
+  }
+  &:focus {
+    span {
+      border-bottom-color: transparent;
+      background-image: url("../../images/info-badge-outline.svg");
+      border-bottom-color: transparent;
+      /* tooltip arrow */
+      &:after {
+        display: block;
+      }
+      + [role=tooltip] {
+        overflow: auto;
+        height: auto;
+        width: auto;
+        margin: 0;
+        padding: $space-2x;
+        right: 0;
+        bottom: 95%;
+        left: 0;
+        background-color: $color-secondary-lightest;
+        border-radius: 4px;
+      }
+    }
+  }
+  [role=tooltip] {
+    /* make tooltip readable to screen readers */
+    position: absolute;
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+
+
+  }
   .errorlist {
-    color: $color-base;
+    color: $color-secondary-dark;
     font-weight: $font-weight-normal;
     font-size: $small-font-size;
     border: none;
-    background-image: url('../../images/uswds/alerts/error.png');
-    background-image: url('../../images/uswds/alerts/error.svg');
-    background-size: 2.5rem;
-    background-repeat: no-repeat;
-    background-position: top 3px left;
-    padding-left: 2.5rem;
-    margin-left: -2.5rem;
     max-width: 220px;
+    margin: 0;
   }
 }
 
@@ -150,11 +235,6 @@ td.number {
   text-align: right;
 }
 
-.price-list-table {
-  th, td {
-    vertical-align: bottom;
-  }
-}
 
 /* Not used because the corresponding JS conflicts with the tooltips. Only here for future reference. */
 th.collapsible {

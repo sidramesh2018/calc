@@ -73,7 +73,7 @@ def get_contracts_queryset(request_params, wage_field):
     contracts = contracts.exclude(**{wage_field + '__isnull': True})
 
     if query:
-        qs = query.split(',')
+        qs = [s for s in query.split(',') if s.strip()]
 
         if query_type not in ('match_phrase', 'match_exact'):
             contracts = contracts.multi_phrase_search(qs)

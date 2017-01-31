@@ -60,6 +60,7 @@ vars().update(email_config)
 
 DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 SERVER_EMAIL = os.environ['SERVER_EMAIL']
+HELP_EMAIL = os.environ.get('HELP_EMAIL', DEFAULT_FROM_EMAIL)
 
 API_HOST = os.environ.get('API_HOST', '/api/')
 
@@ -79,6 +80,7 @@ TEMPLATES = [{
             'hourglass.context_processors.show_debug_ui',
             'hourglass.context_processors.google_analytics_tracking_id',
             'hourglass.context_processors.ethnio_screener_id',
+            'hourglass.context_processors.help_email',
             'frontend.context_processors.is_safe_mode_enabled',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",
@@ -142,6 +144,7 @@ else:
     WHITENOISE_MIDDLEWARE = 'whitenoise.middleware.WhiteNoiseMiddleware'
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'hourglass.middleware.ComplianceMiddleware',
     WHITENOISE_MIDDLEWARE,
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -157,6 +160,7 @@ MIDDLEWARE_CLASSES = (
     # when the ProfilingPanel is enabled
     # http://django-debug-toolbar.readthedocs.io/en/stable/panels.html#profiling
     'hourglass.middleware.DebugOnlyDebugToolbarMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -309,6 +313,15 @@ UAA_CLIENT_SECRET = os.environ.get('UAA_CLIENT_SECRET')
 LOGIN_URL = 'uaa_client:login'
 
 LOGIN_REDIRECT_URL = '/'
+
+# We *always* want to send a Cache-Control header downstream, especially
+# in the event where we've got a reverse proxy with aggressive caching
+# defaults like Amazon CloudFront in front of us.
+#
+# For now we're just going to tell any downstream caches to never cache
+# any dynamic content we give them, to ensure that stale content never
+# gets served to end-users.
+CACHE_MIDDLEWARE_SECONDS = 0
 
 if DEBUG:
     INSTALLED_APPS += ('fake_uaa_provider',)

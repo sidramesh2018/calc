@@ -33,4 +33,8 @@ MANIFEST="manifests/manifest-$DEPLOY_ENV.yml"
 echo "Deploying to $DEPLOY_ENV space."
 
 cf login -a $API -u $DEPLOY_USER -p $DEPLOY_PASS -o $ORG -s $SPACE
+
+# scale down the app instances to avoid overrunning our memory allotment
+cf scale -i 1 $APP_NAME
+
 cf zero-downtime-push $APP_NAME -f $MANIFEST
