@@ -14,3 +14,4 @@ beautifulsoup4==4.5.1
 semantic_version==2.6.0
 freezegun==0.3.8
 pexpect==4.2.1
+ipdb==0.10.2

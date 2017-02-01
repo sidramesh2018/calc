@@ -184,6 +184,15 @@ can just run `python manage.py` directly from outside the container--the
 `manage.py` script has been modified to run itself in a Docker container
 if it detects that Django isn't installed.
 
+### Debugging Python
+CALC's `requirements-dev.txt` file will install [`ipdb`](https://pypi.python.org/pypi/ipdb). 
+
+To drop into an interactive debugging section, add `import ipdb; ipdb.set_trace()` on the line above the point you want to start your debugging session. Then run Docker using the `service-ports` option: `docker-compose run --service-ports app`. Your interactive debugging session should start in your terminal when you reload the page.
+
+Here's a [handy list](https://www.safaribooksonline.com/blog/2014/11/18/intro-python-debugger/) of `ipdb` commands.
+
+If you prefer a different debugger, you can add it to your local `requirements-dev.txt`. Build the Docker containers again and then run the `--service-ports` command listed above.
+
 ### Updating the containers
 
 All the project's dependencies, such as those mentioned in `requirements.txt`,
