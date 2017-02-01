@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.1.0][] - 2017-01-31
+
 ### Added
 
 - A link to "Read about recent updates to CALC" now appears in the
@@ -122,7 +124,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.0.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/18F/calc/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/18F/calc/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/18F/calc/compare/v1.1.2...v1.2.0
 [1.1.2]: https://github.com/18F/calc/compare/v1.1.1...v1.1.2
