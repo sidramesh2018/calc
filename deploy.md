@@ -243,7 +243,7 @@ what host your API backend is listening on. For example:
 
 | Frontend Host   | Backend Host   |
 | --------------- | -------------- |
-| api.data.gov    | calc.gsa.gov   |
+| api.data.gov    | calc-prod.app.cloud.gov |
 
 You will also want to configure your API backend on
 api.data.gov with one **Matching URL Prefixes** entry.
