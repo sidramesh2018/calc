@@ -1,0 +1,6 @@
+# This is a temporary file that's being included separately just
+# so it's easier to quickly change the version of cg-django-uaa
+# being used. Before final merge, its contents will be moved to
+# requirements.txt.
+
+git+https://github.com/18F/cg-django-uaa.git@6eaa9de0e89e41b3a03ee980745e57878540d336

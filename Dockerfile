@@ -36,8 +36,18 @@ RUN pip install -r /calc/requirements-dev.txt
 # irrelevant for a local development environment, where the /calc
 # directory will be superseded by a folder share.
 
-COPY . /calc/
+# TODO: Uncomment these lines before final merge; for now though, we
+# don't care about deploying to cloud environments so they just slow
+# us down.
 
-RUN gulp build
+# COPY . /calc/
+
+# RUN gulp build
 
 ENTRYPOINT ["python", "/calc/docker_django_management.py"]
+
+# TODO: Remove the following lines before final merge.
+
+COPY TEMP_requirements.txt /calc/
+
+RUN pip install -r /calc/TEMP_requirements.txt

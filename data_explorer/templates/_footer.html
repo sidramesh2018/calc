@@ -10,7 +10,7 @@
               <a href="{% url 'uaa_client:login' %}" class="button button-footer">Log in</a>
             {% elif user.is_authenticated %}
               <p>You are logged in as {{ user.email }}</p>
-              <p><a href="{% url 'user_account:index' %}">View account</a> | <a href="{% url 'uaa_client:logout' %}">Log out</a></p>
+              <p><a href="{% url 'user_account:index' %}">View account</a> | <a href="{% url 'logout' %}">Log out</a></p>
             {% endif %}
           </div>
 

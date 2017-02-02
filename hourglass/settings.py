@@ -326,16 +326,12 @@ LOGIN_REDIRECT_URL = '/'
 # gets served to end-users.
 CACHE_MIDDLEWARE_SECONDS = 0
 
-if DEBUG:
-    INSTALLED_APPS += ('fake_uaa_provider',)
-
 if not UAA_CLIENT_SECRET:
     if DEBUG:
         # We'll be using the Fake UAA Provider.
         UAA_CLIENT_SECRET = 'fake-uaa-provider-client-secret'
-        UAA_AUTH_URL = UAA_TOKEN_URL = 'fake:'
-    else:
-        raise Exception('UAA_CLIENT_SECRET must be defined in production.')
+        if not is_running_tests():
+            UAA_AUTH_URL = UAA_TOKEN_URL = 'fake:'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 

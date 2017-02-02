@@ -20,6 +20,7 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
     url(r'^$', 'data_explorer.views.index', name='index'),
     url(r'^about/$', 'data_explorer.views.about', name='about'),
+    url(r'^logout/$', 'data_explorer.views.logout', name='logout'),
     url(r'^safe-mode/', include('frontend.safe_mode', namespace='safe_mode')),
     url(r'^healthcheck/', healthcheck),
     url(r'^api/', include('api.urls')),
@@ -40,8 +41,6 @@ if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns += [
-        url(r'^', include('fake_uaa_provider.urls',
-                          namespace='fake_uaa_provider')),
         url(r'^__debug__/', include(debug_toolbar.urls)),
         tests_url,
     ]
