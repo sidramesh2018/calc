@@ -3,4 +3,4 @@
 # being used. Before final merge, its contents will be moved to
 # requirements.txt.
 
-git+https://github.com/18F/cg-django-uaa.git@6eaa9de0e89e41b3a03ee980745e57878540d336
+git+https://github.com/18F/cg-django-uaa.git@90c09e17c1333ba579113089a20ff671ae891b50
