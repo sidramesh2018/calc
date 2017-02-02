@@ -185,13 +185,21 @@ can just run `python manage.py` directly from outside the container--the
 if it detects that Django isn't installed.
 
 ### Debugging Python
-CALC's `requirements-dev.txt` file will install [`ipdb`](https://pypi.python.org/pypi/ipdb). 
 
-To drop into an interactive debugging section, add `import ipdb; ipdb.set_trace()` on the line above the point you want to start your debugging session. Then run Docker using the `service-ports` option: `docker-compose run --service-ports app`. Your interactive debugging session should start in your terminal when you reload the page.
+CALC's `requirements-dev.txt` file will install [`ipdb`][]. 
 
-Here's a [handy list](https://www.safaribooksonline.com/blog/2014/11/18/intro-python-debugger/) of `ipdb` commands.
+To drop into an interactive debugging section, add `import ipdb; ipdb.set_trace()` on the
+line above the point you want to start your debugging session. Then run Docker using the
+`service-ports` option: `docker-compose run --service-ports app`. Your interactive debugging
+session should start in your terminal when you reload the page.
 
-If you prefer a different debugger, you can add it to your local `requirements-dev.txt`. Build the Docker containers again and then run the `--service-ports` command listed above.
+Here's a [handy list of `ipdb` commands][ipdb_intro].
+
+If you prefer a different debugger, you can add it to your local `requirements-dev.txt`.
+Build the Docker containers again and then run the `--service-ports` command listed above.
+
+[`ipdb`]: https://pypi.python.org/pypi/ipdb
+[ipdb_intro]: https://www.safaribooksonline.com/blog/2014/11/18/intro-python-debugger/
 
 ### Updating the containers
 
