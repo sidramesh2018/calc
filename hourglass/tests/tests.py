@@ -327,12 +327,6 @@ class ContextProcessorTests(DjangoTestCase):
         self.assertIn('GA_TRACKING_ID', res.context)
         self.assertEqual(res.context['GA_TRACKING_ID'], '')
 
-    @override_settings(ETHNIO_SCREENER_ID='hoopla')
-    def test_ethnio_screener_id_is_included(self):
-        res = self.client.get('/')
-        self.assertIn('ETHNIO_SCREENER_ID', res.context)
-        self.assertEquals(res.context['ETHNIO_SCREENER_ID'], 'hoopla')
-
     @override_settings(HELP_EMAIL='help@calc.com')
     def test_help_email_is_included(self):
         res = self.client.get('/')

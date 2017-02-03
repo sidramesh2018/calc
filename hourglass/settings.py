@@ -66,8 +66,6 @@ API_HOST = os.environ.get('API_HOST', '/api/')
 
 GA_TRACKING_ID = os.environ.get('GA_TRACKING_ID', '')
 
-ETHNIO_SCREENER_ID = os.environ.get('ETHNIO_SCREENER_ID')
-
 NON_PROD_INSTANCE_NAME = os.environ.get('NON_PROD_INSTANCE_NAME')
 
 TEMPLATES = [{
@@ -81,7 +79,6 @@ TEMPLATES = [{
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
             'hourglass.context_processors.google_analytics_tracking_id',
-            'hourglass.context_processors.ethnio_screener_id',
             'hourglass.context_processors.help_email',
             'hourglass.context_processors.non_prod_instance_name',
             'frontend.context_processors.is_safe_mode_enabled',
