@@ -22,11 +22,11 @@ class R10AnalysisExport:
         '% Diff from Average',
         '+ 1 Standard Deviation',
         '% Diff from +1 Standard Deviation',
-        'Business Size',
         'SIN',
         'Site',
-        'Exp',
-        'Edu',
+        'Exp Comparable Search Criteria',
+        'Edu Comparable Search Criteria',
+        'Outside 1 Standard Deviation',
     ]
 
     def __init__(self, valid_rows):
@@ -44,8 +44,10 @@ class R10AnalysisExport:
 
         proposed_price = float(valid_row['price_including_iff'].value())
 
-        # TODO: analyzed_row['severe'] and 'stddevs', and 'url'
+        # TODO: analyzed_row['severe'] and 'url'
         # are not included in the output because they are not in the template
+
+        outside_one_std_dev = 'Yes' if analyzed_row['stddevs'] > 1 else 'No'
 
         return [
             num + 1,
@@ -61,11 +63,11 @@ class R10AnalysisExport:
             pct_diff(proposed_price, analyzed_row['avg']),
             proposed_price + analyzed_row['stddev'],
             pct_diff(proposed_price, analyzed_row['stddev']),
-            '',  # TODO: Business Size - not used in analysis,
             valid_row['sin'].value(),
             '',  # TODO: Work site - not used in analysis
-            valid_row['min_years_experience'].value(),  # duplicated value
-            valid_row['education_level'].value(),  # duplicated value
+            '',  # TODO: ? Exp Comparable Search Criteria
+            '',  # TODO: ? Edu Comparable Search Criteria
+            outside_one_std_dev,
         ]
 
     def to_csv(self, filename="analysis.csv"):
