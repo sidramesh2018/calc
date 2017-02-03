@@ -44,7 +44,7 @@ table {
     thead {
       th {
         position: relative;
-        vertical-align: bottom;
+        vertical-align: top;
         color: $color-gray;
         border-bottom: 1px solid;
         &.sortable {
@@ -64,6 +64,9 @@ table {
             font-weight: normal;
             font-size: .9em;
           }
+        }
+        &.number {
+          text-align: right;
         }
         &.sorted {
           color: $color-black;
