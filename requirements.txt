@@ -24,3 +24,4 @@ rq-scheduler==0.7.0
 mypy-lang==0.4.6
 pytz==2016.10
 Markdown==2.6.7
+xlsxwriter==0.9.6

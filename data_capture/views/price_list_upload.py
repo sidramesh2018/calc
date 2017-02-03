@@ -2,7 +2,7 @@ import json
 
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseNotFound
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
@@ -13,8 +13,9 @@ from django.utils.html import escape
 
 from .. import forms
 from ..models import SubmittedPriceList
+from ..analysis import R10AnalysisExport
 from ..decorators import handle_cancel
-from ..schedules import registry
+from ..schedules import registry, region_10
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from .common import (add_generic_form_error, build_url,
                      get_nested_item, get_deserialized_gleaned_data)
@@ -341,3 +342,36 @@ def step_4(request, step):
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 def step_5(request, step):
     return step.render(request)
+
+
+@login_required
+@permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
+@require_http_methods(["GET"])
+def export_r10_analysis(request):
+    gleaned_data = get_deserialized_gleaned_data(request)
+
+    if gleaned_data is None:
+        return redirect('data_capture:step_3')
+
+    if request.method == 'GET' and not gleaned_data.valid_rows:
+        return redirect('data_capture:step_3')
+
+    format = request.GET.get('f', 'csv')
+
+    step_1_form = get_step_form_from_session(1, request)
+
+    contract_number = step_1_form.cleaned_data['contract_number']
+
+    R10_CLASS = '{}.Region10PriceList'.format(region_10.__name__)
+    if step_1_form.cleaned_data['schedule'] != R10_CLASS:
+        # return an error (for now) if not an R10 price list
+        return HttpResponseNotFound()
+
+    analysis_export = R10AnalysisExport(gleaned_data.valid_rows)
+
+    file_name_prefix = contract_number + '_analysis'
+
+    if format == 'xlsx':
+        return analysis_export.to_xlsx(filename=file_name_prefix + '.xlsx')
+    else:
+        return analysis_export.to_csv(filename=file_name_prefix + '.csv')

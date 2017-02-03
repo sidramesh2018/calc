@@ -51,3 +51,10 @@
   {% endfor %}
   </tbody>
 </table>
+
+<a href="{% url 'data_capture:export_r10_analysis' %}?f=csv" class="button" download>
+  ⬇ Download Analysis (CSV)
+</a>
+<a href="{% url 'data_capture:export_r10_analysis' %}?f=xlsx" class="button" download>
+  ⬇ Download Analysis (Excel)
+</a>
