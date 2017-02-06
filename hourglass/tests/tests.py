@@ -22,6 +22,7 @@ from ..settings_utils import (load_cups_from_vcap_services,
 def staff_only_view(request):
     return HttpResponse('ok')
 
+
 urlpatterns += [
     url(r'^staff_only_view/$', staff_only_view, name='staff_only_view'),
 ]

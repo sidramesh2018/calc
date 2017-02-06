@@ -3,14 +3,14 @@
 
 # Testing and development dependencies
 bandit>=1.0,<2.0
-flake8==3.0.4
-pytest==2.9.2
-pytest-cov==2.3.1
-pytest-django==2.9.1
-selenium==2.53.6
+flake8==3.2.1
+pytest==3.0.6
+pytest-cov==2.4.0
+pytest-django==3.1.2
+selenium==3.0.2
 model-mommy==1.2.6
 robobrowser==0.5.3
-beautifulsoup4==4.5.1
+beautifulsoup4==4.5.3
 semantic_version==2.6.0
 freezegun==0.3.8
 pexpect==4.2.1
