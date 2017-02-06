@@ -40,8 +40,11 @@ class ProductionTests(ProductionTestCase):
             '/static/frontend/images/flag-usa.9db9ec00aaa0.png'
         )
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.headers['Cache-Control'],
-                         'public, max-age=315360000')
+
+        cc = [s.strip() for s in res.headers['Cache-Control'].split(',')]
+
+        self.assertIn('max-age=315360000', cc)
+        self.assertIn('public', cc)
 
     def test_ajaxform_submission_works(self):
         '''
