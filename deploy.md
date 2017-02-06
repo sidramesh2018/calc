@@ -264,6 +264,20 @@ user manual, you will likely need to configure `WHITELISTED_IPS` on
 your CALC instance to ensure that clients can't bypass rate limiting by
 directly contacting your CALC instance.
 
+## Testing production deployments
+
+Because reverse proxies like CloudFront can be misconfigured to prevent
+CALC from working properly, we've built a test suite that can be used to
+remotely test a production deployment of CALC. To use it, run:
+
+```
+py.test production_tests
+```
+
+By default, the suite tests against calc.gsa.gov. If you'd like to
+test it against a different URL, you can do so with the `--origin`
+command-line option.
+
 [UPS]: https://docs.cloudfoundry.org/devguide/services/user-provided.html
 [`README.md`]: https://github.com/18F/calc#readme
 [API Umbrella]: https://apiumbrella.io/

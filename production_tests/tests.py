@@ -46,8 +46,9 @@ class ProductionTests(ProductionTestCase):
     def test_ajaxform_submission_works(self):
         '''
         This basically ensures that the 'X-Requested-With' header is
-        being passed through, so that our progressively-enhanced Ajax forms
-        can detect whether they're being accessed via Ajax or not.
+        being passed through any reverse proxies, so that our
+        progressively-enhanced Ajax forms can detect whether they're
+        being accessed via Ajax or not.
         '''
 
         self.browser.open('/styleguide/ajaxform')
