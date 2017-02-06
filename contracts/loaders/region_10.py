@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 
 from contracts.models import Contract
 
-FEDERAL_MIN_CONTRACT_RATE = 10.10
+FEDERAL_MIN_CONTRACT_RATE = 10.20
 
 logger = logging.getLogger(__name__)
 

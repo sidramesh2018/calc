@@ -80,6 +80,5 @@ def command(to):
         html_message=render_to_string(
             'data_capture/email/approval_reminder.html',
             {
-                'count_unreviewed': 20,
                 'unreviewed_url': 'https://example.com/unreviewed_price_lists',
             }))

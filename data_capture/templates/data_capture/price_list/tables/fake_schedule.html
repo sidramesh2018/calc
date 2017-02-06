@@ -14,18 +14,26 @@
   {% for row in rows %}
     {% with row_count=forloop.counter %}
     <tr>
-      {% for col in row %}
-      <td class="{% if col.errors %}error{% endif %} {% if col.name == 'min_years_experience' or col.name == 'price_including_iff' %}number{% endif %}">
-        <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>{% if col.name == 'price_including_iff' %}${% endif %}{{ col.value }}</span>
+    {% for col in row %}
+      <td class="{% if col.errors %}error{% endif %} {% if col.name == 'min_years_experience' or col.name == 'price' %}number{% endif %}">
+        <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>
+          {% if col.name == 'price' %}
+            ${{ col.value|floatformat:2 }}
+          {% else %}
+            {{ col.value }}
+          {% endif %}
+        </span>
         {% if col.errors %}<div class="error__tooltip" role="tooltip" id="error__row-{{ row_count}}__col-{{ forloop.counter }}">{{ col.errors }}</div>{% endif %}
       </td>
-      {% endfor %}
-      {% load analyze_contract %}
-      {% with analysis=row|analyze_contract_row %}
-      <td {% if analysis.severe %}class="error"{% endif %}>
-        {{ analysis.description }}
-      </td>
-      {% endwith %}
+    {% endfor %}
+
+    {% load analyze_contract %}
+    {% with analysis=row|analyze_contract_row %}
+    <td {% if analysis.severe %}class="error"{% endif %}>
+      {{ analysis.description }}
+    </td>
+    {% endwith %}
+
     </tr>
     {% endwith %}
   {% endfor %}

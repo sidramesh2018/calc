@@ -32,6 +32,7 @@ COPY requirements-dev.txt /calc/
 RUN pip install -r /calc/requirements-dev.txt
 RUN pip install nltk
 RUN python -m nltk.downloader averaged_perceptron_tagger -d /usr/local/share/nltk_data
+RUN pip install xlsxwriter==0.9.6
 
 # The following lines set up our container for being run in a
 # cloud environment, where folder sharing is disabled. They're

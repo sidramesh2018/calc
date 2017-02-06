@@ -114,6 +114,19 @@ def bump_version(contents, new_version, date=None):
     return contents
 
 
+def replace_heading_leaders(contents, char='/'):
+    '''
+    Replace leading Markdown heading characters ('#') with a different
+    character so they're not interpreted as comments in git
+    log files (e.g. tag messages).
+    '''
+
+    def hashrepl(matchobj):
+        return char * len(matchobj.group(0))
+
+    return re.sub(r'^(\#+)', hashrepl, contents, 0, re.MULTILINE)
+
+
 def get_unreleased_notes(contents):
     '''
     Return the content of the "Unreleased" section of the given changelog.

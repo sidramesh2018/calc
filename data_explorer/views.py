@@ -1,3 +1,4 @@
+import django.contrib.auth
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from django.utils.crypto import get_random_string
@@ -11,6 +12,11 @@ def about(request):
 
 def index(request, template_vars=None):
     return render(request, 'index.html', template_vars or {})
+
+
+def logout(request):
+    django.contrib.auth.logout(request)
+    return render(request, 'logged_out.html')
 
 
 # TODO: Re-enable this eventually. Right now we can't use it because

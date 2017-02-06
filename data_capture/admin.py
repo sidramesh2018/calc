@@ -264,6 +264,7 @@ class BaseSubmittedPriceListAdmin(UndeletableModelAdmin):
         'contractor_site',
         'contract_start',
         'contract_end',
+        'escalation_rate',
         'submitter',
         'tz_created_at',
         'tz_updated_at',

@@ -1,10 +1,13 @@
 {% load humanize %}
 {% load data_capture %}
 <p>
-  This message is in regards to Region 10 CALC data upload <b>#{{ upload_source.id }}</b>, uploaded by <b>{{ upload_source.submitter.email }}</b> on <b>{{ upload_source.created_at|tz_timestamp }}</b>.
+  Hi there,
 </p>
 <p>
-  The upload was <b>successful</b>!
+  We're emailing regarding the Region 10 CALC data upload <b>#{{ upload_source.id }}</b>, uploaded by <b>{{ upload_source.submitter.email }}</b> on <b>{{ upload_source.created_at|tz_timestamp }}</b>.
+</p>
+<p>
+  The upload was <b>successful</b> and the associated data are now live in CALC!
 </p>
 <p>
   {{ num_contracts|intcomma }} rows of rate information have been loaded and previous Region 10 data has been removed from the CALC database.
@@ -14,3 +17,7 @@
   {{ num_bad_rows|intcomma }} were not parsed and could not be loaded.
 </p>
 {% endif %}
+<p>
+  Best,<br/>
+  The CALC Team
+</p>
