@@ -40,7 +40,8 @@ class ProductionTestCase(TestCase):
     of CALC.
     '''
 
-    ORIGIN = 'https://calc.gsa.gov'
+    # This will be set by test runner code.
+    ORIGIN = None
 
     def setUp(self):
         self.client = ProductionHttpClient(self.ORIGIN)
