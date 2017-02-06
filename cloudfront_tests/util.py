@@ -14,6 +14,8 @@ class CfHttpClient:
     def get(self, url, *args, **kwargs):
         if url.startswith('/'):
             url = self.origin + url
+        if 'allow_redirects' not in kwargs:
+            kwargs['allow_redirects'] = False
         return requests.get(url, *args, **kwargs)
 
 

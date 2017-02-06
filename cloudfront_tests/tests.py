@@ -1,4 +1,5 @@
 import re
+from urllib.parse import urlparse, parse_qs
 
 from .util import CfTestCase
 
@@ -12,6 +13,18 @@ class CloudFrontTests(CfTestCase):
 
         res = self.client.get('/blarg')
         self.assertIn('X-Amz-Cf-Id', res.headers)
+
+    def test_oauth2_redirect_uri_has_correct_domain(self):
+        '''
+        Mitigation against https://github.com/18F/calc/pull/1187.
+        '''
+
+        res = self.client.get('/auth/login')
+        self.assertEqual(res.status_code, 302)
+        qs = parse_qs(urlparse(res.headers['Location']).query)
+        o = urlparse(qs['redirect_uri'][0])
+        origin = o.scheme + '://' + o.netloc
+        self.assertEqual(origin, self.ORIGIN)
 
     def test_index_has_short_expiry(self):
         '''
