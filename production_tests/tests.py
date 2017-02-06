@@ -1,10 +1,10 @@
 import re
 from urllib.parse import urlparse, parse_qs
 
-from .util import CfTestCase
+from .util import ProductionTestCase
 
 
-class CloudFrontTests(CfTestCase):
+class ProductionTests(ProductionTestCase):
     def test_oauth2_redirect_uri_has_correct_domain(self):
         '''
         Mitigation against https://github.com/18F/calc/pull/1187.

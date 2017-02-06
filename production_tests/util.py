@@ -3,7 +3,7 @@ import requests
 from robobrowser import RoboBrowser
 
 
-class CfHttpClient:
+class ProductionHttpClient:
     '''
     A basic HTTP client that defaults to the given origin.
     '''
@@ -19,7 +19,7 @@ class CfHttpClient:
         return requests.get(url, *args, **kwargs)
 
 
-class CfBrowser(RoboBrowser):
+class ProductionBrowser(RoboBrowser):
     '''
     A RoboBrowser subclass that defaults to the given origin.
     '''
@@ -34,7 +34,7 @@ class CfBrowser(RoboBrowser):
         return super().open(url)
 
 
-class CfTestCase(TestCase):
+class ProductionTestCase(TestCase):
     '''
     A base test case whose utilities default to a production deployment
     of CALC.
@@ -43,6 +43,6 @@ class CfTestCase(TestCase):
     ORIGIN = 'https://calc.gsa.gov'
 
     def setUp(self):
-        self.client = CfHttpClient(self.ORIGIN)
-        self.browser = CfBrowser(self.ORIGIN, history=True,
-                                 parser='html.parser')
+        self.client = ProductionHttpClient(self.ORIGIN)
+        self.browser = ProductionBrowser(self.ORIGIN, history=True,
+                                         parser='html.parser')
