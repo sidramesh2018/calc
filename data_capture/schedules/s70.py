@@ -185,10 +185,11 @@ class Schedule70Row(forms.Form):
         help_text="e.g. job title/task"
     )
     education_level = forms.CharField(
-        label="Minimum education / certification level",
+        label="Min. education",
+        help_text="or certification level",
     )
     min_years_experience = forms.IntegerField(
-        label="Minimum years of experience"
+        label="Min. years of experience"
     )
     unit_of_issue = forms.CharField(
         label="Unit of issue",
