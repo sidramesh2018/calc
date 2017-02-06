@@ -31,13 +31,4 @@ COPY requirements-dev.txt /calc/
 
 RUN pip install -r /calc/requirements-dev.txt
 
-# The following lines set up our container for being run in a
-# cloud environment, where folder sharing is disabled. They're
-# irrelevant for a local development environment, where the /calc
-# directory will be superseded by a folder share.
-
-COPY . /calc/
-
-RUN gulp build
-
 ENTRYPOINT ["python", "/calc/docker_django_management.py"]
