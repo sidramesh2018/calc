@@ -5,15 +5,6 @@ from .util import CfTestCase
 
 
 class CloudFrontTests(CfTestCase):
-    def test_app_is_fronted_by_cloudfront(self):
-        '''
-        This just makes sure our app is actually being fronted by
-        AWS CloudFront.
-        '''
-
-        res = self.client.get('/blarg')
-        self.assertIn('X-Amz-Cf-Id', res.headers)
-
     def test_oauth2_redirect_uri_has_correct_domain(self):
         '''
         Mitigation against https://github.com/18F/calc/pull/1187.
