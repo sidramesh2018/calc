@@ -73,6 +73,13 @@ class UtilTests(TestCase):
             ''
             )
 
+    def test_replace_heading_leaders_works(self):
+        txt = '### h #\n\n## b\n\nbop #'
+        self.assertEqual(
+            changelog.replace_heading_leaders(txt),
+            '/// h #\n\n// b\n\nbop #'
+        )
+
     def test_strip_preamble_includes_unreleased_when_nonempty(self):
         self.assertEqual(
             changelog.strip_preamble('BLARG\n' + self.BEFORE_BUMP)[:10],
