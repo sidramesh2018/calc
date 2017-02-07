@@ -26,10 +26,10 @@ satisfies:
   narrative:
     - text: >
         Within our application (see cloud.gov for lower-level controls),
-        Contract Officer user accounts are created and managed by a data
-        administrator. Authentication is provided by cloud.gov's User
+        Contract Officer user accounts are created and managed by Data
+        Administrators. Authentication is provided by cloud.gov's User
         Account and Authentication (UAA) server, while authorization is
-        provided by the Django application; if a data administrator
+        provided by the Django application; if a Data Administrator
         hasn't explicitly created a user account for an individual and
         associated it with the same government-issued email address that they
         log in to cloud.gov with, the user is denied access to all parts
@@ -40,24 +40,24 @@ satisfies:
     - text: >
         Information about approved price list data is meant to be accessed
         by the general public. Submitted price lists that have not yet
-        been reviewed, or which have been rejected, are visible only to
-        data administrators and the Contract Officers who uploaded them.
+        been reviewed, or which have been rejected or retired, are visible only
+        to authenticated Data Administrators and Contract Officers.
 - standard_key: NIST-800-53
   control_key: AC-6   # Least Privilege
   narrative:
     - text: >
         At the application level (see cloud.gov for lower-level controls),
-        only data administrators have the ability to modify approved price
+        only Data Administrators have the ability to modify approved price
         list data. Any data modifications made by Contract Officers must be
-        reviewed by a data administrator before they can be made available to
+        reviewed by a Data Administrator before they are made available to
         the general public.
 - standard_key: NIST-800-53
   control_key: AU-2   # Audit Events
   narrative:
     - text: >
         Cloud.gov logs requests, failures, warnings, etc. emitted by the
-        application. We also utilize New Relic, which registers Python-level
-        exceptions and periods of down-time.
+        application. We also utilize New Relic, which registers Python and
+        JavaScript exceptions and periods of down-time.
   covered_by:
     - verification_key: new-relic
 - standard_key: NIST-800-53
@@ -71,7 +71,20 @@ satisfies:
 - standard_key: NIST-800-53
   control_key: CA-8   # Penetration Testing
   narrative:
-    - text: No controls on top of cloud.gov's
+    - text: >
+        The system undergoes a penetration test at least once a year per
+        18F's Security Assesment and Authorization Policy.
+  covered_by:
+    - verification_key: CA-Policy
+- standard_key: NIST-800-53
+  control_key: CA-8 (1)   # Penetration Testing | Independent team
+  narrative:
+    - text: >
+        All penetration test are conducted by an independent team under the
+        management of the GSA Information Security team or via an accredited
+        FedRAMP third-party assessment organization (3PAO).
+  covered_by:
+    - verification_key: CA-Policy
 - standard_key: NIST-800-53
   control_key: CM-2   # Baseline Configuration
   narrative:
@@ -88,7 +101,8 @@ satisfies:
         resolved or referencing further details in an issue tracker) in either
         their commit history or as part of the GitHub Pull Request. Proposed
         changes which fail automated tests are generally not merged. Only the
-        tested, "master" branch code is deployed, on an ad-hoc basis.
+        tested, "master" branch code is deployed to production when it is
+        specifically tagged with a release-format git tag.
   references:
     - verification_key: github
     - verification_key: travis
@@ -100,7 +114,7 @@ satisfies:
         defined in a handful of locations. Configuration for cloud.gov
         environments is located in the manifests directory and
         hourglass/settings.py. Configurations which are
-        specific to one cloud.gov environment (i.e. either the staging or
+        specific to one cloud.gov environment (i.e. either the dev, staging, or
         production environment) are located in the appropriate manifest-*.yml
         file or stored in and provided by a cloud.gov "user provided
         service".
@@ -113,7 +127,7 @@ satisfies:
         In addition to the controls provided by cloud.gov, the application
         tracks components through versioned library dependencies
         (requirements.txt), as well as a listing of relevant cloud.gov services
-        (mentioned in the README and deploy.md)
+        (mentioned in the README.md and deploy.md)
 - standard_key: NIST-800-53
   control_key: IA-2   # Identification and Authentication (Organizational
                       # Users)
@@ -145,20 +159,23 @@ satisfies:
   narrative:
     - text: >
         In addition to cloud.gov controls, all data in the system comes from
-        Contract Officers and must be approved by a data administrator to
+        Contract Officers and must be approved by a Data Administrator to
         be visible to the general public.
 - standard_key: NIST-800-53
   control_key: RA-5   # Vulnerability Scanning
   narrative:
     - text: >
         In addition to cloud.gov controls, the application layer is scanned with
-        both static and dynamic tooling. Before being merged into "master", all
+        both static and dynamic tooling. Before a pull request is merged, all
         custom code is automatically analyzed by "flake8" (a linting tool to
         catch syntactic errors), "bandit" (a security-focused static analysis
         tool), and a handful of custom, security-centric unit
-        tests. Code which does not meet these standards is generally not
+        tests. These analyses and tests are run as part the TravisCI builds for
+        each pull request. Code which does not pass tests is generally not
         merged. We also employ Gemnasium to track our dependencies and
-        Code Climate to warn of potentially concerning style.
+        Code Climate to warn of potentially concerning style. Badges reflecting
+        the status of the "develop" branch are posted at the top of the code
+        repository's README.md file.
 
         For static analysis, we've addressed all critical issues raised by
         evaluating the application with OWASP ZAP.
@@ -168,24 +185,12 @@ satisfies:
     - verification_key: gemnasium
     - verification_key: code-climate
     - verification_key: owasp-zap
+    - verification_key: travis
 - standard_key: NIST-800-53
   control_key: SA-11 (1)   # Developer Security Testing and Evaluation
                            # Static Code Analysis
   narrative:
-    - text: >
-        In addition to cloud.gov controls, the application layer is scanned with
-        both static and dynamic tooling. Before being merged into "master", all
-        custom code is automatically analyzed by "flake8" (a linting tool to
-        catch syntactic errors), "bandit" (a security-focused static analysis
-        tool), and a handful of custom, security-centric unit
-        tests. Code which does not meet these standards is generally not
-        merged. We also employ Gemnasium to track our dependencies and
-        Code Climate to warn of potentially concerning style.
-  references:
-    - verification_key: flake8
-    - verification_key: bandit
-    - verification_key: gemnasium
-    - verification_key: code-climate
+    - text: See RA-5. Otherwise, there are no additional controls.
 - standard_key: NIST-800-53
   control_key: SA-22 (1)   # Unsupported System Components
                            # Alternative Sources for Continued Support
@@ -225,8 +230,9 @@ satisfies:
         Travis CI. Library dependencies are verified up to date via Gemnasium.
         Production errors are captured via New Relic and emailed to
         relevant parties. Further, code is first deployed (automatically) to
-        our staging environment, where we may discover errors before appearing
-        in production.
+        our dev environment after each PR is merged, and to our staging
+        environment before any production deployments, so we may discover
+        errors before appearing in production.
   references:
     - verification_key: travis
     - verification_key: new-relic
@@ -238,7 +244,17 @@ satisfies:
 - standard_key: NIST-800-53
   control_key: SI-10  # Information Input Validation
   narrative:
-    - text: See cloud.gov controls.
+    - text: >
+      Django's querysets create escaped SQL queries to prevent any SQL
+      injection-type attacks from user-entered data. We also use the defusedxml
+      library to prevent a variety of XML-based attacks from user-uploaded
+      Excel files. CALC's front page JavaScript application is written with the
+      React library and JSX, which escapes embedded values before rendering to
+      prevent XSS-type attacks.
+  references:
+    - verification_key: django
+    - verification_key: defusedxml
+    - verification_key: react-jsx
 verifications:
 - key: travis
   name: Repository's Travis CI
@@ -252,3 +268,14 @@ verifications:
   name: Project's Gemnasium Results
   path: https://gemnasium.com/github.com/18F/calc
   type: URL
+- key: django
+  name: Django
+  path: https://docs.djangoproject.com/en/1.8/
+  type: URL
+- key: defusedxml
+  name: defusedxml
+  path: https://github.com/tiran/defusedxml
+  type: URL
+- key: react-jsx
+  name: React JSX
+  path: https://facebook.github.io/react/docs/introducing-jsx.html
