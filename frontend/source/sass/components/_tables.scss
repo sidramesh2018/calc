@@ -102,7 +102,7 @@ table {
   th:first-child,
   th:last-child {
     position: relative;
-    padding: $space-2x $space-1x;
+    padding: $space-2x $space-1x $space-1x;
   }
   td {
     vertical-align: top;
