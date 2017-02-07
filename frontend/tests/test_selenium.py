@@ -785,6 +785,7 @@ def patch_broken_pipe_error():
     BaseServer.handle_error = my_handle_error
     handlers.BaseHandler.log_exception = my_log_exception
 
+
 patch_broken_pipe_error()
 
 

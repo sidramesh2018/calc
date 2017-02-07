@@ -336,9 +336,9 @@ string), the boolean is true; otherwise, it's false.
   for the associated Google Analytics account.
   It will default to the empty string if not found in the environment.
 
-* `ETHNIO_SCREENER_ID` is the ID for the https://ethn.io screener script to
-  include on CALC pages. If it is not present, then the ethn.io script will not
-  be included.
+* `NON_PROD_INSTANCE_NAME` is an optional instance name that when specified
+  will cause a banner to be shown at the top of every page to let users know
+  that they are viewing a non-production instance of CALC.
 
 * `NEW_RELIC_LICENSE_KEY` is the private New Relic license key for this project.
   If it is present, then the WSGI app will be wrapped with the  New Relic agent.

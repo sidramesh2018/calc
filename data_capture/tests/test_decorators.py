@@ -26,6 +26,7 @@ def key_prefix_view(request):
 def index(request):
     return HttpResponse('index')
 
+
 urlpatterns += [
     url(r'^test_view/$', ok_view),
     url(r'^another_view/$', index, name='another_view'),

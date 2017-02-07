@@ -6,7 +6,7 @@ from ..schedules import registry
 from ..schedules.registry import smart_load_from_upload
 from ..schedules.base import BasePriceList
 from ..schedules.fake_schedule import FakeSchedulePriceList
-from .common import FAKE_SCHEDULE, uploaded_csv_file
+from .common import FAKE_SCHEDULE, uploaded_csv_file, create_csv_content
 
 
 class RegistryTestCase(TestCase):
@@ -46,6 +46,18 @@ class FakeScheduleOnlyTests(RegistryTestCase):
         table_html = p.to_table()
         self.assertIsNotNone(table_html)
         self.assertTrue(isinstance(table_html, str))
+
+    def test_to_table_renders_price_correctly(self):
+        p = registry.load_from_upload(
+            FAKE_SCHEDULE,
+            uploaded_csv_file(content=create_csv_content(rows=[
+                ['132-40', 'Project Manager', 'High School', '7', '25.8989']
+            ])))
+        table_html = p.to_table()
+        self.assertIsNotNone(table_html)
+        self.assertTrue(isinstance(table_html, str))
+        self.assertNotIn('25.8989', table_html)
+        self.assertIn('$25.90', table_html)
 
     def test_to_error_table_works(self):
         p = registry.load_from_upload(FAKE_SCHEDULE, uploaded_csv_file())

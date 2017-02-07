@@ -198,7 +198,6 @@ def approval_reminder(count_unreviewed, site_base_url='https://calc.gsa.gov'):
         'admin:data_capture_unreviewedpricelist_changelist')
 
     ctx = {
-        'count_unreviewed': count_unreviewed,
         'unreviewed_url': unreviewed_url,
     }
 

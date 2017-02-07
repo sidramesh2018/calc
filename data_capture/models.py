@@ -58,6 +58,7 @@ class SubmittedPriceList(models.Model):
         blank=True,
     )
     escalation_rate = models.FloatField(
+        verbose_name='escalation rate (%)',
         validators=[MinValueValidator(MIN_ESCALATION_RATE),
                     MaxValueValidator(MAX_ESCALATION_RATE)]
     )
