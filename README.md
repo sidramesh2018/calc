@@ -212,21 +212,40 @@ host. For example, to do this on Amazon EC2, you might use:
 docker-machine create aws16 --driver=amazonec2 --amazonec2-instance-type=t2.large
 ```
 
+Docker Machine's cloud drivers intentionally don't support
+folder sharing, which means that you can't just edit a file on
+your local system and see the changes instantly on the remote host.
+Instead, your app's source code is part of the container image. To
+facilitate this, you'll need to create a new Dockerfile that augments
+your existing one:
+
+```
+cat Dockerfile Dockerfile.cloud-extras > Dockerfile.cloud
+```
+
 Also, unlike local development, cloud deploys don't support an
 `.env` file. So you'll want to create a custom
 `docker-compose.override.yml` file that defines the app's
-environment variables:
+environment variables, and also points to the alternate Dockerfile:
 
 ```yaml
-app:
-  environment:
-    - DEBUG=yup
-rq_worker:
-  environment:
-    - DEBUG=yup
-rq_scheduler:
-  environment:
-    - DEBUG=yup
+version: '2'
+services:
+  app:
+    build:
+      dockerfile: Dockerfile.cloud
+    environment:
+      - DEBUG=yup
+  rq_worker:
+    build:
+      dockerfile: Dockerfile.cloud
+    environment:
+      - DEBUG=yup
+  rq_scheduler:
+    build:
+      dockerfile: Dockerfile.cloud
+    environment:
+      - DEBUG=yup
 ```
 
 You'll also want to tell Docker Compose what port to listen on,
@@ -237,12 +256,9 @@ At this point, you can use Docker's command-line tools, such as
 `docker-compose up`, and your actions will take effect on the remote
 host instead of your local machine.
 
-**Note:** Docker Machine's cloud drivers intentionally don't support
-folder sharing, which means that you can't just edit a file on
-your local system and see the changes instantly on the remote host.
-Instead, your app's source code is part of the container image,
-which means that every time you make a source code change, you will
-need to re-run `docker-compose build`.
+**Note:** As mentioned earlier, your app's source code is part of
+the container image. This means that every time you make a source code 
+change, you will need to re-run `docker-compose build`.
 
 ## Environment Variables
 
@@ -336,9 +352,9 @@ string), the boolean is true; otherwise, it's false.
   for the associated Google Analytics account.
   It will default to the empty string if not found in the environment.
 
-* `ETHNIO_SCREENER_ID` is the ID for the https://ethn.io screener script to
-  include on CALC pages. If it is not present, then the ethn.io script will not
-  be included.
+* `NON_PROD_INSTANCE_NAME` is an optional instance name that when specified
+  will cause a banner to be shown at the top of every page to let users know
+  that they are viewing a non-production instance of CALC.
 
 * `NEW_RELIC_LICENSE_KEY` is the private New Relic license key for this project.
   If it is present, then the WSGI app will be wrapped with the  New Relic agent.

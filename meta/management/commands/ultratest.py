@@ -97,6 +97,7 @@ def get_coverage() -> float:
 
     return 0.0
 
+
 TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
 
 TestType = namedtuple('TestType', ['name', 'cmd'])

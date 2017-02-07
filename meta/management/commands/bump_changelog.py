@@ -23,7 +23,9 @@ def command():
     markdown = changelog.get_contents()
     new_version = Version(__version__)
     old_version = Version(changelog.get_latest_release(markdown))
-    release_notes = changelog.get_unreleased_notes(markdown).strip()
+    base_release_notes = changelog.get_unreleased_notes(markdown).strip()
+    release_notes = 'Release ' + str(new_version) + '\n\n' + \
+        changelog.replace_heading_leaders(base_release_notes)
     release_notes_filename = 'tag-message-v%s.txt' % new_version
 
     if new_version <= old_version:
@@ -32,7 +34,7 @@ def command():
             'version you\'d like to bump CHANGELOG.md to.'
             )
 
-    if release_notes == '':
+    if base_release_notes == '':
         raise CommandError(
             'The new release has no release notes! Please add some '
             'under the "Unreleased" section of CHANGELOG.md.'
