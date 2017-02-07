@@ -7,6 +7,23 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Added
+
+- A test suite for testing the production instance of CALC has been created
+  (#1199).
+
+### Changed
+
+- The Schedule 70 price list parsing logic has been amended to address a bug
+  where it attempted to parse rows outside of the price list table (#1318).
+
+- Ethnio (used for recruiting users for research sessions) has been removed.
+
+- The cloud.gov UAA authentication code has been extracted to a separate
+  package called [`cg-django-uaa`](https://github.com/18F/cg-django-uaa).
+
+- Most Python dependencies have been updated.
+
 ## [2.1.0][] - 2017-01-31
 
 ### Added
