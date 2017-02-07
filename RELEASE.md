@@ -63,8 +63,9 @@ To release version 0.0.4 of CALC:
     git push
     ```
 
-8.  Merge the PR into `master`. Once Travis CI is finished, the site
-    will be deployed to staging.
+8.  Merge the PR into `master` via the **Create a merge commit** merge
+    strategy (i.e., do *not* squash or rebase). Once Travis CI is finished,
+    the site will be deployed to staging.
 
 9.  Visit the [staging instance][staging] and make sure all is functioning as
     expected.
