@@ -19,6 +19,7 @@ before_install:
 install:
 - pip install -r requirements-dev.txt
 - pip install -r requirements-price-list-analysis.txt
+- python -m nltk.downloader averaged_perceptron_tagger -d /usr/local/share/nltk_data
 - npm install -g gulp-cli
 - npm install
 script:
