@@ -80,7 +80,7 @@ satisfies:
   control_key: CA-8 (1)   # Penetration Testing | Independent team
   narrative:
     - text: >
-        All penetration test are conducted by an independent team under the
+        All penetration tests are conducted by an independent team under the
         management of the GSA Information Security team or via an accredited
         FedRAMP third-party assessment organization (3PAO).
   covered_by:
