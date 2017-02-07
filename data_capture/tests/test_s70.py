@@ -1,5 +1,6 @@
 import json
 
+from copy import deepcopy
 from decimal import Decimal
 from unittest.mock import MagicMock, patch
 from django.test import TestCase, override_settings
@@ -90,7 +91,8 @@ class GleanLaborCategoriesTests(TestCase):
             )
 
     def test_stops_parsing_when_stop_text_encountered(self):
-        book = FakeWorkbook()
+        book = FakeWorkbook(sheets=[
+            FakeSheet(s70.DEFAULT_SHEET_NAME, s70.EXAMPLE_SHEET_ROWS)])
         book._sheets[0]._cells.append(deepcopy(s70.EXAMPLE_SHEET_ROWS[1]))
         book._sheets[0]._cells.append(deepcopy(s70.EXAMPLE_SHEET_ROWS[1]))
         rows = s70.glean_labor_categories_from_book(book)
@@ -102,7 +104,8 @@ class GleanLaborCategoriesTests(TestCase):
         self.assertEqual(len(rows), 1)
 
     def stops_parsing_when_sin_and_price_are_empty(self):
-        book = FakeWorkbook()
+        book = FakeWorkbook(sheets=[
+            FakeSheet(s70.DEFAULT_SHEET_NAME, s70.EXAMPLE_SHEET_ROWS)])
         book._sheets[0]._cells.append(deepcopy(s70.EXAMPLE_SHEET_ROWS[1]))
         book._sheets[0]._cells.append(deepcopy(s70.EXAMPLE_SHEET_ROWS[1]))
         rows = s70.glean_labor_categories_from_book(book)
@@ -227,7 +230,8 @@ class S70Tests(ModelTestCase):
         self.assertTrue(isinstance(table_html, str))
 
     def test_to_table_renders_price_correctly(self):
-        book = FakeWorkbook()
+        book = FakeWorkbook(sheets=[
+            FakeSheet(s70.DEFAULT_SHEET_NAME, s70.EXAMPLE_SHEET_ROWS)])
         book._sheets[0]._cells[1][11] = '$  45.15923 '
 
         rows = s70.glean_labor_categories_from_book(book)
