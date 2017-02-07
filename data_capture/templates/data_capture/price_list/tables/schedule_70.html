@@ -16,7 +16,7 @@
     <tr>
     {% for col in row %}
       <td class="{% if col.errors %}error{% endif %} {% if col.name == 'price_including_iff' %}number{% endif %}" {% if col.errors %}tabindex="0"{% endif %}>
-        <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>{% if col.name == 'price_including_iff' %}${% endif %}{{ col.value }}</span>
+        <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>
           {% if col.name == 'price_including_iff' %}
             ${{ col.value|floatformat:2 }}
           {% else %}
