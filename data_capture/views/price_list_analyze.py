@@ -1,14 +1,20 @@
-from frontend.steps import Steps
+import datetime
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect
+from django.db import transaction, connection
 
 from .common import (add_generic_form_error,
                      get_nested_item, get_deserialized_gleaned_data)
 from .. import forms
+from ..models import SubmittedPriceList
 from ..decorators import handle_cancel
 from frontend import ajaxform
+from frontend.steps import Steps
 from ..schedules import registry
-
+from ..templatetags.analyze_contract import (
+    Vocabulary,
+    describe,
+)
 
 steps = Steps(
     template_format='data_capture/analyze_price_list/step_{}.html',
@@ -105,9 +111,41 @@ def analyze_step_3(request, step):
     if gleaned_data is None:
         return redirect('data_capture:analyze_step_2')
 
-    # TODO: Finish this!
+    valid_rows = []
+    if gleaned_data.valid_rows:
+        cursor = connection.cursor()
+        vocab = Vocabulary.from_db(cursor)
+        with transaction.atomic():
+            sid = transaction.savepoint()
+            price_list = SubmittedPriceList(
+                is_small_business=False,
+                submitter_id=0,
+                escalation_rate=0,
+                status_changed_at=datetime.datetime.now(),
+                status_changed_by_id=0,
+            )
+            price_list.save()
+            gleaned_data.add_to_price_list(price_list)
+            for row in price_list.rows.all():
+                analysis = describe(
+                    cursor,
+                    vocab,
+                    row.labor_category,
+                    row.min_years_experience,
+                    row.education_level,
+                    float(row.base_year_rate),
+                )
+                valid_rows.append({
+                    'analysis': analysis,
+                    'sin': row.sin,
+                    'labor_category': row.labor_category,
+                    'education_level': row.education_level,
+                    'min_years_experience': row.min_years_experience,
+                    'price': float(row.base_year_rate),
+                })
+            transaction.savepoint_rollback(sid)
 
-    from django.http import HttpResponse
-
-    print(gleaned_data)
-    return HttpResponse('thanks budy')
+    return step.render(request, {
+        'gleaned_data': gleaned_data,
+        'valid_rows': valid_rows,
+    })

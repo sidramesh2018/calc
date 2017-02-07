@@ -1,0 +1,72 @@
+{% extends 'data_capture/step.html' %}
+
+{% block body_class %}secondary-step card--wide card--no-header{% endblock %}
+
+{% block title %}Analyze price list / {{ step.description|capfirst }}{% endblock %}
+
+{% block step_heading %}
+  <h2>Price list analysis</h2>
+{% endblock %}
+{% block step_body %}
+  {% if gleaned_data.invalid_rows %}
+    {% with rows=gleaned_data.invalid_rows %}
+      {% with total=rows|length %}
+
+        <div class="message message-error" role="alert">
+          {% if not gleaned_data.valid_rows %}
+            <h3>No valid rows found!</h3>
+            <p>
+              Your uploaded price list contains no valid rows. Please fix the errors
+              shown below in the original file and <a href="{% url 'data_capture:analyze_step_2' %}">try uploading it again</a>.
+            </p>
+          {% else %}
+            <h3>We found errors in {{ total }} row{{ total|pluralize }} of your data</h3>
+            <p>
+              The row{{ total|pluralize }} below appear{{ total|pluralize:"s," }} to be
+              invalid and <strong>was not analyzed</strong>.
+              If you'd like, you may correct {{ total|pluralize:"this row,these rows" }}
+              in your original spreadsheet and <a href="{% url 'data_capture:analyze_step_2' %}">try uploading it again</a>.
+            </p>
+          {% endif %}
+        </div>
+      {% endwith %}
+      {{ gleaned_data.to_error_table|safe }}
+    {% endwith %}
+  {% endif %}
+
+  {% if gleaned_data.valid_rows %}
+    <p>Below is the analysis of your price list.</p>
+
+    <table class="price-list-table">
+        <thead>
+          <tr>
+            <th>SIN</th>
+            <th>Service proposed</th>
+            <th>Minimum education</th>
+            <th class="number">Minimum years of experience</th>
+            <th class="number">Price</th>
+            <th>Analysis</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in valid_rows %}
+          <tr>
+            <td>{{ row.sin }}</td>
+            <td>{{ row.labor_category }}</td>
+            <td>{{ row.education_level }}</td>
+            <td class="number">{{ row.min_years_experience }}</td>
+            <td class="number">${{ row.price|floatformat:2 }}</td>
+            <td {% if row.analysis.severe %}class="error"{% endif %}>
+              {{ row.analysis.description }}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+  {% endif %}
+
+  <div class="form-button-row clearfix">
+    <a href="{% url 'index' %}" class="button button-outline">CALC home</a>
+    <a href="{% url 'data_capture:analyze_step_1' %}" class="button button-primary">Analyze another price list</a>
+  </div>
+{% endblock %}
