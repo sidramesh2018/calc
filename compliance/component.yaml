@@ -25,15 +25,18 @@ satisfies:
   control_key: AC-2   # Account Management
   narrative:
     - text: >
-        Within our application (see cloud.gov for lower-level controls),
-        Contract Officer user accounts are created and managed by Data
-        Administrators. Authentication is provided by cloud.gov's User
+        Within the CALC application (see cloud.gov for lower-level controls),
+        authentication is provided by cloud.gov's User
         Account and Authentication (UAA) server, while authorization is
-        provided by the Django application; if a Data Administrator
-        hasn't explicitly created a user account for an individual and
-        associated it with the same government-issued email address that they
-        log in to cloud.gov with, the user is denied access to all parts
-        of the site requiring login.
+        provided by the Django application. Only users who successfully login
+        through the UAA and who have an associated (via @gsa.gov email address)
+        account in the CALC back end will be able to access privileged areas of
+        the application.
+        Data Administrator users can access the applications' administrative
+        back end, where they can administer, including creating new, user
+        accounts for both Data Administrators and Contract Officers.
+        Contract Officer users are not able to access to access the
+        administrative back end or perform any actions on user accounts.
 - standard_key: NIST-800-53
   control_key: AC-3   # Access Enforcement
   narrative:
@@ -47,17 +50,21 @@ satisfies:
   narrative:
     - text: >
         At the application level (see cloud.gov for lower-level controls),
-        only Data Administrators have the ability to modify approved price
-        list data. Any data modifications made by Contract Officers must be
-        reviewed by a Data Administrator before they are made available to
-        the general public.
+        only Data Administrators have the ability to modify approved (public)
+        price list data directly.
+        Contract Officers may submit modifications to already
+        submitted price list data, which will mark the price list as requiring
+        review. A Data Administrator must then, through the CALC administrative
+        back end, review and approve those changes before they are made
+        available to the general public.
 - standard_key: NIST-800-53
   control_key: AU-2   # Audit Events
   narrative:
     - text: >
         Cloud.gov logs requests, failures, warnings, etc. emitted by the
-        application. We also utilize New Relic, which registers Python and
-        JavaScript exceptions and periods of down-time.
+        application, which are available at https://logs.fr.cloud.gov.
+        CALC also uses New Relic, which logs Python and
+        JavaScript errors and periods of down-time.
   covered_by:
     - verification_key: new-relic
 - standard_key: NIST-800-53
@@ -88,20 +95,24 @@ satisfies:
 - standard_key: NIST-800-53
   control_key: CM-2   # Baseline Configuration
   narrative:
-    - text: No controls on top of cloud.gov's
+    - text: >
+        To receive the latest baseline configuration from cloud.gov, the
+        application is deployed regularly and upon notification of baseline
+        security fixes. See cloud.gov controls for additional information.
 - standard_key: NIST-800-53
   control_key: CM-3   # Configuration Change Control
   narrative:
     - text: >
-        In addition to cloud.gov controls, all code is reviewed on GitHub before
-        being merged into the "master" branch. These changes are tested
-        automatically via Travis CI (which runs unit, integration tests, and
-        static analysis) as well as manual testing for visual regressions.
+        In addition to cloud.gov controls, all code is reviewed by CALC
+        software developers on GitHub before being merged into the "master"
+        branch. These changes are tested automatically via Travis CI (which
+        runs unit, integration tests, and static analysis) as well as manually
+        for visual regressions.
         Proposed changes have appropriate justification (describing problems
         resolved or referencing further details in an issue tracker) in either
         their commit history or as part of the GitHub Pull Request. Proposed
         changes which fail automated tests are generally not merged. Only the
-        tested, "master" branch code is deployed to production when it is
+        tested "master" branch code is deployed to production when it is
         specifically tagged with a release-format git tag.
   references:
     - verification_key: github
@@ -112,30 +123,22 @@ satisfies:
     - text: >
         As described in README.md and deploy.md, configurable settings are
         defined in a handful of locations. Configuration for cloud.gov
-        environments is located in the manifests directory and
-        hourglass/settings.py. Configurations which are
-        specific to one cloud.gov environment (i.e. either the dev, staging, or
-        production environment) are located in the appropriate manifest-*.yml
-        file or stored in and provided by a cloud.gov "user provided
-        service".
+        environments is located in the manifests directory of the code
+        repository. Each environment (dev, staging, production) has a separate
+        manifest file, which  is named "manifest-<environment label>.yml".
+        Application-level settings are specified in the code repository at
+        hourglass/settings.py.
   references:
     - verification_key: ups
 - standard_key: NIST-800-53
   control_key: CM-8   # Information System Component Inventory
   narrative:
-    - text: >
-        In addition to the controls provided by cloud.gov, the application
-        tracks components through versioned library dependencies
-        (requirements.txt), as well as a listing of relevant cloud.gov services
-        (mentioned in the README.md and deploy.md)
+    - text: See cloud.gov controls.
 - standard_key: NIST-800-53
   control_key: IA-2   # Identification and Authentication (Organizational
                       # Users)
   narrative:
-    - text: >
-        Cloud.gov controls cover the majority, here. Authentication is
-        provided by cloud.gov's User Account and Authentication (UAA) server
-        using an OAuth2-based OpenID Connect handshake.
+    - text: See cloud.gov controls.
 - standard_key: NIST-800-53
   control_key: IA-2 (1)   # Identification and Authentication (Organizational
                           # Users)
@@ -147,7 +150,7 @@ satisfies:
                           # Users)
                           # Network Access to Non-Privileged Accounts
   narrative:
-    - text: See cloud.gov controls.
+    - text: N/A
 - standard_key: NIST-800-53
   control_key: IA-2 (12)  # Identification and Authentication (Organizational
                           # Users)
