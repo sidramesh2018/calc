@@ -33,3 +33,4 @@ tag-message-*.txt
 release-*-instructions.txt
 release-*-instructions.html
 ~*.xls[x]
+Dockerfile.cloud

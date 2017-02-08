@@ -35,13 +35,4 @@ COPY requirements-price-list-analysis.txt /calc/
 RUN pip install -r requirements-price-list-analysis.txt
 RUN python -m nltk.downloader averaged_perceptron_tagger -d /usr/local/share/nltk_data
 
-# The following lines set up our container for being run in a
-# cloud environment, where folder sharing is disabled. They're
-# irrelevant for a local development environment, where the /calc
-# directory will be superseded by a folder share.
-
-COPY . /calc/
-
-RUN gulp build
-
 ENTRYPOINT ["python", "/calc/docker_django_management.py"]
