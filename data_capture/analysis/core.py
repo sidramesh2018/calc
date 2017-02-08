@@ -13,7 +13,7 @@ from django.db import connection, transaction
 from django.db.models import Avg, StdDev
 from django.template.loader import render_to_string
 
-from data_capture.models import SubmittedPriceList
+from ..models import SubmittedPriceList
 from contracts.models import Contract
 from contracts.models import EDUCATION_CHOICES as _EDUCATION_CHOICES
 

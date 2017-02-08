@@ -8,8 +8,8 @@ from ..decorators import handle_cancel
 from frontend import ajaxform
 from frontend.steps import Steps
 from ..schedules import registry
-from ..templatetags.analyze_contract import analyze_gleaned_data
-from ..analysis import AnalysisExport
+from ..analysis.core import analyze_gleaned_data
+from ..analysis.export import AnalysisExport
 
 steps = Steps(
     template_format='data_capture/analyze_price_list/step_{}.html',
