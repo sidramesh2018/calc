@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from ..analysis.core import (
+from ..analysis.vocabulary import (
     Vocabulary,
     get_best_permutations,
 )
