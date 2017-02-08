@@ -308,31 +308,6 @@ def describe(cursor, vocab, labor_category, min_years_experience,
     return result
 
 
-@register.filter
-def analyze_contract_row(row):
-    # TODO: Currently this only works w/ fake schedule rows. Should
-    # figure out how to make it work independent of schedules; that
-    # might mean abandoning this weird template filter approach.
-
-    # TODO: It would be great if we could get an existing DB cursor
-    # from somewhere else and/or cache the vocabulary here; otherwise
-    # each call to this template filter could be fairly expensive.
-
-    if (row['price'].errors or row['years_experience'].errors or
-            row['education'].errors or row['service'].errors):
-        return None
-
-    with connection.cursor() as cursor:
-        return describe(
-                cursor,
-                Vocabulary.from_db(cursor),
-                row['service'].value(),
-                int(row['years_experience'].value()),
-                EDU_LEVELS[row['education'].value()],
-                float(row['price'].value())
-            )
-
-
 @register.assignment_tag(takes_context=True)
 def analyze_r10_row(context, row):
     # TODO: Currently this only works w/ region 10 schedule rows. Should
