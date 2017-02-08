@@ -9,6 +9,7 @@ from frontend import ajaxform
 from frontend.steps import Steps
 from ..schedules import registry
 from ..templatetags.analyze_contract import analyze_gleaned_data
+from ..analysis import AnalysisExport
 
 steps = Steps(
     template_format='data_capture/analyze_price_list/step_{}.html',
@@ -108,9 +109,33 @@ def analyze_step_3(request, step):
     if gleaned_data is None:
         return redirect('data_capture:analyze_step_2')
 
-    valid_rows = analyze_gleaned_data(gleaned_data)
+    analyzed_rows = analyze_gleaned_data(gleaned_data)
 
     return step.render(request, {
         'gleaned_data': gleaned_data,
-        'valid_rows': valid_rows,
+        'analyzed_rows': analyzed_rows,
     })
+
+
+@require_http_methods(["GET"])
+def export_analysis(request):
+    gleaned_data = get_deserialized_gleaned_data(
+        request,
+        'data_capture:analyze_price_list'
+    )
+    if gleaned_data is None:
+        return redirect('data_capture:analyze_step_2')
+
+    format = request.GET.get('f', 'csv')
+
+    # TODO: It'd be nice to cache the analysis from step 3, if possible.
+    analyzed_rows = analyze_gleaned_data(gleaned_data)
+
+    analysis_export = AnalysisExport(analyzed_rows)
+
+    file_name_prefix = 'analysis'
+
+    if format == 'xlsx':
+        return analysis_export.to_xlsx(filename=file_name_prefix + '.xlsx')
+    else:
+        return analysis_export.to_csv(filename=file_name_prefix + '.csv')

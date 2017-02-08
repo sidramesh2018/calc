@@ -49,7 +49,7 @@
           </tr>
         </thead>
         <tbody>
-        {% for row in valid_rows %}
+        {% for row in analyzed_rows %}
           <tr>
             <td>{{ row.sin }}</td>
             <td>{{ row.labor_category }}</td>
@@ -64,6 +64,16 @@
         </tbody>
     </table>
   {% endif %}
+
+  <br>
+
+  <a href="{% url 'data_capture:export_analysis' %}?f=csv" class="button" download>
+    ⬇ Download Analysis (CSV)
+  </a>
+
+  <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="button" download>
+    ⬇ Download Analysis (Excel)
+  </a>
 
   <div class="form-button-row clearfix">
     <a href="{% url 'index' %}" class="button button-outline">CALC home</a>
