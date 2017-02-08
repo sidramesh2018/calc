@@ -19,7 +19,7 @@
         <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>
           {% if col.name == 'price_including_iff' and col.value %}
             ${{ col.value|floatformat:2 }}
-          {% else if col.value %}
+          {% elif col.value %}
             {{ col.value }}
           {% endif %}
         </span>
