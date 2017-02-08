@@ -83,7 +83,7 @@ class Vocabulary(dict):
             model._meta.db_table
         )
         cursor.execute(
-            "select word, ndoc from ts_stat(%s) WHERE ndoc > %s",
+            "select word, ndoc from ts_stat(%s) WHERE ndoc >= %s",
             [tsvector_query, min_ndoc]
         )
         vocab = cls()
