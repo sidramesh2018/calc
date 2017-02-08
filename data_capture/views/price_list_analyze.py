@@ -18,6 +18,9 @@ from ..templatetags.analyze_contract import (
 
 steps = Steps(
     template_format='data_capture/analyze_price_list/step_{}.html',
+    extra_ctx_vars={
+        'current_selected_tab': 'analyze_price_data'
+    },
 )
 
 
