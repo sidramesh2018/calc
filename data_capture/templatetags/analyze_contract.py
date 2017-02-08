@@ -1,5 +1,4 @@
 import math
-import datetime
 from urllib.parse import urlencode
 from itertools import chain, combinations
 from functools import cmp_to_key
@@ -10,6 +9,7 @@ except ImportError:
     nltk = None
 
 from django import template
+from django.utils import timezone
 from django.db import connection, transaction
 from django.db.models import Avg, StdDev
 from django.template.loader import render_to_string
@@ -322,7 +322,7 @@ def analyze_gleaned_data(gleaned_data):
                 is_small_business=False,
                 submitter_id=0,
                 escalation_rate=0,
-                status_changed_at=datetime.datetime.now(),
+                status_changed_at=timezone.now(),
                 status_changed_by_id=0,
             )
             price_list.save()
