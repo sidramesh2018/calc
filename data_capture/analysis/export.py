@@ -4,10 +4,8 @@ import xlsxwriter
 from django.http import HttpResponse
 from django.utils import timezone
 
-from .templatetags.analyze_contract import analyze_r10_row
 
-
-class R10AnalysisExport:
+class AnalysisExport:
     output_headers = [
         '#',
         'No of Comps',
@@ -29,20 +27,15 @@ class R10AnalysisExport:
         'Outside 1 Standard Deviation',
     ]
 
-    def __init__(self, valid_rows):
-        self.valid_rows = valid_rows
-
-        context = {}
-        self.analyzed_rows = []
-        for row in valid_rows:
-            analyzed_row = analyze_r10_row(context, row)
-            self.analyzed_rows.append(analyzed_row)
+    def __init__(self, rows):
+        self.valid_rows = rows
+        self.analyzed_rows = [row['analysis'] for row in rows]
 
     def _to_output_row(self, num, analyzed_row, valid_row):
         def pct_diff(a, b):
             return (a - b)/((a + b) / 2) * 100
 
-        proposed_price = float(valid_row['price_including_iff'].value())
+        proposed_price = float(valid_row['price'])
 
         # TODO: analyzed_row['severe'] and 'url'
         # are not included in the output because they are not in the template
@@ -52,10 +45,10 @@ class R10AnalysisExport:
         return [
             num + 1,
             analyzed_row['count'],
-            valid_row['labor_category'].value(),
-            valid_row['labor_category'].value(),
-            valid_row['education_level'].value(),
-            valid_row['min_years_experience'].value(),
+            valid_row['labor_category'],
+            valid_row['labor_category'],
+            valid_row['education_level'],
+            valid_row['min_years_experience'],
             '',  # TODO: ? Most Common EDU
             '',  # TODO: ? Avg EXP
             proposed_price,
@@ -63,7 +56,7 @@ class R10AnalysisExport:
             pct_diff(proposed_price, analyzed_row['avg']),
             proposed_price + analyzed_row['stddev'],
             pct_diff(proposed_price, analyzed_row['stddev']),
-            valid_row['sin'].value(),
+            valid_row['sin'],
             '',  # TODO: Work site - not used in analysis
             '',  # TODO: ? Exp Comparable Search Criteria
             '',  # TODO: ? Edu Comparable Search Criteria

@@ -7,7 +7,6 @@
       <th class="number">Minimum Years of Experience (cannot be a range)</th>
       <th>Unit of Issue (e.g. Hour, Task, Sq Ft)</th>
       <th class="number">Price Offered to GSA (including IFF)</th>
-      <th>Analysis</th>
     </tr>
   </thead>
   <tbody>
@@ -42,19 +41,7 @@
           {{ row.price_including_iff.value|floatformat:2 }}
         {% endif %}
       </td>
-      {% load analyze_contract %}
-      {% analyze_r10_row row as analysis %}
-      <td {% if analysis.severe %}class="error"{% endif %}>
-        {{ analysis.description }}
-      </td>
     </tr>
   {% endfor %}
   </tbody>
 </table>
-
-<a href="{% url 'data_capture:export_r10_analysis' %}?f=csv" class="button" download>
-  ⬇ Download Analysis (CSV)
-</a>
-<a href="{% url 'data_capture:export_r10_analysis' %}?f=xlsx" class="button" download>
-  ⬇ Download Analysis (Excel)
-</a>

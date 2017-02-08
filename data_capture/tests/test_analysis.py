@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from ..templatetags.analyze_contract import (
+from ..analysis.core import (
     Vocabulary,
     get_best_permutations,
 )

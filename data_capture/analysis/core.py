@@ -8,11 +8,12 @@ try:
 except ImportError:
     nltk = None
 
-from django import template
-from django.db import connection
+from django.utils import timezone
+from django.db import connection, transaction
 from django.db.models import Avg, StdDev
 from django.template.loader import render_to_string
 
+from ..models import SubmittedPriceList
 from contracts.models import Contract
 from contracts.models import EDUCATION_CHOICES as _EDUCATION_CHOICES
 
@@ -27,8 +28,6 @@ for _code, _name in _EDUCATION_CHOICES:
 
 del _code
 del _name
-
-register = template.Library()
 
 
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
@@ -308,56 +307,40 @@ def describe(cursor, vocab, labor_category, min_years_experience,
     return result
 
 
-@register.filter
-def analyze_contract_row(row):
-    # TODO: Currently this only works w/ fake schedule rows. Should
-    # figure out how to make it work independent of schedules; that
-    # might mean abandoning this weird template filter approach.
+def analyze_gleaned_data(gleaned_data):
+    valid_rows = []
 
-    # TODO: It would be great if we could get an existing DB cursor
-    # from somewhere else and/or cache the vocabulary here; otherwise
-    # each call to this template filter could be fairly expensive.
-
-    if (row['price'].errors or row['years_experience'].errors or
-            row['education'].errors or row['service'].errors):
-        return None
-
-    with connection.cursor() as cursor:
-        return describe(
-                cursor,
-                Vocabulary.from_db(cursor),
-                row['service'].value(),
-                int(row['years_experience'].value()),
-                EDU_LEVELS[row['education'].value()],
-                float(row['price'].value())
-            )
-
-
-@register.assignment_tag(takes_context=True)
-def analyze_r10_row(context, row):
-    # TODO: Currently this only works w/ region 10 schedule rows. Should
-    # figure out how to make it work independent of schedules.
-
-    if (row['price_including_iff'].errors or
-            row['min_years_experience'].errors or
-            row['education_level'].errors or
-            row['labor_category'].errors):
-        return None
-
-    if '__analyze_contract' not in context:
-        # Cache our DB connection and vocabulary so that every time we're
-        # run on a row, we're not rebuilding stuff from scratch.
+    if gleaned_data.valid_rows:
         cursor = connection.cursor()
         vocab = Vocabulary.from_db(cursor)
-        context['__analyze_contract'] = (cursor, vocab)
+        with transaction.atomic():
+            sid = transaction.savepoint()
+            price_list = SubmittedPriceList(
+                is_small_business=False,
+                submitter_id=0,
+                escalation_rate=0,
+                status_changed_at=timezone.now(),
+                status_changed_by_id=0,
+            )
+            price_list.save()
+            gleaned_data.add_to_price_list(price_list)
+            for row in price_list.rows.all():
+                analysis = describe(
+                    cursor,
+                    vocab,
+                    row.labor_category,
+                    row.min_years_experience,
+                    row.education_level,
+                    float(row.base_year_rate),
+                )
+                valid_rows.append({
+                    'analysis': analysis,
+                    'sin': row.sin,
+                    'labor_category': row.labor_category,
+                    'education_level': row.education_level,
+                    'min_years_experience': row.min_years_experience,
+                    'price': float(row.base_year_rate),
+                })
+            transaction.savepoint_rollback(sid)
 
-    cursor, vocab = context['__analyze_contract']
-
-    return describe(
-        cursor,
-        vocab,
-        row['labor_category'].value(),
-        int(row['min_years_experience'].value()),
-        EDU_LEVELS[row['education_level'].value()],
-        float(row['price_including_iff'].value())
-    )
+    return valid_rows

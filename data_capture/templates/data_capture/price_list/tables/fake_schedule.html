@@ -7,7 +7,6 @@
       <th>Minimum education</th>
       <th class="number">Minimum years of experience</th>
       <th class="number">Price</th>
-      <th>Analysis</th>
     </tr>
   </thead>
   <tbody>
@@ -26,14 +25,6 @@
         {% if col.errors %}<div class="error__tooltip" role="tooltip" id="error__row-{{ row_count}}__col-{{ forloop.counter }}">{{ col.errors }}</div>{% endif %}
       </td>
     {% endfor %}
-
-    {% load analyze_contract %}
-    {% with analysis=row|analyze_contract_row %}
-    <td {% if analysis.severe %}class="error"{% endif %}>
-      {{ analysis.description }}
-    </td>
-    {% endwith %}
-
     </tr>
     {% endwith %}
   {% endfor %}
