@@ -88,8 +88,7 @@ satisfies:
   narrative:
     - text: >
         All penetration tests are conducted by an independent team under the
-        management of the GSA Information Security team or via an accredited
-        FedRAMP third-party assessment organization (3PAO).
+        management of the GSA Information Security team.
   covered_by:
     - verification_key: CA-Policy
 - standard_key: NIST-800-53
