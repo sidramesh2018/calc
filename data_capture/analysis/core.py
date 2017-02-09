@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 
 from contracts.models import Contract, EDUCATION_CHOICES
 from ..models import SubmittedPriceList
-
+from .finders import ExactEduAndExpFinder, GteEduAndExpFinder
 from .vocabulary import Vocabulary, broaden_query
 
 
@@ -31,96 +31,6 @@ FoundContracts = namedtuple(
      'count',
      'finder']
 )
-
-
-class ContractFinder(metaclass=abc.ABCMeta):
-    '''
-    Abstract base class representing a finder for contracts that match
-    a certain criteria.
-    '''
-
-    @abc.abstractmethod
-    def filter_queryset(self, qs):
-        '''
-        Return the given Django QuerySet with the matching criteria
-        applied to it.
-        '''
-
-        raise NotImplementedError()
-
-    @abc.abstractmethod
-    def get_data_explorer_qs_params(self):
-        '''
-        Return a tuple of (name, value) pairs representing querystring
-        arguments to pass to the Data Explorer, which will result in a
-        Data Explorer URL that filters to this class' matching criteria.
-        '''
-
-        raise NotImplementedError()
-
-
-class BaseEduAndExpFinder(ContractFinder):
-    '''
-    Abstract base class for finders that match based on minimum
-    years of experience and education level.
-    '''
-
-    def __init__(self, min_years_experience, education_level):
-        self.min_years_experience = min_years_experience
-        self.education_level = education_level
-
-
-class ExactEduAndExpFinder(BaseEduAndExpFinder):
-    '''
-    Finds contracts that are exactly equal to a given
-    minimum experience and education level.
-    '''
-
-    def filter_queryset(self, qs):
-        return qs.filter(
-            min_years_experience=self.min_years_experience,
-            education_level=self.education_level
-        )
-
-    def get_data_explorer_qs_params(self):
-        return (
-            ('min_experience', self.min_years_experience),
-            ('max_experience', self.min_years_experience),
-            ('education', self.education_level),
-        )
-
-
-class GteEduAndExpFinder(BaseEduAndExpFinder):
-    '''
-    Finds contracts that are greater than or equal to a given
-    minimum experience and education level.
-    '''
-
-    def get_valid_education_levels(self):
-        '''
-        Returns a list of education levels that are equal to or
-        greater than our own.
-        '''
-
-        # TODO: This code is largely copied from
-        # api.views, we should consolidate it at some point.
-        for index, pair in enumerate(EDUCATION_CHOICES):
-            if self.education_level == pair[0]:
-                return [
-                    ed[0] for ed in EDUCATION_CHOICES[index:]
-                ]
-
-    def filter_queryset(self, qs):
-        return qs.filter(
-            min_years_experience__gte=self.min_years_experience,
-            education_level__in=self.get_valid_education_levels()
-        )
-
-    def get_data_explorer_qs_params(self):
-        return (
-            ('min_experience', self.min_years_experience),
-            ('education', ','.join(self.get_valid_education_levels())),
-        )
 
 
 def find_comparable_contracts(cursor, vocab, labor_category,

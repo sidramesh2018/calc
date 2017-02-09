@@ -3,9 +3,11 @@ from django.test import TestCase as DjangoTestCase
 from django.db import connection
 
 from contracts.mommy_recipes import get_contract_recipe
-from ..analysis.core import (
+from ..analysis.finders import (
     ExactEduAndExpFinder,
     GteEduAndExpFinder,
+)
+from ..analysis.core import (
     find_comparable_contracts,
     describe,
 )
@@ -171,7 +173,7 @@ class GteEduAndExpFinderTests(TestCase):
     def test_get_data_explorer_qs_params_works(self):
         finder = GteEduAndExpFinder(1, 'MA')
         self.assertEqual(finder.get_data_explorer_qs_params(), (
-            ('min_experience', 1),
+            ('min_experience', '1'),
             ('education', 'MA,PHD')
         ))
 
