@@ -11,6 +11,11 @@ from django.db import connection
 from contracts.models import Contract
 
 
+# Minimum number of times a word must appear across all contract labor
+# categories for it to be added to the vocabulary.
+DEFAULT_MIN_NDOC = 4
+
+
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
 def powerset(iterable):
     "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
@@ -77,7 +82,7 @@ class Vocabulary(dict):
 
     @classmethod
     def from_db(cls, cursor, model=Contract, field='search_index',
-                min_ndoc=100):
+                min_ndoc=DEFAULT_MIN_NDOC):
         tsvector_query = 'select {} from {}'.format(
             model._meta.get_field(field).column,
             model._meta.db_table
