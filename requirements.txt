@@ -16,7 +16,7 @@ PyJWT==1.4.2
 requests==2.13.0
 python-dotenv==0.6.3
 xlrd==1.0.0
-defusedxml==0.4.1
+defusedxml==0.5.0
 rq==0.7.1
 django-rq==0.9.4
 rq-scheduler==0.7.0
