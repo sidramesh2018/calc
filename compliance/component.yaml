@@ -25,94 +25,56 @@ satisfies:
   control_key: AC-2   # Account Management
   narrative:
     - text: >
-        Within the CALC application (see cloud.gov for lower-level controls),
-        authentication is provided by cloud.gov's User
-        Account and Authentication (UAA) server, while authorization is
-        provided by the Django application. Only users who successfully login
-        through the UAA and who have an associated (via @gsa.gov email address)
-        account in the CALC back end will be able to access privileged areas of
-        the application.
-        Data Administrator users can access the applications' administrative
-        back end, where they can administer, including creating new, user
-        accounts for both Data Administrators and Contract Officers.
-        Contract Officer users are not able to access to access the
-        administrative back end or perform any actions on user accounts.
+        Within the CALC application (see cloud.gov for lower-level controls), authentication is provided by cloud.gov's User Account and Authentication (UAA) server, while authorization is provided by the Django application. Only users who successfully login through the UAA and who have an associated (via @gsa.gov email address) account in the CALC back end will be able to access privileged areas of the application. Data Administrator users can access the applications' administrative back end, where they can administer, including creating new, user accounts for both Data Administrators and Contract Officers. Contract Officer users are not able to access to access the administrative back end or perform any actions on user accounts.
 - standard_key: NIST-800-53
   control_key: AC-3   # Access Enforcement
   narrative:
     - text: >
-        Information about approved price list data is meant to be accessed
-        by the general public. Submitted price lists that have not yet
-        been reviewed, or which have been rejected or retired, are visible only
-        to authenticated Data Administrators and Contract Officers.
+        Information about approved price list data is meant to be accessed by the general public. Submitted price lists that have not yet been reviewed, or which have been rejected or retired, are visible only to authenticated Data Administrators and Contract Officers.
 - standard_key: NIST-800-53
   control_key: AC-6   # Least Privilege
   narrative:
     - text: >
-        At the application level (see cloud.gov for lower-level controls),
-        only Data Administrators have the ability to modify approved (public)
-        price list data directly.
-        Contract Officers may submit modifications to already
-        submitted price list data, which will mark the price list as requiring
-        review. A Data Administrator must then, through the CALC administrative
-        back end, review and approve those changes before they are made
-        available to the general public.
+        At the application level (see cloud.gov for lower-level controls), only Data Administrators have the ability to modify approved (public) price list data directly.
+        Contract Officers may submit modifications to already submitted price list data, which will mark the price list as requiring review. A Data Administrator must then, through the CALC administrative back end, review and approve those changes before they are made available to the general public.
 - standard_key: NIST-800-53
   control_key: AU-2   # Audit Events
   narrative:
     - text: >
-        Cloud.gov logs requests, failures, warnings, etc. emitted by the
-        application, which are available at https://logs.fr.cloud.gov.
-        CALC also uses New Relic, which logs Python and
-        JavaScript errors and periods of down-time.
+        Cloud.gov logs requests, failures, warnings, etc. emitted by the application, which are available at https://logs.fr.cloud.gov. CALC also uses New Relic, which logs Python and JavaScript errors and periods of down-time.
   covered_by:
     - verification_key: new-relic
 - standard_key: NIST-800-53
   control_key: AU-6   # Audit Review, Analysis, and Reporting
   narrative:
     - text: >
-        In addition to the low-level reporting provided by cloud.gov, New Relic
-        sends email alerts to the team after repeated errors or down-time.
+        In addition to the low-level reporting provided by cloud.gov, New Relic sends email alerts to the team after repeated errors or down-time.
   covered_by:
     - verification_key: new-relic
 - standard_key: NIST-800-53
   control_key: CA-8   # Penetration Testing
   narrative:
     - text: >
-        The system undergoes a penetration test at least once a year per
-        18F's Security Assesment and Authorization Policy.
+        The system undergoes a penetration test at least once a year per 18F's Security Assesment and Authorization Policy.
   covered_by:
     - verification_key: CA-Policy
 - standard_key: NIST-800-53
   control_key: CA-8 (1)   # Penetration Testing | Independent team
   narrative:
     - text: >
-        All penetration tests are conducted by an independent team under the
-        management of the GSA Information Security team.
+        All penetration tests are conducted by an independent team under the management of the GSA Information Security team or via an accredited FedRAMP third-party assessment organization (3PAO).
   covered_by:
     - verification_key: CA-Policy
 - standard_key: NIST-800-53
   control_key: CM-2   # Baseline Configuration
   narrative:
     - text: >
-        To receive the latest baseline configuration from cloud.gov, the
-        application is deployed regularly and upon notification of baseline
-        security fixes. See cloud.gov controls for additional information.
+        To receive the latest baseline configuration from cloud.gov, the application is deployed regularly and upon notification of baseline security fixes. See cloud.gov controls for additional information.
 - standard_key: NIST-800-53
   control_key: CM-3   # Configuration Change Control
   narrative:
     - text: >
-        In addition to cloud.gov controls, all code is reviewed by CALC
-        software developers on GitHub before being merged into the "master"
-        branch. These changes are tested automatically via Travis CI (which
-        runs unit, integration tests, and static analysis) as well as manually
-        for visual regressions.
-        Proposed changes have appropriate justification (describing problems
-        resolved or referencing further details in an issue tracker) in either
-        their commit history or as part of the GitHub Pull Request. Proposed
-        changes which fail automated tests are generally not merged. Only the
-        tested "master" branch code is deployed to production when it is
-        specifically tagged with a release-format git tag.
+        In addition to cloud.gov controls, all code is reviewed by CALC software developers on GitHub before being merged into the "master" branch. These changes are tested automatically via Travis CI (which runs unit, integration tests, and static analysis) as well as manually for visual regressions. Proposed changes have appropriate justification (describing problems resolved or referencing further details in an issue tracker) in either their commit history or as part of the GitHub Pull Request. Proposed changes which fail automated tests are generally not merged. Only the tested "master" branch code is deployed to production when it is specifically tagged with a release-format git tag.
   references:
     - verification_key: github
     - verification_key: travis
@@ -120,13 +82,7 @@ satisfies:
   control_key: CM-6   # Configuration Settings
   narrative:
     - text: >
-        As described in README.md and deploy.md, configurable settings are
-        defined in a handful of locations. Configuration for cloud.gov
-        environments is located in the manifests directory of the code
-        repository. Each environment (dev, staging, production) has a separate
-        manifest file, which  is named "manifest-<environment label>.yml".
-        Application-level settings are specified in the code repository at
-        hourglass/settings.py.
+        As described in README.md and deploy.md, configurable settings are defined in a handful of locations. Configuration for cloud.gov environments is located in the manifests directory of the code repository. Each environment (dev, staging, production) has a separate manifest file, which  is named "manifest-<environment label>.yml". Application-level settings are specified in the code repository at hourglass/settings.py.
   references:
     - verification_key: ups
 - standard_key: NIST-800-53
@@ -160,27 +116,14 @@ satisfies:
   control_key: PL-8   # Information Security Architecture
   narrative:
     - text: >
-        In addition to cloud.gov controls, all data in the system comes from
-        Contract Officers and must be approved by a Data Administrator to
-        be visible to the general public.
+        In addition to cloud.gov controls, all data in the system comes from Contract Officers and must be approved by a Data Administrator to be visible to the general public.
 - standard_key: NIST-800-53
   control_key: RA-5   # Vulnerability Scanning
   narrative:
     - text: >
-        In addition to cloud.gov controls, the application layer is scanned with
-        both static and dynamic tooling. Before a pull request is merged, all
-        custom code is automatically analyzed by "flake8" (a linting tool to
-        catch syntactic errors), "bandit" (a security-focused static analysis
-        tool), and a handful of custom, security-centric unit
-        tests. These analyses and tests are run as part the TravisCI builds for
-        each pull request. Code which does not pass tests is generally not
-        merged. We also employ Gemnasium to track our dependencies and
-        Code Climate to warn of potentially concerning style. Badges reflecting
-        the status of the "develop" branch are posted at the top of the code
-        repository's README.md file.
+        In addition to cloud.gov controls, the application layer is scanned with both static and dynamic tooling. Before a pull request is merged, all custom code is automatically analyzed by "flake8" (a linting tool to catch syntactic errors), "bandit" (a security-focused static analysis tool), and a handful of custom, security-centric unit tests. These analyses and tests are run as part the TravisCI builds for each pull request. Code which does not pass tests is generally not merged. We also employ Gemnasium to track our dependencies and Code Climate to warn of potentially concerning style. Badges reflecting the status of the "develop" branch are posted at the top of the code repository's README.md file.
 
-        For static analysis, we've addressed all critical issues raised by
-        evaluating the application with OWASP ZAP.
+        For static analysis, we've addressed all critical issues raised by evaluating the application with OWASP ZAP.
   references:
     - verification_key: flake8
     - verification_key: bandit
@@ -198,10 +141,7 @@ satisfies:
                            # Alternative Sources for Continued Support
   narrative:
     - text: >
-        At the application layer (see cloud.gov controls for lower), one
-        selection criteria for libraries was their support status. Should a
-        library fall in to an unsupported state, 18F has the capacity to
-        maintain it in-house.
+        At the application layer (see cloud.gov controls for lower), one selection criteria for libraries was their support status. Should a library fall in to an unsupported state, 18F has the capacity to maintain it in-house.
 - standard_key: NIST-800-53
   control_key: SC-7   # Boundary Protection
   narrative:
@@ -211,9 +151,7 @@ satisfies:
                           # Availability
   narrative:
     - text: >
-        At the application layer (see cloud.gov controls for lower), all keys
-        are available to authorized users by querying cloud.gov's "services",
-        including "custom user provided services".
+        At the application layer (see cloud.gov controls for lower), all keys are available to authorized users by querying cloud.gov's "services", including "custom user provided services".
 - standard_key: NIST-800-53
   control_key: SC-13  # Cryptographic Protection
   narrative:
@@ -227,14 +165,7 @@ satisfies:
   control_key: SI-2   # Flaw Remediation
   narrative:
     - text: >
-        At the application layer (see cloud.gov controls for lower), all custom
-        code passes through a set of automated unit and integration tests via
-        Travis CI. Library dependencies are verified up to date via Gemnasium.
-        Production errors are captured via New Relic and emailed to
-        relevant parties. Further, code is first deployed (automatically) to
-        our dev environment after each PR is merged, and to our staging
-        environment before any production deployments, so we may discover
-        errors before appearing in production.
+        At the application layer (see cloud.gov controls for lower), all custom code passes through a set of automated unit and integration tests via Travis CI. Library dependencies are verified up to date via Gemnasium. Production errors are captured via New Relic and emailed to relevant parties. Further, code is first deployed (automatically) to our dev environment after each PR is merged, and to our staging environment before any production deployments, so we may discover errors before appearing in production.
   references:
     - verification_key: travis
     - verification_key: new-relic
@@ -247,12 +178,7 @@ satisfies:
   control_key: SI-10  # Information Input Validation
   narrative:
     - text: >
-      Django's querysets create escaped SQL queries to prevent any SQL
-      injection-type attacks from user-entered data. We also use the defusedxml
-      library to prevent a variety of XML-based attacks from user-uploaded
-      Excel files. CALC's front page JavaScript application is written with the
-      React library and JSX, which escapes embedded values before rendering to
-      prevent XSS-type attacks.
+      Django's querysets create escaped SQL queries to prevent any SQL injection-type attacks from user-entered data. We also use the defusedxml library to prevent a variety of XML-based attacks from user-uploaded Excel files. CALC's front page JavaScript application is written with the React library and JSX, which escapes embedded values before rendering to prevent XSS-type attacks.
   references:
     - verification_key: django
     - verification_key: defusedxml
