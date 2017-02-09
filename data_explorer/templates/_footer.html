@@ -10,25 +10,30 @@
               <a href="{% url 'uaa_client:login' %}" class="button button-footer">Log in</a>
             {% elif user.is_authenticated %}
               <p>You are logged in as {{ user.email }}</p>
-              <p><a href="{% url 'user_account:index' %}">View account</a> | <a href="{% url 'uaa_client:logout' %}">Log out</a></p>
+              <p><a href="{% url 'user_account:index' %}">View account</a> | <a href="{% url 'logout' %}">Log out</a></p>
             {% endif %}
           </div>
 
-          <div class="five columns divider_footer">
+          <div class="eight columns divider_footer">
+            <div id="logos">
+              <a href="http://gsa.gov"><img alt="General Services Administration logo"
+                src="{% static 'frontend/images/logo-gsa.png' %}"></a>
+              <a href="https://18f.gsa.gov"><img alt="18F logo"
+                src="{% static 'frontend/images/logo-18f.svg' %}"></a>
+            </div>
             <h2>Get in touch</h2>
-            <p>We're always looking for feedback on CALC!<br>
-              To share your thoughts, email us at <a href="mailto:{{ HELP_EMAIL }}">{{ HELP_EMAIL }}</a>.</p>
-            <p class="github"><a href="https://github.com/18F/calc">View our code on GitHub</a></p>
-            {% if request.path == "/" %}
-            <p class="credits">Icons: Paulo Sá Ferreira, Luis Prado, John Testa, Andrew Forrester from <a href="https://thenounproject.com/">The Noun Project</a>.</p>
-            {% endif %}
-          </div>
-
-          <div id="logos" class="three columns">
-            <a href="http://gsa.gov"><img alt="General Services Administration logo"
-              src="{% static 'frontend/images/logo-gsa.png' %}"></a>
-            <a href="https://18f.gsa.gov"><img alt="18F logo"
-              src="{% static 'frontend/images/logo-18f.svg' %}"></a>
+            <p>
+              We're always looking for feedback on CALC!<br>
+              To share your thoughts, email us at <a href="mailto:{{ HELP_EMAIL }}">{{ HELP_EMAIL }}</a>.
+            </p>
+            <div class="footer_extra">
+              <p class="small">
+                <a href="{% url 'updates' %}">Read about recent updates to CALC</a>
+              </p>
+              <p class="small">
+                <a href="https://github.com/18F/calc">View our code on GitHub</a>
+              </p>
+            </div>
           </div>
 
         </div>

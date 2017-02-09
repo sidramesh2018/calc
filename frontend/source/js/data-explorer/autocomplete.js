@@ -109,4 +109,11 @@ export function initialize(el, {
       setFieldValue(selectedInput);
     },
   });
+
+  $(el).on('blur', () => {
+    // If the user manually changed the field without actually
+    // selecting anything in the autocomplete list, it should take
+    // effect as soon as the user focuses on something else.
+    setFieldValue(el.value);
+  });
 }

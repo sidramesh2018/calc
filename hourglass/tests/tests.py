@@ -22,6 +22,7 @@ from ..settings_utils import (load_cups_from_vcap_services,
 def staff_only_view(request):
     return HttpResponse('ok')
 
+
 urlpatterns += [
     url(r'^staff_only_view/$', staff_only_view, name='staff_only_view'),
 ]
@@ -327,14 +328,14 @@ class ContextProcessorTests(DjangoTestCase):
         self.assertIn('GA_TRACKING_ID', res.context)
         self.assertEqual(res.context['GA_TRACKING_ID'], '')
 
-    @override_settings(ETHNIO_SCREENER_ID='hoopla')
-    def test_ethnio_screener_id_is_included(self):
-        res = self.client.get('/')
-        self.assertIn('ETHNIO_SCREENER_ID', res.context)
-        self.assertEquals(res.context['ETHNIO_SCREENER_ID'], 'hoopla')
-
     @override_settings(HELP_EMAIL='help@calc.com')
     def test_help_email_is_included(self):
         res = self.client.get('/')
         self.assertIn('HELP_EMAIL', res.context)
         self.assertEquals(res.context['HELP_EMAIL'], 'help@calc.com')
+
+    @override_settings(NON_PROD_INSTANCE_NAME='Staging')
+    def test_non_prod_instance_name_is_included(self):
+        res = self.client.get('/')
+        self.assertIn('NON_PROD_INSTANCE_NAME', res.context)
+        self.assertEquals(res.context['NON_PROD_INSTANCE_NAME'], 'Staging')

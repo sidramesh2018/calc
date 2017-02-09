@@ -64,10 +64,14 @@
 
 import os
 import sys
-import pwd
 import time
 import signal
 import subprocess
+
+if sys.platform != 'win32':
+    # If the Docker host is running on Windows, we don't need this
+    # module, so it's OK to not import it.
+    import pwd
 
 if False:
     # This is just needed so mypy will work; it's never executed.
@@ -201,9 +205,19 @@ def execute_from_command_line(argv):  # type: (List[str]) -> None
             warn("You should probably be using 'docker-compose up' "
                  "to run the server.")
         try:
-            os.execvp('docker-compose', [
-                'docker-compose', 'run', CONTAINER_NAME, 'python'
-            ] + argv)
+            cmd_name = 'docker-compose'
+            cmd_args = [
+                cmd_name, 'run', CONTAINER_NAME, 'python'
+            ] + argv
+
+            if sys.platform == 'win32':
+                # Windows doesn't support the exec() syscall,
+                # so run docker-compose in a subshell.
+                # This will allow stdio to work as expected.
+                return_code = subprocess.call(cmd_args)
+                sys.exit(return_code)
+            else:
+                os.execvp(cmd_name, cmd_args)
         except OSError:
             # Apparently docker-compose isn't installed, so just raise
             # the original ImportError.

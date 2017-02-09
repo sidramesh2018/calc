@@ -1,26 +1,36 @@
-app:
-  volumes:
-    - .:/calc
-    # http://stackoverflow.com/a/37898591
-    - /calc/node_modules/
-  command: python manage.py runserver 0.0.0.0:${DOCKER_EXPOSED_PORT}
-  environment:
-    - EMAIL_URL=smtp://mailcatcher:25/
-  links:
-    - mailcatcher
-gulp:
-  build: .
-  volumes:
-    - .:/calc
-    - /calc/node_modules/
-  command: gulp
-rq_worker:
-  volumes:
-    - .:/calc
-rq_scheduler:
-  volumes:
-    - .:/calc
-mailcatcher:
-  image: tophfr/mailcatcher:latest
-  ports:
-    - 1080:80
+version: '2'
+services:
+  app:
+    volumes:
+      - .:/calc
+      # http://stackoverflow.com/a/37898591
+      - /calc/node_modules/
+    command: python manage.py runserver 0.0.0.0:${DOCKER_EXPOSED_PORT}
+    environment:
+      - EMAIL_URL=smtp://mailcatcher:25/
+    links:
+      - mailcatcher
+  gulp:
+    build: .
+    volumes:
+      - .:/calc
+      - /calc/node_modules/
+    command: gulp
+  rq_worker:
+    volumes:
+      - .:/calc
+    environment:
+      - EMAIL_URL=smtp://mailcatcher:25/
+    links:
+      - mailcatcher
+  rq_scheduler:
+    volumes:
+      - .:/calc
+    environment:
+      - EMAIL_URL=smtp://mailcatcher:25/
+    links:
+      - mailcatcher
+  mailcatcher:
+    image: tophfr/mailcatcher:latest
+    ports:
+      - 1080:80

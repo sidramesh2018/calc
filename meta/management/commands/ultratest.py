@@ -97,6 +97,7 @@ def get_coverage() -> float:
 
     return 0.0
 
+
 TESTTYPES_TO_REPORT_COVERAGE_ON = ['py.test']
 
 TestType = namedtuple('TestType', ['name', 'cmd'])
@@ -217,11 +218,8 @@ def command(verbosity: int, testtype: List[str]) -> None:
             echo('\n', 0)
 
     if len(failures) > 0:
-        print_big_fail()
         echo('Failing tests: {}'.format(', '.join(failures)), 0)
         exit_code = 1
-    else:
-        print_big_success()
 
     if report_coverage:
         coverage_after = get_coverage()
@@ -235,5 +233,10 @@ def command(verbosity: int, testtype: List[str]) -> None:
                 echo(' (+{:.2%} from last run)'.format(diff), 1, fg='green')
             else:
                 echo(' (same as last run)', 1)
+
+    if exit_code == 0:
+        print_big_success()
+    else:
+        print_big_fail()
 
     sys.exit(exit_code)
