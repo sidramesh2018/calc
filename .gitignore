@@ -34,3 +34,4 @@ release-*-instructions.txt
 release-*-instructions.html
 Dockerfile.cloud
 docs/_build
+docs/static

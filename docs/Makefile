@@ -7,12 +7,27 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = CALC
 SOURCEDIR     = .
 BUILDDIR      = _build
+DJANGODIR     = static
 
 # Put it first so that "make" without argument is like "make help".
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 .PHONY: help Makefile
+
+html: Makefile
+	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	mkdir -p $(DJANGODIR)
+	cp -R $(BUILDDIR)/html $(DJANGODIR)/docs/
+
+	# The following is a workaround for:
+	# https://github.com/snide/sphinx_rtd_theme/issues/359
+	cp -R $(DJANGODIR)/docs/_static/fonts $(DJANGODIR)/docs/_static/font
+	cd $(DJANGODIR)/docs/_static/font && \
+	mv fontawesome-webfont.eot fontawesome_webfont.eot && \
+	mv fontawesome-webfont.woff fontawesome_webfont.woff && \
+	mv fontawesome-webfont.ttf fontawesome_webfont.ttf && \
+	mv fontawesome-webfont.svg fontawesome_webfont.svg
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
