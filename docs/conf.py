@@ -21,9 +21,12 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import os
 from recommonmark.parser import CommonMarkParser
 from recommonmark.transform import AutoStructify
 import sphinx_rtd_theme
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # -- General configuration ------------------------------------------------
 
@@ -64,7 +67,7 @@ author = '18F'
 #
 # The short X.Y version.
 _globs = {}
-exec(open('../hourglass/version.py').read(), _globs)
+exec(open(os.path.join(BASE_DIR, 'hourglass', 'version.py')).read(), _globs)
 version = _globs['__version__']
 del _globs
 
