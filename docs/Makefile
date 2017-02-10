@@ -16,8 +16,8 @@ help:
 .PHONY: help Makefile
 
 html: Makefile
-	rm -rf $(BUILDDIR) $(DJANGODIR)
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	rm -rf $(DJANGODIR)
 	mkdir -p $(DJANGODIR)
 	cp -R $(BUILDDIR)/html $(DJANGODIR)/docs/
 
