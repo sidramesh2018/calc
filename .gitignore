@@ -32,5 +32,9 @@ calc-prod_manifest.yml
 tag-message-*.txt
 release-*-instructions.txt
 release-*-instructions.html
+<<<<<<< HEAD
 ~*.xls[x]
+=======
+jest/*
+>>>>>>> origin/develop
 Dockerfile.cloud

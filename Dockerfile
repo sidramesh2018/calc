@@ -31,8 +31,9 @@ COPY requirements-dev.txt /calc/
 
 RUN pip install -r /calc/requirements-dev.txt
 
-COPY requirements-price-list-analysis.txt /calc/
-RUN pip install -r requirements-price-list-analysis.txt
+COPY requirements-temp-extras.txt /calc/
+RUN pip install -r /calc/requirements-temp-extras.txt
+
 RUN python -m nltk.downloader averaged_perceptron_tagger -d /usr/local/share/nltk_data
 
 ENTRYPOINT ["python", "/calc/docker_django_management.py"]

@@ -1,0 +1,14 @@
+# This file can be used to add any temporary extra Python packages
+# for experimentation or use by work-in-progress pull requests. It's
+# particularly useful for folks using Docker, as it means that
+# changing dependencies around a bit doesn't require re-fetching
+# and re-downloading all of them.
+#
+# While this file may be populated during a WIP PR, though, its contents
+# should be moved into requirements.txt or requirements-dev.txt before
+# the PR is merged. In other words, this file should always be empty
+# in the master/develop branches.
+
+# TODO: Move these to requirements.txt.
+nltk==3.2.2
+xlsxwriter==0.9.6
