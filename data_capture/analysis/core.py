@@ -1,4 +1,3 @@
-import abc
 import math
 from collections import namedtuple
 from urllib.parse import urlencode
@@ -8,7 +7,7 @@ from django.db import connection, transaction
 from django.db.models import Avg, StdDev
 from django.template.loader import render_to_string
 
-from contracts.models import Contract, EDUCATION_CHOICES
+from contracts.models import Contract
 from ..models import SubmittedPriceList
 from .finders import ExactEduAndExpFinder, GteEduAndExpFinder
 from .vocabulary import Vocabulary, broaden_query

@@ -1,5 +1,5 @@
 import abc
-from typing import Tuple, Any, List
+from typing import Tuple, List
 from django.db.models import QuerySet
 
 from contracts.models import EDUCATION_CHOICES
@@ -40,7 +40,8 @@ class BaseEduAndExpFinder(ContractFinder):
     years of experience and education level.
     '''
 
-    def __init__(self, min_years_experience: int, education_level: str) -> None:
+    def __init__(self, min_years_experience: int,
+                 education_level: str) -> None:
         self.min_years_experience = min_years_experience
         self.education_level = education_level
 

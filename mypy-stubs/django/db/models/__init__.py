@@ -1,6 +1,6 @@
-from typing import Dict, Any
+from typing import Any
 
 
 class QuerySet:
-    def filter(self, **kwargs: Any) -> QuerySet:
+    def filter(self, **kwargs: Any) -> 'QuerySet':
         ...
