@@ -1,5 +1,0 @@
-# TODO: Move these into requirements-dev.txt!
-
-Sphinx==1.5.2
-sphinx-rtd-theme==0.1.9
-recommonmark==0.4.0
