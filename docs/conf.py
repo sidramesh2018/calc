@@ -66,8 +66,9 @@ author = '18F'
 # built documents.
 #
 # The short X.Y version.
+VERSION_PY_PATH = os.path.join(BASE_DIR, 'hourglass', 'version.py')
 _globs = {}
-exec(open(os.path.join(BASE_DIR, 'hourglass', 'version.py')).read(), _globs)
+exec(open(VERSION_PY_PATH).read(), _globs)  # nosec
 version = _globs['__version__']
 del _globs
 
