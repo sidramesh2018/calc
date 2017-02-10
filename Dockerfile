@@ -31,4 +31,7 @@ COPY requirements-dev.txt /calc/
 
 RUN pip install -r /calc/requirements-dev.txt
 
+# TODO: Move these into requirements-dev.txt!
+RUN pip install sphinx recommonmark sphinx-rtd-theme
+
 ENTRYPOINT ["python", "/calc/docker_django_management.py"]

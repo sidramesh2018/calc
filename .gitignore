@@ -33,3 +33,4 @@ tag-message-*.txt
 release-*-instructions.txt
 release-*-instructions.html
 Dockerfile.cloud
+docs/_build
