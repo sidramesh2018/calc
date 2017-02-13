@@ -8,16 +8,31 @@ Welcome to CALC's developer documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Setup and configuration
 
    setup
    docker
-   testing
-   selenium
    environment
    auth
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Testing
+
+   testing
+   selenium
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Data
+
    api
    updating_data
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Release and deployment
+
    release
    deploy
 
