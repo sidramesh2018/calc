@@ -26,6 +26,7 @@ Welcome to CALC's developer documentation!
    :maxdepth: 2
    :caption: Development
 
+   Style guide <https://calc-dev.app.cloud.gov/styleguide/>
    api
    updating_data
    contributing-internal

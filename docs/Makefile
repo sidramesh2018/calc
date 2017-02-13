@@ -33,6 +33,13 @@ html: Makefile
 	sed -i.bak 's/font\/fontawesome_/fonts\/fontawesome-/g' \
 	$(DJANGODIR)/docs/_static/css/badge_only.css
 
+# Since the $(DJANGODIR) docs will be served from the user's local
+# development server, we can rewrite any links to
+# https://calc-dev.app.cloud.gov/ to be against the user's local
+# server instead.
+	sed -i.bak 's/https:\/\/calc-dev\.app\.cloud\.gov//g' \
+	$(DJANGODIR)/docs/*.html
+
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
