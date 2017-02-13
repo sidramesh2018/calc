@@ -39,6 +39,13 @@ Welcome to CALC's developer documentation!
    release
    deploy
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Useful links
+
+   CALC home <https://calc-dev.app.cloud.gov/>
+   GitHub <https://github.com/18F/calc>
+
 Indices and tables
 ==================
 
