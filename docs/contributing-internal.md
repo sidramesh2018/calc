@@ -1,6 +1,6 @@
 # How the CALC team works
 
-See CONTRIBUTING.md as well for information on automated testing.
+See [Testing](testing.md) as well for information on automated testing.
 
 ## Tools
 - Trello

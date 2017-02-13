@@ -24,10 +24,11 @@ Welcome to CALC's developer documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Data
+   :caption: Development
 
    api
    updating_data
+   contributing-internal
 
 .. toctree::
    :maxdepth: 2
