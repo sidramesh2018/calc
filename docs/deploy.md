@@ -232,10 +232,8 @@ source /home/vcap/app/.profile.d/python.sh
 
 ### Setting up the API
 
-In production, CALC's public API is actually fronted by an [API Umbrella][]
-instance on api.data.gov which proxies all API requests to CALC. This
-allows CALC to not have to concern itself with details like API keys and
-rate limiting.
+As mentioned in the [API documentation](api.md), CALC's public API
+is actually proxied by api.data.gov.
 
 In order to configure the proxying between api.data.gov and CALC,
 you will need to obtain an administrative account on api.data.gov.
@@ -297,6 +295,5 @@ command-line option.
 
 [UPS]: https://docs.cloudfoundry.org/devguide/services/user-provided.html
 [`README.md`]: https://github.com/18F/calc#readme
-[API Umbrella]: https://apiumbrella.io/
 [api.data.gov User Manual]: https://github.com/18F/api.data.gov/wiki/User-Manual:-Agencies
 [Securing your API backend]: https://github.com/18F/api.data.gov/wiki/User-Manual:-Agencies#securing-your-api-backend
