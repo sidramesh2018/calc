@@ -1,4 +1,6 @@
-# How the CALC team works
+# How the CALC team works (out of date)
+
+**NOTE:** This document is out-of-date and pending [review](https://github.com/18F/calc/issues/1359).
 
 See [Testing](testing.md) as well for information on automated testing.
 

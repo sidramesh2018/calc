@@ -1,4 +1,4 @@
-## Updating contract data
+## Updating contract data (out of date)
 
 **NOTE:** This document is out-of-date and pending [review/removal](https://github.com/18F/calc/issues/840).
 
