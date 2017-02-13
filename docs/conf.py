@@ -26,7 +26,8 @@ from recommonmark.parser import CommonMarkParser
 from recommonmark.transform import AutoStructify
 import sphinx_rtd_theme
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+DOCS_DIR = os.path.dirname(__file__)
+BASE_DIR = os.path.dirname(DOCS_DIR)
 
 # -- General configuration ------------------------------------------------
 
@@ -175,7 +176,17 @@ texinfo_documents = [
 intersphinx_mapping = {'https://docs.python.org/': None}
 
 
+class PathNotFoundError(Exception):
+    pass
+
+
 def resolve_md_url(url):
+    abspath = os.path.normpath(os.path.join(DOCS_DIR, url))
+    if not os.path.exists(abspath):
+        raise PathNotFoundError(
+            '"{}" is referenced in markdown documentation but "{}" '
+            'does not exist'.format(url, abspath)
+        )
     return 'https://github.com/18F/calc/tree/develop/docs/' + url
 
 
