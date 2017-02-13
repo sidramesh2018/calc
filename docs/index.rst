@@ -18,6 +18,7 @@ Welcome to CALC's developer documentation!
    auth
    api
    updating_data
+   release
    deploy
 
 Indices and tables
