@@ -24,9 +24,3 @@ mypy-lang==0.4.6
 pytz==2016.10
 Markdown==2.6.8
 cg-django-uaa==0.0.1
-
-# These are currently needed in production because we're serving
-# the docs in production at /docs/.
-Sphinx==1.5.2
-sphinx-rtd-theme==0.1.9
-recommonmark==0.4.0
