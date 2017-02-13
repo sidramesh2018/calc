@@ -193,7 +193,7 @@ def execute_from_command_line(argv):  # type: (List[str]) -> None
 
     try:
         from django.core.management import execute_from_command_line
-    except ImportError as e:
+    except ModuleNotFoundError as e:
         if not CONTAINER_NAME:
             raise e
         # Assume the user wants to run us in docker.
@@ -220,7 +220,7 @@ def execute_from_command_line(argv):  # type: (List[str]) -> None
                 os.execvp(cmd_name, cmd_args)
         except OSError:
             # Apparently docker-compose isn't installed, so just raise
-            # the original ImportError.
+            # the original ModuleNotFoundError.
             raise e
 
     execute_from_command_line(argv)
