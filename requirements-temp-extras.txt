@@ -8,3 +8,8 @@
 # should be moved into requirements.txt or requirements-dev.txt before
 # the PR is merged. In other words, this file should always be empty
 # in the master/develop branches.
+
+# TODO: Move these before merging this branch into develop!
+Sphinx==1.5.2
+sphinx-rtd-theme==0.1.9
+recommonmark==0.4.0

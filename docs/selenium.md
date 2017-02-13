@@ -1,8 +1,8 @@
-# Browser tests via Selenium
+## Browser tests via Selenium
 
-## Environment variables
+### Environment variables
 
-### Required variables
+#### Required variables
 
 To run CALC's browser-based tests via Selenium/WebDriver in a real-world
 (i.e., non-PhantomJS) browser, you'll need to define the following
@@ -24,7 +24,7 @@ environment variables, unless otherwise noted:
   Examples include `chrome`, `firefox`, `internet explorer`, `android`,
   `chrome`, `iPhone`, `iPad`, `opera`, and `safari`.
 
-### Optional variables
+#### Optional variables
 
 The following can also be optionally defined:
 
@@ -47,7 +47,7 @@ The following can also be optionally defined:
   `WD_HUB_URL` isn't, its value is automatically set to point to
   `ondemand.saucelabs.com` with the username and access key.
 
-## Example: Docker on OS X
+### Example: Docker on OS X
 
 If you're using Docker, configuration may not be straightforward due
 to the fact that CALC is running in its own Docker container with its
@@ -116,7 +116,7 @@ through the default `DOCKER_EXPOSED_PORT` of `8000`.
    your `.env` to make things run faster.
 
 
-### Running the tests on your machine's Chrome browser
+#### Running the tests on your machine's Chrome browser
 
 One disadvantage of running Chrome headless is that you can't easily
 see what's going on. You can get around this by running the Selenium
