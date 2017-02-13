@@ -16,12 +16,20 @@ help:
 .PHONY: help Makefile
 
 html: Makefile
+# Ideally we should not have to destroy the build directory before
+# rebuilding, but there appears to be a bug in either Sphinx or our
+# Sphinx Theme that causes the table of contents in the sidebar
+# to not be regenerated properly on all pages when it changes. So
+# it's easier for now (especially since our docs build really fast) to
+# wipe out the build directory between rebuilds.
+	rm -rf $(BUILDDIR)
+
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	rm -rf $(DJANGODIR)
 	mkdir -p $(DJANGODIR)
 	cp -R $(BUILDDIR)/html $(DJANGODIR)/docs/
 
-	# https://github.com/snide/sphinx_rtd_theme/issues/359
+# https://github.com/snide/sphinx_rtd_theme/issues/359
 	sed -i.bak 's/font\/fontawesome_/fonts\/fontawesome-/g' \
 	$(DJANGODIR)/docs/_static/css/badge_only.css
 
