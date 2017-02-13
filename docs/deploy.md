@@ -177,7 +177,7 @@ the database service is actually shared between the two production apps. If the 
 breaks the current version of CALC, we'll need to have a (hopefully short) amount of downtime.
 
 We have a very simple maintenance page application that uses the CloudFoundry staticfiles
-buildpack. This app is is the [maintenance_page](../maintenance_page/) subdirectory.
+buildpack. This app is in the [maintenance_page](../maintenance_page/) subdirectory.
 
 If `calc-maintenance` is not running or has not been deployed yet:
 
