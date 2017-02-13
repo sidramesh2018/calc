@@ -192,9 +192,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     # os.path.join(BASE_DIR, 'static'),
-)
+    os.path.join(BASE_DIR, 'docs', 'static')
+]
 
 RQ_QUEUES = {
     'default': {

@@ -5,7 +5,7 @@
       <th>SIN</th>
       <th>Service proposed</th>
       <th>Minimum education</th>
-      <th class="number">Minimum years of experience</th>
+      <th>Min. years of experience</th>
       <th class="number">Price</th>
     </tr>
   </thead>
@@ -14,11 +14,11 @@
     {% with row_count=forloop.counter %}
     <tr>
     {% for col in row %}
-      <td class="{% if col.errors %}error{% endif %} {% if col.name == 'min_years_experience' or col.name == 'price' %}number{% endif %}">
+      <td class="{% if col.errors %}error{% endif %} {% if col.name == 'price' %}number{% endif %}">
         <span {% if col.errors %}aria-describedby="error__row-{{ row_count}}__col-{{ forloop.counter }}"{% endif %}>
-          {% if col.name == 'price' %}
+        {% if col.name == 'price' and col.value %}
             ${{ col.value|floatformat:2 }}
-          {% else %}
+          {% elif col.value %}
             {{ col.value }}
           {% endif %}
         </span>

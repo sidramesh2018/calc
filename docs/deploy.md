@@ -1,11 +1,12 @@
-# Deploying to Cloud Foundry
+## Deploying to Cloud Foundry
 
-**Only of interest to 18F team members**
+**This section is only of interest to 18F team members.**
 
-Download the Cloud Foundry CLI according to the instructions here:
-https://docs.cloud.gov/getting-started/setup/.
-Make sure you are using a version >= v6.17.1, otherwise pushing multiple apps
-at once might not work.
+Download the Cloud Foundry CLI according to the [cloud.gov instructions][].
+Make sure you are using at least version v6.17.1, otherwise pushing
+multiple apps at once might not work.
+
+[cloud.gov instructions]: https://docs.cloud.gov/getting-started/setup/
 
 You will also need to install the [`autopilot`](https://github.com/contraband/autopilot)
 plugin for Cloud Foundry, which is used for zero-downtime deploys.
@@ -20,18 +21,20 @@ Then target the org and space you want to work with. For example, if you wanted 
 `cf target -o fas-calc -s dev`
 
 Manifest files, which contain import deploy configuration settings, are located
-in the [manifests](manifests/) directory of this project.
+in the [manifests](../manifests/) directory of this project.
 
 Note that this project has two requirements files:
 * `requirements.txt` for production dependencies
 * `requirements-dev.txt` for development and testing dependencies
 
-During local development and continuous integration testing, `pip install -r requirements-dev.txt` is used,
-which installs both development and production dependencies.
-During deployments, the Cloud Foundry python buildpack uses only `requirements.txt` by default,
-so only production dependencies will be installed.
+During local development and continuous integration testing,
+`pip install -r requirements-dev.txt` is used, which installs both
+development and production dependencies. During deployments, the Cloud
+Foundry python buildpack uses only `requirements.txt` by default, so
+only production dependencies will be installed.
 
-## CF Structure
+### Cloud Foundry structure
+
 - cloud.gov environment: `GovCloud`
 - Organization: `fas-calc`
 - Spaces: `dev`, `staging`, `prod`
@@ -56,16 +59,17 @@ so only production dependencies will be installed.
   - calc.gsa.gov -> `prod` space, `calc-prod` app
     or the maintenance page app, `calc-maintenance`
 
-## Services
+### Services
 
-### User Provided Service
+#### User Provided Service (UPS)
 
 For cloud.gov deployments, this project makes use of a [User Provided Service (UPS)][UPS] to get its configuration
 variables, instead of using the local environment (except for [New Relic-related environment variables](#new-relic-environment-variables)).
 You will need to create a UPS called `calc-env`, provide 'credentials' to it, and link it to the
 application instance. This will need to be done for every Cloud Foundry `space`.
 
-First, create a JSON file (e.g. `credentials-staging.json`) with all the configuration values specified as per the "Environment Variables" section of [`README.md`][]. **DO NOT COMMIT THIS FILE.**
+First, create a JSON file (e.g. `credentials-staging.json`) with all the configuration values specified as per the
+[Environment variables](environment.md). **DO NOT COMMIT THIS FILE.**
 
 ```json
 {
@@ -90,7 +94,7 @@ cf uups calc-env -p credentials-staging.json
 cf restage calc-dev
 ```
 
-### Database Service
+#### Database service
 
 CALC uses PostgreSQL for its database.
 
@@ -99,7 +103,7 @@ cf create-service aws-rds <SERVICE_PLAN> calc-db
 cf bind-service <APP_INSTANCE> calc-db
 ```
 
-### Redis Service
+#### Redis service
 
 CALC uses Redis along with [rq](http://python-rq.org/) for scheduling and processing
 asynchronous tasks.
@@ -109,19 +113,20 @@ cf create-service redis28 standard calc-redis
 cf bind-service <APP_INSTANCE> calc-redis
 ```
 
-## New Relic Environment Variables
+### New Relic environment variables
 
-Basic New Relic configuration is done in [`newrelic.ini`](/newrelic.ini), with
-additional settings specified in each deployment environment's [manifest](/manifests/) file.
+Basic New Relic configuration is done in [newrelic.ini](../newrelic.ini), with
+additional settings specified in each deployment environment's [manifest](../manifests/) file.
 
-As described in [`README.md`](/README.md), you will need to supply the `NEW_RELIC_LICENSE_KEY`
-as part of each deployment's [User Provided Service](#user-provided-service).
+As described in [Environment variables](environment.md), you will need
+to supply the `NEW_RELIC_LICENSE_KEY` as part of each deployment's
+[User Provided Service](#user-provided-service-ups).
 
-## Staging Server
+### Staging server
 
 The staging server updates automatically when changes are merged into the
-`develop` branch. Check out the `deploy` section of [.travis.yml](.travis.yml)
-for details and settings.
+`develop` branch. Check out the `deploy` section of
+[.travis.yml](../.travis.yml) for details and settings.
 
 Should you need to, you can push directly to calc-dev.app.cloud.gov with:
 
@@ -130,13 +135,11 @@ cf target -o fas-calc -s dev
 cf push -f manifests/manifest-staging.yml
 ```
 
-## Your Own Server
+### Your own sandbox server
 
-If you want to deploy to your own sandbox, e.g. for the purpose of deploying a branch you're working on, see the wiki page on [How to Deploy to your Sandbox](https://github.com/18F/calc/wiki/How-to-Deploy-to-your-Sandbox).
+If you want to deploy to your own sandbox, e.g. for the purpose of deploying a branch you're working on, see the wiki page on [How to Deploy to your cloud.gov Sandbox](https://github.com/18F/calc/wiki/How-to-Deploy-to-your-cloud.gov-Sandbox).
 
-There is an example sandbox manifest at [manifests/manifest-sandbox.yml](manifests/manifest-sandbox.yml)
-
-## Production Servers
+### Production servers
 
 Production deploys are a somewhat manual process in that they are not done
 from CI. However, just like in our Travis deployments to staging, we use the
@@ -174,7 +177,7 @@ the database service is actually shared between the two production apps. If the 
 breaks the current version of CALC, we'll need to have a (hopefully short) amount of downtime.
 
 We have a very simple maintenance page application that uses the CloudFoundry staticfiles
-buildpack. This app is is the [maintenance_page](maintenance_page/) subdirectory.
+buildpack. This app is in the [maintenance_page](../maintenance_page/) subdirectory.
 
 If `calc-maintenance` is not running or has not been deployed yet:
 
@@ -203,7 +206,7 @@ cf map-route calc-prod calc.gsa.gov
 cf unmap-route calc-maintenance
 ```
 
-## Logs
+### Logs
 
 Logs in cloud.gov-deployed applications are generally viewable by running
 `cf logs <APP_NAME> --recent`
@@ -211,14 +214,14 @@ Logs in cloud.gov-deployed applications are generally viewable by running
 Note that the web application and the `rq` worker application have separate
 logs, so you will need to look at each individually.
 
-## Initial Superuser
+### Initial superuser
 
 After the initial setup of `calc-db` and a production app, you will need to
 create a superuser account, after which you'll be able to login to the
 Django admin panel to add additional user accounts. The easiest way to create
 the initial superuser is to use `cf ssh` to get to the remote host
 and run `python manage.py createsuperuser`. You'll need to do some environment
-setup on the remote host, as described at https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-apps.html#ssh-env:
+setup on the remote host, as described at [Cloud Foundry's SSH docs](https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-apps.html#ssh-env):
 
 ```sh
 export HOME=/home/vcap/app
@@ -227,7 +230,7 @@ cd /home/vcap/app
 source /home/vcap/app/.profile.d/python.sh
 ```
 
-## Setting up the API
+### Setting up the API
 
 In production, CALC's public API is actually fronted by an [API Umbrella][]
 instance on api.data.gov which proxies all API requests to CALC. This
@@ -241,18 +244,32 @@ For more information on doing this, see the [api.data.gov User Manual][].
 You'll then want to tell api.data.gov what host it will listen for, and
 what host your API backend is listening on. For example:
 
-| Frontend Host   | Backend Host   |
-| --------------- | -------------- |
-| api.data.gov    | calc-prod.app.cloud.gov |
+<table border="1" class="docutils">
+  <tr>
+    <th>Frontend Host</th>
+    <th>Backend Host</th>
+  </tr>
+  <tr>
+    <td>api.data.gov</td>
+    <td>calc-prod.app.cloud.gov</td>
+  </tr>
+</table>
 
 You will also want to configure your API backend on
 api.data.gov with one **Matching URL Prefixes** entry.
 The **Backend Prefix** should always be `/api/`, while the
 **Frontend Prefix** is up to you. Here's an example:
 
-| Frontend Prefix | Backend Prefix |
-| --------------- | -------------- |
-| /gsa/calc/      | /api/          |
+<table border="1" class="docutils">
+  <tr>
+    <th>Frontend Prefix</th>
+    <th>Backend Prefix</th>
+  </tr>
+  <tr>
+    <td>/gsa/calc/</td>
+    <td>/api/</td>
+  </tr>
+</table>
 
 Now you'll need to configure `API_HOST` on your CALC instance to be
 the combination of your **Frontend Host** and **Frontend Prefix**.
@@ -264,7 +281,7 @@ user manual, you will likely need to configure `WHITELISTED_IPS` on
 your CALC instance to ensure that clients can't bypass rate limiting by
 directly contacting your CALC instance.
 
-## Testing production deployments
+### Testing production deployments
 
 Because reverse proxies like CloudFront can be misconfigured to prevent
 CALC from working properly, we've built a test suite that can be used to

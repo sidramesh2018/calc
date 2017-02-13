@@ -1,4 +1,4 @@
-# CALC release process
+## Release process
 
 This documents the process for issuing and deploying a new
 release for CALC.

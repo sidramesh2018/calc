@@ -31,4 +31,7 @@ COPY requirements-dev.txt /calc/
 
 RUN pip install -r /calc/requirements-dev.txt
 
+COPY requirements-temp-extras.txt /calc/
+RUN pip install -r /calc/requirements-temp-extras.txt
+
 ENTRYPOINT ["python", "/calc/docker_django_management.py"]

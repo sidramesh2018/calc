@@ -6,7 +6,7 @@ MY_DIR = pathlib.Path(__file__).resolve().parent
 
 ROOT_DIR = MY_DIR.parent.parent.parent
 
-RELEASE_MD = ROOT_DIR / 'RELEASE.md'
+RELEASE_MD = ROOT_DIR / 'docs' / 'release.md'
 
 HTML_TEMPLATE = '''\
 <!DOCTYPE html>
