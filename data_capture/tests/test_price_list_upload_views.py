@@ -3,6 +3,7 @@ from datetime import datetime
 
 from model_mommy import mommy
 from django.utils import timezone
+from django.test import override_settings
 from freezegun import freeze_time
 
 from ..models import SubmittedPriceList
@@ -97,6 +98,36 @@ class Step1Tests(PriceListStepTestCase):
         session = self.client.session
         self.assertEqual(session['data_capture:price_list']['step_2_POST'],
                          Step2Tests.valid_form)
+
+    @override_settings(
+        DATA_CAPTURE_SCHEDULES=[
+            FAKE_SCHEDULE,
+            'data_capture.schedules.s70.Schedule70PriceList'],
+    )
+    def test_valid_post_with_diff_schedule_removes_gleaned_data(self):
+        # re-init registry to take overridden settings into account
+        registry._init()
+        self.login()
+
+        # first, post with Fake Schedule selected
+        self.client.post(self.url, self.valid_form)
+        # Save gleaned data into session
+        self.set_fake_gleaned_data(rows=[{
+            'education': 'Bachelors',
+            'price': '15.00',
+            'service': 'Project Manager',
+            'sin': '132-40',
+            'years_experience': '7'
+        }])
+        session = self.client.session
+        self.assertIn('gleaned_data', session['data_capture:price_list'])
+        # Post again but with a different schedule selected
+        self.client.post(self.url, {
+            'schedule': 'data_capture.schedules.s70.Schedule70PriceList',
+            'contract_number': 'GS-123-4567', })
+        session = self.client.session
+        # gleaned_data should now be removed from session
+        self.assertNotIn('gleaned_data', session['data_capture:price_list'])
 
     def test_valid_post_redirects_to_step_2(self):
         self.login()
