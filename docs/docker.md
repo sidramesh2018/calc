@@ -62,17 +62,19 @@ are contained in Docker container images.  Whenever these dependencies change,
 you'll want to re-run `docker-compose build` to rebuild the containers.
 
 ### Debugging Python
-
+
 CALC's `requirements-dev.txt` file will install [`ipdb`][].
 
-To drop into an interactive debugging section, add `import ipdb; ipdb.set_trace()` on the
-line above the point you want to start your debugging session. Then run Docker using the
-`service-ports` option: `docker-compose run --service-ports app`. Your interactive debugging
-session should start in your terminal when you reload the page.
+To drop into an interactive debugging section, add `import ipdb;
+ipdb.set_trace()` on the line above the point you want to start your debugging
+session. Then run Docker using the `service-ports` option: `docker-compose run
+--service-ports app`. Your interactive debugging session should start in your
+terminal when you reload the page.
 
 Here's a [handy list of `ipdb` commands][ipdb_intro].
 
-If you prefer a different debugger, you can add a `RUN` instruction to the end of your Dockerfile, e.g. `RUN pip install my_better_debugger`.
+If you prefer a different debugger, you can add a `RUN` instruction to the end
+of your Dockerfile, e.g. `RUN pip install my_better_debugger`.
 
 [`ipdb`]: https://pypi.python.org/pypi/ipdb
 [ipdb_intro]: https://www.safaribooksonline.com/blog/2014/11/18/intro-python-debugger/
@@ -118,21 +120,15 @@ environment variables, and also points to the alternate Dockerfile:
 ```yaml
 version: '2'
 services:
-  app:
+  app: &app
     build:
       dockerfile: Dockerfile.cloud
     environment:
       - DEBUG=yup
   rq_worker:
-    build:
-      dockerfile: Dockerfile.cloud
-    environment:
-      - DEBUG=yup
+    <<: *app
   rq_scheduler:
-    build:
-      dockerfile: Dockerfile.cloud
-    environment:
-      - DEBUG=yup
+    <<: *app
 ```
 
 You'll also want to tell Docker Compose what port to listen on,
