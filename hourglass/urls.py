@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 from .decorators import staff_login_required
 from .healthcheck import healthcheck
@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^updates/$', view_changelog, name='updates'),
     url(r'^auth/', include('uaa_client.urls', namespace='uaa_client')),
     url(r'^account/', include('user_account.urls', namespace='user_account')),
+    url(r'^docs/',
+        RedirectView.as_view(url=settings.STATIC_URL + 'docs/index.html'),
+        name='sphinx-docs')
 ]
 
 tests_url = url(r'^tests/$', TemplateView.as_view(template_name='tests.html'),

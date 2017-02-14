@@ -38,3 +38,5 @@ release-*-instructions.html
 jest/*
 >>>>>>> origin/develop
 Dockerfile.cloud
+docs/_build
+docs/static

@@ -6,6 +6,7 @@ if (!('DEBUG' in process.env)) {
   process.env.NODE_ENV = 'production';
 }
 
+const spawn = require('child_process').spawn;
 const path = require('path');
 
 const gulp = require('gulp');
@@ -36,6 +37,7 @@ const dirs = {
   src: {
     style: 'frontend/source/sass/',
     scripts: 'frontend/source/js/',
+    sphinx: 'docs/',
   },
   dest: {
     style: {
@@ -48,6 +50,7 @@ const dirs = {
 const paths = {
   sass: '**/*.scss',
   js: '**/*.@(js|jsx)',
+  sphinx: '*.@(md|py|rst)',
 };
 
 const bundles = {
@@ -127,13 +130,29 @@ Object.keys(bundles).forEach((name) => {
 // running `gulp` will default to watching and dist'ing files
 gulp.task('default', ['watch']);
 
+gulp.task('sphinx', (cb) => {
+  const sphinx = spawn('make', ['html'], {
+    stdio: 'inherit',
+    cwd: path.join(__dirname, '/docs'),
+    shell: true,
+  });
+  sphinx.on('exit', (code) => {
+    if (code !== 0) {
+      cb(new Error('Sphinx failed!'));
+      return;
+    }
+    cb(null);
+  });
+});
+
 // production build task
 // will need to run before collectstatic
 // `npm run gulp -- build` or `gulp run build` if gulp-cli is installed globally
-gulp.task('build', ['sass', 'js']);
+gulp.task('build', ['sass', 'js', 'sphinx']);
 
 // watch files for changes
-gulp.task('watch', ['set-watching', 'sass', 'js'], () => {
+gulp.task('watch', ['set-watching', 'sass', 'js', 'sphinx'], () => {
+  gulp.watch(path.join(dirs.src.sphinx, paths.sphinx), ['sphinx']);
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
 
   // browserified bundles set up their own watch handling (via watchify)
