@@ -6,7 +6,8 @@ services:
       - python-venv:/venv/
       - node-modules:/calc/node_modules/
     environment:
-      - VENV_DIR=/venv
+      - DDM_VENV_DIR=/venv
+      - DDM_USER_OWNED_DIRS=/venv:/calc/node_modules
       - DDM_HOST_USER=calc_user
       - PYTHONUNBUFFERED=yup
       - DATABASE_URL=postgres://calc_user@db/calc

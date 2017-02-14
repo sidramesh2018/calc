@@ -60,6 +60,24 @@
 
     Once everything is set up, developers can start your Django
     project via `docker-compose up`.
+
+    Optional environment variables:
+
+    * `DDM_HOST_USER` is the username as it will appear in the
+      Docker container. It's purely for cosmetic purposes and
+      defaults to `docker_user`.
+
+    * `DDM_USER_OWNED_DIRS` is a list of paths that need to be
+      owned by the `DDM_HOST_USER`, e.g. `/foo:/bar:/baz`. This
+      can be useful if your configuration uses Docker volumes,
+      which are owned by root by default. The entrypoint will
+      change ownership if needed before anything is run.
+
+    * `DDM_VENV_DIR` is the name of a directory in the container in
+      which a Python virtualenv should exist. If the directory
+      is empty when the entrypoint is run, a virtualenv will
+      be created in it. The virtualenv is transparently
+      activated before the entrypoint exec's.
 '''
 
 import os
@@ -81,6 +99,8 @@ MY_DIR = os.path.abspath(os.path.dirname(__file__))
 HOST_UID = os.stat(MY_DIR).st_uid
 
 HOST_USER = os.environ.get('DDM_HOST_USER', 'docker_user')
+USER_OWNED_DIRS = os.environ.get('DDM_USER_OWNED_DIRS', '')
+VENV_DIR = os.environ.get('DDM_VENV_DIR', '')
 CONTAINER_NAME = os.environ.get('DDM_CONTAINER_NAME')
 IS_RUNNING_IN_DOCKER = 'DDM_IS_RUNNING_IN_DOCKER' in os.environ
 
@@ -272,29 +292,29 @@ def entrypoint(argv):  # type: (List[str]) -> None
                 '-u', str(HOST_UID)
             ])
 
-        VENV_DIR = os.environ['VENV_DIR']
-
-        for dirname in ['/calc/node_modules', VENV_DIR]:
-            subprocess.check_call([
-                'chown',
-                '{}:{}'.format(HOST_UID, HOST_UID),
-                dirname
-            ])
+        if USER_OWNED_DIRS:
+            for dirname in USER_OWNED_DIRS.split(os.path.pathsep):
+                subprocess.check_call([
+                    'chown',
+                    '{}:{}'.format(HOST_UID, HOST_UID),
+                    dirname
+                ])
 
         os.environ['HOME'] = '/home/%s' % pwd.getpwuid(HOST_UID).pw_name
         os.setuid(HOST_UID)
 
-    ACTIVATE_THIS = os.path.join(VENV_DIR, 'bin/activate_this.py')
+    if VENV_DIR:
+        activate_this = os.path.join(VENV_DIR, 'bin/activate_this.py')
 
-    if not os.path.exists(ACTIVATE_THIS):
-        subprocess.check_call([
-            'virtualenv',
-            '.',
-        ], cwd=VENV_DIR)
+        if not os.path.exists(activate_this):
+            subprocess.check_call([
+                'virtualenv',
+                '.',
+            ], cwd=VENV_DIR)
 
-    # https://virtualenv.pypa.io/en/latest/userguide.html
-    with open(ACTIVATE_THIS) as f:
-        exec(f.read(), dict(__file__=ACTIVATE_THIS))
+        # https://virtualenv.pypa.io/en/latest/userguide.html
+        with open(activate_this) as f:
+            exec(f.read(), dict(__file__=activate_this))
 
     os.execvp(argv[1], argv[1:])
 
