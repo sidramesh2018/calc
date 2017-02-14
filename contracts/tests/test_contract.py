@@ -1,4 +1,5 @@
 import datetime
+import unittest
 from decimal import Decimal
 from itertools import cycle
 
@@ -258,7 +259,19 @@ class ContractTestCase(TestCase):
             c.calculate_end_year()
 
 
-class ContractSearchTestCase(TestCase):
+class BaseContractSearchTestCase(TestCase):
+    def assertCategoriesEqual(self, results, categories):
+        result_categories = [r.labor_category for r in results]
+        self.assertEqual(sorted(result_categories), sorted(categories))
+
+    def setUp(self):
+        self.contracts = get_contract_recipe().make(
+            labor_category=cycle(self.CATEGORIES),
+            _quantity=len(self.CATEGORIES)
+        )
+
+
+class ContractSearchTestCase(BaseContractSearchTestCase):
     CATEGORIES = [
         'Sign Language Interpreter',
         'Foreign Language Staff Interpreter (Spanish sign language)',
@@ -269,16 +282,6 @@ class ContractSearchTestCase(TestCase):
         'Interpretation Services Class 1: Spanish',
         'Interpretation Services Class 2: French, German, Italian',
     ]
-
-    def assertCategoriesEqual(self, results, categories):
-        result_categories = [r.labor_category for r in results]
-        self.assertEqual(sorted(result_categories), sorted(categories))
-
-    def setUp(self):
-        self.contracts = get_contract_recipe().make(
-            labor_category=cycle(self.CATEGORIES),
-            _quantity=len(self.CATEGORIES)
-        )
 
     def test_multi_phrase_search_works_with_single_word_phrase(self):
         results = Contract.objects.multi_phrase_search('interpretation')
@@ -327,4 +330,19 @@ class ContractSearchTestCase(TestCase):
             u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
             u'Interpretation Services Class 1: Spanish',
             u'Interpretation Services Class 2: French, German, Italian'
+        ])
+
+
+class NormalizedContractSearchTestCase(BaseContractSearchTestCase):
+    CATEGORIES = [
+        'Jr. Language Interpreter',
+        'Junior Language Interpreter',
+    ]
+
+    @unittest.skip("eventually we should support this!")
+    def test_works_with_jr(self):
+        results = Contract.objects.multi_phrase_search('junior')
+        self.assertCategoriesEqual(results, [
+            'Jr. Language Interpreter',
+            'Junior Language Interpreter',
         ])
