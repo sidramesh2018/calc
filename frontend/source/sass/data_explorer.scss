@@ -453,6 +453,10 @@ a.focus-input {
   border-radius: $border-radius;
   display: inline-block;
   padding-left: 0; // ul default override
+
+  label {
+    font-size: $base-font-size;
+  }
 }
 
 .contract-year-item {
@@ -618,10 +622,7 @@ input[type="radio"]:focus + .checkbox-focus {
   border-right: 1px solid $color-gray-lighter;
   &:last-of-type {
     border: none;
-    margin-right: -1px;
-  }
-  &:not(:first-child) {
-    margin-left: -3px
+    margin-right: -3px;
   }
 }
 
