@@ -66,7 +66,7 @@ API_HOST = os.environ.get('API_HOST', '/api/')
 
 GA_TRACKING_ID = os.environ.get('GA_TRACKING_ID', '')
 
-ETHNIO_SCREENER_ID = os.environ.get('ETHNIO_SCREENER_ID')
+NON_PROD_INSTANCE_NAME = os.environ.get('NON_PROD_INSTANCE_NAME')
 
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -79,8 +79,8 @@ TEMPLATES = [{
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
             'hourglass.context_processors.google_analytics_tracking_id',
-            'hourglass.context_processors.ethnio_screener_id',
             'hourglass.context_processors.help_email',
+            'hourglass.context_processors.non_prod_instance_name',
             'frontend.context_processors.is_safe_mode_enabled',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",
@@ -192,9 +192,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     # os.path.join(BASE_DIR, 'static'),
-)
+    os.path.join(BASE_DIR, 'docs', 'static')
+]
 
 RQ_QUEUES = {
     'default': {
@@ -323,16 +324,12 @@ LOGIN_REDIRECT_URL = '/'
 # gets served to end-users.
 CACHE_MIDDLEWARE_SECONDS = 0
 
-if DEBUG:
-    INSTALLED_APPS += ('fake_uaa_provider',)
-
 if not UAA_CLIENT_SECRET:
     if DEBUG:
         # We'll be using the Fake UAA Provider.
         UAA_CLIENT_SECRET = 'fake-uaa-provider-client-secret'
-        UAA_AUTH_URL = UAA_TOKEN_URL = 'fake:'
-    else:
-        raise Exception('UAA_CLIENT_SECRET must be defined in production.')
+        if not is_running_tests():
+            UAA_AUTH_URL = UAA_TOKEN_URL = 'fake:'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 

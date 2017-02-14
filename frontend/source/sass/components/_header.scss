@@ -29,6 +29,11 @@
       }
     }
   }
+
+  &.banner__non-prod {
+    background: $color-gold;
+    color: $color-gray-dark;
+  }
 }
 
 header {

@@ -32,3 +32,7 @@ calc-prod_manifest.yml
 tag-message-*.txt
 release-*-instructions.txt
 release-*-instructions.html
+jest/*
+Dockerfile.cloud
+docs/_build
+docs/static

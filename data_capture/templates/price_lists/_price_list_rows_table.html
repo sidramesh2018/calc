@@ -1,4 +1,4 @@
-<table>
+<table class="price-list-table">
   <thead>
     <tr>
       <th>SIN(s)</th>
@@ -16,7 +16,7 @@
         <td>{{ row.labor_category }}</td>
         <td>{{ row.get_education_level_display }}</td>
         <td class="number">{{ row.min_years_experience }}</td>
-        <td class="number currency">{{ row.base_year_rate }}</td>
+        <td class="number">${{ row.base_year_rate }}</td>
         <td>{{ row.is_muted }}</td>
       </tr>
     {% endfor %}

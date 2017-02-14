@@ -1,9 +1,9 @@
-# CALC Data Imports
+## Updating contract data (out of date)
 
-**NOTE:** This document is out-of-date and pending [review/removal](https://github.com/18F/calc/issues/840)
+**NOTE:** This document is out-of-date and pending [review/removal](https://github.com/18F/calc/issues/840).
 
-## About the data
-https://github.com/18F/calc/tree/master/contracts/docs has all versions of the data that has been imported to date. https://github.com/18F/calc/blob/master/contracts/docs/hourly_prices.csv is the most recent data set.
+### About the data
+[contracts/docs](../contracts/docs) has all versions of the data that has been imported to date. [contracts/docs/hourly_prices.csv](../contracts/docs/hourly_prices.csv) is the most recent data set.
 
 The files that we get are in .xlsx format. They need to be converted to CSV. The columns should be arranged as such:
 - Labor Category
@@ -77,13 +77,13 @@ Must be an integer from 1-5. Cannot be empty.
 ##### Contract Start Date and Contract End Date
 Month/Day/Year Ex: "12/3/14"
 
-## Schedule 70 data
+### Schedule 70 data
 
 Schedule 70 contracts have a slightly different data format and are imported through a separate process.
 
-https://github.com/18F/calc/tree/master/contracts/docs/s70 has all versions of Schedule 70 data that have been imported to date.
+[contracts/docs/s70](../contracts/docs/s70) has all versions of Schedule 70 data that have been imported to date.
 
-https://github.com/18F/calc/blob/master/contracts/docs/s70/s70_data.csv is the most recent data.
+[contracts/docs/s70/s70_data.csv](../contracts/docs/s70/s70_data.csv) is the most recent data.
 
 The files that we get are also in .xlsx format. They need to be converted to CSV. It uses the same columns as above, but in a slightly different order:
 
@@ -102,23 +102,24 @@ The files that we get are also in .xlsx format. They need to be converted to CSV
 - Contract begin date
 - Contract end date
 
-## Updating the contract data
+### Updating the contract data
 
-Save a copy of the CSV as the next version of the data in https://github.com/18F/calc/tree/master/contracts/docs. Overwrite `hourly_prices.csv` with the new file.
+Save a copy of the CSV as the next version of the data in [contracts/docs](../contracts/docs). Overwrite `hourly_prices.csv` with the new file.
 
-Run `./manage.py load_data`
+Run `./manage.py load_data`.
 
 This will replace all existing records with the ones in the CSV.
 
-Save a copy of the Schedule 70 CSV as the next version of the data in https://github.com/18F/calc/tree/master/contracts/s70/docs. Overwrite `s70_data.csv` with the new file.
+Save a copy of the Schedule 70 CSV as the next version of the data in [contracts/docs/s70/s70_data.csv](../contracts/docs/s70/s70_data.csv), overwriting the old file.
 
-Run `./manage.py load_s70`
+Run `./manage.py load_s70`.
 
 This will replace all existing Schedule 70 records with the ones in the CSV.
 
-For more information on the Schedule 70 data loader and its configuration options, run `./manage.py load_s70 --help`
+For more information on the Schedule 70 data loader and its configuration options, run `./manage.py load_s70 --help`.
 
 Should the format of the file we import ever change, run `./manage.py makemigrations` and alert the team that they will need to run migrations on their local environments.
 
-## Updating data on Cloud Foundry
+### Updating data on Cloud Foundry
+
 Before pushing to an app, edit the `manifest.yml` and under the environment you want to push to, add `command: bash cf.sh`.

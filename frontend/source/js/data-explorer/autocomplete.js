@@ -7,7 +7,6 @@ export function appendHighlightedTerm($el, term, searchStr) {
     .trim()
     .split(/[ ]+/)
     .join('|');
-  const re = new RegExp(`(${sanitizedSearch})`, 'gi');
 
   const plainText = (start, end) => document.createTextNode(
     term.substring(start, end),
@@ -15,6 +14,12 @@ export function appendHighlightedTerm($el, term, searchStr) {
   const highlightedText = (start, end) => $('<b></b>').text(
     term.substring(start, end),
   )[0];
+
+  if (sanitizedSearch.length === 0) {
+    return $el.append(plainText(term));
+  }
+
+  const re = new RegExp(`(${sanitizedSearch})`, 'gi');
 
   let done = false;
   let lastIndex = 0;
@@ -108,5 +113,12 @@ export function initialize(el, {
       // update the search input field accordingly
       setFieldValue(selectedInput);
     },
+  });
+
+  $(el).on('blur', () => {
+    // If the user manually changed the field without actually
+    // selecting anything in the autocomplete list, it should take
+    // effect as soon as the user focuses on something else.
+    setFieldValue(el.value);
   });
 }

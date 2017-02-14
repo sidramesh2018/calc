@@ -156,7 +156,8 @@ export function activateManualScrollRestoration(window, scrollMs) {
     smoothlyScrollToLocationHash(window, scrollMs);
   } else {
     onPageReady(window, () => {
-      doc.documentElement.scrollTop = doc.body.scrollTop = scrollTop;
+      doc.documentElement.scrollTop = scrollTop;
+      doc.body.scrollTop = scrollTop;
     });
   }
 

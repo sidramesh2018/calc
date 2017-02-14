@@ -134,7 +134,6 @@ class TestGenerateColumnIndexMap(TestCase):
 
 
 class FindHeaderRowTests(TestCase):
-
     def return_heading_on_row_4(self, row, col):
         if row is 4:
             return s70.EXAMPLE_SHEET_ROWS[0][0]
@@ -203,6 +202,30 @@ class GleanLaborCategoriesTests(TestCase):
                 uploaded_xlsx_file(),
                 sheet_name='foo'
             )
+
+    def test_stops_parsing_when_stop_text_encountered(self):
+        book = FakeWorkbook()
+        book._sheets[0]._cells.append(deepcopy(s70.EXAMPLE_SHEET_ROWS[1]))
+        book._sheets[0]._cells.append(deepcopy(s70.EXAMPLE_SHEET_ROWS[1]))
+        rows = s70.glean_labor_categories_from_book(book)
+        self.assertEqual(len(rows), 3)
+
+        book._sheets[0]._cells[2][0] = ('Most favored customer’s Discount '
+                                        'or Discount Range (MFC)')
+        rows = s70.glean_labor_categories_from_book(book)
+        self.assertEqual(len(rows), 1)
+
+    def stops_parsing_when_sin_and_price_are_empty(self):
+        book = FakeWorkbook()
+        book._sheets[0]._cells.append(deepcopy(s70.EXAMPLE_SHEET_ROWS[1]))
+        book._sheets[0]._cells.append(deepcopy(s70.EXAMPLE_SHEET_ROWS[1]))
+        rows = s70.glean_labor_categories_from_book(book)
+        self.assertEqual(len(rows), 3)
+
+        book._sheets[0]._cells[2][0] = ''
+        book._sheets[0]._cells[2][11] = ''
+        rows = s70.glean_labor_categories_from_book(book)
+        self.assertEqual(len(rows), 1)
 
 
 class LoadFromUploadValidationErrorTests(TestCase):

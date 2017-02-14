@@ -58,6 +58,9 @@ DEFAULT_FIELD_TITLE_MAP = {
     'price_including_iff': 'PRICE OFFERED TO GSA (including IFF)',
 }
 
+# Text to indicate the definite end of the the price list table
+STOP_TEXT = r'Most Favored Customer'
+
 logger = logging.getLogger(__name__)
 
 
@@ -150,7 +153,6 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
         'min_years_experience': int,
         'education_level': extract_min_education,
         'unit_of_issue': extract_hour_unit_of_issue,
-        'price_excluding_iff': strip_non_numeric
     }
 
     while True:
@@ -160,9 +162,14 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
         price_including_iff = cval(col_idx_map['price_including_iff'],
                                    coercer=strip_non_numeric)
 
-        # We basically just keep going until we run into a row that
-        # doesn't have a SIN or price including IFF.
-        if not sin.strip() and not price_including_iff.strip():
+        has_stop_text = re.match(STOP_TEXT, cval(0), re.IGNORECASE)
+
+        # We just keep going until we run into a row that either starts with
+        # STOP_TEXT or that doesn't have a SIN and price including IFF.
+        should_stop = has_stop_text or (
+            not sin.strip() and not price_including_iff.strip())
+
+        if should_stop:
             break
 
         cat = {}
@@ -185,10 +192,11 @@ class Schedule70Row(forms.Form):
         help_text="e.g. job title/task"
     )
     education_level = forms.CharField(
-        label="Minimum education / certification level",
+        label="Min. education",
+        help_text="or certification level",
     )
     min_years_experience = forms.IntegerField(
-        label="Minimum years of experience"
+        label="Min. years of experience"
     )
     unit_of_issue = forms.CharField(
         label="Unit of issue",
