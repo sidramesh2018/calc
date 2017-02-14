@@ -120,21 +120,15 @@ environment variables, and also points to the alternate Dockerfile:
 ```yaml
 version: '2'
 services:
-  app:
+  app: &app
     build:
       dockerfile: Dockerfile.cloud
     environment:
       - DEBUG=yup
   rq_worker:
-    build:
-      dockerfile: Dockerfile.cloud
-    environment:
-      - DEBUG=yup
+    <<: *app
   rq_scheduler:
-    build:
-      dockerfile: Dockerfile.cloud
-    environment:
-      - DEBUG=yup
+    <<: *app
 ```
 
 You'll also want to tell Docker Compose what port to listen on,
