@@ -11,7 +11,13 @@
   <link rel="stylesheet" href="{% static 'frontend/style/vendor/vex.css' %}" />
   <link rel="stylesheet" href="{% static 'frontend/style/vendor/vex-theme-default.css' %}" />
 <![endif]-->
-{% endblock %}
+
+<![if gt IE 8]>
+  {# For the list of files included in this built script, see gulpfile.js #}
+  <script src= "{% static 'frontend/built/js/data-explorer/vendor.min.js' %}"></script>
+  <script src= "{% static 'frontend/built/js/data-explorer/index.min.js' %}"></script>
+<![endif]>
+{% endblock head %}
 
 {% block header_extension %}
 <div class="row clearfix">
@@ -46,11 +52,3 @@
   </div>
 </div>
 {% endblock %}
-
-{% block before_body_close %}
-  <![if gt IE 8]>
-  {# For the list of files included in this built script, see gulpfile.js #}
-  <script src= "{% static 'frontend/built/js/data-explorer/vendor.min.js' %}"></script>
-  <script src= "{% static 'frontend/built/js/data-explorer/index.min.js' %}"></script>
-  <![endif]>
-{% endblock before_body_close %}
