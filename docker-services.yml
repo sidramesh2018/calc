@@ -3,9 +3,10 @@ services:
   base_app:
     build: .
     volumes:
-      - python-venv:/calc/venv/
+      - python-venv:/venv/
       - node-modules:/calc/node_modules/
     environment:
+      - VENV_DIR=/venv
       - DDM_HOST_USER=calc_user
       - PYTHONUNBUFFERED=yup
       - DATABASE_URL=postgres://calc_user@db/calc

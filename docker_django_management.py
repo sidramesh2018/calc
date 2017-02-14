@@ -272,7 +272,7 @@ def entrypoint(argv):  # type: (List[str]) -> None
                 '-u', str(HOST_UID)
             ])
 
-        VENV_DIR = '/calc/venv'
+        VENV_DIR = os.environ['VENV_DIR']
 
         for dirname in ['/calc/node_modules', VENV_DIR]:
             subprocess.check_call([
@@ -290,7 +290,7 @@ def entrypoint(argv):  # type: (List[str]) -> None
         subprocess.check_call([
             'virtualenv',
             '.',
-        ], cwd='/calc/venv')
+        ], cwd=VENV_DIR)
 
     # https://virtualenv.pypa.io/en/latest/userguide.html
     with open(ACTIVATE_THIS) as f:
