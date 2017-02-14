@@ -2,6 +2,9 @@ version: '2'
 services:
   base_app:
     build: .
+    volumes:
+      - python-venv:/calc/venv/
+      - node-modules:/calc/node_modules/
     environment:
       - DDM_HOST_USER=calc_user
       - PYTHONUNBUFFERED=yup
