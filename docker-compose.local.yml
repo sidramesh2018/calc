@@ -3,22 +3,27 @@ services:
   app:
     volumes:
       - .:/calc
+      - python-venv:/calc/venv/
       # http://stackoverflow.com/a/37898591
-      - /calc/node_modules/
+      - node-modules:/calc/node_modules/
     command: python manage.py runserver 0.0.0.0:${DOCKER_EXPOSED_PORT}
     environment:
       - EMAIL_URL=smtp://mailcatcher:25/
     links:
       - mailcatcher
   gulp:
-    build: .
+    extends:
+      file: docker-services.yml
+      service: base_app
     volumes:
       - .:/calc
-      - /calc/node_modules/
+      - python-venv:/calc/venv/
+      - node-modules:/calc/node_modules/
     command: gulp
   rq_worker:
     volumes:
       - .:/calc
+      - python-venv:/calc/venv/
     environment:
       - EMAIL_URL=smtp://mailcatcher:25/
     links:
@@ -26,6 +31,7 @@ services:
   rq_scheduler:
     volumes:
       - .:/calc
+      - python-venv:/calc/venv/
     environment:
       - EMAIL_URL=smtp://mailcatcher:25/
     links:
@@ -34,3 +40,6 @@ services:
     image: tophfr/mailcatcher:latest
     ports:
       - 1080:80
+volumes:
+  node-modules:
+  python-venv:

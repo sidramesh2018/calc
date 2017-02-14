@@ -271,8 +271,31 @@ def entrypoint(argv):  # type: (List[str]) -> None
                 '-m', username,
                 '-u', str(HOST_UID)
             ])
+
+        VENV_DIR = '/calc/venv'
+
+        for dirname in ['/calc/node_modules', VENV_DIR]:
+            subprocess.check_call([
+                'chown',
+                '{}:{}'.format(HOST_UID, HOST_UID),
+                dirname
+            ])
+
         os.environ['HOME'] = '/home/%s' % pwd.getpwuid(HOST_UID).pw_name
         os.setuid(HOST_UID)
+
+    ACTIVATE_THIS = os.path.join(VENV_DIR, 'bin/activate_this.py')
+
+    if not os.path.exists(ACTIVATE_THIS):
+        subprocess.check_call([
+            'virtualenv',
+            '.',
+        ], cwd='/calc/venv')
+
+    # https://virtualenv.pypa.io/en/latest/userguide.html
+    with open(ACTIVATE_THIS) as f:
+        exec(f.read(), dict(__file__=ACTIVATE_THIS))
+
     os.execvp(argv[1], argv[1:])
 
 
