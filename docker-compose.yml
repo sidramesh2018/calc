@@ -35,3 +35,6 @@ services:
     command: python manage.py rqscheduler
     environment:
       - IS_RQ_SCHEDULER=yup
+volumes:
+  node-modules:
+  python-venv:
