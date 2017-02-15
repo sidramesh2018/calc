@@ -1,26 +1,50 @@
 ## Setup
 
+Setting up CALC locally without Docker is possible, but it requires
+quite a few prerequisites. If the following instructions seem daunting,
+you may want to check out our alternative [Docker instructions](docker.md).
+
+### Prerequisites
+
+You'll need the following tools and services installed to run CALC
+locally:
+
+* [Python 3.5.2](https://www.python.org/)
+* [Node 6.0](https://nodejs.org/)
+* [Postgres](https://www.postgresql.org/)
+  * It's easiest to have a local instance of it running on its default
+    port, as this requires no extra configuration on the CALC side.
+* [Redis](https://redis.io/)
+  * It's easiest to have a local instance of it running on its default
+    port, as this requires no extra configuration on the CALC side.
+  * For guidance on installing Redis, see
+    [Installing Redis on Mac OSX][redis-osx] or
+    [Installing Redis on Ubuntu][redis-ubuntu].
+
+### Configuration
+
 CALC is a [Django] project. You can configure everything by running:
 
 ```sh
 cp .env.sample .env
 ```
 
-Edit the `.env` file to contain your local database configuration. Note
-that you need to use postgres as a backend, since CALC uses its full-text
-search functionality.
+Edit the `.env` file to your tastes. If all your services are on their
+default ports, you shouldn't need to change much here; if not, see
+[Environment variables](environment.md) for details on
+configuration.
 
-You'll also want to make sure you have a local instance of redis running,
-on its default port, as we use it for CALC's task queue.
+### Creating the database
 
-For guidance on installing Redis, see [Installing Redis on Mac OSX][redis-osx]
-or [Installing Redis on Ubuntu][redis-ubuntu].
-
-Assuming you have Postgres installed you can create the database:
+Assuming you haven't changed the database mentioned in the
+your `.env` file's `DATABASE_URL` value from its default value,
+you can create the Postgres database by running:
 
 ```sh
 createdb hourglass
 ```
+
+### Running the update script
 
 Now run:
 
@@ -29,44 +53,76 @@ Now run:
 ```
 
 This script will install/update all Python and Node dependencies,
-as well as apply any necessary database migrations. You'll also want to
-run it whenever you update your repository via commands like
-`git pull` or `git checkout`.
+as well as apply any necessary database migrations.
 
-After that, you can load all of the data by running:
+You'll also want to run this script whenever you update your repository
+via commands like `git pull` or `git checkout`.
+
+### Loading data (optional)
+
+After that, you can optionally load all of the data by running:
 
 ```sh
 ./manage.py load_data
 ./manage.py load_s70
 ```
 
-From there, you're just a hop, skip and a jump away from your own dev server:
+### Starting the development server
+
+Now you can start the development server:
 
 ```sh
 ./manage.py runserver
 ```
 
-In another terminal, you will also need to run `gulp` to watch and rebuild 
-static assets. All the static assets (SASS for CSS and ES6 JavaScript) are 
-located in the [frontend/source/](../frontend/source/) directory. Outputs
-from the gulp build are placed in `frontend/static/frontend/built/`.
-Examine [gulpfile.js](../gulpfile.js) for details of our gulp asset pipeline.
+Don't visit it just yet, though--first you'll need to start the static
+asset build pipeline.
 
-Note that if you are using our [Docker setup](docker.md), running gulp will
-be handled for you.
+### Starting the static asset generator
+
+In another terminal, you will also need to run `gulp` to watch and rebuild 
+static assets:
 
 ```sh
 npm run gulp
 ```
 
-If you just want to build the assets once without watching for changes, run
+<!-- TODO: The rest of this section should eventually be moved to -->
+<!-- a separate front-end guide. See #1360. -->
+
+All the static assets (SASS for CSS and ES6 JavaScript) are 
+located in the [frontend/source/](../frontend/source/) directory. Outputs
+from the gulp build are placed in `frontend/static/frontend/built/`.
+Examine [gulpfile.js](../gulpfile.js) for details of our gulp asset pipeline.
+
+If you just want to build the assets once without watching for changes, run:
 
 ```sh
 npm run gulp -- build
 ```
 
+### Starting the task runner
+
 Also, in yet another terminal, you will want to run
-`python manage.py rqworker` to process all the tasks in the task queue.
+the following to process all the tasks in the task queue:
+
+```sh
+python manage.py rqworker
+```
+
+### Starting the task scheduler (optional)
+
+You can also start CALC's task scheduler in a separate terminal,
+though it's not required:
+
+```sh
+IS_RQ_SCHEDULER=yup python manage.py rqscheduler
+```
+
+### Visiting the development server
+
+Now you're ready to visit your local development site! Load
+http://localhost:8000/ in your browser.
 
 [redis-ubuntu]: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04
 

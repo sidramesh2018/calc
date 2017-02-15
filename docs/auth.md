@@ -1,4 +1,4 @@
-## Authentication and Authorization
+## Authentication and authorization
 
 We use cloud.gov/Cloud Foundry's User Account and Authentication (UAA)
 server to authenticate users. When a user logs in via UAA, their email

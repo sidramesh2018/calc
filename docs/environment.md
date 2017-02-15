@@ -1,4 +1,4 @@
-## Environment Variables
+## Environment variables
 
 Unlike traditional Django settings, we use environment variables
 for configuration to be compliant with [twelve-factor][] apps.
@@ -26,7 +26,8 @@ string), the boolean is true; otherwise, it's false.
   value when `DEBUG` is true.
 
 * `DATABASE_URL` is the URL for the database, as per the
-  [DJ-Database-URL schema][].
+  [DJ-Database-URL schema][]. Note that the protocol *must* be
+  `postgres:`.
 
 * `EMAIL_URL` is the URL for the service to use when sending
   email, as per the [dj-email-url schema][]. When `DEBUG` is true,
