@@ -81,9 +81,9 @@ def get_contracts_queryset(request_params, wage_field):
             q_objs = Q()
             for q in qs:
                 if query_type == 'match_phrase':
-                    q_objs.add(Q(_labor_category__icontains=q), Q.OR)
+                    q_objs.add(Q(labor_category__icontains=q), Q.OR)
                 elif query_type == 'match_exact':
-                    q_objs.add(Q(_labor_category__iexact=q.strip()), Q.OR)
+                    q_objs.add(Q(labor_category__iexact=q.strip()), Q.OR)
             contracts = contracts.filter(q_objs)
 
     if experience_range:
@@ -259,16 +259,11 @@ class GetAutocomplete(APIView):
 
         if q:
             if query_type == 'match_phrase':
-                data = Contract.objects.filter(_labor_category__icontains=q)
+                data = Contract.objects.filter(labor_category__icontains=q)
             else:
                 data = Contract.objects.multi_phrase_search(q)
-            data = data.values('_labor_category').annotate(
-                count=Count('_labor_category')).order_by('-count')
-            data = [
-                {'labor_category': d['_labor_category'],
-                 'count': d['count']}
-                for d in data
-            ]
+            data = data.values('labor_category').annotate(
+                count=Count('labor_category')).order_by('-count')
             return Response(data)
         else:
             return Response([])
