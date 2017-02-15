@@ -42,6 +42,6 @@ describe('q deserializer', () => {
 
   it('truncates to the MAX_QUERY_LENGTH', () => {
     const longQuery = Array(MAX_QUERY_LENGTH + 5).join('a');
-    expect(q(longQuery).length).toEqual(MAX_QUERY_LENGTH);
+    expect(q(longQuery)).toHaveLength(MAX_QUERY_LENGTH);
   });
 });
