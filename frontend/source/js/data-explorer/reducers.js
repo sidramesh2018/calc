@@ -49,11 +49,11 @@ function contractYear(state = DEFAULT_CONTRACT_YEAR, action) {
 }
 
 export function q(state = '', action) {
-  const cleanedState = state.slice(0, MAX_QUERY_LENGTH);
   if (action.type === SET_QUERY) {
-    return action.query;
+    const cleanedQuery = action.query.slice(0, MAX_QUERY_LENGTH);
+    return cleanedQuery;
   }
-  return cleanedState;
+  return state;
 }
 
 function education(state = [], action) {
