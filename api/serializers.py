@@ -14,3 +14,4 @@ class ContractSerializer(serializers.ModelSerializer):
                   'hourly_rate_year1', 'current_price', 'next_year_price',
                   'second_year_price', 'schedule', 'sin', 'contractor_site',
                   'business_size')
+        read_only_fields = ('labor_category',)

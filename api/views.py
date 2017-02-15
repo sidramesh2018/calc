@@ -81,9 +81,9 @@ def get_contracts_queryset(request_params, wage_field):
             q_objs = Q()
             for q in qs:
                 if query_type == 'match_phrase':
-                    q_objs.add(Q(labor_category__icontains=q), Q.OR)
+                    q_objs.add(Q(_labor_category__icontains=q), Q.OR)
                 elif query_type == 'match_exact':
-                    q_objs.add(Q(labor_category__iexact=q.strip()), Q.OR)
+                    q_objs.add(Q(_labor_category__iexact=q.strip()), Q.OR)
             contracts = contracts.filter(q_objs)
 
     if experience_range:

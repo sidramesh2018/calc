@@ -1,5 +1,4 @@
 import datetime
-import unittest
 from decimal import Decimal
 from itertools import cycle
 
@@ -339,7 +338,6 @@ class NormalizedContractSearchTestCase(BaseContractSearchTestCase):
         'Junior Language Interpreter',
     ]
 
-    @unittest.skip("eventually we should support this!")
     def test_works_with_jr(self):
         results = Contract.objects.multi_phrase_search('junior')
         self.assertCategoriesEqual(results, [

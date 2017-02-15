@@ -21,6 +21,10 @@ MAX_ESCALATION_RATE = 99
 NUM_CONTRACT_YEARS = 5
 
 
+def normalize_labor_category(val):
+    return val.lower().replace('jr.', 'junior')
+
+
 def convert_to_tsquery(query):
     """
     Converts multi-word phrases into AND boolean queries for postgresql.
@@ -153,7 +157,23 @@ class Contract(models.Model):
     contract_end = models.DateField(null=True, blank=True)
     contract_year = models.IntegerField(null=True, blank=True)
     vendor_name = models.CharField(max_length=128)
-    labor_category = models.TextField(db_index=True)
+
+    # https://www.stavros.io/posts/how-replace-django-model-field-property/
+    _labor_category = models.TextField(db_index=True,
+                                       db_column='labor_category')
+    _normalized_labor_category = models.TextField(db_index=True)
+
+    @property
+    def labor_category(self):
+        return self._labor_category
+
+    @labor_category.setter
+    def labor_category(self, value):
+        if not isinstance(value, str):
+            value = next(value)
+        self._labor_category = value
+        self._normalized_labor_category = normalize_labor_category(value)
+
     education_level = models.CharField(
         db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True,
         blank=True)
@@ -193,7 +213,7 @@ class Contract(models.Model):
     # use a manager that filters by current contracts with a valid
     # current_price
     objects = CurrentContractManager(
-        fields=('labor_category',),
+        fields=('_normalized_labor_category',),
         config='pg_catalog.english',
         search_field='search_index',
         auto_update_search_field=True
