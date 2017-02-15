@@ -10,9 +10,7 @@ Then run:
 ```sh
 cp .env.sample .env
 ln -sf docker-compose.local.yml docker-compose.override.yml
-docker-compose build
-docker-compose run app python manage.py syncdb
-docker-compose run app python manage.py initgroups
+./docker-update.sh
 ```
 
 You can optionally load some data into your dockerized database with:
@@ -57,9 +55,32 @@ if it detects that Django isn't installed.
 
 ### Updating the containers
 
-All the project's dependencies, such as those mentioned in `requirements.txt`,
-are contained in Docker container images.  Whenever these dependencies change,
-you'll want to re-run `docker-compose build` to rebuild the containers.
+Whenever you update your repository via e.g. `git pull` or
+`git checkout`, you should update your containers by running
+`./docker-update.sh`.
+
+### Custom dependencies
+
+Feel free to install custom dependencies, e.g. your favorite
+debugging library, in your container via
+`docker-compose run app pip install` or 
+`docker-compose run app npm install`. Everything should work
+as expected.
+
+### Debugging Python
+
+CALC's `requirements-dev.txt` file will install [`ipdb`][].
+
+To drop into an interactive debugging section, add `import ipdb;
+ipdb.set_trace()` on the line above the point you want to start your debugging
+session. Then run Docker using the `service-ports` option: `docker-compose run
+--service-ports app`. Your interactive debugging session should start in your
+terminal when you reload the page.
+
+Here's a [handy list of `ipdb` commands][ipdb_intro].
+
+[`ipdb`]: https://pypi.python.org/pypi/ipdb
+[ipdb_intro]: https://www.safaribooksonline.com/blog/2014/11/18/intro-python-debugger/
 
 ### Reading email
 
@@ -102,21 +123,15 @@ environment variables, and also points to the alternate Dockerfile:
 ```yaml
 version: '2'
 services:
-  app:
+  app: &app
     build:
       dockerfile: Dockerfile.cloud
     environment:
       - DEBUG=yup
   rq_worker:
-    build:
-      dockerfile: Dockerfile.cloud
-    environment:
-      - DEBUG=yup
+    <<: *app
   rq_scheduler:
-    build:
-      dockerfile: Dockerfile.cloud
-    environment:
-      - DEBUG=yup
+    <<: *app
 ```
 
 You'll also want to tell Docker Compose what port to listen on,
@@ -125,7 +140,8 @@ which can be done in the terminal by running
 
 At this point, you can use Docker's command-line tools, such as
 `docker-compose up`, and your actions will take effect on the remote
-host instead of your local machine.
+host instead of your local machine. The `./docker-update.sh` script
+will also take effect on the remote host.
 
 **Note:** As mentioned earlier, your app's source code is part of
 the container image. This means that every time you make a source code 

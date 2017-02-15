@@ -1,7 +1,47 @@
-## API
+# API
 
-### Rates API
-You can access rate information at `http://localhost:8000/api/rates/`.
+## Access from third-party code
+
+If you want to write a third-party app that uses the
+API from CALC's production instance, you can
+do so by first signing up for an [api.data.gov API key][apikey].
+
+Then, follow the documentation below, but instead of accessing
+the API root at `http://localhost:8000/api/`, you will
+want to use `https://api.data.gov/gsa/calc/`.
+
+[apikey]: https://api.data.gov/signup/
+
+## Access from CALC front-end code
+
+In production, CALC's public API is actually fronted by
+an [API Umbrella][] instance on api.data.gov which proxies all
+API requests to CALC. This allows CALC to not have to concern itself
+with details like API keys and rate limiting.
+
+However, this means that front-end code can't simply make requests
+against `/api/`, as the documentation below might imply.
+Instead, a global called `API_HOST` is available to all front-end
+JS code on every CALC page. When developing locally, it will be
+set to `/api/`, but on CALC's development, staging, and
+production deployments it will be an absolute URL.
+
+Thus, all API requests made from front-end CALC code should use
+`API_HOST` as the base URL for all API requests.
+
+[API Umbrella]: https://apiumbrella.io/
+
+## API endpoints
+
+The following documentation assumes you're trying to access the API
+via a tool like `curl` on a local development instance of CALC at
+`http://localhost:8000/`. If your context or environment is
+different, you will need to use a different base URL, as documented
+previously.
+
+### `/rates/`
+
+You can access rate information at `/rates/`.
 
 #### Labor Categories
 You can search for prices of specific labor categories by using the `q`

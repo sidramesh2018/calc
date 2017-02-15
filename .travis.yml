@@ -18,7 +18,6 @@ before_install:
 - node --version
 install:
 - pip install -r requirements-dev.txt
-- pip install -r requirements-temp-extras.txt
 - npm install -g gulp-cli
 - npm install
 script:
