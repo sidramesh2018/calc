@@ -1,6 +1,6 @@
 /* global $ document */
 
-import hourglass from '../common/hourglass';
+import { getLastCommaSeparatedTerm } from './util';
 
 export function appendHighlightedTerm($el, term, searchStr) {
   const sanitizedSearch = searchStr.replace(/[^a-z0-9 ]/gi, '')
@@ -59,7 +59,7 @@ export function initialize(el, {
       // save inputted search terms for display later
       searchTerms = term;
 
-      const lastTerm = hourglass.getLastCommaSeparatedTerm(term);
+      const lastTerm = getLastCommaSeparatedTerm(term);
 
       if (autoCompReq) { autoCompReq.abort(); }
       autoCompReq = api.get({
