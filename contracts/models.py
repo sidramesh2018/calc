@@ -74,6 +74,15 @@ class CurrentContractManager(SearchManager):
     # need to subclass the SearchManager we were using for postgres full text
     # search instead of default
 
+    def update_normalized_labor_categories(self):
+        for contract in self.all():
+            contract.update_normalized_labor_category(save_if_changed=True)
+
+    def bulk_create(self, contracts, *args, **kwargs):
+        for contract in contracts:
+            contract.update_normalized_labor_category()
+        return super().bulk_create(contracts, *args, **kwargs)
+
     def multi_phrase_search(self, *args, **kwargs):
         return self.get_queryset().multi_phrase_search(*args, **kwargs)
 
@@ -88,6 +97,10 @@ class ContractsQuerySet(SearchQuerySet):
     def multi_phrase_search(self, queries):
         if isinstance(queries, str):
             queries = [queries]
+        queries = [
+            Contract.normalize_labor_category(q)
+            for q in queries
+        ]
         return self.search(convert_to_tsquery_union(queries), raw=True)
 
     def order_by(self, *args, **kwargs):
@@ -181,6 +194,8 @@ class Contract(models.Model):
         db_index=True, max_length=128, null=True, blank=True)
     sin = models.TextField(null=True, blank=True)
 
+    _normalized_labor_category = models.TextField(db_index=True, blank=True)
+
     search_index = VectorField()
 
     upload_source = models.ForeignKey(
@@ -193,7 +208,7 @@ class Contract(models.Model):
     # use a manager that filters by current contracts with a valid
     # current_price
     objects = CurrentContractManager(
-        fields=('labor_category',),
+        fields=('_normalized_labor_category',),
         config='pg_catalog.english',
         search_field='search_index',
         auto_update_search_field=True
@@ -204,6 +219,40 @@ class Contract(models.Model):
             return 'small business'
         else:
             return 'other than small business'
+
+    @staticmethod
+    def normalize_labor_category(val):
+        '''
+        Normalize the given labor category by applying various synonyms
+        and such to it.
+
+        Note that this would ideally be done by modifying postgres'
+        dictionary configuration, but at the time of this writing,
+        that is untenable. For more details, see:
+
+            https://github.com/18F/calc/issues/1375
+        '''
+
+        # Note also that any logic changes to this code should
+        # eventually be followed-up with
+        # `manage.py update_search_field contracts`. Otherwise,
+        # all pre-existing contracts will still have search
+        # index information corresponding to the old logic.
+
+        synonyms = {
+            'jr': 'junior',
+            'sr': 'senior',
+            'sme': 'subject matter expert',
+        }
+
+        val = val.lower().replace('.', ' ')
+
+        val = ' '.join([
+            synonyms.get(word, word)
+            for word in val.split()
+        ])
+
+        return val
 
     @staticmethod
     def get_education_code(text):
@@ -309,3 +358,14 @@ class Contract(models.Model):
             raise ValueError(
                 'year must be in range 1 to {}'.format(NUM_CONTRACT_YEARS))
         setattr(self, 'hourly_rate_year{}'.format(year), val)
+
+    def update_normalized_labor_category(self, save_if_changed=False):
+        val = self.normalize_labor_category(self.labor_category)
+        if self._normalized_labor_category != val:
+            self._normalized_labor_category = val
+            if save_if_changed:
+                self.save()
+
+    def save(self, *args, **kwargs):
+        self.update_normalized_labor_category()
+        super().save(*args, **kwargs)
