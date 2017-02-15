@@ -1,5 +1,5 @@
 import { serializers, deserializers } from '../serialization';
-import { DEFAULT_SORT } from '../constants';
+import { DEFAULT_SORT, MAX_QUERY_LENGTH } from '../constants';
 
 describe('sort deserializer', () => {
   const { sort } = deserializers;
@@ -34,5 +34,23 @@ describe('sort serializer', () => {
   });
   it('does not prepend "-" if ascending', () => {
     expect(sort({ descending: false, key: 'blah' })).toBe('blah');
+  });
+});
+
+describe('q deserializer', () => {
+  const { q } = deserializers;
+
+  it('truncates to MAX_QUERY_LENGTH', () => {
+    const query = Array(MAX_QUERY_LENGTH + 10).join('x');
+    expect(q(query).length).toBe(MAX_QUERY_LENGTH);
+  });
+});
+
+describe('q serializer', () => {
+  const { q } = serializers;
+
+  it('truncates to MAX_QUERY_LENGTH', () => {
+    const query = Array(MAX_QUERY_LENGTH + 10).join('x');
+    expect(q(query).length).toBe(MAX_QUERY_LENGTH);
   });
 });

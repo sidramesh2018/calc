@@ -18,6 +18,7 @@ import {
   DEFAULT_QUERY_TYPE,
   QUERY_TYPE_LABELS,
   SORT_KEYS,
+  MAX_QUERY_LENGTH,
 } from './constants';
 
 import {
@@ -70,7 +71,7 @@ const stringInSet = (choices, defaultVal = '') => (val) => {
 export const serializers = {
   exclude: list => list.map(coercedString).join(','),
   education: list => list.map(coercedString).join(','),
-  q: coercedString,
+  q: s => coercedString(s).slice(0, MAX_QUERY_LENGTH),
   'contract-year': coercedString,
   site: coercedString,
   business_size: coercedString,
@@ -92,7 +93,7 @@ export const deserializers = {
     coercedString(list)
       .split(',')
       .filter(x => x in EDU_LABELS),
-  q: coercedString,
+  q: s => coercedString(s).slice(0, MAX_QUERY_LENGTH),
   'contract-year': stringInSet(CONTRACT_YEAR_LABELS, DEFAULT_CONTRACT_YEAR),
   site: stringInSet(SITE_LABELS),
   business_size: stringInSet(BUSINESS_SIZE_LABELS),
