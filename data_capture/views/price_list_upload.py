@@ -55,6 +55,7 @@ def get_step_form_from_session(step_number, request, **kwargs):
         )
     return form
 
+
 def clear_gleaned_data_if_different_schedule(request):
     # If a different schedule has been chosen from that of the gleaned_data
     # in session, then delete gleaned_data from session so that the upload
