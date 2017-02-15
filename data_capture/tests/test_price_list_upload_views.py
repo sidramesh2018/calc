@@ -112,13 +112,7 @@ class Step1Tests(PriceListStepTestCase):
         # first, post with Fake Schedule selected
         self.client.post(self.url, self.valid_form)
         # Save gleaned data into session
-        self.set_fake_gleaned_data(rows=[{
-            'education': 'Bachelors',
-            'price': '15.00',
-            'service': 'Project Manager',
-            'sin': '132-40',
-            'years_experience': '7'
-        }])
+        self.set_fake_gleaned_data(rows=Step3Tests.rows)
         session = self.client.session
         self.assertIn('gleaned_data', session['data_capture:price_list'])
         # Post again but with a different schedule selected
@@ -128,6 +122,16 @@ class Step1Tests(PriceListStepTestCase):
         session = self.client.session
         # gleaned_data should now be removed from session
         self.assertNotIn('gleaned_data', session['data_capture:price_list'])
+
+        # Save Fake gleaned data again now the S70 has been "selected"
+        self.set_fake_gleaned_data(rows=Step3Tests.rows)
+        session = self.client.session
+        self.assertIn('gleaned_data', session['data_capture:price_list'])
+        # Post valid again, but selecting Fake Schedule
+        self.client.post(self.url, self.valid_form)
+        session = self.client.session
+        # gleaned_data should still be in session
+        self.assertIn('gleaned_data', session['data_capture:price_list'])
 
     def test_valid_post_redirects_to_step_2(self):
         self.login()

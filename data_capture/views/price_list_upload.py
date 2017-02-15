@@ -55,6 +55,17 @@ def get_step_form_from_session(step_number, request, **kwargs):
         )
     return form
 
+def clear_gleaned_data_if_different_schedule(request):
+    # If a different schedule has been chosen from that of the gleaned_data
+    # in session, then delete gleaned_data from session so that the upload
+    # step will require an upload of data from the newly selected schedule.
+    sess = request.session
+    new_schedule = request.POST['schedule']
+    gleaned_data = get_deserialized_gleaned_data(request)
+    if gleaned_data and (registry.get_classname(gleaned_data) !=
+                         new_schedule):
+        del sess[SESSION_KEY]['gleaned_data']
+
 
 @steps.step(label='Basic information')
 @login_required
@@ -71,16 +82,7 @@ def step_1(request, step):
         if form.is_valid():
             sess = request.session
             if SESSION_KEY in sess:
-                orig_step_1 = sess[SESSION_KEY].get(
-                    'step_1_POST')
-                if orig_step_1 and (orig_step_1['schedule']
-                                    is not request.POST['schedule']):
-                    # If a different schedule has been chosen from what was
-                    # already in session, delete 'gleaned_data' from sssion so
-                    # that the upload step will require an upload of data
-                    # from the newly selected schedule.
-                    del sess[SESSION_KEY]['gleaned_data']
-
+                clear_gleaned_data_if_different_schedule(request)
                 sess[SESSION_KEY]['step_1_POST'] = request.POST
                 sess.save()
             else:
