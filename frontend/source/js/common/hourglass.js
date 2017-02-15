@@ -141,12 +141,6 @@ const hourglass = {};
   hourglass.noop = function noop() {
   };
 
-  hourglass.getLastCommaSeparatedTerm = function getLastCST(term) {
-    var pieces = term.split(/\s*,\s*/);
-
-    return pieces[pieces.length-1];
-  };
-
   // export hourglass.extend()
   hourglass.extend = extend;
 

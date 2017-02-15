@@ -86,3 +86,8 @@ export function joinQuery(query) {
 export function filterActive(isActive, otherClasses = '') {
   return classNames(isActive ? 'filter_active' : '', otherClasses);
 }
+
+export function getLastCommaSeparatedTerm(term) {
+  const pieces = term.split(/\s*,\s*/);
+  return pieces[pieces.length - 1];
+}

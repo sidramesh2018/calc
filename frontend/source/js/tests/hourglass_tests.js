@@ -6,16 +6,6 @@ var test = QUnit.test,
 
 module("hourglass");
 
-test("getLastCommaSeparatedTerm()", function(assert) {
-  var get = hourglass.getLastCommaSeparatedTerm;
-
-  assert.equal(get("foo"), "foo");
-  assert.equal(get("foo,bar"), "bar");
-  assert.equal(get("foo, bar"), "bar");
-  assert.equal(get("foo , bar"), "bar");
-  assert.equal(get("foo bar"), "foo bar");
-});
-
 test("extend()", function(assert) {
   var extend = hourglass.extend;
   assert.deepEqual(
