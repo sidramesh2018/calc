@@ -24,3 +24,7 @@ mypy-lang==0.4.6
 pytz==2016.10
 Markdown==2.6.8
 cg-django-uaa==0.0.1
+
+# Needed for price list analysis
+nltk==3.2.2
+xlsxwriter==0.9.6
