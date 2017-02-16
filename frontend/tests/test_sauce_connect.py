@@ -4,7 +4,7 @@ from unittest import TestCase
 
 try:
     from .sauce_connect import SauceConnectTunnel, maybe_run_with_tunnel
-except SystemError as e:
+except ModuleNotFoundError as e:
     # If we were run as a script, which is a valid use case for this
     # particular test suite, just let this pass; otherwise, it's
     # a failure!

@@ -1,12 +1,5 @@
 ## Setup
 
-To install the requirements, use:
-
-```sh
-pip install -r requirements-dev.txt
-npm install
-```
-
 CALC is a [Django] project. You can configure everything by running:
 
 ```sh
@@ -32,11 +25,15 @@ createdb hourglass
 Now run:
 
 ```sh
-./manage.py syncdb
-./manage.py initgroups
+./update.sh
 ```
 
-to set up the database. After that, you can load all of the data by running:
+This script will install/update all Python and Node dependencies,
+as well as apply any necessary database migrations. You'll also want to
+run it whenever you update your repository via commands like
+`git pull` or `git checkout`.
+
+After that, you can load all of the data by running:
 
 ```sh
 ./manage.py load_data
