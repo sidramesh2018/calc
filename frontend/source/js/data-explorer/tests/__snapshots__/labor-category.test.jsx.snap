@@ -1,0 +1,19 @@
+exports[`<LaborCategory> matches snapshot 1`] = `
+<div>
+  <input
+    className="form__inline"
+    id="zzz_labor_category"
+    maxLength={255}
+    name="q"
+    onChange={[Function]}
+    onKeyDown={[Function]}
+    placeholder="Type a labor category"
+    type="text"
+    value="" />
+  <label
+    className="sr-only"
+    htmlFor="zzz_labor_category">
+    Type a labor category
+  </label>
+</div>
+`;

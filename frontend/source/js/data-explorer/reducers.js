@@ -7,6 +7,7 @@ import {
   EMPTY_RATES_DATA,
   DEFAULT_SORT,
   DEFAULT_QUERY_TYPE,
+  MAX_QUERY_LENGTH,
 } from './constants';
 
 import {
@@ -47,9 +48,10 @@ function contractYear(state = DEFAULT_CONTRACT_YEAR, action) {
   return state;
 }
 
-function q(state = '', action) {
+export function q(state = '', action) {
   if (action.type === SET_QUERY) {
-    return action.query;
+    const cleanedQuery = action.query.slice(0, MAX_QUERY_LENGTH);
+    return cleanedQuery;
   }
   return state;
 }

@@ -10,7 +10,9 @@ import {
   filterActive,
 } from '../util';
 
-class LaborCategory extends React.Component {
+import { MAX_QUERY_LENGTH } from '../constants';
+
+export class LaborCategory extends React.Component {
   constructor(props) {
     super(props);
     this.state = { value: this.props.query };
@@ -61,6 +63,7 @@ class LaborCategory extends React.Component {
           value={this.state.value}
           onChange={this.handleChange}
           onKeyDown={handleEnter(this.handleEnter)}
+          maxLength={MAX_QUERY_LENGTH}
         />
         <label htmlFor={id} className="sr-only">Type a labor category</label>
         {this.props.children}

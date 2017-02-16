@@ -9,3 +9,11 @@ describe('util.formatFriendlyPrice()', () => {
     expect(util.formatFriendlyPrice(1.1)).toBe('1.10');
   });
 });
+
+describe('util.getLastCommaSeparatedTerm()', () => {
+  expect(util.getLastCommaSeparatedTerm('foo')).toBe('foo');
+  expect(util.getLastCommaSeparatedTerm('foo,bar')).toBe('bar');
+  expect(util.getLastCommaSeparatedTerm('foo, bar')).toBe('bar');
+  expect(util.getLastCommaSeparatedTerm('foo , bar')).toBe('bar');
+  expect(util.getLastCommaSeparatedTerm('foo bar')).toBe('foo bar');
+});

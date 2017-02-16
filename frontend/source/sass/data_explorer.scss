@@ -486,6 +486,8 @@ a.focus-input {
   color: $color-gray-dark;
   font-weight: normal;
   font-size: 2rem;
+  overflow: hidden;
+
   .total {
     font-weight: bold;
   }
