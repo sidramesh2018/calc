@@ -20,6 +20,8 @@ export default class API {
     }, (err, res) => {
       if (err) {
         callback(err.toString());
+      } else if (res.statusCode !== 200) {
+        callback(res.rawRequest.statusText);
       } else {
         callback(null, res.body);
       }

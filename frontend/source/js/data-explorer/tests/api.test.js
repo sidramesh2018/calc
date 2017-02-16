@@ -43,8 +43,10 @@ describe('API get', () => {
       mock.respond(200, responseHeaders, JSON.stringify({
         result: 'data_success',
       }));
-    } else {
+    } else if (mock.url === '/network_error') {
       mock.setNetworkError();
+    } else {
+      mock.respond(404, responseHeaders);
     }
   };
 
@@ -64,8 +66,16 @@ describe('API get', () => {
     });
   });
 
-  it('callsback with a string on error', (done) => {
+  it('callsback with string on non-200 response', (done) => {
     api.get({ uri: 'bad' }, (err, res) => {
+      expect(res).toBeFalsy();
+      expect(err).toMatch('Not Found');
+      done();
+    });
+  });
+
+  it('callsback with a string on network error', (done) => {
+    api.get({ uri: 'network_error' }, (err, res) => {
       expect(res).toBeFalsy();
       expect(err).toMatch('Error: Internal XMLHttpRequest Error');
       done();
