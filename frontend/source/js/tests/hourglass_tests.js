@@ -4,18 +4,6 @@ const hourglass = require('../common/hourglass');
 var test = QUnit.test,
     module = QUnit.module;
 
-module("hourglass");
-
-test("getLastCommaSeparatedTerm()", function(assert) {
-  var get = hourglass.getLastCommaSeparatedTerm;
-
-  assert.equal(get("foo"), "foo");
-  assert.equal(get("foo,bar"), "bar");
-  assert.equal(get("foo, bar"), "bar");
-  assert.equal(get("foo , bar"), "bar");
-  assert.equal(get("foo bar"), "foo bar");
-});
-
 module("hourglass.API");
 
 test("API()", function(assert) {

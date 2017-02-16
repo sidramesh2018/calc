@@ -75,12 +75,6 @@ const hourglass = {};
         });
     }
   };
-
-  hourglass.getLastCommaSeparatedTerm = function getLastCST(term) {
-    var pieces = term.split(/\s*,\s*/);
-
-    return pieces[pieces.length-1];
-  };
 })(hourglass);
 /* eslint-enable */
 
