@@ -1,7 +1,7 @@
 import os
 import unittest
 import json
-from unittest import SkipTest
+from unittest import SkipTest as SkipMe  # So py.test doesn't introspect.
 from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
@@ -323,7 +323,7 @@ class ContextProcessorTests(DjangoTestCase):
         if 'GA_TRACKING_ID' in os.environ:
             # Oof, GA_TRACKING_ID is defined in our outside environment,
             # so we can't actually test this.
-            raise SkipTest()
+            raise SkipMe()
         res = self.client.get('/')
         self.assertIn('GA_TRACKING_ID', res.context)
         self.assertEqual(res.context['GA_TRACKING_ID'], '')

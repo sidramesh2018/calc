@@ -53,11 +53,14 @@ historySynchronizer.initialize(store, () => {
 
 store.dispatch(invalidateRates());
 
-ReactDOM.render(
-  React.createElement(
-    Provider,
-    { store },
-    React.createElement(App, { api }),
-  ),
-  $('[data-embed-jsx-app-here]')[0],
-);
+// Load the React app once the document is ready
+$(() => {
+  ReactDOM.render(
+    React.createElement(
+      Provider,
+      { store },
+      React.createElement(App, { api }),
+    ),
+    $('[data-embed-jsx-app-here]')[0],
+  );
+});

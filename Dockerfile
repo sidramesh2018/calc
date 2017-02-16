@@ -1,4 +1,4 @@
-FROM python:3.5.2
+FROM python:3.6.0
 
 ENV PHANTOMJS_VERSION 1.9.7
 
@@ -17,21 +17,11 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get update && \
   apt-get install -y nodejs postgresql-client
 
-COPY package.json /calc/
+RUN pip install virtualenv
 
 WORKDIR /calc
 
-RUN npm install
-
 ENV PATH /calc/node_modules/.bin:$PATH
 ENV DDM_IS_RUNNING_IN_DOCKER yup
-
-COPY requirements.txt /calc/
-COPY requirements-dev.txt /calc/
-
-RUN pip install -r /calc/requirements-dev.txt
-
-COPY requirements-temp-extras.txt /calc/
-RUN pip install -r /calc/requirements-temp-extras.txt
 
 ENTRYPOINT ["python", "/calc/docker_django_management.py"]
