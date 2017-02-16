@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from decimal import Decimal
 
-from django.db import models
+from django.db import models, connection
 from django.contrib.auth.models import User
 from djorm_pgfulltext.models import SearchManager, SearchQuerySet
 from djorm_pgfulltext.fields import VectorField
@@ -74,9 +74,38 @@ class CurrentContractManager(SearchManager):
     # need to subclass the SearchManager we were using for postgres full text
     # search instead of default
 
-    def update_normalized_labor_categories(self):
-        for contract in self.all():
-            contract.update_normalized_labor_category(save_if_changed=True)
+    def bulk_update_normalized_labor_categories(self):
+        '''
+        Iterate through all Contract models and update their
+        normalized labor categories.
+
+        This method does not trigger any pre/post save signals or
+        call Contract.save().
+        '''
+
+        updates = []
+        num_updates = 0
+        for contract in self.all().only('id', 'labor_category',
+                                        '_normalized_labor_category'):
+            if contract.update_normalized_labor_category():
+                updates.append(contract.id)
+                updates.append(contract._normalized_labor_category)
+                num_updates += 1
+        if updates:
+            print("Updating {} rows.".format(num_updates))
+            with connection.cursor() as cursor:
+                values = []
+                for i in range(num_updates):
+                    values.append(r'(%s, %s)')
+                values = ", ".join(values)
+                sql = (  # nosec
+                    "UPDATE contracts_contract "
+                    "  SET _normalized_labor_category = v.nlc"
+                    "  FROM (VALUES" + values + ") AS v (id, nlc)"
+                    "  WHERE contracts_contract.id = v.id"
+                )
+                cursor.execute(sql, updates)
+        return num_updates
 
     def bulk_create(self, contracts, *args, **kwargs):
         for contract in contracts:
@@ -359,12 +388,12 @@ class Contract(models.Model):
                 'year must be in range 1 to {}'.format(NUM_CONTRACT_YEARS))
         setattr(self, 'hourly_rate_year{}'.format(year), val)
 
-    def update_normalized_labor_category(self, save_if_changed=False):
+    def update_normalized_labor_category(self):
         val = self.normalize_labor_category(self.labor_category)
         if self._normalized_labor_category != val:
             self._normalized_labor_category = val
-            if save_if_changed:
-                self.save()
+            return True
+        return False
 
     def save(self, *args, **kwargs):
         self.update_normalized_labor_category()

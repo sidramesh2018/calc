@@ -1,4 +1,5 @@
 import datetime
+from unittest.mock import patch
 from decimal import Decimal
 from itertools import cycle
 
@@ -39,15 +40,26 @@ class ContractTestCase(TestCase):
         final_kwargs.update(kwargs)
         return get_contract_recipe().make(**final_kwargs)
 
-    def test_update_normalized_labor_category_save_works(self):
+    def test_bulk_update_normalized_labor_categories_works(self):
+        update = Contract.objects.bulk_update_normalized_labor_categories
+        c1 = get_contract_recipe().make(labor_category='foo')
+        c2 = get_contract_recipe().make(labor_category='bar')
+
+        self.assertEqual(update(), 0)
+
+        with patch.object(Contract, 'normalize_labor_category',
+                          lambda self, val: 'lol ' + val):
+            self.assertEqual(update(), 2)
+
+        c1.refresh_from_db()
+        c2.refresh_from_db()
+        self.assertEqual(c1._normalized_labor_category, 'lol foo')
+        self.assertEqual(c2._normalized_labor_category, 'lol bar')
+
+    def test_update_normalized_labor_category_returns_bool(self):
         c = get_contract_recipe().prepare(labor_category='jr person')
-        self.assertEqual(c.pk, None)
-        self.assertEqual(c._normalized_labor_category, '')
-
-        c.update_normalized_labor_category(save_if_changed=True)
-
-        self.assertNotEqual(c.pk, None)
-        self.assertEqual(c._normalized_labor_category, 'junior person')
+        self.assertTrue(c.update_normalized_labor_category())
+        self.assertFalse(c.update_normalized_labor_category())
 
     def test_bulk_create_updates_normalized_labor_category(self):
         c = get_contract_recipe().prepare(labor_category='jr person')
