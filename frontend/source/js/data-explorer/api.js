@@ -20,7 +20,7 @@ export default class API {
     }, (err, res) => {
       if (err) {
         callback(err.toString());
-      } else if (res.statusCode !== 200) {
+      } else if (res.statusCode >= 400) {
         callback(res.rawRequest.statusText);
       } else {
         callback(null, res.body);

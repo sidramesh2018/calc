@@ -66,7 +66,7 @@ describe('API get', () => {
     });
   });
 
-  it('callsback with string on non-200 response', (done) => {
+  it('callsback with string on error response', (done) => {
     api.get({ uri: 'bad' }, (err, res) => {
       expect(res).toBeFalsy();
       expect(err).toMatch('Not Found');
