@@ -262,8 +262,13 @@ class GetAutocomplete(APIView):
                 data = Contract.objects.filter(labor_category__icontains=q)
             else:
                 data = Contract.objects.multi_phrase_search(q)
-            data = data.values('labor_category').annotate(
-                count=Count('labor_category')).order_by('-count')
+            data = data.values('_normalized_labor_category').annotate(
+                count=Count('_normalized_labor_category')).order_by('-count')
+            data = [
+                {'labor_category': d['_normalized_labor_category'],
+                 'count': d['count']}
+                for d in data
+            ]
             return Response(data)
         else:
             return Response([])
