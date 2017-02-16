@@ -50,7 +50,6 @@ export default class StoreRatesAutoRequester {
 
     const data = getRatesParameters(store.getState());
     const defaults = {
-      format: 'json',
       histogram: HISTOGRAM_BINS,
     };
 
