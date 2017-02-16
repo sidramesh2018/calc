@@ -60,15 +60,12 @@ const hourglass = {};
      *   // do something with data
      * });
      */
-    get: function(request, callback) {
-      var url = this.url(request),
-          data = hourglass.extend({
-            format: "json"
-          }, hourglass.qs.coerce(request.data));
+    get: function(request, callback) {  // TODO JAS: move into rates-request
+      var url = this.url(request);
       return $.ajax({
           url: url,
           dataType: 'json',
-          data: data
+          data: request.data
         })
         .done(function(data) {
           return callback(null, data);
@@ -79,92 +76,11 @@ const hourglass = {};
     }
   };
 
-  /**
-   * query string parse/format
-   */
-
-  hourglass.qs = {
-
-    // parse a query string into a data object
-    parse: function(str) {
-      // return an empty object if there's no string or values
-      if (!str || str === "?") return {};
-      var data = {};
-      // lop off the ? at the start
-      if (str.charAt(0) === "?") str = str.substr(1);
-      str.split("&").forEach(function(part) {
-        var i = part.indexOf("=");
-        if (i === -1) {
-          data[part] = true;
-        } else {
-          var key = unescape(part.substr(0, i)),
-              val = unescape(part.substr(i + 1)).replace(/\+/g, " ");
-          // replace < and > to prevent HTML entity injection
-          val = val.replace(/[<>]/g, '');
-          switch (val) {
-            case "true": val = true; break;
-            case "false": val = false; break;
-          }
-          data[key] = val;
-        }
-      });
-      return data;
-    },
-
-    // format a query data object as a string
-    format: $.param,
-
-    // coerce a string into a query string data object
-    coerce: function(data) {
-      return (data && typeof data === "string")
-        ? hourglass.qs.parse(data)
-        : data || {};
-    },
-
-    // merge two or more query strings or data objects
-    // into a single data object
-    merge: function(data) {
-      data = hourglass.qs.coerce(data);
-      for (var i = 1; i < arguments.length; i++) {
-        hourglass.extend(data, hourglass.qs.coerce(arguments[i]));
-      }
-      return data;
-    }
-  };
-
-  // identity function
-  hourglass.identity = function identity(d) {
-    return d;
-  };
-
-  // noop function
-  hourglass.noop = function noop() {
-  };
-
   hourglass.getLastCommaSeparatedTerm = function getLastCST(term) {
     var pieces = term.split(/\s*,\s*/);
 
     return pieces[pieces.length-1];
   };
-
-  // export hourglass.extend()
-  hourglass.extend = extend;
-
-  /**
-   * private utility functions
-   */
-
-  function extend(obj, ext) {
-    for (var i = 1; i < arguments.length; i++) {
-      var ex = arguments[i];
-      if (!ex) continue;
-      for (var k in ex) {
-        obj[k] = ex[k];
-      }
-    }
-    return obj;
-  }
-
 })(hourglass);
 /* eslint-enable */
 
