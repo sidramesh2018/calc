@@ -30,6 +30,9 @@ steps = Steps(
 )
 
 
+SESSION_KEY = 'data_capture:price_list'
+
+
 def get_step_form_from_session(step_number, request, **kwargs):
     '''
     Bring back the given Form instance for a step from the
@@ -40,7 +43,7 @@ def get_step_form_from_session(step_number, request, **kwargs):
 
     cls = getattr(forms, 'Step{}Form'.format(step_number))
     post_data = get_nested_item(request.session, (
-        'data_capture:price_list',
+        SESSION_KEY,
         'step_{}_POST'.format(step_number)
     ))
     if post_data is None:
@@ -53,6 +56,18 @@ def get_step_form_from_session(step_number, request, **kwargs):
     return form
 
 
+def clear_gleaned_data_if_different_schedule(request):
+    # If a different schedule has been chosen from that of the gleaned_data
+    # in session, then delete gleaned_data from session so that the upload
+    # step will require an upload of data from the newly selected schedule.
+    sess = request.session
+    new_schedule = request.POST['schedule']
+    gleaned_data = get_deserialized_gleaned_data(request)
+    if gleaned_data and (registry.get_classname(gleaned_data) !=
+                         new_schedule):
+        del sess[SESSION_KEY]['gleaned_data']
+
+
 @steps.step(label='Basic information')
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
@@ -61,16 +76,18 @@ def step_1(request, step):
     if request.method == 'GET':
         form = forms.Step1Form(data=get_nested_item(
             request.session,
-            ('data_capture:price_list', 'step_1_POST')
+            (SESSION_KEY, 'step_1_POST')
         ))
     else:
         form = forms.Step1Form(request.POST)
         if form.is_valid():
             sess = request.session
-            if 'data_capture:price_list' in sess:
-                sess['data_capture:price_list']['step_1_POST'] = request.POST
+            if SESSION_KEY in sess:
+                clear_gleaned_data_if_different_schedule(request)
+                sess[SESSION_KEY]['step_1_POST'] = request.POST
+                sess.save()
             else:
-                sess['data_capture:price_list'] = {
+                sess[SESSION_KEY] = {
                     'step_1_POST': request.POST,
                 }
 
@@ -110,12 +127,12 @@ def step_2(request, step):
     if request.method == 'GET':
         form = forms.Step2Form(data=get_nested_item(
             request.session,
-            ('data_capture:price_list', 'step_2_POST')
+            (SESSION_KEY, 'step_2_POST')
         ))
     else:
         form = forms.Step2Form(request.POST)
         if form.is_valid():
-            session_data = request.session['data_capture:price_list']
+            session_data = request.session[SESSION_KEY]
             session_data['step_2_POST'] = request.POST
 
             # Changing the value of a subkey doesn't cause the session to save,
@@ -142,7 +159,7 @@ def step_3(request, step):
     if get_step_form_from_session(2, request) is None:
         return redirect('data_capture:step_2')
 
-    session_pl = request.session['data_capture:price_list']
+    session_pl = request.session[SESSION_KEY]
     step_1_data = get_step_form_from_session(1, request).cleaned_data
     schedule_class = step_1_data['schedule_class']
 
@@ -240,7 +257,7 @@ def step_4(request, step):
     if request.method == 'GET' and not gleaned_data.valid_rows:
         return redirect('data_capture:step_3')
 
-    session_pl = request.session['data_capture:price_list']
+    session_pl = request.session[SESSION_KEY]
     step_1_form = get_step_form_from_session(1, request)
     step_2_form = get_step_form_from_session(2, request)
 
@@ -315,7 +332,7 @@ def step_4(request, step):
                 price_list.save()
                 gleaned_data.add_to_price_list(price_list)
 
-                del request.session['data_capture:price_list']
+                del request.session[SESSION_KEY]
 
                 return redirect('data_capture:step_5')
         else:
