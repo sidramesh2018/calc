@@ -14,6 +14,7 @@ services:
       - DDM_VENV_DIR=/venv
       - DDM_USER_OWNED_DIRS=/venv:/calc/node_modules
       - DDM_HOST_USER=calc_user
+      - NPM_CONFIG_ENGINE_STRICT=true
       - PYTHONUNBUFFERED=yup
       - DATABASE_URL=postgres://calc_user@db/calc
       - REDIS_URL=redis://redis:6379/0
