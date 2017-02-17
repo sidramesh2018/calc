@@ -1,6 +1,6 @@
 /* global window */
 import xhr from 'xhr';
-import qs from 'qs';
+import * as qs from 'querystring';
 
 export default class API {
   constructor(basePath = '') {
