@@ -135,10 +135,6 @@ cf target -o fas-calc -s dev
 cf push -f manifests/manifest-staging.yml
 ```
 
-### Your own sandbox server
-
-If you want to deploy to your own sandbox, e.g. for the purpose of deploying a branch you're working on, see the wiki page on [How to Deploy to your cloud.gov Sandbox](https://github.com/18F/calc/wiki/How-to-Deploy-to-your-cloud.gov-Sandbox).
-
 ### Production servers
 
 Production deploys are a somewhat manual process in that they are not done

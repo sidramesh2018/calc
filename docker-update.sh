@@ -1,6 +1,23 @@
 #! /bin/bash
 
-set -e
+if docker-compose build; then
+  if docker-compose run app ./update.sh; then
+    echo
+    echo "Docker environment updated successfully."
+    exit 0
+  fi
+fi
 
-docker-compose build
-docker-compose run app ./update.sh
+echo
+echo "Alas, something didn't work when trying to update your Docker setup."
+echo "If you're not sure what the problem is, you might want to just "
+echo "reset your environment by running:"
+echo
+echo "    docker-compose down -v"
+echo "    $0"
+echo
+echo "Note that this will reset your database! It will also re-fetch"
+echo "your package dependencies, among other things, so make sure you"
+echo "have a good internet connection."
+
+exit 1
