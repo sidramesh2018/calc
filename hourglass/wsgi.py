@@ -12,6 +12,9 @@ from django.core.wsgi import get_wsgi_application
 import newrelic.agent
 from hourglass.settings_utils import load_cups_from_vcap_services
 
+from .wsgi_middleware import static_url_rewriter
+
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hourglass.settings")
 
 # Load user-provided service credentials into the environment so that
@@ -27,7 +30,12 @@ if nr_license and nr_app_name:
     nr_settings.app_name = nr_app_name
     newrelic.agent.initialize()
 
+
 try:
-    application = get_wsgi_application()
+    application = static_url_rewriter(
+        get_wsgi_application(),
+        '/docs/',
+        '/static/docs/'
+    )
 except Exception as e:
     print(e)
