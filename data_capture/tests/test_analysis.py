@@ -60,11 +60,11 @@ class DescribeTests(BaseDbTestCase):
             'avg': 90.0,
             'count': 1,
             'preposition': 'way below',
-            'labor_category': 'Engineer Doom II',
+            'labor_category': 'Engineer of Doom II',
             'severe': True,
             'stddev': 1,
             'stddevs': 1,
-            'url': '/?q=Engineer+Doom+II&min_experience=5'
+            'url': '/?q=Engineer+of+Doom+II&min_experience=5'
                    '&max_experience=9&education=BA'
         })
 
@@ -81,11 +81,11 @@ class DescribeTests(BaseDbTestCase):
         self.assertEqual(result, {
             'avg': 90.0,
             'count': 1,
-            'labor_category': 'Engineer Doom II',
+            'labor_category': 'Engineer of Doom II',
             'severe': False,
             'stddev': 1,
             'stddevs': 0,
-            'url': '/?q=Engineer+Doom+II&min_experience=5'
+            'url': '/?q=Engineer+of+Doom+II&min_experience=5'
                    '&max_experience=9&education=BA'
         })
 
@@ -118,7 +118,7 @@ class FindComparableContractsTests(BaseDbTestCase):
             education_level='BA',
             min_count=1,
         )
-        self.assertEqual(fc.phrase, 'Engineer Doom II')
+        self.assertEqual(fc.phrase, 'Engineer of Doom II')
         self.assertEqual(fc.count, 1)
         self.assertEqual(fc.finder.__class__, GteEduAndExpFinder)
 
@@ -129,7 +129,7 @@ class FindComparableContractsTests(BaseDbTestCase):
             education_level='AA',
             min_count=1,
         )
-        self.assertEqual(fc.phrase, 'Engineer Doom II')
+        self.assertEqual(fc.phrase, 'Engineer of Doom II')
         self.assertEqual(fc.count, 1)
         self.assertEqual(fc.finder.__class__, GteEduAndExpFinder)
 
@@ -140,7 +140,7 @@ class FindComparableContractsTests(BaseDbTestCase):
             education_level='BA',
             min_count=1,
         )
-        self.assertEqual(fc.phrase, 'Engineer Doom II')
+        self.assertEqual(fc.phrase, 'Engineer of Doom II')
         self.assertEqual(fc.count, 1)
         self.assertEqual(fc.finder.__class__, ExactEduAndExpFinder)
 

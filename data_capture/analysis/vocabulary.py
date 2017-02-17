@@ -184,6 +184,11 @@ def broaden_query(cursor, vocab, query, cache, min_count):
     lexemes_in_vocab = [lexeme for lexeme in orig_lexemes if lexeme in vocab]
     pos_mapper = PartOfSpeechMapper(orig_words)
 
+    # Always yield the query verbatim. This way if the POS mapper thinks
+    # the query has no nouns in it, e.g. "Clerical I", at least we still do
+    # at least one search for it.
+    yield query
+
     for lexemes in get_best_permutations(vocab, lexemes_in_vocab, min_count):
         words = sorted(
             [word_map[lexeme] for lexeme in lexemes],
