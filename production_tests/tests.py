@@ -95,3 +95,18 @@ class ProductionTests(ProductionTestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json(), [])
         self.assertEqual(res.headers['Access-Control-Allow-Origin'], '*')
+
+    def test_api_passes_json_accept_header(self):
+        res = self.client.get('/')
+        m = re.search(r'var API_HOST = "([^"]+)"',
+                      res.content.decode('utf-8'))
+        api_url = m.group(1)
+
+        res = self.client.get(
+            api_url + 'search/?q=zzzzzzzz&query_type=match_all',
+            headers={'Accept': 'application/json'}
+        )
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json(), [])
+        self.assertEqual(res.headers['Content-Type'], 'application/json')
