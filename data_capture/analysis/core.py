@@ -21,7 +21,14 @@ from .vocabulary import Vocabulary, broaden_query
 # value.
 MIN_STDDEV = 1
 
-DEFAULT_MIN_COMPARABLES = 4
+# FAR 15.404-1(b)(2) lists seven price analysis techniques by which the
+# Government can make a fair and reasonable price determination.
+#
+# Normally, adequate price competition establishes price reasonableness.
+# This is the most commonly used technique, as the majority of Government
+# procurement actions attract *two*  or more offers that are competing
+# independently for award.
+DEFAULT_MIN_COMPARABLES = 2
 
 FoundContracts = namedtuple(
     'FoundContracts',
