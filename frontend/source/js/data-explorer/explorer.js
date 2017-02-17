@@ -7,8 +7,6 @@ import { Provider } from 'react-redux';
 
 import App from './components/app';
 
-import hourglass from '../common/hourglass';
-
 import ga from '../common/ga';
 
 import { invalidateRates } from './actions';
@@ -19,7 +17,9 @@ import StoreHistorySynchronizer from './history';
 
 import StoreRatesAutoRequester from './rates-request';
 
-const api = new hourglass.API();
+import API from './api';
+
+const api = new API();
 const historySynchronizer = new StoreHistorySynchronizer(window);
 const ratesRequester = new StoreRatesAutoRequester(api);
 const middlewares = [
