@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Upload-price-list" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="price-list-details" transform="translate(-821.000000, -314.000000)" fill="#61701C">
+            <path d="M827.5,327 C831.089851,327 834,324.089851 834,320.5 C834,316.910149 831.089851,314 827.5,314 C823.910149,314 821,316.910149 821,320.5 C821,324.089851 823.910149,327 827.5,327 Z M825.537694,320.069242 C825.248926,319.772282 824.774098,319.765641 824.477138,320.05441 C824.180178,320.343179 824.173537,320.818006 824.462306,321.114967 L826.268667,322.97257 C826.564644,323.276943 827.05403,323.275181 827.347807,322.968685 L830.893985,319.268978 C831.180607,318.969946 831.170548,318.495178 830.871516,318.208556 C830.572484,317.921933 830.097717,317.931992 829.811094,318.231024 L826.802474,321.369901 L825.537694,320.069242 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>
