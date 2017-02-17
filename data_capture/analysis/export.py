@@ -5,6 +5,10 @@ from django.http import HttpResponse
 from django.utils import timezone
 
 
+def pct_diff(a, b):
+    return (a - b)/((a + b) / 2) * 100
+
+
 class AnalysisExport:
     output_headers = [
         '#',
@@ -32,13 +36,30 @@ class AnalysisExport:
         self.analyzed_rows = [row['analysis'] for row in rows]
 
     def _to_output_row(self, num, analyzed_row, valid_row):
-        def pct_diff(a, b):
-            return (a - b)/((a + b) / 2) * 100
-
+        # NOTE: analyzed_row['severe'] and 'url'
+        # are not included in the output because they are not in the template
         proposed_price = float(valid_row['price'])
 
-        # TODO: analyzed_row['severe'] and 'url'
-        # are not included in the output because they are not in the template
+        # Use presence of 'count' as a proxy to determine if the
+        # analyzed_row is populated.
+        if 'count' not in analyzed_row:
+            # If not, then return a mostly empty line
+            return [
+                num + 1,
+                0,
+                valid_row['labor_category'],
+                'Error: Comparables not found',
+                valid_row['education_level'],
+                valid_row['min_years_experience'],
+                '',
+                '',
+                proposed_price,
+                '',
+                '',
+                '',
+                '',
+                valid_row['sin'],
+            ]
 
         outside_one_std_dev = 'Yes' if analyzed_row['stddevs'] > 1 else 'No'
 
