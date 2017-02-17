@@ -138,6 +138,11 @@ So, you should first run `./docker-update.sh` to set everything up,
 followed by `docker-compose up`. Now you should have a server
 running in the cloud!
 
+**Note:** A script, [create-aws-instance.sh](../create-aws-instance.sh),
+actually automates all of this for you, but it's coupled to Amazon
+Web Services (AWS). You're welcome to use it directly or edit it to
+your own needs. Run it without any arguments for help.
+
 **Note:** As mentioned earlier, your app's source code is part of
 the container image. This means that every time you make a source code 
 change, you will need to re-run `./docker-update.sh`.
