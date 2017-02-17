@@ -65,7 +65,7 @@ class DescribeTests(BaseDbTestCase):
             'stddev': 1,
             'stddevs': 1,
             'url': '/?q=Engineer+Doom+II&min_experience=5'
-                   '&max_experience=5&education=BA'
+                   '&max_experience=9&education=BA'
         })
 
     def test_it_does_not_explode_when_stddev_is_zero(self):
@@ -86,7 +86,7 @@ class DescribeTests(BaseDbTestCase):
             'stddev': 1,
             'stddevs': 0,
             'url': '/?q=Engineer+Doom+II&min_experience=5'
-                   '&max_experience=5&education=BA'
+                   '&max_experience=9&education=BA'
         })
 
     def test_returns_empty_description_if_no_comparables_found(self):
@@ -114,7 +114,7 @@ class FindComparableContractsTests(BaseDbTestCase):
     def test_broadening_experience_works(self):
         fc = self.find_comparable_contracts(
             labor_category='Engineer of Doom II',
-            min_years_experience=4,
+            min_years_experience=0,
             education_level='BA',
             min_count=1,
         )

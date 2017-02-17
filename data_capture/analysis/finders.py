@@ -49,19 +49,24 @@ class BaseEduAndExpFinder(ContractFinder):
 class ExactEduAndExpFinder(BaseEduAndExpFinder):
     '''
     Finds contracts that are exactly equal to a given
-    minimum experience and education level.
+    education level, and around a given experience level.
     '''
+
+    MAX_YEARS_DELTA = 4
 
     def filter_queryset(self, qs: QuerySet) -> QuerySet:
         return qs.filter(
-            min_years_experience=self.min_years_experience,
+            min_years_experience__gte=self.min_years_experience,
+            min_years_experience__lte=self.min_years_experience + \
+                                      self.MAX_YEARS_DELTA,
             education_level=self.education_level
         )
 
     def get_data_explorer_qs_params(self) -> QueryStringTuple:
         return (
             ('min_experience', str(self.min_years_experience)),
-            ('max_experience', str(self.min_years_experience)),
+            ('max_experience', str(self.min_years_experience +
+                                   self.MAX_YEARS_DELTA)),
             ('education', self.education_level),
         )
 
