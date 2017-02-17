@@ -57,8 +57,8 @@ class ExactEduAndExpFinder(BaseEduAndExpFinder):
     def filter_queryset(self, qs: QuerySet) -> QuerySet:
         return qs.filter(
             min_years_experience__gte=self.min_years_experience,
-            min_years_experience__lte=self.min_years_experience + \
-                                      self.MAX_YEARS_DELTA,
+            min_years_experience__lte=(self.min_years_experience +
+                                       self.MAX_YEARS_DELTA),
             education_level=self.education_level
         )
 
