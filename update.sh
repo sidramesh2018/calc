@@ -27,3 +27,8 @@ python -W ignore manage.py update_search_field contracts
 
 echo "----- Initializing Groups -----"
 python manage.py initgroups
+
+if [ -n "${CALC_IS_ON_DOCKER_IN_CLOUD}" ]; then
+  echo "----- Building Static Assets -----"
+  gulp build
+fi

@@ -120,32 +120,32 @@ Also, unlike local development, cloud deploys don't support an
 `docker-compose.override.yml` file that defines the app's
 environment variables, and also points to the alternate Dockerfile:
 
-```yaml
-version: '2'
-services:
-  app: &app
-    build:
-      dockerfile: Dockerfile.cloud
-    environment:
-      - DEBUG=yup
-  rq_worker:
-    <<: *app
-  rq_scheduler:
-    <<: *app
 ```
+cp docker-compose.cloud.yml docker-compose.override.yml
+```
+
+You can edit this file to add or change environment variables as needed.
 
 You'll also want to tell Docker Compose what port to listen on,
 which can be done in the terminal by running
 `export DOCKER_EXPOSED_PORT=8000`.
 
-At this point, you can use Docker's command-line tools, such as
-`docker-compose up`, and your actions will take effect on the remote
-host instead of your local machine. The `./docker-update.sh` script
-will also take effect on the remote host.
+At this point, you can use Docker's command-line tools and CALC's
+Docker-related scripts, and your actions will take effect on the remote
+host instead of your local machine.
+
+So, you should first run `./docker-update.sh` to set everything up,
+followed by `docker-compose up`. Now you should have a server
+running in the cloud!
+
+**Note:** A script, [create-aws-instance.sh](../create-aws-instance.sh),
+actually automates all of this for you, but it's coupled to Amazon
+Web Services (AWS). You're welcome to use it directly or edit it to
+your own needs. Run it without any arguments for help.
 
 **Note:** As mentioned earlier, your app's source code is part of
 the container image. This means that every time you make a source code 
-change, you will need to re-run `docker-compose build`.
+change, you will need to re-run `./docker-update.sh`.
 
 [18F Docker guide]: https://pages.18f.gov/dev-environment-standardization/virtualization/docker/
 [Docker]: https://www.docker.com/

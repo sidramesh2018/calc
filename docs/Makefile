@@ -25,7 +25,11 @@ html: Makefile
 	rm -rf $(BUILDDIR)
 
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-	rm -rf $(DJANGODIR)
+
+# Note that $(DJANGODIR) might be a mounted volume, in which case it can't
+# be deleted, so we'll simply delete anything *inside* it.
+	rm -rf $(DJANGODIR)/*
+
 	mkdir -p $(DJANGODIR)
 	cp -R $(BUILDDIR)/html $(DJANGODIR)/docs/
 

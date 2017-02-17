@@ -26,25 +26,8 @@ cat Dockerfile Dockerfile.cloud-extras > ${DOCKERFILE_FILE}
 
 echo "Creating ${YML_FILE}."
 
-cat << EOF > ${YML_FILE}
-version: '2'
-services:
-  app:
-    build:
-      dockerfile: ${DOCKERFILE_FILE}
-    environment:
-      - DEBUG=yup
-  rq_worker:
-    build:
-      dockerfile: ${DOCKERFILE_FILE}
-    environment:
-      - DEBUG=yup
-  rq_scheduler:
-    build:
-      dockerfile: ${DOCKERFILE_FILE}
-    environment:
-      - DEBUG=yup
-EOF
+cat docker-compose.cloud.yml \
+  | sed "s/Dockerfile\.cloud/${DOCKERFILE_FILE}/" > ${YML_FILE}
 
 echo "Creating ${ENV_FILE}."
 
@@ -58,13 +41,7 @@ EOF
 
 source ${ENV_FILE}
 
-docker-compose build
-
-docker-compose pull
-
-docker-compose run app python manage.py migrate
-
-docker-compose run app python manage.py initgroups
+./docker-update.sh
 
 docker-compose run app python manage.py load_data
 
