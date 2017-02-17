@@ -1,0 +1,20 @@
+version: '2'
+services:
+  app: &app
+    build:
+      dockerfile: Dockerfile.cloud
+    volumes:
+      - frontend:/calc/frontend/static/frontend/built/
+      - docs:/calc/docs/static/
+    environment:
+      # Feel free to change this value, or add new environment variables.
+      - DEBUG=yup
+      # Do not change the following value.
+      - CALC_IS_ON_DOCKER_IN_CLOUD=yup
+  rq_worker:
+    <<: *app
+  rq_scheduler:
+    <<: *app
+volumes:
+  frontend:
+  docs:
