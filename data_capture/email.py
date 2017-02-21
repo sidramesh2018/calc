@@ -32,6 +32,42 @@ def collapse_and_strip_tags(text):
     return re.sub(r'\n+', '\n', strip_tags(text))
 
 
+def render_mail(template, ctx):
+    '''
+    Render the given template with the given context for
+    plaintext and HTML formats. This is done by rendering the
+    template *twice* with slightly modified contexts:
+    complementary `is_html_email` and `is_plaintext` variables
+    are set to whatever mode is being rendered.
+
+    Returns a (plaintext, html) string tuple representing the rendered
+    template in each format.
+    '''
+
+    html_ctx = ctx.copy()
+    html_ctx['is_html_email'] = True
+    html_ctx['is_plaintext_email'] = False
+
+    html_message = render_to_string(template, html_ctx)
+    html_message = premailer.transform(html_message)
+
+    # TODO: This is a workaround for
+    # https://github.com/18F/calc/issues/1409, need to figure
+    # out the exact reason behind it.
+    html_message = html_message.encode(
+        'ascii', 'xmlcharrefreplace').decode('ascii')
+
+    plaintext_ctx = ctx.copy()
+    plaintext_ctx['is_html_email'] = False
+    plaintext_ctx['is_plaintext_email'] = True
+
+    plaintext_message = collapse_and_strip_tags(
+        render_to_string(template, plaintext_ctx)
+    )
+
+    return (plaintext_message, html_message)
+
+
 def send_mail(subject, to, template, ctx, reply_to=None):
     '''
     Django's convinience send_mail function does not allow
@@ -43,22 +79,7 @@ def send_mail(subject, to, template, ctx, reply_to=None):
     '''
     connection = get_connection()
 
-    html_ctx = ctx.copy()
-    html_ctx['is_html_email'] = True
-    html_ctx['is_plaintext_email'] = False
-
-    html_message = render_to_string(template, html_ctx)
-    html_message = premailer.transform(html_message)
-    html_message = html_message.encode(
-        'ascii', 'xmlcharrefreplace').decode('ascii')
-
-    plaintext_ctx = ctx.copy()
-    plaintext_ctx['is_html_email'] = False
-    plaintext_ctx['is_plaintext_email'] = True
-
-    plaintext_message = collapse_and_strip_tags(
-        render_to_string(template, plaintext_ctx)
-    )
+    plaintext_message, html_message = render_mail(template, ctx)
 
     msg = EmailMultiAlternatives(
         connection=connection,
