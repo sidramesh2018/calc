@@ -28,3 +28,9 @@ docker-compose.override.yml
 .dockerignore
 
 .git
+.eyeglass_cache
+__pycache__
+docs/_build
+frontend/static/frontend/built
+contracts/docs/hourly_prices_v*.csv
+contracts/docs/s70/s70_data_v*.csv
