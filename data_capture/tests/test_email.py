@@ -14,6 +14,13 @@ from .test_models import ModelTestCase
 
 @freeze_time(datetime(2017, 1, 8, 20, 51, 0))
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE],
+
+                   # Ugh, this is required for the cg-django-uaa to not
+                   # complain when running this test suite standalone.
+                   AUTHENTICATION_BACKENDS=(
+                       'uaa_client.authentication.UaaBackend',
+                   ),
+
                    DEFAULT_FROM_EMAIL='hi@hi.com',
                    HELP_EMAIL="help@help.com",)
 class EmailTests(ModelTestCase):
@@ -44,7 +51,8 @@ class EmailTests(ModelTestCase):
     def test_send_mail_works(self):
         result = email.send_mail(
             subject='test email',
-            html_message='<p>test body</p>',
+            template='data_capture/tests/test_email.html',
+            ctx={},
             to=['test@test.com'],
             reply_to=['reply-test@test.com'],
         )
