@@ -66,6 +66,7 @@ EXAMPLES = [
     )
 ]
 
+
 @click.command()
 @click.argument('to', default='user@example.com')
 def command(to):
