@@ -1,5 +1,5 @@
 import re
-
+import premailer
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.core.urlresolvers import reverse
 from django.utils.html import strip_tags
@@ -43,9 +43,22 @@ def send_mail(subject, to, template, ctx, reply_to=None):
     '''
     connection = get_connection()
 
-    html_message = render_to_string(template, ctx)
+    html_ctx = ctx.copy()
+    html_ctx['is_html_email'] = True
+    html_ctx['is_plaintext_email'] = False
 
-    plaintext_message = collapse_and_strip_tags(html_message)
+    html_message = render_to_string(template, html_ctx)
+    html_message = premailer.transform(html_message)
+    html_message = html_message.encode(
+        'ascii', 'xmlcharrefreplace').decode('ascii')
+
+    plaintext_ctx = ctx.copy()
+    plaintext_ctx['is_html_email'] = False
+    plaintext_ctx['is_plaintext_email'] = True
+
+    plaintext_message = collapse_and_strip_tags(
+        render_to_string(template, plaintext_ctx)
+    )
 
     msg = EmailMultiAlternatives(
         connection=connection,
