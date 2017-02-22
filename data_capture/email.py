@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import pluralize
 from django.conf import settings
 
+from frontend import email_css
 from hourglass.site_utils import absolute_reverse
 from .models import SubmittedPriceList
 
@@ -47,6 +48,7 @@ def render_mail(template, ctx):
     html_ctx = ctx.copy()
     html_ctx['is_html_email'] = True
     html_ctx['is_plaintext_email'] = False
+    html_ctx['email_css'] = email_css
 
     html_message = render_to_string(template, html_ctx)
     html_message = premailer.transform(html_message)
