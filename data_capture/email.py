@@ -1,5 +1,4 @@
 import re
-import premailer
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
@@ -51,7 +50,6 @@ def render_mail(template, ctx):
     html_ctx['email_css'] = email_css
 
     html_message = render_to_string(template, html_ctx)
-    html_message = premailer.transform(html_message)
 
     # TODO: This is a workaround for
     # https://github.com/18F/calc/issues/1409, need to figure
