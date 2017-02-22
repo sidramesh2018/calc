@@ -56,6 +56,10 @@ $usermenu-width: 150px;
     }
   }
 
+  svg {
+    fill: $color-primary-alt;
+  }
+
   &.open {
     > ul {
       display: block;
@@ -64,12 +68,11 @@ $usermenu-width: 150px;
     .usermenu-trigger {
       text-decoration: none;
       color: $color-white;
+    }
 
-      &:after {
-        content: "▲";
-        display: inline-block;
-        text-decoration: none;
-      }
+    svg {
+      fill: $color-white;
+      transform: rotate(180deg);
     }
   }
 }
@@ -81,11 +84,5 @@ a.usermenu-trigger {
 
   &:hover {
     text-decoration: underline;
-  }
-
-  &:after {
-    content: "▼";
-    display: inline-block;
-    text-decoration: none;
   }
 }

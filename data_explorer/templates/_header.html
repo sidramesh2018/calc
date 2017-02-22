@@ -4,7 +4,12 @@
   <div class="columns ten">
     {% if user.is_authenticated %}
       <div id="usermenu">
-        <p class="user-id">Hello, <a class="usermenu-trigger" href="{% url 'user_account:index' %}">{{ user.email }}</a></p>
+        <p class="user-id">Hello,
+          <a class="usermenu-trigger" href="{% url 'user_account:index' %}">{{ user.email }}</a>
+          <svg class="icon-triangle" width="10" height="7" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0l4.95 6.905L9.9 0"/>
+          </svg>
+        </p>
         <ul>
           <li><a href="{% url 'user_account:index' %}">Your activity</a></li>
           <li><a href="{% url 'logout' %}">Log out</a></li>
