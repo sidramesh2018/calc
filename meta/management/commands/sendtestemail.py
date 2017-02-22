@@ -1,13 +1,14 @@
-# This file has been taken directly from Django 1.9:
+# This file is based on the following from Django 1.9:
 # https://github.com/django/django/blob/master/django/core/management/commands/sendtestemail.py
-
-# We should remove it once we've upgraded to 1.9.
+#
+# However, it has been modified, so we should not remove it.
 
 import socket
-
 from django.core.mail import mail_admins, mail_managers, send_mail
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+
+from hourglass.site_utils import absolutify_url
 
 
 class Command(BaseCommand):
@@ -33,7 +34,10 @@ class Command(BaseCommand):
 
         send_mail(
             subject=subject,
-            message="If you\'re reading this, it was successful.",
+            message="\n".join([
+                "If you\'re reading this, it was successful.",
+                "Here is a link back to the site: " + absolutify_url("/"),
+            ]),
             from_email=None,
             recipient_list=kwargs['email'],
         )
