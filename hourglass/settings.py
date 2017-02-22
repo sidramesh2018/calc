@@ -76,6 +76,7 @@ TEMPLATES = [{
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
+            'hourglass.context_processors.canonical_url',
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
             'hourglass.context_processors.google_analytics_tracking_id',
