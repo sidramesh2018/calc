@@ -1,83 +1,92 @@
 
 $menu-caret-size: 6px;
-$menu-width: 200px;
+$menu-width: 150px;
+
+// TODO: make sure it works on admin pages
+// TODO: use SVG for menu caret
+
+.usermenu {
+  position: relative;
+
+  > ul {
+    display: none;
+
+    position: absolute;
+    top: 1.2em;
+    right: 0;
+    width: $menu-width;
+    z-index: 1;
+
+    text-align: left;
+    font-size: $medium-font-size;
+    font-weight: $font-weight-bold;
+    background: $color-gray-lightest;
+    border-radius: 4px;
+    list-style: none;
+    padding: 1.2em 2em;
+
+    li {
+      margin-bottom: 0.5em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    a {
+      text-decoration: none;
+      color: $color-primary-darker;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    // Menu caret
+    &:before {
+      content: '';
+      position: absolute;
+      top: -$menu-caret-size;
+      // aligned in center of menu
+      right: $menu-width/2 - $menu-caret-size/2;
+      width: 0;
+      height: 0;
+      border-bottom: $menu-caret-size solid $color-gray-lightest;
+      border-right: $menu-caret-size solid transparent;
+      border-left: $menu-caret-size solid transparent;
+    }
+  }
+
+  &.open {
+    > ul {
+      display: block;
+    }
+
+    .usermenu-trigger {
+      text-decoration: none;
+      color: $color-white;
+
+      &:after {
+        content: "▲";
+        display: inline-block;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
 
 a.usermenu-trigger {
   color: $color-primary-alt;
+  text-decoration: none;
 
-  /* TODO: might want these indicators to be made using the border trick */
-  /* so that they better match the size of the menu's caret */
+  &:hover {
+    text-decoration: underline;
+  }
+
   &:after {
     content: "▼";
     display: inline-block;
     text-decoration: none;
   }
-
-  &.open:after {
-    content: "▲";
-    display: inline-block;
-    text-decoration: none;
-  }
-}
-
-.usermenu {
-  position: relative;
-}
-
-// TODO: maybe just PE the menu so that
-// it only works (ie, hides/shows) if JS available.
-// If no JS, then it will still be a link to the account page.
-
-.usermenu > ul {
-  display: block;  // TODO: none
-
-  position: absolute;
-  top: 1.2em;
-  right: 0;
-  width: $menu-width;
-
-  text-align: left;
-  font-size: $medium-font-size;
-  font-weight: $font-weight-bold;
-  background: $color-gray-lightest;
-  border-radius: 4px;
-  list-style: none;
-  padding: 1.2em 2em;
-
-  li {
-    margin-bottom: 1em;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  a {
-    text-decoration: none;
-    color: $color-primary-darker;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  // Menu caret
-  &:before {
-    content: '';
-    position: absolute;
-    top: -$menu-caret-size;
-    // TODO: I don't think there is a way to get
-    // this menu to consistently align as shown in the mock
-    // because the user email address is of variable length
-    right: $menu-width/2 - $menu-caret-size/2;
-    width: 0;
-    height: 0;
-    border-bottom: $menu-caret-size solid $color-gray-lightest;
-    border-right: $menu-caret-size solid transparent;
-    border-left: $menu-caret-size solid transparent;
-  }
-}
-
-.usermenu:hover > ul {
-  display: block;
 }

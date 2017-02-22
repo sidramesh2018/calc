@@ -13,3 +13,21 @@
     {% endif %}
   </div>
 </div>
+<script>
+  // TODO: use plain JS instead of jquery
+  var $menu = $('.usermenu');
+  var $trigger = $('.usermenu-trigger', $menu);
+
+  // Only add the aria attributes if JS is loaded
+  // ref: w3.org/WAI/tutorials/menus/flyout/
+  $trigger.attr('aria-haspopup', true);
+  $trigger.attr('aria-expanded', false);
+
+  // TODO: add aria-??? to indicate whether click will Hide Menu or Show Menu
+
+  $trigger.click(function (e) {
+    e.preventDefault();
+    $menu.toggleClass('open');
+    $trigger.attr('aria-expanded', $menu.hasClass('open'));
+  });
+</script>
