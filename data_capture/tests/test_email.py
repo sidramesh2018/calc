@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.core import mail
 from django.core.urlresolvers import reverse
-from django.test import override_settings, TestCase
+from django.test import override_settings
 from django.contrib.auth.models import User
 from freezegun import freeze_time
 
@@ -10,46 +10,6 @@ from .. import email
 from ..models import SubmittedPriceList
 from .common import create_bulk_upload_contract_source, FAKE_SCHEDULE
 from .test_models import ModelTestCase
-
-
-class AbsoluteUrlTests(TestCase):
-    @override_settings(DEBUG=False, SECURE_SSL_REDIRECT=True)
-    def test_absolute_reverse_works(self):
-        self.assertEqual(
-            email.absolute_reverse('data_capture:step_1'),
-            'https://example.com/data-capture/step/1'
-        )
-
-    def test_absolutify_url_raises_error_on_non_absolute_paths(self):
-        with self.assertRaises(ValueError):
-            email.absolutify_url('meh')
-
-    def test_absolutify_url_passes_through_http_urls(self):
-        self.assertEqual(email.absolutify_url('http://foo'), 'http://foo')
-
-    def test_absolutify_url_passes_through_https_urls(self):
-        self.assertEqual(email.absolutify_url('https://foo'), 'https://foo')
-
-    @override_settings(DEBUG=False, SECURE_SSL_REDIRECT=True)
-    def test_absolutify_url_works_in_production(self):
-        self.assertEqual(
-            email.absolutify_url('/boop'),
-            'https://example.com/boop'
-        )
-
-    @override_settings(DEBUG=False, SECURE_SSL_REDIRECT=False)
-    def test_absolutify_url_works_in_unencrypted_production(self):
-        self.assertEqual(
-            email.absolutify_url('/boop'),
-            'http://example.com/boop'
-        )
-
-    @override_settings(DEBUG=True, SECURE_SSL_REDIRECT=False)
-    def test_absolutify_url_works_in_development(self):
-        self.assertEqual(
-            email.absolutify_url('/blap'),
-            'http://example.com/blap'
-        )
 
 
 @freeze_time(datetime(2017, 1, 8, 20, 51, 0))
@@ -61,7 +21,10 @@ class AbsoluteUrlTests(TestCase):
                        'uaa_client.authentication.UaaBackend',
                    ),
 
+                   # This ensures absolute URLs produced by our code
+                   # are https-based.
                    SECURE_SSL_REDIRECT=True,
+
                    DEFAULT_FROM_EMAIL='hi@hi.com',
                    HELP_EMAIL="help@help.com",)
 class EmailTests(ModelTestCase):
