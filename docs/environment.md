@@ -81,7 +81,7 @@ string), the boolean is true; otherwise, it's false.
   API hosted by CALC. It defaults to `/api/` but may need to be changed
   if the API has a proxy in front of it, as it likely will be if deployed
   on government infrastructure. For more information, see
-  [Deploying to Cloud Foundry](deploy.md).
+  the [API documentation](api.md).
 
 * `SECURITY_HEADERS_ON_ERROR_ONLY` is a boolean value that indicates whether
   security-related response headers (such as `X-XSS-Protection`)
