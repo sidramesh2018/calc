@@ -111,6 +111,7 @@ span.dollars {
 
 .filter-title {
   padding-bottom: 0;
+  margin: 1em 0 1.5em 0;
 }
 
 .filter-block {
@@ -118,6 +119,10 @@ span.dollars {
   border-radius: $border-radius;
   margin-bottom: 0;
   padding: 1rem 2rem;
+
+  legend {
+    font-size: $small-font-size;
+  }
 }
 
 
@@ -347,7 +352,6 @@ section.search {
   .experience_range select {
     width: auto;
     height: auto;
-    margin: 15px 0;
     min-width: 51px;
     display: inline-block;
   }
@@ -453,6 +457,10 @@ a.focus-input {
   border-radius: $border-radius;
   display: inline-block;
   padding-left: 0; // ul default override
+
+  label {
+    font-size: $base-font-size;
+  }
 }
 
 .contract-year-item {
@@ -478,6 +486,8 @@ a.focus-input {
   color: $color-gray-dark;
   font-weight: normal;
   font-size: 2rem;
+  overflow: hidden;
+
   .total {
     font-weight: bold;
   }
@@ -618,10 +628,7 @@ input[type="radio"]:focus + .checkbox-focus {
   border-right: 1px solid $color-gray-lighter;
   &:last-of-type {
     border: none;
-    margin-right: -1px;
-  }
-  &:not(:first-child) {
-    margin-left: -3px
+    margin-right: -3px;
   }
 }
 
@@ -641,6 +648,4 @@ input[type="radio"]:focus + .checkbox-focus {
 
 .contract-year legend {
   float: left;
-  margin-bottom: 10px;
-  font-size: $small-font-size;
 }

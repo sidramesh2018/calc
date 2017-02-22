@@ -3,18 +3,17 @@ services:
   app:
     volumes:
       - .:/calc
-      # http://stackoverflow.com/a/37898591
-      - /calc/node_modules/
     command: python manage.py runserver 0.0.0.0:${DOCKER_EXPOSED_PORT}
     environment:
       - EMAIL_URL=smtp://mailcatcher:25/
     links:
       - mailcatcher
   gulp:
-    build: .
+    extends:
+      file: docker-services.yml
+      service: base_app
     volumes:
       - .:/calc
-      - /calc/node_modules/
     command: gulp
   rq_worker:
     volumes:

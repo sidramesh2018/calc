@@ -123,6 +123,8 @@ export const QUERY_TYPE_LABELS = {
   [QUERY_TYPE_MATCH_EXACT]: 'Exact match',
 };
 
+export const MAX_QUERY_LENGTH = 255;
+
 export const API_HOST = window.API_HOST;
 
 export const API_RATES_CSV = `${API_HOST}rates/csv/`;

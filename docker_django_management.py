@@ -60,14 +60,36 @@
 
     Once everything is set up, developers can start your Django
     project via `docker-compose up`.
+
+    Optional environment variables:
+
+    * `DDM_HOST_USER` is the username as it will appear in the
+      Docker container. It's purely for cosmetic purposes and
+      defaults to `docker_user`.
+
+    * `DDM_USER_OWNED_DIRS` is a list of paths that need to be
+      owned by the `DDM_HOST_USER`, e.g. `/foo:/bar:/baz`. This
+      can be useful if your configuration uses Docker volumes,
+      which are owned by root by default. The entrypoint will
+      change ownership if needed before anything is run.
+
+    * `DDM_VENV_DIR` is the name of a directory in the container in
+      which a Python virtualenv should exist. If the directory
+      is empty when the entrypoint is run, a virtualenv will
+      be created in it. The virtualenv is transparently
+      activated before the entrypoint exec's.
 '''
 
 import os
 import sys
-import pwd
 import time
 import signal
 import subprocess
+
+if sys.platform != 'win32':
+    # If the Docker host is running on Windows, we don't need this
+    # module, so it's OK to not import it.
+    import pwd
 
 if False:
     # This is just needed so mypy will work; it's never executed.
@@ -77,6 +99,8 @@ MY_DIR = os.path.abspath(os.path.dirname(__file__))
 HOST_UID = os.stat(MY_DIR).st_uid
 
 HOST_USER = os.environ.get('DDM_HOST_USER', 'docker_user')
+USER_OWNED_DIRS = os.environ.get('DDM_USER_OWNED_DIRS', '')
+VENV_DIR = os.environ.get('DDM_VENV_DIR', '')
 CONTAINER_NAME = os.environ.get('DDM_CONTAINER_NAME')
 IS_RUNNING_IN_DOCKER = 'DDM_IS_RUNNING_IN_DOCKER' in os.environ
 
@@ -201,9 +225,19 @@ def execute_from_command_line(argv):  # type: (List[str]) -> None
             warn("You should probably be using 'docker-compose up' "
                  "to run the server.")
         try:
-            os.execvp('docker-compose', [
-                'docker-compose', 'run', CONTAINER_NAME, 'python'
-            ] + argv)
+            cmd_name = 'docker-compose'
+            cmd_args = [
+                cmd_name, 'run', CONTAINER_NAME, 'python'
+            ] + argv
+
+            if sys.platform == 'win32':
+                # Windows doesn't support the exec() syscall,
+                # so run docker-compose in a subshell.
+                # This will allow stdio to work as expected.
+                return_code = subprocess.call(cmd_args)
+                sys.exit(return_code)
+            else:
+                os.execvp(cmd_name, cmd_args)
         except OSError:
             # Apparently docker-compose isn't installed, so just raise
             # the original ImportError.
@@ -257,8 +291,31 @@ def entrypoint(argv):  # type: (List[str]) -> None
                 '-m', username,
                 '-u', str(HOST_UID)
             ])
+
+        if USER_OWNED_DIRS:
+            for dirname in USER_OWNED_DIRS.split(os.path.pathsep):
+                subprocess.check_call([
+                    'chown',
+                    '{}:{}'.format(HOST_UID, HOST_UID),
+                    dirname
+                ])
+
         os.environ['HOME'] = '/home/%s' % pwd.getpwuid(HOST_UID).pw_name
         os.setuid(HOST_UID)
+
+    if VENV_DIR:
+        activate_this = os.path.join(VENV_DIR, 'bin/activate_this.py')
+
+        if not os.path.exists(activate_this):
+            subprocess.check_call([
+                'virtualenv',
+                '.',
+            ], cwd=VENV_DIR)
+
+        # https://virtualenv.pypa.io/en/latest/userguide.html
+        with open(activate_this) as f:
+            exec(f.read(), dict(__file__=activate_this))
+
     os.execvp(argv[1], argv[1:])
 
 
