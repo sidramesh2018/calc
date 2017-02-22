@@ -5,6 +5,7 @@
 require('babel-polyfill/dist/polyfill');
 
 require('../common/dap-hacks');
+require('../common/usermenu');
 require('./upload');
 require('./ajaxform');
 require('./alerts');

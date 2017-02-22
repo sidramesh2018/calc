@@ -85,6 +85,8 @@ const bundles = {
   styleguide: {},
   // CALC 2.0 Tests
   tests: {},
+  // Custom scripts on /admin pages
+  admin: {},
 };
 
 const browserifiedBundles = [];

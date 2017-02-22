@@ -3,7 +3,7 @@
   <a class="logo-container columns two" href="{% url 'index' %}"><img class="logo" src="{% static 'frontend/images/calc_logo.png' %}" alt="CALC: Contract Awarded Labor Category Tool"></a>
   <div class="columns ten">
     {% if user.is_authenticated %}
-      <div class="usermenu">
+      <div id="usermenu">
         <p class="user-id">Hello, <a class="usermenu-trigger" href="{% url 'user_account:index' %}">{{ user.email }}</a></p>
         <ul>
           <li><a href="{% url 'user_account:index' %}">Your activity</a></li>
@@ -13,21 +13,3 @@
     {% endif %}
   </div>
 </div>
-<script>
-  // TODO: use plain JS instead of jquery
-  var $menu = $('.usermenu');
-  var $trigger = $('.usermenu-trigger', $menu);
-
-  // Only add the aria attributes if JS is loaded
-  // ref: w3.org/WAI/tutorials/menus/flyout/
-  $trigger.attr('aria-haspopup', true);
-  $trigger.attr('aria-expanded', false);
-
-  // TODO: add aria-??? to indicate whether click will Hide Menu or Show Menu
-
-  $trigger.click(function (e) {
-    e.preventDefault();
-    $menu.toggleClass('open');
-    $trigger.attr('aria-expanded', $menu.hasClass('open'));
-  });
-</script>
