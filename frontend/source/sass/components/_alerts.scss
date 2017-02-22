@@ -48,6 +48,13 @@ alerts-widget:focus {
   color: $color-secondary-dark;
   font-weight: $font-weight-bold;
 }
+
+.message-error h3:before {
+  width: $h3-font-size;
+  height: $h3-font-size;
+  content: url('../../images/icon-warning.svg');
+  padding-right: $space-half;
+}
 .message-success h3 {
   color: $color-green;
   margin-bottom: 0;
