@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.core import mail
 from django.core.urlresolvers import reverse
-from django.test import override_settings
+from django.test import override_settings, TestCase
 from django.contrib.auth.models import User
 from freezegun import freeze_time
 
@@ -10,6 +10,46 @@ from .. import email
 from ..models import SubmittedPriceList
 from .common import create_bulk_upload_contract_source, FAKE_SCHEDULE
 from .test_models import ModelTestCase
+
+
+class AbsoluteUrlTests(TestCase):
+    @override_settings(DEBUG=False, SECURE_SSL_REDIRECT=True)
+    def test_absolute_reverse_works(self):
+        self.assertEqual(
+            email.absolute_reverse('data_capture:step_1'),
+            'https://example.com/data-capture/step/1'
+        )
+
+    def test_absolutify_url_raises_error_on_non_absolute_paths(self):
+        with self.assertRaises(ValueError):
+            email.absolutify_url('meh')
+
+    def test_absolutify_url_passes_through_http_urls(self):
+        self.assertEqual(email.absolutify_url('http://foo'), 'http://foo')
+
+    def test_absolutify_url_passes_through_https_urls(self):
+        self.assertEqual(email.absolutify_url('https://foo'), 'https://foo')
+
+    @override_settings(DEBUG=False, SECURE_SSL_REDIRECT=True)
+    def test_absolutify_url_works_in_production(self):
+        self.assertEqual(
+            email.absolutify_url('/boop'),
+            'https://example.com/boop'
+        )
+
+    @override_settings(DEBUG=False, SECURE_SSL_REDIRECT=False)
+    def test_absolutify_url_works_in_unencrypted_production(self):
+        self.assertEqual(
+            email.absolutify_url('/boop'),
+            'http://example.com/boop'
+        )
+
+    @override_settings(DEBUG=True, SECURE_SSL_REDIRECT=False)
+    def test_absolutify_url_works_in_development(self):
+        self.assertEqual(
+            email.absolutify_url('/blap'),
+            'http://example.com/blap'
+        )
 
 
 @freeze_time(datetime(2017, 1, 8, 20, 51, 0))
@@ -21,6 +61,7 @@ from .test_models import ModelTestCase
                        'uaa_client.authentication.UaaBackend',
                    ),
 
+                   SECURE_SSL_REDIRECT=True,
                    DEFAULT_FROM_EMAIL='hi@hi.com',
                    HELP_EMAIL="help@help.com",)
 class EmailTests(ModelTestCase):
@@ -38,7 +79,7 @@ class EmailTests(ModelTestCase):
         self.assertIn(url, html_content)
 
     def assertHasDetailsLink(self, price_list, message):
-        details_link = 'http://test.com' + reverse(
+        details_link = 'https://example.com' + reverse(
             'data_capture:price_list_details', kwargs={'id': price_list.pk})
 
         self.assertHasOneHtmlAlternative(message)
@@ -70,7 +111,7 @@ class EmailTests(ModelTestCase):
         price_list = self.create_price_list(
             status=SubmittedPriceList.STATUS_APPROVED)
         price_list.save()
-        result = email.price_list_approved(price_list, 'http://test.com')
+        result = email.price_list_approved(price_list)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
@@ -87,13 +128,13 @@ class EmailTests(ModelTestCase):
             status=SubmittedPriceList.STATUS_UNREVIEWED)
         price_list.save()
         with self.assertRaises(AssertionError):
-            email.price_list_approved(price_list, 'http://test.com')
+            email.price_list_approved(price_list)
 
     def test_price_list_retired(self):
         price_list = self.create_price_list(
             status=SubmittedPriceList.STATUS_RETIRED)
         price_list.save()
-        result = email.price_list_retired(price_list, 'http://test.com')
+        result = email.price_list_retired(price_list)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
@@ -110,13 +151,13 @@ class EmailTests(ModelTestCase):
             status=SubmittedPriceList.STATUS_APPROVED)
         price_list.save()
         with self.assertRaises(AssertionError):
-            email.price_list_retired(price_list, 'http://test.com')
+            email.price_list_retired(price_list)
 
     def test_price_list_rejected(self):
         price_list = self.create_price_list(
             status=SubmittedPriceList.STATUS_REJECTED)
         price_list.save()
-        result = email.price_list_rejected(price_list, 'http://test.com')
+        result = email.price_list_rejected(price_list)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
@@ -133,7 +174,7 @@ class EmailTests(ModelTestCase):
             status=SubmittedPriceList.STATUS_APPROVED)
         price_list.save()
         with self.assertRaises(AssertionError):
-            email.price_list_rejected(price_list, 'http://test.com')
+            email.price_list_rejected(price_list)
 
     def test_bulk_uploaded_succeeded(self):
         src = create_bulk_upload_contract_source(
@@ -157,8 +198,7 @@ class EmailTests(ModelTestCase):
         src = create_bulk_upload_contract_source(
             self.user)
         src.save()
-        result = email.bulk_upload_failed(src, 'traceback_contents',
-                                          'http://test.com')
+        result = email.bulk_upload_failed(src, 'traceback_contents')
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
@@ -173,14 +213,14 @@ class EmailTests(ModelTestCase):
         self.assertIn('r10_upload_link', result.context)
         self.assertHasLink(
             message,
-            'http://test.com/data-capture/bulk/region-10/step/1')
+            'https://example.com/data-capture/bulk/region-10/step/1')
 
     def test_approval_reminder(self):
         User.objects.create_superuser('admin', 'admin@localhost', 'password')
         User.objects.create_superuser('admin2', 'admin2@localhost', 'password')
         User.objects.create_superuser('blankadmin', '', 'password')
         count = 5
-        result = email.approval_reminder(count, 'http://test.com')
+        result = email.approval_reminder(count)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(),
@@ -194,4 +234,4 @@ class EmailTests(ModelTestCase):
         self.assertHasReplyTo(message)
         self.assertHasLink(
             message,
-            'http://test.com/admin/data_capture/unreviewedpricelist/')
+            'https://example.com/admin/data_capture/unreviewedpricelist/')

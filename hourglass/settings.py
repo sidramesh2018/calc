@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.humanize',
+    'django.contrib.sites',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
@@ -134,6 +135,8 @@ INSTALLED_APPS = (
     'meta',
     'frontend',
 )  # type: Tuple[str, ...]
+
+SITE_ID = 1
 
 if DEBUG:
     STATICFILES_STORAGE = 'frontend.crotchety.CrotchetyStaticFilesStorage'

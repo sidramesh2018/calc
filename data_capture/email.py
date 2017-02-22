@@ -1,5 +1,6 @@
 import re
 import premailer
+from django.contrib.sites.models import Site
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.core.urlresolvers import reverse
 from django.utils.html import strip_tags
@@ -68,6 +69,36 @@ def render_mail(template, ctx):
     return (plaintext_message, html_message)
 
 
+def absolutify_url(url):
+    '''
+    If the URL is an absolute path, returns the URL prefixed with
+    the site's protocol and host information.
+
+    If the given URL is already absolute, returns the URL unchanged.
+    '''
+
+    if url.startswith('http://') or url.startswith('https://'):
+        return url
+
+    if not url.startswith('/'):
+        raise ValueError(f"url must be an absolute path: {url}")
+
+    protocol = 'https'
+    host = Site.objects.get_current().domain
+    if settings.DEBUG or not settings.SECURE_SSL_REDIRECT:
+        protocol = 'http'
+    return f"{protocol}://{host}{url}"
+
+
+def absolute_reverse(*args, **kwargs):
+    '''
+    Like Django's reverse(), but ensures the URL includes protocol
+    and host information, so that it can be embedded in an email.
+    '''
+
+    return absolutify_url(reverse(*args, **kwargs))
+
+
 def send_mail(subject, to, template, ctx, reply_to=None):
     '''
     Django's convinience send_mail function does not allow
@@ -93,9 +124,9 @@ def send_mail(subject, to, template, ctx, reply_to=None):
     return msg.send()
 
 
-def price_list_approved(price_list, site_base_url='https://calc.gsa.gov'):
-    details_link = site_base_url + reverse('data_capture:price_list_details',
-                                           kwargs={'id': price_list.pk})
+def price_list_approved(price_list):
+    details_link = absolute_reverse('data_capture:price_list_details',
+                                    kwargs={'id': price_list.pk})
 
     ctx = {
         'price_list': price_list,
@@ -118,9 +149,9 @@ def price_list_approved(price_list, site_base_url='https://calc.gsa.gov'):
     )
 
 
-def price_list_retired(price_list, site_base_url='https://calc.gsa.gov'):
-    details_link = site_base_url + reverse('data_capture:price_list_details',
-                                           kwargs={'id': price_list.pk})
+def price_list_retired(price_list):
+    details_link = absolute_reverse('data_capture:price_list_details',
+                                    kwargs={'id': price_list.pk})
 
     ctx = {
         'price_list': price_list,
@@ -143,9 +174,9 @@ def price_list_retired(price_list, site_base_url='https://calc.gsa.gov'):
     )
 
 
-def price_list_rejected(price_list, site_base_url='https://calc.gsa.gov'):
-    details_link = site_base_url + reverse('data_capture:price_list_details',
-                                           kwargs={'id': price_list.pk})
+def price_list_rejected(price_list):
+    details_link = absolute_reverse('data_capture:price_list_details',
+                                    kwargs={'id': price_list.pk})
 
     ctx = {
         'price_list': price_list,
@@ -188,9 +219,8 @@ def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
     )
 
 
-def bulk_upload_failed(upload_source, traceback,
-                       site_base_url='https://calc.gsa.gov'):
-    r10_upload_link = site_base_url + reverse(
+def bulk_upload_failed(upload_source, traceback):
+    r10_upload_link = absolute_reverse(
         'data_capture:bulk_region_10_step_1')
 
     ctx = {
@@ -214,8 +244,8 @@ def bulk_upload_failed(upload_source, traceback,
     )
 
 
-def approval_reminder(count_unreviewed, site_base_url='https://calc.gsa.gov'):
-    unreviewed_url = site_base_url + reverse(
+def approval_reminder(count_unreviewed):
+    unreviewed_url = absolute_reverse(
         'admin:data_capture_unreviewedpricelist_changelist')
 
     ctx = {

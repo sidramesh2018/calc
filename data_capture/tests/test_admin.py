@@ -239,8 +239,7 @@ class ActionTests(AdminTestCase):
                 messages.INFO,
                 '1 price list(s) have been approved and added to CALC.'
             )
-            em_monkey.assert_called_once_with(self.price_list,
-                                              self.request_mock.get_host())
+            em_monkey.assert_called_once_with(self.price_list)
 
         self.price_list.refresh_from_db()
         self.assertEqual(self.price_list.status,
@@ -258,8 +257,7 @@ class ActionTests(AdminTestCase):
                 messages.INFO,
                 '1 price list(s) have been retired and removed from CALC.'
             )
-            em_monkey.assert_called_once_with(self.price_list,
-                                              self.request_mock.get_host())
+            em_monkey.assert_called_once_with(self.price_list)
 
         self.price_list.refresh_from_db()
         self.assertEqual(self.price_list.status,
@@ -275,8 +273,7 @@ class ActionTests(AdminTestCase):
                 messages.INFO,
                 '1 price list(s) have been rejected.'
             )
-            em_monkey.assert_called_once_with(self.price_list,
-                                              self.request_mock.get_host())
+            em_monkey.assert_called_once_with(self.price_list)
         self.price_list.refresh_from_db()
         self.assertEqual(self.price_list.status,
                          SubmittedPriceList.STATUS_REJECTED)
