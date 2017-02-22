@@ -22,17 +22,22 @@ def absolute_static(url):
 
 
 @register.simple_tag(takes_context=True)
-def cta(context, url, text):
+def cta(context, url, action_text):
     '''
-    A call-to-action button for HTML emails.
+    A call-to-action. This shows up as a button for HTML emails;
+    for plaintext emails, it shows up like this:
+
+        >>> cta({}, 'http://boop', 'Do something cool')
+        'To do something cool, visit http://boop.'
     '''
 
     if not context.get('is_html_email'):
-        raise Exception('This tag should only be used in HTML emails')
+        action_text = action_text[0].lower() + action_text[1:]
+        return f"To {action_text}, visit {url}."
 
     t = context.template.engine.get_template('email/cta.html')
 
     return t.render(template.Context({
         'url': url,
-        'text': text,
+        'action_text': action_text,
     }))
