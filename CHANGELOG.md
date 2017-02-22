@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.3.0][] - 2017-02-22
+
 ### Added
 
 - CALC's developer documentation has been modularized and is now available at
@@ -166,7 +168,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.2.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/18F/calc/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/18F/calc/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/18F/calc/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/18F/calc/compare/v1.2.0...v2.0.0
