@@ -72,7 +72,7 @@ def render_mail(template, ctx):
 
 def send_mail(subject, to, template, ctx, reply_to=None):
     '''
-    Django's convinience send_mail function does not allow
+    Django's convenience send_mail function does not allow
     specification of the reply-to header, so we instead use
     the underlying EmailMultiAlternatives class to send CALC emails.
 
