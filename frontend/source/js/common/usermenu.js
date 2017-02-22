@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   trigger.addEventListener('click', (e) => {
     e.preventDefault();
-    menu.classList.toggle('open');
-    const isOpen = menu.classList.contains('open');
+    menu.classList.toggle('is-open');
+    const isOpen = menu.classList.contains('is-open');
     trigger.setAttribute('aria-expanded', isOpen);
     trigger.setAttribute('aria-label', isOpen ? closeLabel : openLabel);
   });

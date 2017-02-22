@@ -58,7 +58,7 @@ $usermenu-width: 150px;
     fill: $color-primary-alt;
   }
 
-  &.open {
+  &.is-open {
     > ul {
       display: block;
     }
