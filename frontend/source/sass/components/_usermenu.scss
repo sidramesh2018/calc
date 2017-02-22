@@ -2,8 +2,6 @@
 $usermenu-caret-size: 6px;
 $usermenu-width: 150px;
 
-// TODO: use SVG for menu caret
-
 #usermenu {
   position: relative;
 
@@ -56,7 +54,7 @@ $usermenu-width: 150px;
     }
   }
 
-  svg {
+  svg.icon-triangle {
     fill: $color-primary-alt;
   }
 
@@ -70,9 +68,9 @@ $usermenu-width: 150px;
       color: $color-white;
     }
 
-    svg {
+    svg.icon-triangle {
       fill: $color-white;
-      transform: rotate(180deg);
+      transform: rotate(-180deg);
     }
   }
 }
