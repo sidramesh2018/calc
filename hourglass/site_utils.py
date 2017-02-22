@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 def absolutify_url(url):
     '''
     If the URL is an absolute path, returns the URL prefixed with
-    the site's protocol and host information.
+    the current Site's protocol and host information.
 
     If the given URL is already absolute, returns the URL unchanged.
     '''
@@ -27,8 +27,17 @@ def absolutify_url(url):
 def absolute_reverse(*args, **kwargs):
     '''
     Like Django's reverse(), but ensures the URL includes protocol
-    and host information, so that it can be embedded in an external
-    location, e.g. an email.
+    and host information for the current Site, so that it can be
+    embedded in an external location, e.g. an email.
     '''
 
     return absolutify_url(reverse(*args, **kwargs))
+
+
+def get_canonical_url(request):
+    '''
+    Get the canonical URL for the given request, using the current
+    Site's configuration.
+    '''
+
+    return absolutify_url(request.get_full_path())

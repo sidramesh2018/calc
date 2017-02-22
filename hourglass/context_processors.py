@@ -1,10 +1,10 @@
 from django.conf import settings
-from .site_utils import absolutify_url
+from .site_utils import get_canonical_url
 
 
 def canonical_url(request):
     '''Include the request's canonical URL in all request contexts'''
-    return {'canonical_url': absolutify_url(request.get_full_path())}
+    return {'canonical_url': get_canonical_url(request)}
 
 
 def api_host(request):
