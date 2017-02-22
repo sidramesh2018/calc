@@ -1,8 +1,7 @@
 
-$menu-caret-size: 6px;
-$menu-width: 150px;
+$usermenu-caret-size: 6px;
+$usermenu-width: 150px;
 
-// TODO: make sure it works on admin pages
 // TODO: use SVG for menu caret
 
 #usermenu {
@@ -14,7 +13,7 @@ $menu-width: 150px;
     position: absolute;
     top: 1.2em;
     right: 0;
-    width: $menu-width;
+    width: $usermenu-width;
     z-index: 1;
 
     text-align: left;
@@ -46,14 +45,14 @@ $menu-width: 150px;
     &:before {
       content: '';
       position: absolute;
-      top: -$menu-caret-size;
+      top: -$usermenu-caret-size;
       // aligned in center of menu
-      right: $menu-width/2 - $menu-caret-size/2;
+      right: $usermenu-width/2 - $usermenu-caret-size/2;
       width: 0;
       height: 0;
-      border-bottom: $menu-caret-size solid $color-gray-lightest;
-      border-right: $menu-caret-size solid transparent;
-      border-left: $menu-caret-size solid transparent;
+      border-bottom: $usermenu-caret-size solid $color-gray-lightest;
+      border-right: $usermenu-caret-size solid transparent;
+      border-left: $usermenu-caret-size solid transparent;
     }
   }
 

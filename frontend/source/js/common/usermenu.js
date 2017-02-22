@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const openLabel = 'Show user menu';
   const closeLabel = 'Close user menu';
 
+  if (!menu || !trigger) {
+    return;
+  }
+
   trigger.setAttribute('aria-haspopup', true);
   trigger.setAttribute('aria-expanded', false);
   trigger.setAttribute('aria-label', openLabel);
