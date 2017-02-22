@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from .base import (BasePriceList, min_price_validator,
                    hourly_rates_only_validator)
 from .coercers import (strip_non_numeric, extract_min_education,
-                       extract_hour_unit_of_issue)
+                       extract_hour_unit_of_issue, extract_first_int)
 from contracts.models import EDUCATION_CHOICES
 
 
@@ -150,7 +150,7 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
     # as a string
     coercion_map = {
         'price_including_iff': strip_non_numeric,
-        'min_years_experience': int,
+        'min_years_experience': extract_first_int,
         'education_level': extract_min_education,
         'unit_of_issue': extract_hour_unit_of_issue,
     }
