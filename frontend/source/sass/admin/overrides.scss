@@ -269,3 +269,25 @@ thead a:focus {
     }
   }
 }
+
+.paginator {
+  font-weight: $font-weight-normal;
+  font-style: italic;
+  color: $color-gray-lighter;
+  a {
+    color: $color-white;
+    font-weight: $font-weight-bold;
+    font-style: normal;
+  }
+  .end {
+    margin-right: 10px;
+  }
+  .this-page {
+    color: $color-gold-lightest;
+    font-weight: $font-weight-bold;
+    font-style: normal;
+  }
+  .showall {
+    margin-left: 5px;
+  }
+}
