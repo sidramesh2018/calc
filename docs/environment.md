@@ -95,7 +95,8 @@ string), the boolean is true; otherwise, it's false.
 
 * `NON_PROD_INSTANCE_NAME` is an optional instance name that when specified
   will cause a banner to be shown at the top of every page to let users know
-  that they are viewing a non-production instance of CALC.
+  that they are viewing a non-production instance of CALC. This value
+  can contain HTML, so it's possible to e.g. wrap the value in a hyperlink.
 
 * `NEW_RELIC_LICENSE_KEY` is the private New Relic license key for this project.
   If it is present, then the WSGI app will be wrapped with the  New Relic agent.
