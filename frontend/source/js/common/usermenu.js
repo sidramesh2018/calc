@@ -1,6 +1,6 @@
 /* global document */
 
-document.addEventListener('DOMContentLoaded', () => {
+function enableUsermenu() {
   const menu = document.querySelector('#usermenu');
   const trigger = document.querySelector('#usermenu .usermenu-trigger');
   const openLabel = 'Show user menu';
@@ -21,4 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     trigger.setAttribute('aria-expanded', isOpen);
     trigger.setAttribute('aria-label', isOpen ? closeLabel : openLabel);
   });
-});
+}
+
+document.addEventListener('DOMContentLoaded', enableUsermenu);

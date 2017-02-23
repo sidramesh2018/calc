@@ -23,6 +23,7 @@
       var QUNIT_FIXTURE_DATA = {% qunit_fixture_data_json %};
     </script>
     <script src="{% static 'frontend/js/vendor/qunit-1.16.0.js' %}"></script>
+    <script src="{% static 'frontend/built/js/common/index.min.js' %}"></script>
     <script src="{% static 'frontend/built/js/tests/index.min.js' %}"></script>
     {% include 'frontend/safe_mode/test.html' %}
   </body>

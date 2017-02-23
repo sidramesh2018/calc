@@ -2,10 +2,6 @@
 // entrypoint for data-capture
 // this is where modules should be `require(...)`'d
 
-require('babel-polyfill/dist/polyfill');
-
-require('../common/dap-hacks');
-require('../common/usermenu');
 require('./upload');
 require('./ajaxform');
 require('./alerts');
