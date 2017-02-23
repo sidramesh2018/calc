@@ -34,6 +34,9 @@ DEBUG = 'DEBUG' in os.environ
 
 HIDE_DEBUG_UI = 'HIDE_DEBUG_UI' in os.environ
 
+if is_running_tests():
+    HIDE_DEBUG_UI = True
+
 if DEBUG:
     os.environ.setdefault(
         'SECRET_KEY',
@@ -342,7 +345,6 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 DEBUG_TOOLBAR_PANELS = [
-    'data_capture.panels.DocsPanel',
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.profiling.ProfilingPanel',
     'debug_toolbar.panels.timer.TimerPanel',
