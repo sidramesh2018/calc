@@ -15,11 +15,11 @@ function enableUsermenu() {
   trigger.setAttribute('aria-label', openLabel);
 
   trigger.addEventListener('click', (e) => {
-    e.preventDefault();
     menu.classList.toggle('is-open');
     const isOpen = menu.classList.contains('is-open');
     trigger.setAttribute('aria-expanded', isOpen);
     trigger.setAttribute('aria-label', isOpen ? closeLabel : openLabel);
+    e.preventDefault();
   });
 }
 
