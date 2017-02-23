@@ -54,10 +54,6 @@ $usermenu-width: 150px;
     }
   }
 
-  svg.icon-triangle {
-    margin-left: 4px;
-    fill: $color-primary-alt;
-  }
 
   &.is-open {
     > ul {
@@ -76,12 +72,20 @@ $usermenu-width: 150px;
   }
 }
 
-
 a.usermenu-trigger {
   color: $color-primary-alt;
   text-decoration: none;
 
+  .icon-triangle {
+    margin-left: 4px;
+    fill: $color-primary-alt;
+  }
+
   &:hover {
     color: $color-white;
+
+    svg.icon-triangle {
+      fill: $color-white;
+    }
   }
 }
