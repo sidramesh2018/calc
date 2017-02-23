@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 
 def api_host(request):
@@ -23,4 +24,5 @@ def help_email(request):
 
 def non_prod_instance_name(request):
     '''Include NON_PROD_INSTANCE_NAME in all request contexts'''
-    return {'NON_PROD_INSTANCE_NAME': settings.NON_PROD_INSTANCE_NAME}
+    value = mark_safe(settings.NON_PROD_INSTANCE_NAME)  # nosec
+    return {'NON_PROD_INSTANCE_NAME': value}
