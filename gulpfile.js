@@ -85,6 +85,10 @@ const bundles = {
   styleguide: {},
   // CALC 2.0 Tests
   tests: {},
+  // Common scripts
+  shared: {
+    dirName: 'common',
+  },
 };
 
 const browserifiedBundles = [];
