@@ -20,7 +20,7 @@ $usermenu-width: 150px;
     background: $color-gray-lightest;
     border-radius: 4px;
     list-style: none;
-    padding: 1.5rem 1rem 1.7rem 2rem;
+    padding: $space-2x $space-3x;
 
     li {
       margin-bottom: 0.5em;
