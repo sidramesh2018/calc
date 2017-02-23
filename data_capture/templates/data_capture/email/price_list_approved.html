@@ -1,23 +1,16 @@
+{% extends "email/base.html" %}
+{% load email_utils %}
 {% load data_capture %}
-<p>
-  Hi there,
-</p>
+
+{% block content %}
 <p>
   The price list you submitted to CALC on {{ price_list.created_at|tz_timestamp }} has been <b>approved</b>!
 </p>
 <p>
   The submitted price list was for contract <b>{{ price_list.contract_number }}</b> ({{ price_list.get_schedule_title }}) with <b>{{ price_list.vendor_name }}</b>.
 </p>
-<p>
-  Visit <a href="{{ details_link }}">{{ details_link }}</a> to view its details.
-</p>
+  {% cta url=details_link action_text="View the price list's details" %}
 <p>
   Thanks for helping make CALC a better tool for all of its users!
 </p>
-<p>
-  If you have any questions, reply to this email. We'll get back to you within two business days.
-</p>
-<p>
-  Best,<br/>
-  The CALC Team
-</p>
+{% endblock %}
