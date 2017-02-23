@@ -65,7 +65,7 @@ $usermenu-width: 150px;
       color: $color-white;
     }
 
-    svg.icon-triangle {
+    .icon-triangle {
       fill: $color-white;
       transform: rotate(-180deg);
     }
@@ -84,7 +84,7 @@ a.usermenu-trigger {
   &:hover {
     color: $color-white;
 
-    svg.icon-triangle {
+    .icon-triangle {
       fill: $color-white;
     }
   }
