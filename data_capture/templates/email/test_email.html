@@ -1,0 +1,13 @@
+{% extends "email/base.html" %}
+{% load email_utils %}
+
+{% block content %}
+<p>
+  Hi there,
+</p>
+<p>
+  This is a test email sent to make sure that HTML email works,
+  and that it creates URLs back to the site properly.
+</p>
+  {% cta url=site_url action_text="Visit CALC" %}
+{% endblock %}
