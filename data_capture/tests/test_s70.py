@@ -193,6 +193,12 @@ class GleanLaborCategoriesTests(TestCase):
 
         self.assertEqual(rows[0]['unit_of_issue'], 'Hour')
 
+    def test_min_experience_is_gleaned_from_text(self):
+        book = FakeWorkbook()
+        book._sheets[0]._cells[1][3] = 'At least 3 years but up to 20'
+        rows = s70.glean_labor_categories_from_book(book)
+        self.assertEqual(rows[0]['min_years_experience'], '3')
+
     def test_validation_error_raised_when_sheet_not_present(self):
         with self.assertRaisesRegexp(
             ValidationError,

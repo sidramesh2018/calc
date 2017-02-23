@@ -66,7 +66,7 @@ API_HOST = os.environ.get('API_HOST', '/api/')
 
 GA_TRACKING_ID = os.environ.get('GA_TRACKING_ID', '')
 
-NON_PROD_INSTANCE_NAME = os.environ.get('NON_PROD_INSTANCE_NAME')
+NON_PROD_INSTANCE_NAME = os.environ.get('NON_PROD_INSTANCE_NAME', '')
 
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',

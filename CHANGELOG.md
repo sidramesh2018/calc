@@ -7,6 +7,31 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.3.0][] - 2017-02-22
+
+### Added
+
+- CALC's developer documentation has been modularized and is now available at
+  at `/docs/` (#1301).
+
+### Changed
+
+- A bug in the labor category search box that could cause the user's browser
+  to lock up on special-character-only search queries has been fixed (#1355).
+
+- The labor category search box and associated URL parameter now enforce a
+  a maximum length of 255 characters (#1354).
+
+- The navigation tabs no longer "jump" while the front page is loaded (#1341).
+
+- Table header styling throughout CALC has been improved and made more
+  consistent (#1202).
+
+- Some minor styling bugs (#1229) and inconsistencies (#1371) in the filter box
+  on the front have been corrected.
+
+- CALC now runs on Python 3.6.0.
+
 ## [2.2.0][] - 2017-02-07
 
 ### Added
@@ -143,7 +168,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.2.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/18F/calc/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/18F/calc/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/18F/calc/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/18F/calc/compare/v1.2.0...v2.0.0

@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.utils.safestring import mark_safe
+
 from .site_utils import get_canonical_url
 
 
@@ -29,4 +31,5 @@ def help_email(request):
 
 def non_prod_instance_name(request):
     '''Include NON_PROD_INSTANCE_NAME in all request contexts'''
-    return {'NON_PROD_INSTANCE_NAME': settings.NON_PROD_INSTANCE_NAME}
+    value = mark_safe(settings.NON_PROD_INSTANCE_NAME)  # nosec
+    return {'NON_PROD_INSTANCE_NAME': value}
