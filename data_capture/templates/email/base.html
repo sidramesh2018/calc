@@ -1,4 +1,5 @@
 {% if is_html_email %}<!doctype html>
+{% load email_utils %}
 <html>
   <head>
     <meta name="viewport" content="width=device-width" />
@@ -297,6 +298,9 @@
                   <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
+                        <div class="calc-logo-wrapper align-center">
+                          <img src="{% absolute_static 'frontend/images/calc_logo_blue.png' %}" alt="">
+                        </div>
 {% endif %}{% block content %}{% endblock %}{% if is_html_email %}
                       </td>
                     </tr>
