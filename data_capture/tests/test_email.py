@@ -68,7 +68,7 @@ class EmailTests(ModelTestCase):
         self.assertEqual(message.from_email, 'hi@hi.com')
         self.assertEqual(message.body, 'test body')
         self.assertHasOneHtmlAlternative(message)
-        self.assertIn('<p>test body</p>', message.alternatives[0][0])
+        self.assertEqual(message.alternatives[0][0], '<p>test body</p>')
 
     def test_price_list_approved(self):
         price_list = self.create_price_list(
