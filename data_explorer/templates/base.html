@@ -45,28 +45,7 @@
     {% endblock %}
   </head>
   <body>
-    {% if NON_PROD_INSTANCE_NAME %}
-      <div id="banner" class="banner__non-prod">
-        <div class="container">
-          <p>
-            This is a {{ NON_PROD_INSTANCE_NAME }} version of CALC.
-            Please visit <a href="https://calc.gsa.gov">calc.gsa.gov</a> for the production site.
-          </p>
-        </div>
-      </div>
-    {% else %}
-      <div id="banner">
-        <div class="container">
-          <a class="skip-nav" tabindex="-1" href="#main">Skip navigation</a>
-          <p id="usa">
-            <img src="{% static 'frontend/images/flag-usa.png' %}" alt="USA flag">
-            An official website of the U.S. government</p>
-          <p id="site-status">This website is in beta.
-            <a href="#help-wanted">Help us improve.</a>
-          </p>
-        </div>
-      </div>
-    {% endif %}
+    {% include '_banner.html' %}
     <header>
       <div class="container">
       {% include '_header.html' %}
