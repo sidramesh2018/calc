@@ -74,7 +74,7 @@ class DescribeTests(BaseDescribeTestCase):
             'avg': 90.0,
             'count': 1,
             'preposition': 'way below',
-
+            'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
             'labor_category': 'Engineer of Doom II',
             'severe': True,
             'stddev': 1,
@@ -96,12 +96,13 @@ class DescribeTests(BaseDescribeTestCase):
         self.assertEqual(result, {
             'avg': 90.0,
             'count': 1,
+            'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
             'labor_category': 'Engineer of Doom II',
             'severe': False,
             'stddev': 1,
             'stddevs': 0,
             'url': '/?q=Engineer+of+Doom+II&min_experience=5'
-                   '&max_experience=9&education=BA'
+                   '&max_experience=9&education=BA',
         })
 
     def test_returns_empty_description_if_no_comparables_found(self):
@@ -164,12 +165,16 @@ class ExportTests(BaseDescribeTestCase):
             self.row_without_comparables]).to_output_rows())
         self.assertEqual(row.comparables, 0)
         self.assertEqual(row.search_labor_category, COMPARABLES_NOT_FOUND)
+        self.assertEqual(row.exp_comparable_search_criteria, '')
+        self.assertEqual(row.edu_comparable_search_criteria, '')
 
     def test_exporting_row_with_comparables_works(self):
         _, row = next(AnalysisExport([
             self.row_with_comparables]).to_output_rows())
         self.assertEqual(row.comparables, 2)
         self.assertEqual(row.search_labor_category, 'Engineer of Doom II')
+        self.assertEqual(row.exp_comparable_search_criteria, '5-9 years')
+        self.assertEqual(row.edu_comparable_search_criteria, 'BA')
 
 
 class FindComparableContractsTests(BaseDbTestCase):

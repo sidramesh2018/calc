@@ -91,6 +91,7 @@ class AnalysisExport:
             )
 
         outside_one_std_dev = 'Yes' if analyzed_row['stddevs'] > 1 else 'No'
+        criteria = analyzed_row['comparable_search_criteria']
 
         return ExportRow(
             num + 1,
@@ -108,8 +109,8 @@ class AnalysisExport:
             pct_diff(proposed_price, analyzed_row['stddev']),
             valid_row['sin'],
             '',  # TODO: Work site - not used in analysis
-            '',  # TODO: ? Exp Comparable Search Criteria
-            '',  # TODO: ? Edu Comparable Search Criteria
+            criteria['exp'],
+            criteria['edu'],
             outside_one_std_dev,
         )
 

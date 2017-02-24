@@ -149,6 +149,10 @@ def describe(cursor, vocab, labor_category, min_years_experience,
 
         result['labor_category'] = fc.phrase
         result['url'] = get_data_explorer_url(fc)
+        result['comparable_search_criteria'] = {
+            'exp': fc.finder.get_exp_comparable_search_criteria(),
+            'edu': fc.finder.get_edu_comparable_search_criteria(),
+        }
         result['description'] = render_to_string(
             'data_capture/analyze_contract.html',
             result

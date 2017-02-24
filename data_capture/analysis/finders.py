@@ -33,6 +33,24 @@ class ContractFinder(metaclass=abc.ABCMeta):
 
         raise NotImplementedError()
 
+    @abc.abstractmethod
+    def get_exp_comparable_search_criteria(self) -> str:
+        '''
+        Return a string describing, in English, the search criteria for
+        finding comparables in terms of experience.
+        '''
+
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def get_edu_comparable_search_criteria(self) -> str:
+        '''
+        Return a string describing, in English, the search criteria for
+        finding comparables in terms of education.
+        '''
+
+        raise NotImplementedError()
+
 
 class BaseEduAndExpFinder(ContractFinder):
     '''
@@ -54,21 +72,32 @@ class ExactEduAndExpFinder(BaseEduAndExpFinder):
 
     MAX_YEARS_DELTA = 4
 
+    @property
+    def max_years_experience(self) -> int:
+        return self.min_years_experience + self.MAX_YEARS_DELTA
+
     def filter_queryset(self, qs: QuerySet) -> QuerySet:
         return qs.filter(
             min_years_experience__gte=self.min_years_experience,
-            min_years_experience__lte=(self.min_years_experience +
-                                       self.MAX_YEARS_DELTA),
+            min_years_experience__lte=self.max_years_experience,
             education_level=self.education_level
         )
 
     def get_data_explorer_qs_params(self) -> QueryStringTuple:
         return (
             ('min_experience', str(self.min_years_experience)),
-            ('max_experience', str(self.min_years_experience +
-                                   self.MAX_YEARS_DELTA)),
+            ('max_experience', str(self.max_years_experience)),
             ('education', self.education_level),
         )
+
+    def get_exp_comparable_search_criteria(self) -> str:
+        return "{}-{} years".format(
+            self.min_years_experience,
+            self.max_years_experience,
+        )
+
+    def get_edu_comparable_search_criteria(self) -> str:
+        return self.education_level
 
 
 class GteEduAndExpFinder(BaseEduAndExpFinder):
@@ -102,3 +131,9 @@ class GteEduAndExpFinder(BaseEduAndExpFinder):
             ('min_experience', str(self.min_years_experience)),
             ('education', ','.join(self.get_valid_education_levels())),
         )
+
+    def get_exp_comparable_search_criteria(self) -> str:
+        return "{} years or greater".format(self.min_years_experience)
+
+    def get_edu_comparable_search_criteria(self) -> str:
+        return ','.join(self.get_valid_education_levels())
