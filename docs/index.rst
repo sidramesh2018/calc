@@ -29,7 +29,6 @@ Welcome to CALC's developer documentation!
    Style guide <https://calc-dev.app.cloud.gov/styleguide/>
    api
    updating_data
-   contributing-internal
 
 .. toctree::
    :maxdepth: 2
