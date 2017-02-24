@@ -4,6 +4,8 @@ import xlsxwriter
 from django.http import HttpResponse
 from django.utils import timezone
 
+COMPARABLES_NOT_FOUND = 'Error: Comparables not found'
+
 
 def pct_diff(a, b):
     return (a - b)/((a + b) / 2) * 100
@@ -48,7 +50,7 @@ class AnalysisExport:
                 num + 1,
                 0,
                 valid_row['labor_category'],
-                'Error: Comparables not found',
+                COMPARABLES_NOT_FOUND,
                 valid_row['education_level'],
                 valid_row['min_years_experience'],
                 '',

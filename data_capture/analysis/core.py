@@ -157,6 +157,25 @@ def describe(cursor, vocab, labor_category, min_years_experience,
     return result
 
 
+def analyze_price_list_row(cursor, vocab, row):
+    analysis = describe(
+        cursor,
+        vocab,
+        row.labor_category,
+        row.min_years_experience,
+        row.education_level,
+        float(row.base_year_rate),
+    )
+    return {
+        'analysis': analysis,
+        'sin': row.sin,
+        'labor_category': row.labor_category,
+        'education_level': row.education_level,
+        'min_years_experience': row.min_years_experience,
+        'price': float(row.base_year_rate),
+    }
+
+
 def analyze_gleaned_data(gleaned_data):
     valid_rows = []
 
@@ -175,22 +194,7 @@ def analyze_gleaned_data(gleaned_data):
             price_list.save()
             gleaned_data.add_to_price_list(price_list)
             for row in price_list.rows.all():
-                analysis = describe(
-                    cursor,
-                    vocab,
-                    row.labor_category,
-                    row.min_years_experience,
-                    row.education_level,
-                    float(row.base_year_rate),
-                )
-                valid_rows.append({
-                    'analysis': analysis,
-                    'sin': row.sin,
-                    'labor_category': row.labor_category,
-                    'education_level': row.education_level,
-                    'min_years_experience': row.min_years_experience,
-                    'price': float(row.base_year_rate),
-                })
+                valid_rows.append(analyze_price_list_row(cursor, vocab, row))
             transaction.savepoint_rollback(sid)
 
     return valid_rows
