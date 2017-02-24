@@ -123,10 +123,13 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         wage_field = 'current_price'
         stats = fc.contracts.aggregate(
             avg=Avg(wage_field),
-            stddev=StdDev(wage_field)
+            stddev=StdDev(wage_field),
+            avg_exp=Avg('min_years_experience'),
         )
         avg = stats['avg']
         stddev = stats['stddev']
+
+        result['avg_exp'] = stats['avg_exp']
 
         price_delta = abs(price - avg)
 

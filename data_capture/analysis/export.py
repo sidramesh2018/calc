@@ -101,7 +101,7 @@ class AnalysisExport:
             valid_row['education_level'],
             valid_row['min_years_experience'],
             '',  # TODO: ? Most Common EDU
-            '',  # TODO: ? Avg EXP
+            float(analyzed_row['avg_exp']),
             proposed_price,
             float(analyzed_row['avg']),
             pct_diff(proposed_price, analyzed_row['avg']),

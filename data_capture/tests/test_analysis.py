@@ -72,6 +72,7 @@ class DescribeTests(BaseDescribeTestCase):
         del result['description']
         self.assertEqual(result, {
             'avg': 90.0,
+            'avg_exp': 5.0,
             'count': 1,
             'preposition': 'way below',
             'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
@@ -95,6 +96,7 @@ class DescribeTests(BaseDescribeTestCase):
         del result['description']
         self.assertEqual(result, {
             'avg': 90.0,
+            'avg_exp': 5.0,
             'count': 1,
             'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
             'labor_category': 'Engineer of Doom II',
@@ -167,6 +169,7 @@ class ExportTests(BaseDescribeTestCase):
         self.assertEqual(row.search_labor_category, COMPARABLES_NOT_FOUND)
         self.assertEqual(row.exp_comparable_search_criteria, '')
         self.assertEqual(row.edu_comparable_search_criteria, '')
+        self.assertEqual(row.avg_exp, '')
 
     def test_exporting_row_with_comparables_works(self):
         _, row = next(AnalysisExport([
@@ -175,6 +178,7 @@ class ExportTests(BaseDescribeTestCase):
         self.assertEqual(row.search_labor_category, 'Engineer of Doom II')
         self.assertEqual(row.exp_comparable_search_criteria, '5-9 years')
         self.assertEqual(row.edu_comparable_search_criteria, 'BA')
+        self.assertEqual(row.avg_exp, 5.0)
 
 
 class FindComparableContractsTests(BaseDbTestCase):
