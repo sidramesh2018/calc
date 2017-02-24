@@ -1,4 +1,5 @@
 import pathlib
+from django.utils.safestring import mark_safe
 
 
 CSS_PATH = (pathlib.Path(__file__).resolve().parent /
@@ -6,4 +7,4 @@ CSS_PATH = (pathlib.Path(__file__).resolve().parent /
 
 
 def get():
-    return CSS_PATH.read_text(encoding='utf-8')
+    return mark_safe(CSS_PATH.read_text(encoding='utf-8'))  # nosec

@@ -7,6 +7,11 @@
   background-color: $color-gray-lighter;
 }
 
+.calc-questions p:first-child {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
 table {
   border-spacing: 0;
 }
@@ -19,7 +24,7 @@ body, .body {
   background-color: $color-gray-lightest;
 }
 
-.btn a {
+.btn a, h1 {
   // We use sentence case, not title case.
   text-transform: none;
 }
@@ -28,10 +33,16 @@ a {
   color: $color-primary;
 }
 
+.wrapper {
+  padding-left: 48px;
+  padding-right: 48px;
+}
+
 .btn a {
   border: solid 1px $color-primary;
   color: $color-primary;
-  border-radius: 0;
+  border-radius: 3px;
+  font-size: 18px;
 }
 
 .btn-primary table td {
@@ -54,7 +65,7 @@ a {
 }
 
 .btn table td {
-  border-radius: 0;
+  border-radius: 3px;
 }
 
 table.body .btn table {
@@ -66,5 +77,25 @@ table.body .btn a {
 }
 
 .calc-logo-wrapper {
-  padding-bottom: 20px;
+  padding-top: 24px;
+  padding-bottom: 36px;
+}
+
+h1 {
+  text-align: left;
+  font-size: 26px;
+  line-height: 34px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 26px;
+  margin-bottom: 12px;
+}
+
+.btn > tbody > tr > td {
+  padding-top: 24px;
+  padding-bottom: 48px;
 }
