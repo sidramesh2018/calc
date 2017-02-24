@@ -3,6 +3,7 @@ from django.test import TestCase as DjangoTestCase
 from django.db import connection
 
 from contracts.mommy_recipes import get_contract_recipe
+from contracts.models import Contract
 from ..models import SubmittedPriceListRow
 from ..analysis.finders import (
     ExactEduAndExpFinder,
@@ -10,6 +11,7 @@ from ..analysis.finders import (
 )
 from ..analysis.core import (
     find_comparable_contracts,
+    get_most_common_edu_levels,
     describe,
     analyze_price_list_row,
 )
@@ -74,6 +76,7 @@ class DescribeTests(BaseDescribeTestCase):
             'avg': 90.0,
             'avg_exp': 5.0,
             'count': 1,
+            'most_common_edu_levels': ['BA'],
             'preposition': 'way below',
             'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
             'labor_category': 'Engineer of Doom II',
@@ -98,6 +101,7 @@ class DescribeTests(BaseDescribeTestCase):
             'avg': 90.0,
             'avg_exp': 5.0,
             'count': 1,
+            'most_common_edu_levels': ['BA'],
             'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
             'labor_category': 'Engineer of Doom II',
             'severe': False,
@@ -170,6 +174,7 @@ class ExportTests(BaseDescribeTestCase):
         self.assertEqual(row.exp_comparable_search_criteria, '')
         self.assertEqual(row.edu_comparable_search_criteria, '')
         self.assertEqual(row.avg_exp, '')
+        self.assertEqual(row.most_common_edu, '')
 
     def test_exporting_row_with_comparables_works(self):
         _, row = next(AnalysisExport([
@@ -179,6 +184,31 @@ class ExportTests(BaseDescribeTestCase):
         self.assertEqual(row.exp_comparable_search_criteria, '5-9 years')
         self.assertEqual(row.edu_comparable_search_criteria, 'BA')
         self.assertEqual(row.avg_exp, 5.0)
+        self.assertEqual(row.most_common_edu, 'BA')
+
+
+class GetMostCommonEduLevelsTests(DjangoTestCase):
+    def setUp(self):
+        self.contract = get_contract_recipe()
+
+    def test_it_reports_decisive_winners(self):
+        self.contract.make(education_level='BA')
+        self.contract.make(education_level='BA')
+        self.contract.make(education_level='AA')
+        self.assertEqual(
+            get_most_common_edu_levels(Contract.objects.all()),
+            ['BA']
+        )
+
+    def test_it_reports_ties(self):
+        self.contract.make(education_level='BA')
+        self.contract.make(education_level='BA')
+        self.contract.make(education_level='AA')
+        self.contract.make(education_level='AA')
+        self.assertEqual(
+            get_most_common_edu_levels(Contract.objects.all()),
+            ['BA', 'AA']
+        )
 
 
 class FindComparableContractsTests(BaseDbTestCase):

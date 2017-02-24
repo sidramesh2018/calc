@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 from django.utils import timezone
 from django.db import connection, transaction
-from django.db.models import Avg, StdDev
+from django.db.models import Avg, StdDev, Count
 from django.template.loader import render_to_string
 
 from contracts.models import Contract
@@ -87,6 +87,21 @@ def find_comparable_contracts(cursor, vocab, labor_category,
     return None
 
 
+def get_most_common_edu_levels(qs):
+    '''
+    Returns a list containing the most common education levels in
+    the given QuerySet. The list only has more than one entry in
+    the case of ties.
+    '''
+
+    results = qs.values('education_level').annotate(
+        count=Count('id'),
+    ).order_by('-count')
+    top_count = results[0]['count']
+    return [result['education_level'] for result in results
+            if result['count'] == top_count]
+
+
 def get_data_explorer_url(found_contracts):
     # TODO: Use url mapper to get URL for the data explorer.
 
@@ -144,6 +159,9 @@ def describe(cursor, vocab, labor_category, min_years_experience,
 
         result['stddev'] = stddev
         result['stddevs'] = math.ceil(price_delta / stddev)
+
+        result['most_common_edu_levels'] = get_most_common_edu_levels(
+            fc.contracts)
 
         if result['severe']:
             result['preposition'] = \

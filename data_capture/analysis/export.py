@@ -100,7 +100,7 @@ class AnalysisExport:
             valid_row['labor_category'],
             valid_row['education_level'],
             valid_row['min_years_experience'],
-            '',  # TODO: ? Most Common EDU
+            ','.join(analyzed_row['most_common_edu_levels']),
             float(analyzed_row['avg_exp']),
             proposed_price,
             float(analyzed_row['avg']),
