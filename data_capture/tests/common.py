@@ -1,5 +1,6 @@
 import os
 import unittest
+from copy import deepcopy
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
@@ -24,6 +25,54 @@ R10_XLSX_PATH = path('static', 'data_capture', 'r10_export_sample.xlsx')
 
 XLSX_CONTENT_TYPE = ('application/vnd.openxmlformats-'
                      'officedocument.spreadsheetml.sheet')
+
+
+class FakeCell:
+    def __init__(self, val):
+        self._val = val
+
+    @property
+    def value(self):
+        return self._val
+
+
+class FakeSheet():
+    def __init__(self, name, cells):
+        self.name = name
+        self._cells = deepcopy(cells)
+
+    @property
+    def nrows(self):
+        return len(self._cells)
+
+    def cell_value(self, rownum, colnum):
+        return self._cells[rownum][colnum]
+
+    def row(self, rownum):
+        return [FakeCell(c) for c in self._cells[rownum]]
+
+
+class FakeWorkbook:
+    def __init__(self, sheets):
+        self._sheets = sheets
+
+    def sheet_names(self):
+        return [sheet.name for sheet in self._sheets]
+
+    def sheet_by_name(self, name):
+        return [sheet for sheet in self._sheets if sheet.name == name][0]
+
+
+def uploaded_xlsx_file(path, content=None):
+    if content is None:
+        with open(path, 'rb') as f:
+            content = f.read()
+
+    return SimpleUploadedFile(
+        'foo.xlsx',
+        content,
+        content_type=XLSX_CONTENT_TYPE
+    )
 
 
 def create_bulk_upload_contract_source(user, **kwargs):
