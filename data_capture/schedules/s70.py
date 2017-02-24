@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 
 from .base import (BasePriceList, min_price_validator,
                    hourly_rates_only_validator)
+from .spreadsheet_utils import generate_column_index_map, safe_cell_str_value
 from .coercers import (strip_non_numeric, extract_min_education,
                        extract_hour_unit_of_issue, extract_first_int)
 from contracts.models import EDUCATION_CHOICES
@@ -64,44 +65,6 @@ STOP_TEXT = r'Most Favored Customer'
 logger = logging.getLogger(__name__)
 
 
-def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
-    val = ''
-
-    try:
-        val = sheet.cell_value(rownum, colnum)
-    except IndexError:
-        pass
-
-    if coercer is not None:
-        try:
-            val = coercer(val)
-        except ValueError:
-            pass
-
-    return str(val)
-
-
-def generate_column_index_map(heading_row, field_title_map=None):
-    def normalize(s):
-        return re.sub(r'\s+', '', str(s).lower())
-
-    def find_col(col_name):
-        for idx, cell in enumerate(heading_row):
-            if normalize(cell.value) == normalize(col_name):
-                return idx
-        raise ValidationError('Column heading "{}" was not found.'.format(
-            col_name))
-
-    if field_title_map is None:
-        field_title_map = DEFAULT_FIELD_TITLE_MAP
-
-    col_idx_map = {}
-    for field, title in field_title_map.items():
-        col_idx_map[field] = find_col(title)
-
-    return col_idx_map
-
-
 def find_header_row(sheet, row_threshold=50):
     first_col_heading = EXAMPLE_SHEET_ROWS[0][0]
     row_limit = min(sheet.nrows, row_threshold)
@@ -143,7 +106,8 @@ def glean_labor_categories_from_book(book, sheet_name=DEFAULT_SHEET_NAME):
 
     heading_row = sheet.row(rownum - 1)
 
-    col_idx_map = generate_column_index_map(heading_row)
+    col_idx_map = generate_column_index_map(heading_row,
+                                            DEFAULT_FIELD_TITLE_MAP)
 
     # dict of property names to functions that will be used to coerce values
     # if a field is not in this map, it will just be retrieved (safely)
