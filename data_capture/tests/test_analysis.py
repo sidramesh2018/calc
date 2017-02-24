@@ -113,7 +113,8 @@ class DescribeTests(BaseDescribeTestCase):
 
 
 class ExportTests(BaseDescribeTestCase):
-    def to_row(self, sin, **describe_kwargs):
+    @staticmethod
+    def to_spl_row(sin, **describe_kwargs):
         return SubmittedPriceListRow(
             sin=sin,
             labor_category=describe_kwargs['labor_category'],
@@ -122,24 +123,53 @@ class ExportTests(BaseDescribeTestCase):
             base_year_rate=describe_kwargs['price'],
         )
 
-    def analyze_rows(self, rows):
-        return [
-            analyze_price_list_row(self.cursor, self.vocab, row)
-            for row in rows
-        ]
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.setup_rows = False
 
-    def get_csv(self, rows):
-        return AnalysisExport(self.analyze_rows(rows)).to_csv()
+    def setUp(self):
+        if not self.setup_rows:
+            self.setup_rows = True
+            self.row_without_comparables = self.to_analyzed_row(
+                self.to_spl_row('1234', **self.ROW_WITHOUT_COMPARABLES))
+            self.row_with_comparables = self.to_analyzed_row(
+                self.to_spl_row('5678', **self.ROW_WITH_COMPARABLES))
+            self.rows = [
+                self.row_without_comparables,
+                self.row_with_comparables
+            ]
+
+    def to_analyzed_row(self, spl_row):
+        return analyze_price_list_row(self.cursor, self.vocab, spl_row)
+
+    def test_to_csv_works(self):
+        response = AnalysisExport(self.rows).to_csv()
+        self.assertEqual(response['Content-Disposition'],
+                         'attachment; filename="analysis.csv"')
+        self.assertEqual(response['Content-Type'], 'text/csv')
+        self.assertContains(response, 'Average Price')
+        self.assertContains(response, '5678')
+
+    def test_to_xlsx_works(self):
+        response = AnalysisExport(self.rows).to_xlsx()
+        self.assertEqual(response['Content-Disposition'],
+                         'attachment; filename="analysis.xlsx"')
+        self.assertEqual(response['Content-Type'],
+                         'application/vnd.openxmlformats-'
+                         'officedocument.spreadsheetml.sheet')
 
     def test_exporting_row_without_comparables_works(self):
-        self.assertContains(self.get_csv([
-            self.to_row('1234', **self.ROW_WITHOUT_COMPARABLES)
-        ]), COMPARABLES_NOT_FOUND)
+        _, row = next(AnalysisExport([
+            self.row_without_comparables]).to_output_rows())
+        self.assertEqual(row.comparables, 0)
+        self.assertEqual(row.search_labor_category, COMPARABLES_NOT_FOUND)
 
     def test_exporting_row_with_comparables_works(self):
-        self.assertNotContains(self.get_csv([
-            self.to_row('1234', **self.ROW_WITH_COMPARABLES)
-        ]), COMPARABLES_NOT_FOUND)
+        _, row = next(AnalysisExport([
+            self.row_with_comparables]).to_output_rows())
+        self.assertEqual(row.comparables, 2)
+        self.assertEqual(row.search_labor_category, 'Engineer of Doom II')
 
 
 class FindComparableContractsTests(BaseDbTestCase):

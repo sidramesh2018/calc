@@ -1,5 +1,6 @@
 import csv
 import xlsxwriter
+from collections import namedtuple
 
 from django.http import HttpResponse
 from django.utils import timezone
@@ -11,8 +12,30 @@ def pct_diff(a, b):
     return (a - b)/((a + b) / 2) * 100
 
 
+ExportRow = namedtuple('ExportRow', [
+    'number',
+    'comparables',
+    'vendor_labor_category',
+    'search_labor_category',
+    'proposed_edu',
+    'proposed_exp',
+    'most_common_edu',
+    'avg_exp',
+    'offered_hourly_price',
+    'avg_price',
+    'pct_diff_from_avg',
+    'plusone_stddev',
+    'pct_diff_from_stddev',
+    'sin',
+    'worksite',
+    'exp_comparable_search_criteria',
+    'edu_comparable_search_criteria',
+    'is_outside_one_stddev',
+])
+
+
 class AnalysisExport:
-    output_headers = [
+    output_headers = ExportRow(
         '#',
         'No of Comps',
         'Vendor Labor Category',
@@ -31,7 +54,7 @@ class AnalysisExport:
         'Exp Comparable Search Criteria',
         'Edu Comparable Search Criteria',
         'Outside 1 Standard Deviation',
-    ]
+    )
 
     def __init__(self, rows):
         self.valid_rows = rows
@@ -46,7 +69,7 @@ class AnalysisExport:
         # analyzed_row is populated.
         if 'count' not in analyzed_row:
             # If not, then return a mostly empty line
-            return [
+            return ExportRow(
                 num + 1,
                 0,
                 valid_row['labor_category'],
@@ -61,11 +84,15 @@ class AnalysisExport:
                 '',
                 '',
                 valid_row['sin'],
-            ]
+                '',
+                '',
+                '',
+                ''
+            )
 
         outside_one_std_dev = 'Yes' if analyzed_row['stddevs'] > 1 else 'No'
 
-        return [
+        return ExportRow(
             num + 1,
             analyzed_row['count'],
             valid_row['labor_category'],
@@ -84,7 +111,12 @@ class AnalysisExport:
             '',  # TODO: ? Exp Comparable Search Criteria
             '',  # TODO: ? Edu Comparable Search Criteria
             outside_one_std_dev,
-        ]
+        )
+
+    def to_output_rows(self):
+        for idx, (analyzed_row, row) in enumerate(zip(
+                self.analyzed_rows, self.valid_rows)):
+            yield idx, self._to_output_row(idx, analyzed_row, row)
 
     def to_csv(self, filename="analysis.csv"):
         response = HttpResponse(content_type='text/csv')
@@ -94,9 +126,8 @@ class AnalysisExport:
         writer = csv.writer(response)
         writer.writerow(self.output_headers)
 
-        for idx, (analyzed_row, row) in enumerate(zip(
-                self.analyzed_rows, self.valid_rows)):
-            writer.writerow(self._to_output_row(idx, analyzed_row, row))
+        for _, row in self.to_output_rows():
+            writer.writerow(row)
 
         return response
 
@@ -121,9 +152,7 @@ class AnalysisExport:
 
         row_offset = 2  # sheet heading + table header row
 
-        for row_idx, (analyzed_row, row) in enumerate(zip(
-                self.analyzed_rows, self.valid_rows)):
-            out_row = self._to_output_row(row_idx, analyzed_row, row)
+        for row_idx, out_row in self.to_output_rows():
             write_row(row_idx + row_offset, out_row)
 
         workbook.close()
