@@ -12,7 +12,6 @@ from .base import (BasePriceList, min_price_validator,
 from .spreadsheet_utils import generate_column_index_map, safe_cell_str_value
 from .coercers import (strip_non_numeric, extract_min_education,
                        extract_hour_unit_of_issue, extract_first_int)
-from .spreadsheet_utils import generate_column_index_map, safe_cell_str_value
 from contracts.models import EDUCATION_CHOICES
 
 
