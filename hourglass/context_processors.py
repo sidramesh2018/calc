@@ -1,6 +1,13 @@
 from django.conf import settings
 from django.utils.safestring import mark_safe
 
+from .site_utils import get_canonical_url
+
+
+def canonical_url(request):
+    '''Include the request's canonical URL in all request contexts'''
+    return {'canonical_url': get_canonical_url(request)}
+
 
 def api_host(request):
     '''Include API_HOST in all request contexts'''

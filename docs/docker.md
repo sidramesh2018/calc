@@ -82,14 +82,6 @@ Here's a [handy list of `ipdb` commands][ipdb_intro].
 [`ipdb`]: https://pypi.python.org/pypi/ipdb
 [ipdb_intro]: https://www.safaribooksonline.com/blog/2014/11/18/intro-python-debugger/
 
-### Reading email
-
-In the development Docker configuration, we use a container with
-[MailCatcher][] to make it easy to read the emails sent by the app. You
-can view it at port 1080 of your Docker host.
-
-[MailCatcher]: https://mailcatcher.me/
-
 ### Deploying to cloud environments
 
 The Docker setup can also be used to deploy to cloud environments.

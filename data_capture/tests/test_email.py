@@ -14,6 +14,17 @@ from .test_models import ModelTestCase
 
 @freeze_time(datetime(2017, 1, 8, 20, 51, 0))
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE],
+
+                   # Ugh, this is required for the cg-django-uaa to not
+                   # complain when running this test suite standalone.
+                   AUTHENTICATION_BACKENDS=(
+                       'uaa_client.authentication.UaaBackend',
+                   ),
+
+                   # This ensures absolute URLs produced by our code
+                   # are https-based.
+                   SECURE_SSL_REDIRECT=True,
+
                    DEFAULT_FROM_EMAIL='hi@hi.com',
                    HELP_EMAIL="help@help.com",)
 class EmailTests(ModelTestCase):
@@ -31,7 +42,7 @@ class EmailTests(ModelTestCase):
         self.assertIn(url, html_content)
 
     def assertHasDetailsLink(self, price_list, message):
-        details_link = 'http://test.com' + reverse(
+        details_link = 'https://example.com' + reverse(
             'data_capture:price_list_details', kwargs={'id': price_list.pk})
 
         self.assertHasOneHtmlAlternative(message)
@@ -44,7 +55,8 @@ class EmailTests(ModelTestCase):
     def test_send_mail_works(self):
         result = email.send_mail(
             subject='test email',
-            html_message='<p>test body</p>',
+            template='data_capture/tests/test_email.html',
+            ctx={},
             to=['test@test.com'],
             reply_to=['reply-test@test.com'],
         )
@@ -62,7 +74,7 @@ class EmailTests(ModelTestCase):
         price_list = self.create_price_list(
             status=SubmittedPriceList.STATUS_APPROVED)
         price_list.save()
-        result = email.price_list_approved(price_list, 'http://test.com')
+        result = email.price_list_approved(price_list)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
@@ -79,13 +91,13 @@ class EmailTests(ModelTestCase):
             status=SubmittedPriceList.STATUS_UNREVIEWED)
         price_list.save()
         with self.assertRaises(AssertionError):
-            email.price_list_approved(price_list, 'http://test.com')
+            email.price_list_approved(price_list)
 
     def test_price_list_retired(self):
         price_list = self.create_price_list(
             status=SubmittedPriceList.STATUS_RETIRED)
         price_list.save()
-        result = email.price_list_retired(price_list, 'http://test.com')
+        result = email.price_list_retired(price_list)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
@@ -102,13 +114,13 @@ class EmailTests(ModelTestCase):
             status=SubmittedPriceList.STATUS_APPROVED)
         price_list.save()
         with self.assertRaises(AssertionError):
-            email.price_list_retired(price_list, 'http://test.com')
+            email.price_list_retired(price_list)
 
     def test_price_list_rejected(self):
         price_list = self.create_price_list(
             status=SubmittedPriceList.STATUS_REJECTED)
         price_list.save()
-        result = email.price_list_rejected(price_list, 'http://test.com')
+        result = email.price_list_rejected(price_list)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
@@ -125,7 +137,7 @@ class EmailTests(ModelTestCase):
             status=SubmittedPriceList.STATUS_APPROVED)
         price_list.save()
         with self.assertRaises(AssertionError):
-            email.price_list_rejected(price_list, 'http://test.com')
+            email.price_list_rejected(price_list)
 
     def test_bulk_uploaded_succeeded(self):
         src = create_bulk_upload_contract_source(
@@ -149,8 +161,7 @@ class EmailTests(ModelTestCase):
         src = create_bulk_upload_contract_source(
             self.user)
         src.save()
-        result = email.bulk_upload_failed(src, 'traceback_contents',
-                                          'http://test.com')
+        result = email.bulk_upload_failed(src, 'traceback_contents')
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(), [self.user.email])
@@ -165,14 +176,14 @@ class EmailTests(ModelTestCase):
         self.assertIn('r10_upload_link', result.context)
         self.assertHasLink(
             message,
-            'http://test.com/data-capture/bulk/region-10/step/1')
+            'https://example.com/data-capture/bulk/region-10/step/1')
 
     def test_approval_reminder(self):
         User.objects.create_superuser('admin', 'admin@localhost', 'password')
         User.objects.create_superuser('admin2', 'admin2@localhost', 'password')
         User.objects.create_superuser('blankadmin', '', 'password')
         count = 5
-        result = email.approval_reminder(count, 'http://test.com')
+        result = email.approval_reminder(count)
         self.assertTrue(result.was_successful)
         message = mail.outbox[0]
         self.assertEqual(message.recipients(),
@@ -186,4 +197,4 @@ class EmailTests(ModelTestCase):
         self.assertHasReplyTo(message)
         self.assertHasLink(
             message,
-            'http://test.com/admin/data_capture/unreviewedpricelist/')
+            'https://example.com/admin/data_capture/unreviewedpricelist/')

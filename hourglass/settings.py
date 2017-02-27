@@ -82,6 +82,7 @@ TEMPLATES = [{
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
+            'hourglass.context_processors.canonical_url',
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
             'hourglass.context_processors.google_analytics_tracking_id',
@@ -122,6 +123,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.humanize',
+    'django.contrib.sites',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
@@ -140,6 +142,8 @@ INSTALLED_APPS = (
     'meta',
     'frontend',
 )  # type: Tuple[str, ...]
+
+SITE_ID = 1
 
 if DEBUG:
     STATICFILES_STORAGE = 'frontend.crotchety.CrotchetyStaticFilesStorage'

@@ -1,13 +1,9 @@
+{% extends "email/base.html" %}
+{% load email_utils %}
+
+{% block content %}
 <p>
-  Hi there,
+  We notice you haven't approved submitted price lists in CALC.
 </p>
-<p>
-  We notice you haven't approved submitted price lists in CALC. When you can, please review and approve these lists at <a href="{{ unreviewed_url }}">{{ unreviewed_url }}</a>.
-</p>
-<p>
-  Have questions about how to review and approve? Please contact us by replying to this email.
-</p>
-<p>
-  Best,<br/>
-  The CALC Team
-</p>
+  {% cta url=unreviewed_url action_text="Review submitted price lists" %}
+{% endblock %}

@@ -15,6 +15,12 @@
         <a href="{% url 'styleguide:index' %}">Style guide</a> |
         <a href="/docs/">Docs</a>
       </p>
+      {% if canonical_url != request.build_absolute_uri %}
+        <br>
+        <p>
+          You should probably <a href="/admin/sites/site/1/">change your site's domain name</a>, or some links may not work.
+        </p>
+      {% endif %}
     </div>
   </div>
 {% else %}

@@ -14,6 +14,7 @@ Welcome to CALC's developer documentation!
    docker
    environment
    auth
+   email
 
 .. toctree::
    :maxdepth: 2

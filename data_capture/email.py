@@ -1,13 +1,13 @@
 import re
-
 from django.core.mail import EmailMultiAlternatives, get_connection
-from django.core.urlresolvers import reverse
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.template.defaultfilters import pluralize
 from django.conf import settings
 
+from frontend import email_css
+from hourglass.site_utils import absolute_reverse
 from .models import SubmittedPriceList
 
 
@@ -32,9 +32,45 @@ def collapse_and_strip_tags(text):
     return re.sub(r'\n+', '\n', strip_tags(text))
 
 
-def send_mail(subject, to, html_message, reply_to=None):
+def render_mail(template, ctx):
     '''
-    Django's convinience send_mail function does not allow
+    Render the given template with the given context for
+    plaintext and HTML formats. This is done by rendering the
+    template *twice* with slightly modified contexts:
+    complementary `is_html_email` and `is_plaintext` variables
+    are set to whatever mode is being rendered.
+
+    Returns a (plaintext, html) string tuple representing the rendered
+    template in each format.
+    '''
+
+    html_ctx = ctx.copy()
+    html_ctx['is_html_email'] = True
+    html_ctx['is_plaintext_email'] = False
+    html_ctx['email_css'] = email_css
+
+    html_message = render_to_string(template, html_ctx)
+
+    # TODO: This is a workaround for
+    # https://github.com/18F/calc/issues/1409, need to figure
+    # out the exact reason behind it.
+    html_message = html_message.encode(
+        'ascii', 'xmlcharrefreplace').decode('ascii')
+
+    plaintext_ctx = ctx.copy()
+    plaintext_ctx['is_html_email'] = False
+    plaintext_ctx['is_plaintext_email'] = True
+
+    plaintext_message = collapse_and_strip_tags(
+        render_to_string(template, plaintext_ctx)
+    )
+
+    return (plaintext_message, html_message)
+
+
+def send_mail(subject, to, template, ctx, reply_to=None):
+    '''
+    Django's convenience send_mail function does not allow
     specification of the reply-to header, so we instead use
     the underlying EmailMultiAlternatives class to send CALC emails.
 
@@ -43,7 +79,7 @@ def send_mail(subject, to, html_message, reply_to=None):
     '''
     connection = get_connection()
 
-    plaintext_message = collapse_and_strip_tags(html_message)
+    plaintext_message, html_message = render_mail(template, ctx)
 
     msg = EmailMultiAlternatives(
         connection=connection,
@@ -57,9 +93,9 @@ def send_mail(subject, to, html_message, reply_to=None):
     return msg.send()
 
 
-def price_list_approved(price_list, site_base_url='https://calc.gsa.gov'):
-    details_link = site_base_url + reverse('data_capture:price_list_details',
-                                           kwargs={'id': price_list.pk})
+def price_list_approved(price_list):
+    details_link = absolute_reverse('data_capture:price_list_details',
+                                    kwargs={'id': price_list.pk})
 
     ctx = {
         'price_list': price_list,
@@ -69,13 +105,10 @@ def price_list_approved(price_list, site_base_url='https://calc.gsa.gov'):
     if price_list.status is not SubmittedPriceList.STATUS_APPROVED:
         raise AssertionError('price_list.status must be STATUS_APPROVED')
 
-    rendered_email = render_to_string(
-        'data_capture/email/price_list_approved.html',
-        ctx)
-
     result = send_mail(
         subject='CALC Price List Approved',
-        html_message=rendered_email,
+        template='data_capture/email/price_list_approved.html',
+        ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[price_list.submitter.email],
     )
@@ -85,9 +118,9 @@ def price_list_approved(price_list, site_base_url='https://calc.gsa.gov'):
     )
 
 
-def price_list_retired(price_list, site_base_url='https://calc.gsa.gov'):
-    details_link = site_base_url + reverse('data_capture:price_list_details',
-                                           kwargs={'id': price_list.pk})
+def price_list_retired(price_list):
+    details_link = absolute_reverse('data_capture:price_list_details',
+                                    kwargs={'id': price_list.pk})
 
     ctx = {
         'price_list': price_list,
@@ -97,13 +130,10 @@ def price_list_retired(price_list, site_base_url='https://calc.gsa.gov'):
     if price_list.status is not SubmittedPriceList.STATUS_RETIRED:
         raise AssertionError('price_list.status must be STATUS_RETIRED')
 
-    rendered_email = render_to_string(
-        'data_capture/email/price_list_retired.html',
-        ctx)
-
     result = send_mail(
         subject='CALC Price List Retired',
-        html_message=rendered_email,
+        template='data_capture/email/price_list_retired.html',
+        ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[price_list.submitter.email],
     )
@@ -113,22 +143,19 @@ def price_list_retired(price_list, site_base_url='https://calc.gsa.gov'):
     )
 
 
-def price_list_rejected(price_list, site_base_url='https://calc.gsa.gov'):
-    details_link = site_base_url + reverse('data_capture:price_list_details',
-                                           kwargs={'id': price_list.pk})
+def price_list_rejected(price_list):
+    details_link = absolute_reverse('data_capture:price_list_details',
+                                    kwargs={'id': price_list.pk})
 
     ctx = {
         'price_list': price_list,
         'details_link': details_link,
     }
 
-    rendered_email = render_to_string(
-        'data_capture/email/price_list_rejected.html',
-        ctx)
-
     result = send_mail(
         subject='CALC Price List Rejected',
-        html_message=rendered_email,
+        template='data_capture/email/price_list_rejected.html',
+        ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[price_list.submitter.email]
     )
@@ -147,14 +174,11 @@ def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
         'num_bad_rows': num_bad_rows,
     }
 
-    rendered_email = render_to_string(
-        'data_capture/email/bulk_upload_succeeded.html',
-        ctx)
-
     result = send_mail(
         subject='CALC Region 10 bulk data results - upload #{}'.format(
             upload_source.id),
-        html_message=rendered_email,
+        template='data_capture/email/bulk_upload_succeeded.html',
+        ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[upload_source.submitter.email],
     )
@@ -164,9 +188,8 @@ def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
     )
 
 
-def bulk_upload_failed(upload_source, traceback,
-                       site_base_url='https://calc.gsa.gov'):
-    r10_upload_link = site_base_url + reverse(
+def bulk_upload_failed(upload_source, traceback):
+    r10_upload_link = absolute_reverse(
         'data_capture:bulk_region_10_step_1')
 
     ctx = {
@@ -175,15 +198,12 @@ def bulk_upload_failed(upload_source, traceback,
         'r10_upload_link': r10_upload_link
     }
 
-    rendered_email = render_to_string(
-        'data_capture/email/bulk_upload_failed.html',
-        ctx)
-
     result = send_mail(
         subject='CALC Region 10 bulk data results - upload #{}'.format(
             upload_source.id
         ),
-        html_message=rendered_email,
+        template='data_capture/email/bulk_upload_failed.html',
+        ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[upload_source.submitter.email],
     )
@@ -193,18 +213,13 @@ def bulk_upload_failed(upload_source, traceback,
     )
 
 
-def approval_reminder(count_unreviewed, site_base_url='https://calc.gsa.gov'):
-    unreviewed_url = site_base_url + reverse(
+def approval_reminder(count_unreviewed):
+    unreviewed_url = absolute_reverse(
         'admin:data_capture_unreviewedpricelist_changelist')
 
     ctx = {
         'unreviewed_url': unreviewed_url,
     }
-
-    rendered_email = render_to_string(
-        'data_capture/email/approval_reminder.html',
-        ctx
-    )
 
     superusers = User.objects.filter(is_superuser=True)
     recipients = [s.email for s in superusers if s.email]
@@ -212,7 +227,8 @@ def approval_reminder(count_unreviewed, site_base_url='https://calc.gsa.gov'):
     result = send_mail(
         subject='CALC Reminder - {} price list{} not reviewed'.format(
             count_unreviewed, pluralize(count_unreviewed)),
-        html_message=rendered_email,
+        template='data_capture/email/approval_reminder.html',
+        ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=recipients,
     )

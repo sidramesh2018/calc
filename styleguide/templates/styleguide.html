@@ -575,6 +575,30 @@
 
   <p>When JavaScript is not available, the activator element will do whatever it previously did before being modified to open a dialog.</p>
 
+  {% guide_section "Emails" %}
+
+  <p>
+    Emails are delivered in both plain text and HTML formats. Our
+    HTML emails are based on Lee Munroe's
+    <a href="https://github.com/leemunroe/responsive-html-email-template">Really Simple Responsive HTML Email Template</a>.
+  </p>
+
+  <p>
+    Examples of each email type that can be sent from CALC are listed
+    below.
+  </p>
+
+  <ul>
+    {% for example in email_examples %}
+    <li>
+      {{ example.subject }}
+      <br>
+      <a href="{{ example.plaintext_url }}">Plain text</a> |
+       <a href="{{ example.html_url }}">HTML</a>
+    </li>
+    {% endfor %}
+  </ul>
+
   {% guide_section "Compatibility Mode" %}
 
   <p>
