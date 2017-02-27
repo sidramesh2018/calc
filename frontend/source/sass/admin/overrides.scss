@@ -286,3 +286,18 @@ thead a:focus {
     margin-left: 5px;
   }
 }
+
+/* users and groups multiselect form */
+.related-widget-wrapper {
+  width: 100%;
+  .selector .selector-available input {
+    width: 100%;
+  }
+  .selector .selector-filter {
+    padding: 0;
+  }
+  .selector ul.selector-chooser {
+    background: transparent;
+  }
+  .selector #id_groups_filter.selector-filter label { padding: 0; }
+}
