@@ -3,17 +3,11 @@
 {% load data_capture %}
 
 {% block content %}
+<h1>
+  There's a problem with your upload
+</h1>
 <p>
-  We're emailing regarding the Region 10 CALC data upload <b>#{{ upload_source.id }}</b>, uploaded by <b>{{ upload_source.submitter.email }}</b> on <b>{{ upload_source.created_at|tz_timestamp }}</b>.
-</p>
-<p>
-  Unfortunately, an <b>error occurred</b> while importing the data.
+  Unfortunately we found an error when processing the Region 10 data you uploaded on {{ upload_source.created_at|tz_timestamp }}. <!-- Could we add "on" before the time stamp? --> Please visit CALC to <a href="https://review-link.htm">try again</a>.
 </p>
   {% cta url=r10_upload_link action_text="Try uploading again" %}
-<p>
-  The traceback below may help the development team debug the problem.
-</p>
-<pre>
-  {{ traceback }}
-</pre>
 {% endblock %}

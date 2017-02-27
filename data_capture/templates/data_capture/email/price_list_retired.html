@@ -3,11 +3,11 @@
 {% load data_capture %}
 
 {% block content %}
+<h1>
+  Your price list has been retired
+</h1>
 <p>
-  The price list you submitted to CALC on {{ price_list.created_at|tz_timestamp }} has been <b>retired</b> and its pricing data will no longer be visible in CALC.
-</p>
-<p>
-  The submitted price list was for contract <b>{{ price_list.contract_number }}</b> ({{ price_list.get_schedule_title }}) with <b>{{ price_list.vendor_name }}</b>.
+  The price list you submitted to CALC on {{ price_list.created_at|tz_timestamp }} has been retired, and its pricing data will no longer be visible in CALC. The submitted price list was for contract <a href="retired-PL-link"><b>{{ price_list.contract_number }}</b></a> ({{ price_list.get_schedule_title }}) with <b>{{ price_list.vendor_name }}</b>.
 </p>
   {% cta url=details_link action_text="View the price list's details" %}
 {% endblock %}
