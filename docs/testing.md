@@ -6,7 +6,8 @@ CALC provides a custom Django management command to run all linters and tests:
 python manage.py ultratest
 ```
 
-### Unit tests
+### Python unit tests
+
 To run just unit tests:
 
 ```sh
@@ -15,6 +16,10 @@ py.test
 
 For more information on running only specific tests, see
 [`py.test` Usage and Invocations][pytest].
+
+### Front-end tests
+
+For more details on front-end testing, see the [front-end guide](frontend.md).
 
 ### Using real-world browsers
 

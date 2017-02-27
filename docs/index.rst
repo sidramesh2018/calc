@@ -28,6 +28,7 @@ Welcome to CALC's developer documentation!
    :caption: Development
 
    Style guide <https://calc-dev.app.cloud.gov/styleguide/>
+   frontend
    api
    updating_data
 
