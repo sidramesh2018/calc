@@ -20,7 +20,12 @@ class BaseTestCase(TestCase):
     PASSWORD_HASHERS=['django.contrib.auth.hashers.MD5PasswordHasher'],
     # Ignore our custom auth backend so we can log the user in via
     # Django 1.8's login helpers.
-    AUTHENTICATION_BACKENDS=['django.contrib.auth.backends.ModelBackend'],
+    AUTHENTICATION_BACKENDS=[
+        'django.contrib.auth.backends.ModelBackend',
+        # But also include UaaBackend so cg-django-uaa doesn't raise an
+        # ImproperlyConfigured error.
+        'uaa_client.authentication.UaaBackend',
+    ],
 )
 class BaseLoginTestCase(BaseTestCase):
     def create_user(self, username, password=None, is_staff=False,
