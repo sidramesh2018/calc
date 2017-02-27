@@ -107,6 +107,7 @@ form .aligned p.help {
   border: none !important;
 }
 
+
 .selector .selector-available h2,
 .selector .selector-chosen h2 {
   color: $color-base !important;
@@ -144,6 +145,10 @@ select[multiple="multiple"] {
 .inline-form input[type="search"],
 .inline-form input[type="submit"] {
   display: inline;
+  height: 40px;
+  + button {
+    height: 40px;
+  }
 }
 
 /* Styling for ul/lis with action links */

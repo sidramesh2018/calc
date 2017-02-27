@@ -1,5 +1,10 @@
 @import '../base/_variables.scss';
 
+#changelist .actions {
+  label select {
+  }
+  }
+}
 /* changelists */
 #changelist {
   #toolbar form input {
@@ -12,18 +17,24 @@
       color: $color-base;
       margin-left: 0;
       display: inline-block;
-
-  margin: 1rem 0;
-  float: left;
+      margin: 1rem 0;
+      float: left;
     }
 
     select {
-      margin-left: 0 ;
+      margin-left: 0;
+      box-sizing: border-box !important;
+      height: 40px !important;
     }
 
     button {
     margin: 1rem 0;
     display: inline-block;
+    }
+    button.submit {
+      float: none !important;
+      box-sizing: border-box !important;
+      height: 40px !important;
     }
   }
 }
