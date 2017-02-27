@@ -42,7 +42,10 @@ if DEBUG:
         'SECRET_KEY',
         'I am an insecure secret key intended ONLY for dev/testing.'
     )
-    os.environ.setdefault('EMAIL_URL', 'console:')
+    os.environ.setdefault(
+        'EMAIL_URL',
+        os.environ.get('DEFAULT_DEBUG_EMAIL_URL', 'console:')
+    )
     if 'REDIS_URL' not in os.environ:
         # Only set a default REDIS_TEST_URL if REDIS_URL is not
         # explicitly defined either.
