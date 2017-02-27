@@ -584,6 +584,12 @@
   </p>
 
   <p>
+    The base template used to render emails is at
+    {% template_link 'email/base.html' %}, while common template tags are
+    in {% pyobjname 'data_capture.templatetags.email_utils' %}.
+  </p>
+
+  <p>
     Examples of each email type that can be sent from CALC are listed
     below.
   </p>
@@ -594,7 +600,8 @@
       {{ example.subject }}
       <br>
       <a href="{{ example.plaintext_url }}">Plain text</a> |
-       <a href="{{ example.html_url }}">HTML</a>
+       <a href="{{ example.html_url }}">HTML</a> |
+       <a href="{% template_url example.template %}">Template source</a>
     </li>
     {% endfor %}
   </ul>

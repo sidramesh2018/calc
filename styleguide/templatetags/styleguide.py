@@ -77,6 +77,26 @@ class WebComponentHTMLParser(HTMLParser):
                 self.extends = val
 
 
+@register.simple_tag(takes_context=True)
+def template_url(context, template_name):
+    '''
+    Return a GitHub URL to the source of the given template.
+    '''
+
+    t = context.template.engine.get_template(template_name)
+    return github_url_for_path(os.path.relpath(t.origin.name, ROOT_DIR))
+
+
+@register.simple_tag(takes_context=True)
+def template_link(context, template_name):
+    '''
+    Return a link to the source code of the given template.
+    '''
+
+    url = template_url(context, template_name)
+    return SafeString(f'<code><a href="{url}">{template_name}</a></code>')
+
+
 @register.simple_tag
 def webcomponent(html):
     '''
