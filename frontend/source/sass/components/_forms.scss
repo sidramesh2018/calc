@@ -145,8 +145,12 @@ dl.contract-details {
   }
 }
 
-/* search -- inline form + button */
-input[type].form__inline {
+/* search -- inline form + button
+ * input[type=search] rule is for admin page searches, e.g. users or groups
+ * .actions label select rule is for admin page action dropdown on users/groups */
+input[type].form__inline,
+.form__inline input[type=search],
+.actions label select {
   height: 40px;
   display: block;
   margin: 1rem 0;
@@ -157,15 +161,19 @@ input[type].form__inline {
     padding-top: 0.9rem;
     padding-bottom: 0.9rem;
   }
+  /* input[type=submit] used on admin page searches
+   * .select-across ~ button used on admin page dropdowns w/in .actions block */
   ~ .button,
   ~ button,
-  ~ input[type=button] {
+  ~ input[type=button],
+  ~ input[type=submit],
+  input.select-across ~ button[type=submit]{
     height: 40px;
     margin: 1rem 0;
     display: block;
     box-sizing: border-box;
     float: left;
-    &:last-child {
+    &.reset {
       margin-left: 1rem;
     }
   }
