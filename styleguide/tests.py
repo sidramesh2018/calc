@@ -1,11 +1,9 @@
-from unittest.mock import MagicMock
 from django.test import TestCase, SimpleTestCase
 from django.template import engines
 
 from styleguide import email_examples
 from styleguide.templatetags.styleguide import (
     template_tag_library,
-    template_url,
     github_url_for_path,
 )
 
