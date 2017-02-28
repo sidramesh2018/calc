@@ -154,6 +154,7 @@ class EmailTests(ModelTestCase):
         self.assertIn('Jan. 8, 2017, 3:51 p.m. (EST)', message.body)
         self.assertHasOneHtmlAlternative(message)
         self.assertHasReplyTo(message)
+        self.assertIn('r10_upload_link', result.context)
         self.assertEqual(result.context['num_contracts'], 5)
         self.assertEqual(result.context['num_bad_rows'], 2)
 

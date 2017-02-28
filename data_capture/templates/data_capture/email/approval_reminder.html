@@ -1,14 +1,13 @@
 {% extends "email/base.html" %}
 {% load email_utils %}
+{% load humanize %}
 
 {% block content %}
 <h1>
   {{ total }} price list{{ total|pluralize:"s" }} nee{{ total|pluralize:"ds,d"}} your review
 </h1>
 <p>
-  We noticed that {{ total|pluralize:"an,some" }} uploaded price list{{ total|pluralize:" is,s are" }} still awaiting your approval. Please <a href="https://review-link.htm">review {{ total|pluralize:"it,them" }} </a> at your earliest convenience, so this data can be added to CALC. Thanks!
+  We noticed that {{ total|pluralize:"an,some" }} uploaded price list{{ total|pluralize:" is,s are" }} still awaiting your approval. Please <a href="{{ unreviewed_url }}">review {{ total|pluralize:"it,them" }} </a> at your earliest convenience, so this data can be added to CALC. Thanks!
 </p>
-  {% cta url=unreviewed_url action_text="Review submitted price list" %}
+  {% cta url=unreviewed_url action_text="Review now" %}
 {% endblock %}
-
- <!-- need to add {{ total|pluralize:"s" }} function to the button -->

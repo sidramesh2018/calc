@@ -40,6 +40,7 @@ EXAMPLES = [
                     'submitter': {'email': 'example_admin@example.com'},
                     'created_at': timezone.now(),
                 },
+                'r10_upload_link': 'https://example.com/r10_bulk_upload',
                 'num_contracts': 50123,
                 'num_bad_rows': 25,
         }

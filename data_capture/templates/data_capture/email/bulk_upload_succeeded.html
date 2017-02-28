@@ -1,4 +1,5 @@
 {% extends "email/base.html" %}
+{% load email_utils %}
 {% load humanize %}
 {% load data_capture %}
 
@@ -7,7 +8,10 @@
   The data you uploaded has been added to CALC!
 </h1>
 <p>
-  The Region 10 data file {{ total|pluralize:"s" }} you uploaded to CALC on {{ upload_source.created_at|tz_timestamp }} {{ total|pluralize:"has,have" }} been approved and added to <a href="https://calc.gsa.gov/">CALC</a>.
+  The Region 10 data file you uploaded to CALC on {{ upload_source.created_at|tz_timestamp }} has been added to <a href="{{ r10_upload_link }}">CALC</a>.
+</p>
+<p>
+  <b>{{ num_contracts|intcomma }} rows</b> of pricing information have been loaded and previous Region 10 data has been removed from the CALC database.
 </p>
 {% cta url=r10_upload_link action_text="Visit CALC now" %}
 {% endblock %}

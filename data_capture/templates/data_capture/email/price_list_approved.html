@@ -1,5 +1,6 @@
 {% extends "email/base.html" %}
 {% load email_utils %}
+{% load humanize %}
 {% load data_capture %}
 
 {% block content %}
@@ -10,7 +11,7 @@
   The price list you submitted to CALC on {{ price_list.created_at|tz_timestamp }} has been approved.
 </p>
 <p>
-  The submitted price list was for contract <b>{{ price_list.contract_number }}</b> ({{ price_list.get_schedule_title }}) with <b>{{ price_list.vendor_name }}</b>.
+  The <a href="{{ details_link }}">submitted price list</a> was for contract <b>{{ price_list.contract_number }}</b> ({{ price_list.get_schedule_title }}) with <b>{{ price_list.vendor_name }}</b>.
 </p>
   {% cta url=details_link action_text="View your price list's details" %}
 {% endblock %}

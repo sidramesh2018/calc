@@ -7,7 +7,7 @@
   There's a problem with your upload
 </h1>
 <p>
-  Unfortunately we found an error when processing the Region 10 data you uploaded on {{ upload_source.created_at|tz_timestamp }}. <!-- Could we add "on" before the time stamp? --> Please visit CALC to <a href="https://review-link.htm">try again</a>.
+  Unfortunately we found an error when processing the Region 10 data you uploaded on {{ upload_source.created_at|tz_timestamp }}. Please visit CALC to <a href="{{ r10_upload_link }}">try again</a>.
 </p>
   {% cta url=r10_upload_link action_text="Try uploading again" %}
 {% endblock %}
