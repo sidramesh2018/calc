@@ -1,4 +1,4 @@
-/* global $ */
+/* global window */
 
 import React from 'react';
 
@@ -12,19 +12,11 @@ export default class SlideyPanel extends React.Component {
   }
 
   slideDown(cb) {
-    if (typeof $ !== 'undefined') {
-      $(this.el).hide().slideDown('fast', cb);
-    } else {
-      cb();
-    }
+    this.props.$(this.el).hide().slideDown('fast', cb);
   }
 
   componentWillLeave(cb) {
-    if (typeof $ !== 'undefined') {
-      $(this.el).slideUp('fast', cb);
-    } else {
-      cb();
-    }
+    this.props.$(this.el).slideUp('fast', cb);
   }
 
   render() {
@@ -34,6 +26,7 @@ export default class SlideyPanel extends React.Component {
 
     delete newProps.children;
     delete newProps.component;
+    delete newProps.$;
 
     return React.createElement(
       this.props.component,
@@ -46,4 +39,15 @@ export default class SlideyPanel extends React.Component {
 SlideyPanel.propTypes = {
   component: React.PropTypes.any.isRequired,
   children: React.PropTypes.any.isRequired,
+  $: React.PropTypes.func,
+};
+
+SlideyPanel.defaultProps = {
+  $: window.$ || function fakeJquery() {
+    return {
+      hide() { return this; },
+      slideUp(speed, cb) { cb(); },
+      slideDown(speed, cb) { cb(); },
+    };
+  },
 };

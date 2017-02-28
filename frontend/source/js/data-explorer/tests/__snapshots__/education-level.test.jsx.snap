@@ -40,6 +40,7 @@ exports[`<EducationLevel> matches snapshot 1`] = `
             childFactory={[Function]}
             component={[Function]}>
             <SlideyPanel
+              $={[Function]}
               component="ul"
               style={
                 Object {
