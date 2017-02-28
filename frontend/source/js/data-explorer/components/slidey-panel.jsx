@@ -12,11 +12,19 @@ export default class SlideyPanel extends React.Component {
   }
 
   slideDown(cb) {
-    $(this.el).hide().slideDown('fast', cb);
+    if (typeof $ !== 'undefined') {
+      $(this.el).hide().slideDown('fast', cb);
+    } else {
+      cb();
+    }
   }
 
   componentWillLeave(cb) {
-    $(this.el).slideUp('fast', cb);
+    if (typeof $ !== 'undefined') {
+      $(this.el).slideUp('fast', cb);
+    } else {
+      cb();
+    }
   }
 
   render() {
