@@ -91,3 +91,8 @@ export function getLastCommaSeparatedTerm(term) {
   const pieces = term.split(/\s*,\s*/);
   return pieces[pieces.length - 1];
 }
+
+export function stripTrailingComma(str) {
+  // Removes trailing comma and whitespace from given string
+  return str.replace(/,\s*$/, '');
+}
