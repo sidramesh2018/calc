@@ -1,17 +1,18 @@
 /* global window */
 
+/**
+ * Implementation of a panel that can slide up and down if jQuery
+ * is present on the page. If jQuery is not present, it gracefully
+ * degrades to a panel without animation.
+ */
+
 import React from 'react';
+import ReactTransitionGroup from 'react-addons-transition-group';
 
-export default class SlideyPanel extends React.Component {
-  componentWillAppear(cb) {
-    this.slideDown(cb);
-  }
+import { FirstChild } from './util';
 
+class InnerSlideyPanel extends React.Component {
   componentWillEnter(cb) {
-    this.slideDown(cb);
-  }
-
-  slideDown(cb) {
     this.props.$(this.el).hide().slideDown('fast', cb);
   }
 
@@ -36,13 +37,14 @@ export default class SlideyPanel extends React.Component {
   }
 }
 
-SlideyPanel.propTypes = {
-  component: React.PropTypes.any.isRequired,
+InnerSlideyPanel.propTypes = {
+  component: React.PropTypes.any,
   children: React.PropTypes.any.isRequired,
   $: React.PropTypes.func,
 };
 
-SlideyPanel.defaultProps = {
+InnerSlideyPanel.defaultProps = {
+  component: 'span',
   $: window.$ || function fakeJquery() {
     return {
       hide() { return this; },
@@ -51,3 +53,33 @@ SlideyPanel.defaultProps = {
     };
   },
 };
+
+export default function SlideyPanel(props) {
+  let innerPanel = null;
+
+  if (props.expanded) {
+    const innerProps = Object.assign({}, props);
+
+    delete innerProps.expanded;
+
+    innerPanel = (
+      <InnerSlideyPanel {...innerProps}>
+        {props.children}
+      </InnerSlideyPanel>
+    );
+  }
+
+  return (
+    <ReactTransitionGroup component={FirstChild}>
+      {innerPanel}
+    </ReactTransitionGroup>
+  );
+}
+
+SlideyPanel.propTypes = Object.assign({}, InnerSlideyPanel.propTypes, {
+  expanded: React.PropTypes.bool,
+});
+
+SlideyPanel.defaultProps = Object.assign({}, InnerSlideyPanel.defaultProps, {
+  expanded: false,
+});

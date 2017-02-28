@@ -36,44 +36,41 @@ exports[`<EducationLevel> matches snapshot 1`] = `
             className="sr-only">
             Education level:
           </legend>
-          <ReactTransitionGroup
-            childFactory={[Function]}
-            component={[Function]}>
-            <SlideyPanel
-              $={[Function]}
-              component="ul"
-              style={
-                Object {
-                  "display": "block",
-                }
-              }>
-              <EducationLevelItem
-                checked={false}
-                id="zzz_HS"
-                onCheckboxClick={[Function]}
-                value="HS" />
-              <EducationLevelItem
-                checked={false}
-                id="zzz_AA"
-                onCheckboxClick={[Function]}
-                value="AA" />
-              <EducationLevelItem
-                checked={false}
-                id="zzz_BA"
-                onCheckboxClick={[Function]}
-                value="BA" />
-              <EducationLevelItem
-                checked={true}
-                id="zzz_MA"
-                onCheckboxClick={[Function]}
-                value="MA" />
-              <EducationLevelItem
-                checked={true}
-                id="zzz_PHD"
-                onCheckboxClick={[Function]}
-                value="PHD" />
-            </SlideyPanel>
-          </ReactTransitionGroup>
+          <SlideyPanel
+            $={[Function]}
+            component="ul"
+            expanded={true}
+            style={
+              Object {
+                "display": "block",
+              }
+            }>
+            <EducationLevelItem
+              checked={false}
+              id="zzz_HS"
+              onCheckboxClick={[Function]}
+              value="HS" />
+            <EducationLevelItem
+              checked={false}
+              id="zzz_AA"
+              onCheckboxClick={[Function]}
+              value="AA" />
+            <EducationLevelItem
+              checked={false}
+              id="zzz_BA"
+              onCheckboxClick={[Function]}
+              value="BA" />
+            <EducationLevelItem
+              checked={true}
+              id="zzz_MA"
+              onCheckboxClick={[Function]}
+              value="MA" />
+            <EducationLevelItem
+              checked={true}
+              id="zzz_PHD"
+              onCheckboxClick={[Function]}
+              value="PHD" />
+          </SlideyPanel>
         </fieldset>
       </div>
     </dd>

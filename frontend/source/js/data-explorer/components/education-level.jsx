@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import ReactTransitionGroup from 'react-addons-transition-group';
 
 import SlideyPanel from './slidey-panel';
 import EducationLevelItem from './education-level-item';
@@ -20,8 +19,6 @@ import {
 import {
   toggleEducationLevel,
 } from '../actions';
-
-import { FirstChild } from './util';
 
 // TODO: We could just use jQuery for this, but I wanted to decouple
 // the new React code from jQuery as much as possible for now.
@@ -123,16 +120,6 @@ export class EducationLevel extends React.Component {
 
     const eduLevelId = `${this.props.idPrefix}education_level`;
 
-    let panel = null;
-
-    if (this.state.expanded) {
-      panel = (
-        <SlideyPanel component="ul" style={{ display: 'block' }}>
-          {inputs}
-        </SlideyPanel>
-      );
-    }
-
     return (
       <div>
         <label htmlFor={eduLevelId}>Education level:</label>
@@ -158,9 +145,13 @@ export class EducationLevel extends React.Component {
               <fieldset>
                 <legend className="sr-only">Education level:</legend>
 
-                <ReactTransitionGroup component={FirstChild}>
-                  {panel}
-                </ReactTransitionGroup>
+                <SlideyPanel
+                  component="ul"
+                  style={{ display: 'block' }}
+                  expanded={this.state.expanded}
+                >
+                  {inputs}
+                </SlideyPanel>
               </fieldset>
             </div>
           </dd>
