@@ -8,7 +8,7 @@ register = template.Library()
 def tz_timestamp(value, tz_name="US/Eastern"):
     '''
     This template filter formats the given timezone-aware datetime into
-    a more readable format (ex: "Jan. 1, 2015 at 1:55 p.m. (EST)"),
+    a more readable format (ex: "Jan. 1, 2015 at 1:55 PM (EST)"),
     localized to the timezone specified by tz_name.
     '''
     try:
