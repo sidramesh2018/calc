@@ -147,7 +147,6 @@ export class EducationLevel extends React.Component {
 
                 <SlideyPanel
                   component="ul"
-                  style={{ display: 'block' }}
                   expanded={this.state.expanded}
                 >
                   {inputs}

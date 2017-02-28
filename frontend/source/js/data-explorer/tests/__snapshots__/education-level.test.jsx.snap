@@ -39,12 +39,7 @@ exports[`<EducationLevel> matches snapshot 1`] = `
           <SlideyPanel
             $={[Function]}
             component="ul"
-            expanded={true}
-            style={
-              Object {
-                "display": "block",
-              }
-            }>
+            expanded={true}>
             <EducationLevelItem
               checked={false}
               id="zzz_HS"
