@@ -1,6 +1,7 @@
 @import 'libs/no-ui';
 @import 'base/variables';
 @import 'components/tables';
+@import 'libs/react-select';
 
 body {
   background-color: $color-white; //override to steps.scss

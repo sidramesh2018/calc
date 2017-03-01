@@ -1,32 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { AsyncCreatable } from 'react-select';
 
-import * as autocomplete from '../autocomplete';
 import { setQuery } from '../actions';
 
 import {
   autobind,
-  handleEnter,
   filterActive,
 } from '../util';
 
-import { MAX_QUERY_LENGTH } from '../constants';
+// TODO: MAX_QUERY_LENGTH anywhere?
+// TODO: Close/clear suggestions after select item
+
+let autoCompReq = null; // TODO: better place to put this?
 
 export class LaborCategory extends React.Component {
   constructor(props) {
     super(props);
     this.state = { value: this.props.query };
-    autobind(this, ['handleChange', 'handleEnter']);
-  }
-
-  componentDidMount() {
-    autocomplete.initialize(this.inputEl, {
-      api: this.props.api,
-      getQueryType: () => this.props.queryType,
-      setFieldValue: (value) => {
-        this.props.setQuery(value);
-      },
-    });
+    autobind(this, ['handleChange', 'loadOptions']);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -35,36 +27,59 @@ export class LaborCategory extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    autocomplete.destroy(this.inputEl);
+  handleChange(value) {
+    this.setState({ value });
+
+    const query = value.map(v => v.name).join(',');
+    this.props.setQuery(query);
   }
 
-  handleChange(e) {
-    this.setState({ value: e.target.value });
-  }
-
-  handleEnter() {
-    if (this.state.value !== this.props.query) {
-      this.props.setQuery(this.state.value);
+  loadOptions(input, callback) {
+    if (!input) {
+      callback(null, { options: [] });
+      return;
     }
+
+    if (autoCompReq) { autoCompReq.abort(); }
+    autoCompReq = this.props.api.get({
+      uri: 'search/',
+      data: {
+        q: input,
+        query_type: this.props.queryType,
+      },
+    }, (error, result) => {
+      autoCompReq = null;
+      if (error) {
+        return callback(null, { options: [] });
+      }
+
+      const categories = result.slice(0, 20).map(d => ({
+        name: d.labor_category,
+        count: d.count,
+      }));
+      return callback(null, { options: categories });
+    });
   }
 
   render() {
     const id = `${this.props.idPrefix}labor_category`;
-    const className = filterActive(this.props.query !== '',
-                                   'form__inline');
+    const className = filterActive(this.props.query !== '', 'form__inline');
 
     return (
       <div>
-        <input
-          id={id} name="q" placeholder="Type a labor category"
-          className={className} type="text"
-          ref={(el) => { this.inputEl = el; }}
+        <AsyncCreatable
+          id={id}
+          name="q"
+          placeholder="Type a labor category"
+          className={className}
+          multi
           value={this.state.value}
           onChange={this.handleChange}
-          onKeyDown={handleEnter(this.handleEnter)}
-          maxLength={MAX_QUERY_LENGTH}
+          valueKey="name"
+          labelKey="name"
+          loadOptions={this.loadOptions}
         />
+
         <label htmlFor={id} className="sr-only">Type a labor category</label>
         {this.props.children}
       </div>
