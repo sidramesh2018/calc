@@ -69,6 +69,12 @@ To run the QUnit tests, visit
 [/tests/](https://calc-dev.app.cloud.gov/tests/) on your local
 development instance.
 
+### Administrative UI
+
+We skin the Django administrative UI to look like part of the CALC
+site; its templates are located in
+[hourglass/templates/admin](../hourglass/templates/admin).
+
 ### Other components
 
 Other parts of CALC are usually stored in either Django templates
