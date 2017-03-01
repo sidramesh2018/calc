@@ -54,6 +54,11 @@ tests as you change your code:
 npm run test:watch
 ```
 
+Finally, you can also run `jest` directly. If you're using Docker,
+this can be done via `docker-compose run app jest`; otherwise you can
+use `npm run test --`, followed by any
+[Jest CLI options](https://facebook.github.io/jest/docs/cli.html).
+
 ### Data capture
 
 Data capture largely consists of Django templates combined with
