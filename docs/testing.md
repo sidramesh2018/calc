@@ -17,9 +17,9 @@ py.test
 For more information on running only specific tests, see
 [`py.test` Usage and Invocations][pytest].
 
-### Front-end tests
+### Front end tests
 
-For more details on front-end testing, see the [front-end guide](frontend.md).
+For more details on front end testing, see the [front end guide](frontend.md).
 
 ### Using real-world browsers
 

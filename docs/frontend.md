@@ -1,8 +1,8 @@
-# Front-end
+# Front end
 
-In general, front-end code is in the [frontend](../frontend/) directory.
+In general, front end code is in the [frontend](../frontend/) directory.
 
-This guide is about the nuts-and-bolts of developing front-end code; for
+This guide is about the nuts-and-bolts of developing front end code; for
 details on how to use or style individual components, see the
 [style guide][].
 
@@ -11,7 +11,7 @@ details on how to use or style individual components, see the
 If you haven't already, make sure you've followed the
 [setup guide](setup.md); it explains how to get the gulp-based
 static asset generator up and running. It will watch for changes to
-front-end code and re-build bundles as needed.
+front end code and re-build bundles as needed.
 
 All the static assets (SASS for CSS and ES6 JavaScript) are 
 located in the [frontend/source/](../frontend/source/) directory. Outputs
@@ -27,10 +27,10 @@ If you just want to build the assets once without watching for changes, run:
 npm run gulp -- build
 ```
 
-## Developing the front-end
+## Developing the front end
 
 Different parts of CALC are constructed in different ways, so
-developing the front-end depends on which part you want to change.
+developing the front end depends on which part you want to change.
 
 ### Data explorer
 
