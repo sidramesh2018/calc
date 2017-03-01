@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime  # noqa (needed for doctest)
 from django import template
 from django.utils.formats import date_format, time_format
 from pytz import timezone
