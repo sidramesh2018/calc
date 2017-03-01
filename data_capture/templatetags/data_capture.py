@@ -17,8 +17,8 @@ def tz_timestamp(value, tz_name="US/Eastern"):
     '''
     try:
         tz = timezone(tz_name)
-        timestamp = value.astimezone(tz)
-        return f"{date_format(timestamp)} at {time_format(timestamp)} ({timestamp.tzname()})"
+        ts = value.astimezone(tz)
+        return f"{date_format(ts)} at {time_format(ts)} ({ts.tzname()})"
     except (AttributeError, ValueError):
         # just return the original value
         return value
