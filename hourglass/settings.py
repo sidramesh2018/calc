@@ -367,3 +367,8 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
     'data_capture.panels.ScheduledJobsPanel',
 ]
+
+if DEBUG:
+    INSTALLED_APPS += (
+        'django.contrib.admindocs',
+    )

@@ -40,7 +40,9 @@ tests_url = url(r'^tests/$', TemplateView.as_view(template_name='tests.html'),
 if settings.DEBUG:
     import debug_toolbar
 
-    urlpatterns += [
+    urlpatterns = [
+        url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    ] + urlpatterns + [
         url(r'^__debug__/', include(debug_toolbar.urls)),
         tests_url,
     ]
