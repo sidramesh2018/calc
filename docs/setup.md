@@ -87,20 +87,6 @@ static assets:
 npm run gulp
 ```
 
-<!-- TODO: The rest of this section should eventually be moved to -->
-<!-- a separate front-end guide. See #1360. -->
-
-All the static assets (SASS for CSS and ES6 JavaScript) are 
-located in the [frontend/source/](../frontend/source/) directory. Outputs
-from the gulp build are placed in `frontend/static/frontend/built/`.
-Examine [gulpfile.js](../gulpfile.js) for details of our gulp asset pipeline.
-
-If you just want to build the assets once without watching for changes, run:
-
-```sh
-npm run gulp -- build
-```
-
 ### Starting the task runner
 
 Also, in yet another terminal, you will want to run
