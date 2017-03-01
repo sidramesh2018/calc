@@ -95,9 +95,7 @@ class App extends React.Component {
         <section className="search">
           <div className="container">
             <p className="help-text">
-              Enter your search terms below, separated by commas.
-              {' '}
-              (For example: Engineer, Consultant)
+              Enter your search terms below. (For example: Engineer, Consultant)
             </p>
             <div className="row">
               <div className="twelve columns">

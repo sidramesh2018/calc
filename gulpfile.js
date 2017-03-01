@@ -74,7 +74,6 @@ const bundles = {
       'vendor/canvg.js',
       'vendor/canvas-toBlob.js',
       'vendor/FileSaver.js',
-      'vendor/jquery.auto-complete.min.js',
     ],
   },
   // CALC 2.0 Data Capture scripts

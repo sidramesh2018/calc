@@ -10,27 +10,39 @@ import {
 } from '../util';
 
 // TODO: MAX_QUERY_LENGTH anywhere?
-// TODO: Close/clear suggestions after select item
+// TODO: Close/clear suggestions dropdown after select item
+// TODO: initial query is cleared once new items are added
 
 let autoCompReq = null; // TODO: better place to put this?
+
+function queryToValues(query) {
+  if (!query || query.trim().length === 0) {
+    return null;
+  }
+
+  return query.split(',')
+    .map(q => ({ name: q.trim() }))
+    .filter(q => q.name.length !== 0); // TODO: maybe deserialization should do this
+}
 
 export class LaborCategory extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: this.props.query };
+
+    this.state = { value: queryToValues(this.props.query) };
     autobind(this, ['handleChange', 'loadOptions']);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.query !== this.props.query) {
-      this.setState({ value: nextProps.query });
+      this.setState({ value: queryToValues(nextProps.query) });
     }
   }
 
   handleChange(value) {
     this.setState({ value });
 
-    const query = value.map(v => v.name).join(',');
+    const query = value.map(v => v.name).join(', ');
     this.props.setQuery(query);
   }
 
