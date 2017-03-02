@@ -12,7 +12,7 @@ import {
   SCHEDULE_LABELS,
 } from '../constants';
 
-import { formatCommas, stripTrailingComma } from '../util';
+import { formatCommas } from '../util';
 
 export function Description({
   shownResults,
@@ -32,7 +32,7 @@ export function Description({
   if (laborCategory) {
     filters.push(
       <DescriptionFilter key="lab">
-        {stripTrailingComma(laborCategory)}
+        {laborCategory}
       </DescriptionFilter>,
     );
   }

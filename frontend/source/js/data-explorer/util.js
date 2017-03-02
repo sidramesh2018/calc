@@ -2,6 +2,7 @@
 
 import classNames from 'classnames';
 import { format } from 'd3-format';
+import { csvFormatRows, csvParseRows } from 'd3-dsv';
 
 export const formatCommas = format(',');
 export const formatPrice = format(',.0f');
@@ -95,4 +96,25 @@ export function getLastCommaSeparatedTerm(term) {
 export function stripTrailingComma(str) {
   // Removes trailing comma and whitespace from given string
   return str.replace(/,\s*$/, '');
+}
+
+export function queryStringToValuesArray(query) {
+  if (!query || query.trim().length === 0) {
+    return null;
+  }
+  const values = csvParseRows(query)[0]
+    .map(s => ({ name: s.trim() }))
+    .filter(v => v.name.length !== 0);
+
+  return values.length ? values : null;
+}
+
+export function valuesArrayToQueryString(values) {
+  if (!values) {
+    return '';
+  }
+  const names = values
+    .map(v => v.name)
+    .filter(n => !!n);
+  return csvFormatRows([names]);
 }

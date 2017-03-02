@@ -7,43 +7,34 @@ import { setQuery } from '../actions';
 import {
   autobind,
   filterActive,
+  queryStringToValuesArray,
+  valuesArrayToQueryString,
 } from '../util';
 
 // TODO: MAX_QUERY_LENGTH anywhere?
 // TODO: Close/clear suggestions dropdown after select item
+// TODO: Clear suggestions on close
 // TODO: initial query is cleared once new items are added
-
-let autoCompReq = null; // TODO: better place to put this?
-
-function queryToValues(query) {
-  if (!query || query.trim().length === 0) {
-    return null;
-  }
-
-  return query.split(',')
-    .map(q => ({ name: q.trim() }))
-    .filter(q => q.name.length !== 0); // TODO: maybe deserialization should do this
-}
+// TODO: display of query in <Description> needs some work due to improved
+//       handling of terms with commas in them (ref #1459)
 
 export class LaborCategory extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { value: queryToValues(this.props.query) };
+    this.state = { value: queryStringToValuesArray(this.props.query) };
     autobind(this, ['handleChange', 'loadOptions']);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.query !== this.props.query) {
-      this.setState({ value: queryToValues(nextProps.query) });
+      this.setState({ value: queryStringToValuesArray(nextProps.query) });
     }
   }
 
-  handleChange(value) {
-    this.setState({ value });
-
-    const query = value.map(v => v.name).join(', ');
-    this.props.setQuery(query);
+  handleChange(values) {
+    this.setState({ value: values });
+    this.props.setQuery(valuesArrayToQueryString(values));
   }
 
   loadOptions(input, callback) {
@@ -52,15 +43,15 @@ export class LaborCategory extends React.Component {
       return;
     }
 
-    if (autoCompReq) { autoCompReq.abort(); }
-    autoCompReq = this.props.api.get({
+    if (this._autoCompReq) { this._autoCompReq.abort(); }
+    this._autoCompReq = this.props.api.get({
       uri: 'search/',
       data: {
         q: input,
         query_type: this.props.queryType,
       },
     }, (error, result) => {
-      autoCompReq = null;
+      this._autoCompReq = null;
       if (error) {
         return callback(null, { options: [] });
       }
@@ -89,6 +80,7 @@ export class LaborCategory extends React.Component {
           onChange={this.handleChange}
           valueKey="name"
           labelKey="name"
+          promptTextCreator={label => `Search for "${label}"`}
           loadOptions={this.loadOptions}
         />
 
