@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { AsyncCreatable } from 'react-select';
+import { Creatable } from 'react-select';
 
 import { setQuery } from '../actions';
 
@@ -12,18 +12,25 @@ import {
 } from '../util';
 
 // TODO: MAX_QUERY_LENGTH anywhere?
-// TODO: Close/clear suggestions dropdown after select item
-// TODO: Clear suggestions on close
 // TODO: initial query is cleared once new items are added
-// TODO: display of query in <Description> needs some work due to improved
-//       handling of terms with commas in them (ref #1459)
+// TODO: highlight suggestion items in dropdown
+// TODO: remove loading-indicator
+// TODO: fix api/views.py to use csv-style parsing
+// TODO: take out arrow
 
 export class LaborCategory extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { value: queryStringToValuesArray(this.props.query) };
-    autobind(this, ['handleChange', 'loadOptions']);
+    this.state = {
+      value: queryStringToValuesArray(this.props.query),
+      isLoading: false,
+      options: [],
+    };
+    autobind(this, [
+      'handleChange', 'loadOptions', 'handleInputChange',
+      'clearOptionsAndStopLoading',
+    ]);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,18 +39,33 @@ export class LaborCategory extends React.Component {
     }
   }
 
+  clearOptionsAndStopLoading() {
+    this.setState({ options: [], isLoading: false });
+    if (this._autoCompReq) { this._autoCompReq.abort(); }
+  }
+
   handleChange(values) {
-    this.setState({ value: values });
+    this.setState({ value: values, options: [] });
     this.props.setQuery(valuesArrayToQueryString(values));
   }
 
-  loadOptions(input, callback) {
+  handleInputChange(val) {
+    if (val.length >= 3) {
+      this.loadOptions(val);
+    } else {
+      this.clearOptionsAndStopLoading();
+    }
+  }
+
+  loadOptions(input) {
     if (!input) {
-      callback(null, { options: [] });
+      this.setState({ options: [], isLoading: false });
       return;
     }
 
     if (this._autoCompReq) { this._autoCompReq.abort(); }
+
+    this.setState({ isLoading: true });
     this._autoCompReq = this.props.api.get({
       uri: 'search/',
       data: {
@@ -53,14 +75,15 @@ export class LaborCategory extends React.Component {
     }, (error, result) => {
       this._autoCompReq = null;
       if (error) {
-        return callback(null, { options: [] });
+        this.setState({ options: [], isLoading: false });
+        return;
       }
 
       const categories = result.slice(0, 20).map(d => ({
         name: d.labor_category,
         count: d.count,
       }));
-      return callback(null, { options: categories });
+      this.setState({ options: categories, isLoading: false });
     });
   }
 
@@ -70,7 +93,7 @@ export class LaborCategory extends React.Component {
 
     return (
       <div>
-        <AsyncCreatable
+        <Creatable
           id={id}
           name="q"
           placeholder="Type a labor category"
@@ -78,10 +101,13 @@ export class LaborCategory extends React.Component {
           multi
           value={this.state.value}
           onChange={this.handleChange}
+          onInputChange={this.handleInputChange}
           valueKey="name"
           labelKey="name"
           promptTextCreator={label => `Search for "${label}"`}
-          loadOptions={this.loadOptions}
+          noResultsText="No matches found"
+          options={this.state.options}
+          isLoading={this.state.isLoading}
         />
 
         <label htmlFor={id} className="sr-only">Type a labor category</label>
