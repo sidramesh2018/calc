@@ -25,32 +25,6 @@ nav li:first-child {
     clear: both;
 }
 
-.autocomplete-suggestions {
-  position: absolute;
-  display: none;
-  z-index: 9999;
-  overflow: hidden;
-  background: $color-white;
-  max-height: 29.4rem;
-  overflow: hidden;
-  overflow-y: auto;
-  border: 1px solid $color-gray-lighter;
-}
-
-.autocomplete-suggestion {
-  position: relative;
-  padding: .25em .5em;
-  &.selected {
-    color: $color-white;
-    background: $color-primary-alt;
-  }
-  .count {
-    position: absolute;
-    right: .5em;
-    text-align: right;
-  }
-}
-
 .loading {
   .has-data {
     opacity: .2;
