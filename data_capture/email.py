@@ -230,16 +230,21 @@ def price_list_rejected(template, price_list):
             'submitter': {'email': 'example_admin@example.com'},
             'created_at': timezone.now(),
         },
+        'r10_upload_link': 'https://example.com/r10_bulk_upload',
         'num_contracts': 50123,
         'num_bad_rows': 25,
     }
 )
 def bulk_upload_succeeded(template, upload_source, num_contracts,
                           num_bad_rows):
+    r10_upload_link = absolute_reverse(
+        'data_capture:bulk_region_10_step_1')
+
     ctx = {
         'upload_source': upload_source,
         'num_contracts': num_contracts,
         'num_bad_rows': num_bad_rows,
+        'r10_upload_link': r10_upload_link,
     }
 
     result = send_mail(

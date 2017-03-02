@@ -1,20 +1,22 @@
 {% extends "email/base.html" %}
+{% load email_utils %}
 {% load humanize %}
 {% load data_capture %}
 
 {% block content %}
+<h1>
+  The data you uploaded has been added to CALC!
+</h1>
 <p>
-  We're emailing regarding the Region 10 CALC data upload <b>#{{ upload_source.id }}</b>, uploaded by <b>{{ upload_source.submitter.email }}</b> on <b>{{ upload_source.created_at|tz_timestamp }}</b>.
+  The Region 10 data file you uploaded to CALC on {{ upload_source.created_at|tz_timestamp }} has been added to <a href="{{ r10_upload_link }}">CALC</a>.
 </p>
 <p>
-  The upload was <b>successful</b> and the associated data are now live in CALC!
-</p>
-<p>
-  {{ num_contracts|intcomma }} rows of rate information have been loaded and previous Region 10 data has been removed from the CALC database.
+  <b>{{ num_contracts|intcomma }} rows</b> of pricing information have been loaded and previous Region 10 data has been removed from the CALC database.
 </p>
 {% if num_bad_rows %}
-<p>
-  {{ num_bad_rows|intcomma }} were not parsed and could not be loaded.
-</p>
+  <p>
+    <b>{{ num_bad_rows|intcomma }} rows</b> had parsing errors and could not be loaded.
+  </p>
 {% endif %}
+{% cta url=r10_upload_link action_text="Visit CALC now" %}
 {% endblock %}
