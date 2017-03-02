@@ -1,6 +1,8 @@
 import re
+from functools import wraps
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.utils.html import strip_tags
+from django.utils import timezone
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.template.defaultfilters import pluralize
@@ -93,7 +95,52 @@ def send_mail(subject, to, template, ctx, reply_to=None):
     return msg.send()
 
 
-def price_list_approved(price_list):
+EXAMPLES = []
+
+
+def email_sender(template, example_ctx):
+    '''
+    Decorator for any function that sends an email. Takes a template
+    name and an example context to pass to it; this information will
+    be added to EXAMPLES, which can then be used to render example
+    emails for debugging/development.
+
+    The given template name will be passed on to the decorated function
+    as its first argument.
+    '''
+
+    def wrap(func):
+        name = func.__name__.replace('_', ' ')
+
+        EXAMPLES.append({
+            'subject': f'Example {name}',
+            'template': template,
+            'ctx': example_ctx,
+        })
+
+        @wraps(func)
+        def wrapped(*args, **kwargs):
+            return func(template, *args, **kwargs)
+
+        wrapped.example_ctx = example_ctx
+
+        return wrapped
+    return wrap
+
+
+@email_sender(
+    template='data_capture/email/price_list_approved.html',
+    example_ctx={
+        'price_list': {
+            'created_at': timezone.now(),
+            'contract_number': 'GS-12-Example',
+            'get_schedule_title': 'Fake Schedule',
+            'vendor_name': 'Example Vendor, Inc.',
+        },
+        'details_link': 'https://example.com/price-list/details',
+    }
+)
+def price_list_approved(template, price_list):
     details_link = absolute_reverse('data_capture:price_list_details',
                                     kwargs={'id': price_list.pk})
 
@@ -107,7 +154,7 @@ def price_list_approved(price_list):
 
     result = send_mail(
         subject='CALC Price List Approved',
-        template='data_capture/email/price_list_approved.html',
+        template=template,
         ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[price_list.submitter.email],
@@ -118,7 +165,11 @@ def price_list_approved(price_list):
     )
 
 
-def price_list_retired(price_list):
+@email_sender(
+    template='data_capture/email/price_list_retired.html',
+    example_ctx=price_list_approved.example_ctx
+)
+def price_list_retired(template, price_list):
     details_link = absolute_reverse('data_capture:price_list_details',
                                     kwargs={'id': price_list.pk})
 
@@ -132,7 +183,7 @@ def price_list_retired(price_list):
 
     result = send_mail(
         subject='CALC Price List Retired',
-        template='data_capture/email/price_list_retired.html',
+        template=template,
         ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[price_list.submitter.email],
@@ -143,7 +194,11 @@ def price_list_retired(price_list):
     )
 
 
-def price_list_rejected(price_list):
+@email_sender(
+    template='data_capture/email/price_list_rejected.html',
+    example_ctx=price_list_approved.example_ctx
+)
+def price_list_rejected(template, price_list):
     details_link = absolute_reverse('data_capture:price_list_details',
                                     kwargs={'id': price_list.pk})
 
@@ -154,7 +209,7 @@ def price_list_rejected(price_list):
 
     result = send_mail(
         subject='CALC Price List Rejected',
-        template='data_capture/email/price_list_rejected.html',
+        template=template,
         ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[price_list.submitter.email]
@@ -167,7 +222,21 @@ def price_list_rejected(price_list):
     )
 
 
-def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
+@email_sender(
+    template='data_capture/email/bulk_upload_succeeded.html',
+    example_ctx={
+        'upload_source': {
+            'id': 2,
+            'submitter': {'email': 'example_admin@example.com'},
+            'created_at': timezone.now(),
+        },
+        'r10_upload_link': 'https://example.com/r10_bulk_upload',
+        'num_contracts': 50123,
+        'num_bad_rows': 25,
+    }
+)
+def bulk_upload_succeeded(template, upload_source, num_contracts,
+                          num_bad_rows):
     r10_upload_link = absolute_reverse(
         'data_capture:bulk_region_10_step_1')
 
@@ -181,7 +250,7 @@ def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
     result = send_mail(
         subject='CALC Region 10 bulk data results - upload #{}'.format(
             upload_source.id),
-        template='data_capture/email/bulk_upload_succeeded.html',
+        template=template,
         ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[upload_source.submitter.email],
@@ -192,7 +261,14 @@ def bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows):
     )
 
 
-def bulk_upload_failed(upload_source, traceback):
+@email_sender(
+    template='data_capture/email/bulk_upload_failed.html',
+    example_ctx={**bulk_upload_succeeded.example_ctx, **{
+        'r10_upload_link': 'https://example.com/r10_bulk_upload',
+        'traceback': 'error traceback'
+    }}
+)
+def bulk_upload_failed(template, upload_source, traceback):
     r10_upload_link = absolute_reverse(
         'data_capture:bulk_region_10_step_1')
 
@@ -206,7 +282,7 @@ def bulk_upload_failed(upload_source, traceback):
         subject='CALC Region 10 bulk data results - upload #{}'.format(
             upload_source.id
         ),
-        template='data_capture/email/bulk_upload_failed.html',
+        template=template,
         ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=[upload_source.submitter.email],
@@ -217,7 +293,13 @@ def bulk_upload_failed(upload_source, traceback):
     )
 
 
-def approval_reminder(count_unreviewed):
+@email_sender(
+    template='data_capture/email/approval_reminder.html',
+    example_ctx={
+        'unreviewed_url': 'https://example.com/unreviewed_price_lists',
+    }
+)
+def approval_reminder(template, count_unreviewed):
     unreviewed_url = absolute_reverse(
         'admin:data_capture_unreviewedpricelist_changelist')
 
@@ -231,7 +313,7 @@ def approval_reminder(count_unreviewed):
     result = send_mail(
         subject='CALC Reminder - {} price list{} not reviewed'.format(
             count_unreviewed, pluralize(count_unreviewed)),
-        template='data_capture/email/approval_reminder.html',
+        template=template,
         ctx=ctx,
         reply_to=[settings.HELP_EMAIL],
         to=recipients,

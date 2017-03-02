@@ -68,7 +68,7 @@
   <p>
     We use an {% webcomponent '<upload-widget>' %} with a nested
     {% webcomponent '<input is="upload-input">' %} to progressively enhance
-    the front-end. However, using them is rarely needed in practice, as
+    the front end. However, using them is rarely needed in practice, as
     {% pyobjname 'frontend.upload.UploadWidget' %} contains the Django
     widget for rendering all the required HTML.
   </p>
@@ -584,6 +584,12 @@
   </p>
 
   <p>
+    The base template used to render emails is at
+    {% template_link 'email/base.html' %}, while common template tags are
+    in the {% template_tag_library 'email_utils' %} template tag library.
+  </p>
+
+  <p>
     Examples of each email type that can be sent from CALC are listed
     below.
   </p>
@@ -594,7 +600,8 @@
       {{ example.subject }}
       <br>
       <a href="{{ example.plaintext_url }}">Plain text</a> |
-       <a href="{{ example.html_url }}">HTML</a>
+       <a href="{{ example.html_url }}">HTML</a> |
+       <a href="{% template_url example.template %}">Template source</a>
     </li>
     {% endfor %}
   </ul>

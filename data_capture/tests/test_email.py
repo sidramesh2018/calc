@@ -15,12 +15,6 @@ from .test_models import ModelTestCase
 @freeze_time(datetime(2017, 1, 8, 20, 51, 0))
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE],
 
-                   # Ugh, this is required for the cg-django-uaa to not
-                   # complain when running this test suite standalone.
-                   AUTHENTICATION_BACKENDS=(
-                       'uaa_client.authentication.UaaBackend',
-                   ),
-
                    # This ensures absolute URLs produced by our code
                    # are https-based.
                    SECURE_SSL_REDIRECT=True,
