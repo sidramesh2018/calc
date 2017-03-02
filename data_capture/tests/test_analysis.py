@@ -18,6 +18,7 @@ from ..analysis.core import (
 from ..analysis.vocabulary import (
     Vocabulary,
     get_best_permutations,
+    broaden_query,
 )
 from ..analysis.export import AnalysisExport, COMPARABLES_NOT_FOUND
 
@@ -27,13 +28,13 @@ class BaseDbTestCase(DjangoTestCase):
     def setUpTestData(cls):
         cls.contract = get_contract_recipe()
         cls.contract.make(
-            labor_category="Engineer of Doom II",
+            labor_category="Engineer of Doom ZZ",
             min_years_experience=5,
             education_level="BA",
             current_price=90
         )
         cls.contract.make(
-            labor_category="Engineer II",
+            labor_category="Engineer ZZ",
             min_years_experience=5,
             education_level="BA",
             current_price=100
@@ -44,7 +45,7 @@ class BaseDbTestCase(DjangoTestCase):
 
 class BaseDescribeTestCase(BaseDbTestCase):
     ROW_WITH_COMPARABLES = dict(
-        labor_category='Engineer of Doom II',
+        labor_category='Engineer of Doom ZZ',
         min_years_experience=5,
         education_level='BA',
         severe_stddevs=1,
@@ -79,17 +80,17 @@ class DescribeTests(BaseDescribeTestCase):
             'most_common_edu_levels': ['BA'],
             'preposition': 'way below',
             'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
-            'labor_category': 'Engineer of Doom II',
+            'labor_category': 'Engineer of Doom ZZ',
             'severe': True,
             'stddev': 1,
             'stddevs': 1,
-            'url': '/?q=Engineer+of+Doom+II&min_experience=5'
+            'url': '/?q=Engineer+of+Doom+ZZ&min_experience=5'
                    '&max_experience=9&education=BA'
         })
 
     def test_it_does_not_explode_when_stddev_is_zero(self):
         result = self.describe(
-            labor_category='Engineer of Doom II',
+            labor_category='Engineer of Doom ZZ',
             min_years_experience=5,
             education_level='BA',
             severe_stddevs=1,
@@ -103,11 +104,11 @@ class DescribeTests(BaseDescribeTestCase):
             'count': 1,
             'most_common_edu_levels': ['BA'],
             'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
-            'labor_category': 'Engineer of Doom II',
+            'labor_category': 'Engineer of Doom ZZ',
             'severe': False,
             'stddev': 1,
             'stddevs': 0,
-            'url': '/?q=Engineer+of+Doom+II&min_experience=5'
+            'url': '/?q=Engineer+of+Doom+ZZ&min_experience=5'
                    '&max_experience=9&education=BA',
         })
 
@@ -180,7 +181,7 @@ class ExportTests(BaseDescribeTestCase):
         _, row = next(AnalysisExport([
             self.row_with_comparables]).to_output_rows())
         self.assertEqual(row.comparables, 2)
-        self.assertEqual(row.search_labor_category, 'Engineer of Doom II')
+        self.assertEqual(row.search_labor_category, 'Engineer of Doom ZZ')
         self.assertEqual(row.exp_comparable_search_criteria, '5-9 years')
         self.assertEqual(row.edu_comparable_search_criteria, 'BA')
         self.assertEqual(row.avg_exp, 5.0)
@@ -211,6 +212,20 @@ class GetMostCommonEduLevelsTests(DjangoTestCase):
         )
 
 
+class BroadenQueryTests(BaseDbTestCase):
+    def broaden(self, query, min_count=1):
+        return broaden_query(
+            self.cursor,
+            self.vocab,
+            query,
+            cache={},
+            min_count=min_count,
+        )
+
+    def test_first_yields_query_without_stop_words(self):
+        self.assertEqual(next(self.broaden('clerical II')), 'clerical')
+
+
 class FindComparableContractsTests(BaseDbTestCase):
     def find_comparable_contracts(self, *args, **kwargs):
         return find_comparable_contracts(
@@ -222,45 +237,45 @@ class FindComparableContractsTests(BaseDbTestCase):
 
     def test_broadening_experience_works(self):
         fc = self.find_comparable_contracts(
-            labor_category='Engineer of Doom II',
+            labor_category='Engineer of Doom ZZ',
             min_years_experience=0,
             education_level='BA',
             min_count=1,
         )
-        self.assertEqual(fc.phrase, 'Engineer of Doom II')
+        self.assertEqual(fc.phrase, 'Engineer of Doom ZZ')
         self.assertEqual(fc.count, 1)
         self.assertEqual(fc.finder.__class__, GteEduAndExpFinder)
 
     def test_broadening_education_works(self):
         fc = self.find_comparable_contracts(
-            labor_category='Engineer of Doom II',
+            labor_category='Engineer of Doom ZZ',
             min_years_experience=5,
             education_level='AA',
             min_count=1,
         )
-        self.assertEqual(fc.phrase, 'Engineer of Doom II')
+        self.assertEqual(fc.phrase, 'Engineer of Doom ZZ')
         self.assertEqual(fc.count, 1)
         self.assertEqual(fc.finder.__class__, GteEduAndExpFinder)
 
     def test_exact_match_searches_work(self):
         fc = self.find_comparable_contracts(
-            labor_category='Engineer of Doom II',
+            labor_category='Engineer of Doom ZZ',
             min_years_experience=5,
             education_level='BA',
             min_count=1,
         )
-        self.assertEqual(fc.phrase, 'Engineer of Doom II')
+        self.assertEqual(fc.phrase, 'Engineer of Doom ZZ')
         self.assertEqual(fc.count, 1)
         self.assertEqual(fc.finder.__class__, ExactEduAndExpFinder)
 
     def test_broadening_labor_category_works(self):
         fc = self.find_comparable_contracts(
-            labor_category='Engineer of Doom II',
+            labor_category='Engineer of Doom ZZ',
             min_years_experience=5,
             education_level='BA',
             min_count=2,
         )
-        self.assertEqual(fc.phrase, 'Engineer II')
+        self.assertEqual(fc.phrase, 'Engineer ZZ')
         self.assertEqual(fc.count, 2)
         self.assertEqual(fc.finder.__class__, ExactEduAndExpFinder)
 
@@ -291,12 +306,12 @@ class GetBestPermutationsTests(TestCase):
     def test_min_length_works(self):
         vocab = Vocabulary.from_list([
             'engineer',
-            'engineer ii',
+            'engineer zz',
         ])
 
         self.assertEqual(
-            get_best_permutations(vocab, ['engineer', 'ii'], min_length=3),
-            [('engineer', 'ii'),
+            get_best_permutations(vocab, ['engineer', 'zz'], min_length=3),
+            [('engineer', 'zz'),
              ('engineer',)],
         )
 
@@ -317,11 +332,11 @@ class GetBestPermutationsTests(TestCase):
     def test_it_works(self):
         vocab = Vocabulary.from_list([
             'junior engineer',
-            'engineer ii',
-            'administrative assistant ii',
-            'administrative assistant ii',
+            'engineer zz',
+            'administrative assistant zz',
+            'administrative assistant zz',
             'senior engineer',
-            'project manager ii',
+            'project manager zz',
         ])
         self.assertEqual(
             get_best_permutations(vocab, ['junior', 'administrative',
