@@ -3,7 +3,7 @@ from datetime import datetime
 
 from model_mommy import mommy
 from django.utils import timezone
-from django.test import override_settings
+from django.test import override_settings, TestCase
 from freezegun import freeze_time
 
 from ..models import SubmittedPriceList
@@ -62,6 +62,12 @@ class PriceListStepTestCase(StepTestCase):
     def login(self, **kwargs):
         kwargs['permissions'] = [PRICE_LIST_UPLOAD_PERMISSION]
         return super().login(**kwargs)
+
+
+class TutorialTests(TestCase):
+    def test_get_is_ok(self):
+        res = self.client.get('/data-capture/tutorial')
+        self.assertEqual(res.status_code, 200)
 
 
 class Step1Tests(PriceListStepTestCase):

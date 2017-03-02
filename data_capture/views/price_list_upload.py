@@ -68,6 +68,12 @@ def clear_gleaned_data_if_different_schedule(request):
         del sess[SESSION_KEY]['gleaned_data']
 
 
+def tutorial(request):
+    return render(request, 'data_capture/tutorial.html', {
+        'current_selected_tab': 'upload_price_data',
+    })
+
+
 @steps.step(label='Basic information')
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
