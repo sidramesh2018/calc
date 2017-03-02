@@ -12,7 +12,6 @@ const defaultProps = {
   site: 'both',
   businessSize: 's',
   schedule: 'IT Schedule 70',
-  laborCategory: 'Systems Analyst',
 };
 
 const setup = makeSetup(Description, defaultProps);

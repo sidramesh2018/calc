@@ -23,19 +23,10 @@ export function Description({
   site,
   businessSize,
   schedule,
-  laborCategory,
 }) {
   let results = ' results ';
   const filtersClasses = ['filters'];
   const filters = [];
-
-  if (laborCategory) {
-    filters.push(
-      <DescriptionFilter key="lab">
-        {laborCategory}
-      </DescriptionFilter>,
-    );
-  }
 
   if (education.length) {
     filters.push(
@@ -82,7 +73,7 @@ export function Description({
   }
 
   if (filters.length) {
-    results += 'with ';
+    results += 'with filters: ';
   } else {
     filtersClasses.push('hidden');
   }
@@ -112,7 +103,6 @@ Description.propTypes = {
   site: React.PropTypes.string.isRequired,
   businessSize: React.PropTypes.string.isRequired,
   schedule: React.PropTypes.string.isRequired,
-  laborCategory: React.PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -125,7 +115,6 @@ function mapStateToProps(state) {
     site: state.site,
     businessSize: state.business_size,
     schedule: state.schedule,
-    laborCategory: state.q,
   };
 }
 
