@@ -1,14 +1,93 @@
-[information about this page]
-{% if user.is_authenticated %}
-[price list upload step 1]
-{% endif %}
 {% extends 'data_capture/step.html' %}
 {% load frontend %}
+{% load staticfiles %}
 {% block subtitle %}Upload price list{% endblock %}
 {% block page_heading %}
 Add awarded price data to CALC
 {% endblock %}
 {% block step_heading %}
+
+<p>
+  Now <b>contracting officers</b> and other acquisition professionals can add price lists directly to CALC. And it only takes about a minute.
+</p>
+
+<div class="form-button-row align-center submit-group">
+    <button href="{% url 'uaa_client:login' %}" class="button-primary">Log in to add price lists</button>
+</div>
+
+<h1>How to add price data to CALC</h1>
+<h3>First, find a recent price list on your computer that you want to submit</h3>
+<p>
+  It should look something like this…
+</p>
+{% if upload_example %}
+  <div>
+    {{ upload_example }}
+  </div>
+{% endif %}
+
+<h3>Next, log in to CALC</h3>
+<p>
+  To log in, click the login button at the bottom of the CALC homepage or visit https://calc.gsa.gov/auth/login. You'll be taken to Cloud.gov and asked to enter your GSA login credentials
+</p>
+<p>
+  <img src="{% static 'frontend/images/tutorial/callout_footer-login.png' %}">
+</p>
+<p>
+  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" width="20px">
+</p>
+<p>
+  <img src="{% static 'frontend/images/tutorial/logo_cloud-gov.svg' %}" width="200px">
+</p>
+
+<h4>Once logged in, click "Add price data"</h4>
+<p>
+  After you log in, you should see an option to "Add price data" in the navigation. Click it to begin.
+</p>
+<img src="{% static 'frontend/images/tutorial/callout_tab-add-data.png' %}">
+<p>
+
+<h3>Then, upload your price list</h3>
+<p>
+  You will be asked for very basic details around the contract (e.g. contract number, schedule name, business size, etc..) When you have filled that out, simply upload your contract to CALC.
+</p>
+<p>
+  <img src="{% static 'frontend/images/tutorial/callout_step-1.png' %}">
+</p>
+<p>
+  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" width="20px">
+</p>
+<p>
+  <img src="{% static 'frontend/images/tutorial/callout_step-2.png' %}">
+</p>
+<p>
+  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" width="20px">
+</p>
+<p>
+  <img src="{% static 'frontend/images/tutorial/callout_step-3.png' %}">
+</p>
+<p>
+  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" width="20px">
+</p>
+<p>
+  <img src="{% static 'frontend/images/tutorial/callout_step-4.png' %}">
+</p>
+<p>
+  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" width="20px">
+</p>
+<p>
+  <img src="{% static 'frontend/images/tutorial/callout_success.png' %}">
+</p>
+
+<h3>You're done! It's that easy.</h3>
+<p>
+  You should receive an e-mail when your price list has been approved. If you have any questions or suggestions, please reach out to us at calc@gsa.gov.
+</p>
+
+<div class="form-button-row align-center submit-group">
+    <button href="{% url 'uaa_client:login' %}" class="button-primary">Log in to try it</button>
+</div>
+
 <p>
   Start here to add finalized price list data to CALC.
   Your price lists help make CALC a more robust tool, and sharing them is easy.
