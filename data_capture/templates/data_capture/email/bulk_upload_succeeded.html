@@ -13,5 +13,10 @@
 <p>
   <b>{{ num_contracts|intcomma }} rows</b> of pricing information have been loaded and previous Region 10 data has been removed from the CALC database.
 </p>
+{% if num_bad_rows %}
+  <p>
+    <b>{{ num_bad_rows|intcomma }} rows</b> had parsing errors and could not be loaded.
+  </p>
+{% endif %}
 {% cta url=r10_upload_link action_text="Visit CALC now" %}
 {% endblock %}
