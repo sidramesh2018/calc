@@ -2,6 +2,8 @@ import math
 from collections import namedtuple
 from urllib.parse import urlencode
 
+from django.conf import settings
+from django.utils.module_loading import import_string
 from django.utils import timezone
 from django.db import connection, transaction
 from django.db.models import Avg, StdDev, Count
@@ -9,7 +11,6 @@ from django.template.loader import render_to_string
 
 from contracts.models import Contract
 from ..models import SubmittedPriceList
-from .finders import ExactEduAndExpFinder, GteEduAndExpFinder
 from .vocabulary import Vocabulary, broaden_query
 
 
@@ -55,10 +56,14 @@ def find_comparable_contracts(cursor, vocab, labor_category,
     if cache is None:
         cache = {}
 
-    finders = [
-        ExactEduAndExpFinder(min_years_experience, education_level),
-        GteEduAndExpFinder(min_years_experience, education_level),
-    ]
+    finders = []
+
+    for classname in settings.PRICE_LIST_ANALYSIS_FINDERS:
+        cls = import_string(classname)
+        finders.append(cls(
+            min_years_experience=min_years_experience,
+            education_level=education_level
+        ))
 
     for phrase in broaden_query(cursor, vocab, labor_category, cache,
                                 min_count):

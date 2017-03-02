@@ -361,3 +361,7 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
     'data_capture.panels.ScheduledJobsPanel',
 ]
+
+PRICE_LIST_ANALYSIS_FINDERS = [
+    'data_capture.analysis.finders.GteEduAndExpFinder',
+]
