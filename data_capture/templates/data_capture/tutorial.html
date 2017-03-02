@@ -3,10 +3,30 @@
 {% load staticfiles %}
 
 {% block body %}
+<style>
+.tutorial .arrow {
+  background-image: url({% static 'frontend/images/arrow-triangle.svg' %});
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 20px;
+  width: 20px;
+  margin: 32px auto;
+}
+
+.tutorial p.img-wrapper {
+  text-align: center;
+}
+
+h3:not(:first-child) {
+  /* TODO: We should use our SASS variables for this. */
+  padding-top: 48px;
+}
+</style>
+
   <div class="container card--narrow">
     <div class="row">
       <div class="card">
-        <div class="card__content">
+        <div class="card__content tutorial">
 
 <h1>How to add price data to CALC</h1>
 <p>
@@ -23,73 +43,60 @@
   </a>
 </div>
 
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__content tutorial">
+
 <h3>First, find a recent price list on your computer that you want to submit</h3>
 <p>
   It should look something like this…
 </p>
-{% if upload_example %}
-  <div>
-    {{ upload_example }}
-  </div>
-{% endif %}
+<p>
+  TODO: Add upload example here.
+</p>
 
 <h3>Next, log in to CALC</h3>
 <p>
   To log in, click the login button at the bottom of the CALC homepage or visit https://calc.gsa.gov/auth/login. You'll be taken to Cloud.gov and asked to enter your GSA login credentials
 </p>
-<p>
+<p class="img-wrapper">
   <img src="{% static 'frontend/images/tutorial/callout_footer-login.png' %}">
 </p>
-<p>
-  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" width="20px">
-</p>
-<p>
-  <img src="{% static 'frontend/images/tutorial/logo_cloud-gov.svg' %}" width="200px">
+<div class="arrow"></div>
+<p class="img-wrapper">
+  <img src="{% static 'frontend/images/tutorial/logo_cloud-gov.svg' %}" width="220px">
 </p>
 
-<h4>Once logged in, click "Add price data"</h4>
+<h3>Once logged in, click "Add price data"</h3>
 <p>
   After you log in, you should see an option to "Add price data" in the navigation. Click it to begin.
 </p>
+<p class="img-wrapper">
 <img src="{% static 'frontend/images/tutorial/callout_tab-add-data.png' %}">
-<p>
+</p>
 
 <h3>Then, upload your price list</h3>
 <p>
   You will be asked for very basic details around the contract (e.g. contract number, schedule name, business size, etc..) When you have filled that out, simply upload your contract to CALC.
 </p>
-<style>
-img.arrow {
-  background-image: url({% static 'frontend/images/arrow-triangle.svg' %});
-  height: 200px;
-  width: 200px;
-}
-</style>
-<p>
+<p class="img-wrapper">
   <img src="{% static 'frontend/images/tutorial/callout_step-1.png' %}">
 </p>
-<p>
-  <div class="arrow"></div>
-</p>
-<p>
+<div class="arrow"></div>
+<p class="img-wrapper">
   <img src="{% static 'frontend/images/tutorial/callout_step-2.png' %}">
 </p>
-<p>
-  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" class="arrow">
-</p>
-<p>
+<div class="arrow"></div>
+<p class="img-wrapper">
   <img src="{% static 'frontend/images/tutorial/callout_step-3.png' %}">
 </p>
-<p>
-  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" class="arrow">
-</p>
-<p>
+<div class="arrow"></div>
+<p class="img-wrapper">
   <img src="{% static 'frontend/images/tutorial/callout_step-4.png' %}">
 </p>
-<p>
-  <img src="{% static 'frontend/images/arrow-triangle.svg' %}" width="20px">
-</p>
-<p>
+<div class="arrow"></div>
+<p class="img-wrapper">
   <img src="{% static 'frontend/images/tutorial/callout_success.png' %}">
 </p>
 
