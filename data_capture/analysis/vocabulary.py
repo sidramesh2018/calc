@@ -1,5 +1,6 @@
 from itertools import chain, combinations
 from functools import cmp_to_key
+from collections import OrderedDict
 
 try:
     import nltk
@@ -14,6 +15,48 @@ from contracts.models import Contract
 # Minimum number of times a word must appear across all contract labor
 # categories for it to be added to the vocabulary.
 DEFAULT_MIN_NDOC = 4
+
+
+# List of words that are, for all intents and purposes, "stop words"
+# with respect to price list analysis. Any alphabetic characters should
+# be lowercase.
+ANALYSIS_STOP_WORDS = []
+
+
+# http://stackoverflow.com/a/28777781
+def write_roman(num):
+    roman = OrderedDict()
+    roman[1000] = "M"
+    roman[900] = "CM"
+    roman[500] = "D"
+    roman[400] = "CD"
+    roman[100] = "C"
+    roman[90] = "XC"
+    roman[50] = "L"
+    roman[40] = "XL"
+    roman[10] = "X"
+    roman[9] = "IX"
+    roman[5] = "V"
+    roman[4] = "IV"
+    roman[1] = "I"
+
+    def roman_num(num):
+        for r in roman.keys():
+            x, y = divmod(num, r)
+            yield roman[r] * x
+            num -= (r * x)
+            if num > 0:
+                roman_num(num)
+            else:
+                break
+
+    return "".join([a for a in roman_num(num)])
+
+
+for i in range(1, 10):
+    ANALYSIS_STOP_WORDS.append(write_roman(i).lower())
+    ANALYSIS_STOP_WORDS.append(str(i))
+del i
 
 
 # https://docs.python.org/3/library/itertools.html#itertools-recipes
@@ -177,7 +220,10 @@ def broaden_query(cursor, vocab, query, cache, min_count):
     first.
     '''
 
-    orig_words = query.split()
+    orig_words = [
+        word for word in query.split()
+        if word.lower() not in ANALYSIS_STOP_WORDS
+    ]
     orig_word_ordering = dict(zip(orig_words, range(len(orig_words))))
     orig_lexemes = get_lexemes(cursor, orig_words, cache)
     word_map = dict(zip(orig_lexemes, orig_words))
@@ -187,7 +233,7 @@ def broaden_query(cursor, vocab, query, cache, min_count):
     # Always yield the query verbatim. This way if the POS mapper thinks
     # the query has no nouns in it, e.g. "Clerical I", at least we still do
     # at least one search for it.
-    yield query
+    yield ' '.join(orig_words)
 
     for lexemes in get_best_permutations(vocab, lexemes_in_vocab, min_count):
         words = sorted(

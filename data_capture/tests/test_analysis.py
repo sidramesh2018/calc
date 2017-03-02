@@ -18,6 +18,7 @@ from ..analysis.core import (
 from ..analysis.vocabulary import (
     Vocabulary,
     get_best_permutations,
+    broaden_query,
 )
 from ..analysis.export import AnalysisExport, COMPARABLES_NOT_FOUND
 
@@ -209,6 +210,20 @@ class GetMostCommonEduLevelsTests(DjangoTestCase):
             get_most_common_edu_levels(Contract.objects.all()),
             ['BA', 'AA']
         )
+
+
+class BroadenQueryTests(BaseDbTestCase):
+    def broaden(self, query, min_count=1):
+        return broaden_query(
+            self.cursor,
+            self.vocab,
+            query,
+            cache={},
+            min_count=min_count,
+        )
+
+    def test_first_yields_query_without_stop_words(self):
+        self.assertEqual(next(self.broaden('clerical II')), 'clerical')
 
 
 class FindComparableContractsTests(BaseDbTestCase):
