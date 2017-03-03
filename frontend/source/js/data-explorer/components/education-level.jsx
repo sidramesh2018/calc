@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import SlideyPanel from './slidey-panel';
 import EducationLevelItem from './education-level-item';
 
 import {
@@ -90,7 +91,6 @@ export class EducationLevel extends React.Component {
   render() {
     const levels = this.props.levels;
     const idPrefix = this.props.idPrefix;
-    const ddStyle = this.state.expanded ? { display: 'block' } : null;
     const inputs = Object.keys(EDU_LABELS).map((value) => {
       const id = idPrefix + value;
       return (
@@ -119,6 +119,7 @@ export class EducationLevel extends React.Component {
     }
 
     const eduLevelId = `${this.props.idPrefix}education_level`;
+
     return (
       <div>
         <label htmlFor={eduLevelId}>Education level:</label>
@@ -143,9 +144,13 @@ export class EducationLevel extends React.Component {
             <div className="multiSelect">
               <fieldset>
                 <legend className="sr-only">Education level:</legend>
-                <ul style={ddStyle}>
+
+                <SlideyPanel
+                  component="ul"
+                  expanded={this.state.expanded}
+                >
                   {inputs}
-                </ul>
+                </SlideyPanel>
               </fieldset>
             </div>
           </dd>
