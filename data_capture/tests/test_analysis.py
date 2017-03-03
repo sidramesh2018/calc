@@ -1,5 +1,5 @@
 from unittest import TestCase
-from django.test import TestCase as DjangoTestCase
+from django.test import TestCase as DjangoTestCase, override_settings
 from django.db import connection
 
 from contracts.mommy_recipes import get_contract_recipe
@@ -23,6 +23,10 @@ from ..analysis.vocabulary import (
 from ..analysis.export import AnalysisExport, COMPARABLES_NOT_FOUND
 
 
+@override_settings(PRICE_LIST_ANALYSIS_FINDERS=[
+    'data_capture.analysis.finders.ExactEduAndExpFinder',
+    'data_capture.analysis.finders.GteEduAndExpFinder',
+])
 class BaseDbTestCase(DjangoTestCase):
     @classmethod
     def setUpTestData(cls):

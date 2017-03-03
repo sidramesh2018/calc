@@ -14,6 +14,11 @@ class ContractFinder(metaclass=abc.ABCMeta):
     a certain criteria.
     '''
 
+    def __init__(self, min_years_experience: int,
+                 education_level: str) -> None:
+        self.min_years_experience = min_years_experience
+        self.education_level = education_level
+
     @abc.abstractmethod
     def filter_queryset(self, qs: QuerySet) -> QuerySet:
         '''
@@ -52,19 +57,7 @@ class ContractFinder(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
 
-class BaseEduAndExpFinder(ContractFinder):
-    '''
-    Abstract base class for finders that match based on minimum
-    years of experience and education level.
-    '''
-
-    def __init__(self, min_years_experience: int,
-                 education_level: str) -> None:
-        self.min_years_experience = min_years_experience
-        self.education_level = education_level
-
-
-class ExactEduAndExpFinder(BaseEduAndExpFinder):
+class ExactEduAndExpFinder(ContractFinder):
     '''
     Finds contracts that are exactly equal to a given
     education level, and around a given experience level.
@@ -100,7 +93,7 @@ class ExactEduAndExpFinder(BaseEduAndExpFinder):
         return self.education_level
 
 
-class GteEduAndExpFinder(BaseEduAndExpFinder):
+class GteEduAndExpFinder(ContractFinder):
     '''
     Finds contracts that are greater than or equal to a given
     minimum experience and education level.
