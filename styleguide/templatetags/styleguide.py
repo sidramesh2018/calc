@@ -18,6 +18,10 @@ MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
 ROOT_DIR = os.path.normpath(os.path.join(MY_DIR, '..', '..'))
 
+SCSS_DIR = 'frontend/source/sass'
+
+JS_DIR = 'frontend/source/js'
+
 register = template.Library()
 
 
@@ -140,6 +144,38 @@ def template_link(context, template_name):
 
     url = template_url(context, template_name)
     return SafeString(f'<code><a href="{url}">{template_name}</a></code>')
+
+
+@register.simple_tag
+def scss(path):
+    '''
+    Link to a .scss (SASS) file relative to the base SASS directory.
+    '''
+
+    abspath = os.path.join(ROOT_DIR, SCSS_DIR, path)
+
+    if not os.path.exists(abspath):
+        raise ValueError(f'{abspath} does not exist')
+
+    url = github_url_for_path(os.path.join(SCSS_DIR, path))
+
+    return SafeString(f'<code><a href="{url}">{path}</a></code>')
+
+
+@register.simple_tag
+def js(path):
+    '''
+    Link to a JavaScript file relative to the base JS directory.
+    '''
+
+    abspath = os.path.join(ROOT_DIR, JS_DIR, path)
+
+    if not os.path.exists(abspath):
+        raise ValueError(f'{abspath} does not exist')
+
+    url = github_url_for_path(os.path.join(JS_DIR, path))
+
+    return SafeString(f'<code><a href="{url}">{path}</a></code>')
 
 
 @register.simple_tag
