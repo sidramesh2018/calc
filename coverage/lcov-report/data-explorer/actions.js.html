@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for data-explorer/actions.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">All files</a> / <a href="index.html">data-explorer</a> actions.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">55.88% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>19/34</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">11.76% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">55.88% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>19/34</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94</td><td class="line-coverage quiet"><span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const EXCLUDE_ROW = 'EXCLUDE_ROW';
+export const EXCLUDE_NONE = 'EXCLUDE_NONE';
+export const SET_STATE = 'SET_STATE';
+export const RESET_STATE = 'RESET_STATE';
+export const START_RATES_REQUEST = 'START_RATES_REQUEST';
+export const COMPLETE_RATES_REQUEST = 'COMPLETE_RATES_REQUEST';
+export const INVALIDATE_RATES = 'INVALIDATE_RATES';
+export const SET_SORT = 'SET_SORT';
+export const SET_PROPOSED_PRICE = 'SET_PROPOSED_PRICE';
+export const SET_EXPERIENCE = 'SET_EXPERIENCE';
+export const TOGGLE_EDU_LEVEL = 'TOGGLE_EDU_LEVEL';
+export const SET_SCHEDULE = 'SET_SCHEDULE';
+export const SET_CONTRACT_YEAR = 'SET_CONTRACT_YEAR';
+export const SET_QUERY_TYPE = 'SET_QUERY_TYPE';
+export const SET_SITE = 'SET_SITE';
+export const SET_BUSINESS_SIZE = 'SET_BUSINESS_SIZE';
+export const SET_QUERY = 'SET_QUERY';
+&nbsp;
+export function excludeRow(rowId) {
+  return { type: EXCLUDE_ROW, rowId };
+}
+&nbsp;
+export function excludeNone() {
+  return { type: EXCLUDE_NONE };
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setState(</span>value) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_STATE, value };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >resetState(</span>) {
+<span class="cstat-no" title="statement not covered" >  return { type: RESET_STATE };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >startRatesRequest(</span>) {
+<span class="cstat-no" title="statement not covered" >  return { type: START_RATES_REQUEST };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >completeRatesRequest(</span>error, data) {
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    type: COMPLETE_RATES_REQUEST,
+    error,
+    data,
+  };
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >invalidateRates(</span>) {
+<span class="cstat-no" title="statement not covered" >  return { type: INVALIDATE_RATES };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setSort(</span>{ key, descending }) {
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    type: SET_SORT,
+    key,
+    descending,
+  };
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setProposedPrice(</span>price) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_PROPOSED_PRICE, price };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setExperience(</span>subtype, years) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_EXPERIENCE, subtype, years };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >toggleEducationLevel(</span>level) {
+<span class="cstat-no" title="statement not covered" >  return { type: TOGGLE_EDU_LEVEL, level };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setSchedule(</span>schedule) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_SCHEDULE, schedule };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setContractYear(</span>year) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_CONTRACT_YEAR, year };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setQueryType(</span>queryType) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_QUERY_TYPE, queryType };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setSite(</span>site) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_SITE, site };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setBusinessSize(</span>size) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_BUSINESS_SIZE, size };</span>
+}
+&nbsp;
+export function <span class="fstat-no" title="function not covered" >setQuery(</span>query) {
+<span class="cstat-no" title="statement not covered" >  return { type: SET_QUERY, query };</span>
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Feb 28 2017 21:17:12 GMT+0000 (UTC)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

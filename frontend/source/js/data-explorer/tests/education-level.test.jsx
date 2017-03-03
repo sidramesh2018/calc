@@ -60,10 +60,9 @@ describe('<EducationLevel>', () => {
     const e = {
       preventDefault: jest.fn()
     }
-    wrapper.state().expanded = false;
+    console.log(wrapper.state().expanded);
     expect(wrapper.state().expanded).toBeFalsy();
     wrapper.find('a').simulate('click', e);
     expect(wrapper.state().expanded).toBeTruthy();
   });
-
 });
