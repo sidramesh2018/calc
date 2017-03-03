@@ -18,7 +18,7 @@ before_install:
 - node --version
 install:
 - pip install -r requirements-dev.txt
-- npm install -g gulp-cli yarn
+- npm install -g gulp-cli yarn@0.21.3
 - yarn
 script:
 - phantomjs --version
