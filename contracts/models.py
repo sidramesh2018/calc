@@ -21,6 +21,23 @@ MAX_ESCALATION_RATE = 99
 NUM_CONTRACT_YEARS = 5
 
 
+def cash(val):
+    '''
+    Converts the given value, which may be a floating-point number,
+    to a Decimal that represents a monetary value.
+
+    Examples:
+
+        >>> cash(1.0 / 3)
+        Decimal('0.33')
+
+        >>> cash(350)
+        Decimal('350.00')
+    '''
+
+    return Decimal(val).quantize(Decimal('.01'))
+
+
 def convert_to_tsquery(query):
     """
     Converts multi-word phrases into AND boolean queries for postgresql.
@@ -242,6 +259,40 @@ class Contract(models.Model):
         search_field='search_index',
         auto_update_search_field=True
     )
+
+    def clean_fields(self, exclude=None):
+        '''
+        It's possible that our cash-related fields have been set to
+        float values that don't convert nicely to Decimal values with
+        a reasonable number of digits in the cents part.
+
+        This will trip Django 1.9's max_digits validators, so we'll
+        ensure that our values don't have an excessive number of cents
+        digits.
+        '''
+
+        if exclude is None:
+            exclude = []
+
+        CASH_FIELDS = [
+            'hourly_rate_year1',
+            'hourly_rate_year2',
+            'hourly_rate_year3',
+            'hourly_rate_year4',
+            'hourly_rate_year5',
+            'current_price',
+            'next_year_price',
+            'second_year_price',
+        ]
+
+        for field in CASH_FIELDS:
+            if field in exclude:
+                continue
+            val = getattr(self, field)
+            if val is not None:
+                setattr(self, field, cash(val))
+
+        super().clean_fields(exclude)
 
     def get_readable_business_size(self):
         if 's' in self.business_size.lower():
