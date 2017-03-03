@@ -85,6 +85,11 @@ main {
   margin-top: 0;
 }
 
+.card .card__content:first-child h3:first-child {
+  // Duped the above code to remove margin from h3 as well, when used as a card header (e.g. on tutorial.html) First header on a card has too much space.
+  margin-top: 0;
+}
+
 /* Also a "body class." Used in conjunction with the above. */
 .card--no-header {
   .card:first-child {

@@ -36,7 +36,7 @@ ol.steps {
   padding: 0;
   list-style-type: none;
   list-style-position: inside;
-  margin-top: 2rem;
+  // margin-top: 2rem;
 
   &:after {
     content: " ";
@@ -56,7 +56,7 @@ ol.steps {
       content: counter(li);
       counter-increment: li;
       width: 2.2rem;
-      height: 2.2rem;
+      // height: 2.2rem;
       padding: 0;
       position: absolute;
       top: -12px;
