@@ -77,7 +77,7 @@ class CurrentContractManager(SearchManager):
     def bulk_update_normalized_labor_categories(self):
         '''
         Iterate through all Contract models and update their
-        normalized labor categories.
+        normalized labor categories if necessary.
 
         This method does not trigger any pre/post save signals or
         call Contract.save().
