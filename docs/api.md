@@ -12,21 +12,21 @@ want to use `https://api.data.gov/gsa/calc/`.
 
 [apikey]: https://api.data.gov/signup/
 
-## Access from CALC front-end code
+## Access from CALC front end code
 
 In production, CALC's public API is actually fronted by
 an [API Umbrella][] instance on api.data.gov which proxies all
 API requests to CALC. This allows CALC to not have to concern itself
 with details like API keys and rate limiting.
 
-However, this means that front-end code can't simply make requests
+However, this means that front end code can't simply make requests
 against `/api/`, as the documentation below might imply.
-Instead, a global called `API_HOST` is available to all front-end
+Instead, a global called `API_HOST` is available to all front end
 JS code on every CALC page. When developing locally, it will be
 set to `/api/`, but on CALC's development, staging, and
 production deployments it will be an absolute URL.
 
-Thus, all API requests made from front-end CALC code should use
+Thus, all API requests made from front end CALC code should use
 `API_HOST` as the base URL for all API requests.
 
 [API Umbrella]: https://apiumbrella.io/

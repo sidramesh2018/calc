@@ -1,5 +1,6 @@
 import os
 from unittest import TestCase
+import json
 import yaml
 
 
@@ -34,7 +35,8 @@ class Version:
 
 class PythonVersionTests(TestCase):
     '''
-    Ensure all our configuration files specify the same Python version.
+    Ensure all our configuration files, documentation, etc. specify the
+    same Python version.
     '''
 
     version = Version('3.6.0')
@@ -53,3 +55,26 @@ class PythonVersionTests(TestCase):
         with open(path('.travis.yml')) as f:
             data = yaml.safe_load(f)
             self.assertEqual(data['python'], [float(self.version)])
+
+    def test_docs_setup_md(self):
+        with open(path('docs', 'setup.md')) as f:
+            self.assertIn(f'Python {self.version}', f.read())
+
+
+class NodeVersionTests(TestCase):
+    '''
+    Ensure all our configuration files, documentation, etc. specify
+    the same Node version.
+    '''
+
+    version = Version('6.0')
+
+    def test_package_json(self):
+        with open(path('package.json')) as f:
+            package = json.load(f)
+            min_version = package['engines']['node'].split()[0]
+            self.assertEqual(min_version, f'>={self.version}')
+
+    def test_docs_setup_md(self):
+        with open(path('docs', 'setup.md')) as f:
+            self.assertIn(f'Node {self.version}', f.read())

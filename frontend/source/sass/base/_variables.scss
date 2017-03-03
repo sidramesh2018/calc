@@ -28,11 +28,12 @@ $color-gray-lighter:         #d6d7d9; // lighten($color-gray-dark, 80%)
 $color-gray-lightest:        #f1f1f1; // lighten($color-gray-dark, 91%)
 
 $color-gold:                 #fdb81e;
-$color-gold-lightest:        #fff1d2; //  lighten($color-gold, 83%)
+$color-gold-darkest:         #825C1E;
+$color-gold-lightest:        #FBEEBE;
 
-$color-green:                #2e8540;
+$color-green:                #61701C;
 $color-green-light:          $color-green; // for wds compat
-$color-green-lightest:       #e7f4e4; // lighten($color-green, 60%)
+$color-green-lightest:       #E6EDC2;
 
 $color-focus:                $color-primary-alt;
 $color-visited:              #4c2c92;

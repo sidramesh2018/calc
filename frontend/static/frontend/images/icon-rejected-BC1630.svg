@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>icon / status / rejected</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="status-/-rejected" transform="translate(-10.000000, -8.000000)" fill="#BC1630">
+            <g id="icon-/-status-/-rejected" transform="translate(10.000000, 8.000000)">
+                <path d="M6.5,13 C10.0898509,13 13,10.0898509 13,6.5 C13,2.91014913 10.0898509,0 6.5,0 C2.91014913,0 0,2.91014913 0,6.5 C0,10.0898509 2.91014913,13 6.5,13 Z M8.49235042,3.44698941 L3.44484416,8.49449567 C3.15195094,8.78738889 3.15195094,9.26226262 3.44484416,9.55515584 C3.73773738,9.84804906 4.21261111,9.84804906 4.50550433,9.55515584 L9.55301059,4.50764958 C9.84590381,4.21475636 9.84590381,3.73988262 9.55301059,3.44698941 C9.26011738,3.15409619 8.78524364,3.15409619 8.49235042,3.44698941 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

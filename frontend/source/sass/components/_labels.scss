@@ -1,0 +1,57 @@
+@import '../base/variables';
+
+.label {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  font-size: $small-font-size;
+  font-weight: normal;
+  padding: $space-1x;
+  text-transform: uppercase;
+  border-radius: 4px;
+  background-color: $color-gray-lightest;
+  color: $color-gray;
+  &:before {
+    content: "";
+    width: 15px;
+    height: $small-font-size;
+  }
+  &.label--pending {
+    background-color: $color-gold-lightest;
+    color: $color-gold-darkest;
+    &:before {
+      background-image: url('../../images/icon-pending-825C1E.svg');
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-size: $small-font-size;
+    }
+  }
+  &.label--approved {
+    background-color: $color-green-lightest;
+    color: $color-green;
+    &:before {
+      background-image: url('../../images/icon-approved-61701C.svg');
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-size: $small-font-size;
+    }
+  }
+  &.label--rejected,
+  &.label--retired {
+    background-color: $color-secondary-lightest;
+    color: $color-secondary-dark;
+    &:before {
+      background-image: url('../../images/icon-rejected-BC1630.svg');
+      background-repeat: no-repeat;
+      background-position: left center;
+      background-size: $small-font-size;
+    }
+  }
+}
+
+// h2 rule used on price list status pages
+// other rules could be useful on other pages
+h1 + .label,
+h2 + .label {
+  margin-left: $space-2x;
+}

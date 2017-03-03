@@ -4,7 +4,8 @@ from django.shortcuts import render
 from frontend.upload import UploadWidget
 from frontend.steps import StepsWidget
 from data_capture.schedules.s70 import Schedule70PriceList
-from . import ajaxform_example, date_example, radio_checkbox_example
+from . import (ajaxform_example, date_example, radio_checkbox_example,
+               email_examples)
 
 
 def get_degraded_upload_widget():
@@ -63,5 +64,6 @@ def index(request):
     ctx.update(ajaxform_example.create_template_context())
     ctx.update(date_example.create_template_context())
     ctx.update(radio_checkbox_example.create_template_context())
+    ctx['email_examples'] = email_examples.examples
 
     return render(request, 'styleguide.html', ctx)

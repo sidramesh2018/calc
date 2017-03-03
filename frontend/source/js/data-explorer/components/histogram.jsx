@@ -43,7 +43,7 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
   fill: #5b616b;
 }
 
-.axis .label {
+.axis .chart-label {
   fill: #5b616b;
   font-style: italic;
 }
@@ -132,7 +132,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('class', 'range-rule');
     const stdDevLabels = stdDev.append('g')
       .attr('class', 'range-labels')
-      .selectAll('g.label')
+      .selectAll('g.chart-label')
       .data([
         { type: 'min', anchor: 'end', label: '-1 stddev' },
         { type: 'max', anchor: 'start', label: '+1 stddev' },
@@ -140,7 +140,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .enter()
       .append('g')
         .attr('transform', 'translate(0,0)')
-        .attr('class', d => `label ${d.type}`);
+        .attr('class', d => `chart-label ${d.type}`);
     stdDevLabels.append('line')
       .attr('class', 'label-rule')
       .attr({
@@ -301,23 +301,23 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   stdDev.select('line.range-rule')
     .attr('x2', stdDevWidth);
 
-  stdDev.select('.label.min .stddev-text')
+  stdDev.select('.chart-label.min .stddev-text')
     .text(formatDollars(stdDevMin))
     .attr({ x: 0, dy: 0 });
 
-  stdDev.select('.label.min .stddev-text-label')
+  stdDev.select('.chart-label.min .stddev-text-label')
     .text('-1 std dev')
     .attr({ x: -8, dy: '15px' });
 
-  stdDev.select('.label.max')
+  stdDev.select('.chart-label.max')
     .attr('transform', `translate(${[stdDevWidth, 0]})`);
 
-  stdDev.select('.label.max .stddev-text-label')
+  stdDev.select('.chart-label.max .stddev-text-label')
     .text('+1 std dev')
     .attr({ x: 8, dy: '15px' });
 
 
-  stdDev.select('.label.max .stddev-text')
+  stdDev.select('.chart-label.max .stddev-text')
     .text(formatDollars(stdDevMax));
 
   const trunc = (num) => {
@@ -370,10 +370,10 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
         .attr('transform', 'rotate(-35)');
 
   // remove existing labels
-  svg.selectAll('text.label').remove();
+  svg.selectAll('text.chart-label').remove();
 
   xAxis.append('text')
-    .attr('class', 'label')
+    .attr('class', 'chart-label')
     .attr('transform', `translate(${[left + ((right - left) / 2), 45]})`)
     .attr('text-anchor', 'middle')
     .text('Ceiling price (hourly rate)');
@@ -390,7 +390,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     .attr('transform', `translate(${[left - 2, 0]})`);
 
   yAxis.append('text')
-    .attr('class', 'label')
+    .attr('class', 'chart-label')
     .attr('transform', `translate(${[-25, (height / 2) + 25]}) rotate(-90)`)
     .attr('text-anchor', 'middle')
     .text('# of results');

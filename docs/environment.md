@@ -1,4 +1,4 @@
-## Environment Variables
+## Environment variables
 
 Unlike traditional Django settings, we use environment variables
 for configuration to be compliant with [twelve-factor][] apps.
@@ -26,7 +26,8 @@ string), the boolean is true; otherwise, it's false.
   value when `DEBUG` is true.
 
 * `DATABASE_URL` is the URL for the database, as per the
-  [DJ-Database-URL schema][].
+  [DJ-Database-URL schema][]. Note that the protocol *must* be
+  `postgres:`.
 
 * `EMAIL_URL` is the URL for the service to use when sending
   email, as per the [dj-email-url schema][]. When `DEBUG` is true,
@@ -80,7 +81,7 @@ string), the boolean is true; otherwise, it's false.
   API hosted by CALC. It defaults to `/api/` but may need to be changed
   if the API has a proxy in front of it, as it likely will be if deployed
   on government infrastructure. For more information, see
-  [Deploying to Cloud Foundry](deploy.md).
+  the [API documentation](api.md).
 
 * `SECURITY_HEADERS_ON_ERROR_ONLY` is a boolean value that indicates whether
   security-related response headers (such as `X-XSS-Protection`)
@@ -94,7 +95,8 @@ string), the boolean is true; otherwise, it's false.
 
 * `NON_PROD_INSTANCE_NAME` is an optional instance name that when specified
   will cause a banner to be shown at the top of every page to let users know
-  that they are viewing a non-production instance of CALC.
+  that they are viewing a non-production instance of CALC. This value
+  can contain HTML, so it's possible to e.g. wrap the value in a hyperlink.
 
 * `NEW_RELIC_LICENSE_KEY` is the private New Relic license key for this project.
   If it is present, then the WSGI app will be wrapped with the  New Relic agent.

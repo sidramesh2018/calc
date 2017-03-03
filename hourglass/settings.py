@@ -34,12 +34,18 @@ DEBUG = 'DEBUG' in os.environ
 
 HIDE_DEBUG_UI = 'HIDE_DEBUG_UI' in os.environ
 
+if is_running_tests():
+    HIDE_DEBUG_UI = True
+
 if DEBUG:
     os.environ.setdefault(
         'SECRET_KEY',
         'I am an insecure secret key intended ONLY for dev/testing.'
     )
-    os.environ.setdefault('EMAIL_URL', 'console:')
+    os.environ.setdefault(
+        'EMAIL_URL',
+        os.environ.get('DEFAULT_DEBUG_EMAIL_URL', 'console:')
+    )
     if 'REDIS_URL' not in os.environ:
         # Only set a default REDIS_TEST_URL if REDIS_URL is not
         # explicitly defined either.
@@ -66,7 +72,7 @@ API_HOST = os.environ.get('API_HOST', '/api/')
 
 GA_TRACKING_ID = os.environ.get('GA_TRACKING_ID', '')
 
-NON_PROD_INSTANCE_NAME = os.environ.get('NON_PROD_INSTANCE_NAME')
+NON_PROD_INSTANCE_NAME = os.environ.get('NON_PROD_INSTANCE_NAME', '')
 
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -76,6 +82,7 @@ TEMPLATES = [{
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
+            'hourglass.context_processors.canonical_url',
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
             'hourglass.context_processors.google_analytics_tracking_id',
@@ -116,6 +123,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.humanize',
+    'django.contrib.sites',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
@@ -134,6 +142,8 @@ INSTALLED_APPS = (
     'meta',
     'frontend',
 )  # type: Tuple[str, ...]
+
+SITE_ID = 1
 
 if DEBUG:
     STATICFILES_STORAGE = 'frontend.crotchety.CrotchetyStaticFilesStorage'
@@ -342,7 +352,6 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 DEBUG_TOOLBAR_PANELS = [
-    'data_capture.panels.DocsPanel',
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.profiling.ProfilingPanel',
     'debug_toolbar.panels.timer.TimerPanel',
