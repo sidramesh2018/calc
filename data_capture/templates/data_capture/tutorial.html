@@ -23,96 +23,65 @@ h3:not(:first-child) {
 }
 </style>
 
-  <div class="container card--narrow">
-    <div class="row">
-      <div class="card">
-        <div class="card__content tutorial">
+<div class="container card--narrow">
+  <div class="row">
+    <div class="card">
+      <div class="card__content tutorial">
 
-<h1>How to add price data to CALC</h1>
-<p>
-  Now <b>contracting officers</b> and other acquisition professionals can add price lists directly to CALC. And it only takes about a minute.
-</p>
+        <h1>How to add price data to CALC</h1>
+        <p>
+          Now <b>contracting officers</b> and other acquisition professionals can add price lists directly to CALC. And it only takes about a minute.
+        </p>
 
-<div class="form-button-row align-center submit-group">
-  <a href="{% url 'data_capture:step_1' %}" class="button button-primary">
-    {% if user.is_authenticated %}
-      Add price lists
-    {% else %}
-      Log in to add price lists
-    {% endif %}
-  </a>
-</div>
-
+        <div class="form-button-row align-center submit-group">
+          <a href="{% url 'data_capture:step_1' %}" class="button button-primary">
+            {% if user.is_authenticated %}
+              Add price lists
+            {% else %}
+              Log in to add price lists
+            {% endif %}
+          </a>
         </div>
-      </div>
-      <div class="card">
-        <div class="card__content tutorial">
 
-<h3>First, find a recent price list on your computer that you want to submit</h3>
+      </div> <!-- Ends card_content tutorial div -->
+    </div> <!-- Ends card div -->
+    <div class="card">
+      <div class="card__content tutorial">
+        <h3>First, find a recent price list on your computer that you want to submit</h3>
+        {{ upload_example_info }}
+        <h3>Next, log in to CALC</h3>
+        <p>To log in, click the login button at the bottom of the CALC homepage or visit https://calc.gsa.gov/auth/login. You'll be taken to Cloud.gov and asked to enter your GSA login credentials</p>
+        <p class="img-wrapper"> <img src="{% static 'frontend/images/tutorial/callout_footer-login.png' %}"> </p>
+        <div class="arrow"> </div>
+        <p class="img-wrapper"> <img src="{% static 'frontend/images/tutorial/logo_cloud-gov.svg' %}" width="220px"></p>
+        <h3>Once logged in, click "Add price data"</h3>
+        <p>After you log in, you should see an option to "Add price data" in the navigation. Click it to begin.</p>
+        <p class="img-wrapper"> <img src="{% static 'frontend/images/tutorial/callout_tab-add-data.png' %}"></p>
+        <h3>Then, upload your price list</h3>
+        <p>You will be asked for very basic details around the contract (e.g. contract number, schedule name, business size, etc..) When you have filled that out, simply upload your contract to CALC.</p>
+        <p class="img-wrapper"> <img src="{% static 'frontend/images/tutorial/callout_step-1.png' %}"></p>
+        <div class="arrow"></div>
+        <p class="img-wrapper"> <img src="{% static 'frontend/images/tutorial/callout_step-2.png' %}"></p>
+        <div class="arrow"></div>
+        <p class="img-wrapper"> <img src="{% static 'frontend/images/tutorial/callout_step-3.png' %}"></p>
+        <div class="arrow"></div>
+        <p class="img-wrapper"><img src="{% static 'frontend/images/tutorial/callout_step-4.png' %}"></p>
+        <div class="arrow"></div>
+        <p class="img-wrapper"><img src="{% static 'frontend/images/tutorial/callout_success.png' %}"></p>
+        <h3>You're done! It's that easy.</h3>
+        <p>You should receive an e-mail when your price list has been approved. If you have any questions or suggestions, please reach out to us at calc@gsa.gov.</p>
 
-{{ upload_example_info }}
-
-<h3>Next, log in to CALC</h3>
-<p>
-  To log in, click the login button at the bottom of the CALC homepage or visit https://calc.gsa.gov/auth/login. You'll be taken to Cloud.gov and asked to enter your GSA login credentials
-</p>
-<p class="img-wrapper">
-  <img src="{% static 'frontend/images/tutorial/callout_footer-login.png' %}">
-</p>
-<div class="arrow"></div>
-<p class="img-wrapper">
-  <img src="{% static 'frontend/images/tutorial/logo_cloud-gov.svg' %}" width="220px">
-</p>
-
-<h3>Once logged in, click "Add price data"</h3>
-<p>
-  After you log in, you should see an option to "Add price data" in the navigation. Click it to begin.
-</p>
-<p class="img-wrapper">
-<img src="{% static 'frontend/images/tutorial/callout_tab-add-data.png' %}">
-</p>
-
-<h3>Then, upload your price list</h3>
-<p>
-  You will be asked for very basic details around the contract (e.g. contract number, schedule name, business size, etc..) When you have filled that out, simply upload your contract to CALC.
-</p>
-<p class="img-wrapper">
-  <img src="{% static 'frontend/images/tutorial/callout_step-1.png' %}">
-</p>
-<div class="arrow"></div>
-<p class="img-wrapper">
-  <img src="{% static 'frontend/images/tutorial/callout_step-2.png' %}">
-</p>
-<div class="arrow"></div>
-<p class="img-wrapper">
-  <img src="{% static 'frontend/images/tutorial/callout_step-3.png' %}">
-</p>
-<div class="arrow"></div>
-<p class="img-wrapper">
-  <img src="{% static 'frontend/images/tutorial/callout_step-4.png' %}">
-</p>
-<div class="arrow"></div>
-<p class="img-wrapper">
-  <img src="{% static 'frontend/images/tutorial/callout_success.png' %}">
-</p>
-
-<h3>You're done! It's that easy.</h3>
-<p>
-  You should receive an e-mail when your price list has been approved. If you have any questions or suggestions, please reach out to us at calc@gsa.gov.
-</p>
-
-<div class="form-button-row align-center submit-group">
-  <a href="{% url 'data_capture:step_1' %}" class="button button-primary">
-    {% if user.is_authenticated %}
-      Try it
-    {% else %}
-      Log in to try it
-    {% endif %}
-  </a>
-</div>
-
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="form-button-row align-center submit-group">
+          <a href="{% url 'data_capture:step_1' %}" class="button button-primary">
+            {% if user.is_authenticated %}
+              Try it
+            {% else %}
+              Log in to try it
+            {% endif %}
+          </a>
+        </div> <!-- Ends form-button-row div -->
+      </div> <!-- Ends card_content tutorial div -->
+    </div> <!-- Ends card div -->
+  </div> <!-- Ends row div -->
+</div> <!-- Ends container cardnarrow div -->
 {% endblock %}
