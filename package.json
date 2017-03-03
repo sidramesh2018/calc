@@ -49,7 +49,7 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
-    "xhr": "^2.3.3"
+    "xhr": "^2.4.0"
   },
   "scripts": {
     "gulp": "gulp",
