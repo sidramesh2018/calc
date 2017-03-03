@@ -54,4 +54,16 @@ describe('<EducationLevel>', () => {
     expect(props.toggleEducationLevel.mock.calls.length).toBe(1);
     expect(props.toggleEducationLevel.mock.calls[0][0]).toBe('HS');
   });
+
+  it('fires handleToggleMenu when dropdown is clicked', () => {
+    const { wrapper } = setup();
+    const e = {
+      preventDefault: jest.fn()
+    }
+    wrapper.state().expanded = false;
+    expect(wrapper.state().expanded).toBeFalsy();
+    wrapper.find('a').simulate('click', e);
+    expect(wrapper.state().expanded).toBeTruthy();
+  });
+
 });
