@@ -27,7 +27,6 @@ ExportRow = namedtuple('ExportRow', [
     'plusone_stddev',
     'pct_diff_from_stddev',
     'sin',
-    'worksite',
     'exp_comparable_search_criteria',
     'edu_comparable_search_criteria',
     'is_outside_one_stddev',
@@ -50,7 +49,6 @@ class AnalysisExport:
         '+ 1 Standard Deviation',
         '% Diff from +1 Standard Deviation',
         'SIN',
-        'Site',
         'Exp Comparable Search Criteria',
         'Edu Comparable Search Criteria',
         'Outside 1 Standard Deviation',
@@ -86,7 +84,6 @@ class AnalysisExport:
                 valid_row['sin'],
                 '',
                 '',
-                '',
                 ''
             )
 
@@ -108,7 +105,6 @@ class AnalysisExport:
             proposed_price + analyzed_row['stddev'],
             pct_diff(proposed_price, analyzed_row['stddev']),
             valid_row['sin'],
-            '',  # TODO: Work site - not used in analysis
             criteria['exp'],
             criteria['edu'],
             outside_one_std_dev,
