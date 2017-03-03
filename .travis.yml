@@ -18,7 +18,7 @@ before_install:
 install:
 - pip install -r requirements-dev.txt
 - npm install -g gulp-cli yarn@0.21.3
-- yarn
+- yarn --pure-lockfile
 script:
 - phantomjs --version
 - python manage.py ultratest flake8 eslint mypy
