@@ -6,7 +6,7 @@ echo "----- Updating Python Dependencies -----"
 pip install -r requirements-dev.txt
 
 echo "----- Updating Node Dependencies -----"
-npm install
+yarn
 
 echo "----- Migrating Database -----"
 python manage.py migrate --noinput

@@ -18,8 +18,8 @@ before_install:
 - node --version
 install:
 - pip install -r requirements-dev.txt
-- npm install -g gulp-cli
-- npm install
+- npm install -g gulp-cli yarn
+- yarn
 script:
 - phantomjs --version
 - python manage.py ultratest flake8 eslint mypy

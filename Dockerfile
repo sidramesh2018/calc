@@ -21,6 +21,8 @@ RUN pip install virtualenv
 
 WORKDIR /calc
 
+RUN npm install -g yarn
+
 ENV PATH /calc/node_modules/.bin:$PATH
 ENV DDM_IS_RUNNING_IN_DOCKER yup
 
