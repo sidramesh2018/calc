@@ -21,7 +21,9 @@ exports[`<Experience> matches snapshot 1`] = `
         onChange={[Function]}
         value={5}>
         <option
-          value={0} />
+          value={0}>
+          0
+        </option>
         <option
           value={1}>
           1
