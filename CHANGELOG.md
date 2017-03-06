@@ -7,6 +7,25 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Added
+
+- When logged-in, the username in the upper right corner of the page has been
+  turned into a small dropdown menu (#1413).
+
+### Changed
+
+- System-generated emails have vastly improved styling (#1208).
+- The logic to parse the minimum experience values from
+  uploaded Schedule 70 price lists has been made more flexible by using the
+  first numeric value encountered.
+- The data explorer page now changes the page title based on the current search
+  term(s) (#1315).
+- Price list details pages have improved status indication styling (#980).
+- Styling of the error page of the price list upload process has been improved
+  (#1266).
+- The Rates API now handles quotation-delimited search terms, like
+  "engineer, senior" (#1459).
+
 ## [2.3.0][] - 2017-02-22
 
 ### Added
