@@ -64,6 +64,13 @@ You can search for multiple labor categories separated by a comma.
 http://localhost:8000/api/rates/?q=trainer,instructor
 ```
 
+If any of the labor categories you'd like included in your search has a comma,
+you can surround that labor category with quotation marks:
+
+```
+http://localhost:8000/api/rates/?q="engineer, senior",instructor
+```
+
 All of the query types are case-insenstive.
 
 #### Education and Experience Filters
