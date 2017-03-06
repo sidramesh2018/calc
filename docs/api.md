@@ -71,7 +71,7 @@ you can surround that labor category with quotation marks:
 http://localhost:8000/api/rates/?q="engineer, senior",instructor
 ```
 
-All of the query types are case-insenstive.
+All of the query types are case-insensitive.
 
 #### Education and Experience Filters
 ###### Experience
