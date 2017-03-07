@@ -10,14 +10,14 @@
  * easily share their searches with others.
  */
 
+import * as querystring from 'querystring';
+
 import {
   setState,
 } from './actions';
 
 import {
   autobind,
-  parseQuery,
-  joinQuery,
 } from './util';
 
 import {
@@ -46,7 +46,9 @@ export default class StoreHistorySynchronizer {
   }
 
   reflectToStore(store) {
-    const qsFields = parseQuery(this.window.location.search);
+    const qsFields = querystring.parse(
+      this.window.location.search.substring(1)); // substring after '?' char
+
     const state = store.getState();
     const changes = {};
 
@@ -85,9 +87,9 @@ export default class StoreHistorySynchronizer {
           allFields,
         );
 
-        const qs = joinQuery(nonDefaultFields);
+        const qs = querystring.stringify(nonDefaultFields);
 
-        this.window.history.pushState(null, null, qs);
+        this.window.history.pushState(null, null, `?${qs}`);
         this.onLocationChanged();
       }
 
