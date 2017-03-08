@@ -11,7 +11,6 @@ const path = require('path');
 
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const eyeglass = require('eyeglass');
 const cleancss = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
@@ -27,6 +26,7 @@ const watchify = require('watchify');
 const envify = require('envify/custom');
 const babelify = require('babelify');
 const del = require('del');
+const bourbonNeatPaths = require('bourbon-neat').includePaths;
 
 const BUILT_FRONTEND_DIR = 'frontend/static/frontend/built';
 
@@ -177,7 +177,9 @@ gulp.task('clean', () => {
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sourcemaps.init())
-    .pipe(sass(eyeglass()).on('error', sass.logError))
+    .pipe(sass({
+      includePaths: [bourbonNeatPaths, 'node_modules'],
+    }).on('error', sass.logError))
     .pipe(rename({ suffix: '.min' }))
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))

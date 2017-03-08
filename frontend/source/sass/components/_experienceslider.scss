@@ -1,9 +1,12 @@
 @import '../base/variables';
-@import '../libs/rc-slider';
+@import 'rc-slider/assets/index';
 
 .experience-slider {
-  margin-top: $space-half;
-  margin-bottom: $space-1x;
+  margin: $space-half $space-1x $space-1x $space-1x;
+
+  &.rc-slider {
+    width: auto;
+  }
 
   .rc-slider-track {
     background-color: $color-primary;
