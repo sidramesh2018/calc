@@ -7,7 +7,7 @@ exports[`<Experience> matches snapshot 1`] = `
     </legend>
     <ComponentEnhancer(Range)
       allowCross={false}
-      className=""
+      className="experience-slider"
       count={1}
       disabled={false}
       dots={false}
