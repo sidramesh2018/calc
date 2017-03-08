@@ -58,7 +58,6 @@ const bundles = {
   common: {
     noBrowserify: true,
     vendor: [
-      'vendor/d3.v3.min.js',
       'vendor/jquery.min.js',
       'vendor/query.xdomainrequest.min.js',
       'vendor/jquery.tooltipster.js',

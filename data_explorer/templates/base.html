@@ -75,9 +75,7 @@
       <![if gt IE 8]>
       <script {{ csp_nonce }}>
         if (typeof aight === 'object') {
-          d3.select('body')
-            .classed('ie', true)
-            .classed('ie' + aight.browser.ie, true);
+          document.body.className += ' ie ie' + aight.browser.ie;
         }
       </script>
       <![endif]>
