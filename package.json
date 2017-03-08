@@ -37,6 +37,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
     "jest": "^18.0.0",
+    "rc-slider": "^6.1.2",
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
     "react-addons-transition-group": "^15.4.2",

@@ -62,7 +62,6 @@ const bundles = {
       'vendor/jquery.min.js',
       'vendor/query.xdomainrequest.min.js',
       'vendor/jquery.tooltipster.js',
-      'vendor/jquery.nouislider.all.min.js',
     ],
   },
   // CALC 1.0 scripts
