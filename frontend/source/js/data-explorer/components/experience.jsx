@@ -85,6 +85,7 @@ export class Experience extends React.Component {
             value={this.state.sliderVal}
             onChange={this.onSliderChange}
             onAfterChange={this.onAfterSliderChange}
+            className="experience-slider"
           />
           <div className="experience_range">
             <label htmlFor={minId} className="sr-only">Minimum Years</label>
