@@ -19,7 +19,7 @@ export default class API {
       json: true,
     }, (err, res) => {
       if (err) {
-        callback(err.toString());
+        callback(`Error: Internal XMLHttpRequest Error: ${err.toString()}`);
       } else if (res.statusCode >= 400) {
         callback(res.rawRequest.statusText);
       } else {

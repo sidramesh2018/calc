@@ -3,10 +3,7 @@ from django.http import HttpResponse
 from django.conf.urls import url
 from django.core.urlresolvers import reverse
 
-from data_capture.email import render_mail
-from data_capture.management.commands.send_example_emails import (
-    EXAMPLES
-)
+from data_capture.email import render_mail, EXAMPLES
 
 
 # Erg, we want to be able to give templates the full path to our

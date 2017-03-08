@@ -3,11 +3,11 @@
 {% load data_capture %}
 
 {% block content %}
+<h1>
+  Your price list has been rejected
+</h1>
 <p>
-  The price list you submitted to CALC on {{ price_list.created_at|tz_timestamp }} has unfortunately been <b>rejected</b>.
-</p>
-<p>
-  The submitted price list was for contract <b>{{ price_list.contract_number }}</b> ({{ price_list.get_schedule_title }}) with <b>{{ price_list.vendor_name }}</b>.
+Unfortunately the price list you submitted to CALC on {{ price_list.created_at|tz_timestamp }} has been rejected. The <a href="{{ details_link }}">submitted price list</a> was for contract <b>{{ price_list.contract_number }}</b> ({{ price_list.get_schedule_title }}) with <b>{{ price_list.vendor_name }}</b>.
 </p>
   {% cta url=details_link action_text="View the price list's details" %}
 {% endblock %}

@@ -107,6 +107,7 @@ form .aligned p.help {
   border: none !important;
 }
 
+
 .selector .selector-available h2,
 .selector .selector-chosen h2 {
   color: $color-base !important;
@@ -137,12 +138,6 @@ select[multiple="multiple"] {
 }
 
 .submit-row input[type="submit"] {
-  display: inline;
-}
-
-/* search */
-.inline-form input[type="search"],
-.inline-form input[type="submit"] {
   display: inline;
 }
 
@@ -268,4 +263,41 @@ thead a:focus {
       }
     }
   }
+}
+
+.paginator {
+  font-weight: $font-weight-normal;
+  font-style: italic;
+  color: $color-gray-lighter;
+  a {
+    color: $color-white;
+    font-weight: $font-weight-bold;
+    font-style: normal;
+  }
+  .end {
+    margin-right: 10px;
+  }
+  .this-page {
+    color: $color-gold-lightest;
+    font-weight: $font-weight-bold;
+    font-style: normal;
+  }
+  .showall {
+    margin-left: 5px;
+  }
+}
+
+/* users and groups multiselect form */
+.related-widget-wrapper {
+  width: 100%;
+  .selector .selector-available input {
+    width: 100%;
+  }
+  .selector .selector-filter {
+    padding: 0;
+  }
+  .selector ul.selector-chooser {
+    background: transparent;
+  }
+  .selector #id_groups_filter.selector-filter label { padding: 0; }
 }
