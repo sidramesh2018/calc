@@ -59,8 +59,8 @@ const bundles = {
     noBrowserify: true,
     vendor: [
       'vendor/d3.v3.min.js',
-      'vendor/jquery.min.js',
-      'vendor/query.xdomainrequest.min.js',
+      'vendor/jquery.1.11.1.js',
+      'vendor/jquery.xdomainrequest.js',
       'vendor/jquery.tooltipster.js',
       'vendor/jquery.nouislider.all.min.js',
     ],
@@ -74,7 +74,7 @@ const bundles = {
       'vendor/canvg.js',
       'vendor/canvas-toBlob.js',
       'vendor/FileSaver.js',
-      'vendor/jquery.auto-complete.min.js',
+      'vendor/jquery.auto-complete.js',
     ],
   },
   // CALC 2.0 Data Capture scripts
