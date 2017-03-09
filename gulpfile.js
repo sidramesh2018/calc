@@ -162,10 +162,12 @@ gulp.task('build', ['sass', 'js', 'sphinx']);
 gulp.task('watch', ['set-watching', 'sass', 'js', 'sphinx'], () => {
   gulp.watch(path.join(dirs.src.sphinx, paths.sphinx), ['sphinx']);
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
+  gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint']);
 
-  // browserified bundles set up their own watch handling (via watchify)
+  // Note: browserified and webpack'd bundles set up their own watch handling
   // so we don't want to re-trigger them here, ref #437
-  gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint', 'js:vendor']);
+
+  gulp.watch(path.join(dirs.src.scripts, 'vendor', paths.js), ['js:vendor']);
 });
 
 gulp.task('clean', () => {
