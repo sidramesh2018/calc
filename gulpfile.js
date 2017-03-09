@@ -303,7 +303,10 @@ gulp.task('js:data-explorer', () => {
             test: /\.jsx?$/,
             exclude: /node_modules/,
             loader: 'babel-loader',
-            options: { presets: ['es2015', 'react'] },
+            options: {
+              presets: ['es2015', 'react'],
+              cacheDirectory: true,
+            },
           },
         ],
       },
