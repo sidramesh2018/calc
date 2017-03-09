@@ -27,6 +27,7 @@ const watchify = require('watchify');
 const envify = require('envify/custom');
 const babelify = require('babelify');
 const del = require('del');
+const webpack = require('webpack-stream');
 
 const BUILT_FRONTEND_DIR = 'frontend/static/frontend/built';
 
@@ -129,6 +130,35 @@ Object.keys(bundles).forEach((name) => {
     vendoredBundles.push(vendoredBundleName);
   }
 });
+
+/* WORKZONE */
+gulp.task('webpack', () => {
+  const src = path.join(dirs.src.scripts, 'data-explorer', 'index.js');
+  return gulp.src(src)
+    .pipe(webpack({
+      resolve: {
+        extensions: ['', '.js', '.jsx'],
+      },
+      module: {
+        loaders: [
+          {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loader: 'babel',
+            query: {
+              presets: ['es2015', 'react'], // TODO: babel-preset-env 'env' also?
+            },
+          },
+        ],
+      },
+      output: {
+        filename: 'index.min.js',
+      },
+    }))
+    .pipe(gulp.dest('frontend/static/frontend/built/js/data-explorer/'));
+});
+/* END WORK ZONE */
+
 
 // default task
 // running `gulp` will default to watching and dist'ing files
