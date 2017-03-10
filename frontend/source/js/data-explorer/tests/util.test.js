@@ -11,9 +11,22 @@ describe('util.formatFriendlyPrice()', () => {
 });
 
 describe('util.getLastCommaSeparatedTerm()', () => {
-  expect(util.getLastCommaSeparatedTerm('foo')).toBe('foo');
-  expect(util.getLastCommaSeparatedTerm('foo,bar')).toBe('bar');
-  expect(util.getLastCommaSeparatedTerm('foo, bar')).toBe('bar');
-  expect(util.getLastCommaSeparatedTerm('foo , bar')).toBe('bar');
-  expect(util.getLastCommaSeparatedTerm('foo bar')).toBe('foo bar');
+  it('works', () => {
+    expect(util.getLastCommaSeparatedTerm('foo')).toBe('foo');
+    expect(util.getLastCommaSeparatedTerm('foo,bar')).toBe('bar');
+    expect(util.getLastCommaSeparatedTerm('foo, bar')).toBe('bar');
+    expect(util.getLastCommaSeparatedTerm('foo , bar')).toBe('bar');
+    expect(util.getLastCommaSeparatedTerm('foo bar')).toBe('foo bar');
+  });
+});
+
+describe('util.parseQueryString()', () => {
+  it('works', () => {
+    expect(util.parseQueryString('a=1&b=cow')).toEqual({ a: '1', b: 'cow' });
+  });
+
+  it('uses first value of a repeated param', () => {
+    expect(util.parseQueryString('z=yes&z=no')).toEqual({ z: 'yes' });
+    expect(util.parseQueryString('x=&x=')).toEqual({ x: '' });
+  });
 });
