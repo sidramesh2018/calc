@@ -276,7 +276,7 @@ gulp.task('js:data-explorer', () => {
   const entry = path.join(dirs.src.scripts, dirName, 'index.js');
   const plugins = [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': isProd ? '"production"' : '""'
+      'process.env.NODE_ENV': isProd ? '"production"' : '""',
     }),
   ];
 
