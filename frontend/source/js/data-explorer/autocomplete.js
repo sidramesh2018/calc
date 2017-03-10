@@ -42,8 +42,8 @@ export function destroy(el) {
   $(el).autoComplete('destroy');
 }
 
-export function processResults(error, result) {
-  if (error || !result || !result.length) {
+export function processResults(result) {
+  if (!result || !result.length) {
     return [];
   }
   const categories = result.slice(0, 20).map(d => ({
@@ -82,7 +82,8 @@ export function initialize(el, {
         },
       }, (error, result) => {
         autoCompReq = null;
-        const categories = processResults(error, result);
+        if (error) { return done([]); }
+        const categories = processResults(result);
         return done(categories);
       });
     },
