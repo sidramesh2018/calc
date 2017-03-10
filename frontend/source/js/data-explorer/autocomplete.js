@@ -70,7 +70,9 @@ export function initialize(el, {
         },
       }, (error, result) => {
         autoCompReq = null;
-        if (error) { return done([]); }
+        if (error || !result || !result.length) {
+          return done([]);
+        }
         const categories = result.slice(0, 20).map(d => ({
           term: d.labor_category,
           count: d.count,
