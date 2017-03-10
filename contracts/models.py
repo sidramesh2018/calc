@@ -32,10 +32,13 @@ def convert_to_tsquery(query):
 
         >>> convert_to_tsquery('interpretation services')
         'interpretation:* & services:*'
+
+        >>> convert_to_tsquery('123')
+        '123:*'
     """
 
     # remove all non-alphanumeric or whitespace chars
-    pattern = re.compile('[^a-zA-Z\s]')
+    pattern = re.compile('[^a-zA-Z0-9\s]')
     query = pattern.sub('', query)
     query_parts = query.split()
     # remove empty strings and add :* to use prefix matching on each chunk
