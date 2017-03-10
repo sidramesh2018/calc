@@ -14,6 +14,7 @@ Welcome to CALC's developer documentation!
    docker
    environment
    auth
+   email
 
 .. toctree::
    :maxdepth: 2
@@ -27,9 +28,9 @@ Welcome to CALC's developer documentation!
    :caption: Development
 
    Style guide <https://calc-dev.app.cloud.gov/styleguide/>
+   frontend
    api
    updating_data
-   contributing-internal
 
 .. toctree::
    :maxdepth: 2

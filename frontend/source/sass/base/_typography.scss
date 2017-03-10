@@ -10,6 +10,8 @@ body {
 }
 
 h1 {
+  font-size: $h1-font-size;
+  line-height: $heading-line-height;
   .site-title {
     display: block;
   }
@@ -18,16 +20,19 @@ h1 {
     display: block;
     font-size: 2rem;
   }
-}
-
-h1 {
-  font-size: $h1-font-size;
-  line-height: $heading-line-height;
+  &.h1--deemphasized {
+    font-size: $h3-font-size;
+    line-height: $heading-line-height;
+    color: $color-gray-medium;
+  }
 }
 
 h2 {
   font-size: $h2-font-size;
   line-height: $heading-line-height;
+  &.h2--emphasized {
+    font-size: $h1-font-size;
+  }
 }
 
 h3,

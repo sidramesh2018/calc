@@ -6,6 +6,7 @@ from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.http import HttpResponse
 from django.conf.urls import url
 
@@ -70,26 +71,50 @@ class ComplianceTests(DjangoTestCase):
         self.assertHasHeaders(res)
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)
 class HealthcheckTests(DjangoTestCase):
-    def test_it_works(self):
+    def setUp(self):
+        site = Site.objects.get_current()
+        site.domain = "testserver"
+        site.save()
+
+    def assertResponseContains(self, expected, res=None):
+        if res is None:
+            res = self.client.get('/healthcheck/')
+        full_actual = json.loads(str(res.content, encoding='utf8'))
+        actual = {k: full_actual[k] for k in expected.keys()}
+        self.assertEqual(actual, expected)
+
+    @override_settings(SECURE_SSL_REDIRECT=True)
+    def test_it_returns_500_when_canonical_and_request_url_mismatch(self):
+        self.assertResponseContains({
+            'canonical_url': 'https://testserver/healthcheck/',
+            'request_url': 'http://testserver/healthcheck/',
+            'canonical_url_matches_request_url': False,
+        })
+
+    def test_it_includes_rq_jobs(self):
+        self.assertResponseContains({'rq_jobs': 0})
+
+    def test_it_includes_version(self):
+        self.assertResponseContains({'version': __version__})
+
+    def test_it_returns_200_when_all_is_well(self):
         res = self.client.get('/healthcheck/')
         self.assertEqual(res.status_code, 200)
-        self.assertJSONEqual(str(res.content, encoding='utf8'), {
-            'version': __version__,
+        self.assertResponseContains({
+            'canonical_url_matches_request_url': True,
             'is_database_synchronized': True,
-            'rq_jobs': 0
-        })
+        }, res=res)
 
     @patch.object(healthcheck, 'is_database_synchronized')
     def test_it_returns_500_when_db_is_not_synchronized(self, mock):
         mock.return_value = False
         res = self.client.get('/healthcheck/')
         self.assertEqual(res.status_code, 500)
-        self.assertJSONEqual(str(res.content, encoding='utf8'), {
-            'version': __version__,
+        self.assertResponseContains({
             'is_database_synchronized': False,
-            'rq_jobs': 0
-        })
+        }, res=res)
 
 
 class RobotsTests(DjangoTestCase):

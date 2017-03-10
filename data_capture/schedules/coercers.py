@@ -146,3 +146,28 @@ def extract_hour_unit_of_issue(text):
         return text
 
     return 'Hour'
+
+
+def extract_first_int(text):
+    '''
+    Returns the first integer found in the input text.
+
+    >>> extract_first_int('At least 12 years with 8 years management')
+    12
+
+    >>> extract_first_int('5+')
+    5
+
+    >>> extract_first_int(8.0)
+    8
+
+    Returns the original value if an integer is not found.
+
+    >>> extract_first_int('No integers here')
+    'No integers here'
+    '''
+    match = re.search(r'\d+', str(text))
+    if not match:
+        return text
+
+    return int(match.group())

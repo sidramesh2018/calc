@@ -105,3 +105,15 @@ main {
     padding: $space-4x 0;
   }
 }
+
+.price-list__status-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  h2 {
+    margin: 0;
+  }
+  h1, p {
+    flex: 1 100%;
+  }
+}

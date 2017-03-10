@@ -1,0 +1,38 @@
+{% load staticfiles %}
+{% if NON_PROD_INSTANCE_NAME or show_debug_ui %}
+  <div id="banner" class="banner__non-prod">
+    <div class="container">
+      <a class="skip-nav" tabindex="-1" href="#main">Skip navigation</a>
+      <p id="usa">
+        {% if NON_PROD_INSTANCE_NAME %}
+          This is a {{ NON_PROD_INSTANCE_NAME }} version of CALC.
+          Please visit <a href="https://calc.gsa.gov">calc.gsa.gov</a> for the production site.
+        {% else %}
+          This is a development version of CALC.
+        {% endif %}
+      </p>
+      <p id="site-status">
+        <a href="{% url 'styleguide:index' %}">Style guide</a> |
+        <a href="/docs/">Docs</a>
+      </p>
+      {% if canonical_url != request.build_absolute_uri %}
+        <br>
+        <p>
+          You should probably <a href="/admin/sites/site/1/">change your site's domain name</a>, or some links may not work.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+{% else %}
+  <div id="banner">
+    <div class="container">
+      <a class="skip-nav" tabindex="-1" href="#main">Skip navigation</a>
+      <p id="usa">
+        <img src="{% static 'frontend/images/flag-usa.png' %}" alt="USA flag">
+        An official website of the U.S. government</p>
+      <p id="site-status">This website is in beta.
+        <a href="#help-wanted">Help us improve.</a>
+      </p>
+    </div>
+  </div>
+{% endif %}

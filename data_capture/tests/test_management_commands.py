@@ -31,3 +31,8 @@ class TestSendexampleemails(TestCase):
     def test_it_does_not_explode(self):
         result = CliRunner().invoke(send_example_emails.command)
         self.assertEqual(result.exit_code, 0)
+
+
+class TestSendtesthtmlemail(TestCase):
+    def test_it_does_not_explode(self):
+        call_command('send_test_html_email', 'foo@example.com')

@@ -11,5 +11,3 @@
 # directory is mounted via folder share.
 
 COPY . /calc/
-
-RUN gulp build

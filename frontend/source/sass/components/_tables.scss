@@ -132,13 +132,13 @@ td.error {
   font-weight: $font-weight-bold;
   span {
     line-height: 1.2;
-    padding-right: 18px; /* to give the info badge space */
     position: relative;
-    background-image: url("../../images/info-badge-filled.svg");
-    background-size: 13px 13px;
-    background-repeat: no-repeat;
-    background-position: top right;
     border-bottom: 1px dotted $color-secondary-dark;
+    &:before {
+      width: 13px;
+      height: 13px;
+      content: url("../../images/info-badge-filled.svg");
+    }
     /* this is the tooltip's bottom arrow. It needs to be part of the span so
      * it is aware of the span's width. This is the only way I know of to position
      * the arrow over the info-badge (a background image on the span) when the
@@ -147,7 +147,7 @@ td.error {
       display: none;
       position: absolute;
       top: -$space-2x;
-      right: -3px; /* positions the tooltip arrow over the info badge */
+      left: -3px; /* positions the tooltip arrow over the info badge */
       border-top: 12px solid $color-secondary-lightest;
       border-right: 10px solid transparent;
       border-left: 10px solid transparent;
@@ -157,8 +157,9 @@ td.error {
     &:hover {
       cursor: pointer;
       border-bottom-color: transparent;
-      background-image: url("../../images/info-badge-outline.svg");
-      border-bottom-color: transparent;
+      &:before {
+        content: url("../../images/info-badge-outline.svg");
+      }
       /* tooltip arrow */
       &:after {
         display: block;
@@ -180,8 +181,9 @@ td.error {
   &:focus {
     span {
       border-bottom-color: transparent;
-      background-image: url("../../images/info-badge-outline.svg");
-      border-bottom-color: transparent;
+      &:before {
+        content: url("../../images/info-badge-outline.svg");
+      }
       /* tooltip arrow */
       &:after {
         display: block;
