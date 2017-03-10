@@ -218,15 +218,6 @@ function browserifyBundle(entryPath, outputPath, outputFile) {
     packageCache: {},
   });
 
-  // Some modules are referenced in the source code for
-  // Enzyme, but they're never actually loaded because they're only
-  // needed for older versions of React, so we'll explicitly tell
-  // Browserify to ignore them here.
-  bundler = bundler
-    .exclude('react/addons')
-    .exclude('react/lib/ReactContext')
-    .exclude('react/lib/ExecutionEnvironment');
-
   bundler = bundler
     .transform(envify({ NODE_ENV: process.env.NODE_ENV }), { global: true })
     .transform(babelify.configure({ presets: ['es2015'] }));
