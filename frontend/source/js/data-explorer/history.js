@@ -18,6 +18,7 @@ import {
 
 import {
   autobind,
+  parseQueryString,
 } from './util';
 
 import {
@@ -46,7 +47,7 @@ export default class StoreHistorySynchronizer {
   }
 
   reflectToStore(store) {
-    const qsFields = querystring.parse(
+    const qsFields = parseQueryString(
       this.window.location.search.substring(1)); // substring after '?' char
 
     const state = store.getState();

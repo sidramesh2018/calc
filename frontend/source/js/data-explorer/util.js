@@ -1,5 +1,6 @@
 /* global event */
 
+import * as querystring from 'querystring';
 import classNames from 'classnames';
 import { format } from 'd3-format';
 
@@ -69,4 +70,19 @@ export function getLastCommaSeparatedTerm(term) {
 export function stripTrailingComma(str) {
   // Removes trailing comma and whitespace from given string
   return str.replace(/,\s*$/, '');
+}
+
+export function parseQueryString(str) {
+  const qsObj = querystring.parse(str);
+
+  // querystring.parse will create array values if a querystring param name
+  // is repeated. We'll just take the first value of any such array.
+  Object.keys(qsObj).forEach((key) => {
+    const val = qsObj[key];
+    if (Array.isArray(val)) {
+      qsObj[key] = val[0];
+    }
+  });
+
+  return qsObj;
 }
