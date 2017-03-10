@@ -14,6 +14,9 @@ to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- CALC now understands certain acronyms and abbreviations, such as
+  "jr" (junior), "sr" (senior), and "sme" (subject matter expert). Searches
+  for any of these will yield more inclusive results than before (#1378).
 - System-generated emails have vastly improved styling (#1208).
 - The logic to parse the minimum experience values from
   uploaded Schedule 70 price lists has been made more flexible by using the
