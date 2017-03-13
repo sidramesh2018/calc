@@ -98,9 +98,9 @@ Object.keys(bundles).forEach((name) => {
     const vendoredBundleName = `js:${dirName}:vendor`;
     gulp.task(vendoredBundleName, () =>
       concatAndMapSources(  // eslint-disable-line no-use-before-define
-        'vendor.min.js',
+        `${dirName}.vendor.js`,
         vendor.map(p => dirs.src.scripts + p),
-        `${BUILT_FRONTEND_DIR}/js/${dirName}`));
+        `${BUILT_FRONTEND_DIR}/js/`));
 
     vendoredBundles.push(vendoredBundleName);
   }
