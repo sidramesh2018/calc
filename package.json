@@ -42,7 +42,7 @@
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
-    "sinon": "next",
+    "sinon": "2.0.0-pre.6",
     "vinyl-named": "^1.1.0",
     "webpack": "^2.2.1",
     "webpack-stream": "^3.2.0",
