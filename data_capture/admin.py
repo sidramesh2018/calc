@@ -12,7 +12,8 @@ from django.contrib.auth.forms import UserChangeForm
 
 from . import email
 from .schedules import registry
-from .models import SubmittedPriceList, SubmittedPriceListRow
+from .models import (SubmittedPriceList, SubmittedPriceListRow,
+                     AttemptedPriceListSubmission)
 from .templatetags.data_capture import tz_timestamp
 
 
@@ -435,6 +436,24 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
 
     def vendor_name(self, obj):
         return obj.price_list.vendor_name
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(AttemptedPriceListSubmission)
+class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
+    readonly_fields = (
+        'created_at',
+        'updated_at',
+        'submitter',
+        'uploaded_file',
+        'uploaded_file_name',
+        'uploaded_file_content_type',
+        'valid_row_count',
+        'invalid_row_count',
+        'session_state',
+    )
 
     def has_add_permission(self, request):
         return False

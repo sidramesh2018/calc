@@ -14,6 +14,10 @@ class UploadedFile(models.Model):
 
     HASH_HEXDIGEST_LEN = 64
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
     hex_hash = models.CharField(
         max_length=HASH_HEXDIGEST_LEN,
         db_index=True,
@@ -41,7 +45,33 @@ class UploadedFile(models.Model):
             return q.get()
         obj = cls(hex_hash=hex_hash, contents=f)
         obj.save()
+        f.seek(0)
         return obj
+
+
+class AttemptedPriceListSubmission(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    submitter = models.ForeignKey(User)
+
+    uploaded_file = models.ForeignKey(UploadedFile, null=True, blank=True)
+
+    uploaded_file_name = models.CharField(max_length=128, blank=True)
+
+    uploaded_file_content_type = models.CharField(max_length=128, blank=True)
+
+    valid_row_count = models.IntegerField(null=True, blank=True)
+
+    invalid_row_count = models.IntegerField(null=True, blank=True)
+
+    session_state = models.TextField()
+
+    def set_uploaded_file(self, f):
+        self.uploaded_file = UploadedFile.store(f)
+        self.uploaded_file_name = f.name
+        self.uploaded_file_content_type = f.content_type
 
 
 class SubmittedPriceList(models.Model):

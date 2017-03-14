@@ -12,7 +12,7 @@ from django.utils.safestring import mark_safe
 from django.utils.html import escape
 
 from .. import forms
-from ..models import SubmittedPriceList
+from ..models import SubmittedPriceList, AttemptedPriceListSubmission
 from ..decorators import handle_cancel
 from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
@@ -155,7 +155,7 @@ def step_2(request, step):
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
-def step_3(request, step):
+def step_3(request, step, record_attempt=True):
     if get_step_form_from_session(2, request) is None:
         return redirect('data_capture:step_2')
 
@@ -187,6 +187,14 @@ def step_3(request, step):
             is_file_required=is_file_required
         )
 
+        if record_attempt:
+            attempt = AttemptedPriceListSubmission(
+                submitter=request.user,
+                session_state=json.dumps(session_pl)
+            )
+            if 'file' in request.FILES:
+                attempt.set_uploaded_file(request.FILES['file'])
+
         if form.is_valid():
             if 'gleaned_data' in form.cleaned_data:
                 gleaned_data = form.cleaned_data['gleaned_data']
@@ -195,10 +203,17 @@ def step_3(request, step):
                 session_pl['filename'] = form.cleaned_data['file'].name
                 request.session.modified = True
 
+            if record_attempt:
+                attempt.valid_row_count = len(gleaned_data.valid_rows)
+                attempt.invalid_row_count = len(gleaned_data.invalid_rows)
+                attempt.save()
+
             if gleaned_data.invalid_rows:
                 return ajaxform.redirect(request, 'data_capture:step_3_errors')
             return ajaxform.redirect(request, 'data_capture:step_4')
         else:
+            if record_attempt:
+                attempt.save()
             add_generic_form_error(request, form)
 
     return ajaxform.render(
