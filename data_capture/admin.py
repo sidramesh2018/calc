@@ -469,7 +469,7 @@ class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
     fields = readonly_fields
 
     def submitter_email(self, obj):
-        return self.submitter.email
+        return obj.submitter.email
 
     def uploaded_file_info(self, obj):
         url = reverse(
