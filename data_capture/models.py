@@ -1,4 +1,4 @@
-
+import hashlib
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import (MinValueValidator, MaxValueValidator,
@@ -7,6 +7,41 @@ from django.utils import timezone
 
 from contracts.models import (Contract, EDUCATION_CHOICES,
                               MIN_ESCALATION_RATE, MAX_ESCALATION_RATE)
+
+
+class UploadedFile(models.Model):
+    HASH_NAME = 'sha256'
+
+    HASH_HEXDIGEST_LEN = 64
+
+    hex_hash = models.CharField(
+        max_length=HASH_HEXDIGEST_LEN,
+        db_index=True,
+        unique=True
+    )
+
+    contents = models.FileField(
+        upload_to='data_capture_uploaded_files/'
+    )
+
+    @classmethod
+    def get_hex_hash(cls, f):
+        f.seek(0)
+        hasher = getattr(hashlib, cls.HASH_NAME)()
+        for chunk in iter(lambda: f.read(4096), b''):
+            hasher.update(chunk)
+        f.seek(0)
+        return hasher.hexdigest()
+
+    @classmethod
+    def store(cls, f):
+        hex_hash = cls.get_hex_hash(f)
+        q = cls.objects.filter(hex_hash=hex_hash)
+        if q.exists():
+            return q.get()
+        obj = cls(hex_hash=hex_hash, contents=f)
+        obj.save()
+        return obj
 
 
 class SubmittedPriceList(models.Model):

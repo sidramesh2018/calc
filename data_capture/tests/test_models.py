@@ -1,20 +1,45 @@
+import os
 from datetime import datetime, date
 from decimal import Decimal
 
 from freezegun import freeze_time
-from django.test import override_settings
+from django.test import override_settings, TestCase
 from django.utils import timezone
 from django.forms import ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from hourglass.tests.common import BaseLoginTestCase
 from contracts.models import Contract
 from ..schedules import registry
 from ..schedules.fake_schedule import FakeSchedulePriceList
-from ..models import SubmittedPriceList, SubmittedPriceListRow
+from ..models import (SubmittedPriceList, SubmittedPriceListRow,
+                      UploadedFile)
 from .common import FAKE_SCHEDULE
 
 
 frozen_datetime = datetime(2017, 1, 12, 9, 15, 20)
+
+
+class UploadedFileTests(TestCase):
+    UPLOAD_DIR = 'data_capture_uploaded_files'
+
+    def test_store_creates_files(self):
+        f = SimpleUploadedFile(name='blah.txt', content=b'blah')
+        uf = UploadedFile.store(f)
+        self.assertEqual(
+            uf.hex_hash,
+            '8b7df143d91c716ecfa5fc1730022f6b421b05cedee8fd52b1fc65a96030ad52'
+        )
+        self.assertEqual(uf.contents.read(), b'blah')
+        self.assertIn(self.UPLOAD_DIR, uf.contents.name)
+        self.assertIn('blah', uf.contents.name)
+        self.assertTrue(os.path.exists(uf.contents.name))
+
+    def test_store_returns_existing_files(self):
+        uf1 = UploadedFile.store(SimpleUploadedFile(name='f1', content=b'zz'))
+        uf2 = UploadedFile.store(SimpleUploadedFile(name='f2', content=b'zz'))
+        self.assertEqual(uf1, uf2)
+        self.assertEqual(UploadedFile.objects.all().count(), 1)
 
 
 class ModelTestCase(BaseLoginTestCase):
