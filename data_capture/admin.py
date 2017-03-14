@@ -443,17 +443,33 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
 
 @admin.register(AttemptedPriceListSubmission)
 class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
-    readonly_fields = (
+    list_display = (
         'created_at',
-        'updated_at',
+        'id',
         'submitter',
-        'uploaded_file',
         'uploaded_file_name',
-        'uploaded_file_content_type',
         'valid_row_count',
         'invalid_row_count',
-        'session_state',
     )
+
+    readonly_fields = (
+        'id',
+        'created_at',
+        'updated_at',
+        'submitter_email',
+        'valid_row_count',
+        'invalid_row_count',
+        'uploaded_file_info',
+    )
+
+    fields = readonly_fields
+
+    def submitter_email(self, obj):
+        return self.submitter.email
+
+    def uploaded_file_info(self, obj):
+        return (f"{obj.uploaded_file_name} "
+                f"({obj.uploaded_file.contents.size} bytes)")
 
     def has_add_permission(self, request):
         return False
