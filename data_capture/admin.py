@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.http import HttpResponse
 from django.db import models, transaction
 from django import forms
 from django.core.urlresolvers import reverse
@@ -9,6 +10,9 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
+from django.conf.urls import url
+from django.shortcuts import get_object_or_404
+
 
 from . import email
 from .schedules import registry
@@ -468,8 +472,35 @@ class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
         return self.submitter.email
 
     def uploaded_file_info(self, obj):
-        return (f"{obj.uploaded_file_name} "
-                f"({obj.uploaded_file.contents.size} bytes)")
+        url = reverse(
+            'admin:data_capture_send_uploaded_file',
+            args=(obj.id,))
+        return format_html(
+            '<a href="{}">{} ({} bytes)</a>',
+            url,
+            obj.uploaded_file_name,
+            obj.uploaded_file.contents.size,
+        )
 
     def has_add_permission(self, request):
         return False
+
+    def send_uploaded_file(self, request, id):
+        id = int(id)
+        obj = get_object_or_404(AttemptedPriceListSubmission, pk=id)
+
+        # TODO: Ensure this is actually secure.
+
+        response = HttpResponse(obj.uploaded_file.contents.read(),
+                                content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(
+            obj.uploaded_file_name,
+        )
+        return response
+
+    def get_urls(self):
+        return [
+            url(r'^(?P<id>\d+)/download/$',
+                self.admin_site.admin_view(self.send_uploaded_file),
+                name='data_capture_send_uploaded_file'),
+        ] + super().get_urls()
