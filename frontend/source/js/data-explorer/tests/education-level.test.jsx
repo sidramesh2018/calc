@@ -1,5 +1,4 @@
 import toJson from 'enzyme-to-json';
-
 import { EducationLevel } from '../components/education-level';
 import makeSetup from './testSetup';
 import { EDU_LABELS } from '../constants';
@@ -59,8 +58,7 @@ describe('<EducationLevel>', () => {
     const { wrapper } = setup();
     const e = {
       preventDefault: jest.fn()
-    }
-    console.log(wrapper.state().expanded);
+    };
     expect(wrapper.state().expanded).toBeFalsy();
     wrapper.find('a').simulate('click', e);
     expect(wrapper.state().expanded).toBeTruthy();
