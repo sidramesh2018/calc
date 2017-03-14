@@ -195,7 +195,9 @@ gulp.task('js:webpack', () => {
   ];
 
   if (isProd) {
-    plugins.push(new webpack.optimize.UglifyJsPlugin());
+    plugins.push(new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+    }));
   }
 
   return gulp.src(sources)
@@ -214,7 +216,7 @@ gulp.task('js:webpack', () => {
         extensions: ['.js', '.jsx'],
       },
       stats: {},
-      devtool: 'source-map',
+      devtool: isProd ? 'source-map' : 'eval-source-map',
       module: {
         rules: [
           {
