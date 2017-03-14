@@ -215,7 +215,6 @@ gulp.task('js:webpack', () => {
       resolve: {
         extensions: ['.js', '.jsx'],
       },
-      stats: {},
       devtool: isProd ? 'source-map' : 'eval-source-map',
       module: {
         rules: [
