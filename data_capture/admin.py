@@ -456,31 +456,7 @@ class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
         'invalid_row_count',
     )
 
-    readonly_fields = (
-        'id',
-        'created_at',
-        'updated_at',
-        'submitter_email',
-        'valid_row_count',
-        'invalid_row_count',
-        'uploaded_file_info',
-    )
-
-    fields = readonly_fields
-
-    def submitter_email(self, obj):
-        return obj.submitter.email
-
-    def uploaded_file_info(self, obj):
-        url = reverse(
-            'admin:data_capture_send_uploaded_file',
-            args=(obj.id,))
-        return format_html(
-            '<a href="{}">{} ({} bytes)</a>',
-            url,
-            obj.uploaded_file_name,
-            obj.uploaded_file.contents.size,
-        )
+    change_form_template = 'admin/data_capture/view_attempted_submission.html'
 
     def has_add_permission(self, request):
         return False

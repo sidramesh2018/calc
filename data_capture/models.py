@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.core.files.storage import Storage
 from django.utils.deconstruct import deconstructible
 from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from contracts.models import (Contract, EDUCATION_CHOICES,
                               MIN_ESCALATION_RATE, MAX_ESCALATION_RATE)
@@ -103,6 +104,15 @@ class AttemptedPriceListSubmission(models.Model):
         self.uploaded_file = UploadedFile.store(f)
         self.uploaded_file_name = f.name
         self.uploaded_file_content_type = f.content_type
+
+    def restore_uploaded_file(self):
+        contents = self.uploaded_file.contents
+        contents.open()
+        return SimpleUploadedFile(
+            name=self.uploaded_file_name,
+            content=contents.read(),
+            content_type=self.uploaded_file_content_type,
+        )
 
 
 class SubmittedPriceList(models.Model):

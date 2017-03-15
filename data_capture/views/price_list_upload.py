@@ -155,7 +155,20 @@ def step_2(request, step):
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
-def step_3(request, step, record_attempt=True):
+def step_3(request, step):
+    record_attempt = True
+    request_files = request.FILES
+
+    if (request.method == 'POST' and request.user.is_superuser and
+            'replay-attempted-submission' in request.POST):
+        record_attempt = False
+        attempt = AttemptedPriceListSubmission.objects.filter(
+            pk=int(request.POST['replay-attempted-submission'])).get()
+        request.session[SESSION_KEY] = json.loads(attempt.session_state)
+        request_files = {}
+        if attempt.uploaded_file:
+            request_files['file'] = attempt.restore_uploaded_file()
+
     if get_step_form_from_session(2, request) is None:
         return redirect('data_capture:step_2')
 
@@ -182,7 +195,7 @@ def step_3(request, step, record_attempt=True):
 
         form = forms.PriceListUploadForm(
             request.POST,
-            request.FILES,
+            request_files,
             schedule=step_1_data['schedule'],
             is_file_required=is_file_required
         )
@@ -192,8 +205,8 @@ def step_3(request, step, record_attempt=True):
                 submitter=request.user,
                 session_state=json.dumps(session_pl)
             )
-            if 'file' in request.FILES:
-                attempt.set_uploaded_file(request.FILES['file'])
+            if 'file' in request_files:
+                attempt.set_uploaded_file(request_files['file'])
 
         if form.is_valid():
             if 'gleaned_data' in form.cleaned_data:
