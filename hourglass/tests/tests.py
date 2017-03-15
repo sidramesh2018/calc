@@ -248,7 +248,7 @@ class AdminLoginTest(DjangoTestCase):
         res = self.client.get('/admin/')
         self.assertEqual(res.status_code, 302)
         self.assertTrue(
-            res['Location'].startswith('http://testserver/admin/login'))
+            res['Location'].startswith('/admin/login'))
 
     def test_is_staff_user_can_view(self):
         user = User.objects.create_user(  # nosec
@@ -317,7 +317,7 @@ class StaffLoginRequiredTests(DjangoTestCase):
         res = self.client.get('/staff_only_view/')
         self.assertEqual(302, res.status_code)
         self.assertTrue(
-            res['Location'].startswith('http://testserver/auth/login'))
+            res['Location'].startswith('/auth/login'))
 
     def test_staff_user_is_permitted(self):
         self.login(is_staff=True)
