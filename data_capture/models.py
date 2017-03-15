@@ -40,7 +40,7 @@ class SlowpokeStorageModel(models.Model):
     name = models.CharField(max_length=128, unique=True, db_index=True)
 
 
-class UploadedFile(models.Model):
+class HashedUploadedFile(models.Model):
     HASH_NAME = 'sha256'
 
     HASH_HEXDIGEST_LEN = 64
@@ -88,7 +88,8 @@ class AttemptedPriceListSubmission(models.Model):
 
     submitter = models.ForeignKey(User)
 
-    uploaded_file = models.ForeignKey(UploadedFile, null=True, blank=True)
+    uploaded_file = models.ForeignKey(HashedUploadedFile, null=True,
+                                      blank=True)
 
     uploaded_file_name = models.CharField(max_length=128, blank=True)
 
@@ -101,7 +102,7 @@ class AttemptedPriceListSubmission(models.Model):
     session_state = models.TextField()
 
     def set_uploaded_file(self, f):
-        self.uploaded_file = UploadedFile.store(f)
+        self.uploaded_file = HashedUploadedFile.store(f)
         self.uploaded_file_name = f.name
         self.uploaded_file_content_type = f.content_type
 

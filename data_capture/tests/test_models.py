@@ -12,19 +12,19 @@ from contracts.models import Contract
 from ..schedules import registry
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..models import (SubmittedPriceList, SubmittedPriceListRow,
-                      UploadedFile)
+                      HashedUploadedFile)
 from .common import FAKE_SCHEDULE
 
 
 frozen_datetime = datetime(2017, 1, 12, 9, 15, 20)
 
 
-class UploadedFileTests(TestCase):
+class HashedUploadedFileTests(TestCase):
     UPLOAD_DIR = 'data_capture_uploaded_files'
 
     def test_store_creates_files(self):
         f = SimpleUploadedFile(name='blah.txt', content=b'blah')
-        uf = UploadedFile.store(f)
+        uf = HashedUploadedFile.store(f)
         self.assertEqual(
             uf.hex_hash,
             '8b7df143d91c716ecfa5fc1730022f6b421b05cedee8fd52b1fc65a96030ad52'
@@ -35,14 +35,18 @@ class UploadedFileTests(TestCase):
         self.assertIn('blah', uf.contents.name)
 
     def test_store_returns_existing_files(self):
-        uf1 = UploadedFile.store(SimpleUploadedFile(name='f1', content=b'zz'))
-        uf2 = UploadedFile.store(SimpleUploadedFile(name='f2', content=b'zz'))
+        uf1 = HashedUploadedFile.store(SimpleUploadedFile(
+            name='f1', content=b'zz'))
+        uf2 = HashedUploadedFile.store(SimpleUploadedFile(
+            name='f2', content=b'zz'))
         self.assertEqual(uf1, uf2)
-        self.assertEqual(UploadedFile.objects.all().count(), 1)
+        self.assertEqual(HashedUploadedFile.objects.all().count(), 1)
 
     def test_store_saves_different_files_with_same_name(self):
-        uf1 = UploadedFile.store(SimpleUploadedFile(name='zz', content=b'a'))
-        uf2 = UploadedFile.store(SimpleUploadedFile(name='zz', content=b'b'))
+        uf1 = HashedUploadedFile.store(
+            SimpleUploadedFile(name='zz', content=b'a'))
+        uf2 = HashedUploadedFile.store(
+            SimpleUploadedFile(name='zz', content=b'b'))
         self.assertIn('zz', uf1.contents.name)
         self.assertIn('zz', uf2.contents.name)
         self.assertNotEqual(uf1.contents.name, uf2.contents.name)
