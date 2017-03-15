@@ -11,6 +11,8 @@ locally:
 
 * [Python 3.6.0](https://www.python.org/)
 * [Node 6.0](https://nodejs.org/)
+* [yarn](https://yarnpkg.com)
+  * Install globally via `npm install -g yarn`
 * [Postgres](https://www.postgresql.org/)
   * It's easiest to have a local instance of it running on its default
     port, as this requires no extra configuration on the CALC side.
@@ -80,7 +82,7 @@ asset build pipeline.
 
 ### Starting the static asset generator
 
-In another terminal, you will also need to run `gulp` to watch and rebuild 
+In another terminal, you will also need to run `gulp` to watch and rebuild
 static assets:
 
 ```sh

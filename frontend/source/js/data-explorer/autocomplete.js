@@ -42,6 +42,18 @@ export function destroy(el) {
   $(el).autoComplete('destroy');
 }
 
+export function processResults(result) {
+  if (!result || !result.length) {
+    return [];
+  }
+  const categories = result.slice(0, 20).map(d => ({
+    term: d.labor_category,
+    count: d.count,
+  }));
+
+  return categories;
+}
+
 export function initialize(el, {
   api,
   getQueryType,
@@ -71,10 +83,7 @@ export function initialize(el, {
       }, (error, result) => {
         autoCompReq = null;
         if (error) { return done([]); }
-        const categories = result.slice(0, 20).map(d => ({
-          term: d.labor_category,
-          count: d.count,
-        }));
+        const categories = processResults(result);
         return done(categories);
       });
     },

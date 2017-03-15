@@ -1,3 +1,5 @@
+import csv
+
 from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Count, Q, StdDev
 from decimal import Decimal
@@ -10,7 +12,26 @@ from api.serializers import ContractSerializer
 from api.utils import get_histogram
 from contracts.models import Contract, EDUCATION_CHOICES
 
-import csv
+
+def parse_csv_style_string(s):
+    '''
+    Parses comma-delimited string into an array of strings.
+    Quoted sub-strings (like "engineer, junior") will be kept together to
+    allow for commas in sub-strings.
+
+    Examples:
+
+        >>> parse_csv_style_string('jane,jim,jacky,joe')
+        ['jane', 'jim', 'jacky', 'joe']
+
+        >>> parse_csv_style_string('carrot, beet  , sunchoke')
+        ['carrot', 'beet', 'sunchoke']
+
+        >>> parse_csv_style_string('turkey, "hog, wild", cow')
+        ['turkey', 'hog, wild', 'cow']
+    '''
+    reader = csv.reader([s], skipinitialspace=True)
+    return [qq.strip() for qq in list(reader)[0] if qq.strip()]
 
 
 def get_contracts_queryset(request_params, wage_field):
@@ -73,7 +94,7 @@ def get_contracts_queryset(request_params, wage_field):
     contracts = contracts.exclude(**{wage_field + '__isnull': True})
 
     if query:
-        qs = [s for s in query.split(',') if s.strip()]
+        qs = parse_csv_style_string(query)
 
         if query_type not in ('match_phrase', 'match_exact'):
             contracts = contracts.multi_phrase_search(qs)

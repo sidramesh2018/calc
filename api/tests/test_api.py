@@ -85,6 +85,12 @@ class ContractsTest(TestCase):
                                   'contractor_site': None,
                                   'business_size': None}])
 
+    def test_search_results_with_numeric_query(self):
+        self.make_test_set()
+        resp = self.c.get(self.path, {'q': '12345'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertResultsEqual(resp.data['results'], [])
+
     def test_multi_word_search_results__hit(self):
         self.make_test_set()
         resp = self.c.get(self.path, {'q': 'legal services'})
@@ -151,6 +157,50 @@ class ContractsTest(TestCase):
         resp = self.c.get(self.path, {'q': 'legal  advice '})
         self.assertEqual(resp.status_code, 200)
 
+    def test_search_results_with_quoted_comma_strings(self):
+        self.make_test_set()
+        resp = self.c.get(self.path, {'q': '"designer, extra cool"'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertResultsEqual(resp.data['results'],
+                                [{'idv_piid': "ABC456",
+                                  'vendor_name': "Big Bob's Design Corral",
+                                  'labor_category': "Designer, Extra Cool",
+                                  'education_level': 'Bachelors',
+                                  'min_years_experience': 5,
+                                  'hourly_rate_year1': 24.0,
+                                  'current_price': 24.0,
+                                  'schedule': None,
+                                  'contractor_site': None,
+                                  'business_size': None}])
+
+    def test_multi_search_results_with_quoted_comma_strings(self):
+        self.make_test_set()
+        resp = self.c.get(self.path,
+                          {'q': 'legal, "designer, extra cool"'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertResultsEqual(resp.data['results'],
+                                [{'idv_piid': 'ABC123',
+                                  'vendor_name': 'ACME Corp.',
+                                  'labor_category': 'Legal Services',
+                                  'education_level': None,
+                                  'min_years_experience': 10,
+                                  'hourly_rate_year1': 18.0,
+                                  'current_price': 18.0,
+                                  'schedule': None,
+                                  'contractor_site': None,
+                                  'business_size': None},
+                                 {'idv_piid': "ABC456",
+                                  'vendor_name': "Big Bob's Design Corral",
+                                  'labor_category': "Designer, Extra Cool",
+                                  'education_level': 'Bachelors',
+                                  'min_years_experience': 5,
+                                  'hourly_rate_year1': 24.0,
+                                  'current_price': 24.0,
+                                  'schedule': None,
+                                  'contractor_site': None,
+                                  'business_size': None},
+                                 ])
+
     def test_filter_by_price__exact(self):
         self.make_test_set()
         resp = self.c.get(self.path, {'price': 18})
@@ -174,7 +224,17 @@ class ContractsTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         self.assertResultsEqual(resp.data['results'],
-                                [{'idv_piid': 'ABC234',
+                                [{'idv_piid': "ABC456",
+                                  'vendor_name': "Big Bob's Design Corral",
+                                  'labor_category': "Designer, Extra Cool",
+                                  'education_level': 'Bachelors',
+                                  'min_years_experience': 5,
+                                  'hourly_rate_year1': 24.0,
+                                  'current_price': 24.0,
+                                  'schedule': None,
+                                  'contractor_site': None,
+                                  'business_size': None},
+                                 {'idv_piid': 'ABC234',
                                   'vendor_name': 'Numbers R Us',
                                   'labor_category': 'Accounting, CPA',
                                   'education_level': 'Masters',
@@ -183,7 +243,8 @@ class ContractsTest(TestCase):
                                   'current_price': 50.0,
                                   'schedule': None,
                                   'contractor_site': None,
-                                  'business_size': None}])
+                                  'business_size': None},
+                                 ])
 
     def test_filter_by_price__lte(self):
         self.make_test_set()
@@ -743,6 +804,16 @@ class ContractsTest(TestCase):
                                     'schedule': None,
                                     'contractor_site': None,
                                     'business_size': None},
+                                 {'idv_piid': "ABC456",
+                                    'vendor_name': "Big Bob's Design Corral",
+                                    'labor_category': "Designer, Extra Cool",
+                                    'education_level': 'Bachelors',
+                                    'min_years_experience': 5,
+                                    'hourly_rate_year1': 24.0,
+                                    'current_price': 24.0,
+                                    'schedule': None,
+                                    'contractor_site': None,
+                                    'business_size': None},
                                  {'idv_piid': 'ABC123',
                                     'vendor_name': 'ACME Corp.',
                                     'labor_category': 'Legal Services',
@@ -752,7 +823,8 @@ class ContractsTest(TestCase):
                                     'current_price': 18.0,
                                     'schedule': None,
                                     'contractor_site': None,
-                                    'business_size': None}])
+                                    'business_size': None},
+                                 ])
 
         # sort the price descending, too, to make sure we're not just randomly
         # passing the first test
@@ -790,6 +862,16 @@ class ContractsTest(TestCase):
                                     'schedule': 'MOBIS',
                                     'contractor_site': None,
                                     'business_size': None},
+                                 {'idv_piid': "ABC456",
+                                    'vendor_name': "Big Bob's Design Corral",
+                                    'labor_category': "Designer, Extra Cool",
+                                    'education_level': 'Bachelors',
+                                    'min_years_experience': 5,
+                                    'hourly_rate_year1': 24.0,
+                                    'current_price': 24.0,
+                                    'schedule': None,
+                                    'contractor_site': None,
+                                    'business_size': None},
                                  {'idv_piid': 'ABC123',
                                     'vendor_name': 'ACME Corp.',
                                     'labor_category': 'Legal Services',
@@ -799,7 +881,8 @@ class ContractsTest(TestCase):
                                     'current_price': 18.0,
                                     'schedule': None,
                                     'contractor_site': None,
-                                    'business_size': None}])
+                                    'business_size': None},
+                                 ])
 
     def test_query_type__match_phrase(self):
         self.make_test_set()
@@ -869,16 +952,20 @@ class ContractsTest(TestCase):
         self.assertEqual(resp.data['maximum'], 50.0)
 
     def test_average_price_no_args(self):
-        self.make_test_set()
+        contracts = self.make_test_set()
         resp = self.c.get(self.path, {})
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.data['average'], (16.0 + 18.0 + 50.0) / 3)
+        avg = 0
+        for c in contracts:
+            avg = avg + c.current_price
+        avg = avg / len(contracts)
+        self.assertEqual(resp.data['average'], avg)
 
     def test_first_std_deviation_no_args(self):
         self.make_test_set()
         resp = self.c.get(self.path, {})
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(int(resp.data['first_standard_deviation']), 15)
+        self.assertEqual(int(resp.data['first_standard_deviation']), 13)
 
     def test_histogram_length(self):
         self.make_test_set()
@@ -897,7 +984,7 @@ class ContractsTest(TestCase):
         resp = self.c.get(self.path, {'histogram': 2})
         self.assertEqual(resp.status_code, 200)
         self.assertResultsEqual(resp.data['wage_histogram'], [
-            {'count': 2, 'min': 16.0, 'max': 33.0},
+            {'count': 3, 'min': 16.0, 'max': 33.0},
             {'count': 1, 'min': 33.0, 'max': 50.0}
         ])
 
@@ -937,41 +1024,53 @@ class ContractsTest(TestCase):
 
     @staticmethod
     def make_test_set():
-        mommy.make(
-            Contract,
-            id=1,
-            idv_piid="ABC123",
-            piid="123",
-            vendor_name="ACME Corp.",
-            labor_category="Legal Services",
-            min_years_experience=10,
-            hourly_rate_year1=18.00,
-            current_price=18.00,
-        )
-        mommy.make(
-            Contract,
-            id=2,
-            idv_piid="ABC234",
-            piid="234",
-            vendor_name="Numbers R Us",
-            labor_category="Accounting, CPA",
-            education_level='MA',
-            min_years_experience=5,
-            hourly_rate_year1=50.00,
-            current_price=50.00,
-        )
-        mommy.make(
-            Contract,
-            id=3,
-            idv_piid="ABC345",
-            piid="345",
-            vendor_name="Word Power Co.",
-            labor_category="Writer/Editor",
-            education_level='BA',
-            min_years_experience=1,
-            hourly_rate_year1=16.00,
-            current_price=16.00,
-        )
+        test_contract_params = [
+            dict(
+                id=1,
+                idv_piid="ABC123",
+                piid="123",
+                vendor_name="ACME Corp.",
+                labor_category="Legal Services",
+                min_years_experience=10,
+                hourly_rate_year1=18.00,
+                current_price=18.00
+            ),
+            dict(
+                id=2,
+                idv_piid="ABC234",
+                piid="234",
+                vendor_name="Numbers R Us",
+                labor_category="Accounting, CPA",
+                education_level='MA',
+                min_years_experience=5,
+                hourly_rate_year1=50.00,
+                current_price=50.00,
+            ),
+            dict(
+                id=3,
+                idv_piid="ABC345",
+                piid="345",
+                vendor_name="Word Power Co.",
+                labor_category="Writer/Editor",
+                education_level='BA',
+                min_years_experience=1,
+                hourly_rate_year1=16.00,
+                current_price=16.00,
+            ),
+            dict(
+                id=4,
+                idv_piid="ABC456",
+                piid="456",
+                vendor_name="Big Bob's Design Corral",
+                labor_category="Designer, Extra Cool",
+                education_level='BA',
+                min_years_experience=5,
+                hourly_rate_year1=24.00,
+                current_price=24.00,
+            )
+        ]
+
+        return [mommy.make(Contract, **p) for p in test_contract_params]
 
     def assertResultsEqual(self, results, expected, just_expected_fields=True):
         dict_results = [dict(x) for x in results]
