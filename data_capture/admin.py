@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.db import models, transaction
 from django import forms
 from django.core.urlresolvers import reverse
@@ -462,6 +462,9 @@ class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
         return False
 
     def send_uploaded_file(self, request, id):
+        if not request.user.is_superuser:
+            return HttpResponseForbidden()
+
         id = int(id)
         obj = get_object_or_404(AttemptedPriceListSubmission, pk=id)
 
