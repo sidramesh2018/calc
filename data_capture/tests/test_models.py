@@ -1,4 +1,3 @@
-import os
 from datetime import datetime, date
 from decimal import Decimal
 
@@ -31,15 +30,22 @@ class UploadedFileTests(TestCase):
             '8b7df143d91c716ecfa5fc1730022f6b421b05cedee8fd52b1fc65a96030ad52'
         )
         self.assertEqual(uf.contents.read(), b'blah')
+        self.assertEqual(uf.contents.size, 4)
         self.assertIn(self.UPLOAD_DIR, uf.contents.name)
         self.assertIn('blah', uf.contents.name)
-        self.assertTrue(os.path.exists(uf.contents.name))
 
     def test_store_returns_existing_files(self):
         uf1 = UploadedFile.store(SimpleUploadedFile(name='f1', content=b'zz'))
         uf2 = UploadedFile.store(SimpleUploadedFile(name='f2', content=b'zz'))
         self.assertEqual(uf1, uf2)
         self.assertEqual(UploadedFile.objects.all().count(), 1)
+
+    def test_store_saves_different_files_with_same_name(self):
+        uf1 = UploadedFile.store(SimpleUploadedFile(name='zz', content=b'a'))
+        uf2 = UploadedFile.store(SimpleUploadedFile(name='zz', content=b'b'))
+        self.assertIn('zz', uf1.contents.name)
+        self.assertIn('zz', uf2.contents.name)
+        self.assertNotEqual(uf1.contents.name, uf2.contents.name)
 
 
 class ModelTestCase(BaseLoginTestCase):

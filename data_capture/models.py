@@ -4,9 +4,39 @@ from django.contrib.auth.models import User
 from django.core.validators import (MinValueValidator, MaxValueValidator,
                                     RegexValidator)
 from django.utils import timezone
+from django.core.files.storage import Storage
+from django.utils.deconstruct import deconstructible
+from django.core.files.base import ContentFile
 
 from contracts.models import (Contract, EDUCATION_CHOICES,
                               MIN_ESCALATION_RATE, MAX_ESCALATION_RATE)
+
+
+@deconstructible
+class SlowpokeStorage(Storage):
+    def _open(self, name, mode='rb'):
+        obj = SlowpokeStorageModel.objects.filter(name=name).get()
+        return ContentFile(obj.data)
+
+    def _save(self, name, content):
+        data = content.read()
+        obj = SlowpokeStorageModel(name=name, data=data, size=len(data))
+        obj.save()
+        return name
+
+    def exists(self, name):
+        return SlowpokeStorageModel.objects.filter(name=name).exists()
+
+    def size(self, name):
+        return SlowpokeStorageModel.objects.filter(name=name).get().size
+
+
+class SlowpokeStorageModel(models.Model):
+    data = models.BinaryField()
+
+    size = models.IntegerField()
+
+    name = models.CharField(max_length=128, unique=True, db_index=True)
 
 
 class UploadedFile(models.Model):
@@ -25,7 +55,8 @@ class UploadedFile(models.Model):
     )
 
     contents = models.FileField(
-        upload_to='data_capture_uploaded_files/'
+        upload_to='data_capture_uploaded_files/',
+        storage=SlowpokeStorage()
     )
 
     @classmethod
