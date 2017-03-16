@@ -1,3 +1,5 @@
+import os
+import re
 from django.contrib import admin
 from django.http import HttpResponse, HttpResponseForbidden
 from django.db import models, transaction
@@ -14,6 +16,7 @@ from django.conf.urls import url
 from django.shortcuts import get_object_or_404
 
 
+from frontend.upload import DEFAULT_FILE_EXTENSIONS
 from . import email
 from .schedules import registry
 from .models import (SubmittedPriceList, SubmittedPriceListRow,
@@ -445,6 +448,39 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
         return False
 
 
+def clean_filename(filename):
+    '''
+    Attempt to clean the filename so it doesn't contain invalid
+    characters or potentially dangerous file extensions.
+
+    Examples:
+
+        >>> clean_filename('boop.exe')
+        'boop'
+
+        >>> clean_filename('.csv')
+        'csv'
+
+        >>> clean_filename('$.csv')
+        'data.csv'
+
+        >>> clean_filename('u$goose.xls')
+        'ugoose.xls'
+    '''
+
+    basename, ext = os.path.splitext(filename)
+
+    basename = ''.join([
+        char for char in basename
+        if re.match('[A-Za-z0-9_\-]', char)
+    ]) or 'data'
+
+    if ext.lower() not in DEFAULT_FILE_EXTENSIONS:
+        ext = ''
+
+    return basename + ext
+
+
 @admin.register(AttemptedPriceListSubmission)
 class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
     list_display = (
@@ -467,13 +503,10 @@ class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
 
         id = int(id)
         obj = get_object_or_404(AttemptedPriceListSubmission, pk=id)
-
-        # TODO: Ensure this is actually secure.
-
         response = HttpResponse(obj.uploaded_file.contents.read(),
                                 content_type='application/octet-stream')
         response['Content-Disposition'] = 'attachment; filename="{}"'.format(
-            obj.uploaded_file_name,
+            clean_filename(obj.uploaded_file_name),
         )
         return response
 
