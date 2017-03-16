@@ -9,7 +9,9 @@ from freezegun import freeze_time
 from ..models import SubmittedPriceList, AttemptedPriceListSubmission
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
-from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
+from ..management.commands.initgroups import (
+    PRICE_LIST_UPLOAD_PERMISSION,
+    VIEW_ATTEMPT_PERMISSION)
 from .common import (StepTestCase, FAKE_SCHEDULE, uploaded_csv_file,
                      create_csv_content)
 
@@ -60,7 +62,8 @@ class PriceListStepTestCase(StepTestCase):
         registry._init()
 
     def login(self, **kwargs):
-        kwargs['permissions'] = [PRICE_LIST_UPLOAD_PERMISSION]
+        perms = kwargs.get('permissions', [])
+        kwargs['permissions'] = perms + [PRICE_LIST_UPLOAD_PERMISSION]
         return super().login(**kwargs)
 
 
@@ -288,7 +291,8 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertRedirects(res, Step2Tests.url, target_status_code=302)
 
     def test_replay_works(self):
-        user = self.login(is_superuser=True)
+        user = self.login(is_staff=True,
+                          permissions=[VIEW_ATTEMPT_PERMISSION])
         attempt = AttemptedPriceListSubmission(
             submitter=user,
             session_state=self.client.session['data_capture:price_list'],
@@ -306,7 +310,7 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertEqual(AttemptedPriceListSubmission.objects.all().count(),
                          1)
 
-    def test_replay_is_forbidden_for_non_superusers(self):
+    def test_replay_is_forbidden_for_non_tech_support_folks(self):
         self.login(is_staff=True)
         res = self.client.post(self.url, {
             'replay-attempted-submission': '1'

@@ -17,6 +17,7 @@ from django.shortcuts import get_object_or_404
 
 
 from frontend.upload import DEFAULT_FILE_EXTENSIONS
+from .management.commands.initgroups import VIEW_ATTEMPT_PERMISSION
 from . import email
 from .schedules import registry
 from .models import (SubmittedPriceList, SubmittedPriceListRow,
@@ -498,7 +499,7 @@ class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
         return False
 
     def send_uploaded_file(self, request, id):
-        if not request.user.is_superuser:
+        if not request.user.has_perm(VIEW_ATTEMPT_PERMISSION):
             return HttpResponseForbidden()
 
         id = int(id)

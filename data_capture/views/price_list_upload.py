@@ -15,7 +15,9 @@ from .. import forms
 from ..models import SubmittedPriceList, AttemptedPriceListSubmission
 from ..decorators import handle_cancel
 from ..schedules import registry
-from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
+from ..management.commands.initgroups import (
+    PRICE_LIST_UPLOAD_PERMISSION,
+    VIEW_ATTEMPT_PERMISSION)
 from .common import (add_generic_form_error, build_url,
                      get_nested_item, get_deserialized_gleaned_data)
 from frontend import ajaxform
@@ -161,7 +163,8 @@ def step_3(request, step):
 
     if (request.method == 'POST' and
             'replay-attempted-submission' in request.POST):
-        if not request.user.is_superuser:
+        if not (request.user.is_staff and
+                request.user.has_perm(VIEW_ATTEMPT_PERMISSION)):
             return HttpResponseForbidden()
         record_attempt = False
         attempt = AttemptedPriceListSubmission.objects.filter(

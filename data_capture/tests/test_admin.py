@@ -320,8 +320,10 @@ class AttemptedPriceListSubmissionAdminTests(BaseLoginTestCase):
 
     def setUp(self):
         super().setUp()
+        call_command('initgroups', stdout=io.StringIO())
         self.user = self.create_user(
-            username='foo', is_superuser=True, email='foo@example.org')
+            username='foo', is_staff=True, email='foo@example.org',
+            groups=['Technical Support Specialists'])
         self.apls = AttemptedPriceListSubmission(
             submitter=self.user,
             session_state='{}'
@@ -333,7 +335,7 @@ class AttemptedPriceListSubmissionAdminTests(BaseLoginTestCase):
     def assert_403(self, url):
         self.assertEqual(self.client.get(url).status_code, 403)
 
-    def test_views_are_protected_from_non_superusers(self):
+    def test_views_are_protected_from_non_tech_support_folks(self):
         self.login(username='bar', is_staff=True)
         self.assert_403(f'{self.URL_PREFIX}')
         self.assert_403(f'{self.URL_PREFIX}{self.apls.id}/change/')
