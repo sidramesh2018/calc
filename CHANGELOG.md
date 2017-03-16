@@ -18,6 +18,7 @@ to [Semantic Versioning](http://semver.org/).
   validation (#1494).
 - Modified the Schedule 70 price list parser to look for some variations on
   column names in order to accept more price list uploads.
+- Fixed some minor styling bugs in the admin interface (#1326 and #1262).
 - Upgraded CALC to use Django 1.9.
 
 ## [2.4.0][] - 2017-03-10
