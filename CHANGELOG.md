@@ -7,6 +7,19 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Fixed a bug in the data explorer search input that prevented searches for
+  numeric strings (#1475).
+- Fixed a bug in the the data explorer search input that would cause a
+  JavaScript error when empty results were returned from the autocompletion
+  API (#1484).
+- Fixed a bug preventing Unit of Issue cells with extra spaces from passing
+  validation (#1494).
+- Modified the Schedule 70 price list parser to look for some variations on
+  column names in order to accept more price list uploads.
+- Upgraded CALC to use Django 1.9.
+
 ## [2.4.0][] - 2017-03-10
 
 ### Added
