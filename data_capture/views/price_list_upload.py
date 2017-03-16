@@ -166,7 +166,7 @@ def step_3(request, step):
         record_attempt = False
         attempt = AttemptedPriceListSubmission.objects.filter(
             pk=int(request.POST['replay-attempted-submission'])).get()
-        request.session[SESSION_KEY] = json.loads(attempt.session_state)
+        request.session[SESSION_KEY] = attempt.session_state
         request_files = {}
         if attempt.uploaded_file:
             request_files['file'] = attempt.restore_uploaded_file()
@@ -205,7 +205,7 @@ def step_3(request, step):
         if record_attempt:
             attempt = AttemptedPriceListSubmission(
                 submitter=request.user,
-                session_state=json.dumps(session_pl)
+                session_state=session_pl
             )
             if 'file' in request_files:
                 attempt.set_uploaded_file(request_files['file'])

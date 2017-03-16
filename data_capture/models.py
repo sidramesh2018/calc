@@ -1,6 +1,7 @@
 import hashlib
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 from django.core.validators import (MinValueValidator, MaxValueValidator,
                                     RegexValidator)
 from django.utils import timezone
@@ -99,7 +100,7 @@ class AttemptedPriceListSubmission(models.Model):
 
     invalid_row_count = models.IntegerField(null=True, blank=True)
 
-    session_state = models.TextField()
+    session_state = JSONField()
 
     def set_uploaded_file(self, f):
         self.uploaded_file = HashedUploadedFile.store(f)

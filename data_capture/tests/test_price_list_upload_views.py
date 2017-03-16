@@ -289,10 +289,9 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
 
     def test_replay_works(self):
         user = self.login(is_superuser=True)
-        state = json.dumps(self.client.session['data_capture:price_list'])
         attempt = AttemptedPriceListSubmission(
             submitter=user,
-            session_state=state,
+            session_state=self.client.session['data_capture:price_list'],
         )
         attempt.set_uploaded_file(uploaded_csv_file())
         attempt.save()
