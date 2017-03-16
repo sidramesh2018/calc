@@ -226,6 +226,7 @@ def step_3(request, step):
             return ajaxform.redirect(request, 'data_capture:step_4')
         else:
             if record_attempt:
+                attempt.valid_row_count = attempt.invalid_row_count = 0
                 attempt.save()
             add_generic_form_error(request, form)
 
