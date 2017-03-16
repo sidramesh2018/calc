@@ -2,7 +2,7 @@ import json
 
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
@@ -159,8 +159,10 @@ def step_3(request, step):
     record_attempt = True
     request_files = request.FILES
 
-    if (request.method == 'POST' and request.user.is_superuser and
+    if (request.method == 'POST' and
             'replay-attempted-submission' in request.POST):
+        if not request.user.is_superuser:
+            return HttpResponseForbidden()
         record_attempt = False
         attempt = AttemptedPriceListSubmission.objects.filter(
             pk=int(request.POST['replay-attempted-submission'])).get()

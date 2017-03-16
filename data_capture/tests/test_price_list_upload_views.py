@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.test import override_settings
 from freezegun import freeze_time
 
-from ..models import SubmittedPriceList
+from ..models import SubmittedPriceList, AttemptedPriceListSubmission
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
@@ -286,6 +286,33 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         self.delete_price_list_from_session()
         res = self.client.get(self.url)
         self.assertRedirects(res, Step2Tests.url, target_status_code=302)
+
+    def test_replay_works(self):
+        user = self.login(is_superuser=True)
+        state = json.dumps(self.client.session['data_capture:price_list'])
+        attempt = AttemptedPriceListSubmission(
+            submitter=user,
+            session_state=state,
+        )
+        attempt.set_uploaded_file(uploaded_csv_file())
+        attempt.save()
+        self.delete_price_list_from_session()
+        res = self.client.post(self.url, {
+            'replay-attempted-submission': str(attempt.id)
+        })
+        self.assertRedirects(res, Step4Tests.url)
+
+        # Ensure that an additional replay wasn't created as a result
+        # of the replay.
+        self.assertEqual(AttemptedPriceListSubmission.objects.all().count(),
+                         1)
+
+    def test_replay_is_forbidden_for_non_superusers(self):
+        self.login(is_staff=True)
+        res = self.client.post(self.url, {
+            'replay-attempted-submission': '1'
+        })
+        self.assertEqual(res.status_code, 403)
 
     def assertExistingFilename(self, res, value):
         self.assertEqual(
