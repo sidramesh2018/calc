@@ -38,15 +38,11 @@ def safe_cell_str_value(sheet, rownum, colnum, coercer=None):
     except IndexError:
         pass
 
-    print(f"val before: '{val}'")
     if coercer is not None:
         try:
             val = coercer(val)
-            print(f"val after: '{val}'")
         except ValueError:
-            print(f"Failed on '{val}'")
             pass
-    print("-----------------------")
 
     return str(val)
 
