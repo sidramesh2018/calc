@@ -18,6 +18,9 @@
     The user uploaded 
     <a href="{% url 'admin:data_capture_send_uploaded_file' id=original.id %}">{{ original.uploaded_file_name }}</a>
     ({{ original.uploaded_file.contents.size }} bytes).
+    It had {{ original.valid_row_count }} valid
+    row{{ original.valid_row_count|pluralize }} and {{ original.invalid_row_count }} invalid
+    row{{ original.invalid_row_count|pluralize }}.
   </p>
   {% endif %}
 
