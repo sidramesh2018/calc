@@ -24,15 +24,39 @@ from frontend import ajaxform
 from frontend.steps import Steps
 
 
+SESSION_KEY = 'data_capture:price_list'
+
+
+def get_ctx_replay_info(request):
+    '''
+    A context processor that adds information about the current
+    AttemptedPriceListSubmission being replayed, if any.
+    '''
+
+    replay_id = get_nested_item(request.session, (
+        SESSION_KEY,
+        'replay_id',
+    ))
+
+    replay = None
+
+    if replay_id:
+        # Just in case the replay has disappeared since the user
+        # started replaying, we'll use `first()` to get the attempt,
+        # so that we don't crash if the replay no longer exists.
+        replay = AttemptedPriceListSubmission.objects.filter(
+            pk=int(replay_id)).first()
+
+    return {'replay': replay}
+
+
 steps = Steps(
     template_format='data_capture/price_list/step_{}.html',
     extra_ctx_vars={
         'current_selected_tab': 'upload_price_data'
     },
+    extra_ctx_processors=[get_ctx_replay_info]
 )
-
-
-SESSION_KEY = 'data_capture:price_list'
 
 
 def get_step_form_from_session(step_number, request, **kwargs):
@@ -158,7 +182,6 @@ def step_2(request, step):
 @require_http_methods(["GET", "POST"])
 @handle_cancel
 def step_3(request, step):
-    record_attempt = True
     request_files = request.FILES
 
     if (request.method == 'POST' and
@@ -166,10 +189,13 @@ def step_3(request, step):
         if not (request.user.is_staff and
                 request.user.has_perm(VIEW_ATTEMPT_PERMISSION)):
             return HttpResponseForbidden()
-        record_attempt = False
+        attempt_id = request.POST['replay-attempted-submission']
         attempt = AttemptedPriceListSubmission.objects.filter(
-            pk=int(request.POST['replay-attempted-submission'])).get()
-        request.session[SESSION_KEY] = attempt.session_state
+            pk=int(attempt_id)).get()
+        request.session[SESSION_KEY] = {
+            'replay_id': attempt_id,
+            **attempt.session_state
+        }
         request_files = {}
         if attempt.uploaded_file:
             request_files['file'] = attempt.restore_uploaded_file()
@@ -183,6 +209,7 @@ def step_3(request, step):
 
     gleaned_data = get_deserialized_gleaned_data(request)
     is_file_required = not (gleaned_data and gleaned_data.valid_rows)
+    record_attempt = False if session_pl.get('replay_id') else True
 
     if request.method == 'GET':
         existing_filename = None
@@ -240,7 +267,7 @@ def step_3(request, step):
         context=step.context({
             'form': form,
             'upload_example': schedule_class.render_upload_example(request)
-        }),
+        }, request),
         template_name=step.template_name,
         ajax_template_name='data_capture/price_list/upload_form.html',
     )
@@ -273,7 +300,7 @@ def step_3_errors(request):
                     'is_preferred_schedule': isinstance(gleaned_data,
                                                         preferred_schedule),
                     'preferred_schedule_title': preferred_schedule.title,
-                  }))
+                  }, request))
 
 
 @steps.step(label='Data verification')
