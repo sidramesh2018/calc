@@ -1,33 +1,5 @@
 @import '../base/_variables.scss';
 
-/* changelists */
-#changelist {
-  #toolbar form input {
-    padding: auto;
-  }
-
-  .actions {
-    label {
-      font-size: 1.5rem;
-      color: $color-base;
-      margin-left: 0;
-      display: inline-block;
-
-  margin: 1rem 0;
-  float: left;
-    }
-
-    select {
-      margin-left: 0 ;
-    }
-
-    button {
-    margin: 1rem 0;
-    display: inline-block;
-    }
-  }
-}
-
 td.action-checkbox,
 th.action-checkbox-column {
   padding: 0.45em 0 0 0.25em;
@@ -74,10 +46,15 @@ th.action-checkbox-column {
 
 #changelist-form {
   .actions {
-    max-width: 550px;
     button {
-      margin: 3.5rem 0 1rem;
-      float: right;
+      margin: 0;
+    }
+    label {
+      font-size: 1.5rem;
+      color: $color-base;
+      margin-left: 0;
+      margin: 1rem 0;
+      float: left;
     }
   }
   .paginator {
@@ -92,9 +69,15 @@ th.action-checkbox-column {
   font-size: $small-font-size;
   color: $color-gray;
   display: block;
+  clear: both;
   // hide .questions, .all, etc. until we can modify the django template
   // see https://github.com/18F/calc/issues/1134
   ~ span {
     display: none;
   }
+}
+
+/* users and groups multiselect form */
+.related-widget-wrapper {
+  width: 100%;
 }

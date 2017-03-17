@@ -85,6 +85,12 @@ class ContractsTest(TestCase):
                                   'contractor_site': None,
                                   'business_size': None}])
 
+    def test_search_results_with_numeric_query(self):
+        self.make_test_set()
+        resp = self.c.get(self.path, {'q': '12345'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertResultsEqual(resp.data['results'], [])
+
     def test_multi_word_search_results__hit(self):
         self.make_test_set()
         resp = self.c.get(self.path, {'q': 'legal services'})
