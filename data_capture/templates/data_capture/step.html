@@ -19,6 +19,11 @@
                 when attempting to submit a price list on
                 <strong>{{ replay.created_at|tz_timestamp }}</strong>.
               </p>
+
+              <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="cancel" class="button-outline" formnovalidate>Exit this replay</button>
+              </form>
             </div>
           {% endif %}
 

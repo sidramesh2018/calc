@@ -98,6 +98,7 @@ def clear_gleaned_data_if_different_schedule(request):
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
+@handle_cancel
 def step_1(request, step):
     if request.method == 'GET':
         form = forms.Step1Form(data=get_nested_item(

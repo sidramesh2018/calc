@@ -67,7 +67,7 @@ class PriceListStepTestCase(StepTestCase):
         return super().login(**kwargs)
 
 
-class Step1Tests(PriceListStepTestCase):
+class Step1Tests(PriceListStepTestCase, HandleCancelMixin):
     url = '/data-capture/step/1'
 
     valid_form = {
