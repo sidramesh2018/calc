@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.5.0][] - 2017-03-16
+
 ### Changed
 
 - Fixed a bug in the data explorer search input that prevented searches for
@@ -206,7 +208,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.4.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/18F/calc/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/18F/calc/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/18F/calc/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/18F/calc/compare/v2.1.0...v2.2.0
