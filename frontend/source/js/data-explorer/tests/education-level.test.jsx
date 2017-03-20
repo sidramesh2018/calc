@@ -15,6 +15,8 @@ describe('<EducationLevel>', () => {
   it('renders correctly', () => {
     const { wrapper } = setup();
 
+    wrapper.setState({ expanded: true });
+
     Object.keys(EDU_LABELS).forEach((key) => {
       const eduLevelItem = wrapper.find(`EducationLevelItem[value="${key}"]`);
       expect(eduLevelItem.exists()).toBeTruthy();
@@ -32,6 +34,7 @@ describe('<EducationLevel>', () => {
 
   it('matches snapshot', () => {
     const { wrapper } = setup();
+    wrapper.setState({ expanded: true });
     expect(toJson(wrapper)).toMatchSnapshot();
   });
 
@@ -46,6 +49,8 @@ describe('<EducationLevel>', () => {
   it('calls toggleEducationLevel when checkbox is clicked', () => {
     const { props, mounted } = setup();
     expect(props.toggleEducationLevel.mock.calls.length).toBe(0);
+
+    mounted.setState({ expanded: true });
 
     mounted.find('input[value="HS"]')
       .simulate('change', { target: { checked: true } });

@@ -1,11 +1,57 @@
 import datetime
+from unittest.mock import patch
 from decimal import Decimal
 from itertools import cycle
 
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from contracts.mommy_recipes import get_contract_recipe
 
-from ..models import Contract, convert_to_tsquery
+from ..models import Contract, convert_to_tsquery, CashField
+
+
+_normalize = Contract.normalize_labor_category
+
+
+class CashFieldTests(SimpleTestCase):
+    def test_value_error_raised_on_invalid_decimal_places(self):
+        with self.assertRaisesRegexp(ValueError, r'must have exactly 2'):
+            CashField(max_digits=10, decimal_places=4)
+
+    def test_to_python_returns_none_when_value_is_none(self):
+        c = CashField(max_digits=10, decimal_places=2)
+        self.assertEqual(c.to_python(None), None)
+
+    def test_to_python_returns_decimal_when_value_is_float(self):
+        c = CashField(max_digits=10, decimal_places=2)
+        self.assertEqual(c.to_python(1.0 / 3), Decimal('0.33'))
+
+    def test_to_python_rounds_decimals(self):
+        c = CashField(max_digits=10, decimal_places=2)
+        self.assertEqual(c.to_python(Decimal('0.336')), Decimal('0.34'))
+        self.assertEqual(c.to_python(Decimal('0.334')), Decimal('0.33'))
+
+    def test_clean_calls_to_python(self):
+        # This is really a test to ensure that Django is working
+        # the way we think it is.
+        c = CashField(max_digits=10, decimal_places=2)
+        self.assertEqual(c.clean(1.0 / 3, None), Decimal('0.33'))
+
+
+class NormalizeLaborCategoryTests(SimpleTestCase):
+    def test_abbr_with_period(self):
+        self.assertEqual(_normalize('jr. person'), 'junior person')
+
+    def test_abbr_without_period(self):
+        self.assertEqual(_normalize('jr person'), 'junior person')
+
+    def test_abbr_at_end(self):
+        self.assertEqual(_normalize('person jr.'), 'person junior')
+
+    def test_abbr_in_middle(self):
+        self.assertEqual(_normalize('person jr. ham'), 'person junior ham')
+
+    def test_abbr_uppercase(self):
+        self.assertEqual(_normalize('JR. PERSON'), 'junior person')
 
 
 class ContractTestCase(TestCase):
@@ -18,6 +64,35 @@ class ContractTestCase(TestCase):
             hourly_rate_year5=105.50)
         final_kwargs.update(kwargs)
         return get_contract_recipe().make(**final_kwargs)
+
+    def test_bulk_update_normalized_labor_categories_works(self):
+        update = Contract.objects.bulk_update_normalized_labor_categories
+        c1 = get_contract_recipe().make(labor_category='foo')
+        c2 = get_contract_recipe().make(labor_category='bar')
+
+        self.assertEqual(update(), 0)
+
+        with patch.object(Contract, 'normalize_labor_category',
+                          lambda self, val: 'lol ' + val):
+            self.assertEqual(update(), 2)
+
+        c1.refresh_from_db()
+        c2.refresh_from_db()
+        self.assertEqual(c1._normalized_labor_category, 'lol foo')
+        self.assertEqual(c2._normalized_labor_category, 'lol bar')
+
+    def test_update_normalized_labor_category_returns_bool(self):
+        c = get_contract_recipe().prepare(labor_category='jr person')
+        self.assertTrue(c.update_normalized_labor_category())
+        self.assertFalse(c.update_normalized_labor_category())
+
+    def test_bulk_create_updates_normalized_labor_category(self):
+        c = get_contract_recipe().prepare(labor_category='jr person')
+        self.assertEqual(c._normalized_labor_category, '')
+        Contract.objects.bulk_create([c])
+
+        c = Contract.objects.all()[0]
+        self.assertEqual(c._normalized_labor_category, 'junior person')
 
     def test_readable_business_size(self):
         business_sizes = ('O', 'S')
@@ -258,17 +333,8 @@ class ContractTestCase(TestCase):
             c.calculate_end_year()
 
 
-class ContractSearchTestCase(TestCase):
-    CATEGORIES = [
-        'Sign Language Interpreter',
-        'Foreign Language Staff Interpreter (Spanish sign language)',
-        'Aircraft Servicer',
-        'Service Order Dispatcher',
-        'Disposal Services',
-        'Interpretation Services Class 4: Afrikan,Akan,Albanian',
-        'Interpretation Services Class 1: Spanish',
-        'Interpretation Services Class 2: French, German, Italian',
-    ]
+class BaseContractSearchTestCase(TestCase):
+    CATEGORIES = []
 
     def assertCategoriesEqual(self, results, categories):
         result_categories = [r.labor_category for r in results]
@@ -279,6 +345,19 @@ class ContractSearchTestCase(TestCase):
             labor_category=cycle(self.CATEGORIES),
             _quantity=len(self.CATEGORIES)
         )
+
+
+class ContractSearchTestCase(BaseContractSearchTestCase):
+    CATEGORIES = [
+        'Sign Language Interpreter',
+        'Foreign Language Staff Interpreter (Spanish sign language)',
+        'Aircraft Servicer',
+        'Service Order Dispatcher',
+        'Disposal Services',
+        'Interpretation Services Class 4: Afrikan,Akan,Albanian',
+        'Interpretation Services Class 1: Spanish',
+        'Interpretation Services Class 2: French, German, Italian',
+    ]
 
     def test_multi_phrase_search_works_with_single_word_phrase(self):
         results = Contract.objects.multi_phrase_search('interpretation')
@@ -327,4 +406,38 @@ class ContractSearchTestCase(TestCase):
             u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
             u'Interpretation Services Class 1: Spanish',
             u'Interpretation Services Class 2: French, German, Italian'
+        ])
+
+
+class UnicodeContractSearchTestCase(BaseContractSearchTestCase):
+    CATEGORIES = [
+        '\u5982',
+        '\u679c',
+    ]
+
+    def test_search_finds_thing(self):
+        results = Contract.objects.search('\u5982')
+        self.assertCategoriesEqual(results, [
+            '\u5982',
+        ])
+
+
+class NormalizedContractSearchTestCase(BaseContractSearchTestCase):
+    CATEGORIES = [
+        'Jr. Language Interpreter',
+        'Junior Language Interpreter',
+    ]
+
+    def test_search_for_junior_finds_jr(self):
+        results = Contract.objects.multi_phrase_search('junior')
+        self.assertCategoriesEqual(results, [
+            'Jr. Language Interpreter',
+            'Junior Language Interpreter',
+        ])
+
+    def test_search_for_jr_finds_junior(self):
+        results = Contract.objects.multi_phrase_search('jr')
+        self.assertCategoriesEqual(results, [
+            'Jr. Language Interpreter',
+            'Junior Language Interpreter',
         ])

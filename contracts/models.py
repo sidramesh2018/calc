@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from decimal import Decimal
 
-from django.db import models
+from django.db import models, connection
 from django.contrib.auth.models import User
 from djorm_pgfulltext.models import SearchManager, SearchQuerySet
 from djorm_pgfulltext.fields import VectorField
@@ -32,10 +32,13 @@ def convert_to_tsquery(query):
 
         >>> convert_to_tsquery('interpretation services')
         'interpretation:* & services:*'
+
+        >>> convert_to_tsquery('123')
+        '123:*'
     """
 
     # remove all non-alphanumeric or whitespace chars
-    pattern = re.compile('[^a-zA-Z\s]')
+    pattern = re.compile('[^a-zA-Z0-9\s]')
     query = pattern.sub('', query)
     query_parts = query.split()
     # remove empty strings and add :* to use prefix matching on each chunk
@@ -74,6 +77,44 @@ class CurrentContractManager(SearchManager):
     # need to subclass the SearchManager we were using for postgres full text
     # search instead of default
 
+    def bulk_update_normalized_labor_categories(self):
+        '''
+        Iterate through all Contract models and update their
+        normalized labor categories if necessary.
+
+        This method does not trigger any pre/post save signals or
+        call Contract.save().
+        '''
+
+        updates = []
+        num_updates = 0
+        for contract in self.all().only('id', 'labor_category',
+                                        '_normalized_labor_category'):
+            if contract.update_normalized_labor_category():
+                updates.append(contract.id)
+                updates.append(contract._normalized_labor_category)
+                num_updates += 1
+        if updates:
+            print("Updating {} rows.".format(num_updates))
+            with connection.cursor() as cursor:
+                values = []
+                for i in range(num_updates):
+                    values.append(r'(%s, %s)')
+                values = ", ".join(values)
+                sql = (  # nosec
+                    "UPDATE contracts_contract "
+                    "  SET _normalized_labor_category = v.nlc"
+                    "  FROM (VALUES" + values + ") AS v (id, nlc)"
+                    "  WHERE contracts_contract.id = v.id"
+                )
+                cursor.execute(sql, updates)
+        return num_updates
+
+    def bulk_create(self, contracts, *args, **kwargs):
+        for contract in contracts:
+            contract.update_normalized_labor_category()
+        return super().bulk_create(contracts, *args, **kwargs)
+
     def multi_phrase_search(self, *args, **kwargs):
         return self.get_queryset().multi_phrase_search(*args, **kwargs)
 
@@ -88,6 +129,10 @@ class ContractsQuerySet(SearchQuerySet):
     def multi_phrase_search(self, queries):
         if isinstance(queries, str):
             queries = [queries]
+        queries = [
+            Contract.normalize_labor_category(q)
+            for q in queries
+        ]
         return self.search(convert_to_tsquery_union(queries), raw=True)
 
     def order_by(self, *args, **kwargs):
@@ -145,6 +190,51 @@ class BulkUploadContractSource(models.Model):
         db_index=True, max_length=5, choices=PROCUREMENT_CENTER_CHOICES)
 
 
+class CashField(models.DecimalField):
+    '''
+    Custom field class for storing cash amounts in U.S. dollars and cents.
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.decimal_places != 2:
+            raise ValueError(f'{self.__class__.__name__} must have '
+                             f'exactly 2 decimal places')
+
+    @staticmethod
+    def cash(val):
+        '''
+        Converts the given value, which may be a floating-point number,
+        to a Decimal that represents a monetary value.
+
+        Examples:
+
+            >>> CashField.cash(1.0 / 3)
+            Decimal('0.33')
+
+            >>> CashField.cash(350)
+            Decimal('350.00')
+        '''
+
+        return Decimal(val).quantize(Decimal('.01'))
+
+    def to_python(self, value):
+        '''
+        It's possible that our cash-related fields have been set to
+        float values that don't convert nicely to Decimal values with
+        a reasonable number of digits in the cents part.
+
+        This will trip Django 1.9's max_digits validators, so we'll
+        ensure that our values don't have an excessive number of cents
+        digits.
+        '''
+
+        value = super().to_python(value)
+        if value is None:
+            return value
+        return self.cash(value)
+
+
 class Contract(models.Model):
 
     idv_piid = models.CharField(max_length=128)  # index this field
@@ -158,20 +248,20 @@ class Contract(models.Model):
         db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True,
         blank=True)
     min_years_experience = models.IntegerField(db_index=True)
-    hourly_rate_year1 = models.DecimalField(max_digits=10, decimal_places=2)
-    hourly_rate_year2 = models.DecimalField(
+    hourly_rate_year1 = CashField(max_digits=10, decimal_places=2)
+    hourly_rate_year2 = CashField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year3 = models.DecimalField(
+    hourly_rate_year3 = CashField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year4 = models.DecimalField(
+    hourly_rate_year4 = CashField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year5 = models.DecimalField(
+    hourly_rate_year5 = CashField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    current_price = models.DecimalField(
+    current_price = CashField(
         db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
-    next_year_price = models.DecimalField(
+    next_year_price = CashField(
         db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
-    second_year_price = models.DecimalField(
+    second_year_price = CashField(
         db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
     contractor_site = models.CharField(
         db_index=True, max_length=128, null=True, blank=True)
@@ -180,6 +270,8 @@ class Contract(models.Model):
     business_size = models.CharField(
         db_index=True, max_length=128, null=True, blank=True)
     sin = models.TextField(null=True, blank=True)
+
+    _normalized_labor_category = models.TextField(db_index=True, blank=True)
 
     search_index = VectorField()
 
@@ -193,7 +285,7 @@ class Contract(models.Model):
     # use a manager that filters by current contracts with a valid
     # current_price
     objects = CurrentContractManager(
-        fields=('labor_category',),
+        fields=('_normalized_labor_category',),
         config='pg_catalog.english',
         search_field='search_index',
         auto_update_search_field=True
@@ -204,6 +296,40 @@ class Contract(models.Model):
             return 'small business'
         else:
             return 'other than small business'
+
+    @staticmethod
+    def normalize_labor_category(val):
+        '''
+        Normalize the given labor category by applying various synonyms
+        and such to it.
+
+        Note that this would ideally be done by modifying postgres'
+        dictionary configuration, but at the time of this writing,
+        that is untenable. For more details, see:
+
+            https://github.com/18F/calc/issues/1375
+        '''
+
+        # Note also that any logic changes to this code should
+        # eventually be followed-up with
+        # `manage.py update_search_field contracts`. Otherwise,
+        # all pre-existing contracts will still have search
+        # index information corresponding to the old logic.
+
+        synonyms = {
+            'jr': 'junior',
+            'sr': 'senior',
+            'sme': 'subject matter expert',
+        }
+
+        val = val.lower().replace('.', ' ')
+
+        val = ' '.join([
+            synonyms.get(word, word)
+            for word in val.split()
+        ])
+
+        return val
 
     @staticmethod
     def get_education_code(text):
@@ -309,3 +435,14 @@ class Contract(models.Model):
             raise ValueError(
                 'year must be in range 1 to {}'.format(NUM_CONTRACT_YEARS))
         setattr(self, 'hourly_rate_year{}'.format(year), val)
+
+    def update_normalized_labor_category(self):
+        val = self.normalize_labor_category(self.labor_category)
+        if self._normalized_labor_category != val:
+            self._normalized_labor_category = val
+            return True
+        return False
+
+    def save(self, *args, **kwargs):
+        self.update_normalized_labor_category()
+        super().save(*args, **kwargs)

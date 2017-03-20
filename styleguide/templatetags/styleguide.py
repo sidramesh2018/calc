@@ -18,6 +18,10 @@ MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
 ROOT_DIR = os.path.normpath(os.path.join(MY_DIR, '..', '..'))
 
+SCSS_DIR = 'frontend/source/sass'
+
+JS_DIR = 'frontend/source/js'
+
 register = template.Library()
 
 
@@ -80,19 +84,16 @@ class WebComponentHTMLParser(HTMLParser):
 @register.simple_tag
 def template_tag_library(name):
     from importlib import import_module
-    from django.template.base import get_templatetags_modules
+    from django.template.backends.django import get_installed_libraries
 
-    mod = None
+    libs = get_installed_libraries()
 
-    for modname in get_templatetags_modules():
-        try:
-            mod = import_module(f'{modname}.{name}')
-            break
-        except ModuleNotFoundError:
-            pass
+    print(libs)
 
-    if mod is None:
+    if name not in libs:
         raise ValueError(f'template tag library {name} not found')
+
+    mod = import_module(libs[name])
 
     if not mod.__file__.startswith(ROOT_DIR):
         raise ValueError(f'template tag library {name} is not in project')
@@ -122,8 +123,8 @@ def template_url(context, template_name):
     path = None
 
     for candidate in candidates:
-            if os.path.exists(candidate):
-                path = candidate
+            if os.path.exists(candidate.name):
+                path = candidate.name
                 break
 
     if path is None:
@@ -140,6 +141,38 @@ def template_link(context, template_name):
 
     url = template_url(context, template_name)
     return SafeString(f'<code><a href="{url}">{template_name}</a></code>')
+
+
+@register.simple_tag
+def scss(path):
+    '''
+    Link to a .scss (SASS) file relative to the base SASS directory.
+    '''
+
+    abspath = os.path.join(ROOT_DIR, SCSS_DIR, path)
+
+    if not os.path.exists(abspath):
+        raise ValueError(f'{abspath} does not exist')
+
+    url = github_url_for_path(os.path.join(SCSS_DIR, path))
+
+    return SafeString(f'<code><a href="{url}">{path}</a></code>')
+
+
+@register.simple_tag
+def js(path):
+    '''
+    Link to a JavaScript file relative to the base JS directory.
+    '''
+
+    abspath = os.path.join(ROOT_DIR, JS_DIR, path)
+
+    if not os.path.exists(abspath):
+        raise ValueError(f'{abspath} does not exist')
+
+    url = github_url_for_path(os.path.join(JS_DIR, path))
+
+    return SafeString(f'<code><a href="{url}">{path}</a></code>')
 
 
 @register.simple_tag

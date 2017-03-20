@@ -11,6 +11,8 @@ locally:
 
 * [Python 3.6.0](https://www.python.org/)
 * [Node 6.0](https://nodejs.org/)
+* [yarn](https://yarnpkg.com)
+  * Install globally via `npm install -g yarn`
 * [Postgres](https://www.postgresql.org/)
   * It's easiest to have a local instance of it running on its default
     port, as this requires no extra configuration on the CALC side.
@@ -80,25 +82,11 @@ asset build pipeline.
 
 ### Starting the static asset generator
 
-In another terminal, you will also need to run `gulp` to watch and rebuild 
+In another terminal, you will also need to run `gulp` to watch and rebuild
 static assets:
 
 ```sh
 npm run gulp
-```
-
-<!-- TODO: The rest of this section should eventually be moved to -->
-<!-- a separate front-end guide. See #1360. -->
-
-All the static assets (SASS for CSS and ES6 JavaScript) are 
-located in the [frontend/source/](../frontend/source/) directory. Outputs
-from the gulp build are placed in `frontend/static/frontend/built/`.
-Examine [gulpfile.js](../gulpfile.js) for details of our gulp asset pipeline.
-
-If you just want to build the assets once without watching for changes, run:
-
-```sh
-npm run gulp -- build
 ```
 
 ### Starting the task runner

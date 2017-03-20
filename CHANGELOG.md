@@ -7,6 +7,30 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.4.0][] - 2017-03-10
+
+### Added
+
+- When logged-in, the username in the upper right corner of the page has been
+  turned into a small dropdown menu (#1413).
+
+### Changed
+
+- CALC now understands certain acronyms and abbreviations, such as
+  "jr" (junior), "sr" (senior), and "sme" (subject matter expert). Searches
+  for any of these will yield more inclusive results than before (#1378).
+- System-generated emails have vastly improved styling (#1208).
+- The logic to parse the minimum experience values from
+  uploaded Schedule 70 price lists has been made more flexible by using the
+  first numeric value encountered.
+- The data explorer page now changes the page title based on the current search
+  term(s) (#1315).
+- Price list details pages have improved status indication styling (#980).
+- Styling of the error page of the price list upload process has been improved
+  (#1266).
+- The Rates API now handles quotation-delimited search terms, like
+  "engineer, senior" (#1459).
+
 ## [2.3.0][] - 2017-02-22
 
 ### Added
@@ -168,7 +192,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.3.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/18F/calc/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/18F/calc/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/18F/calc/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/18F/calc/compare/v2.0.0...v2.1.0

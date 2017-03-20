@@ -112,7 +112,7 @@ through the default `DOCKER_EXPOSED_PORT` of `8000`.
    ```
 
    If you need to run this multiple times but aren't changing any
-   front-end code between runs, set `SKIP_STATIC_ASSET_BUILDING=yup` in
+   front end code between runs, set `SKIP_STATIC_ASSET_BUILDING=yup` in
    your `.env` to make things run faster.
 
 
