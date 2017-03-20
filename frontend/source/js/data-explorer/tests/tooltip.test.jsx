@@ -32,5 +32,4 @@ describe('<Tooltip>', () => {
     setup();
     expect(tooltipsterMock.mock.calls.length).toBeGreaterThan(0);
   });
-
 });
