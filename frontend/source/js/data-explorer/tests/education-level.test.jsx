@@ -57,7 +57,7 @@ describe('<EducationLevel>', () => {
   it('fires handleToggleMenu when dropdown is clicked', () => {
     const { wrapper } = setup();
     const e = {
-      preventDefault: jest.fn()
+      preventDefault: jest.fn(),
     };
     expect(wrapper.state().expanded).toBeFalsy();
     wrapper.find('a').simulate('click', e);
