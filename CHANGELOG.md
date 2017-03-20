@@ -7,6 +7,11 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Fixed a bug that caused errors in the API due to a bad interaction between
+  the New Relic monitor and djorm-ext-pgfulltext (#1498).
+
 ## [2.5.0][] - 2017-03-16
 
 ### Changed
