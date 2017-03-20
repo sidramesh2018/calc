@@ -7,6 +7,13 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.5.1][] - 2017-03-20
+
+### Changed
+
+- Fixed a bug that caused errors in the API due to a bad interaction between
+  the New Relic monitor and djorm-ext-pgfulltext (#1498).
+
 ## [2.5.0][] - 2017-03-16
 
 ### Changed
@@ -208,7 +215,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.5.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.5.1...HEAD
+[2.5.1]: https://github.com/18F/calc/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/18F/calc/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/18F/calc/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/18F/calc/compare/v2.2.0...v2.3.0
