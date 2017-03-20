@@ -10,6 +10,7 @@ from django.contrib.sites.models import Site
 from django.http import HttpResponse
 from django.conf.urls import url
 from django.conf import settings
+from semantic_version import Version
 
 from .. import healthcheck, __version__
 from ..urls import urlpatterns
@@ -100,9 +101,15 @@ class HealthcheckTests(DjangoTestCase):
     def test_it_includes_version(self):
         self.assertResponseContains({'version': __version__})
 
-    def test_it_includes_postgres_version(self):
-        self.assertResponseContains(
-            {'postgres_version': settings.POSTGRES_VERSION})
+    def test_it_includes_postgres_minor_version(self):
+        res = self.client.get('/healthcheck/')
+        full_actual = json.loads(str(res.content, encoding='utf8'))
+        actual_pg_version = Version(full_actual['postgres_version'])
+        expected_pg_version = Version(settings.POSTGRES_VERSION)
+        self.assertEqual(
+            f"{actual_pg_version.major}.{actual_pg_version.minor}",
+            f"{expected_pg_version.major}.{expected_pg_version.minor}",
+        )
 
     def test_it_returns_200_when_all_is_well(self):
         res = self.client.get('/healthcheck/')
