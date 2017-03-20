@@ -33,13 +33,4 @@ describe('<Tooltip>', () => {
     expect(tooltipsterMock.mock.calls.length).toBeGreaterThan(0);
   });
 
-  it('calls the show and hide functions in respect to the right props', () => {
-    const { wrapper } = setup();
-    // mock the tooltipster show/hide functions
-    const show = jest.fn();
-    const hide = jest.fn();
-    const isHidden = false; // same as defaultProps.show
-    wrapper.syncShowProps();
-    expect(show.mock.calls.length).toBe(1);
-  });
 });
