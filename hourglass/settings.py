@@ -282,6 +282,7 @@ LOGGING = {
 
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
+POSTGRES_VERSION = '9.4.7'
 
 SECURE_SSL_REDIRECT = not DEBUG
 

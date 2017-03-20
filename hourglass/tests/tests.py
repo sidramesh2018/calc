@@ -9,8 +9,9 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.http import HttpResponse
 from django.conf.urls import url
+from django.conf import settings
 
-from .. import healthcheck, __version__, POSTGRES_VERSION
+from .. import healthcheck, __version__
 from ..urls import urlpatterns
 from ..decorators import staff_login_required
 from ..settings_utils import (load_cups_from_vcap_services,
@@ -100,7 +101,8 @@ class HealthcheckTests(DjangoTestCase):
         self.assertResponseContains({'version': __version__})
 
     def test_it_includes_postgres_version(self):
-        self.assertResponseContains({'postgres_version': POSTGRES_VERSION})
+        self.assertResponseContains(
+            {'postgres_version': settings.POSTGRES_VERSION})
 
     def test_it_returns_200_when_all_is_well(self):
         res = self.client.get('/healthcheck/')
@@ -113,7 +115,7 @@ class HealthcheckTests(DjangoTestCase):
     @patch.object(healthcheck, 'get_database_info')
     def test_it_returns_500_when_db_is_not_synchronized(self, mock):
         mock.return_value = {
-            'pg_version': POSTGRES_VERSION,
+            'pg_version': settings.POSTGRES_VERSION,
             'is_synchronized': False,
         }
         res = self.client.get('/healthcheck/')

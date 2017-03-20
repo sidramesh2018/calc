@@ -37,7 +37,7 @@ def healthcheck(request):
 
     results = {
         'version': __version__,
-        'postgres_version': db_info['pg_version'],  # 90410
+        'postgres_version': db_info['pg_version'],
         'is_database_synchronized': db_info['is_synchronized'],
         'canonical_url': canonical_url,
         'request_url': request_url,
