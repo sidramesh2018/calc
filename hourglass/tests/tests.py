@@ -122,8 +122,8 @@ class HealthcheckTests(DjangoTestCase):
     @patch.object(healthcheck, 'get_database_info')
     def test_it_returns_500_when_db_is_not_synchronized(self, mock):
         mock.return_value = {
-            'pg_version': settings.POSTGRES_VERSION,
-            'is_synchronized': False,
+            'postgres_version': settings.POSTGRES_VERSION,
+            'is_database_synchronized': False,
         }
         res = self.client.get('/healthcheck/')
         self.assertEqual(res.status_code, 500)

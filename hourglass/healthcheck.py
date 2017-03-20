@@ -24,8 +24,8 @@ def get_database_info(database=DEFAULT_DB_ALIAS):
     targets = executor.loader.graph.leaf_nodes()
     is_synchronized = False if executor.migration_plan(targets) else True
     return {
-        'is_synchronized': is_synchronized,
-        'pg_version': str(parse_pg_version(connection.pg_version)),
+        'is_database_synchronized': is_synchronized,
+        'postgres_version': str(parse_pg_version(connection.pg_version)),
     }
 
 
@@ -33,16 +33,13 @@ def healthcheck(request):
     canonical_url = get_canonical_url(request)
     request_url = request.build_absolute_uri()
 
-    db_info = get_database_info()
-
     results = {
         'version': __version__,
-        'postgres_version': db_info['pg_version'],
-        'is_database_synchronized': db_info['is_synchronized'],
         'canonical_url': canonical_url,
         'request_url': request_url,
         'canonical_url_matches_request_url': canonical_url == request_url,
         'rq_jobs': len(django_rq.get_queue().jobs),
+        **get_database_info(),
     }
 
     status_code = 200
