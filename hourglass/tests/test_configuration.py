@@ -48,6 +48,12 @@ class PostgresVersionTests(TestCase):
 
     version = Version(settings.POSTGRES_VERSION)
 
+    def test_docs_setup_md(self):
+        with open(path('docs', 'setup.md')) as f:
+            self.assertIn(
+                f'Postgres {self.version.major}.{self.version.minor}',
+                f.read())
+
     def test_docker_compose_yml(self):
         with open(path('docker-compose.yml')) as f:
             self.assertIn(f"image: postgres:{self.version}", f.read())
