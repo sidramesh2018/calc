@@ -52,7 +52,6 @@ const bundles = {
   // Scripts (vendor libs) common to CALC 1 and 2
   common: {
     vendor: [
-      'vendor/d3.v3.min.js',
       'vendor/jquery.1.11.1.js',
       'vendor/jquery.xdomainrequest.js',
       'vendor/jquery.tooltipster.js',
