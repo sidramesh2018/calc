@@ -19,7 +19,6 @@ const rename = require('gulp-rename');
 const eslint = require('gulp-eslint');
 const gutil = require('gulp-util');
 const del = require('del');
-const plumber = require('gulp-plumber');
 const named = require('vinyl-named');
 
 const webpackUtil = require('./frontend/gulp/webpack-util');
@@ -181,14 +180,18 @@ gulp.task('set-watching', () => {
   isWatching = true;
 });
 
-gulp.task('js:webpack', () => gulp.src(webpackUtil.scriptSources({
-  bundles,
-  rootDir: dirs.src.scripts,
-}))
-  .pipe(plumber())
-  .pipe(named(webpackUtil.getLastFolderName))
-  .pipe(webpackUtil.webpackify({ isWatching, isProd }))
-  .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/js/`)));
+gulp.task('js:webpack', () => {
+  // NOTE: Don't return this stream, otherwise other streams will get swallowed
+  // I think this is because when watching, webpack-stream does not ever
+  // return its stream
+  gulp.src(webpackUtil.scriptSources({
+    bundles,
+    rootDir: dirs.src.scripts,
+  }))
+    .pipe(named(webpackUtil.getLastFolderName))
+    .pipe(webpackUtil.webpackify({ isWatching, isProd }))
+    .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/js/`));
+});
 
 gulp.task('lint', () => gulp.src(path.join(dirs.src.scripts, paths.js))
     .pipe(eslint())
