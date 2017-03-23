@@ -1,6 +1,7 @@
 import json
 import requests
 import logging
+from typing import Dict
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -17,7 +18,7 @@ TIMEOUT = 3
 logger = logging.getLogger('slackbot')
 
 
-def post_to_webhook(payload):
+def post_to_webhook(payload: Dict[str, str]):
     res = requests.post(
         settings.SLACKBOT_WEBHOOK_URL,
         data={'payload': json.dumps(payload)},
@@ -26,7 +27,7 @@ def post_to_webhook(payload):
     res.raise_for_status()
 
 
-def sendmsg(text):
+def sendmsg(text: str) -> bool:
     '''
     Sends a message to Slack with the given text, formatted in the
     style described at https://api.slack.com/incoming-webhooks.
