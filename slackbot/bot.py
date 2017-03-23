@@ -50,7 +50,7 @@ def sendmsg(text):
             post_to_webhook(payload)
             return True
         except Exception:
-            logger.exception('Error occured when sending Slack message.')
+            logger.exception('Error occurred when sending Slack message.')
     else:
         logger.debug('SLACKBOT_WEBHOOK_URL is empty; not sending message.')
 
