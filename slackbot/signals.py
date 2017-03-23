@@ -8,7 +8,7 @@ from hourglass.site_utils import absolute_reverse
 
 @receiver(post_save, sender=SubmittedPriceList)
 def on_submittedpricelist_save(sender, created=False, instance=None,
-                               **kwargs):
+                               **kwargs) -> None:
     if (created and instance and
             instance.status == SubmittedPriceList.STATUS_UNREVIEWED):
         url = absolute_reverse(

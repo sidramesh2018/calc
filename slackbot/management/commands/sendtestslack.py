@@ -7,7 +7,7 @@ from hourglass.site_utils import absolutify_url
 
 
 @click.command()
-def command():
+def command() -> None:
     url = absolutify_url('/')
 
     if not settings.SLACKBOT_WEBHOOK_URL:

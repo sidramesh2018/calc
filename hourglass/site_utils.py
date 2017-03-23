@@ -24,7 +24,7 @@ def absolutify_url(url: str) -> str:
     return f"{protocol}://{host}{url}"
 
 
-def absolute_reverse(*args, **kwargs):
+def absolute_reverse(*args, **kwargs) -> str:
     '''
     Like Django's reverse(), but ensures the URL includes protocol
     and host information for the current Site, so that it can be

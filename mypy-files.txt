@@ -7,3 +7,5 @@ api/utils.py
 frontend/tests/sauce_connect.py
 data_capture/schedules/base.py
 slackbot/bot.py
+slackbot/signals.py
+slackbot/management/commands/sendtestslack.py
