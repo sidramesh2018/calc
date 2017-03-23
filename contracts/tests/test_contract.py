@@ -409,6 +409,19 @@ class ContractSearchTestCase(BaseContractSearchTestCase):
         ])
 
 
+class UnicodeContractSearchTestCase(BaseContractSearchTestCase):
+    CATEGORIES = [
+        '\u5982',
+        '\u679c',
+    ]
+
+    def test_search_finds_thing(self):
+        results = Contract.objects.search('\u5982')
+        self.assertCategoriesEqual(results, [
+            '\u5982',
+        ])
+
+
 class NormalizedContractSearchTestCase(BaseContractSearchTestCase):
     CATEGORIES = [
         'Jr. Language Interpreter',

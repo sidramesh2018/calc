@@ -7,6 +7,29 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.5.1][] - 2017-03-20
+
+### Changed
+
+- Fixed a bug that caused errors in the API due to a bad interaction between
+  the New Relic monitor and djorm-ext-pgfulltext (#1498).
+
+## [2.5.0][] - 2017-03-16
+
+### Changed
+
+- Fixed a bug in the data explorer search input that prevented searches for
+  numeric strings (#1475).
+- Fixed a bug in the the data explorer search input that would cause a
+  JavaScript error when empty results were returned from the autocompletion
+  API (#1484).
+- Fixed a bug preventing Unit of Issue cells with extra spaces from passing
+  validation (#1494).
+- Modified the Schedule 70 price list parser to look for some variations on
+  column names in order to accept more price list uploads.
+- Fixed some minor styling bugs in the admin interface (#1326 and #1262).
+- Upgraded CALC to use Django 1.9.
+
 ## [2.4.0][] - 2017-03-10
 
 ### Added
@@ -192,7 +215,9 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.4.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.5.1...HEAD
+[2.5.1]: https://github.com/18F/calc/compare/v2.5.0...v2.5.1
+[2.5.0]: https://github.com/18F/calc/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/18F/calc/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/18F/calc/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/18F/calc/compare/v2.1.0...v2.2.0
