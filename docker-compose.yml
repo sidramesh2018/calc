@@ -11,7 +11,7 @@ services:
     ports:
       - "${DOCKER_EXPOSED_PORT}:${DOCKER_EXPOSED_PORT}"
   db:
-    image: postgres:9.4
+    image: postgres:9.4.7
     volumes:
       - pgdata:/var/lib/postgresql/data/
     environment:
