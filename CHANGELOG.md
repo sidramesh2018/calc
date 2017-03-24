@@ -7,6 +7,16 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Improved how autocomplete search results are returned from the server
+  to improve the speed of retrieving, processing, showing results.
+- Changed `/healthcheck/` to include an `is_everything_ok` property and
+  always return `200` in order to effectively monitor that endpoint (#1516).
+- Optimized client JavaScript by removing global D3, using Webpack to make
+  all bundles, and switching to a React-based component for the Experience
+  slider.
+
 ## [2.5.1][] - 2017-03-20
 
 ### Changed
