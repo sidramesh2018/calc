@@ -7,9 +7,11 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.6.0][] - 2017-03-24
+
 ### Changed
 
-- Improved how autocomplete search results are returned from the server
+- Modified how autocomplete search results are returned from the server
   to improve the speed of retrieving, processing, showing results.
 - Changed `/healthcheck/` to include an `is_everything_ok` property and
   always return `200` in order to effectively monitor that endpoint (#1516).
@@ -225,7 +227,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.5.1...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.6.0...HEAD
+[2.6.0]: https://github.com/18F/calc/compare/v2.5.1...v2.6.0
 [2.5.1]: https://github.com/18F/calc/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/18F/calc/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/18F/calc/compare/v2.3.0...v2.4.0
