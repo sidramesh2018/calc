@@ -113,6 +113,8 @@ class GteEduAndExpFinder(ContractFinder):
                     ed[0] for ed in EDUCATION_CHOICES[index:]
                 ]
 
+        raise AssertionError('this should never be reached')
+
     def filter_queryset(self, qs: QuerySet) -> QuerySet:
         return qs.filter(
             min_years_experience__gte=self.min_years_experience,
