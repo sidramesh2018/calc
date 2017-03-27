@@ -11,22 +11,17 @@ const path = require('path');
 
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const eyeglass = require('eyeglass');
 const cleancss = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename');
 const eslint = require('gulp-eslint');
-const gulpif = require('gulp-if');
 const gutil = require('gulp-util');
-const uglify = require('gulp-uglify');
-const source = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
-const browserify = require('browserify');
-const watchify = require('watchify');
-const envify = require('envify/custom');
-const babelify = require('babelify');
 const del = require('del');
+const bourbonNeatPaths = require('bourbon-neat').includePaths;
+const named = require('vinyl-named');
+
+const webpackUtil = require('./frontend/gulp/webpack-util');
 
 const BUILT_FRONTEND_DIR = 'frontend/static/frontend/built';
 
@@ -56,16 +51,13 @@ const paths = {
 const bundles = {
   // Scripts (vendor libs) common to CALC 1 and 2
   common: {
-    noBrowserify: true,
     vendor: [
-      'vendor/d3.v3.min.js',
-      'vendor/jquery.min.js',
-      'vendor/query.xdomainrequest.min.js',
+      'vendor/jquery.1.11.1.js',
+      'vendor/jquery.xdomainrequest.js',
       'vendor/jquery.tooltipster.js',
-      'vendor/jquery.nouislider.all.min.js',
     ],
   },
-  // CALC 1.0 scripts
+  // Data Explorer scripts
   dataExplorer: {
     dirName: 'data-explorer',
     vendor: [
@@ -74,16 +66,16 @@ const bundles = {
       'vendor/canvg.js',
       'vendor/canvas-toBlob.js',
       'vendor/FileSaver.js',
-      'vendor/jquery.auto-complete.min.js',
+      'vendor/jquery.auto-complete.js',
     ],
   },
-  // CALC 2.0 Data Capture scripts
+  // Data Capture scripts
   dataCapture: {
     dirName: 'data-capture',
   },
   // Styleguide scripts
   styleguide: {},
-  // CALC 2.0 Tests
+  // Test scripts
   tests: {},
   // Common scripts
   shared: {
@@ -91,44 +83,26 @@ const bundles = {
   },
 };
 
-const browserifiedBundles = [];
 const vendoredBundles = [];
 
+// Generate tasks for all the vendor bundles
 Object.keys(bundles).forEach((name) => {
   const options = bundles[name];
   const dirName = options.dirName || name;
-  const noBrowserify = options.noBrowserify;
   const vendor = options.vendor || [];
-  const entryName = `${name}Entry`;
-  const outfileName = `${name}Outfile`;
-
-  dirs.dest.scripts[name] = `${BUILT_FRONTEND_DIR}/js/${dirName}`;
-
-  if (!noBrowserify) {
-    const browserifiedBundleName = `js:${dirName}`;
-    paths[entryName] = `${dirName}/index.js`;
-    paths[outfileName] = 'index.min.js';
-
-    gulp.task(browserifiedBundleName, () =>
-      browserifyBundle( // eslint-disable-line no-use-before-define
-        path.join(dirs.src.scripts, paths[entryName]),
-        dirs.dest.scripts[name],
-        paths[outfileName]));
-
-    browserifiedBundles.push(browserifiedBundleName);
-  }
 
   if (vendor.length) {
     const vendoredBundleName = `js:${dirName}:vendor`;
     gulp.task(vendoredBundleName, () =>
       concatAndMapSources(  // eslint-disable-line no-use-before-define
-        'vendor.min.js',
+        `${dirName}.vendor.js`,
         vendor.map(p => dirs.src.scripts + p),
-        dirs.dest.scripts[name]));
+        `${BUILT_FRONTEND_DIR}/js/`));
 
     vendoredBundles.push(vendoredBundleName);
   }
 });
+
 
 // default task
 // running `gulp` will default to watching and dist'ing files
@@ -158,10 +132,11 @@ gulp.task('build', ['sass', 'js', 'sphinx']);
 gulp.task('watch', ['set-watching', 'sass', 'js', 'sphinx'], () => {
   gulp.watch(path.join(dirs.src.sphinx, paths.sphinx), ['sphinx']);
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
+  gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint']);
 
-  // browserified bundles set up their own watch handling (via watchify)
+  // Note: wepback bundles set up their own watch handling
   // so we don't want to re-trigger them here, ref #437
-  gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint', 'js:legacy']);
+  gulp.watch(path.join(dirs.src.scripts, 'vendor', paths.js), ['js:vendor']);
 });
 
 gulp.task('clean', () => {
@@ -178,16 +153,18 @@ gulp.task('clean', () => {
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sourcemaps.init())
-    .pipe(sass(eyeglass()).on('error', sass.logError))
+    .pipe(sass({
+      includePaths: [bourbonNeatPaths, 'node_modules'],
+    }).on('error', sass.logError))
     .pipe(rename({ suffix: '.min' }))
     .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
   .pipe(gulp.dest(dirs.dest.style.built)));
 
 // Compile and lint JavaScript sources
-gulp.task('js', ['lint', 'js:legacy'].concat(browserifiedBundles));
+gulp.task('js', ['lint', 'js:vendor', 'js:webpack']);
 
-gulp.task('js:legacy', vendoredBundles);
+gulp.task('js:vendor', vendoredBundles);
 
 function concatAndMapSources(name, sources, dest) {
   return gulp.src(sources)
@@ -197,83 +174,24 @@ function concatAndMapSources(name, sources, dest) {
     .pipe(gulp.dest(dest));
 }
 
-// boolean flag to indicate to watchify/browserify that it should set up
-// its rebundling
+// boolean flag to indicate to webpack that it should set up its watching
 let isWatching = false;
 gulp.task('set-watching', () => {
   isWatching = true;
 });
 
-function browserifyBundle(entryPath, outputPath, outputFile) {
-  // ref: https://gist.github.com/danharper/3ca2273125f500429945
-  let bundler = browserify(entryPath, {
-    debug: true,
-    cache: {},
-    packageCache: {},
-    extensions: ['.jsx'],
-  });
-
-  // Some modules are referenced in the source code for
-  // Enzyme, but they're never actually loaded because they're only
-  // needed for older versions of React, so we'll explicitly tell
-  // Browserify to ignore them here.
-  bundler = bundler
-    .exclude('react/addons')
-    .exclude('react/lib/ReactContext')
-    .exclude('react/lib/ExecutionEnvironment');
-
-  bundler = bundler
-    .transform(envify({ NODE_ENV: process.env.NODE_ENV }), { global: true })
-    .transform(babelify.configure({ presets: ['es2015', 'react'] }));
-
-  if (process.env.NODE_ENV === 'production') {
-    // Here we use uglifyify--not to be confused with uglify--to uglify
-    // each individual module by itself, which allows us to excise
-    // unused dependencies based on our build configuration. We are
-    // also passing arguments to bundler.transform() in a weird order,
-    // but it's what uglifyify's docs recommend and it seems to work,
-    // so whatever.
-    bundler = bundler.transform({
-      global: true,
-    }, 'uglifyify');
-  }
-
-  if (isWatching) {
-    bundler = watchify(bundler);
-  }
-
-  function rebundle() {
-    bundler.bundle()
-      .on('error', (err) => {
-        gutil.beep();
-        gutil.log(gutil.colors.red(`Error (browserify):\n${err.toString()}`));
-        if (!isWatching) {
-          throw err;
-        }
-      })
-      .pipe(source(outputFile))
-      .pipe(buffer())
-      .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(gulpif(isProd, uglify()))
-      .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(outputPath))
-      .on('data', (file) => {
-        const pathname = path.relative(__dirname, file.path);
-
-        gutil.log(`Wrote ${pathname}.`);
-      });
-  }
-
-  if (isWatching) {
-    bundler.on('update', () => {
-      gutil.log(`-> Rebundling ${entryPath}`);
-      rebundle();
-    });
-  }
-
-  rebundle();
-  return bundler;
-}
+gulp.task('js:webpack', () => {
+  // NOTE: Don't return this stream, otherwise other streams will get swallowed
+  // I think this is because when watching, webpack-stream does not ever
+  // return its stream
+  gulp.src(webpackUtil.scriptSources({
+    bundles,
+    rootDir: dirs.src.scripts,
+  }))
+    .pipe(named(webpackUtil.getLastFolderName))
+    .pipe(webpackUtil.webpackify({ isWatching, isProd }))
+    .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/js/`));
+});
 
 gulp.task('lint', () => gulp.src(path.join(dirs.src.scripts, paths.js))
     .pipe(eslint())

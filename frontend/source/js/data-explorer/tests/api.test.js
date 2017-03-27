@@ -1,7 +1,7 @@
 /* global window */
 
 import xhr from 'xhr';
-import MockXMLHttpRequest from 'mock-xmlhttprequest';
+import sinon from 'sinon';
 
 import API from '../api';
 
@@ -27,27 +27,23 @@ describe('API constructor', () => {
 });
 
 describe('API get', () => {
-  xhr.XMLHttpRequest = MockXMLHttpRequest;
+  xhr.XMLHttpRequest = sinon.FakeXMLHttpRequest;
   const api = new API();
+  let req;
 
-  MockXMLHttpRequest.onSend = (mock) => {
-    const responseHeaders = {
-      'Content-Type': 'application/json',
-    };
+  beforeEach(() => {
+    req = null;
+  });
 
-    if (mock.url === '/whatever') {
-      mock.respond(200, responseHeaders, JSON.stringify({
-        result: 'success',
-      }));
-    } else if (mock.url === '/data?param=value') {
-      mock.respond(200, responseHeaders, JSON.stringify({
-        result: 'data_success',
-      }));
-    } else if (mock.url === '/network_error') {
-      mock.setNetworkError();
-    } else {
-      mock.respond(404, responseHeaders);
+  const resHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  sinon.FakeXMLHttpRequest.onCreate = (xhrObj) => {
+    if (req) {
+      throw new Error('more than one request made in this test!');
     }
+    req = xhrObj;
   };
 
   it('works with just uri', (done) => {
@@ -56,6 +52,8 @@ describe('API get', () => {
       expect(res).toMatchObject({ result: 'success' });
       done();
     });
+    expect(req.url).toEqual('/whatever');
+    req.respond(200, resHeaders, JSON.stringify({ result: 'success' }));
   });
 
   it('works with uri and data object', (done) => {
@@ -64,7 +62,10 @@ describe('API get', () => {
       expect(res).toMatchObject({ result: 'data_success' });
       done();
     });
+    expect(req.url).toEqual('/data?param=value');
+    req.respond(200, resHeaders, JSON.stringify({ result: 'data_success' }));
   });
+
 
   it('callsback with string on error response', (done) => {
     api.get({ uri: 'bad' }, (err, res) => {
@@ -72,7 +73,9 @@ describe('API get', () => {
       expect(err).toMatch('Not Found');
       done();
     });
+    req.respond(404, resHeaders);
   });
+
 
   it('callsback with a string on network error', (done) => {
     api.get({ uri: 'network_error' }, (err, res) => {
@@ -80,5 +83,6 @@ describe('API get', () => {
       expect(err).toMatch('Error: Internal XMLHttpRequest Error');
       done();
     });
+    req.error();
   });
 });

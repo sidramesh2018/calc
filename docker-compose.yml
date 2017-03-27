@@ -11,7 +11,9 @@ services:
     ports:
       - "${DOCKER_EXPOSED_PORT}:${DOCKER_EXPOSED_PORT}"
   db:
-    image: postgres:9.4
+    image: postgres:9.4.7
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=calc
       - POSTGRES_USER=calc_user
@@ -38,4 +40,7 @@ services:
 volumes:
   node-modules:
   python-venv:
+  home:
+  pgdata:
+  # TODO: We might be able to just put the nltk-data in the home dir.
   nltk-data:

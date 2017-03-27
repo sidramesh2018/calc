@@ -63,8 +63,8 @@ Whenever you update your repository via e.g. `git pull` or
 
 Feel free to install custom dependencies, e.g. your favorite
 debugging library, in your container via
-`docker-compose run app pip install` or 
-`docker-compose run app npm install`. Everything should work
+`docker-compose run app pip install` or
+`docker-compose run app yarn add`. Everything should work
 as expected.
 
 ### Debugging Python
@@ -81,14 +81,6 @@ Here's a [handy list of `ipdb` commands][ipdb_intro].
 
 [`ipdb`]: https://pypi.python.org/pypi/ipdb
 [ipdb_intro]: https://www.safaribooksonline.com/blog/2014/11/18/intro-python-debugger/
-
-### Reading email
-
-In the development Docker configuration, we use a container with
-[MailCatcher][] to make it easy to read the emails sent by the app. You
-can view it at port 1080 of your Docker host.
-
-[MailCatcher]: https://mailcatcher.me/
 
 ### Deploying to cloud environments
 
@@ -144,7 +136,7 @@ Web Services (AWS). You're welcome to use it directly or edit it to
 your own needs. Run it without any arguments for help.
 
 **Note:** As mentioned earlier, your app's source code is part of
-the container image. This means that every time you make a source code 
+the container image. This means that every time you make a source code
 change, you will need to re-run `./docker-update.sh`.
 
 [18F Docker guide]: https://pages.18f.gov/dev-environment-standardization/virtualization/docker/

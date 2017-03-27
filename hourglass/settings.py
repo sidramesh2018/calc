@@ -42,7 +42,10 @@ if DEBUG:
         'SECRET_KEY',
         'I am an insecure secret key intended ONLY for dev/testing.'
     )
-    os.environ.setdefault('EMAIL_URL', 'console:')
+    os.environ.setdefault(
+        'EMAIL_URL',
+        os.environ.get('DEFAULT_DEBUG_EMAIL_URL', 'console:')
+    )
     if 'REDIS_URL' not in os.environ:
         # Only set a default REDIS_TEST_URL if REDIS_URL is not
         # explicitly defined either.
@@ -79,6 +82,7 @@ TEMPLATES = [{
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
+            'hourglass.context_processors.canonical_url',
             'hourglass.context_processors.api_host',
             'hourglass.context_processors.show_debug_ui',
             'hourglass.context_processors.google_analytics_tracking_id',
@@ -119,6 +123,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.humanize',
+    'django.contrib.sites',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
@@ -137,6 +142,8 @@ INSTALLED_APPS = (
     'meta',
     'frontend',
 )  # type: Tuple[str, ...]
+
+SITE_ID = 1
 
 if DEBUG:
     STATICFILES_STORAGE = 'frontend.crotchety.CrotchetyStaticFilesStorage'
@@ -275,6 +282,7 @@ LOGGING = {
 
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
+POSTGRES_VERSION = '9.4.7'
 
 SECURE_SSL_REDIRECT = not DEBUG
 

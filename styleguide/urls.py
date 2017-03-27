@@ -1,6 +1,9 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
-from . import views, ajaxform_example, date_example, radio_checkbox_example
+from . import (
+    views, ajaxform_example, date_example, radio_checkbox_example,
+    email_examples
+)
 
 
 urlpatterns = [
@@ -9,4 +12,6 @@ urlpatterns = [
     url(r'^date$', date_example.view, name='date'),
     url(r'^radio-checkbox$', radio_checkbox_example.view,
         name='radio-checkbox'),
+    url(r'^email/', include(email_examples.urls,
+                            namespace='email_examples')),
 ]

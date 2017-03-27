@@ -1,26 +1,19 @@
+{% extends "email/base.html" %}
+{% load email_utils %}
 {% load data_capture %}
+
+{% block content %}
+<h1>
+  There's a problem with your upload
+</h1>
 <p>
-  Hi there,
+  Unfortunately we found an error when processing the Region 10 data you uploaded on {{ upload_source.created_at|tz_timestamp }}. Please visit CALC to <a href="{{ r10_upload_link }}">try again</a>.
 </p>
 <p>
-  We're emailing regarding the Region 10 CALC data upload <b>#{{ upload_source.id }}</b>, uploaded by <b>{{ upload_source.submitter.email }}</b> on <b>{{ upload_source.created_at|tz_timestamp }}</b>.
+  Also, this "traceback" may help the development team debug the problem:
+  <pre>
+    {{ traceback }}
+  </pre>
 </p>
-<p>
-  Unfortunately, an <b>error occurred</b> while importing the data.
-</p>
-<p>
-  Please visit <a href="{{ r10_upload_link }}">{{ r10_upload_link }}</a> to try uploading again.
-</p>
-<p>
-  The traceback below may help the development team debug the problem.
-</p>
-<pre>
-  {{ traceback }}
-</pre>
-<p>
-  If you have any questions, reply to this email. We'll get back to you within two business days.
-</p>
-<p>
-  Best,<br/>
-  The CALC Team
-</p>
+  {% cta url=r10_upload_link action_text="Try uploading again" %}
+{% endblock %}

@@ -43,8 +43,17 @@ alerts-widget:focus {
 
 // TODO: style these the same as alerts?
 // or perhaps just use alert classes in messages.html
-.message-error h3 {
+.message-error h3,
+.message-error p {
   color: $color-secondary-dark;
+  font-weight: $font-weight-bold;
+}
+
+.message-error h3:before {
+  width: $h3-font-size;
+  height: $h3-font-size;
+  content: url('../../images/icon-warning.svg');
+  padding-right: $space-half;
 }
 .message-success h3 {
   color: $color-green;

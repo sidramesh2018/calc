@@ -1,6 +1,6 @@
-@import 'libs/no-ui';
 @import 'base/variables';
 @import 'components/tables';
+@import 'components/experienceslider';
 
 body {
   background-color: $color-white; //override to steps.scss
@@ -148,7 +148,6 @@ dl.dropdown {
       background-color: $color-white;
       border:0;
       color:#000;
-      display:none;
       left:0px;
       padding: 2px 15px 2px 5px;
       position:absolute;

@@ -18,6 +18,10 @@ MY_DIR = os.path.abspath(os.path.dirname(__file__))
 
 ROOT_DIR = os.path.normpath(os.path.join(MY_DIR, '..', '..'))
 
+SCSS_DIR = 'frontend/source/sass'
+
+JS_DIR = 'frontend/source/js'
+
 register = template.Library()
 
 
@@ -75,6 +79,100 @@ class WebComponentHTMLParser(HTMLParser):
         for attr, val in attrs:
             if attr == 'is':
                 self.extends = val
+
+
+@register.simple_tag
+def template_tag_library(name):
+    from importlib import import_module
+    from django.template.backends.django import get_installed_libraries
+
+    libs = get_installed_libraries()
+
+    print(libs)
+
+    if name not in libs:
+        raise ValueError(f'template tag library {name} not found')
+
+    mod = import_module(libs[name])
+
+    if not mod.__file__.startswith(ROOT_DIR):
+        raise ValueError(f'template tag library {name} is not in project')
+
+    url = github_url_for_path(os.path.relpath(mod.__file__, ROOT_DIR))
+
+    return SafeString(f'<code><a href="{url}">{name}</a></code>')
+
+
+@register.simple_tag(takes_context=True)
+def template_url(context, template_name):
+    '''
+    Return a GitHub URL to the source of the given template.
+    '''
+
+    # Note that we can't simply use the `origin` property of a Template
+    # object, because, at least in Django 1.8, it seems this property
+    # is None if TEMPLATE_DEBUG is disabled (and we want to be able to
+    # render the styleguide in non-debug instances).
+
+    candidates = []
+
+    for loader in context.template.engine.template_loaders:
+        for candidate in loader.get_template_sources(template_name):
+            candidates.append(candidate)
+
+    path = None
+
+    for candidate in candidates:
+            if os.path.exists(candidate.name):
+                path = candidate.name
+                break
+
+    if path is None:
+        raise ValueError(f'Template {template_name} not found')
+
+    return github_url_for_path(os.path.relpath(path, ROOT_DIR))
+
+
+@register.simple_tag(takes_context=True)
+def template_link(context, template_name):
+    '''
+    Return a link to the source code of the given template.
+    '''
+
+    url = template_url(context, template_name)
+    return SafeString(f'<code><a href="{url}">{template_name}</a></code>')
+
+
+@register.simple_tag
+def scss(path):
+    '''
+    Link to a .scss (SASS) file relative to the base SASS directory.
+    '''
+
+    abspath = os.path.join(ROOT_DIR, SCSS_DIR, path)
+
+    if not os.path.exists(abspath):
+        raise ValueError(f'{abspath} does not exist')
+
+    url = github_url_for_path(os.path.join(SCSS_DIR, path))
+
+    return SafeString(f'<code><a href="{url}">{path}</a></code>')
+
+
+@register.simple_tag
+def js(path):
+    '''
+    Link to a JavaScript file relative to the base JS directory.
+    '''
+
+    abspath = os.path.join(ROOT_DIR, JS_DIR, path)
+
+    if not os.path.exists(abspath):
+        raise ValueError(f'{abspath} does not exist')
+
+    url = github_url_for_path(os.path.join(JS_DIR, path))
+
+    return SafeString(f'<code><a href="{url}">{path}</a></code>')
 
 
 @register.simple_tag

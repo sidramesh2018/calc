@@ -12,12 +12,7 @@ import {
   SCHEDULE_LABELS,
 } from '../constants';
 
-import { formatCommas } from '../util';
-
-function stripTrailingComma(str) {
-  // Removes trailing comma and whitespace from given string
-  return str.replace(/,\s*$/, '');
-}
+import { formatCommas, stripTrailingComma } from '../util';
 
 export function Description({
   shownResults,

@@ -24,6 +24,7 @@ import Site from './site';
 import BusinessSize from './business-size';
 import LaborCategory from './labor-category';
 import LoadingIndicator from './loading-indicator';
+import TitleTagSynchronizer from './title-tag-synchronizer';
 
 import { autobind } from '../util';
 
@@ -90,6 +91,7 @@ class App extends React.Component {
         onSubmit={this.handleSubmit}
         role="form"
       >
+        <TitleTagSynchronizer />
         <section className="search">
           <div className="container">
             <p className="help-text">

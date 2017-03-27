@@ -41,6 +41,11 @@
 
   {% guide_section "Typography" %}
 
+  <p>
+  Most typography-related styling is defined in
+  {% scss "base/_typography.scss" %} and {% scss "base/_variables.scss" %}.
+  </p>
+
   {% example %}
   <h1>Heading 1</h1>
   <h2>Heading 2</h2>
@@ -68,7 +73,7 @@
   <p>
     We use an {% webcomponent '<upload-widget>' %} with a nested
     {% webcomponent '<input is="upload-input">' %} to progressively enhance
-    the front-end. However, using them is rarely needed in practice, as
+    the front end. However, using them is rarely needed in practice, as
     {% pyobjname 'frontend.upload.UploadWidget' %} contains the Django
     widget for rendering all the required HTML.
   </p>
@@ -190,6 +195,10 @@
     cancelling a process or deleting information.
   </p>
 
+  <p>
+    Styling is defined in {% scss "components/_buttons.scss" %}.
+  </p>
+
   {% example %}
   <button>Default button</button>
   <a class="button button-primary" href="#">Link</a>
@@ -227,16 +236,22 @@
     </div>
   </div>
 
-  {% guide_section "Alerts" %}
-
   <p>
-    Defined in {% pathname 'frontend/source/sass/components/_alerts.scss' %}.</p>
+    The markup used by this widget is defined in
+    {% template_link "frontend/steps.html" %}, while styling is
+    in {% scss "components/_steps.scss" %}.
   </p>
+
+  {% guide_section "Alerts" %}
 
   <p>
     These are similar to the
     <a href="https://standards.usa.gov/alerts/">US Web Design Standards</a>,
     but add a stroke and the CALC standard border radius.
+  </p>
+
+  <p>
+    Styling is defined in {% scss 'components/_alerts.scss' %}.</p>
   </p>
 
   {% example %}
@@ -268,6 +283,9 @@
   {% endexample %}
 
   {% guide_section "Tables" %}
+
+  <p>Defined in {% scss "components/_tables.scss" %}.</p>
+
   <p>When displaying data in tables, be sure to add the <code>number</code> class to cells that contain numbers. This will monospace and right-align those columns. For dollar amounts, you'll need to also add the <code>currency</code> class to get the dollar sign to appear. You can add a highlight-on-hover effect to a table's rows by including the <code>hoverable</code> class on the table.</p>
   {% example %}
     <table class="hoverable">
@@ -331,7 +349,7 @@
 
   {% guide_section "Excel Tables" %}
 
-  <p>Defined in {% pathname 'frontend/source/sass/components/_exceltables.scss' %}.</p>
+  <p>Defined in {% scss 'components/_exceltables.scss' %}.</p>
 
   <p>
     Sometimes we need to display "screenshots" of Microsoft Excel tables
@@ -388,6 +406,12 @@
   {% endexample %}
 
   {% guide_section "Forms" %}
+
+  <p>
+    Defined in {% scss "components/_forms.scss" %} and
+    {% scss "uswds/_forms.scss" %}.
+  </p>
+
   {% example %}
   <label for="input-type-text">Text input label</label>
   <input id="input-type-text" name="input-type-text" type="text">
@@ -470,7 +494,7 @@
 
   {% guide_section "Form Button Row" %}
 
-  <p>Defined in {% pathname 'frontend/source/sass/components/_formbuttonrow.scss' %}.</p>
+  <p>Defined in {% scss 'components/_formbuttonrow.scss' %}.</p>
 
   <p>The form-button-row widget is used to add common buttons to the bottom of forms in a multi-step process, such as the Data Capture Upload flow.</p>
 
@@ -525,10 +549,15 @@
 
   <p>
     Styling for this component can be found in
-    {% pathname 'frontend/source/sass/components/_expandablearea.scss' %}.
+    {% scss 'components/_expandablearea.scss' %}.
   </p>
 
   {% guide_section "Modal Dialogs" %}
+
+  <p>
+    Defined in {% scss "components/_dialogs.scss" %} and
+    {% js "data-capture/modal-dialogs.js" %}.
+  </p>
 
   <p>
     Modal dialogs provide a way of display a dialog, such as a confirmation
@@ -574,6 +603,37 @@
   {% endexample %}
 
   <p>When JavaScript is not available, the activator element will do whatever it previously did before being modified to open a dialog.</p>
+
+  {% guide_section "Emails" %}
+
+  <p>
+    Emails are delivered in both plain text and HTML formats. Our
+    HTML emails are based on Lee Munroe's
+    <a href="https://github.com/leemunroe/responsive-html-email-template">Really Simple Responsive HTML Email Template</a>.
+  </p>
+
+  <p>
+    The base template used to render emails is at
+    {% template_link 'email/base.html' %}, while common template tags are
+    in the {% template_tag_library 'email_utils' %} template tag library.
+  </p>
+
+  <p>
+    Examples of each email type that can be sent from CALC are listed
+    below.
+  </p>
+
+  <ul>
+    {% for example in email_examples %}
+    <li>
+      {{ example.subject }}
+      <br>
+      <a href="{{ example.plaintext_url }}">Plain text</a> |
+       <a href="{{ example.html_url }}">HTML</a> |
+       <a href="{% template_url example.template %}">Template source</a>
+    </li>
+    {% endfor %}
+  </ul>
 
   {% guide_section "Compatibility Mode" %}
 

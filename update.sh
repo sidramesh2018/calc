@@ -16,7 +16,7 @@ fi
 python -m nltk.downloader averaged_perceptron_tagger ${NLTK_OPTS}
 
 echo "----- Updating Node Dependencies -----"
-npm install
+yarn
 
 echo "----- Migrating Database -----"
 python manage.py migrate --noinput

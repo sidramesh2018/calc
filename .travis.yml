@@ -1,12 +1,11 @@
 language: python
 cache:
   pip: true
-  directories:
-  - node_modules
+  yarn: true
 python:
 - 3.6
 addons:
-  postgresql: 9.3
+  postgresql: 9.4
 matrix:
   fast_finish: true
 services:
@@ -20,8 +19,8 @@ install:
 - pip install -r requirements-dev.txt
 - python -m nltk.downloader averaged_perceptron_tagger -d ./nltk_data
 - sudo mv nltk_data /usr/share/nltk_data
-- npm install -g gulp-cli
-- npm install
+- npm install -g gulp-cli yarn@0.21.3
+- yarn --pure-lockfile
 script:
 - phantomjs --version
 - python manage.py ultratest flake8 eslint mypy

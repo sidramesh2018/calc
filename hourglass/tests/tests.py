@@ -6,8 +6,11 @@ from unittest.mock import patch
 from django.test import TestCase as DjangoTestCase
 from django.test import override_settings
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.http import HttpResponse
 from django.conf.urls import url
+from django.conf import settings
+from semantic_version import Version
 
 from .. import healthcheck, __version__
 from ..urls import urlpatterns
@@ -70,26 +73,66 @@ class ComplianceTests(DjangoTestCase):
         self.assertHasHeaders(res)
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)
 class HealthcheckTests(DjangoTestCase):
-    def test_it_works(self):
-        res = self.client.get('/healthcheck/')
-        self.assertEqual(res.status_code, 200)
-        self.assertJSONEqual(str(res.content, encoding='utf8'), {
-            'version': __version__,
-            'is_database_synchronized': True,
-            'rq_jobs': 0
+    def setUp(self):
+        site = Site.objects.get_current()
+        site.domain = "testserver"
+        site.save()
+
+    def assertResponseContains(self, expected, res=None):
+        if res is None:
+            res = self.client.get('/healthcheck/')
+        full_actual = json.loads(str(res.content, encoding='utf8'))
+        actual = {k: full_actual[k] for k in expected.keys()}
+        self.assertEqual(actual, expected)
+
+    @override_settings(SECURE_SSL_REDIRECT=True)
+    def test_it_works_when_canonical_and_request_url_mismatch(self):
+        self.assertResponseContains({
+            'canonical_url': 'https://testserver/healthcheck/',
+            'request_url': 'http://testserver/healthcheck/',
+            'canonical_url_matches_request_url': False,
+            'is_everything_ok': False,
         })
 
-    @patch.object(healthcheck, 'is_database_synchronized')
-    def test_it_returns_500_when_db_is_not_synchronized(self, mock):
-        mock.return_value = False
+    def test_it_includes_rq_jobs(self):
+        self.assertResponseContains({'rq_jobs': 0})
+
+    def test_it_includes_version(self):
+        self.assertResponseContains({'version': __version__})
+
+    def test_it_includes_postgres_minor_version(self):
         res = self.client.get('/healthcheck/')
-        self.assertEqual(res.status_code, 500)
-        self.assertJSONEqual(str(res.content, encoding='utf8'), {
-            'version': __version__,
+        full_actual = json.loads(str(res.content, encoding='utf8'))
+        actual_pg_version = Version(full_actual['postgres_version'])
+        expected_pg_version = Version(settings.POSTGRES_VERSION)
+        self.assertEqual(
+            f"{actual_pg_version.major}.{actual_pg_version.minor}",
+            f"{expected_pg_version.major}.{expected_pg_version.minor}",
+        )
+
+    def test_it_works_when_all_is_well(self):
+        res = self.client.get('/healthcheck/')
+        self.assertEqual(res.status_code, 200)
+        self.assertResponseContains({
+            'canonical_url_matches_request_url': True,
+            'is_database_synchronized': True,
+            'is_everything_ok': True,
+        }, res=res)
+
+    @patch.object(healthcheck, 'get_database_info')
+    def test_it_works_when_db_is_not_synchronized(self, mock):
+        mock.return_value = {
+            'postgres_version': settings.POSTGRES_VERSION,
             'is_database_synchronized': False,
-            'rq_jobs': 0
-        })
+            'is_everything_ok': False,
+        }
+        res = self.client.get('/healthcheck/')
+        self.assertEqual(res.status_code, 200)
+        self.assertResponseContains({
+            'is_database_synchronized': False,
+        }, res=res)
 
 
 class RobotsTests(DjangoTestCase):
@@ -223,7 +266,7 @@ class AdminLoginTest(DjangoTestCase):
         res = self.client.get('/admin/')
         self.assertEqual(res.status_code, 302)
         self.assertTrue(
-            res['Location'].startswith('http://testserver/admin/login'))
+            res['Location'].startswith('/admin/login'))
 
     def test_is_staff_user_can_view(self):
         user = User.objects.create_user(  # nosec
@@ -292,7 +335,7 @@ class StaffLoginRequiredTests(DjangoTestCase):
         res = self.client.get('/staff_only_view/')
         self.assertEqual(302, res.status_code)
         self.assertTrue(
-            res['Location'].startswith('http://testserver/auth/login'))
+            res['Location'].startswith('/auth/login'))
 
     def test_staff_user_is_permitted(self):
         self.login(is_staff=True)
