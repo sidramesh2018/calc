@@ -32,7 +32,7 @@ load_redis_url_from_vcap_services('calc-redis')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
 
-DEBUG_HTTPS = 'DEBUG_HTTPS' in os.environ
+DEBUG_HTTPS = 'DEBUG_HTTPS' in os.environ and not is_running_tests()
 
 HIDE_DEBUG_UI = 'HIDE_DEBUG_UI' in os.environ
 
