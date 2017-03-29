@@ -132,7 +132,10 @@ gulp.task('build', ['sass', 'js', 'sphinx']);
 gulp.task('watch', ['set-watching', 'sass', 'js', 'sphinx'], () => {
   gulp.watch(path.join(dirs.src.sphinx, paths.sphinx), ['sphinx']);
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
-  gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint']);
+
+  if (!('ESLINT_CHILL_OUT' in process.env)) {
+    gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint']);
+  }
 
   // Note: wepback bundles set up their own watch handling
   // so we don't want to re-trigger them here, ref #437
