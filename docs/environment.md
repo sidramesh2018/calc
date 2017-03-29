@@ -110,6 +110,10 @@ string), the boolean is true; otherwise, it's false.
   will be sent messages whenever certain kinds of
   [events](../slackbot/signals.py) occur in the app.
 
+* `ESLINT_CHILL_OUT` is a boolean; if true, it will change the behavior
+  of gulp's watch mode such that it doesn't run `eslint` every time a
+  file changes.
+
 [RoboBrowser]: http://robobrowser.readthedocs.io/
 [`SECRET_KEY`]: https://docs.djangoproject.com/en/1.8/ref/settings/#secret-key
 [`DEFAULT_FROM_EMAIL`]: https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-DEFAULT_FROM_EMAIL
