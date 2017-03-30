@@ -5,7 +5,7 @@ cache:
 python:
 - 3.6
 addons:
-  postgresql: 9.4
+  postgresql: 9.5
 matrix:
   fast_finish: true
 services:
