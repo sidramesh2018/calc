@@ -6,42 +6,20 @@ from ..models import AttemptedPriceListSubmission
 from .common import get_nested_item
 
 
-class Recorder:
-    '''
-    A class used for managing the recording of a price list
-    upload request.
-    '''
-
-    def __init__(self, replayer, request):
-        self.attempt = None
-
-        if request.method == 'POST' and not replayer.is_replay(request):
-            self.attempt = AttemptedPriceListSubmission(
-                submitter=request.user,
-                session_state=request.session[replayer.base_session_key]
-            )
-            if 'file' in request.FILES:
-                self.attempt.set_uploaded_file(request.FILES['file'])
-            self.attempt.valid_row_count = 0
-            self.attempt.invalid_row_count = 0
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        if self.attempt:
-            self.attempt.save()
-
-    def on_gleaned_data(self, gleaned_data):
-        if self.attempt:
-            self.attempt.valid_row_count = len(gleaned_data.valid_rows)
-            self.attempt.invalid_row_count = len(gleaned_data.invalid_rows)
-
-
 class Replayer:
     '''
     A class used for managing the recording and replaying of
     price list uploads.
+
+    It's assumed that price list upload endpoints conform to
+    the following:
+
+      * Respond to a POST request with the 'file' parameter
+        containing a price list file that has been uploaded.
+
+      * Store all relevant price list-related data in a
+        session key. The value of this session key should
+        be a dict.
     '''
 
     def __init__(self, base_session_key):
@@ -77,6 +55,10 @@ class Replayer:
     def _load_replay(self, request):
         '''
         Load the replay specified by the given POST request.
+
+        This essentially makes the request's session and POST
+        data look like it did when the replay was originally
+        recorded.
         '''
 
         attempt_id = request.POST['replay-attempted-submission']
@@ -89,17 +71,29 @@ class Replayer:
         if attempt.uploaded_file:
             request.FILES['file'] = attempt.restore_uploaded_file()
 
+    @staticmethod
+    def can_view_replays(user):
+        '''
+        Returns whether or not the given User has permission to
+        view replays.
+        '''
+
+        return user.is_staff and user.has_perm(VIEW_ATTEMPT_PERMISSION)
+
     def recordable(self, func):
         '''
         A view decorator that makes a view recordable and replayable.
+
+        The view will be passed 'recorder' as a keyword argument;
+        it will be a Recorder instance that can be used to add
+        additional metadata to the recording.
         '''
 
         @wraps(func)
         def view(request, *args, **kwargs):
             if (request.method == 'POST' and
                     'replay-attempted-submission' in request.POST):
-                if not (request.user.is_staff and
-                        request.user.has_perm(VIEW_ATTEMPT_PERMISSION)):
+                if not self.can_view_replays(request.user):
                     return HttpResponseForbidden()
                 self._load_replay(request)
 
@@ -115,3 +109,48 @@ class Replayer:
         '''
 
         return bool(self._get_replay_id(request))
+
+
+class Recorder:
+    '''
+    A class used for managing the recording of a price list
+    upload request.
+
+    It is passed to views with the Replayer.recordable decorator
+    and can be used to attach additional metadata to a recording.
+
+    Note that a Recorder instance may not actually represent an
+    actual recording, because the same view function is called
+    for both recordings and replays. If the view function is
+    called in the context of a replay, the Recorder passed to
+    it will be usable, but its method calls will largely be no-ops.
+    '''
+
+    def __init__(self, replayer, request):
+        self.attempt = None
+
+        if request.method == 'POST' and not replayer.is_replay(request):
+            self.attempt = AttemptedPriceListSubmission(
+                submitter=request.user,
+                session_state=request.session[replayer.base_session_key]
+            )
+            if 'file' in request.FILES:
+                self.attempt.set_uploaded_file(request.FILES['file'])
+            self.attempt.valid_row_count = 0
+            self.attempt.invalid_row_count = 0
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        if self.attempt:
+            self.attempt.save()
+
+    def on_gleaned_data(self, gleaned_data):
+        '''
+        Associate gleaned data with a price list upload request.
+        '''
+
+        if self.attempt:
+            self.attempt.valid_row_count = len(gleaned_data.valid_rows)
+            self.attempt.invalid_row_count = len(gleaned_data.invalid_rows)
