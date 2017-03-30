@@ -16,6 +16,11 @@ string), the boolean is true; otherwise, it's false.
 * `DEBUG` is a boolean value that indicates whether debugging is enabled
   (this should always be false in production).
 
+* `DEBUG_HTTPS` is a boolean value that indicates whether the
+  site should consider itself to be served over HTTPS while
+  debugging is enabled. This can be useful if you want to develop
+  with SSL enabled.
+
 * `HIDE_DEBUG_UI` is a boolean value that indicates whether to hide
   various development and debugging affordances in the UI, such as the
   [Django Debug Toolbar][]. This can be useful when demoing or user testing

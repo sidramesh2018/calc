@@ -32,6 +32,8 @@ load_redis_url_from_vcap_services('calc-redis')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
 
+DEBUG_HTTPS = 'DEBUG_HTTPS' in os.environ and not is_running_tests()
+
 HIDE_DEBUG_UI = 'HIDE_DEBUG_UI' in os.environ
 
 SLACKBOT_WEBHOOK_URL = os.environ.get('SLACKBOT_WEBHOOK_URL', '')
@@ -293,6 +295,9 @@ DATABASES['default'] = dj_database_url.config()
 POSTGRES_VERSION = '9.4.7'
 
 SECURE_SSL_REDIRECT = not DEBUG
+
+if DEBUG and DEBUG_HTTPS:
+    SECURE_SSL_REDIRECT = True
 
 if 'FORCE_DISABLE_SECURE_SSL_REDIRECT' in os.environ:
     SECURE_SSL_REDIRECT = False

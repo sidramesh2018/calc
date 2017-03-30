@@ -19,7 +19,8 @@ def absolutify_url(url: str) -> str:
 
     protocol = 'https'
     host = Site.objects.get_current().domain
-    if settings.DEBUG or not settings.SECURE_SSL_REDIRECT:
+    if ((settings.DEBUG and not settings.DEBUG_HTTPS) or
+            not settings.SECURE_SSL_REDIRECT):
         protocol = 'http'
     return f"{protocol}://{host}{url}"
 
