@@ -2,7 +2,7 @@ import json
 
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
-from django.http import HttpResponseBadRequest, HttpResponseForbidden
+from django.http import HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
@@ -12,50 +12,27 @@ from django.utils.safestring import mark_safe
 from django.utils.html import escape
 
 from .. import forms
-from ..models import SubmittedPriceList, AttemptedPriceListSubmission
+from ..models import SubmittedPriceList
 from ..decorators import handle_cancel
 from ..schedules import registry
-from ..management.commands.initgroups import (
-    PRICE_LIST_UPLOAD_PERMISSION,
-    VIEW_ATTEMPT_PERMISSION)
+from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from .common import (add_generic_form_error, build_url,
                      get_nested_item, get_deserialized_gleaned_data)
+from .replay import Replayer
 from frontend import ajaxform
 from frontend.steps import Steps
 
 
 SESSION_KEY = 'data_capture:price_list'
 
-
-def get_ctx_replay_info(request):
-    '''
-    A context processor that adds information about the current
-    AttemptedPriceListSubmission being replayed, if any.
-    '''
-
-    replay_id = get_nested_item(request.session, (
-        SESSION_KEY,
-        'replay_id',
-    ))
-
-    replay = None
-
-    if replay_id:
-        # Just in case the replay has disappeared since the user
-        # started replaying, we'll use `first()` to get the attempt,
-        # so that we don't crash if the replay no longer exists.
-        replay = AttemptedPriceListSubmission.objects.filter(
-            pk=int(replay_id)).first()
-
-    return {'replay': replay}
-
+replayer = Replayer(SESSION_KEY)
 
 steps = Steps(
     template_format='data_capture/price_list/step_{}.html',
     extra_ctx_vars={
         'current_selected_tab': 'upload_price_data'
     },
-    extra_ctx_processors=[get_ctx_replay_info]
+    extra_ctx_processors=[replayer.context_processor]
 )
 
 
@@ -182,25 +159,8 @@ def step_2(request, step):
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
-def step_3(request, step):
-    request_files = request.FILES
-
-    if (request.method == 'POST' and
-            'replay-attempted-submission' in request.POST):
-        if not (request.user.is_staff and
-                request.user.has_perm(VIEW_ATTEMPT_PERMISSION)):
-            return HttpResponseForbidden()
-        attempt_id = request.POST['replay-attempted-submission']
-        attempt = AttemptedPriceListSubmission.objects.filter(
-            pk=int(attempt_id)).get()
-        request.session[SESSION_KEY] = {
-            'replay_id': attempt_id,
-            **attempt.session_state
-        }
-        request_files = {}
-        if attempt.uploaded_file:
-            request_files['file'] = attempt.restore_uploaded_file()
-
+@replayer.recordable
+def step_3(request, step, recorder):
     if get_step_form_from_session(2, request) is None:
         return redirect('data_capture:step_2')
 
@@ -210,7 +170,6 @@ def step_3(request, step):
 
     gleaned_data = get_deserialized_gleaned_data(request)
     is_file_required = not (gleaned_data and gleaned_data.valid_rows)
-    record_attempt = False if session_pl.get('replay_id') else True
 
     if request.method == 'GET':
         existing_filename = None
@@ -228,18 +187,10 @@ def step_3(request, step):
 
         form = forms.PriceListUploadForm(
             request.POST,
-            request_files,
+            request.FILES,
             schedule=step_1_data['schedule'],
             is_file_required=is_file_required
         )
-
-        if record_attempt:
-            attempt = AttemptedPriceListSubmission(
-                submitter=request.user,
-                session_state=session_pl
-            )
-            if 'file' in request_files:
-                attempt.set_uploaded_file(request_files['file'])
 
         if form.is_valid():
             if 'gleaned_data' in form.cleaned_data:
@@ -249,18 +200,12 @@ def step_3(request, step):
                 session_pl['filename'] = form.cleaned_data['file'].name
                 request.session.modified = True
 
-            if record_attempt:
-                attempt.valid_row_count = len(gleaned_data.valid_rows)
-                attempt.invalid_row_count = len(gleaned_data.invalid_rows)
-                attempt.save()
+            recorder.on_gleaned_data(gleaned_data)
 
             if gleaned_data.invalid_rows:
                 return ajaxform.redirect(request, 'data_capture:step_3_errors')
             return ajaxform.redirect(request, 'data_capture:step_4')
         else:
-            if record_attempt:
-                attempt.valid_row_count = attempt.invalid_row_count = 0
-                attempt.save()
             add_generic_form_error(request, form)
 
     return ajaxform.render(
