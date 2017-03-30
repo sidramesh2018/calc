@@ -53,7 +53,6 @@ const bundles = {
   common: {
     vendor: [
       'vendor/jquery.1.12.4.js',
-      'vendor/jquery.xdomainrequest.js',
       'vendor/jquery.tooltipster.js',
     ],
   },
