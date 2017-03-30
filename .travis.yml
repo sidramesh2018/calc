@@ -19,6 +19,8 @@ install:
 - pip install -r requirements-dev.txt
 - npm install -g gulp-cli yarn@0.21.3
 - yarn --pure-lockfile
+before_script:
+  - export TRAVIS_EVENT_TYPE="cron"
 script:
 - phantomjs --version
 - python manage.py ultratest flake8 eslint mypy
@@ -27,6 +29,11 @@ script:
 - bandit -r .
 - npm test
 - python frontend/tests/sauce_connect.py py.test --ignore=frontend/tests/test_selenium.py --cov
+- |
+  if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then
+    # run production tests
+    py.test production_tests
+  fi
 after_success:
 - codeclimate-test-reporter
 env:
