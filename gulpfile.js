@@ -49,14 +49,8 @@ const paths = {
 };
 
 const bundles = {
-  // Scripts (vendor libs) common to CALC 1 and 2
-  common: {
-    vendor: [
-      'vendor/jquery.1.11.1.js',
-      'vendor/jquery.xdomainrequest.js',
-      'vendor/jquery.tooltipster.js',
-    ],
-  },
+  // Scripts common to Data Explorer and Data Capture
+  common: {},
   // Data Explorer scripts
   dataExplorer: {
     dirName: 'data-explorer',
@@ -77,10 +71,6 @@ const bundles = {
   styleguide: {},
   // Test scripts
   tests: {},
-  // Common scripts
-  shared: {
-    dirName: 'common',
-  },
 };
 
 const vendoredBundles = [];
