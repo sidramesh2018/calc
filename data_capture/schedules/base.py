@@ -2,7 +2,7 @@ import re
 import abc
 from typing import Dict, Any, Optional
 from django.template.loader import render_to_string
-from django.core.validators import (  # type: ignore
+from django.core.validators import (
     MinValueValidator, RegexValidator)
 from django.http import HttpRequest
 from django.utils.safestring import SafeString, mark_safe
@@ -13,6 +13,7 @@ from ..models import SubmittedPriceList
 
 if False:
     from django.forms import Form  # NOQA
+    from typing import List  # NOQA
 
 min_price_validator = MinValueValidator(
     FEDERAL_MIN_CONTRACT_RATE,
