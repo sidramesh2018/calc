@@ -9,6 +9,26 @@ that's how long AWS sandbox instances last.
 
 The following instructions document how to accomplish this.
 
+## Prerequisites
+
+You will need the following:
+
+* Write access to the Cloud Foundry organization, space, and app
+  defined in [`.env.cloudgov-proxy`](.env.cloudgov-proxy).
+
+* Write access to the Docker Hub organization and repo
+  defined in [`.env.cloudgov-proxy`](.env.cloudgov-proxy).
+
+* AWS sandbox access outlined in the
+  [18F Before You Ship](https://pages.18f.gov/before-you-ship/infrastructure/sandbox/)
+  guide.
+
+You may also want to familiarize yourself with deploying CALC to
+cloud environments via Docker, as described in the
+[CALC Docker guide](../docs/docker.md).
+
+## Deployment
+
 These instructions assume you are going to create a docker machine called
 `aws30`, substitute it for your own machine name as needed.
 
