@@ -32,12 +32,15 @@ load_redis_url_from_vcap_services('calc-redis')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
 
-DEBUG_HTTPS = 'DEBUG_HTTPS' in os.environ
+DEBUG_HTTPS = 'DEBUG_HTTPS' in os.environ and not is_running_tests()
 
 HIDE_DEBUG_UI = 'HIDE_DEBUG_UI' in os.environ
 
+SLACKBOT_WEBHOOK_URL = os.environ.get('SLACKBOT_WEBHOOK_URL', '')
+
 if is_running_tests():
     HIDE_DEBUG_UI = True
+    SLACKBOT_WEBHOOK_URL = ''
 
 if DEBUG:
     os.environ.setdefault(
@@ -143,6 +146,7 @@ INSTALLED_APPS = (
     'styleguide',
     'meta',
     'frontend',
+    'slackbot.apps.SlackbotConfig',
 )  # type: Tuple[str, ...]
 
 SITE_ID = 1
@@ -279,12 +283,16 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'INFO',
         },
+        'slackbot': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
     },
 }
 
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
-POSTGRES_VERSION = '9.4.7'
+POSTGRES_VERSION = '9.5.4'
 
 SECURE_SSL_REDIRECT = not DEBUG
 
