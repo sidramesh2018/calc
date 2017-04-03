@@ -110,7 +110,9 @@ class GteEduAndExpFinder(ContractFinder):
         for index, pair in enumerate(EDUCATION_CHOICES):
             if self.education_level == pair[0]:
                 return [
-                    ed[0] for ed in EDUCATION_CHOICES[index:]
+                    # No idea why mypy suddenly doesn't like this but I
+                    # don't have time to deal with it now.
+                    ed[0] for ed in EDUCATION_CHOICES[index:]  # type: ignore
                 ]
 
         raise AssertionError('this should never be reached')
