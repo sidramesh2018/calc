@@ -4,6 +4,13 @@ import * as sinon from 'sinon';
 
 import { UploadWidget } from '../data-capture/upload';
 
+function mockOriginalEvent(extras) {
+  return Object.assign({
+    preventDefault: () => {},
+    stopPropagation: () => {},
+  }, extras);
+}
+
 (function uploadTests(QUnit, $) {
   const UPLOAD_HTML = QUNIT_FIXTURE_DATA.UPLOAD_TESTS_HTML;
 
@@ -157,7 +164,7 @@ import { UploadWidget } from '../data-capture/upload';
   advancedTest('advanced upload does not allow non-accepted file types', (assert) => {
     const badFakeFile = { name: 'boop', type: 'application/badtest' };
     const evt = jQuery.Event('drop', { // eslint-disable-line new-cap
-      originalEvent: { dataTransfer: { files: [badFakeFile] } },
+      originalEvent: mockOriginalEvent({ dataTransfer: { files: [badFakeFile] } }),
     });
 
     upload.trigger(evt);
@@ -168,7 +175,7 @@ import { UploadWidget } from '../data-capture/upload';
   advancedTest('advanced upload allows accepted file types', (assert) => {
     const goodFileMime = { name: 'boop', type: 'application/test' };
     const mimeDropEvt = jQuery.Event('drop', { // eslint-disable-line new-cap
-      originalEvent: { dataTransfer: { files: [goodFileMime] } },
+      originalEvent: mockOriginalEvent({ dataTransfer: { files: [goodFileMime] } }),
     });
 
     upload.trigger(mimeDropEvt);
@@ -176,7 +183,7 @@ import { UploadWidget } from '../data-capture/upload';
 
     const goodFileExt = { name: 'boop.csv', type: 'whatever' };
     const extDropEvt = jQuery.Event('drop', { // eslint-disable-line new-cap
-      originalEvent: { dataTransfer: { files: [goodFileExt] } },
+      originalEvent: mockOriginalEvent({ dataTransfer: { files: [goodFileExt] } }),
     });
     upload.trigger(extDropEvt);
     assert.strictEqual(input[0].upgradedValue, goodFileExt);
@@ -186,7 +193,7 @@ import { UploadWidget } from '../data-capture/upload';
     input.attr('accept', null);
     const fakeFile = { name: 'boop' };
     const evt = jQuery.Event('drop', { // eslint-disable-line new-cap
-      originalEvent: { dataTransfer: { files: [fakeFile] } },
+      originalEvent: mockOriginalEvent({ dataTransfer: { files: [fakeFile] } }),
     });
     upload.trigger(evt);
     assert.strictEqual(input[0].upgradedValue, fakeFile);
@@ -195,7 +202,7 @@ import { UploadWidget } from '../data-capture/upload';
   advancedTest('"changefile" event triggered on drop', (assert) => {
     const fakeFile = { name: 'boop', type: 'application/test' };
     const evt = jQuery.Event('drop', { // eslint-disable-line new-cap
-      originalEvent: { dataTransfer: { files: [fakeFile] } },
+      originalEvent: mockOriginalEvent({ dataTransfer: { files: [fakeFile] } }),
     });
 
     upload.on('changefile', (e) => {
