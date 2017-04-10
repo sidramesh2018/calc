@@ -4,6 +4,12 @@ set -e
 
 export $(cat .env.cloudgov-proxy | xargs)
 
+if [ -n "$COMPOSE_FILE" ]
+then
+  echo "Please run this command in a new terminal session."
+  exit 1
+fi
+
 # Rebuild our Docker image and tag it.
 docker-compose build
 

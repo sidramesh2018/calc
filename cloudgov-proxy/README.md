@@ -77,7 +77,7 @@ These instructions assume you are going to create a docker machine called
    This will open a browser to have you login via 2FA to cloud.gov. It
    will automatically target the proper organization and space.
 
-7. Now run:
+7. Now, in a new terminal, run:
 
    ```
    ./update-site.sh aws30

@@ -14,6 +14,12 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+if [ -n "$COMPOSE_FILE" ]
+then
+  echo "Please run this command in a new terminal session."
+  exit 1
+fi
+
 cd ..
 
 echo "Activating $1..."
