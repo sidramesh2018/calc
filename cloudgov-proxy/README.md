@@ -83,3 +83,12 @@ These instructions assume you are going to create a docker machine called
    ./update-site.sh aws30
    ./cloud.gov-push.sh
    ```
+
+You're done! Next week, the `aws30` machine will be automatically
+cleaned up, so you'll want to remove its references on your machine
+by running the following in the root directory of your repository:
+
+```
+rm *aws30*
+docker-machine rm -f aws30
+```
