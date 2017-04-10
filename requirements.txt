@@ -2,7 +2,7 @@
 dj-database-url==0.4.2
 dj-email-url==0.0.10
 django-click==1.2.0
-Django==1.9.12
+Django==1.9.13
 django-cors-headers==2.0.2
 django-debug-toolbar==1.6
 djangorestframework==3.5.3
