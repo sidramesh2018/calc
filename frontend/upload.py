@@ -3,6 +3,9 @@ from django.forms.utils import flatatt
 from django.utils.html import escape
 
 
+DEFAULT_FILE_EXTENSIONS = (".xlsx", ".xls", ".csv")
+
+
 class UploadWidget(forms.widgets.FileInput):
     '''
     This widget represents an upload widget that the user can
@@ -12,7 +15,7 @@ class UploadWidget(forms.widgets.FileInput):
     '''
 
     def __init__(self, attrs=None, degraded=False, required=True,
-                 accept=(".xlsx", ".xls", ".csv"),
+                 accept=DEFAULT_FILE_EXTENSIONS,
                  extra_instructions='XLS, XLSX, or CSV format, please.',
                  existing_filename=None):
         super().__init__(attrs=attrs)

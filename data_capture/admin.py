@@ -1,4 +1,7 @@
+import os
+import re
 from django.contrib import admin
+from django.http import HttpResponse, HttpResponseForbidden
 from django.db import models, transaction
 from django import forms
 from django.core.urlresolvers import reverse
@@ -9,10 +12,16 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
+from django.conf.urls import url
+from django.shortcuts import get_object_or_404
 
+
+from frontend.upload import DEFAULT_FILE_EXTENSIONS
+from .management.commands.initgroups import VIEW_ATTEMPT_PERMISSION
 from . import email
 from .schedules import registry
-from .models import SubmittedPriceList, SubmittedPriceListRow
+from .models import (SubmittedPriceList, SubmittedPriceListRow,
+                     AttemptedPriceListSubmission)
 from .templatetags.data_capture import tz_timestamp
 
 
@@ -438,3 +447,73 @@ class SubmittedPriceListRowAdmin(UndeletableModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+def clean_filename(filename):
+    '''
+    Attempt to clean the filename so it doesn't contain invalid
+    characters or potentially dangerous file extensions.
+
+    Examples:
+
+        >>> clean_filename('boop.exe')
+        'boop'
+
+        >>> clean_filename('.csv')
+        'csv'
+
+        >>> clean_filename('$.csv')
+        'data.csv'
+
+        >>> clean_filename('u$goose.xls')
+        'ugoose.xls'
+    '''
+
+    basename, ext = os.path.splitext(filename)
+
+    basename = ''.join([
+        char for char in basename
+        if re.match('[A-Za-z0-9_\-]', char)
+    ]) or 'data'
+
+    if ext.lower() not in DEFAULT_FILE_EXTENSIONS:
+        ext = ''
+
+    return basename + ext
+
+
+@admin.register(AttemptedPriceListSubmission)
+class AttemptedPriceListSubmissionAdmin(admin.ModelAdmin):
+    list_display = (
+        'created_at',
+        'id',
+        'submitter',
+        'uploaded_file_name',
+        'valid_row_count',
+        'invalid_row_count',
+    )
+
+    change_form_template = 'admin/data_capture/view_attempted_submission.html'
+
+    def has_add_permission(self, request):
+        return False
+
+    def send_uploaded_file(self, request, id):
+        if not request.user.has_perm(VIEW_ATTEMPT_PERMISSION):
+            return HttpResponseForbidden()
+
+        id = int(id)
+        obj = get_object_or_404(AttemptedPriceListSubmission, pk=id)
+        response = HttpResponse(obj.uploaded_file.contents.read(),
+                                content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(
+            clean_filename(obj.uploaded_file_name),
+        )
+        return response
+
+    def get_urls(self):
+        return [
+            url(r'^(?P<id>\d+)/download/$',
+                self.admin_site.admin_view(self.send_uploaded_file),
+                name='data_capture_send_uploaded_file'),
+        ] + super().get_urls()

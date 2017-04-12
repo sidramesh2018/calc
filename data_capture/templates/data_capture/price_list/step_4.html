@@ -100,6 +100,19 @@
   {{ gleaned_data.to_table|safe }}
 {% endwith %}
 </div>
+
+{% if replay %}
+<div class="alert alert-warning" role="alert">
+  <h3>Remember, this is a replay!</h3>
+
+  <p>
+    While we won't <em>stop</em> you from submitting this price list
+    for review, it might not be a good idea. Proceed at your own
+    risk.
+  </p>
+</div>
+{% endif %}
+
 <div class="row">
   <div class="twelve columns form-button-row clearfix">
     {% if prev_url %}
