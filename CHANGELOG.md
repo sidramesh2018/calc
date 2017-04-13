@@ -7,6 +7,15 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Upgraded Django to 1.9.3 (#1526).
+- Upgraded jQuery to 3.2.1 (#1539).
+
+### Added
+
+- Added documentation on monitoring CALC (#1518).
+
 ## [2.6.0][] - 2017-03-24
 
 ### Changed
