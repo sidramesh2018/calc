@@ -6,7 +6,7 @@ Django==1.9.13
 django-cors-headers==2.0.2
 django-debug-toolbar==1.6
 djangorestframework==3.5.3
-git+git://github.com/18F/djorm-ext-pgfulltext@179c45929288e6b14f3067489c1ba8f9e158a974
+git+git://github.com/18F/djorm-ext-pgfulltext@eabba50831ab48509e2ce4fcb4e32a7f1f1aec05
 gunicorn==19.6.0
 newrelic==2.78.0.57
 psycopg2==2.6.2
