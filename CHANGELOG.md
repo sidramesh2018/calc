@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.7.0][] - 2017-04-14
+
 ### Changed
 
 - Upgraded Django to 1.9.3 (#1526).
@@ -236,7 +238,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.6.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.7.0...HEAD
+[2.7.0]: https://github.com/18F/calc/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/18F/calc/compare/v2.5.1...v2.6.0
 [2.5.1]: https://github.com/18F/calc/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/18F/calc/compare/v2.4.0...v2.5.0
