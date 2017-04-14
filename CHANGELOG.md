@@ -11,9 +11,21 @@ to [Semantic Versioning](http://semver.org/).
 
 - Upgraded Django to 1.9.3 (#1526).
 - Upgraded jQuery to 3.2.1 (#1539).
+- CALC is now prepared for migration to Django 1.10 (#1544). However,
+  as the development team currently has a limited amount of time to
+  work on CALC, we've decided not to actually migrate to the new
+  version of Django, as we may not have time to address any problems
+  occurring from the upgrade in the near future.
 
 ### Added
 
+- Added support for recording and replaying attempted price list
+  submissions (#1491), and added a new **Technical Support Specialist**
+  role. This will allow the development team to better serve
+  users who are having problems submitting their price lists.
+- Added integration with Slack, so that the development team will be
+  notified of events happening on CALC and be able to respond quickly
+  to anything that needs attention (#1505).
 - Added documentation on monitoring CALC (#1518).
 
 ## [2.6.0][] - 2017-03-24
