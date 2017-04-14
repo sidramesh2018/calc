@@ -41,7 +41,7 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
   };
 
   return (
-    <div>
+    <div role="group" aria-label="Labor category query type">
       {input(QUERY_TYPE_MATCH_ALL)}
       {input(QUERY_TYPE_MATCH_PHRASE)}
       {input(QUERY_TYPE_MATCH_EXACT)}

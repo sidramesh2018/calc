@@ -234,6 +234,10 @@ aws4@^1.2.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
 
+axe-core@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-2.1.7.tgz#4f66f2b3ee3b58ec2d3db4339dd124c5b33b79c3"
+
 babel-code-frame@^6.16.0, babel-code-frame@^6.22.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-code-frame/-/babel-code-frame-6.22.0.tgz#027620bee567a88c32561574e7fd0801d33118e4"
