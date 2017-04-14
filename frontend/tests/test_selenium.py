@@ -510,6 +510,10 @@ class DataExplorerTests(SeleniumTestCase):
         self.load_and_wait()
         axe.run_and_validate(self.driver)
 
+    def test_styleguide_accessibility(self):
+        self.load('/styleguide/')
+        axe.run_and_validate(self.driver)
+
     def test_schedule_column_is_open_by_default(self):
         get_contract_recipe().make(_quantity=5)
         driver = self.load()
