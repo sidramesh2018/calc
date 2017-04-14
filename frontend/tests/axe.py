@@ -48,7 +48,7 @@ def run_and_validate(webdriver):
     }
 
     for rule_name in IGNORED_VIOLATIONS:
-        options['rules'][rule_name] = { 'enabled': False }
+        options['rules'][rule_name] = {'enabled': False}
 
     result = webdriver.execute_async_script(
         get_axe_js() +
