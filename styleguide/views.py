@@ -20,12 +20,12 @@ def get_existing_filename_upload_form():
         js = forms.FileField(widget=UploadWidget(
             required=False,
             existing_filename='boop.csv',
-        ))
+        ), required=False)
         no_js = forms.FileField(widget=UploadWidget(
             degraded=True,
             required=False,
             existing_filename='boop.csv',
-        ))
+        ), required=False)
 
     return MyForm()
 

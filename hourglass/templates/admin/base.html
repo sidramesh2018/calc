@@ -24,13 +24,13 @@
 
 <body class="{% if is_popup %}popup {% endif %}card--wide{% block bodyclass %}{% endblock %}">
 
-  {% include "../../data_explorer/templates/_banner.html" %}
+  {% include "_banner.html" %}
 
   {% if not is_popup %}
   <header>
     <div class="container">
-    {% include "../../data_explorer/templates/_header.html" %}
-    {% include "../../data_explorer/templates/_nav.html" %}
+    {% include "_header.html" %}
+    {% include "_nav.html" %}
     </div>
   </header>
   <!-- Header -->
@@ -99,7 +99,7 @@
   <!-- END Content -->
 
   {% block footer %}
-    {% include "../../data_explorer/templates/_footer.html" %}
+    {% include "_footer.html" %}
   {% endblock %}
 
 </body>

@@ -1,12 +1,120 @@
-
+import hashlib
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 from django.core.validators import (MinValueValidator, MaxValueValidator,
                                     RegexValidator)
 from django.utils import timezone
+from django.core.files.storage import Storage
+from django.utils.deconstruct import deconstructible
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from contracts.models import (Contract, CashField, EDUCATION_CHOICES,
                               MIN_ESCALATION_RATE, MAX_ESCALATION_RATE)
+
+
+@deconstructible
+class SlowpokeStorage(Storage):
+    def _open(self, name, mode='rb'):
+        obj = SlowpokeStorageModel.objects.filter(name=name).get()
+        return ContentFile(obj.data)
+
+    def _save(self, name, content):
+        data = content.read()
+        obj = SlowpokeStorageModel(name=name, data=data, size=len(data))
+        obj.save()
+        return name
+
+    def exists(self, name):
+        return SlowpokeStorageModel.objects.filter(name=name).exists()
+
+    def size(self, name):
+        return SlowpokeStorageModel.objects.filter(name=name).get().size
+
+
+class SlowpokeStorageModel(models.Model):
+    data = models.BinaryField()
+
+    size = models.IntegerField()
+
+    name = models.CharField(max_length=128, unique=True, db_index=True)
+
+
+class HashedUploadedFile(models.Model):
+    HASH_NAME = 'sha256'
+
+    HASH_HEXDIGEST_LEN = 64
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    hex_hash = models.CharField(
+        max_length=HASH_HEXDIGEST_LEN,
+        db_index=True,
+        unique=True
+    )
+
+    contents = models.FileField(
+        upload_to='data_capture_uploaded_files/',
+        storage=SlowpokeStorage()
+    )
+
+    @classmethod
+    def get_hex_hash(cls, f):
+        f.seek(0)
+        hasher = getattr(hashlib, cls.HASH_NAME)()
+        for chunk in iter(lambda: f.read(4096), b''):
+            hasher.update(chunk)
+        f.seek(0)
+        return hasher.hexdigest()
+
+    @classmethod
+    def store(cls, f):
+        hex_hash = cls.get_hex_hash(f)
+        q = cls.objects.filter(hex_hash=hex_hash)
+        if q.exists():
+            return q.get()
+        obj = cls(hex_hash=hex_hash, contents=f)
+        obj.save()
+        f.seek(0)
+        return obj
+
+
+class AttemptedPriceListSubmission(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    submitter = models.ForeignKey(User)
+
+    uploaded_file = models.ForeignKey(HashedUploadedFile, null=True,
+                                      blank=True)
+
+    uploaded_file_name = models.CharField(max_length=128, blank=True)
+
+    uploaded_file_content_type = models.CharField(max_length=128, blank=True)
+
+    valid_row_count = models.IntegerField(null=True, blank=True)
+
+    invalid_row_count = models.IntegerField(null=True, blank=True)
+
+    session_state = JSONField()
+
+    def set_uploaded_file(self, f):
+        self.uploaded_file = HashedUploadedFile.store(f)
+        self.uploaded_file_name = f.name
+        self.uploaded_file_content_type = f.content_type
+
+    def restore_uploaded_file(self):
+        contents = self.uploaded_file.contents
+        contents.open()
+        return SimpleUploadedFile(
+            name=self.uploaded_file_name,
+            content=contents.read(),
+            content_type=self.uploaded_file_content_type,
+        )
 
 
 class SubmittedPriceList(models.Model):
