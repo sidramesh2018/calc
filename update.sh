@@ -3,7 +3,7 @@
 set -e
 
 echo "----- Updating Python Dependencies -----"
-pip install -r requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 
 echo "----- Updating Node Dependencies -----"
 yarn
