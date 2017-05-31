@@ -1,7 +1,6 @@
 from price_prediction.models import FittedValuesByCategory as Fitted
 from price_prediction.models import LaborCategory
 from price_prediction.models import TrendByCategory as Trend
-#from price_prediction.helpers import 
 import pandas as pd
 import math
 import datetime
