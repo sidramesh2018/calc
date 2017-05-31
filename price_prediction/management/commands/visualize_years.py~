@@ -1,0 +1,16 @@
+import plotly
+from plotly.graph_objs import Bar,Layout,Scatter, Box, Annotation,Marker,Font,XAxis,YAxis 
+import shutil
+
+def bar_plot(data,filename):
+    filename = "/Users/ericschles/Documents/projects/calc/price_prediction/"+filename
+    x_vals = [elem[0] for elem in  data]
+    y_vals = [elem[1] for elem in data]
+        
+    plotly.offline.plot({
+        "data":[Bar(x=x_vals,y=y_vals)],
+        "layout":Layout(
+            title=filename.split(".")[0]
+        )
+    },auto_open=False)
+    shutil.move("temp-plot.html",filename)
