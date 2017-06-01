@@ -51,6 +51,14 @@ Other than the brute method, which might be subject to change.  The rest of the 
 
 `python manage.py runserver`
 
+## Running the tests
+
+`python -m pytest price_prediction/tests/test_load_timeseries_data.py`
+
+&&
+
+`python -m pytest price_prediction/tests/test_generate_arima_model.py`
+
 ## Visualizing the data
 
 Head over to [http://localhost:8000/price_prediction/timeseries_analysis](http://localhost:8000/price_prediction/timeseries_analysis).
