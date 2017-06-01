@@ -178,10 +178,12 @@ def increment_year(current_startdate: datetime) -> datetime:
     ----------
     * current_startdate - the current start date for the given year
     """
-    return datetime(current_startdate.year+1,
-                    current_startdate.month,
-                    current_startdate.day)
-
+    if isinstance(current_startdate, datetime):
+        return datetime(current_startdate.year+1,
+                        current_startdate.month,
+                        current_startdate.day)
+    else:
+        raise ValueError("expected datetime")
 
 class Command(BaseCommand):
 
