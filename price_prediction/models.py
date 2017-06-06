@@ -104,3 +104,12 @@ class TrendByCategory(models.Model):
 
     def __str__(self):
         return self.labor_key
+
+class InterpolatedDataByCategory(models.Model):
+    labor_category = models.CharField(max_length=400)
+    labor_key = models.CharField(max_length=400)
+    interpolated_data = models.DecimalField(decimal_places=2, max_digits=200)
+    start_date = models.DateField()
+
+    def __str__(self):
+        return self.labor_key

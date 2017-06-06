@@ -43,7 +43,7 @@ from price_prediction.models import LaborCategory
 # unnecessary in the future.
 
 
-def money_to_float(string: str):
+def money_to_float(string: str) -> float:
     """
     hourly wages have dollar signs and use commas,
     this method removes those things, so we can treat stuff as floats.
