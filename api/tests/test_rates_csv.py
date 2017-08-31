@@ -1,3 +1,4 @@
+import urllib
 
 from django.test import TestCase
 
@@ -12,8 +13,9 @@ class GetRatesCSVTests(TestCase):
         GetRatesTests.make_test_set()
         self.path = RATES_CSV_PATH
 
-    def test_prefixes_excel_formula_chars(self):
-        excel_formula_prefixes = ['@', '-', '=', '|', '%']
+    def test_prefixes_excel_formula_chars_in_query(self):
+        excel_formula_prefixes = ['@', '+', '-', '=', '|', '%']
         for char in excel_formula_prefixes:
-            resp = self.client.get(f'{self.path}/?q={char}query')
+            encoded_query = urllib.parse.quote(f'{char}query')
+            resp = self.client.get(f'{self.path}/?q={encoded_query}')
             self.assertContains(resp, f"'{char}query")

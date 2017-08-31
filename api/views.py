@@ -224,10 +224,12 @@ class GetRatesCSV(APIView):
 
         q = request.query_params.get('q', 'None')
 
-        # if the query starts with special chars that could be interpreted
+        # If the query starts with special chars that could be interpreted
         # as parts of a formula by Excel, then prefix the query with
-        # an apostrophe so that Excel instead treats it as plain text
-        if q.startswith(('@', '-', '=', '|', '%')):
+        # an apostrophe so that Excel instead treats it as plain text.
+        # See https://issues.apache.org/jira/browse/CSV-199
+        # for more information.
+        if q.startswith(('@', '-', '+', '=', '|', '%')):
             q = "'" + q
 
         min_education = request.query_params.get(
