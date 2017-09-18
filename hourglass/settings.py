@@ -270,6 +270,16 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'uaa_client': {
+            'handlers': ['console', 'file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'calc': {
+            'handlers': ['console', 'file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'contracts': {
             'handlers': ['console', 'contracts_file'],
             'propagate': True,

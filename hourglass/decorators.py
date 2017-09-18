@@ -1,5 +1,9 @@
+import logging
+
 from django.contrib.auth import REDIRECT_FIELD_NAME, decorators
 from django.core.exceptions import PermissionDenied
+
+logger = logging.getLogger('calc')
 
 
 def staff_login_required(function=None,
@@ -20,15 +24,21 @@ def staff_login_required(function=None,
         if not user.is_authenticated():
             # returning False will cause the user_passes_test decorator
             # to redirect to the login flow
+            logger.info(f'Unauthenticated user has attempted to access '
+                        f'is_staff view')
             return False
 
         if user.is_staff:
             # then all good
+            logger.info(f'User with id {user.id} ({user.email}) has passed '
+                        f'is_staff check')
             return True
 
         # otherwise the user is authenticated but isn't staff, so
         # they do not have the correct permissions and should be directed
         # to the 403 page
+        logger.info(f'User with id {user.id} ({user.email}) is '
+                    f'authenticated but has not passed is_staff check')
         raise PermissionDenied
 
     actual_decorator = decorators.user_passes_test(
