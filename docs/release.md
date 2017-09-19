@@ -30,7 +30,7 @@ To release version 0.0.4 of CALC:
     ```
 
 3.  [Issue a PR][pr] to merge your branch into `staging` titled
-    "Tag and release v0.0.4". Paste in the latest changes from the
+    "Tag and release v0.0.4 to staging". Paste in the latest changes from the
     topmost "Unreleased" section of `CHANGELOG.md` into the
     description of the PR so stakeholders know what's changed. If you're
     on OS X, you can easily copy this to your clipboard with the following
@@ -85,7 +85,8 @@ To release version 0.0.4 of CALC:
     git push https://github.com/18F/calc.git v0.0.4
     ```
 
-12. In GitHub, open a PR from `staging` to `master` and wait for all status
+12. In GitHub, open a PR from `staging` to `master` called
+    "Tag and release v0.0.4 to production" and wait for all status
     checks to successfully pass. Have another developer review and approve
     the PR.
 
