@@ -81,7 +81,7 @@ EXAMPLE_SHEET_ROWS = [
 # Text to indicate the definite end of the the price list table
 STOP_TEXT = r'Most Favored Customer'
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('calc')
 
 
 def find_header_row(sheet, row_threshold=50):
