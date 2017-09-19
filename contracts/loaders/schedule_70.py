@@ -9,7 +9,7 @@ from django.db import transaction
 from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 from contracts.models import Contract
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('contracts')
 
 
 class Schedule70Loader(object):
