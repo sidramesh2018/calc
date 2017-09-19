@@ -9,6 +9,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [2.7.1][] - 2017-09-19
 
+### Changed
+
 - Migrate from TravisCI to CircleCI.
 - Upgrade to Python 3.6.2.
 - Fix an issue that allowed CSVs exported from the Data Explorer to contain
