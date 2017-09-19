@@ -1,5 +1,11 @@
 from functools import wraps
 from unittest.mock import patch
+from django.test import TestCase
+from django.contrib.auth.models import User, Permission
+from django.contrib.admin.models import (
+    LogEntry, ADDITION, CHANGE, DELETION
+)
+
 from .test_models import ModelTestCase
 
 
@@ -36,3 +42,60 @@ class PriceListTests(ModelTestCase):
         self.assertEqual(len(logger.logs), 1)
         pl.retire(pl.submitter)
         self.assertEqual(len(logger.logs), 1)
+
+
+class BaseUserTest(TestCase):
+    def setUp(self):
+        user = User(username='foo', email='foo@gsa.gov')
+        user.save()
+        self.user = user
+
+
+class LogEntryTests(BaseUserTest):
+    @mock_logged
+    def test_addition_is_logged(self, logger):
+        LogEntry(user=self.user, object_repr='blargy',
+                 action_flag=ADDITION).save()
+        self.assertEqual(logger.logs, ["foo created None 'blargy'"])
+
+    @mock_logged
+    def test_deletion_is_logged(self, logger):
+        LogEntry(user=self.user, object_repr='blargy',
+                 action_flag=DELETION).save()
+        self.assertEqual(logger.logs, ["foo deleted None 'blargy'"])
+
+    @mock_logged
+    def test_change_is_logged(self, logger):
+        LogEntry(user=self.user, object_repr='blargy',
+                 action_flag=CHANGE, change_message='oof').save()
+        self.assertEqual(logger.logs, ["foo changed None 'blargy': oof"])
+
+
+class M2MTests(BaseUserTest):
+    @mock_logged
+    def test_change_is_logged(self, logger):
+        perm = Permission.objects.get(codename='change_user')
+        self.user.user_permissions.add(perm)
+        self.assertEqual(logger.logs, [
+            "permissions given to user 'foo': "
+            "[<Permission: auth | user | Can change user>]"
+        ])
+
+    @mock_logged
+    def test_remove_is_logged(self, logger):
+        perm = Permission.objects.get(codename='change_user')
+        self.user.user_permissions.add(perm)
+        self.user.user_permissions.remove(perm)
+        self.assertIn((
+            "permissions removed from user 'foo': "
+            "[<Permission: auth | user | Can change user>]"
+        ), logger.logs)
+
+    @mock_logged
+    def test_clear_is_logged(self, logger):
+        perm = Permission.objects.get(codename='change_user')
+        self.user.user_permissions.add(perm)
+        self.user.user_permissions.clear()
+        self.assertIn((
+            "All permissions removed from user 'foo'"
+        ), logger.logs)
