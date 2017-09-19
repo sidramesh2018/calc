@@ -7,6 +7,10 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Switch to 3-tiered branch-based deployments (`develop`, `staging`, `master`).
+
 ## [2.7.1][] - 2017-09-19
 
 ### Changed
