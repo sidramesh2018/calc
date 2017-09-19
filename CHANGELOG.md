@@ -7,6 +7,15 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.7.1][] - 2017-09-19
+
+### Changed
+
+- Migrate from TravisCI to CircleCI.
+- Upgrade to Python 3.6.2.
+- Fix an issue that allowed CSVs exported from the Data Explorer to contain
+  auto-running Excel formulas in the query field.
+
 ## [2.7.0][] - 2017-04-14
 
 ### Changed
@@ -250,7 +259,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.7.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.7.1...HEAD
+[2.7.1]: https://github.com/18F/calc/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/18F/calc/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/18F/calc/compare/v2.5.1...v2.6.0
 [2.5.1]: https://github.com/18F/calc/compare/v2.5.0...v2.5.1

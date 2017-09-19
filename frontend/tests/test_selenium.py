@@ -29,6 +29,7 @@ import os
 import socket
 from datetime import datetime
 
+from . import axe
 from .utils import build_static_assets
 
 
@@ -81,7 +82,7 @@ def _get_webdriver(name):
         driver = webdriver.PhantomJS()
         driver.command_executor.set_timeout(PHANTOMJS_TIMEOUT)
         return driver
-    raise 'No such webdriver: "%s"' % name
+    raise Exception('No such webdriver: "%s"' % name)
 
 
 class SeleniumTestCase(StaticLiveServerTestCase):
@@ -504,6 +505,10 @@ class DataExplorerTests(SeleniumTestCase):
 
         self.assertIsNone(re.search(r'AIMS\d+', driver.page_source))
         self.assertIsNotNone(re.search(r'MOBIS\d+', driver.page_source))
+
+    def test_index_accessibility(self):
+        self.load_and_wait()
+        axe.run_and_validate(self.driver)
 
     def test_schedule_column_is_open_by_default(self):
         get_contract_recipe().make(_quantity=5)

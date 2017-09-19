@@ -1,5 +1,7 @@
 exports[`<QueryType> matches snapshot 1`] = `
-<div>
+<div
+  aria-label="Labor category query type"
+  role="group">
   <span>
     <input
       checked={false}
