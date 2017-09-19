@@ -7,6 +7,11 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+- Migrate from TravisCI to CircleCI.
+- Upgrade to Python 3.6.2.
+- Fix an issue that allowed CSVs exported from the Data Explorer to contain
+  auto-running Excel formulas in the query field.
+
 ## [2.7.0][] - 2017-04-14
 
 ### Changed
