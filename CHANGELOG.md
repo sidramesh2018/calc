@@ -7,6 +7,10 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Added
+
+- Added additional required logging (#1569).
+
 ## [2.7.2][] - 2017-09-19
 
 ### Changed
