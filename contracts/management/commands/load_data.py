@@ -21,7 +21,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        log = logging.getLogger(__name__)
+        log = logging.getLogger('contracts')
 
         log.info("Begin load_data task")
 

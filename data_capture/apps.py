@@ -12,6 +12,9 @@ class DefaultDataCaptureApp(AppConfig):
     name = 'data_capture'
     verbose_name = 'User-submitted CALC data'
 
+    def ready(self):
+        from . import signals  # noqa
+
 
 class DataCaptureSchedulerApp(AppConfig):
     '''
