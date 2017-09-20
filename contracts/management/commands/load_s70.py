@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 from contracts.models import BulkUploadContractSource
 from contracts.loaders.schedule_70 import Schedule70Loader
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('contracts')
 
 
 class Command(BaseCommand):

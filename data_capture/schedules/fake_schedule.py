@@ -18,7 +18,7 @@ for _code, _name in _EDUCATION_CHOICES:
 del _code
 del _name
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('calc')
 
 
 def validate_education_level(value):
