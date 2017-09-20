@@ -223,8 +223,10 @@ class SubmittedPriceList(models.Model):
         self.status = status
         self.status_changed_at = timezone.now()
         self.status_changed_by = user
-        logger.info(f'Price list with id {self.id} has been set to {status}'
-                    f'by user id {user.id} ({user.email})')
+
+        status_name = self.STATUS_CHOICES[status][1]
+        logger.info(f'Price list with id {self.id} has been set to '
+                    f'{status_name} by user id {user.id} ({user.email})')
 
     def approve(self, user):
         '''

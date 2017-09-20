@@ -1,5 +1,6 @@
 from datetime import datetime, date
 from decimal import Decimal
+from unittest.mock import patch
 
 from freezegun import freeze_time
 from django.test import override_settings, TestCase
@@ -118,9 +119,11 @@ class ModelsTests(ModelTestCase):
         self.assertEqual(p.get_business_size_string(), 'S')
 
     @freeze_time(frozen_datetime)
-    def test_change_status_works(self):
+    @patch('data_capture.models.logger')
+    def test_change_status_works(self, mock_logger):
         original_user = self.create_user(username='boop', email="boop@beep")
         p = self.create_price_list(
+            pk=5,
             status=SubmittedPriceList.STATUS_UNREVIEWED,
             status_changed_by=original_user)
         p._change_status(SubmittedPriceList.STATUS_APPROVED, self.user)
@@ -129,10 +132,17 @@ class ModelsTests(ModelTestCase):
         self.assertEqual(
             p.status_changed_at,
             timezone.make_aware(frozen_datetime))
+        self.assertTrue(mock_logger.info.called)
+        self.assertEqual(
+            mock_logger.info.call_args[0][0],
+            f'Price list with id 5 has been set to approved by user id '
+            f'{self.user.id} ({self.user.email})')
 
     @freeze_time(frozen_datetime)
-    def test_approve_works(self):
+    @patch('data_capture.models.logger')
+    def test_approve_works(self, mock_logger):
         p = self.create_price_list(
+            pk=5,
             contract_number='GS-123-4568',
             schedule=FAKE_SCHEDULE,
             escalation_rate=1
@@ -149,6 +159,11 @@ class ModelsTests(ModelTestCase):
         self.assertEqual(p.status_changed_by, self.user)
         self.assertEqual(p.status_changed_at,
                          timezone.make_aware(frozen_datetime))
+        self.assertTrue(mock_logger.info.called)
+        self.assertEqual(
+            mock_logger.info.call_args[0][0],
+            f'Price list with id 5 has been set to approved by user id '
+            f'{self.user.id} ({self.user.email})')
 
         contract = p.rows.all()[0].contract_model
         self.assertEqual(contract.idv_piid, 'GS-123-4568')
@@ -172,8 +187,9 @@ class ModelsTests(ModelTestCase):
             contract.second_year_price, Decimal(10.20), places=2)
 
     @freeze_time(frozen_datetime)
-    def test_retire_works(self):
-        p = self.create_price_list()
+    @patch('data_capture.models.logger')
+    def test_retire_works(self, mock_logger):
+        p = self.create_price_list(pk=5)
         p.save()
         self.create_row(price_list=p).save()
         self.create_row(price_list=p, is_muted=True).save()
@@ -185,10 +201,16 @@ class ModelsTests(ModelTestCase):
                          timezone.make_aware(frozen_datetime))
         self.assertEqual(p.rows.all()[0].contract_model, None)
         self.assertEqual(Contract.objects.all().count(), 0)
+        self.assertTrue(mock_logger.info.called)
+        self.assertEqual(
+            mock_logger.info.call_args[0][0],
+            f'Price list with id 5 has been set to retired by user id '
+            f'{self.user.id} ({self.user.email})')
 
     @freeze_time(frozen_datetime)
-    def test_reject_works(self):
-        p = self.create_price_list()
+    @patch('data_capture.models.logger')
+    def test_reject_works(self, mock_logger):
+        p = self.create_price_list(pk=5)
         p.save()
         self.create_row(price_list=p).save()
         p.reject(self.user)
@@ -198,6 +220,11 @@ class ModelsTests(ModelTestCase):
                          timezone.make_aware(frozen_datetime))
         self.assertEqual(p.rows.all()[0].contract_model, None)
         self.assertEqual(Contract.objects.all().count(), 0)
+        self.assertTrue(mock_logger.info.called)
+        self.assertEqual(
+            mock_logger.info.call_args[0][0],
+            f'Price list with id 5 has been set to rejected by user id '
+            f'{self.user.id} ({self.user.email})')
 
     def test_reject_raises_when_not_STATUS_UNREVIEWED(self):
         p = self.create_price_list()
@@ -208,8 +235,9 @@ class ModelsTests(ModelTestCase):
             p.reject(self.user)
 
     @freeze_time(frozen_datetime)
-    def test_unreview_works(self):
-        p = self.create_price_list()
+    @patch('data_capture.models.logger')
+    def test_unreview_works(self, mock_logger):
+        p = self.create_price_list(pk=5)
         p.save()
         self.create_row(price_list=p).save()
         p.approve(self.user)
@@ -220,6 +248,11 @@ class ModelsTests(ModelTestCase):
                          timezone.make_aware(frozen_datetime))
         self.assertEqual(p.rows.all()[0].contract_model, None)
         self.assertEqual(Contract.objects.all().count(), 0)
+        self.assertTrue(mock_logger.info.called)
+        self.assertEqual(
+            mock_logger.info.call_args[0][0],
+            f'Price list with id 5 has been set to unreviewed by user id '
+            f'{self.user.id} ({self.user.email})')
 
     def test_row_stringify_works(self):
         self.assertEqual(str(self.create_row()), 'Submitted price list row')
