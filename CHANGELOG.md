@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.8.1][] - 2017-10-02
+
 ### Changed
 
 - The cross-origin security policy of the API has been hardened to
@@ -279,7 +281,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.8.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.8.1...HEAD
+[2.8.1]: https://github.com/18F/calc/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/18F/calc/compare/v2.7.2...v2.8.0
 [2.7.2]: https://github.com/18F/calc/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/18F/calc/compare/v2.7.0...v2.7.1
