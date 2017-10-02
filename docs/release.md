@@ -107,6 +107,6 @@ To release version 0.0.4 of CALC:
 Hooray, you're done!
 
 [unreleased]: https://github.com/18F/calc/blob/develop/CHANGELOG.md#unreleased
-[pr]: https://github.com/18F/calc/compare/master...v0.0.4-rc
+[pr]: https://github.com/18F/calc/compare/staging...v0.0.4-rc
 [staging]: https://calc-staging.app.cloud.gov
 [production]: https://calc.gsa.gov
