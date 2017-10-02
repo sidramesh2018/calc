@@ -85,7 +85,7 @@ To release version 0.0.4 of CALC:
     git push https://github.com/18F/calc.git v0.0.4
     ```
 
-12. In GitHub, open a PR from `staging` to `master` called
+12. In GitHub, [open a PR from `staging` to `master`][pr2] called
     "Tag and release v0.0.4 to production" and wait for all status
     checks to successfully pass. Have another developer review and approve
     the PR.
@@ -108,5 +108,6 @@ Hooray, you're done!
 
 [unreleased]: https://github.com/18F/calc/blob/develop/CHANGELOG.md#unreleased
 [pr]: https://github.com/18F/calc/compare/staging...v0.0.4-rc
+[pr2]: https://github.com/18F/calc/compare/master...staging
 [staging]: https://calc-staging.app.cloud.gov
 [production]: https://calc.gsa.gov
