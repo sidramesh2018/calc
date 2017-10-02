@@ -13,6 +13,8 @@ to [Semantic Versioning](http://semver.org/).
   only allow CORS requests under `/api/`, and only allow the
   `GET` and `OPTIONS` HTTP methods (#1585).
 
+- Improved logging for price list status changes (#1579).
+
 ## [2.8.0][] - 2017-09-19
 
 ### Added
