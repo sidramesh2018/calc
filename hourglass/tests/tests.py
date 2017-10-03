@@ -73,6 +73,16 @@ class ComplianceTests(DjangoTestCase):
         self.assertHasHeaders(res)
 
 
+class AdminCacheControlTests(DjangoTestCase):
+    def test_no_cache_on_admin_routes(self):
+        res = self.client.get('/admin/')
+        self.assertEqual(res.get('Cache-Control'), 'no-cache')
+
+    def test_no_cache_control_header_on_non_admin_routes(self):
+        res = self.client.get('/blarg')
+        self.assertEqual(res.get('Cache-Control'), None)
+
+
 @override_settings(SECURE_SSL_REDIRECT=False)
 class HealthcheckTests(DjangoTestCase):
     def setUp(self):
