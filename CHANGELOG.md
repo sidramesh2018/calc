@@ -7,6 +7,13 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.8.2][] - 2017-10-03
+
+### Changed
+
+- The session cookie now expires when the user's browser is closed (#1584).
+- All admin routes have the 'Cache-Control: no-cache' header to prevent browser caching (#1590).
+
 ## [2.8.1][] - 2017-10-02
 
 ### Changed
@@ -281,7 +288,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.8.1...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.8.2...HEAD
+[2.8.2]: https://github.com/18F/calc/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/18F/calc/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/18F/calc/compare/v2.7.2...v2.8.0
 [2.7.2]: https://github.com/18F/calc/compare/v2.7.1...v2.7.2
