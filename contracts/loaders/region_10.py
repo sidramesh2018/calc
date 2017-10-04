@@ -121,3 +121,5 @@ class Region10Loader(object):
                 contract.upload_source = upload_source
 
             return contract
+        else:
+            raise ValueError('missing labor category')
