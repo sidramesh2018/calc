@@ -7,6 +7,11 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Fixed a bug whereby some region 10 spreadsheets would cause CALC bulk
+  upload to fail (#1594).
+
 ## [2.8.2][] - 2017-10-03
 
 ### Changed
