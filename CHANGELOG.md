@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.8.3][] - 2017-10-05
+
 ### Changed
 
 - Fixed a bug whereby some region 10 spreadsheets would cause CALC bulk
@@ -293,7 +295,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.8.2...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.8.3...HEAD
+[2.8.3]: https://github.com/18F/calc/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/18F/calc/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/18F/calc/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/18F/calc/compare/v2.7.2...v2.8.0
