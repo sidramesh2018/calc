@@ -39,4 +39,3 @@ applications:
   timeout: 180
   env:
     IS_RQ_SCHEDULER: "yup"
-    DISABLE_COLLECTSTATIC: "1"
