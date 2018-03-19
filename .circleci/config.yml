@@ -110,7 +110,7 @@ jobs:
       - run:
           name: Build front end and run front end tests
           command: |
-            yarn gulp -- build
+            yarn gulp build
             yarn test
 
       - run:
