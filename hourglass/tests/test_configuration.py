@@ -20,7 +20,7 @@ class PythonVersionTests(TestCase):
     same Python version.
     '''
 
-    version = Version('3.6.2')
+    version = Version('3.6.4')
 
     def test_runtime_txt(self):
         with open(path('runtime.txt')) as f:
