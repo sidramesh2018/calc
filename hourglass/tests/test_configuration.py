@@ -31,6 +31,8 @@ class PythonVersionTests(TestCase):
 
     def test_dockerfile(self):
         with open(path('Dockerfile')) as f:
+            # We specify the patch version in our Dockerfile, but this
+            # test will just check down to the minor version level
             self.assertIn(f'FROM python:{self.python_version}', f.read())
 
     def test_circle_yml(self):
