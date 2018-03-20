@@ -9,6 +9,11 @@ If this isn't the case, simply replace this value for your own. Or
 alternatively, run `python manage.py releasehelp` to generate a
 customized version of these instructions just for you.
 
+**Note:** When following these instructions, ensure that no one else is
+merging any PRs into `develop`; at the time of this writing, cloud.gov will
+run out of memory quota if multiple branches of CALC are deployed
+simultaneously!
+
 To release version 0.0.4 of CALC:
 
 1.  Verify that the ["Unreleased" section of `CHANGELOG.md`][unreleased]
@@ -65,7 +70,7 @@ To release version 0.0.4 of CALC:
     ```
 
 8.  Merge the PR into `staging` via the **Create a merge commit** merge
-    strategy (i.e., do *not* squash or rebase). Once CircleCI is finished,
+    strategy (i.e., do *not* squash or rebase). Once [CircleCI][] is finished,
     the site will be deployed to [staging][staging].
 
 9.  Visit the [staging instance][staging] and make sure all is functioning as
@@ -90,10 +95,20 @@ To release version 0.0.4 of CALC:
     checks to successfully pass. Have another developer review and approve
     the PR.
 
+    **Note:** If you didn't wait for [CircleCI][] to deploy to
+    staging earlier, do so now; at the time of this writing, cloud.gov will
+    run out of memory quota if multiple branches of CALC are deployed
+    simultaneously!
+
 13. Once the PR from `staging` to `master` is approved, merge it via the
     **Create a merge commit** merge strategy (i.e., do *not* squash or rebase).
-    Once CircleCI is finished, the site will be deployed to
+    Once [CircleCI][] is finished, the site will be deployed to
     [production][production].
+
+    **Note:** Before moving to the next step, wait for [CircleCI][] to deploy 
+    to production; at the time of this writing, cloud.gov will
+    run out of memory quota if multiple branches of CALC are deployed
+    simultaneously!
 
 14. Merge `v0.0.4-rc` into `develop` on the official repository:
 
@@ -111,3 +126,4 @@ Hooray, you're done!
 [pr2]: https://github.com/18F/calc/compare/master...staging
 [staging]: https://calc-staging.app.cloud.gov
 [production]: https://calc.gsa.gov
+[CircleCI]: https://circleci.com/gh/18F/calc
