@@ -20,7 +20,7 @@ jobs:
           # tests. Note that if we're not in a trusted environment (e.g. a PR
           # is being issued from an untrusted fork), we will default to using
           # PhantomJS locally, rather than a real-world browser via Sauce Labs.
-          DJANGO_LIVE_TEST_SERVER_ADDRESS: 127.0.0.1:8000
+          DJANGO_LIVE_TEST_SERVER_ADDRESS: 127.0.0.1:8000-8010,8080,9200-9300
 
           # TODO: Add this back in once we have time to get Sauce running in Circle
           # WD_TESTING_BROWSER: "internet explorer"
