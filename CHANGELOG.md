@@ -7,6 +7,13 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Use the latest version of Python 3.6.x in deployed applications (#1631).
+- Fixed a bug that impacted the sending of emails from worker applications (#1599).
+- Updated Code Climate config to match that services new format (#1629).
+- Updated README with information about waiting for automated deploys to finish (#1598).
+
 ## [2.8.3][] - 2017-10-05
 
 ### Changed
