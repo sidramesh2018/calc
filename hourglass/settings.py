@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.humanize',
     'django.contrib.sites',
+    'django.contrib.postgres',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
@@ -138,7 +139,6 @@ INSTALLED_APPS = (
     'contracts',
     'data_capture.apps.{}'.format(DATA_CAPTURE_APP_CONFIG),
     'api',
-    'djorm_pgfulltext',
     'rest_framework',
     'corsheaders',
     'uaa_client',
@@ -303,6 +303,19 @@ LOGGING = {
         },
     },
 }
+
+DEBUG_LOG_SQL = 'DEBUG_LOG_SQL' in os.environ
+
+if DEBUG_LOG_SQL:
+    LOGGING['handlers']['debug_console'] = {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'verbose'
+    }
+    LOGGING['loggers']['django.db.backends'] = {
+        'handlers': ['debug_console'],
+        'level': 'DEBUG',
+    }
 
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
