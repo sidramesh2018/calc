@@ -56,7 +56,7 @@ cf scale -i 1 $APP_NAME
 
 cf zero-downtime-push $APP_NAME -f $MANIFEST
 
-# use a regular `cf push`` for the worker and scheduler apps
+# use a regular `cf push` for the worker and scheduler apps
 # because we don't want multiple instances processing the queue
 # while a deployment is happening
 cf push $WORKER_APP_NAME -f $MANIFEST
