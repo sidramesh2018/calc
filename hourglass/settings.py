@@ -147,6 +147,7 @@ INSTALLED_APPS = (
     'meta',
     'frontend',
     'slackbot.apps.SlackbotConfig',
+    'uswds_forms',
 )  # type: Tuple[str, ...]
 
 SITE_ID = 1
