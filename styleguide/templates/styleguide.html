@@ -443,8 +443,7 @@
   <p>
     Because USWDS uses a slightly different HTML structure for
     radio buttons and checkboxes from Django, we need to use custom
-    widgets: {% pyobjname 'frontend.widgets.UswdsRadioSelect' %} and
-    {% pyobjname 'frontend.widgets.UswdsCheckbox' %}.
+    widgets from <a href="http://django-uswds-forms.readthedocs.io/">django-uswds-forms</a>.
   </p>
 
   <p>
@@ -466,12 +465,13 @@
   {% guide_section "Dates" %}
 
   <p>
-    {% pyobjname 'frontend.date.SplitDateField' %} is a custom Django form
-    field and widget that offers three separate text fields for users to enter
+    We use a custom Django form
+    field and widget from <a href="http://django-uswds-forms.readthedocs.io/">django-uswds-forms</a>
+    that offers three separate text fields for users to enter
     dates, as per the <a href="https://standards.usa.gov/form-controls/#date-input">USWDS section on date input</a>.
   </p>
   <p>
-    We use a {% webcomponent '<uswds-date>' %} to provide some optional
+    Additioanlly, we use a {% webcomponent '<uswds-date>' %} to provide some optional
     dynamic functionality, such as automatically advancing focus to the
     next input field in the date whenever <kbd>/</kbd>,
     <kbd>.</kbd>, or <kbd>-</kbd> is pressed.

@@ -1,10 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from uswds_forms import UswdsRadioSelect
 
 from ..models import SubmittedPriceList
 from ..schedules import registry
 from frontend.upload import UploadWidget
-from frontend.widgets import UswdsRadioSelect
 from frontend.date import SplitDateField
 from contracts.models import MIN_ESCALATION_RATE, MAX_ESCALATION_RATE
 
