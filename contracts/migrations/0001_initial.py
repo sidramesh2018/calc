@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                     blank=True, max_digits=5, null=True, decimal_places=2)),
                 ('contractor_site', models.CharField(
                     blank=True, max_length=128, null=True)),
-                ('search_index', SearchVectorField(null=True, db_index=True)),
+                ('search_index', SearchVectorField(null=True, db_index=True, editable=False)),
             ],
             options={
             },

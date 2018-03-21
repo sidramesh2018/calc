@@ -283,7 +283,7 @@ class Contract(models.Model):
 
     _normalized_labor_category = models.TextField(db_index=True, blank=True)
 
-    search_index = SearchVectorField(null=True, db_index=True)
+    search_index = SearchVectorField(null=True, db_index=True, editable=False)
 
     upload_source = models.ForeignKey(
         BulkUploadContractSource,
