@@ -116,6 +116,9 @@ class CurrentContractManager(models.Manager):
     def multi_phrase_search(self, *args, **kwargs):
         return self.get_queryset().multi_phrase_search(*args, **kwargs)
 
+    def search(self, *args, **kwargs):
+        return self.get_queryset().search(*args, **kwargs)
+
     def get_queryset(self):
         return ContractsQuerySet(self.model, using=self._db)\
             .filter(current_price__gt=0)\
