@@ -27,7 +27,7 @@ if os.path.exists(DOTENV_PATH):
     load_dotenv(DOTENV_PATH)
 
 load_cups_from_vcap_services()
-load_redis_url_from_vcap_services('calc-redis')
+load_redis_url_from_vcap_services('calc-redis32')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ

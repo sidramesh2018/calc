@@ -127,10 +127,14 @@ cf bind-service <APP_INSTANCE> calc-db
 CALC uses Redis along with [rq](http://python-rq.org/) for scheduling and processing
 asynchronous tasks.
 
+For production, use the `standard-ha` (high availability) plan. For non-production uses, use the `standard` plan.
+
 ```sh
-cf create-service redis28 standard calc-redis
-cf bind-service <APP_INSTANCE> calc-redis
+cf create-service redis32 standard-ha calc-redis32
+cf bind-service <APP_INSTANCE> calc-redis32
 ```
+
+For more information on cloud.gov's Redis service, see its [docs](https://cloud.gov/docs/services/redis/).
 
 ### New Relic environment variables
 

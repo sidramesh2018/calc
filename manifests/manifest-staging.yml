@@ -2,7 +2,7 @@
 services:
 - calc-db
 - calc-env
-- calc-redis
+- calc-redis32
 applications:
 - name: calc-staging
   instances: 1
