@@ -2,7 +2,7 @@
 dj-database-url==0.4.2
 dj-email-url==0.0.10
 django-click==1.2.0
-Django==1.10.8
+Django==1.11.11
 django-cors-headers==2.0.2
 django-debug-toolbar==1.6
 djangorestframework==3.5.3
@@ -25,3 +25,4 @@ pytz==2016.10
 Markdown==2.6.8
 cg-django-uaa==1.2.0
 semantic_version==2.6.0
+git+git://github.com/18F/django-uswds-forms@c159b838357e61c0bdec2f5cd071398168d9e4d9
