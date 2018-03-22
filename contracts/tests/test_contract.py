@@ -460,5 +460,5 @@ class SearchIndexTests(TestCase):
                 'search_index',
                 'tsvector',
                 None,
-                'YES',
+                'NO',
             ))
