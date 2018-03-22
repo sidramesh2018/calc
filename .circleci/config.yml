@@ -1,4 +1,5 @@
-version: 2
+version: 2.0
+
 jobs:
   build:
     working_directory: ~/calc
@@ -128,6 +129,13 @@ jobs:
             py.test --ignore=frontend/tests/test_selenium.py --cov=. --cov-report xml:./coverage/python/coverage.xml
 
       - run:
+          name: Run tests against production instance
+          command: |
+            if [[ "${RUN_PROD_TESTS}" == "true" ]]; then
+              py.test production_tests
+            fi
+
+      - run:
           name: CodeClimate combine and upload coverage
           command: |
             # Format the various coverage reports
@@ -145,10 +153,6 @@ jobs:
       #     command: |
       #       # For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330
       #       python frontend/tests/sauce_connect.py py.test --ignore=frontend/tests/test_selenium.py --cov
-
-      # TODO: Run py.test production_tests in a cron-style nightly build
-      # Cron-style builds are not yet supported in CircleCI
-      #  if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then py.test production_tests; fi
 
       - deploy:
           name: Deploy to dev
@@ -168,3 +172,28 @@ jobs:
             if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
               DEPLOY_ENV=prod ./.circleci/deploy-circle.sh
             fi
+
+workflows:
+  version: 2
+  build-test-and-deploy:
+    environment:
+      RUN_PROD_TESTS: true
+    jobs:
+      - build
+  # nightly:
+  #   environment:
+  #     RUN_PROD_TESTS: true
+  #   jobs:
+  #     - build
+      # - production-test:
+      #     requires:
+      #       - build
+    # triggers:
+    #   - schedule:
+    #       # every night at 2:11 AM
+    #       cron: "11 02 * * *"
+    #       filters:
+    #         branches:
+    #           only:
+    #             - master
+
