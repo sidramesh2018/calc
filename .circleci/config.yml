@@ -125,12 +125,18 @@ jobs:
           command: |
             # Note that this MUST come after building the front end assets
             # For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330
-            py.test --ignore=frontend/tests/test_selenium.py --cov=. --cov-report xml:./coverage.xml
+            py.test --ignore=frontend/tests/test_selenium.py --cov=. --cov-report xml:./coverage/python/coverage.xml
 
       - run:
-          name: CodeClimate after-build
-          # Attempt to submit a report, but don't fail the build if this fails (`|| true`)
-          command: ./cc-test-reporter after-build -t coverage.py --exit-code $? || true
+          name: CodeClimate combine and upload coverage
+          command: |
+            # Format the various coverage reports
+            ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.jest.json coverage/jest/lcov.info
+            ./cc-test-reporter format-coverage -t coverage.py -o coverage/codeclimate.python.json coverage/python/coverage.xml
+            # Combine the test coverage reports
+            ./cc-test-reporter sum-coverage coverage/codeclimate.*.json
+            # Attempt to submit the coverage report, but don't fail the build if this fails (`|| true`)
+            ./cc-test-reporter upload-coverage || true
 
       # TODO: This should be added back into the CI build once
       # we have time to get Sauce working in CircleCI
