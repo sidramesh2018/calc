@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from django.contrib.postgres.search import SearchVector
 
 from contracts.models import Contract
 
@@ -15,5 +14,4 @@ class Command(BaseCommand):
         Contract.objects.bulk_update_normalized_labor_categories()
 
         print("Updating full-text search indexes...")
-        Contract.objects.update(
-            search_index=SearchVector('_normalized_labor_category'))
+        Contract.objects.update_search_index()

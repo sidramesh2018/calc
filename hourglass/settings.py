@@ -136,7 +136,7 @@ INSTALLED_APPS = (
     'django_rq',
 
     'data_explorer',
-    'contracts',
+    'contracts.apps.DefaultContractsApp',
     'data_capture.apps.{}'.format(DATA_CAPTURE_APP_CONFIG),
     'api',
     'rest_framework',

@@ -6,7 +6,7 @@ from decimal import Decimal
 from django.db import models, connection
 from django.contrib.auth.models import User
 from django.db.models.expressions import Value
-from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.search import SearchVectorField, SearchVector
 
 
 EDUCATION_CHOICES = (
@@ -119,6 +119,10 @@ class CurrentContractManager(models.Manager):
     def search(self, *args, **kwargs):
         return self.get_queryset().search(*args, **kwargs)
 
+    def update_search_index(self):
+        return self.update(
+            search_index=SearchVector('_normalized_labor_category'))
+
     def get_queryset(self):
         return ContractsQuerySet(self.model, using=self._db)\
             .filter(current_price__gt=0)\
@@ -147,6 +151,10 @@ class ContractsQuerySet(models.QuerySet):
 
     def search(self, query):
         return self.filter(search_index=query)
+
+    def update_search_index(self):
+        return self.update(
+            search_index=SearchVector('_normalized_labor_category'))
 
     def order_by(self, *args, **kwargs):
         edu_sort_sql = """
