@@ -13,7 +13,7 @@ import os
 import dj_database_url
 import dj_email_url
 from dotenv import load_dotenv
-from typing import Tuple  # NOQA
+from typing import Tuple, Any, Dict  # NOQA
 
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
@@ -236,7 +236,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-LOGGING = {
+LOGGING: Dict[str, Any] = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
