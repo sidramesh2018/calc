@@ -13,7 +13,7 @@ import os
 import dj_database_url
 import dj_email_url
 from dotenv import load_dotenv
-from typing import Tuple  # NOQA
+from typing import Tuple, Any, Dict  # NOQA
 
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
@@ -129,16 +129,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.humanize',
     'django.contrib.sites',
+    'django.contrib.postgres',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
     'django_rq',
 
     'data_explorer',
-    'contracts',
+    'contracts.apps.DefaultContractsApp',
     'data_capture.apps.{}'.format(DATA_CAPTURE_APP_CONFIG),
     'api',
-    'djorm_pgfulltext',
     'rest_framework',
     'corsheaders',
     'uaa_client',
@@ -236,7 +236,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-LOGGING = {
+LOGGING: Dict[str, Any] = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -303,6 +303,19 @@ LOGGING = {
         },
     },
 }
+
+DEBUG_LOG_SQL = 'DEBUG_LOG_SQL' in os.environ
+
+if DEBUG_LOG_SQL:
+    LOGGING['handlers']['debug_console'] = {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'verbose'
+    }
+    LOGGING['loggers']['django.db.backends'] = {
+        'handlers': ['debug_console'],
+        'level': 'DEBUG',
+    }
 
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
