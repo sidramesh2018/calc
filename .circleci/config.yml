@@ -1,40 +1,69 @@
-version: 2
+version: 2.0
+
+default-docker-config: &default-docker-config
+  docker:
+    - image: circleci/python:3.6
+      environment:
+        CI_NODE_VERSION: 6.5.0
+        NPM_CONFIG_ENGINE_STRICT: true
+        PHANTOMJS_TIMEOUT: 15
+        SKIP_STATIC_ASSET_BUILDING: yup
+        DEBUG: yup
+        DATABASE_URL: postgres://postgres@localhost/hourglass
+
+        # Some of our integration tests either take a really long time to run or
+        # are very error-prone via Selenium, so prefer RoboBrowser for now.
+        TEST_WITH_ROBOBROWSER: yup
+
+        # These environment variables affect the running of Webdriver/Selenium
+        # tests. Note that if we're not in a trusted environment (e.g. a PR
+        # is being issued from an untrusted fork), we will default to using
+        # PhantomJS locally, rather than a real-world browser via Sauce Labs.
+        DJANGO_LIVE_TEST_SERVER_ADDRESS: 127.0.0.1:8000-8010,8080,9200-9300
+
+        # TODO: Add this back in once we have time to get Sauce running in Circle
+        # WD_TESTING_BROWSER: "internet explorer"
+        # WD_TESTING_BROWSER_VERSION: 11.103
+        # WD_JOB_VISIBILITY: public
+        # WD_SOCKET_TIMEOUT: 60
+
+        SAUCE_USERNAME: atulvarma
+        # SAUCE_ACCESS_KEY is set as a private env var in the Circle dashboard
+    - image: circleci/postgres:9.5
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: hourglass
+    - image: redis:3.2-alpine
+
 jobs:
+  prod-test:
+    working_directory: ~/calc
+    <<: *default-docker-config
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-py-cache-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}-{{ checksum "requirements.txt" }}
+      - run:
+          name: Activate venv and install requirements
+          command: |
+            python3 -m venv ~/venv
+
+            echo ". ~/venv/bin/activate" >> $BASH_ENV
+            source $BASH_ENV
+
+            pip install -r requirements-dev.txt
+      - save_cache:
+          name: Save python deps cache
+          key: v1-py-cache-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}-{{ checksum "requirements.txt" }}
+          paths:
+            - ~/venv
+      - run:
+          name: Run tests against production instance
+          command: py.test production_tests
+      
   build:
     working_directory: ~/calc
-    docker:
-      - image: circleci/python:3.6
-        environment:
-          CI_NODE_VERSION: 6.5.0
-          NPM_CONFIG_ENGINE_STRICT: true
-          PHANTOMJS_TIMEOUT: 15
-          SKIP_STATIC_ASSET_BUILDING: yup
-          DEBUG: yup
-          DATABASE_URL: postgres://postgres@localhost/hourglass
-
-          # Some of our integration tests either take a really long time to run or
-          # are very error-prone via Selenium, so prefer RoboBrowser for now.
-          TEST_WITH_ROBOBROWSER: yup
-
-          # These environment variables affect the running of Webdriver/Selenium
-          # tests. Note that if we're not in a trusted environment (e.g. a PR
-          # is being issued from an untrusted fork), we will default to using
-          # PhantomJS locally, rather than a real-world browser via Sauce Labs.
-          DJANGO_LIVE_TEST_SERVER_ADDRESS: 127.0.0.1:8000-8010,8080,9200-9300
-
-          # TODO: Add this back in once we have time to get Sauce running in Circle
-          # WD_TESTING_BROWSER: "internet explorer"
-          # WD_TESTING_BROWSER_VERSION: 11.103
-          # WD_JOB_VISIBILITY: public
-          # WD_SOCKET_TIMEOUT: 60
-
-          SAUCE_USERNAME: atulvarma
-          # SAUCE_ACCESS_KEY is set as a private env var in the Circle dashboard
-      - image: circleci/postgres:9.5
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: hourglass
-      - image: redis:3.2-alpine
+    <<: *default-docker-config
     steps:
       - checkout
 
@@ -146,10 +175,6 @@ jobs:
       #       # For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330
       #       python frontend/tests/sauce_connect.py py.test --ignore=frontend/tests/test_selenium.py --cov
 
-      # TODO: Run py.test production_tests in a cron-style nightly build
-      # Cron-style builds are not yet supported in CircleCI
-      #  if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then py.test production_tests; fi
-
       - deploy:
           name: Deploy to dev
           command: |
@@ -168,3 +193,21 @@ jobs:
             if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
               DEPLOY_ENV=prod ./.circleci/deploy-circle.sh
             fi
+
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - build
+  nightly:
+    jobs:
+      - prod-test
+    triggers:
+      - schedule:
+          # every night at 2:11 AM UTC (10:11 PM ET)
+          cron: "11 02 * * *"
+          filters:
+            branches:
+              only:
+                - master
+
