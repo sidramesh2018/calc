@@ -30,12 +30,6 @@ class UploadWidget(forms.widgets.FileInput):
         if attrs:
             final_attrs.update(attrs)
 
-        if self.required:
-            # TODO: Django 1.10 automatically adds this attribute as needed
-            # based on the form field, so we should remove this once we
-            # upgrade.
-            final_attrs['required'] = ''
-
         final_attrs['accept'] = ",".join(self.accept)
         final_attrs['is'] = 'upload-input'
 
