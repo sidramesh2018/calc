@@ -41,7 +41,7 @@ class UploadWidget(forms.widgets.FileInput):
 
         nojs_preamble = ''
         if self.existing_filename:
-            if 'required' in final_attrs:
+            if self.required:
                 raise AssertionError(
                     'Using an existing filename is incompatible with '
                     'the "required" attribute'
