@@ -107,6 +107,7 @@ TESTTYPES = [
     TestType(name='eslint', cmd='npm run failable-eslint'),
     TestType(name='bandit', cmd='bandit -r .'),
     TestType(name='mypy', cmd='mypy @mypy-files.txt'),
+    TestType(name='typescript', cmd='npm run typescript'),
     TestType(name='jest', cmd='npm test'),
     TestType(name='py.test',
              cmd='py.test --cov-report xml --cov-report term --cov'),

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "checkJs": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": true,
+  },
+  "include": [
+    "frontend/source/js/common/usermenu.js",
+    "frontend/source/js/common/dap-hacks.js",
+    "frontend/source/js/common/dap-hacks.d.ts",
+  ]
+}

@@ -5,3 +5,6 @@ htmlcov/
 vendor/
 
 frontend/static/frontend/built/
+
+# TypeScript checks these files, so ignore them.
+frontend/source/js/common/dap-hacks.js
