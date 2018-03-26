@@ -77,7 +77,7 @@ def is_running_tests(argv: List[str]=sys.argv) -> bool:
 
     if basename == 'manage.py' and first_arg == 'test':
         return True
-    if basename == 'py.test':
+    if basename == 'py.test' or basename == 'pytest':
         return True
 
     return False
