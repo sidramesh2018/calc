@@ -61,12 +61,15 @@ class UploadWidget(forms.widgets.FileInput):
                 'You can keep using it or select a new file to replace it.'
             )
 
+        label_txt = 'Choose file'
+        final_attrs['aria-label'] = label_txt
+
         return "\n".join([
             '<upload-widget%s>' % flatatt(widget_attrs),
             '  <span class="nojs-preamble">%s</span>' % nojs_preamble,
             '  %s' % super().render(name, value, final_attrs),
             '  <div class="upload-chooser">',
-            '    <label for="%s">Choose file</label>' % id_for_label,
+            '    <label for="%s">%s</label>' % (id_for_label, label_txt),
             '    <span>%s</span>' % self.extra_instructions,
             '  </div>',
             '</upload-widget>'

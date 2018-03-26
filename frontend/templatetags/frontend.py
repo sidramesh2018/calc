@@ -10,6 +10,7 @@ register = template.Library()
 # that screen-readers contextualize them properly.
 LEGEND_WIDGETS = (
     UswdsDateWidget,
+    forms.CheckboxSelectMultiple,
     forms.RadioSelect
 )
 
