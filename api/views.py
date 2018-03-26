@@ -223,6 +223,15 @@ class GetRatesCSV(APIView):
         contracts_all = get_contracts_queryset(request.GET, wage_field)
 
         q = request.query_params.get('q', 'None')
+
+        # If the query starts with special chars that could be interpreted
+        # as parts of a formula by Excel, then prefix the query with
+        # an apostrophe so that Excel instead treats it as plain text.
+        # See https://issues.apache.org/jira/browse/CSV-199
+        # for more information.
+        if q.startswith(('@', '-', '+', '=', '|', '%')):
+            q = "'" + q
+
         min_education = request.query_params.get(
             'min_education', 'None Specified')
         min_experience = request.query_params.get(

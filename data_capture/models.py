@@ -1,4 +1,6 @@
 import hashlib
+import logging
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
@@ -12,6 +14,9 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 from contracts.models import (Contract, CashField, EDUCATION_CHOICES,
                               MIN_ESCALATION_RATE, MAX_ESCALATION_RATE)
+
+
+logger = logging.getLogger('calc')
 
 
 @deconstructible
@@ -218,6 +223,10 @@ class SubmittedPriceList(models.Model):
         self.status = status
         self.status_changed_at = timezone.now()
         self.status_changed_by = user
+
+        status_name = self.STATUS_CHOICES[status][1]
+        logger.info(f'Price list with id {self.id} has been set to '
+                    f'{status_name} by user id {user.id} ({user.email})')
 
     def approve(self, user):
         '''

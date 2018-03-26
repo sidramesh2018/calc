@@ -43,7 +43,10 @@ For more details on the `/healthcheck/` endpoint, see
 CALC has a suite of tests in [production_tests](../production_tests/) for
 checking that the production site is properly configured.
 
-These tests are run as part of our daily [Travis cron][travis-cron] build.
+<!--
+TODO: Restore this information once cron jobs are supported and setup in
+      our CircleCI build.
+These tests are run as part of our daily CI cron build.
+-->
 
 [rq]: http://python-rq.org/
-[travis-cron]: https://docs.travis-ci.com/user/cron-jobs/
