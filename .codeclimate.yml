@@ -17,9 +17,9 @@ plugins:
     enabled: true
 
 exclude_patterns:
-- "frontend/tests/*"
 - "frontend/source/js/vendor/*"
 - "frontend/source/style/libs/*"
 - "styleguide/static/styleguide/vendor/*"
 - "**/migrations/*"
 - "**/vendor/*"
+- "**/tests/*"
