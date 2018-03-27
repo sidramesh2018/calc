@@ -53,15 +53,34 @@ input[type="reset"] {
   padding-bottom: 0.9rem; //compensates for the 1px border
 }
 
-.button-gray,
-.button-gray:hover,
-.button-gray:active,
-.button-gray:focus {
+.usa-button-gray,
+.usa-button-gray:hover,
+.usa-button-gray:active,
+.usa-button-gray:focus {
   color: $color-white;
   border: 0;
 }
 
-usa-button.usa-button-link,
+// The WDS used to style secondary buttons in the secondary color,
+// but now styles them as outlines. Use the old style.
+.usa-button.usa-button-secondary,
+a.usa-button.usa-button-secondary,
+a:visited.usa-button.usa-button-secondary,
+button.usa-button-secondary,
+input.usa-button-secondary[type="submit"],
+input.usa-button-secondary[type="reset"],
+input.usa-button-secondary[type="button"] {
+  background-color: $color-secondary;
+  color: $color-white;
+  box-shadow: none;
+  &:hover {
+    color: $color-white;
+    background-color: $color-secondary-dark;
+    box-shadow: none;
+  }
+}
+
+button.usa-button-link,
 input.usa-button-link[type="submit"],
 input.usa-button-link[type="reset"],
 input.usa-button-link[type="button"] {
@@ -82,6 +101,7 @@ input.usa-button-link[type="button"] {
   &:hover,
   &.usa-button-hover {
     color: $color-primary-darker;
+    background-color: transparent;
   }
 
   &:focus,
