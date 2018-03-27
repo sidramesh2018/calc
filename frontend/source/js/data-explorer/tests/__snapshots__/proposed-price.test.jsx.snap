@@ -21,7 +21,7 @@ exports[`<ProposedPrice> matches snapshot 1`] = `
   />
   <button
     className="button-primary go"
-    onClick={[Function]}
+    type="button"
   >
     Go
   </button>

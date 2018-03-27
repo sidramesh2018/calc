@@ -18,6 +18,8 @@ const rename = require('gulp-rename');
 const eslint = require('gulp-eslint');
 const gutil = require('gulp-util');
 const del = require('del');
+const uglify = require('gulp-uglify');
+const gulpif = require('gulp-if');
 const bourbonNeatPaths = require('bourbon-neat').includePaths;
 const named = require('vinyl-named');
 
@@ -74,6 +76,15 @@ const bundles = {
   // Test scripts
   tests: {},
 };
+
+function concatAndMapSources(name, sources, dest) {
+  return gulp.src(sources)
+    .pipe(sourcemaps.init())
+    .pipe(concat(name))
+    .pipe(gulpif(isProd, uglify()))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(dest));
+}
 
 const vendoredBundles = [];
 
@@ -163,14 +174,6 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 gulp.task('js', ['lint', 'js:vendor', 'js:webpack']);
 
 gulp.task('js:vendor', vendoredBundles);
-
-function concatAndMapSources(name, sources, dest) {
-  return gulp.src(sources)
-    .pipe(sourcemaps.init())
-      .pipe(concat(name))
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(dest));
-}
 
 // boolean flag to indicate to webpack that it should set up its watching
 let isWatching = false;

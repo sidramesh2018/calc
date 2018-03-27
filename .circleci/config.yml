@@ -16,19 +16,8 @@ default-docker-config: &default-docker-config
         TEST_WITH_ROBOBROWSER: yup
 
         # These environment variables affect the running of Webdriver/Selenium
-        # tests. Note that if we're not in a trusted environment (e.g. a PR
-        # is being issued from an untrusted fork), we will default to using
-        # PhantomJS locally, rather than a real-world browser via Sauce Labs.
+        # tests.
         DJANGO_LIVE_TEST_SERVER_ADDRESS: 127.0.0.1:8000-8010,8080,9200-9300
-
-        # TODO: Add this back in once we have time to get Sauce running in Circle
-        # WD_TESTING_BROWSER: "internet explorer"
-        # WD_TESTING_BROWSER_VERSION: 11.103
-        # WD_JOB_VISIBILITY: public
-        # WD_SOCKET_TIMEOUT: 60
-
-        SAUCE_USERNAME: atulvarma
-        # SAUCE_ACCESS_KEY is set as a private env var in the Circle dashboard
     - image: circleci/postgres:9.5
       environment:
         POSTGRES_USER: postgres
@@ -135,7 +124,7 @@ jobs:
       - run:
           name: Run linters and static analysis
           command: |
-            python manage.py ultratest flake8 eslint mypy bandit
+            python manage.py ultratest flake8 eslint mypy bandit typescript
       - run:
           name: Build front end and run front end tests
           command: |
@@ -153,8 +142,7 @@ jobs:
           name: Run python tests
           command: |
             # Note that this MUST come after building the front end assets
-            # For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330
-            py.test --ignore=frontend/tests/test_selenium.py --cov=. --cov-report xml:./coverage/python/coverage.xml
+            py.test --cov=. --cov-report xml:./coverage/python/coverage.xml
 
       - run:
           name: CodeClimate combine and upload coverage
@@ -166,14 +154,6 @@ jobs:
             ./cc-test-reporter sum-coverage coverage/codeclimate.*.json
             # Attempt to submit the coverage report, but don't fail the build if this fails (`|| true`)
             ./cc-test-reporter upload-coverage || true
-
-      # TODO: This should be added back into the CI build once
-      # we have time to get Sauce working in CircleCI
-      # - run:
-      #     name: Run tests via Sauce
-      #     command: |
-      #       # For details on why we're ignoring selenium tests, see https://github.com/18F/calc/issues/330
-      #       python frontend/tests/sauce_connect.py py.test --ignore=frontend/tests/test_selenium.py --cov
 
       - deploy:
           name: Deploy to dev
