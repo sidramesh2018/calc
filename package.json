@@ -5,6 +5,7 @@
   "description": "An estimator for hourly rates on professional services contracts",
   "dependencies": {
     "a11y-dialog": "2.5.2",
+    "axe-core": "^2.1.7",
     "babel-core": "^6.23.1",
     "babel-jest": "^18.0.0",
     "babel-loader": "^6.4.0",
@@ -33,12 +34,14 @@
     "gulp-clean-css": "2.3.2",
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^3.0.1",
+    "gulp-if": "^2.0.2",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "1.6.0",
+    "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.7",
-    "jest": "^18.0.0",
-    "jquery": "1.12.4",
+    "jest": "^22.0.0",
+    "jquery": "3.2.1",
     "rc-slider": "^6.1.2",
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
@@ -73,5 +76,14 @@
   "engines": {
     "node": ">=6.0 <7.0",
     "npm": ">=3.8.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "lcov",
+      "text",
+      "html"
+    ],
+    "coverageDirectory": "./coverage/jest/"
   }
 }

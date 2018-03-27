@@ -146,7 +146,7 @@ class ChangelogMdTests(TestCase):
             version, date = h.get_text().split(' - ')
             if last_version is not None:
                 self.assertLess(Version(last_version), Version(version))
-                self.assertLess(parsedate(last_date), parsedate(date))
+                self.assertLessEqual(parsedate(last_date), parsedate(date))
                 self.assertEqual(
                     h.find('a').get('href'),
                     repo_url + '/compare/v%s...v%s' % (last_version, version)

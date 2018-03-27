@@ -9,6 +9,7 @@
 coverage.xml
 htmlcov
 *,cover
+/coverage
 venv
 ghostdriver.log
 *.log
@@ -35,5 +36,7 @@ release-*-instructions.html
 ~*.xls[x]
 jest/*
 Dockerfile.cloud
+docs/changelog.md
 docs/_build
 docs/static
+data_capture_uploaded_files/

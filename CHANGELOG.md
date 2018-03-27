@@ -7,6 +7,83 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.8.4][] - 2018-03-20
+
+### Changed
+
+- Use the latest version of Python 3.6.x in deployed applications (#1631).
+- Fixed a bug that impacted the sending of emails from worker applications (#1599).
+- Updated Code Climate config to match that services new format (#1629).
+- Updated README with information about waiting for automated deploys to finish (#1598).
+
+## [2.8.3][] - 2017-10-05
+
+### Changed
+
+- Fixed a bug whereby some region 10 spreadsheets would cause CALC bulk
+  upload to fail (#1594).
+
+## [2.8.2][] - 2017-10-03
+
+### Changed
+
+- The session cookie now expires when the user's browser is closed (#1584).
+- All admin routes have the 'Cache-Control: no-cache' header to prevent browser caching (#1590).
+
+## [2.8.1][] - 2017-10-02
+
+### Changed
+
+- The cross-origin security policy of the API has been hardened to
+  only allow CORS requests under `/api/`, and only allow the
+  `GET` and `OPTIONS` HTTP methods (#1585).
+
+- Improved logging for price list status changes (#1579).
+
+## [2.8.0][] - 2017-09-19
+
+### Added
+
+- Added additional required logging (#1569).
+
+## [2.7.2][] - 2017-09-19
+
+### Changed
+
+- Switch to 3-tiered branch-based deployments (`develop`, `staging`, `master`).
+
+## [2.7.1][] - 2017-09-19
+
+### Changed
+
+- Migrate from TravisCI to CircleCI.
+- Upgrade to Python 3.6.2.
+- Fix an issue that allowed CSVs exported from the Data Explorer to contain
+  auto-running Excel formulas in the query field.
+
+## [2.7.0][] - 2017-04-14
+
+### Changed
+
+- Upgraded Django to 1.9.3 (#1526).
+- Upgraded jQuery to 3.2.1 (#1539).
+- CALC is now prepared for migration to Django 1.10 (#1544). However,
+  as the development team currently has a limited amount of time to
+  work on CALC, we've decided not to actually migrate to the new
+  version of Django, as we may not have time to address any problems
+  occurring from the upgrade in the near future.
+
+### Added
+
+- Added support for recording and replaying attempted price list
+  submissions (#1491), and added a new **Technical Support Specialist**
+  role. This will allow the development team to better serve
+  users who are having problems submitting their price lists.
+- Added integration with Slack, so that the development team will be
+  notified of events happening on CALC and be able to respond quickly
+  to anything that needs attention (#1505).
+- Added documentation on monitoring CALC (#1518).
+
 ## [2.6.0][] - 2017-03-24
 
 ### Changed
@@ -227,7 +304,15 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.6.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.8.4...HEAD
+[2.8.4]: https://github.com/18F/calc/compare/v2.8.3...v2.8.4
+[2.8.3]: https://github.com/18F/calc/compare/v2.8.2...v2.8.3
+[2.8.2]: https://github.com/18F/calc/compare/v2.8.1...v2.8.2
+[2.8.1]: https://github.com/18F/calc/compare/v2.8.0...v2.8.1
+[2.8.0]: https://github.com/18F/calc/compare/v2.7.2...v2.8.0
+[2.7.2]: https://github.com/18F/calc/compare/v2.7.1...v2.7.2
+[2.7.1]: https://github.com/18F/calc/compare/v2.7.0...v2.7.1
+[2.7.0]: https://github.com/18F/calc/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/18F/calc/compare/v2.5.1...v2.6.0
 [2.5.1]: https://github.com/18F/calc/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/18F/calc/compare/v2.4.0...v2.5.0

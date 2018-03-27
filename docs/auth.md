@@ -15,6 +15,8 @@ Currently, authorization is set up as follows:
   * create and edit users and assign them to groups,
   * review submitted price lists and approve/reject/retire them,
   * bulk upload data exports (only Region 10 data for now).
+* **Staff users** in the **Technical Support Specialists** group can
+  view attempted price list submissions that any users have made.
 * **Superusers** can do anything, but only infrastructure/operational
   engineers should be given this capability.
 

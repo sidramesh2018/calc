@@ -6,11 +6,12 @@ from hourglass.utils import get_permissions_from_ns_codenames
 
 BULK_UPLOAD_PERMISSION = 'contracts.add_bulkuploadcontractsource'
 PRICE_LIST_UPLOAD_PERMISSION = 'data_capture.add_submittedpricelist'
+VIEW_ATTEMPT_PERMISSION = 'data_capture.change_attemptedpricelistsubmission'
 
 ROLES = {}
 
 # Devs: If any roles are added or modified, please also update
-# the "Authentication and Authorization" section of README.md
+# the "Authentication and Authorization" section of docs/auth.md.
 
 ROLES['Data Administrators'] = set([
     'auth.add_user',
@@ -27,6 +28,10 @@ ROLES['Data Administrators'] = set([
 ROLES['Contract Officers'] = set([
     PRICE_LIST_UPLOAD_PERMISSION,
     'data_capture.add_submittedpricelistrow',
+])
+
+ROLES['Technical Support Specialists'] = set([
+    VIEW_ATTEMPT_PERMISSION,
 ])
 
 # Data Administrators should also have any perms that Contract Officers do

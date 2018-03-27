@@ -9,7 +9,7 @@ from django.db import transaction
 from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 from contracts.models import Contract
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('contracts')
 
 
 class Schedule70Loader(object):
@@ -123,6 +123,4 @@ class Schedule70Loader(object):
             logger.info('updating search field')
             call_command(
                 'update_search_field',
-                cls.model._meta.app_label,
-                cls.model._meta.model_name
             )
