@@ -78,7 +78,9 @@ jobs:
       - run:
           name: Install NLTK data
           command: |
-            python -m nltk.downloader averaged_perceptron_tagger -d /usr/share/nltk_data
+            python -m nltk.downloader averaged_perceptron_tagger -d ./nltk_data
+            sudo rm -rf /usr/share/nltk_data
+            sudo mv nltk_data /usr/share/nltk_data
       - save_cache:
           name: Save NLTK cache
           key: nltk-data-v1
