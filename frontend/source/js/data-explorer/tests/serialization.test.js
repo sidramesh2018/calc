@@ -3,8 +3,8 @@ import {
   getSerializedFields, getChangedSerializedFields,
 } from '../serialization';
 import {
-  DEFAULT_SORT, MAX_QUERY_LENGTH,
-  MIN_EXPERIENCE, MAX_EXPERIENCE,
+  DEFAULT_SORT, DEFAULT_CONTRACT_YEAR, DEFAULT_QUERY_TYPE,
+  MAX_QUERY_LENGTH, MIN_EXPERIENCE, MAX_EXPERIENCE,
 } from '../constants';
 
 
@@ -109,7 +109,7 @@ describe('deserializers', () => {
   describe('contract-year', () => {
     it('deserializes various values', () => {
       const contractYear = deserializers['contract-year'];
-      expect(contractYear('whatever')).toBe('current');
+      expect(contractYear('whatever')).toBe(DEFAULT_CONTRACT_YEAR);
       expect(contractYear('current')).toBe('current');
       expect(contractYear('2')).toBe('2');
     });
@@ -145,7 +145,7 @@ describe('deserializers', () => {
   describe('query_type', () => {
     it('deserializes various values', () => {
       const { query_type } = deserializers;
-      expect(query_type('whatever')).toBe('match_all');
+      expect(query_type('whatever')).toBe(DEFAULT_QUERY_TYPE);
       expect(query_type('match_phrase')).toBe('match_phrase');
       expect(query_type('match_exact')).toBe('match_exact');
     });
