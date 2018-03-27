@@ -9,7 +9,7 @@
       <div class="card">
         <div class="card__content">
           {% if replay %}
-            <div class="alert alert-warning" role="alert">
+            <div class="usa-alert usa-alert-warning" role="alert">
               <h3>This is a replay!</h3>
 
               <p>You are replaying <a href="{% url 'admin:data_capture_attemptedpricelistsubmission_change' replay.id %}">price list submission attempt #{{ replay.id }}</a>.</p>
