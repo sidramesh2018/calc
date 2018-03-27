@@ -1,3 +1,4 @@
+// @ts-check
 /* global window */
 
 export const IS_SUPPORTED = 'MutationObserver' in window;

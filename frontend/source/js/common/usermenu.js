@@ -1,3 +1,4 @@
+// @ts-check
 /* global document */
 
 function enableUsermenu() {
