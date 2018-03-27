@@ -73,6 +73,9 @@ DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 SERVER_EMAIL = os.environ['SERVER_EMAIL']
 HELP_EMAIL = os.environ.get('HELP_EMAIL', DEFAULT_FROM_EMAIL)
 
+# Use a secure TLS connection for SMTP email sending
+EMAIL_USE_TLS = True
+
 API_HOST = os.environ.get('API_HOST', '/api/')
 
 GA_TRACKING_ID = os.environ.get('GA_TRACKING_ID', '')
