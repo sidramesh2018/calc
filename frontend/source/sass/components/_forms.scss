@@ -163,7 +163,7 @@ input[type].form__inline,
   }
   /* input[type=submit] used on admin page searches
    * .select-across ~ button used on admin page dropdowns w/in .actions block */
-  ~ .button,
+  ~ .usa-button,
   ~ button,
   ~ input[type=button],
   ~ input[type=submit],

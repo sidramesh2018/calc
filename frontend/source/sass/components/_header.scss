@@ -172,6 +172,9 @@ nav {
         &:hover {
           color: $color-white;
         }
+        &:visited {
+          color: $color-white;
+        }
       }
     }
   }

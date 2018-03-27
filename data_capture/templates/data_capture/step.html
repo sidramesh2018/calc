@@ -22,7 +22,7 @@
 
               <form method="post">
                 {% csrf_token %}
-                <button type="submit" name="cancel" class="button-outline" formnovalidate>Exit this replay</button>
+                <button type="submit" name="cancel" class="usa-button-outline" formnovalidate>Exit this replay</button>
               </form>
             </div>
           {% endif %}
@@ -71,12 +71,12 @@
         </p>
 
         <div class="dialog-buttons">
-          <button class="button-primary" data-a11y-dialog-hide>
+          <button class="usa-button-primary" data-a11y-dialog-hide>
             No, keep working
           </button>
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="cancel" class="button-secondary">
+            <button type="submit" name="cancel" class="usa-button-secondary">
               Yes, discard my work
             </button>
           </form>
