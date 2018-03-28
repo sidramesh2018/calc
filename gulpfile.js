@@ -129,8 +129,7 @@ gulp.task('sphinx', (cb) => {
 });
 
 gulp.task('copy-uswds-assets', () => gulp.src(`${USWDS_DIST}/@(js|fonts|img)/**/**`)
-  .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/vendor/uswds`)),
-);
+  .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/vendor/uswds`)));
 
 // production build task
 // will need to run before collectstatic
