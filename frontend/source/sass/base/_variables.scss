@@ -1,5 +1,9 @@
 @import '../../../../node_modules/uswds/src/stylesheets/core/_utilities.scss';
 @import 'rem';
+
+// Set the base path for assets (used for font and image paths)
+$asset-path: '../vendor/uswds/' !default;
+
 /* #044364: used for header background fallback */
 /* #D2F6FF used for info alert bg */
 
