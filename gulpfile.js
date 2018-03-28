@@ -128,7 +128,7 @@ gulp.task('sphinx', (cb) => {
 
 // production build task
 // will need to run before collectstatic
-// `npm run gulp -- build` or `gulp run build` if gulp-cli is installed globally
+// `yarn gulp build` or `gulp run build` if gulp-cli is installed globally
 gulp.task('build', ['sass', 'js', 'sphinx']);
 
 // watch files for changes
