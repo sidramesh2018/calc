@@ -25,6 +25,8 @@ const named = require('vinyl-named');
 
 const webpackUtil = require('./frontend/gulp/webpack-util');
 
+const USWDS_DIST = 'node_modules/uswds/dist';
+
 const BUILT_FRONTEND_DIR = 'frontend/static/frontend/built';
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -125,6 +127,10 @@ gulp.task('sphinx', (cb) => {
     cb(null);
   });
 });
+
+gulp.task('copy-uswds-assets', () => gulp.src(`${USWDS_DIST}/@(js|fonts|img)/**/**`)
+  .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/vendor/uswds`)),
+);
 
 // production build task
 // will need to run before collectstatic
