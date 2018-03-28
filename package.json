@@ -63,7 +63,7 @@
     "failable-eslint": "eslint --max-warnings 0 --ext .jsx --ext .js .",
     "typescript": "tsc",
     "test": "jest",
-    "test:watch": "npm test -- --watch"
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
