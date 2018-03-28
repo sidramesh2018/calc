@@ -1,6 +1,7 @@
 /docs/_build/
 /docs/static/
 /static/
+/static_compressed/
 htmlcov/
 vendor/
 coverage/
