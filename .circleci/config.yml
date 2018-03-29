@@ -117,9 +117,9 @@ jobs:
           name: Display versions
           command: |
             echo $(node --version)
+            echo $(npm --version)
             echo $(yarn --version)
             echo $(phantomjs --version)
-            echo $(npm --version)
             echo $(pwd)
       - run:
           name: Run linters and static analysis
