@@ -7,6 +7,19 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Improved performance of Region 10 bulk data upload processing (#1675).
+- Switched to native PostgreSQL full-text search instead of using djorm-exp-pgfulltext (#1652).
+- Upgraded to Django 1.11 (#1640).
+- Upgraded to Redis 3.2 (#1647).
+- Upgraded to React 15.5 (#1680).
+- Upgraded dj-email-url in support of switching to Amazon SES for email sending (#1678).
+- Fixed automated deployments to redeploy the main app and worker apps (#1651).
+- Added coverage reporting for the Data Explorer React app (#1653).
+- Setup nightly tests to be run against the production instance of CALC (#1654).
+- Minimized vendor JavaScript bundle (#1655).
+
 ## [2.8.4][] - 2018-03-20
 
 ### Changed
