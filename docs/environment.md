@@ -16,6 +16,9 @@ string), the boolean is true; otherwise, it's false.
 * `DEBUG` is a boolean value that indicates whether debugging is enabled
   (this should always be false in production).
 
+* `DEBUG_LOG_SQL` is a boolean value that indicates whether SQL
+  statements sent to the database should be logged to the console.
+
 * `DEBUG_HTTPS` is a boolean value that indicates whether the
   site should consider itself to be served over HTTPS while
   debugging is enabled. This can be useful if you want to develop
@@ -118,6 +121,11 @@ string), the boolean is true; otherwise, it's false.
 * `ESLINT_CHILL_OUT` is a boolean; if true, it will change the behavior
   of gulp's watch mode such that it doesn't run `eslint` every time a
   file changes.
+
+* `USE_POLLING` is a boolean; if true, this will force all the watchers
+  to use filesystem polling instead of OS notifications, which works
+  better with some configurations, such as Windows, VirtualBox, and
+  NFS mounts.
 
 [RoboBrowser]: http://robobrowser.readthedocs.io/
 [`SECRET_KEY`]: https://docs.djangoproject.com/en/1.8/ref/settings/#secret-key

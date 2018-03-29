@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import * as qs from 'querystring';
 
 import React from 'react';
@@ -20,7 +21,7 @@ export function ExportData({ querystring }) {
 }
 
 ExportData.propTypes = {
-  querystring: React.PropTypes.string.isRequired,
+  querystring: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
