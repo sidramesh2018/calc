@@ -155,7 +155,7 @@ class App extends React.Component {
                 <div className="download-buttons row">
                   <div className="four columns">
                     <a
-                      className="button button-primary"
+                      className="usa-button usa-button-primary"
                       id={prefixId('download-histogram') /* Selenium needs it. */}
                       href=""
                       onClick={this.handleDownloadClick}
