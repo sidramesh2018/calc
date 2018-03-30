@@ -1,15 +1,14 @@
 import toJson from 'enzyme-to-json';
+import React from 'react';
+import { mount } from 'enzyme';
 
 import Tooltip from '../components/tooltip';
-import makeSetup from './testSetup';
 
 const defaultProps = {
   children: '',
   text: 'hi james',
   show: false,
 };
-
-const setup = makeSetup(Tooltip, defaultProps);
 
 const tooltipsterMock = jest.fn().mockReturnThis();
 
@@ -24,12 +23,14 @@ describe('<Tooltip>', () => {
   // NOTE: This test does not cover any tooltipster functionality,
   // which has all been mocked
   it('matches snapshot', () => {
-    const { wrapper } = setup();
-    expect(toJson(wrapper)).toMatchSnapshot();
+    const component = React.createElement(Tooltip, defaultProps);
+    const mounted = mount(component);
+    expect(toJson(mounted)).toMatchSnapshot();
   });
 
   it('initializes tooltipster', () => {
-    setup();
+    const component = React.createElement(Tooltip, defaultProps);
+    mount(component);
     expect(tooltipsterMock.mock.calls.length).toBeGreaterThan(0);
   });
 });
