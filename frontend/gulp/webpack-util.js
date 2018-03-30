@@ -28,13 +28,8 @@ exports.webpackify = ({ isWatching, isProd }) => {
     }),
   ];
 
-  if (isProd) {
-    plugins.push(new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-    }));
-  }
-
   return webpackStream({
+    mode: isProd ? 'production' : 'development',
     watch: isWatching,
     watchOptions: USE_POLLING ? {
       aggregateTimeout: 300,
@@ -55,7 +50,7 @@ exports.webpackify = ({ isWatching, isProd }) => {
           exclude: /node_modules/,
           loader: 'babel-loader',
           options: {
-            presets: ['es2015', 'react'],
+            presets: ['env', 'react'],
             cacheDirectory: true,
           },
         },
