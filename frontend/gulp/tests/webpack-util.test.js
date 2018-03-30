@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import path from 'path';
 import vm from 'vm';
 import gulp from 'gulp';
