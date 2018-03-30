@@ -133,7 +133,8 @@ gulp.task('copy-uswds-assets', () => gulp.src(`${USWDS_DIST}/@(js|fonts|img)/**/
 
 // production build task
 // will need to run before collectstatic
-// `npm run gulp -- build` or `gulp run build` if gulp-cli is installed globally
+
+// `yarn gulp build` or `gulp run build` if gulp-cli is installed globally
 gulp.task('build', ['copy-uswds-assets', 'sass', 'js', 'sphinx']);
 
 // watch files for changes
