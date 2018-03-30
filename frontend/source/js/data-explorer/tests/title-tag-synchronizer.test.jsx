@@ -1,44 +1,50 @@
 import { TitleTagSynchronizer } from '../components/title-tag-synchronizer';
 import makeSetup from './testSetup';
 
-describe('<TitleTagSynchronzer>', () => {
+describe('<TitleTagSynchronizer>', () => {
   let fakeDocument;
-  let mounted;
+  let wrapper;
 
   const setup = (extraProps) => {
-    fakeDocument = { title: 'original' };
+    fakeDocument = Object.assign({}, { title: 'original' });
 
-    mounted = makeSetup(TitleTagSynchronizer, {
+    const defaultProps = {
       q: '',
       document: fakeDocument,
-    })(extraProps).mounted;
+    };
+
+    wrapper = makeSetup(TitleTagSynchronizer, defaultProps,
+      { wrapperOnly: true })(extraProps).wrapper;
   };
 
   it('leaves title unchanged on mount if query is empty', () => {
     setup();
-    expect(fakeDocument.title).toBe('original');
+    expect(fakeDocument.title).toEqual('original');
   });
 
   it('sets title to search query on mount if it is non-empty', () => {
     setup({ q: 'blarg' });
-    expect(fakeDocument.title).toBe('blarg - CALC Search');
+    expect(fakeDocument.title).toEqual('blarg - CALC Search');
   });
 
   it('sets title to non-empty search query on props change', () => {
     setup();
-    mounted.setProps({ q: 'boop,' });
-    expect(fakeDocument.title).toBe('boop - CALC Search');
+    wrapper.setProps({ q: 'boop,' });
+    expect(fakeDocument.title).toEqual('boop - CALC Search');
   });
 
   it('sets title to original if query is empty on props change', () => {
+    // TODO: fix
     setup({ q: 'boop' });
-    mounted.setProps({ q: '' });
-    expect(fakeDocument.title).toBe('original');
+    wrapper.setProps({ q: '' });
+    wrapper.update();
+    expect(fakeDocument.title).toEqual('original');
   });
 
   it('resets title to original on unmount', () => {
+    // TODO: fix
     setup({ q: 'boop' });
-    mounted.unmount();
-    expect(fakeDocument.title).toBe('original');
+    wrapper.unmount();
+    expect(fakeDocument.title).toEqual('original');
   });
 });
