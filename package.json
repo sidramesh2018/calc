@@ -87,6 +87,7 @@
       "text",
       "html"
     ],
-    "coverageDirectory": "./coverage/jest/"
+    "coverageDirectory": "./coverage/jest/",
+    "setupTestFrameworkScriptFile": "./frontend/source/js/data-explorer/tests/setup.js"
   }
 }
