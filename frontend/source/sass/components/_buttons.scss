@@ -21,9 +21,6 @@ button,
   font-weight: $font-weight-bold;
   line-height: 1.7; // adjusted from 1, which makes links show funky
 
-  &:focus {
-    box-shadow: $focus-shadow;
-  }
 
   &.usa-button-outline {
     border: 1px solid $color-gray;
@@ -108,7 +105,6 @@ input.usa-button-link[type="button"] {
   &.usa-button-focus {
     color: $color-primary-darker;
     outline: 1px dotted $color-primary-darker;
-    box-shadow: none;
   }
 
   &:active,
