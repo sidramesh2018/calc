@@ -92,6 +92,7 @@ fieldset.fieldset-error {
   select,
   textarea {
     border: 3px solid $color-secondary-dark;
+    padding: 1rem 0.45em; // WDS override
   }
 }
 
