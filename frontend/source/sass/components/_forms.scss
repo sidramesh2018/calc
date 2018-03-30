@@ -201,12 +201,16 @@ input[type].form__inline,
     display: block;
     box-sizing: border-box;
     float: left;
-    // only square the corners of the first button -- relevant on homepage search
-    &:first-of-type {
-      border-radius: 0 $border-radius $border-radius 0;
-    }
     &.reset {
       margin-left: 1rem;
     }
+  }
+  // only square the corners of the first button -- relevant on homepage search
+  ~ .usa-button:first-of-type,
+  ~ button:first-of-type,
+  ~ input[type=button]:first-of-type,
+  ~ input[type=submit],
+  input.select-across ~ button[type=submit] {
+    border-radius: 0 $border-radius $border-radius 0;
   }
 }

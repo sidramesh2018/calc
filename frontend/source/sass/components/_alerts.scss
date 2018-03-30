@@ -106,12 +106,15 @@ alerts-widget:focus {
 /* for Django admin */
 .messagelist li {
   @extend .usa-alert;
+  @extend .usa-alert-info;
 }
 
 .messagelist li.success {
+  @extend .usa-alert;
   @extend .usa-alert-success;
 }
 
 .errornote {
+  @extend .usa-alert;
   @extend .usa-alert-error;
 }
