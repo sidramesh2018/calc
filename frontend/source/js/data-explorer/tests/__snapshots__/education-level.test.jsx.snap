@@ -24,11 +24,13 @@ exports[`<EducationLevel> matches snapshot 1`] = `
           className="multiSel"
         >
           <span
+            key="MA"
             title="Masters Degree"
           >
             Masters Degree
           </span>
           <span
+            key="PHD"
             title="Ph.D"
           >
             Ph.D
@@ -54,30 +56,35 @@ exports[`<EducationLevel> matches snapshot 1`] = `
             <EducationLevelItem
               checked={false}
               id="zzz_HS"
+              key="HS"
               onCheckboxClick={[Function]}
               value="HS"
             />
             <EducationLevelItem
               checked={false}
               id="zzz_AA"
+              key="AA"
               onCheckboxClick={[Function]}
               value="AA"
             />
             <EducationLevelItem
               checked={false}
               id="zzz_BA"
+              key="BA"
               onCheckboxClick={[Function]}
               value="BA"
             />
             <EducationLevelItem
               checked={true}
               id="zzz_MA"
+              key="MA"
               onCheckboxClick={[Function]}
               value="MA"
             />
             <EducationLevelItem
               checked={true}
               id="zzz_PHD"
+              key="PHD"
               onCheckboxClick={[Function]}
               value="PHD"
             />
