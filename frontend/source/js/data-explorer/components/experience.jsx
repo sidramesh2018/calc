@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
-import Range from 'rc-slider/lib/Range';
+import { Range } from 'rc-slider';
 
 import {
   setExperience,

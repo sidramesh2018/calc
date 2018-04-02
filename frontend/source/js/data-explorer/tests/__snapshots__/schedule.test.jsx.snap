@@ -28,46 +28,55 @@ exports[`<Schedule> matches snapshot 1`] = `
       (all)
     </option>
     <option
+      key="Environmental"
       value="Environmental"
     >
       899 - Legacy Environmental
     </option>
     <option
+      key="Logistics"
       value="Logistics"
     >
       87405 - Legacy Logistics
     </option>
     <option
+      key="MOBIS"
       value="MOBIS"
     >
       874 - Legacy MOBIS
     </option>
     <option
+      key="PES"
       value="PES"
     >
       871 - Legacy PES
     </option>
     <option
+      key="Language Services"
       value="Language Services"
     >
       73802 - Legacy Language
     </option>
     <option
+      key="AIMS"
       value="AIMS"
     >
       541 - Legacy AIMS
     </option>
     <option
+      key="FABS"
       value="FABS"
     >
       520 - Legacy FABS
     </option>
     <option
+      key="IT Schedule 70"
       value="IT Schedule 70"
     >
       132 - IT 70
     </option>
     <option
+      key="Consolidated"
       value="Consolidated"
     >
       Consolidated

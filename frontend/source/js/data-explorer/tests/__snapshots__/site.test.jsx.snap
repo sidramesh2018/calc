@@ -22,16 +22,19 @@ exports[`<Site> matches snapshot 1`] = `
       (all)
     </option>
     <option
+      key="customer"
       value="customer"
     >
       customer
     </option>
     <option
+      key="contractor"
       value="contractor"
     >
       contractor
     </option>
     <option
+      key="both"
       value="both"
     >
       both
