@@ -1,6 +1,5 @@
 @import '../base/variables';
-@import '../uswds/forms';
-
+@import '../base/utils';
 
 legend {
   font-size: $base-font-size;
@@ -22,6 +21,33 @@ legend {
 
 label input[type="radio"] {
   width: auto; // WDS override for width: 100%;
+}
+
+.form-note {
+  float: right;
+  font-family: $font-family-main;
+  font-size: $h5-font-size;
+  margin: 0 0 1.5rem;
+
+  & + * {
+    clear: both;
+  }
+}
+
+.additional_text {
+  float: right;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.input-buttons-inline {
+  button,
+  button[type="submit"],
+  input[type="submit"],
+  & > * {
+    display: inline;
+    margin-right: 1.5em;
+  }
 }
 
 /* A <ul> holds a Django-rendered list of radio buttons. */
@@ -66,6 +92,7 @@ fieldset.fieldset-error {
   select,
   textarea {
     border: 3px solid $color-secondary-dark;
+    padding: 1rem 0.45em; // WDS override
   }
 }
 
@@ -100,7 +127,7 @@ form > .fieldset-error {
   fieldset {
     margin-top: 3rem;
     display: inline-block;
-    .form-group:last-child {
+    .usa-form-group:last-child {
       margin-right: 0;
     }
   }
@@ -157,13 +184,14 @@ input[type].form__inline,
   float: left;
   box-sizing: border-box;
   border-right: none;
+  border-radius: $border-radius 0 0 $border-radius;
   &.filter_active {
     padding-top: 0.9rem;
     padding-bottom: 0.9rem;
   }
   /* input[type=submit] used on admin page searches
    * .select-across ~ button used on admin page dropdowns w/in .actions block */
-  ~ .button,
+  ~ .usa-button,
   ~ button,
   ~ input[type=button],
   ~ input[type=submit],
@@ -176,5 +204,13 @@ input[type].form__inline,
     &.reset {
       margin-left: 1rem;
     }
+  }
+  // only square the corners of the first button -- relevant on homepage search
+  ~ .usa-button:first-of-type,
+  ~ button:first-of-type,
+  ~ input[type=button]:first-of-type,
+  ~ input[type=submit],
+  input.select-across ~ button[type=submit] {
+    border-radius: 0 $border-radius $border-radius 0;
   }
 }
