@@ -51,16 +51,6 @@ nav li:first-child {
   border: 2px solid $color-gold !important;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
-  box-shadow: $focus-shadow;
-}
-
-.filter_focus {
-  border: 2px solid $color-focus !important;
-}
-
 input.price,
 input#min_experience {
   width: 4em;
@@ -170,10 +160,6 @@ dl.dropdown {
     line-height: 24px;
     overflow: hidden;
     padding: 6px 10px;
-    &:focus {
-      border: 1px solid $color-primary-alt !important;
-      box-shadow: $focus-shadow;
-    }
   }
   span.value {
     display:none;
@@ -578,13 +564,6 @@ label.radio :checked + span {
   padding: 0;
   position: absolute;
   width: 1px;
-}
-
-input[type="checkbox"]:focus + .checkbox-focus,
-input[type="radio"]:focus + .checkbox-focus {
-  -webkit-box-shadow: 0px 0px 5px 2px $color-focus;
-  -moz-box-shadow: 0px 0px 5px 2px $color-focus;
-  box-shadow: 0px 0px 5px 2px $color-focus;
 }
 
 .fieldset-inputs label {

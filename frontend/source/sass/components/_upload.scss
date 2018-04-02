@@ -102,9 +102,6 @@ upload-widget:not([aria-live]) {
     // TODO: This is just clearing out the margin-bottom from our standard
     // CSS, which feels like a hack.
     margin-bottom: 0;
-    &:focus {
-      box-shadow: none;
-    }
   }
 
   label {
