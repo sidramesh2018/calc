@@ -21,41 +21,32 @@ exports.getLastFolderName = (file) => {
   return lastFolderName;
 };
 
-exports.webpackify = ({ isWatching, isProd }) => {
-  const plugins = [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': isProd ? '"production"' : '""',
-    }),
-  ];
-
-  return webpackStream({
-    mode: isProd ? 'production' : 'development',
-    watch: isWatching,
-    watchOptions: USE_POLLING ? {
-      aggregateTimeout: 300,
-      poll: 500,
-    } : {},
-    resolve: {
-      extensions: ['.js', '.jsx'],
-    },
-    context: path.normalize(path.join(__dirname, '..', '..')),
-    node: {
-      __filename: true,
-    },
-    devtool: isProd ? 'source-map' : 'eval-source-map',
-    module: {
-      rules: [
-        {
-          test: /\.jsx?$/,
-          exclude: /node_modules/,
-          loader: 'babel-loader',
-          options: {
-            presets: ['env', 'react'],
-            cacheDirectory: true,
-          },
+exports.webpackify = ({ isWatching, isProd }) => webpackStream({
+  mode: isProd ? 'production' : 'development',
+  watch: isWatching,
+  watchOptions: USE_POLLING ? {
+    aggregateTimeout: 300,
+    poll: 500,
+  } : {},
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
+  context: path.normalize(path.join(__dirname, '..', '..')),
+  node: {
+    __filename: true,
+  },
+  devtool: isProd ? 'source-map' : 'eval-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['env', 'react'],
+          cacheDirectory: true,
         },
-      ],
-    },
-    plugins,
-  }, webpack);
-};
+      },
+    ],
+  },
+}, webpack);
