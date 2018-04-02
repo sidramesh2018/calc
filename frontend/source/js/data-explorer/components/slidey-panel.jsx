@@ -4,9 +4,6 @@
  * Implementation of a panel that can slide up and down if jQuery
  * is present on the page. If jQuery is not present, it gracefully
  * degrades to a panel without animation.
- *
- * Note that this component requires react-transition-group@1.x
- * as defined in our package.json.
  */
 
 import PropTypes from 'prop-types';
