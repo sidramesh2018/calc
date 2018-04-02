@@ -10,17 +10,10 @@ exports[`<Description> matches snapshot 1`] = `
   >
     5,000
   </span>
-   results with 
+   results with filters: 
   <span
     className="filters"
   >
-    <DescriptionFilter
-      extraClassName={null}
-      key="lab"
-      label={null}
-    >
-      Systems Analyst
-    </DescriptionFilter>
     <DescriptionFilter
       extraClassName="education-filter"
       key="edu"

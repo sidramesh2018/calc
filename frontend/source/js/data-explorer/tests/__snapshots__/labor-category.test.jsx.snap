@@ -2,16 +2,27 @@
 
 exports[`<LaborCategory> matches snapshot 1`] = `
 <div>
-  <input
+  <CreatableSelect
     className="form__inline"
+    filterOptions={[Function]}
     id="zzz_labor_category"
-    maxLength={255}
+    isLoading={false}
+    isOptionUnique={[Function]}
+    isValidNewOption={[Function]}
+    labelKey="name"
+    menuRenderer={[Function]}
+    multi={true}
     name="q"
+    newOptionCreator={[Function]}
+    noResultsText="No matches found"
     onChange={[Function]}
-    onKeyDown={[Function]}
+    onInputChange={[Function]}
+    options={Array []}
     placeholder="Type a labor category"
-    type="text"
-    value=""
+    promptTextCreator={[Function]}
+    shouldKeyDownEventCreateNewOption={[Function]}
+    value={null}
+    valueKey="name"
   />
   <label
     className="sr-only"
