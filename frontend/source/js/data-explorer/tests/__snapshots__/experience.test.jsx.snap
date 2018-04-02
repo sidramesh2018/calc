@@ -1,17 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`<Experience> matches snapshot 1`] = `
 <div
-  className="filter">
+  className="filter"
+>
   <fieldset>
     <legend>
       Experience:
     </legend>
+    <ComponentEnhancer(Range)
+      activeDotStyle={Object {}}
+      allowCross={false}
+      className="experience-slider"
+      count={1}
+      disabled={false}
+      dotStyle={Object {}}
+      dots={false}
+      handle={[Function]}
+      handleStyle={
+        Array [
+          Object {},
+        ]
+      }
+      id="zzz_range"
+      included={true}
+      marks={Object {}}
+      max={45}
+      min={0}
+      onAfterChange={[Function]}
+      onBeforeChange={[Function]}
+      onChange={[Function]}
+      prefixCls="rc-slider"
+      pushable={false}
+      railStyle={Object {}}
+      step={1}
+      tabIndex={Array []}
+      trackStyle={
+        Array [
+          Object {},
+        ]
+      }
+      value={
+        Array [
+          5,
+          10,
+        ]
+      }
+      vertical={false}
+    />
     <div
-      className="slider" />
-    <div
-      className="experience_range">
+      className="experience_range"
+    >
       <label
         className="sr-only"
-        htmlFor="zzz_min">
+        htmlFor="zzz_min"
+      >
         Minimum Years
       </label>
       <select
@@ -19,56 +62,80 @@ exports[`<Experience> matches snapshot 1`] = `
         id="zzz_min"
         name="min_experience"
         onChange={[Function]}
-        value={5}>
+        value={5}
+      >
         <option
-          value={0}>
+          key="0"
+          value={0}
+        >
           0
         </option>
         <option
-          value={1}>
+          key="1"
+          value={1}
+        >
           1
         </option>
         <option
-          value={2}>
+          key="2"
+          value={2}
+        >
           2
         </option>
         <option
-          value={3}>
+          key="3"
+          value={3}
+        >
           3
         </option>
         <option
-          value={4}>
+          key="4"
+          value={4}
+        >
           4
         </option>
         <option
-          value={5}>
+          key="5"
+          value={5}
+        >
           5
         </option>
         <option
-          value={6}>
+          key="6"
+          value={6}
+        >
           6
         </option>
         <option
-          value={7}>
+          key="7"
+          value={7}
+        >
           7
         </option>
         <option
-          value={8}>
+          key="8"
+          value={8}
+        >
           8
         </option>
         <option
-          value={9}>
+          key="9"
+          value={9}
+        >
           9
         </option>
         <option
-          value={10}>
+          key="10"
+          value={10}
+        >
           10
         </option>
       </select>
        - 
       <label
         className="sr-only"
-        htmlFor="zzz_max">
+        htmlFor="zzz_max"
+      >
         Maximum Years
       </label>
       <select
@@ -76,169 +143,252 @@ exports[`<Experience> matches snapshot 1`] = `
         id="zzz_max"
         name="max_experience"
         onChange={[Function]}
-        value={10}>
+        value={10}
+      >
         <option
-          value={5}>
+          key="5"
+          value={5}
+        >
           5
         </option>
         <option
-          value={6}>
+          key="6"
+          value={6}
+        >
           6
         </option>
         <option
-          value={7}>
+          key="7"
+          value={7}
+        >
           7
         </option>
         <option
-          value={8}>
+          key="8"
+          value={8}
+        >
           8
         </option>
         <option
-          value={9}>
+          key="9"
+          value={9}
+        >
           9
         </option>
         <option
-          value={10}>
+          key="10"
+          value={10}
+        >
           10
         </option>
         <option
-          value={11}>
+          key="11"
+          value={11}
+        >
           11
         </option>
         <option
-          value={12}>
+          key="12"
+          value={12}
+        >
           12
         </option>
         <option
-          value={13}>
+          key="13"
+          value={13}
+        >
           13
         </option>
         <option
-          value={14}>
+          key="14"
+          value={14}
+        >
           14
         </option>
         <option
-          value={15}>
+          key="15"
+          value={15}
+        >
           15
         </option>
         <option
-          value={16}>
+          key="16"
+          value={16}
+        >
           16
         </option>
         <option
-          value={17}>
+          key="17"
+          value={17}
+        >
           17
         </option>
         <option
-          value={18}>
+          key="18"
+          value={18}
+        >
           18
         </option>
         <option
-          value={19}>
+          key="19"
+          value={19}
+        >
           19
         </option>
         <option
-          value={20}>
+          key="20"
+          value={20}
+        >
           20
         </option>
         <option
-          value={21}>
+          key="21"
+          value={21}
+        >
           21
         </option>
         <option
-          value={22}>
+          key="22"
+          value={22}
+        >
           22
         </option>
         <option
-          value={23}>
+          key="23"
+          value={23}
+        >
           23
         </option>
         <option
-          value={24}>
+          key="24"
+          value={24}
+        >
           24
         </option>
         <option
-          value={25}>
+          key="25"
+          value={25}
+        >
           25
         </option>
         <option
-          value={26}>
+          key="26"
+          value={26}
+        >
           26
         </option>
         <option
-          value={27}>
+          key="27"
+          value={27}
+        >
           27
         </option>
         <option
-          value={28}>
+          key="28"
+          value={28}
+        >
           28
         </option>
         <option
-          value={29}>
+          key="29"
+          value={29}
+        >
           29
         </option>
         <option
-          value={30}>
+          key="30"
+          value={30}
+        >
           30
         </option>
         <option
-          value={31}>
+          key="31"
+          value={31}
+        >
           31
         </option>
         <option
-          value={32}>
+          key="32"
+          value={32}
+        >
           32
         </option>
         <option
-          value={33}>
+          key="33"
+          value={33}
+        >
           33
         </option>
         <option
-          value={34}>
+          key="34"
+          value={34}
+        >
           34
         </option>
         <option
-          value={35}>
+          key="35"
+          value={35}
+        >
           35
         </option>
         <option
-          value={36}>
+          key="36"
+          value={36}
+        >
           36
         </option>
         <option
-          value={37}>
+          key="37"
+          value={37}
+        >
           37
         </option>
         <option
-          value={38}>
+          key="38"
+          value={38}
+        >
           38
         </option>
         <option
-          value={39}>
+          key="39"
+          value={39}
+        >
           39
         </option>
         <option
-          value={40}>
+          key="40"
+          value={40}
+        >
           40
         </option>
         <option
-          value={41}>
+          key="41"
+          value={41}
+        >
           41
         </option>
         <option
-          value={42}>
+          key="42"
+          value={42}
+        >
           42
         </option>
         <option
-          value={43}>
+          key="43"
+          value={43}
+        >
           43
         </option>
         <option
-          value={44}>
+          key="44"
+          value={44}
+        >
           44
         </option>
         <option
-          value={45}>
+          key="45"
+          value={45}
+        >
           45
         </option>
       </select>

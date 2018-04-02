@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -206,12 +207,12 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  api: React.PropTypes.object.isRequired,
-  ratesInProgress: React.PropTypes.bool.isRequired,
-  ratesError: React.PropTypes.string,
-  resetState: React.PropTypes.func.isRequired,
-  invalidateRates: React.PropTypes.func.isRequired,
-  idPrefix: React.PropTypes.string,
+  api: PropTypes.object.isRequired,
+  ratesInProgress: PropTypes.bool.isRequired,
+  ratesError: PropTypes.string,
+  resetState: PropTypes.func.isRequired,
+  invalidateRates: PropTypes.func.isRequired,
+  idPrefix: PropTypes.string,
 };
 
 App.defaultProps = {

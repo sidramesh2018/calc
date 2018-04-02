@@ -223,6 +223,15 @@ class GetRatesCSV(APIView):
         contracts_all = get_contracts_queryset(request.GET, wage_field)
 
         q = request.query_params.get('q', 'None')
+
+        # If the query starts with special chars that could be interpreted
+        # as parts of a formula by Excel, then prefix the query with
+        # an apostrophe so that Excel instead treats it as plain text.
+        # See https://issues.apache.org/jira/browse/CSV-199
+        # for more information.
+        if q.startswith(('@', '-', '+', '=', '|', '%')):
+            q = "'" + q
+
         min_education = request.query_params.get(
             'min_education', 'None Specified')
         min_experience = request.query_params.get(
@@ -267,6 +276,8 @@ class GetRatesCSV(APIView):
 
 class GetAutocomplete(APIView):
 
+    MAX_RESULTS = 20
+
     def get(self, request, format=None):
         """
         Query Params:
@@ -283,8 +294,13 @@ class GetAutocomplete(APIView):
                 data = Contract.objects.filter(labor_category__icontains=q)
             else:
                 data = Contract.objects.multi_phrase_search(q)
+
             data = data.values('_normalized_labor_category').annotate(
                 count=Count('_normalized_labor_category')).order_by('-count')
+
+            # limit data to MAX_RESULTS
+            data = data[:self.MAX_RESULTS]
+
             data = [
                 {'labor_category': d['_normalized_labor_category'],
                  'count': d['count']}

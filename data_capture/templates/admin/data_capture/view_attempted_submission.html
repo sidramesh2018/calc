@@ -1,0 +1,38 @@
+{% extends "admin/base_site.html" %}
+{% load data_capture %}
+
+{% block content_title %}
+  <h1>View attempted price list submission</h1>
+{% endblock %}
+
+{% block content %}
+  <p>
+    Attempted submission #{{ original.id }} was made by
+    <strong>{{ original.submitter.email }}</strong>
+    on
+    <strong>{{ original.created_at|tz_timestamp }}</strong>.
+  </p>
+
+  {% if original.uploaded_file %}
+  <p>
+    The user uploaded 
+    <a href="{% url 'admin:data_capture_send_uploaded_file' id=original.id %}">{{ original.uploaded_file_name }}</a>
+    ({{ original.uploaded_file.contents.size|filesizeformat }}).
+    It had {{ original.valid_row_count }} valid
+    row{{ original.valid_row_count|pluralize }} and {{ original.invalid_row_count }} invalid
+    row{{ original.invalid_row_count|pluralize }}.
+  </p>
+  {% endif %}
+
+  <p>
+    You can replay the submission using the button below, to see
+    what the user saw when they attempted to submit the
+    price list.
+  </p>
+
+  <form method="post" action="{% url 'data_capture:step_3' %}">
+    {% csrf_token %}
+    <input type="hidden" name="replay-attempted-submission" value="{{ original.id }}">
+    <button type="submit">Replay submission</button>
+  </form>
+{% endblock %}

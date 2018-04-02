@@ -46,6 +46,7 @@ describe('<SlideyPanel>', () => {
     const wrapper = mount(<SlideyPanel><p>hi</p></SlideyPanel>);
 
     wrapper.setProps({ expanded: true });
+    wrapper.update();
     expect(wrapper.find('p').exists()).toBeTruthy();
     expect(wrapper.text()).toBe('hi');
   });
@@ -54,6 +55,7 @@ describe('<SlideyPanel>', () => {
     const wrapper = mount(<SlideyPanel expanded><p>hi</p></SlideyPanel>);
 
     wrapper.setProps({ expanded: false });
+    wrapper.update();
     expect(wrapper.find('p').exists()).toBeFalsy();
   });
 
@@ -61,6 +63,7 @@ describe('<SlideyPanel>', () => {
     const wrapper = mount(<SlideyPanel $={fake$}><p>hi</p></SlideyPanel>);
 
     wrapper.setProps({ expanded: true });
+    wrapper.update();
     expect(fake$.log).toEqual([
       'hide <span>',
       'slideDown <span> fast',
@@ -71,8 +74,10 @@ describe('<SlideyPanel>', () => {
     const wrapper = mount(<SlideyPanel $={fake$}><p>hi</p></SlideyPanel>);
 
     wrapper.setProps({ expanded: true });
+    wrapper.update();
     fake$.log = [];
     wrapper.setProps({ expanded: false });
+    wrapper.update();
     expect(fake$.log).toEqual([
       'slideUp <span> fast',
     ]);

@@ -5,8 +5,9 @@ from decimal import Decimal
 
 from django.db import models, connection
 from django.contrib.auth.models import User
-from djorm_pgfulltext.models import SearchManager, SearchQuerySet
-from djorm_pgfulltext.fields import VectorField
+from django.db.models.expressions import Value
+from django.contrib.postgres.search import SearchVectorField, SearchVector
+
 
 EDUCATION_CHOICES = (
     ('HS', 'High School'),
@@ -32,10 +33,13 @@ def convert_to_tsquery(query):
 
         >>> convert_to_tsquery('interpretation services')
         'interpretation:* & services:*'
+
+        >>> convert_to_tsquery('123')
+        '123:*'
     """
 
     # remove all non-alphanumeric or whitespace chars
-    pattern = re.compile('[^a-zA-Z\s]')
+    pattern = re.compile('[^a-zA-Z0-9\s]')
     query = pattern.sub('', query)
     query_parts = query.split()
     # remove empty strings and add :* to use prefix matching on each chunk
@@ -70,10 +74,7 @@ def convert_to_tsquery_union(queries):
     return " | ".join(queries)
 
 
-class CurrentContractManager(SearchManager):
-    # need to subclass the SearchManager we were using for postgres full text
-    # search instead of default
-
+class CurrentContractManager(models.Manager):
     def bulk_update_normalized_labor_categories(self):
         '''
         Iterate through all Contract models and update their
@@ -115,22 +116,45 @@ class CurrentContractManager(SearchManager):
     def multi_phrase_search(self, *args, **kwargs):
         return self.get_queryset().multi_phrase_search(*args, **kwargs)
 
+    def search(self, *args, **kwargs):
+        return self.get_queryset().search(*args, **kwargs)
+
+    def update_search_index(self):
+        return self.update(
+            search_index=SearchVector('_normalized_labor_category'))
+
     def get_queryset(self):
         return ContractsQuerySet(self.model, using=self._db)\
             .filter(current_price__gt=0)\
             .exclude(current_price__isnull=True)
 
 
-class ContractsQuerySet(SearchQuerySet):
+class MultiPhraseSearchQuery(Value):
+    def as_sql(self, compiler, connection):
+        queries = self.value
 
-    def multi_phrase_search(self, queries):
         if isinstance(queries, str):
             queries = [queries]
         queries = [
             Contract.normalize_labor_category(q)
             for q in queries
         ]
-        return self.search(convert_to_tsquery_union(queries), raw=True)
+        tsquery = convert_to_tsquery_union(queries)
+
+        return f"to_tsquery('pg_catalog.english', %s)", [tsquery]
+
+
+class ContractsQuerySet(models.QuerySet):
+
+    def multi_phrase_search(self, queries):
+        return self.search(MultiPhraseSearchQuery(queries))
+
+    def search(self, query):
+        return self.filter(search_index=query)
+
+    def update_search_index(self):
+        return self.update(
+            search_index=SearchVector('_normalized_labor_category'))
 
     def order_by(self, *args, **kwargs):
         edu_sort_sql = """
@@ -187,6 +211,51 @@ class BulkUploadContractSource(models.Model):
         db_index=True, max_length=5, choices=PROCUREMENT_CENTER_CHOICES)
 
 
+class CashField(models.DecimalField):
+    '''
+    Custom field class for storing cash amounts in U.S. dollars and cents.
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.decimal_places != 2:
+            raise ValueError(f'{self.__class__.__name__} must have '
+                             f'exactly 2 decimal places')
+
+    @staticmethod
+    def cash(val):
+        '''
+        Converts the given value, which may be a floating-point number,
+        to a Decimal that represents a monetary value.
+
+        Examples:
+
+            >>> CashField.cash(1.0 / 3)
+            Decimal('0.33')
+
+            >>> CashField.cash(350)
+            Decimal('350.00')
+        '''
+
+        return Decimal(val).quantize(Decimal('.01'))
+
+    def to_python(self, value):
+        '''
+        It's possible that our cash-related fields have been set to
+        float values that don't convert nicely to Decimal values with
+        a reasonable number of digits in the cents part.
+
+        This will trip Django 1.9's max_digits validators, so we'll
+        ensure that our values don't have an excessive number of cents
+        digits.
+        '''
+
+        value = super().to_python(value)
+        if value is None:
+            return value
+        return self.cash(value)
+
+
 class Contract(models.Model):
 
     idv_piid = models.CharField(max_length=128)  # index this field
@@ -200,20 +269,20 @@ class Contract(models.Model):
         db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True,
         blank=True)
     min_years_experience = models.IntegerField(db_index=True)
-    hourly_rate_year1 = models.DecimalField(max_digits=10, decimal_places=2)
-    hourly_rate_year2 = models.DecimalField(
+    hourly_rate_year1 = CashField(max_digits=10, decimal_places=2)
+    hourly_rate_year2 = CashField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year3 = models.DecimalField(
+    hourly_rate_year3 = CashField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year4 = models.DecimalField(
+    hourly_rate_year4 = CashField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    hourly_rate_year5 = models.DecimalField(
+    hourly_rate_year5 = CashField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    current_price = models.DecimalField(
+    current_price = CashField(
         db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
-    next_year_price = models.DecimalField(
+    next_year_price = CashField(
         db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
-    second_year_price = models.DecimalField(
+    second_year_price = CashField(
         db_index=True, max_digits=10, decimal_places=2, null=True, blank=True)
     contractor_site = models.CharField(
         db_index=True, max_length=128, null=True, blank=True)
@@ -225,7 +294,7 @@ class Contract(models.Model):
 
     _normalized_labor_category = models.TextField(db_index=True, blank=True)
 
-    search_index = VectorField()
+    search_index = SearchVectorField(default='', db_index=True, editable=False)
 
     upload_source = models.ForeignKey(
         BulkUploadContractSource,
@@ -236,12 +305,7 @@ class Contract(models.Model):
 
     # use a manager that filters by current contracts with a valid
     # current_price
-    objects = CurrentContractManager(
-        fields=('_normalized_labor_category',),
-        config='pg_catalog.english',
-        search_field='search_index',
-        auto_update_search_field=True
-    )
+    objects = CurrentContractManager()
 
     def get_readable_business_size(self):
         if 's' in self.business_size.lower():
@@ -264,7 +328,7 @@ class Contract(models.Model):
 
         # Note also that any logic changes to this code should
         # eventually be followed-up with
-        # `manage.py update_search_field contracts`. Otherwise,
+        # `manage.py update_search_field`. Otherwise,
         # all pre-existing contracts will still have search
         # index information corresponding to the old logic.
 

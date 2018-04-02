@@ -11,12 +11,14 @@ services:
     ports:
       - "${DOCKER_EXPOSED_PORT}:${DOCKER_EXPOSED_PORT}"
   db:
-    image: postgres:9.4
+    image: postgres:9.5.4
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=calc
       - POSTGRES_USER=calc_user
   redis:
-    image: redis:3.0.7-alpine
+    image: redis:3.2-alpine
   rq_worker:
     extends:
       file: docker-services.yml
@@ -39,3 +41,4 @@ volumes:
   node-modules:
   python-venv:
   home:
+  pgdata:

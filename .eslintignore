@@ -3,5 +3,6 @@
 /static/
 htmlcov/
 vendor/
+coverage/
 
 frontend/static/frontend/built/

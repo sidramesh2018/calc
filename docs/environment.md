@@ -16,6 +16,14 @@ string), the boolean is true; otherwise, it's false.
 * `DEBUG` is a boolean value that indicates whether debugging is enabled
   (this should always be false in production).
 
+* `DEBUG_LOG_SQL` is a boolean value that indicates whether SQL
+  statements sent to the database should be logged to the console.
+
+* `DEBUG_HTTPS` is a boolean value that indicates whether the
+  site should consider itself to be served over HTTPS while
+  debugging is enabled. This can be useful if you want to develop
+  with SSL enabled.
+
 * `HIDE_DEBUG_UI` is a boolean value that indicates whether to hide
   various development and debugging affordances in the UI, such as the
   [Django Debug Toolbar][]. This can be useful when demoing or user testing
@@ -106,6 +114,19 @@ string), the boolean is true; otherwise, it's false.
   Running tests with RoboBrowser can be much faster and less error-prone
   than via Selenium, but it also means that the tests are less end-to-end.
 
+* `SLACKBOT_WEBHOOK_URL` is the URL of a [Slack incoming webhook][] that
+  will be sent messages whenever certain kinds of
+  [events](../slackbot/signals.py) occur in the app.
+
+* `ESLINT_CHILL_OUT` is a boolean; if true, it will change the behavior
+  of gulp's watch mode such that it doesn't run `eslint` every time a
+  file changes.
+
+* `USE_POLLING` is a boolean; if true, this will force all the watchers
+  to use filesystem polling instead of OS notifications, which works
+  better with some configurations, such as Windows, VirtualBox, and
+  NFS mounts.
+
 [RoboBrowser]: http://robobrowser.readthedocs.io/
 [`SECRET_KEY`]: https://docs.djangoproject.com/en/1.8/ref/settings/#secret-key
 [`DEFAULT_FROM_EMAIL`]: https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-DEFAULT_FROM_EMAIL
@@ -114,3 +135,4 @@ string), the boolean is true; otherwise, it's false.
 [DJ-Database-URL schema]: https://github.com/kennethreitz/dj-database-url#url-schema
 [dj-email-url schema]: https://github.com/migonzalvar/dj-email-url#supported-backends
 [twelve-factor]: http://12factor.net/
+[Slack incoming webhook]: https://api.slack.com/incoming-webhooks

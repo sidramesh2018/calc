@@ -111,8 +111,10 @@ class Steps:
     in templates with something like {{ step.widget }}.
     '''
 
-    def __init__(self, template_format, extra_ctx_vars=None):
+    def __init__(self, template_format, extra_ctx_vars=None,
+                 extra_ctx_processors=None):
         self.extra_ctx_vars = extra_ctx_vars or {}
+        self.extra_ctx_processors = extra_ctx_processors or []
         self.template_format = template_format
         self._views = []
 
@@ -177,9 +179,12 @@ class StepRenderer:
         self.steps = steps
         self.number = step_number
 
-    def context(self, context=None):
+    def context(self, context=None, request=None):
         final_ctx = {'step': self}
         final_ctx.update(self.steps.extra_ctx_vars)
+        if request is not None:
+            for processor in self.steps.extra_ctx_processors:
+                final_ctx.update(processor(request))
         if context:
             final_ctx.update(context)
         return final_ctx
@@ -194,7 +199,7 @@ class StepRenderer:
 
     def render(self, request, context=None):
         return render(request, self.template_name,
-                      self.context(context))
+                      self.context(context, request))
 
     def render_to_string(self, context=None):
         return render_to_string(self.template_name, self.context(context))

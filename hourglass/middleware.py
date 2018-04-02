@@ -13,6 +13,9 @@ class ComplianceMiddleware:
     to 200 responses, but not to error responses.
 
     Otherwise, the headers will be added to all responses.
+
+    We also want to ensure that /admin/ routes are never cached, so we'll
+    add appropriate headers for those routes.
     '''
 
     def process_response(self, request, response):
@@ -21,6 +24,9 @@ class ComplianceMiddleware:
 
             response["X-Content-Type-Options"] = "nosniff"
             response["X-XSS-Protection"] = "1; mode=block"
+
+        if request.path.startswith("/admin/"):
+            response["Cache-Control"] = "no-cache"
 
         return response
 

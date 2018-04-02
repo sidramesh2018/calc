@@ -6,9 +6,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.test import override_settings, TestCase
 from django.contrib.admin.sites import AdminSite
+from django.core.files.uploadedfile import SimpleUploadedFile
 
+from hourglass.tests.common import BaseLoginTestCase
 from .. import admin, email
-from ..models import SubmittedPriceList, SubmittedPriceListRow
+from ..models import (SubmittedPriceList, SubmittedPriceListRow,
+                      AttemptedPriceListSubmission)
 from .common import FAKE_SCHEDULE
 from .test_models import ModelTestCase
 
@@ -32,7 +35,7 @@ class AdminTestCase(ModelTestCase):
         )
 
 
-@override_settings(
+DEBUG_ADMIN_SETTINGS = dict(
     # Strangely, disabling DEBUG mode silences some errors in Django
     # admin views, so we'll enforce it so that any errors are raised.
     DEBUG=True,
@@ -47,6 +50,9 @@ class AdminTestCase(ModelTestCase):
         if name != 'hourglass.middleware.DebugOnlyDebugToolbarMiddleware'
     ]),
 )
+
+
+@override_settings(**DEBUG_ADMIN_SETTINGS)
 class DebugAdminTestCase(AdminTestCase):
     pass
 
@@ -103,7 +109,8 @@ class SuperuserViewTests(DebugAdminTestCase):
         self.user = self.login(is_superuser=True)
 
     def test_can_set_superuser(self):
-        res = self.client.get('/admin/auth/user/{}/'.format(self.user.id))
+        res = self.client.get(
+            '/admin/auth/user/{}/change/'.format(self.user.id))
         self.assertContains(res, 'Superuser')
         self.assertEqual(res.status_code, 200)
 
@@ -126,7 +133,8 @@ class NonSuperuserViewTests(DebugAdminTestCase):
                             status_code=200)
 
     def test_cannot_set_superuser(self):
-        res = self.client.get('/admin/auth/user/{}/'.format(self.user.id))
+        res = self.client.get(
+            '/admin/auth/user/{}/change/'.format(self.user.id))
         self.assertNotContains(res, 'Superuser')
         self.assertEqual(res.status_code, 200)
 
@@ -161,7 +169,7 @@ class NonSuperuserViewTests(DebugAdminTestCase):
 
     def test_unreviewed_pricelist_detail_returns_200(self):
         res = self.client.get(
-            '/admin/data_capture/unreviewedpricelist/{}/'.format(
+            '/admin/data_capture/unreviewedpricelist/{}/change/'.format(
                 self.price_list.id
             )
         )
@@ -170,7 +178,7 @@ class NonSuperuserViewTests(DebugAdminTestCase):
     def test_retired_pricelist_detail_returns_200(self):
         self.price_list.retire(self.user)
         res = self.client.get(
-            '/admin/data_capture/retiredpricelist/{}/'.format(
+            '/admin/data_capture/retiredpricelist/{}/change/'.format(
                 self.price_list.id
             )
         )
@@ -179,7 +187,7 @@ class NonSuperuserViewTests(DebugAdminTestCase):
     def test_approved_pricelist_detail_returns_200(self):
         self.price_list.approve(self.user)
         res = self.client.get(
-            '/admin/data_capture/approvedpricelist/{}/'.format(
+            '/admin/data_capture/approvedpricelist/{}/change/'.format(
                 self.price_list.id
             )
         )
@@ -188,7 +196,7 @@ class NonSuperuserViewTests(DebugAdminTestCase):
     def test_rejected_pricelist_detail_returns_200(self):
         self.price_list.reject(self.user)
         res = self.client.get(
-            '/admin/data_capture/rejectedpricelist/{}/'.format(
+            '/admin/data_capture/rejectedpricelist/{}/change/'.format(
                 self.price_list.id
             )
         )
@@ -291,7 +299,7 @@ class SubmittedPriceListRowAdminTests(AdminTestCase):
             self.price_list.status = val
             self.assertEqual(
                 self.pl_model_admin.contract_number(self.row),
-                '<a href="/admin/data_capture/{}pricelist/{}/">{}</a>'.format(
+                '<a href="/admin/data_capture/{}pricelist/{}/change/">{}</a>'.format(  # NOQA
                     label,
                     self.price_list.id,
                     self.price_list.contract_number)
@@ -304,3 +312,49 @@ class SubmittedPriceListRowAdminTests(AdminTestCase):
 
     def test_has_add_permission_is_false(self):
         self.assertFalse(self.pl_model_admin.has_add_permission(self.row))
+
+
+@override_settings(**DEBUG_ADMIN_SETTINGS)
+class AttemptedPriceListSubmissionAdminTests(BaseLoginTestCase):
+    URL_PREFIX = '/admin/data_capture/attemptedpricelistsubmission/'
+
+    def setUp(self):
+        super().setUp()
+        call_command('initgroups', stdout=io.StringIO())
+        self.user = self.create_user(
+            username='foo', is_staff=True, email='foo@example.org',
+            groups=['Technical Support Specialists'])
+        self.apls = AttemptedPriceListSubmission(
+            submitter=self.user,
+            session_state='{}'
+        )
+        f = SimpleUploadedFile(name='blah.csv', content=b'blah,meh')
+        self.apls.set_uploaded_file(f)
+        self.apls.save()
+
+    def assert_403(self, url):
+        self.assertEqual(self.client.get(url).status_code, 403)
+
+    def test_views_are_protected_from_non_tech_support_folks(self):
+        self.login(username='bar', is_staff=True)
+        self.assert_403(f'{self.URL_PREFIX}')
+        self.assert_403(f'{self.URL_PREFIX}{self.apls.id}/change/')
+        self.assert_403(f'{self.URL_PREFIX}{self.apls.id}/download/')
+
+    def test_view_works(self):
+        self.client.force_login(self.user)
+        res = self.client.get(f'{self.URL_PREFIX}{self.apls.id}/change/')
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, 'blah.csv')
+
+    def test_download_works(self):
+        self.client.force_login(self.user)
+        res = self.client.get(f'{self.URL_PREFIX}{self.apls.id}/download/')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(
+            res['Content-Disposition'],
+            'attachment; filename="blah.csv"')
+        self.assertEqual(
+            res['Content-Type'],
+            'application/octet-stream')
+        self.assertEqual(res.content, b'blah,meh')
