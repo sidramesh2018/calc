@@ -11,7 +11,7 @@ locally:
 
 * [Python 3.6](https://www.python.org/)
   * If not using the [Docker-based development workflow](docker.md), make sure your system `python` command runs Python 3. You can check this by running `python --version`.
-* [Node 6.0](https://nodejs.org/)
+* [Node 6.13](https://nodejs.org/)
 * [yarn](https://yarnpkg.com)
   * Install globally via `npm install -g yarn` or via another method described at [https://yarnpkg.com/lang/en/docs/install/](https://yarnpkg.com/lang/en/docs/install/).
 * [Postgres 9.5](https://www.postgresql.org/)

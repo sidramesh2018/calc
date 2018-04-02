@@ -4,7 +4,7 @@ default-docker-config: &default-docker-config
   docker:
     - image: circleci/python:3.6
       environment:
-        CI_NODE_VERSION: 6.5.0
+        CI_NODE_VERSION: 6.13.1
         NPM_CONFIG_ENGINE_STRICT: true
         PHANTOMJS_TIMEOUT: 15
         SKIP_STATIC_ASSET_BUILDING: yup
