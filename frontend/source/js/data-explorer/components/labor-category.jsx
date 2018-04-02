@@ -7,7 +7,6 @@ import { setQuery } from '../actions';
 
 import {
   autobind,
-  filterActive,
   queryStringToValuesArray,
   valuesArrayToQueryString,
 } from '../util';
@@ -90,7 +89,7 @@ export class LaborCategory extends React.Component {
 
   render() {
     const id = `${this.props.idPrefix}labor_category`;
-    const className = filterActive(this.props.query !== '', 'form__inline');
+    const className = 'form__inline';
 
     return (
       <div>

@@ -177,6 +177,7 @@ dl.contract-details {
  * .actions label select rule is for admin page action dropdown on users/groups */
 input[type].form__inline,
 .form__inline input[type=search],
+.Select.form__inline,
 .actions label select {
   height: 40px;
   display: block;
@@ -212,5 +213,16 @@ input[type].form__inline,
   ~ input[type=submit],
   input.select-across ~ button[type=submit] {
     border-radius: 0 $border-radius $border-radius 0;
+  }
+}
+
+// react-select style overrides
+.form__inline {
+  min-width: 53%;
+
+  .Select-control {
+    border-radius: $border-radius 0 0 $border-radius;
+    border-right: none;
+    height: 40px;
   }
 }
