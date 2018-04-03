@@ -4,6 +4,7 @@ $color-error-bg: #fef5f5;
   margin: 1rem 0;
   padding: 1rem 6rem 1rem 2rem;
   border-radius: $border-radius;
+  background-image: none;
   &::before {
     width: 0;
   }
@@ -67,27 +68,40 @@ alerts-widget:focus {
   outline: none;
 }
 
-// TODO: style these the same as alerts?
-// or perhaps just use alert classes in messages.html
-.message-error h3,
-.message-error p {
-  color: $color-secondary-dark;
-  font-weight: $font-weight-bold;
+.message-error {
+  @extend .usa-alert;
+  @extend .usa-alert-error;
+  &.no-bg {
+    background-color: transparent;
+    border: none;
+  }
+  h3,
+  p {
+    color: $color-secondary-dark;
+    font-weight: $font-weight-bold;
+  }
+  h3:before {
+    width: $h3-font-size;
+    height: $h3-font-size;
+    content: url('../../images/icon-warning.svg');
+    padding-right: $space-half;
+  }
 }
-
-.message-error h3:before {
-  width: $h3-font-size;
-  height: $h3-font-size;
-  content: url('../../images/icon-warning.svg');
-  padding-right: $space-half;
+.message-success {
+  @extend .usa-alert;
+  @extend .usa-alert-success;
+  h3 {
+    color: $color-green;
+    margin-bottom: 0;
+  }
 }
-.message-success h3 {
-  color: $color-green;
-  margin-bottom: 0;
-}
-.message-info h3 {
-  /*color: $color-primary-alt-darkest;*/
-  margin-bottom: 0;
+.message-info {
+  @extend .usa-alert;
+  @extend .usa-alert-info;
+  h3 {
+    color: $color-primary-alt-darkest;
+    margin-bottom: 0;
+  }
 }
 
 .alert-submitted-price-lists {
