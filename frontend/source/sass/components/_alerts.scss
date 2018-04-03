@@ -71,6 +71,10 @@ alerts-widget:focus {
 .message-error {
   @extend .usa-alert;
   @extend .usa-alert-error;
+  &.no-bg {
+    background-color: transparent;
+    border: none;
+  }
   h3,
   p {
     color: $color-secondary-dark;
