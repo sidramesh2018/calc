@@ -34,7 +34,7 @@ https://api.data.gov/gsa/calc/rates/?q=accountant
 
 You can change the way that labor categories are searched by using the `query_type` parameter, which can be either:
 
-* `match_words` (the default), which matches all words in the query;
+* `match_all` (the default), which matches all words in the query;
 * `match_phrase`, which matches the query as a phrase; or
 * `match_exact`, which matches labor categories exactly
 
