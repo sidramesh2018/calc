@@ -101,7 +101,7 @@ class App extends React.Component {
             <div className="row">
               <div className="twelve columns">
                 <LaborCategory api={this.props.api}>
-                  <button className="submit usa-button-primary">
+                  <button className="submit usa-button usa-button-primary">
                     Search
                   </button>
                   {' '}
@@ -109,7 +109,7 @@ class App extends React.Component {
                     onClick={this.handleResetClick}
                     className="reset usa-button usa-button-outline"
                     type="reset"
-                    value="Clear search"
+                    value="Start over"
                   />
                 </LaborCategory>
               </div>
