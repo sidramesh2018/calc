@@ -17,7 +17,7 @@ const setup = makeSetup(LaborCategory, defaultProps);
 describe('<LaborCategory>', () => {
   it('renders correctly', () => {
     const { props, wrapper } = setup();
-    const input = wrapper.find(`input[type="text"][id="${props.idPrefix}labor_category"]`);
+    const input = wrapper.find(`CreatableSelect[id="${props.idPrefix}labor_category"]`);
     expect(input.exists()).toBeTruthy();
     expect(input.prop('maxLength')).toBe(MAX_QUERY_LENGTH);
   });
