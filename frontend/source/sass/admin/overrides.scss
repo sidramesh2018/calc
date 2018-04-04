@@ -242,7 +242,7 @@ thead a:focus {
 /* same as filter-block in changelists.css */
 .sidebar {
   background: $color-gray-lightest;
-  border-radius: 4px;
+  border-radius: $border-radius;
   margin-bottom: 0;
   padding: 1rem 2rem;
   h2,
