@@ -97,6 +97,12 @@ p {
   }
 }
 
+a {
+  &:visited {
+    color: $color-primary; // WDS override
+  }
+}
+
 .help-text {
   clear: both;
   color: $color-gray;
