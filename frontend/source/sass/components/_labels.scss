@@ -28,7 +28,7 @@
   }
   &.label--approved {
     background-color: $color-green-lightest;
-    color: $color-green;
+    color: $color-green-darkest;
     &:before {
       background-image: url('../../images/icon-approved-61701C.svg');
       background-repeat: no-repeat;

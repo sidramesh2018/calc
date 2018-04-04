@@ -39,7 +39,7 @@ header {
   font-size: $h3-font-size;
   font-weight: $font-weight-bold;
   .info {
-    color: $color-green;
+    color: $color-green-darkest;
   }
 }
 /* end messagelist styling */
@@ -223,11 +223,11 @@ thead a:focus {
 }
 
 .deletelink {
-  color: $color-gray-medium;
+  color: $color-gray-medium-light;
 }
 
 .mini.quiet {
-  color: $color-gray-medium;
+  color: $color-gray-medium-light;
   font-size: $small-font-size;
 }
 

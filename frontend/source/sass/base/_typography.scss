@@ -23,7 +23,7 @@ h1 {
   &.h1--deemphasized {
     font-size: $h3-font-size;
     line-height: $heading-line-height;
-    color: $color-gray-medium;
+    color: $color-gray-medium-light;
   }
 }
 
@@ -104,7 +104,7 @@ p {
 }
 
 .dev-note {
-  color: $color-gray-medium;
+  color: $color-gray-medium-light;
 }
 
 .schedule {

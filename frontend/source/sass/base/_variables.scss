@@ -9,37 +9,47 @@ $color-primary:              #2D6580;
 $color-primary-darker:       #274E60;
 $color-primary-darkest:      #092D39;
 
-$color-primary-alt:          #ccde61;
-$color-primary-alt-lightest: #c5d6de;
+$color-primary-alt:          $color-green-bright;
+$color-secondary:            $color-green-bright;
+// Solve later: disconnect between ^this^ and other "secondary" colors
 
-$color-secondary:            #e31c3d;
 $color-secondary-dark:       #BC1630;
 $color-secondary-darkest:    #981b1e;
-$color-secondary-lightest:   #fad0d0;
+$color-secondary-lightest:   #ffe0e0;
 
 $color-white:                #ffffff;
 $color-base:                 #021014;
-$color-black:                #021014;
-$color-gray-dark:            #2d4d59;
-$color-gray-medium-dark:     #436a79;
+$color-black:                $color-base;
+
+$color-blue-lightest:        #d4f6fe;
+$color-blue:                 #077bc7; // Link color
+$color-blue-dark:            #0b6199;
+
+$color-gray-darkest          #092d39;
+$color-gray-darker           #2d4d59;
+$color-gray-dark:            #436a79;
 $color-gray:                 #547d8c;
-$color-gray-medium:          #7da1b0;
-$color-gray-light:           #dfe8ed;
-$color-gray-lighter:         #f5f8fa;
+$color-gray-medium-light:    #7da1b0;
+$color-gray-light:           #c5d6de;
+$color-gray-lighter:         #dfe7ee;
 $color-gray-lightest:        #f5f8fa;
+
+
+$color-green-darkest:        #61701c;
+$color-green-dark:           #a0ad64;
+$color-green:                #bbcb70;
+$color-green-light:          #ccdc86
+$color-green-lighter:        #dae6a3;
+$color-green-bright:         #ccde61;
+
 
 $color-gold:                 #fdb81e;
 $color-gold-darkest:         #825c1e;
 $color-gold-lightest:        #fbeebe;
 
-$color-green:                #61701c;
-$color-green-light:          $color-green; // for wds compat
-$color-green-lightest:       #e6edc2;
 
 $color-focus:                $color-primary-alt;
 $color-visited:              #4c2c92;
-
-$color-error-bg: #fad0d0;
 
 // Fonts
 $em-base:             10px;

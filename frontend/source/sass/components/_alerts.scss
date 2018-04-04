@@ -1,5 +1,5 @@
 @import '../base/variables';
-$color-error-bg: #fef5f5;
+$color-secondary-lightest: #fef5f5;
 .usa-alert {
   margin: 1rem 0;
   padding: 1rem 6rem 1rem 2rem;
@@ -43,7 +43,7 @@ $color-error-bg: #fef5f5;
 
 .usa-alert-error {
   border: 2px solid $color-secondary-dark;
-  background-color: $color-error-bg;
+  background-color: $color-secondary-lightest;
   h3 {
     color: $color-secondary-dark;
   }
@@ -51,7 +51,7 @@ $color-error-bg: #fef5f5;
 
 .usa-alert-success {
   background-color: $color-green-lightest;
-  border: 2px solid $color-green; //borders added for consistency with error style
+  border: 2px solid $color-green-darkest; //borders added for consistency with error style
 }
 
 .usa-alert-warning {
@@ -91,7 +91,7 @@ alerts-widget:focus {
   @extend .usa-alert;
   @extend .usa-alert-success;
   h3 {
-    color: $color-green;
+    color: $color-green-darkest;
     margin-bottom: 0;
   }
 }
