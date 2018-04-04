@@ -4,9 +4,6 @@
 // Set the base path for assets (used for font and image paths)
 $asset-path: '../vendor/uswds/' !default;
 
-/* #092d39: used for header background fallback */
-/* #D2F6FF used for info alert bg */
-
 // Color
 $color-primary:              #2D6580;
 $color-primary-darker:       #274E60;
@@ -64,6 +61,7 @@ $heading-line-height: 1.3;
 $small-line-height: 1.3;
 
 $font-family-main: 'Libre Franklin', 'Helvetica', 'Arial', sans-serif;
+$font-sans: $font-family-main;
 $font-family-mono: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 $font-weight-bold: 700;
 $font-weight-normal: 400;
