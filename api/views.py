@@ -306,6 +306,8 @@ class GetAutocomplete(APIView):
                  'count': d['count']}
                 for d in data
             ]
+
+            data.sort(key=lambda d: len(d['labor_category']))
             return Response(data)
         else:
             return Response([])
