@@ -19,6 +19,45 @@ main {
   font-size: $h3-font-size;
 }
 
+/* Top level classes go in {% body_class %} */
+.content--narrow {
+  header,
+  main,
+  footer {
+    @include span-columns(8);
+    @include shift(2);
+  }
+}
+
+.content--wide {
+  header,
+  main,
+  footer {
+    // Theoretically .container can be used anywhere. We only target top-level ones.
+    > .container {
+      // .row can also be used anywhere; target just top-level classes.
+      > .row,
+      .card {
+        @include span-columns(12);
+        .content {
+          @include span-columns(10 of 12);
+          @include shift-in-context(1 of 12);
+        }
+      }
+      .card:last-child {
+        margin-bottom: $space-10x; //hacky spacing hackity hack
+      }
+    }
+    .card__footer {
+      margin-top: -$space-10x; //ugh this is dumb
+      @include span-columns(8);
+      @include shift(2);
+    }
+  }
+}
+
+
+
 .card {
   background-color: $color-white;
   padding: $space-8x 0;
