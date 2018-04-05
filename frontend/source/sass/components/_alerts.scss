@@ -1,5 +1,5 @@
 @import '../base/variables';
-$color-secondary-lightest: #fef5f5;
+$color-red-lightest: #fef5f5;
 .usa-alert {
   margin: 1rem 0;
   padding: 1rem 6rem 1rem 2rem;
@@ -42,10 +42,10 @@ $color-secondary-lightest: #fef5f5;
 }
 
 .usa-alert-error {
-  border: 2px solid $color-secondary-dark;
-  background-color: $color-secondary-lightest;
+  border: 2px solid $color-red-dark;
+  background-color: $color-red-lightest;
   h3 {
-    color: $color-secondary-dark;
+    color: $color-red-dark;
   }
 }
 
@@ -77,7 +77,7 @@ alerts-widget:focus {
   }
   h3,
   p {
-    color: $color-secondary-dark;
+    color: $color-red-dark;
     font-weight: $font-weight-bold;
   }
   h3:before {

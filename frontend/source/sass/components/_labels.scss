@@ -38,8 +38,8 @@
   }
   &.label--rejected,
   &.label--retired {
-    background-color: $color-secondary-lightest;
-    color: $color-secondary-dark;
+    background-color: $color-red-lightest;
+    color: $color-red-dark;
     &:before {
       background-image: url('../../images/icon-rejected-BC1630.svg');
       background-repeat: no-repeat;
