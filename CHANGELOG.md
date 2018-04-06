@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+- Fixed bulk upload to use less memory (#1714).
+
 ## [2.8.5][] - 2018-03-29
 
 ### Changed
