@@ -29,35 +29,6 @@ main {
   }
 }
 
-.content--wide {
-  header,
-  main,
-  footer {
-    // Theoretically .container can be used anywhere. We only target top-level ones.
-    > .container {
-      // .row can also be used anywhere; target just top-level classes.
-      > .row,
-      .card {
-        @include span-columns(12);
-        .content {
-          @include span-columns(10 of 12);
-          @include shift-in-context(1 of 12);
-        }
-      }
-      .card:last-child {
-        margin-bottom: $space-10x; //hacky spacing hackity hack
-      }
-    }
-    .card__footer {
-      margin-top: -$space-10x; //ugh this is dumb
-      @include span-columns(8);
-      @include shift(2);
-    }
-  }
-}
-
-
-
 .card {
   background-color: $color-white;
   padding: $space-8x 0;
@@ -71,12 +42,63 @@ main {
 .card__footer {
   padding: $space-half 0;
   margin-bottom: $space-10x;
+  margin-top: -$space-10x; //ugh this is dumb
   button.usa-button-link {
     margin-top: $space-half;
     font-size: $small-font-size;
     padding: 0;
   }
 }
+
+.content--wide {
+  header,
+  main,
+  footer {
+    // .container can be used anywhere. Only target top-level ones.
+    > .container {
+      // .row can also be used anywhere; target just top-level classes.
+      > .row,
+      .card,
+      .card__footer {
+        @include span-columns(12);
+        .content {
+          @include span-columns(10 of 12);
+          @include shift-in-context(1 of 12);
+        }
+      }
+      .card:last-child {
+        margin-bottom: $space-10x; //hacky spacing hackity hack
+      }
+    }
+  }
+}
+
+// Default content body class
+.content--skinny {
+  header,
+  main,
+  footer {
+    // .container can be used anywhere. Only target top-level ones.
+    > .container {
+      // .row can also be used anywhere; target just top-level classes.
+      > .row,
+      .card,
+      .card__footer {
+        @include span-columns(8);
+        @include shift(2);
+        .content {
+          @include span-columns(6 of 8);
+          @include shift-in-context(1 of 8);
+        }
+      }
+      .card:last-child {
+        margin-bottom: $space-10x; //hacky spacing hackity hack
+      }
+    }
+  }
+}
+
+
 
 /* this isn't exactly BEM, but the best way I can find to manage the variable
  * card widths without duplicating the styles for card, content & footer.
