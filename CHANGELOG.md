@@ -7,6 +7,12 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.8.6][] - 2018-04-06
+
+### Changed
+
+- Fixed bulk upload to use less memory (#1714).
+
 ## [2.8.5][] - 2018-03-29
 
 ### Changed
@@ -319,7 +325,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.8.5...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.8.6...HEAD
+[2.8.6]: https://github.com/18F/calc/compare/v2.8.5...v2.8.6
 [2.8.5]: https://github.com/18F/calc/compare/v2.8.4...v2.8.5
 [2.8.4]: https://github.com/18F/calc/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/18F/calc/compare/v2.8.2...v2.8.3
