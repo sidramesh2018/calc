@@ -39,9 +39,12 @@ exports.webpackify = ({ isWatching, isProd }) => webpackStream({
   devtool: isProd ? 'source-map' : 'eval-source-map',
   plugins: [
     new BundleAnalyzerPlugin({
+      analyzerMode: 'disabled',
       analyzerHost: '0.0.0.0',
       openAnalyzer: false,
       defaultSizes: 'parsed',
+      generateStatsFile: true,
+      statsFilename: './frontend/static/frontend/built/js/stats.json',
     }),
   ],
   module: {
