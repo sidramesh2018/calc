@@ -43,6 +43,9 @@ main {
   padding: $space-half 0;
   margin-bottom: $space-10x;
   margin-top: -$space-10x; //ugh this is dumb
+  > * {
+    padding-top: $space-10x;
+  }
   button.usa-button-link {
     margin-top: $space-half;
     font-size: $small-font-size;
@@ -66,9 +69,6 @@ main {
           @include shift-in-context(1 of 12);
         }
       }
-      .card:last-child {
-        margin-bottom: $space-10x; //hacky spacing hackity hack
-      }
     }
   }
 }
@@ -91,53 +91,7 @@ main {
           @include shift-in-context(1 of 8);
         }
       }
-      .card:last-child {
-        margin-bottom: $space-10x; //hacky spacing hackity hack
-      }
     }
-  }
-}
-
-
-
-/* this isn't exactly BEM, but the best way I can find to manage the variable
- * card widths without duplicating the styles for card, content & footer.
- * Top level goes in {% body_class %} even though that's not a class on <body>.
- * Ugh. */
-.card--narrow {
-  .card {
-    @include span-columns(8);
-    @include shift(2);
-    .card__content {
-      @include span-columns(6 of 8);
-      @include shift-in-context(1 of 8);
-    }
-    &:last-child {
-      margin-bottom: $space-10x; //hacky spacing hackity hack
-    }
-  }
-  .card__footer {
-    margin-top: -$space-10x; //ugh this is dumb
-    @include span-columns(8);
-    @include shift(2);
-  }
-}
-
-.card--wide {
-  .card {
-    @include span-columns(12);
-
-    .card__content {
-      @include span-columns(10 of 12);
-      @include shift-in-context(1 of 12);
-    }
-    &:last-child {
-      margin-bottom: $space-10x;
-    }
-  }
-  .card__footer {
-    margin-top: -$space-10x;
-    @include span-columns(12);
   }
 }
 
