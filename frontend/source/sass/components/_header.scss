@@ -1,9 +1,9 @@
 @import '../base/variables';
 
 #banner {
-  color: $color-gray-lighter;
+  color: $color-primary-darkest;
   font-size: 85%;
-  background: $color-gray-dark;
+  background: $color-white;
   padding: .2em 0;
   text-align: center;
 
@@ -39,33 +39,58 @@
 header {
   color: $color-white;
   background: $color-primary-darker;
-  background-image: url(../../images/background-header.png);
-  background-repeat: repeat;
-  background-size: auto 100%;
+  background-image: url(../../images/background-header.svg);
+  background-size: 100%;
   padding-bottom: $space-4x; //to create "stacked" look
   @include antialias();
 }
 
+.hero {
+  margin-bottom: $space-8x;
+
+  a {
+    color: $color-primary-alt;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.hero-callout {
+  border-left: 4px solid $color-gray;
+  padding-left: $space-3x;
+
+  p {
+    font-size: $medium-font-size;
+    margin: 0;
+  }
+}
+
 .base-header {
   display: flex;
-  margin-top: 1.6em;
+  margin-top: 3em;
   + .row {
-    margin-top: 1.6em;
+    margin-top: 2em;
   }
 }
 
 .logo {
   display: inline-block;
-  height: 58px;
+  height: 42px;
   max-width: none;
   padding-bottom: 0;
 }
+
 .description-main {
   color: $color-white;
-  font-size: $h1-font-size;
+  font-size: $display-font-size;
   margin-top: 0;
   margin-bottom: .3em;
 }
+
 .description-secondary {
   color: $color-primary-alt-lightest;
   font-size: $h4-font-size;
@@ -114,9 +139,8 @@ header {
 
 .user-id {
   margin: 0 0 0.8rem 0;
-  float: right;
+  padding-left: 2.8rem;
   font-size: 1.5rem;
-  text-align: right;
 
   > a {
     color: $color-white;
@@ -141,16 +165,17 @@ nav {
     @include span-columns(12 of 12);
     @include shift(0);
     list-style: none;
-    text-align: center;
+    text-align: left;
     color: $color-white;
     padding: 0;
     margin-top: 0;
     margin-bottom: 0;
 
     li {
+      font-size: 1.5rem;
       list-style: none;
       display: inline-block;
-      margin: 0 $space-3x;
+      margin: 0 $space-2x;
       border-bottom: $space-1x solid transparent; //so pages with no applicable item still have the right spacing
       &:first-child {
         margin-left: 0em;

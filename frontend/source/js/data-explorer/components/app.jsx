@@ -10,6 +10,7 @@ import {
 
 import histogramToImg from '../histogram-to-img';
 
+import ga from '../../common/ga';
 import Description from './description';
 import Highlights from './highlights';
 import Histogram from './histogram';
@@ -80,6 +81,7 @@ class App extends React.Component {
       this.histogram.getWrappedInstance().svgEl,
       this.canvasEl,
     );
+    ga('send', 'event', 'download-graph', 'click');
   }
 
   render() {

@@ -31,10 +31,11 @@ button,
       border-color: $color-gray-light;
     }
   }
+
   &.button-footer {
     background-color: $color-white;
-    border-radius: 4px;
-    color: $color-gray-medium-dark;
+    border-radius: $border-radius;
+    color: $color-gray-medium;
 
     &:hover,
     &.button-hover {
