@@ -1,6 +1,5 @@
 @import '../base/variables';
-@import '../uswds/forms';
-
+@import '../base/utils';
 
 legend {
   font-size: $base-font-size;
@@ -22,6 +21,33 @@ legend {
 
 label input[type="radio"] {
   width: auto; // WDS override for width: 100%;
+}
+
+.form-note {
+  float: right;
+  font-family: $font-family-main;
+  font-size: $h5-font-size;
+  margin: 0 0 1.5rem;
+
+  & + * {
+    clear: both;
+  }
+}
+
+.additional_text {
+  float: right;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.input-buttons-inline {
+  button,
+  button[type="submit"],
+  input[type="submit"],
+  & > * {
+    display: inline;
+    margin-right: 1.5em;
+  }
 }
 
 /* A <ul> holds a Django-rendered list of radio buttons. */
@@ -66,6 +92,7 @@ fieldset.fieldset-error {
   select,
   textarea {
     border: 3px solid $color-secondary-dark;
+    padding: 1rem 0.45em; // WDS override
   }
 }
 
@@ -100,7 +127,7 @@ form > .fieldset-error {
   fieldset {
     margin-top: 3rem;
     display: inline-block;
-    .form-group:last-child {
+    .usa-form-group:last-child {
       margin-right: 0;
     }
   }
@@ -145,26 +172,51 @@ dl.contract-details {
   }
 }
 
-/* search -- inline form + button */
-input[type].form__inline {
-  display: inline-block;
+/* search -- inline form + button
+ * input[type=search] rule is for admin page searches, e.g. users or groups
+ * .actions label select rule is for admin page action dropdown on users/groups */
+input[type].form__inline,
+.form__inline input[type=search],
+.actions label select {
+  height: 40px;
+  display: block;
   margin: 1rem 0;
   float: left;
+  box-sizing: border-box;
   border-right: none;
+  border-radius: $border-radius 0 0 $border-radius;
   &.filter_active {
     padding-top: 0.9rem;
     padding-bottom: 0.9rem;
-    ~ .button,
-    ~ button,
-    ~ input[type=button] {
-      /*padding-top: 1.1rem;*/
-      /*padding-bottom: 1.1rem; // to accommodate extra border*/
+  }
+  /* input[type=submit] used on admin page searches
+   * .select-across ~ button used on admin page dropdowns w/in .actions block */
+  ~ .usa-button,
+  ~ button,
+  ~ input[type=button],
+  ~ input[type=submit],
+  input.select-across ~ button[type=submit]{
+    height: 40px;
+    margin: 1rem 0;
+    display: block;
+    box-sizing: border-box;
+    float: left;
+    &.reset {
+      margin-left: 1rem;
     }
   }
-  ~ .button,
-  ~ button,
-  ~ input[type=button] {
-    margin: 1rem 0;
-    display: inline-block;
+  // only square the corners of the first button -- relevant on homepage search
+  ~ .usa-button:first-of-type,
+  ~ button:first-of-type,
+  ~ input[type=button]:first-of-type,
+  ~ input[type=submit],
+  input.select-across ~ button[type=submit] {
+    border-radius: 0 $border-radius $border-radius 0;
   }
+}
+
+// WDS override for date groupings
+input[type="number"] {
+  padding-left: 0.4em;
+  padding-right: 0.4em;
 }

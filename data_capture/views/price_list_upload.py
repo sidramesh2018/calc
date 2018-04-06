@@ -19,19 +19,22 @@ from ..schedules import registry
 from ..management.commands.initgroups import PRICE_LIST_UPLOAD_PERMISSION
 from .common import (add_generic_form_error, build_url,
                      get_nested_item, get_deserialized_gleaned_data)
+from .replay import Replayer
 from frontend import ajaxform
 from frontend.steps import Steps
 
+
+SESSION_KEY = 'data_capture:price_list'
+
+replayer = Replayer(SESSION_KEY)
 
 steps = Steps(
     template_format='data_capture/price_list/step_{}.html',
     extra_ctx_vars={
         'current_selected_tab': 'upload_price_data'
     },
+    extra_ctx_processors=[replayer.context_processor]
 )
-
-
-SESSION_KEY = 'data_capture:price_list'
 
 
 def get_step_form_from_session(step_number, request, **kwargs):
@@ -87,6 +90,7 @@ def tutorial(request):
 @login_required
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
+@handle_cancel  # This is for canceling a replay.
 def step_1(request, step):
     if request.method == 'GET':
         form = forms.Step1Form(data=get_nested_item(
@@ -170,7 +174,8 @@ def step_2(request, step):
 @permission_required(PRICE_LIST_UPLOAD_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
-def step_3(request, step):
+@replayer.recordable
+def step_3(request, step, recorder):
     if get_step_form_from_session(2, request) is None:
         return redirect('data_capture:step_2')
 
@@ -210,6 +215,8 @@ def step_3(request, step):
                 session_pl['filename'] = form.cleaned_data['file'].name
                 request.session.modified = True
 
+            recorder.on_gleaned_data(gleaned_data)
+
             if gleaned_data.invalid_rows:
                 return ajaxform.redirect(request, 'data_capture:step_3_errors')
             return ajaxform.redirect(request, 'data_capture:step_4')
@@ -221,7 +228,7 @@ def step_3(request, step):
         context=step.context({
             'form': form,
             'upload_example': schedule_class.render_upload_example(request)
-        }),
+        }, request),
         template_name=step.template_name,
         ajax_template_name='data_capture/price_list/upload_form.html',
     )
@@ -254,7 +261,7 @@ def step_3_errors(request):
                     'is_preferred_schedule': isinstance(gleaned_data,
                                                         preferred_schedule),
                     'preferred_schedule_title': preferred_schedule.title,
-                  }))
+                  }, request))
 
 
 @steps.step(label='Data verification')

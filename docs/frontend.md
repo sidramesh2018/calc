@@ -13,7 +13,7 @@ If you haven't already, make sure you've followed the
 static asset generator up and running. It will watch for changes to
 front end code and re-build bundles as needed.
 
-All the static assets (SASS for CSS and ES6 JavaScript) are 
+All the static assets (SASS for CSS and ES6 JavaScript) are
 located in the [frontend/source/](../frontend/source/) directory. Outputs
 from the static asset generator are placed in
 `frontend/static/frontend/built/`.
@@ -24,13 +24,18 @@ pipeline.
 If you just want to build the assets once without watching for changes, run:
 
 ```sh
-npm run gulp -- build
+yarn gulp build
 ```
 
 ## Developing the front end
 
 Different parts of CALC are constructed in different ways, so
 developing the front end depends on which part you want to change.
+
+We use [yarn][] to manage our node dependencies and run node tasks.
+`yarn`, in addition to being faster than using `npm install`, has the
+benefit of locking dependency versions via a `yarn.lock` file.
+Read the [yarn workflow docs][] if you are not familiar with how to use it.
 
 ### Data explorer
 
@@ -44,19 +49,19 @@ The explorer's test suite uses [Jest][], and the tests are located in
 To run all the tests, run:
 
 ```
-npm run test
+yarn test
 ```
 
 You can also run the tests in a continuous "watch" mode, which re-runs
 tests as you change your code:
 
 ```
-npm run test:watch
+yarn test:watch
 ```
 
 Finally, you can also run `jest` directly. If you're using Docker,
 this can be done via `docker-compose run app jest`; otherwise you can
-use `npm run test --`, followed by any
+use `yarn test`, followed by any
 [Jest CLI options](https://facebook.github.io/jest/docs/cli.html).
 
 ### Data capture
@@ -67,7 +72,7 @@ HTML5 Custom Elements to provide a progressively-enhanced experience.
 The source code is located in
 [frontend/source/js/data-capture](../frontend/source/js/data-capture/).
 
-Tests are [QUnit][]-based and are located in 
+Tests are [QUnit][]-based and are located in
 [frontend/source/js/tests](../frontend/source/js/tests/).
 
 To run the QUnit tests, visit
@@ -93,3 +98,5 @@ When in doubt, see the [style guide][]!
 [Redux]: http://redux.js.org/
 [Jest]: https://facebook.github.io/jest/
 [style guide]: https://calc-dev.app.cloud.gov/styleguide/
+[yarn]: https://yarnpkg.com/
+[yarn workflow docs]: https://yarnpkg.com/en/docs/yarn-workflow

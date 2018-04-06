@@ -1,4 +1,4 @@
-FROM python:3.6.0
+FROM python:3.6.4
 
 ENV PHANTOMJS_VERSION 1.9.7
 
@@ -20,6 +20,8 @@ RUN apt-get update && \
 RUN pip install virtualenv
 
 WORKDIR /calc
+
+RUN npm install -g yarn
 
 ENV PATH /calc/node_modules/.bin:$PATH
 ENV DDM_IS_RUNNING_IN_DOCKER yup

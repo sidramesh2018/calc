@@ -9,9 +9,12 @@ you may want to check out our alternative [Docker instructions](docker.md).
 You'll need the following tools and services installed to run CALC
 locally:
 
-* [Python 3.6.0](https://www.python.org/)
-* [Node 6.0](https://nodejs.org/)
-* [Postgres](https://www.postgresql.org/)
+* [Python 3.6](https://www.python.org/)
+  * If not using the [Docker-based development workflow](docker.md), make sure your system `python` command runs Python 3. You can check this by running `python --version`.
+* [Node 6.13](https://nodejs.org/)
+* [yarn](https://yarnpkg.com)
+  * Install globally via `npm install -g yarn` or via another method described at [https://yarnpkg.com/lang/en/docs/install/](https://yarnpkg.com/lang/en/docs/install/).
+* [Postgres 9.5](https://www.postgresql.org/)
   * It's easiest to have a local instance of it running on its default
     port, as this requires no extra configuration on the CALC side.
 * [Redis](https://redis.io/)
@@ -80,11 +83,11 @@ asset build pipeline.
 
 ### Starting the static asset generator
 
-In another terminal, you will also need to run `gulp` to watch and rebuild 
+In another terminal, you will also need to run `gulp` to watch and rebuild
 static assets:
 
 ```sh
-npm run gulp
+yarn gulp
 ```
 
 ### Starting the task runner

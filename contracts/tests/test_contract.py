@@ -3,13 +3,39 @@ from unittest.mock import patch
 from decimal import Decimal
 from itertools import cycle
 
+from django.db import connection
 from django.test import TestCase, SimpleTestCase
 from contracts.mommy_recipes import get_contract_recipe
 
-from ..models import Contract, convert_to_tsquery
+from ..models import Contract, convert_to_tsquery, CashField
 
 
 _normalize = Contract.normalize_labor_category
+
+
+class CashFieldTests(SimpleTestCase):
+    def test_value_error_raised_on_invalid_decimal_places(self):
+        with self.assertRaisesRegexp(ValueError, r'must have exactly 2'):
+            CashField(max_digits=10, decimal_places=4)
+
+    def test_to_python_returns_none_when_value_is_none(self):
+        c = CashField(max_digits=10, decimal_places=2)
+        self.assertEqual(c.to_python(None), None)
+
+    def test_to_python_returns_decimal_when_value_is_float(self):
+        c = CashField(max_digits=10, decimal_places=2)
+        self.assertEqual(c.to_python(1.0 / 3), Decimal('0.33'))
+
+    def test_to_python_rounds_decimals(self):
+        c = CashField(max_digits=10, decimal_places=2)
+        self.assertEqual(c.to_python(Decimal('0.336')), Decimal('0.34'))
+        self.assertEqual(c.to_python(Decimal('0.334')), Decimal('0.33'))
+
+    def test_clean_calls_to_python(self):
+        # This is really a test to ensure that Django is working
+        # the way we think it is.
+        c = CashField(max_digits=10, decimal_places=2)
+        self.assertEqual(c.clean(1.0 / 3, None), Decimal('0.33'))
 
 
 class NormalizeLaborCategoryTests(SimpleTestCase):
@@ -384,6 +410,19 @@ class ContractSearchTestCase(BaseContractSearchTestCase):
         ])
 
 
+class UnicodeContractSearchTestCase(BaseContractSearchTestCase):
+    CATEGORIES = [
+        '\u5982',
+        '\u679c',
+    ]
+
+    def test_search_finds_thing(self):
+        results = Contract.objects.search('\u5982')
+        self.assertCategoriesEqual(results, [
+            '\u5982',
+        ])
+
+
 class NormalizedContractSearchTestCase(BaseContractSearchTestCase):
     CATEGORIES = [
         'Jr. Language Interpreter',
@@ -403,3 +442,23 @@ class NormalizedContractSearchTestCase(BaseContractSearchTestCase):
             'Jr. Language Interpreter',
             'Junior Language Interpreter',
         ])
+
+
+class SearchIndexTests(TestCase):
+    GET_SCHEMA_SQL = """
+    SELECT column_name, data_type, column_default, is_nullable
+      FROM information_schema.columns
+      WHERE table_name = 'contracts_contract'
+        AND column_name = 'search_index'
+    """
+
+    def test_schema_is_what_we_expect(self):
+        with connection.cursor() as cursor:
+            cursor.execute(self.GET_SCHEMA_SQL)
+            row = cursor.fetchone()
+            self.assertEqual(row, (
+                'search_index',
+                'tsvector',
+                None,
+                'NO',
+            ))

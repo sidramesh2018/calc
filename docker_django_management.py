@@ -25,6 +25,11 @@
 
     * Friendly warnings are logged if anything seems to be misconfigured.
 
+    Requirements:
+
+    * The docker container this runs in should support the
+      `useradd` command.
+
     To use it:
 
     * Place this script in the same directory as your Django project's
@@ -93,7 +98,7 @@ if sys.platform != 'win32':
 
 if False:
     # This is just needed so mypy will work; it's never executed.
-    from typing import Iterator, Any  # NOQA
+    from typing import Iterator, Any, List  # NOQA
 
 MY_DIR = os.path.abspath(os.path.dirname(__file__))
 HOST_UID = os.stat(MY_DIR).st_uid
@@ -280,25 +285,40 @@ def entrypoint(argv):  # type: (List[str]) -> None
     '''
 
     if HOST_UID != os.geteuid():
+        user_owned_dirs = []  # type: List[str]
+
         if not does_uid_exist(HOST_UID):
             username = HOST_USER
             while does_username_exist(username):
                 username += '0'
             home_dir = '/home/%s' % username
+            extra_useradd_options = []  # type: List[str]
+
+            if os.path.exists(home_dir):
+                # The home directory already exists; just to be safe,
+                # let's make sure it's owned by our UID.
+                user_owned_dirs.append(home_dir)
+            else:
+                # The home directory doesn't already exist, so tell
+                # useradd to make it for us.
+                extra_useradd_options.append('-m')
+
             subprocess.check_call([
                 'useradd',
                 '-d', home_dir,
-                '-m', username,
+                username,
                 '-u', str(HOST_UID)
-            ])
+            ] + extra_useradd_options)
 
         if USER_OWNED_DIRS:
-            for dirname in USER_OWNED_DIRS.split(os.path.pathsep):
-                subprocess.check_call([
-                    'chown',
-                    '{}:{}'.format(HOST_UID, HOST_UID),
-                    dirname
-                ])
+            user_owned_dirs += USER_OWNED_DIRS.split(os.path.pathsep)
+
+        for dirname in user_owned_dirs:
+            subprocess.check_call([
+                'chown',
+                '{}:{}'.format(HOST_UID, HOST_UID),
+                dirname
+            ])
 
         os.environ['HOME'] = '/home/%s' % pwd.getpwuid(HOST_UID).pw_name
         os.setuid(HOST_UID)

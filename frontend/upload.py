@@ -3,6 +3,9 @@ from django.forms.utils import flatatt
 from django.utils.html import escape
 
 
+DEFAULT_FILE_EXTENSIONS = (".xlsx", ".xls", ".csv")
+
+
 class UploadWidget(forms.widgets.FileInput):
     '''
     This widget represents an upload widget that the user can
@@ -12,7 +15,7 @@ class UploadWidget(forms.widgets.FileInput):
     '''
 
     def __init__(self, attrs=None, degraded=False, required=True,
-                 accept=(".xlsx", ".xls", ".csv"),
+                 accept=DEFAULT_FILE_EXTENSIONS,
                  extra_instructions='XLS, XLSX, or CSV format, please.',
                  existing_filename=None):
         super().__init__(attrs=attrs)
@@ -27,12 +30,6 @@ class UploadWidget(forms.widgets.FileInput):
         if attrs:
             final_attrs.update(attrs)
 
-        if self.required:
-            # TODO: Django 1.10 automatically adds this attribute as needed
-            # based on the form field, so we should remove this once we
-            # upgrade.
-            final_attrs['required'] = ''
-
         final_attrs['accept'] = ",".join(self.accept)
         final_attrs['is'] = 'upload-input'
 
@@ -44,7 +41,7 @@ class UploadWidget(forms.widgets.FileInput):
 
         nojs_preamble = ''
         if self.existing_filename:
-            if 'required' in final_attrs:
+            if self.required:
                 raise AssertionError(
                     'Using an existing filename is incompatible with '
                     'the "required" attribute'
@@ -58,12 +55,15 @@ class UploadWidget(forms.widgets.FileInput):
                 'You can keep using it or select a new file to replace it.'
             )
 
+        label_txt = 'Choose file'
+        final_attrs['aria-label'] = label_txt
+
         return "\n".join([
             '<upload-widget%s>' % flatatt(widget_attrs),
             '  <span class="nojs-preamble">%s</span>' % nojs_preamble,
             '  %s' % super().render(name, value, final_attrs),
             '  <div class="upload-chooser">',
-            '    <label for="%s">Choose file</label>' % id_for_label,
+            '    <label for="%s">%s</label>' % (id_for_label, label_txt),
             '    <span>%s</span>' % self.extra_instructions,
             '  </div>',
             '</upload-widget>'

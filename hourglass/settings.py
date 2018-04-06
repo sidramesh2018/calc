@@ -13,7 +13,7 @@ import os
 import dj_database_url
 import dj_email_url
 from dotenv import load_dotenv
-from typing import Tuple  # NOQA
+from typing import Tuple, Any, Dict  # NOQA
 
 from .settings_utils import (load_cups_from_vcap_services,
                              load_redis_url_from_vcap_services,
@@ -27,15 +27,20 @@ if os.path.exists(DOTENV_PATH):
     load_dotenv(DOTENV_PATH)
 
 load_cups_from_vcap_services()
-load_redis_url_from_vcap_services('calc-redis')
+load_redis_url_from_vcap_services('calc-redis32')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
 
+DEBUG_HTTPS = 'DEBUG_HTTPS' in os.environ and not is_running_tests()
+
 HIDE_DEBUG_UI = 'HIDE_DEBUG_UI' in os.environ
+
+SLACKBOT_WEBHOOK_URL = os.environ.get('SLACKBOT_WEBHOOK_URL', '')
 
 if is_running_tests():
     HIDE_DEBUG_UI = True
+    SLACKBOT_WEBHOOK_URL = ''
 
 if DEBUG:
     os.environ.setdefault(
@@ -124,16 +129,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.humanize',
     'django.contrib.sites',
+    'django.contrib.postgres',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'debug_toolbar',
     'django_rq',
 
     'data_explorer',
-    'contracts',
+    'contracts.apps.DefaultContractsApp',
     'data_capture.apps.{}'.format(DATA_CAPTURE_APP_CONFIG),
     'api',
-    'djorm_pgfulltext',
     'rest_framework',
     'corsheaders',
     'uaa_client',
@@ -141,6 +146,8 @@ INSTALLED_APPS = (
     'styleguide',
     'meta',
     'frontend',
+    'slackbot.apps.SlackbotConfig',
+    'uswds_forms',
 )  # type: Tuple[str, ...]
 
 SITE_ID = 1
@@ -162,6 +169,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'uaa_client.middleware.UaaRefreshMiddleware',
     # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -196,6 +204,8 @@ USE_TZ = True
 
 # django cors headers
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'  # only allow CORS for /api/ routes
+CORS_ALLOW_METHODS = ('GET', 'OPTIONS',)  # only allow read-only methods
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -226,7 +236,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-LOGGING = {
+LOGGING: Dict[str, Any] = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -264,6 +274,16 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'uaa_client': {
+            'handlers': ['console', 'file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'calc': {
+            'handlers': ['console', 'file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'contracts': {
             'handlers': ['console', 'contracts_file'],
             'propagate': True,
@@ -277,18 +297,40 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'INFO',
         },
+        'slackbot': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
     },
 }
 
+DEBUG_LOG_SQL = 'DEBUG_LOG_SQL' in os.environ
+
+if DEBUG_LOG_SQL:
+    LOGGING['handlers']['debug_console'] = {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'verbose'
+    }
+    LOGGING['loggers']['django.db.backends'] = {
+        'handlers': ['debug_console'],
+        'level': 'DEBUG',
+    }
+
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
+POSTGRES_VERSION = '9.5.4'
 
 SECURE_SSL_REDIRECT = not DEBUG
+
+if DEBUG and DEBUG_HTTPS:
+    SECURE_SSL_REDIRECT = True
 
 if 'FORCE_DISABLE_SECURE_SSL_REDIRECT' in os.environ:
     SECURE_SSL_REDIRECT = False
 
 SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = SECURE_SSL_REDIRECT
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 CSRF_COOKIE_HTTPONLY = True
 
@@ -367,3 +409,8 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
     'data_capture.panels.ScheduledJobsPanel',
 ]
+
+if DEBUG:
+    INSTALLED_APPS += (
+        'django.contrib.admindocs',
+    )

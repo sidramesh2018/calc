@@ -1,5 +1,4 @@
-@import 'variables';
-@import '../uswds/utilities';
+@import 'variables.scss';
 
 // legacy sr-only class
 .sr-only {
@@ -110,14 +109,6 @@ th:hover.tooltips span {
   left: 50%;
   margin-left: -76px;
   z-index: 999;
-}
-
-
-/**
- * no-UI overrides
- **/
-.noUi-connect {
-  background: $color-primary;
 }
 
 /* Skeleton adds margin even to the first column in a row. */

@@ -1,7 +1,8 @@
+import PropTypes from 'prop-types';
+import * as qs from 'querystring';
+
 import React from 'react';
 import { connect } from 'react-redux';
-
-import { joinQuery } from '../util';
 
 import { getRatesParameters } from '../rates-request';
 
@@ -12,7 +13,7 @@ export function ExportData({ querystring }) {
 
   return (
     <a
-      className="button button-primary export-data"
+      className="usa-button usa-button-primary export-data"
       title="Click to export your search results to an Excel file (CSV)"
       href={href}
     >⬇ Export Data (CSV)</a>
@@ -20,12 +21,12 @@ export function ExportData({ querystring }) {
 }
 
 ExportData.propTypes = {
-  querystring: React.PropTypes.string.isRequired,
+  querystring: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
-    querystring: joinQuery(getRatesParameters(state)),
+    querystring: `?${qs.stringify(getRatesParameters(state))}`,
   };
 }
 

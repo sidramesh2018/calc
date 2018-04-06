@@ -8,7 +8,7 @@ from contracts.models import Contract
 
 FEDERAL_MIN_CONTRACT_RATE = 10.20
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('contracts')
 
 
 class Region10Loader(object):
@@ -121,3 +121,5 @@ class Region10Loader(object):
                 contract.upload_source = upload_source
 
             return contract
+        else:
+            raise ValueError('missing labor category')

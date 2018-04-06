@@ -14,37 +14,26 @@
 
 <![if gt IE 8]>
   {# For the list of files included in this built script, see gulpfile.js #}
-  <script src= "{% static 'frontend/built/js/data-explorer/vendor.min.js' %}"></script>
-  <script src= "{% static 'frontend/built/js/data-explorer/index.min.js' %}"></script>
+  <script src= "{% static 'frontend/built/js/data-explorer.vendor.js' %}"></script>
+  <script src= "{% static 'frontend/built/js/data-explorer.js' %}"></script>
 <![endif]>
 {% endblock head %}
 
 {% block header_extension %}
-<div class="row clearfix">
+<div class="hero row clearfix">
   <div class="eight columns">
     <h1 class="description-main">Search awarded ceiling rates for labor categories</h1>
-    <h2 class="description-secondary">CALC lets you conduct market research on professional service labor categories quickly and easily, helping you make better informed decisions. Results shown are awarded hourly rates from GSA IDIQ service schedules.</h2>
+    <a href="{% url 'about' %}">Learn about CALC ></a>
   </div>
-  <div class="price-callout four columns">
-    <h3>CALC offers &hellip;</h3>
-    <div class="icon icon-ceiling">
-      <p>Ceiling prices</p>
-    </div>
-    <div class="icon icon-fully-burdened">
-      <p>Fully burdened costs</p>
-    </div>
-    <div class="icon icon-professional-services">
-      <p>Services data</p>
-    </div>
-    <div class="icon icon-worldwide-rates">
-      <p>Worldwide rates</p>
-    </div>
+  <div class="hero-callout four columns">
+    <p><b>The Contract-Awarded Labor Category</b> (CALC) tool helps federal contracting officers and others find awarded prices to use in negotiations for labor contracts. It offers ceiling prices, fully burdened costs, services data, and worldwide rates.
+    </p>
   </div>
 </div>
 {% endblock header_extension %}
 
 {% block body %}
-<div data-embed-jsx-app-here class="card--half-padding">
+<div data-embed-jsx-app-here class="card--narrow"> <!--change to card--wide-->
   <div class="card">
     <noscript>
       Please enable JavaScript to use this page's functionality.

@@ -9,16 +9,15 @@ $usermenu-width: 150px;
     display: none;
 
     position: absolute;
-    top: 1.2em;
+    top: $space-3x;
     right: 0;
     width: $usermenu-width;
     z-index: 1;
-
     text-align: left;
     font-size: $medium-font-size;
     font-weight: $font-weight-bold;
     background: $color-gray-lightest;
-    border-radius: 4px;
+    border-radius: $border-radius;
     list-style: none;
     padding: $space-2x $space-3x;
 

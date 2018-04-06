@@ -1,13 +1,14 @@
 ---
-services:
+services: &services
 - calc-db
 - calc-env
-- calc-redis
+- calc-redis32
 applications:
 - name: calc-prod
   instances: 2
   memory: 1G
   disk_quota: 1024M
+  services: *services
   routes:
     - route: calc.gsa.gov
     - route: calc-prod.app.cloud.gov
@@ -25,21 +26,20 @@ applications:
   health-check-type: none
   instances: 1
   memory: 512M
+  services: *services
   buildpack: python_buildpack
   command: python manage.py rqworker default
   stack: cflinuxfs2
   timeout: 180
-  env:
-    DISABLE_COLLECTSTATIC: "1"
 - name: calc-rqscheduler
   no-route: true
   health-check-type: none
   instances: 1
   memory: 512M
+  services: *services
   buildpack: python_buildpack
   command: python manage.py rqscheduler
   stack: cflinuxfs2
   timeout: 180
   env:
     IS_RQ_SCHEDULER: "yup"
-    DISABLE_COLLECTSTATIC: "1"

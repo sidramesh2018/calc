@@ -2,7 +2,7 @@ import sys
 import tempfile
 import subprocess
 from collections import namedtuple
-import djclick as click  # type: ignore
+import djclick as click
 import xml.etree.ElementTree as etree
 from django.core.management.base import CommandError
 from typing import List, Any
@@ -104,10 +104,11 @@ TestType = namedtuple('TestType', ['name', 'cmd'])
 
 TESTTYPES = [
     TestType(name='flake8', cmd='flake8 --exclude=node_modules,migrations .'),
-    TestType(name='eslint', cmd='npm run failable-eslint'),
+    TestType(name='eslint', cmd='yarn failable-eslint'),
     TestType(name='bandit', cmd='bandit -r .'),
     TestType(name='mypy', cmd='mypy @mypy-files.txt'),
-    TestType(name='jest', cmd='npm test'),
+    TestType(name='typescript', cmd='yarn typescript'),
+    TestType(name='jest', cmd='yarn test'),
     TestType(name='py.test',
              cmd='py.test --cov-report xml --cov-report term --cov'),
 ]

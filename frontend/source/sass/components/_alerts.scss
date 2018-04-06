@@ -1,9 +1,23 @@
-@import '../uswds/alerts';
-//TODO: rewrite alerts so the new styles are here
-/*$color-error-bg: #f9f0f0;*/
+@import '../base/variables';
 $color-error-bg: #fef5f5;
-.alert {
+.usa-alert {
   margin: 1rem 0;
+  padding: 1rem 6rem 1rem 2rem;
+  border-radius: $border-radius;
+  background-image: none;
+  &::before {
+    width: 0;
+  }
+
+  h3 {
+    font-weight: $font-weight-bold;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
 
   td, th {
     border-color: $color-gray-dark;
@@ -12,7 +26,6 @@ $color-error-bg: #fef5f5;
       border-right: none;
     }
   }
-
 
   thead th {
     color: $color-black;
@@ -28,7 +41,7 @@ $color-error-bg: #fef5f5;
   }
 }
 
-.alert-error {
+.usa-alert-error {
   border: 2px solid $color-secondary-dark;
   background-color: $color-error-bg;
   h3 {
@@ -36,32 +49,59 @@ $color-error-bg: #fef5f5;
   }
 }
 
+.usa-alert-success {
+  background-color: $color-green-lightest;
+  border: 2px solid $color-green; //borders added for consistency with error style
+}
+
+.usa-alert-warning {
+  background-color: $color-gold-lightest;
+  border: 2px solid $color-gold; //borders added for consistency with error style
+}
+
+.usa-alert-info {
+  background-color: #D2F6FF;
+  border: 2px solid $color-primary-alt; //borders added for consistency with error style
+}
+
 alerts-widget:focus {
   outline: none;
 }
 
-
-// TODO: style these the same as alerts?
-// or perhaps just use alert classes in messages.html
-.message-error h3,
-.message-error p {
-  color: $color-secondary-dark;
-  font-weight: $font-weight-bold;
+.message-error {
+  @extend .usa-alert;
+  @extend .usa-alert-error;
+  &.no-bg {
+    background-color: transparent;
+    border: none;
+  }
+  h3,
+  p {
+    color: $color-secondary-dark;
+    font-weight: $font-weight-bold;
+  }
+  h3:before {
+    width: $h3-font-size;
+    height: $h3-font-size;
+    content: url('../../images/icon-warning.svg');
+    padding-right: $space-half;
+  }
 }
-
-.message-error h3:before {
-  width: $h3-font-size;
-  height: $h3-font-size;
-  content: url('../../images/icon-warning.svg');
-  padding-right: $space-half;
+.message-success {
+  @extend .usa-alert;
+  @extend .usa-alert-success;
+  h3 {
+    color: $color-green;
+    margin-bottom: 0;
+  }
 }
-.message-success h3 {
-  color: $color-green;
-  margin-bottom: 0;
-}
-.message-info h3 {
-  /*color: $color-primary-alt-darkest;*/
-  margin-bottom: 0;
+.message-info {
+  @extend .usa-alert;
+  @extend .usa-alert-info;
+  h3 {
+    color: $color-primary-alt-darkest;
+    margin-bottom: 0;
+  }
 }
 
 .alert-submitted-price-lists {
@@ -79,13 +119,16 @@ alerts-widget:focus {
 
 /* for Django admin */
 .messagelist li {
-  @extend .alert;
+  @extend .usa-alert;
+  @extend .usa-alert-info;
 }
 
 .messagelist li.success {
-  @extend .alert-success;
+  @extend .usa-alert;
+  @extend .usa-alert-success;
 }
 
 .errornote {
-  @extend .alert-error;
+  @extend .usa-alert;
+  @extend .usa-alert-error;
 }

@@ -16,7 +16,7 @@
             <li><a href="{% url 'data_capture:price_lists' %}#unreviewed">{{ total_unreviewed }} awaiting approval</a></li>
             <li><a href="{% url 'data_capture:price_lists' %}#rejected">{{ total_rejected }} rejected</a></li>
           </ul>
-          <a class="button button-primary" href="{% url 'data_capture:price_lists' %}">See all</a>
+          <a class="usa-button usa-button-primary" href="{% url 'data_capture:price_lists' %}">See all</a>
         </div>
       {% elif perms.data_capture.add_submittedpricelist %}
         <div class="alert alert-warning">
@@ -40,7 +40,7 @@
                 </li>
               {% endfor %}
             </ul>
-            <p><a class="button" href="{% url 'data_capture:price_lists' %}#approved">See all</a></p>
+            <p><a class="usa-button usa-button-primary" href="{% url 'data_capture:price_lists' %}#approved">See all</a></p>
           {% else %}
             <p>None of your price lists have been approved yet.</p>
           {% endif %}
@@ -58,7 +58,7 @@
                 </li>
               {% endfor %}
             </ul>
-            <p><a class="button" href="{% url 'data_capture:price_lists' %}#unreviewed">See all</a></p>
+            <p><a class="usa-button-usa-button-primary" href="{% url 'data_capture:price_lists' %}#unreviewed">See all</a></p>
           {% else %}
             <p>All of your submitted price lists have been approved!</p>
           {% endif %}
