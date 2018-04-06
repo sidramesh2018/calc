@@ -35,7 +35,7 @@ main {
   border-bottom: $space-half solid $background-color;
 
   &:last-child {
-    border-bottom-color: $color-gray-light;
+    border-bottom-color: $color-gray-light; // TODO: This is not getting picked up for some reason.
   }
 }
 
@@ -43,6 +43,7 @@ main {
   padding: $space-half 0;
   margin-bottom: $space-10x;
   margin-top: -$space-10x; //ugh this is dumb
+  // hackity spacing hackity hack
   > * {
     padding-top: $space-10x;
   }
@@ -53,42 +54,46 @@ main {
   }
 }
 
-.content--wide {
-  header,
-  main,
-  footer {
-    // .container can be used anywhere. Only target top-level ones.
-    > .container {
-      // .row can also be used anywhere; target just top-level classes.
-      > .row,
-      .card,
-      .card__footer {
-        @include span-columns(12);
-        .content {
-          @include span-columns(10 of 12);
-          @include shift-in-context(1 of 12);
-        }
+// Formerly .content--wide; now default style
+header,
+main,
+footer {
+  // .container can be used anywhere. Only target top-level ones.
+  > .container {
+    // .row can also be used anywhere; target just top-level classes.
+    > .row,
+    .card,
+    .card__footer {
+      @include span-columns(12);
+      .content {
+        @include span-columns(10 of 12);
+        @include shift-in-context(1 of 12);
       }
     }
   }
 }
 
-// Default content body class
 .content--skinny {
   header,
-  main,
-  footer {
+  main {
     // .container can be used anywhere. Only target top-level ones.
     > .container {
       // .row can also be used anywhere; target just top-level classes.
-      > .row,
+      nav,
       .card,
       .card__footer {
-        @include span-columns(8);
-        @include shift(2);
+        @include span-columns(12);
+        @media screen and (min-width: $medium-large-screen) {
+          @include span-columns(8);
+          @include shift(2);
+        }
         .content {
-          @include span-columns(6 of 8);
-          @include shift-in-context(1 of 8);
+          @include span-columns(10 of 12);
+          @include shift-in-context(1 of 12);
+          @media screen and (min-width: $medium-large-screen) {
+            @include span-columns(6 of 8);
+            @include shift-in-context(1 of 8);
+          }
         }
       }
     }
