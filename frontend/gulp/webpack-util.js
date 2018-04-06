@@ -1,6 +1,7 @@
 const path = require('path');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const USE_POLLING = 'USE_POLLING' in process.env;
 
@@ -36,6 +37,13 @@ exports.webpackify = ({ isWatching, isProd }) => webpackStream({
     __filename: true,
   },
   devtool: isProd ? 'source-map' : 'eval-source-map',
+  plugins: [
+    new BundleAnalyzerPlugin({
+      analyzerHost: '0.0.0.0',
+      openAnalyzer: false,
+      defaultSizes: 'parsed',
+    }),
+  ],
   module: {
     rules: [
       {

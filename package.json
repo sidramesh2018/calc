@@ -53,10 +53,11 @@
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
     "sinon": "2.1.0",
-    "uswds": "^1.6.0",
     "typescript": "^2.7.2",
+    "uswds": "^1.6.0",
     "vinyl-named": "^1.1.0",
     "webpack": "^4.4.1",
+    "webpack-bundle-analyzer": "2.7.0",
     "webpack-stream": "^4.0.3",
     "xhr": "^2.4.0"
   },
