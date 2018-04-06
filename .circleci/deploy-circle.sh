@@ -37,7 +37,7 @@ MANIFEST="manifests/manifest-$DEPLOY_ENV.yml"
 
 # make a production build
 unset DEBUG
-yarn gulp -- build
+yarn gulp build
 
 # install cf cli
 curl -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
