@@ -41,7 +41,7 @@
         {% block messages %}
             {% if messages %}
             <div class="row card">
-              <ul class="messagelist card__content">
+              <ul class="messagelist content">
               {% for message in messages %}
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
               {% endfor %}
@@ -52,7 +52,7 @@
 
         <!-- Content -->
         <div id="content" class="row card">
-          <div class="card__content">
+          <div class="content">
 
             <!-- Section nav -->
             <div class="container">
