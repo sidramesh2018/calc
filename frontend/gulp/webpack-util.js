@@ -2,6 +2,8 @@ const path = require('path');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { ReactLoadablePlugin } = require('react-loadable/webpack');
+
 
 const USE_POLLING = 'USE_POLLING' in process.env;
 
@@ -38,11 +40,11 @@ exports.webpackify = ({ isWatching, isProd }) => webpackStream({
   },
   devtool: isProd ? 'source-map' : 'eval-source-map',
   plugins: [
+    new ReactLoadablePlugin({
+      filename: '././frontend/static/frontend/built/js/react-loadable.json',
+    }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'disabled',
-      analyzerHost: '0.0.0.0',
-      openAnalyzer: false,
-      defaultSizes: 'parsed',
       generateStatsFile: true,
       statsFilename: './frontend/static/frontend/built/js/stats.json',
     }),
@@ -59,5 +61,9 @@ exports.webpackify = ({ isWatching, isProd }) => webpackStream({
         },
       },
     ],
+  },
+  output: {
+    chunkFilename: '[name].bundle.js',
+    publicPath: '/static/frontend/built/js/',
   },
 }, webpack);
