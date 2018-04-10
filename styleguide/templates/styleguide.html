@@ -61,6 +61,73 @@
   </ul>
   {% endexample %}
 
+  {% guide_section "Card Layout" %}
+
+  <p>Defined in {% scss "components/_page.scss" %}. The card layout is used on every page, and there are some general rules for using the styles successfully.</p>
+
+  <p>Basic layout:</p>
+
+  {% example %}
+  <main class="clearfix"><!-- fixes a styleguide display issue -->
+    <div class="container">
+      <div class="card">
+        <div class="content">
+          <p>Some compelling content goes here.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="content">
+          <p>Thrilling, isn't it?</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endexample %}
+
+  <p>Some pages display a bit of information below the last card. Use the <code>card__footer</code> class here. Note the markup needs to go inside the top-level <code>container</code> to work properly.</p>
+
+  {% example %}
+  <main class="clearfix"><!-- fixes a styleguide display issue -->
+    <div class="container">
+      <div class="card">
+        <div class="content">
+          <p>Some compelling content goes here.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="content">
+          <p>Thrilling, isn't it?</p>
+        </div>
+      </div>
+      <div class="card__footer">
+        <button type="submit" class="usa-button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate="">I've changed my mind; abort!</button>
+      </div>
+    </div>
+  </main>
+  {% endexample %}
+
+  <p>By default, the cards are <code>980px</code> wide. This is too wide for sections like About and most of the price list upload, so you may need to use the <code>content--skinny</code> body class.</p>
+
+  {% example %}
+  <div class="content--skinny"><!-- goes on BODY in actuality -->
+    <main class="clearfix"><!-- fixes a styleguide display issue -->
+      <div class="container">
+        <div class="card">
+          <div class="content">
+            <p>Some compelling content goes here.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="content">
+            <p>Thrilling, isn't it?</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  {% endexample %}
+
+
   {% guide_section "Ajax Form + Upload Widget" %}
 
   <p>
