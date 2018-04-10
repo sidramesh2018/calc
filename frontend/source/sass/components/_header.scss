@@ -182,13 +182,7 @@ nav {
       &:last-child {
         margin-right: 0em;
       }
-      /*&:hover:not(.selected) {
-        border-bottom: $space-1x solid $color-gray-medium-dark;
-        a {
-          display: block;
-          padding-bottom: $space-half;
-        }
-      }*/
+
       &.selected {
         border-bottom: $space-1x solid $color-primary-alt;
         a {
