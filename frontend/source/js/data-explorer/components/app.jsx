@@ -58,7 +58,7 @@ class App extends React.Component {
 
     return {
       search: true,
-      card: true,
+      content: true,
       loaded,
       loading,
       error,
