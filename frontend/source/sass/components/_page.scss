@@ -37,15 +37,7 @@ footer {
   }
 }
 
-/* Top level classes go in {% body_class %} */
-.content--narrow {
-  header,
-  main,
-  footer {
-    @include span-columns(8);
-    @include shift(2);
-  }
-}
+
 // A top-level body class. Used on About.
 .content--skinny {
   header,
@@ -73,7 +65,6 @@ footer {
     }
   }
 }
->>>>>>> Stashed changes
 .card {
   background-color: $color-white;
   padding: $space-8x 0;
@@ -102,54 +93,6 @@ footer {
   }
 }
 
-<<<<<<< Updated upstream
-header,
-main,
-footer {
-  // .container can be used anywhere. Only target top-level ones.
-  > .container {
-    // .row can also be used anywhere; target just top-level classes.
-    > .row,
-    .card,
-    .card__footer {
-      @include span-columns(12);
-      .content {
-        @include span-columns(10 of 12);
-        @include shift-in-context(1 of 12);
-      }
-    }
-  }
-}
-
-.content--skinny {
-  header,
-  main {
-    // .container can be used anywhere. Only target top-level ones.
-    > .container {
-      // .row can also be used anywhere; target just top-level classes.
-      nav,
-      .card,
-      .card__footer {
-        @include span-columns(12);
-        @media screen and (min-width: $medium-large-screen) {
-          @include span-columns(8);
-          @include shift(2);
-        }
-        .content {
-          @include span-columns(10 of 12);
-          @include shift-in-context(1 of 12);
-          @media screen and (min-width: $medium-large-screen) {
-            @include span-columns(6 of 8);
-            @include shift-in-context(1 of 8);
-          }
-        }
-      }
-    }
-  }
-}
-
-=======
->>>>>>> Stashed changes
 .card .content:first-child h2:first-child {
   // The first header on a card has too much space.
   margin-top: 0;
