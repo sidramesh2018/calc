@@ -34,18 +34,21 @@ main {
   padding: $space-8x 0;
   border-bottom: $space-half solid $background-color;
 
+  /* This will only apply to cards that do not have a .card__footer.
+   * That class applies these styles as a top border to approximate the same thing. */
   &:last-child {
-    border-bottom-color: $color-gray-light; // TODO: This is not getting picked up for some reason.
+    border-bottom-color: $color-gray-light;
+    margin-bottom: $space-10x;
   }
 }
 
 .card__footer {
+  border-top: $space-half solid $color-gray-light; // same as if the .card:last-child class had been applied
+  margin-bottom: $space-10x; // same as .card:last-child
+  margin-top: -$space-half; // to account for border on the bottom of the preceding card
   padding: $space-half 0;
-  margin-bottom: $space-10x;
-  margin-top: -$space-10x; //ugh this is dumb
-  // hackity spacing hackity hack
   > * {
-    padding-top: $space-10x;
+    //padding-top: $space-10x;
   }
   button.usa-button-link {
     margin-top: $space-half;
@@ -54,7 +57,6 @@ main {
   }
 }
 
-// Formerly .content--wide; now default style
 header,
 main,
 footer {

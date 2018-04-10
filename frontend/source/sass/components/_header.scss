@@ -146,16 +146,6 @@ nav {
     clear: both;
   }
 
-  //.nav--wide {
-    //@include span-columns(12 of 12);
-    //@include shift(0);
-  //}
-
-  //.nav--narrow {
-    //@include span-columns(8 of 12);
-    //@include shift(2);
-  //}
-
   ul {
     list-style: none;
     text-align: left;
@@ -176,6 +166,7 @@ nav {
       &:last-child {
         margin-right: 0em;
       }
+
       &.selected {
         border-bottom: $space-1x solid $color-primary-alt;
         a {
@@ -185,15 +176,13 @@ nav {
         }
       }
       a {
-        /*font-weight: normal;*/
         color: $color-white;
         text-decoration: none;
-        &:hover {
-          color: $color-white;
-          /* border-bottom: $space-1x solid $color-gray-medium-dark; add this hover, needs debugging so the border hover doesn't show for the selected nav item */
-          padding-bottom: $space-half;
-        }
-        &:visited {
+        &:hover,
+        &:visited,
+        &:visited:hover,
+        &:visited:active,
+        &:visited:focus{
           color: $color-white;
         }
       }
