@@ -56,7 +56,6 @@ You can also run the tests in a continuous "watch" mode, which re-runs
 tests as you change your code:
 
 ```
-<<<<<<< Updated upstream
 yarn test:watch
 ```
 
@@ -64,9 +63,6 @@ Finally, you can also run `jest` directly. If you're using Docker,
 this can be done via `docker-compose run app jest`; otherwise you can
 use `yarn test`, followed by any
 [Jest CLI options](https://facebook.github.io/jest/docs/cli.html).
-=======
-
-You can run `jest` directly, too. If you're using Docker, this can be done via `docker-compose run app jest`; otherwise use `yarn test`, followed by any [Jest CLI options](https://facebook.github.io/jest/docs/cli.html).
 
 #### Analyzing bundles
 
@@ -87,7 +83,6 @@ yarn analyze-webpack
 ```
 
 Then visit http://localhost:8888 to explore the modules that comprise each bundle.
->>>>>>> Stashed changes
 
 ### Data capture
 
