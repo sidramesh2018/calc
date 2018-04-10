@@ -18,7 +18,7 @@ import ProposedPrice from './proposed-price';
 import ExportData from './export-data';
 import ResultsTable from './results-table';
 import QueryType from './query-type';
-import LoadableOptionalFilters from './loadable-optional-filters';
+import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
 import LaborCategory from './labor-category';
 import LoadingIndicator from './loading-indicator';
 import TitleTagSynchronizer from './title-tag-synchronizer';

@@ -10,7 +10,7 @@ services:
     command: sh -c "python manage.py collectstatic --noinput ; gunicorn -b :${DOCKER_EXPOSED_PORT} hourglass.wsgi:application"
     ports:
       - "${DOCKER_EXPOSED_PORT}:${DOCKER_EXPOSED_PORT}"
-      - "8888:8888"
+      - "8888:8888" # for analyze-webpack
   db:
     image: postgres:9.5.4
     volumes:

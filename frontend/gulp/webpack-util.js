@@ -41,7 +41,7 @@ exports.webpackify = ({ isWatching, isProd }) => webpackStream({
   devtool: isProd ? 'source-map' : 'eval-source-map',
   plugins: [
     new ReactLoadablePlugin({
-      filename: '././frontend/static/frontend/built/js/react-loadable.json',
+      filename: './frontend/static/frontend/built/js/react-loadable.json',
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'disabled',
