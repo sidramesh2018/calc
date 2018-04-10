@@ -69,13 +69,7 @@ form .aligned p.help {
     text-decoration: none;
 
     &:hover {
-      /* border-bottom: $space-1x solid $color-gray-medium-dark; add this hover, needs debugging so the border hover doesn't show for the selected nav item */
-    }
-
-    &.selected {
-      /* these aren't working, prob need a diff method becuase django) */
-      border-bottom: $space-1x solid $color-primary-alt;
-      font-weight: $font-weight-bold;
+       border-bottom: $space-1x solid $color-gray-medium-dark; /* add this hover, needs debugging so the border hover doesn't show for the selected nav item */
     }
   }
 
