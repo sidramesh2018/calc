@@ -107,6 +107,5 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(
                 f"No rates were written to the database."))
         else:
-            pbar.close()
             self.stdout.write(self.style.SUCCESS(
                 f"Done writing {num_rates} rates to the database."))
