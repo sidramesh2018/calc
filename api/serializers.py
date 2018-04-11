@@ -24,7 +24,7 @@ class EducationLevelField(serializers.Field):
                 f'Invalid education level: {data}'
             )
 
-        return edu_code[0]
+        return edu_code
 
 
 class ContractSerializer(serializers.ModelSerializer):
