@@ -61,6 +61,13 @@ class Command(BaseCommand):
         )
 
         parser.add_argument(
+            '--dry-run',
+            default=False,
+            action='store_true',
+            help='don\'t actually change the database'
+        )
+
+        parser.add_argument(
             '-u', '--url',
             default=self.DEFAULT_URL,
             help=f'URL of CALC API (default is {self.DEFAULT_URL})'
@@ -70,11 +77,12 @@ class Command(BaseCommand):
         url = options['url']
         start_page = options['start_page']
         end_page = options['end_page']
+        dry_run = options['dry_run']
 
         if end_page is not None and start_page > end_page:
             raise CommandError('Start page cannot be greater than end page!')
 
-        if not options['append']:
+        if not options['append'] and not dry_run:
             self.stdout.write("Deleting all existing rate information.")
             Contract.objects.all().delete()
 
@@ -83,29 +91,39 @@ class Command(BaseCommand):
         pagenum = start_page
         pbar = None
         num_rates = 0
-        for rates, total_pages in iter_api_pages(url, start_page, end_page):
-            if pbar is None:
-                pbar = tqdm(total=total_pages)
-            serializer = ContractSerializer(data=rates, many=True)
-            if serializer.is_valid():
-                num_rates += len(rates)
-                serializer.save()
-            else:
-                for rate, error in zip(rates, serializer.errors):
-                    if not error:
-                        continue
-                    self.stderr.write(
-                        f"Rate {self.style.WARNING(rate)} has "
-                        f"error {self.style.ERROR(error)}!"
-                    )
-            pbar.update(1)
-            pagenum += 1
+        pages = iter_api_pages(url, start_page, end_page)
+        try:
+            for rates, total_pages in pages:
+                if pbar is None:
+                    pbar = tqdm(total=total_pages)
+                serializer = ContractSerializer(data=rates, many=True)
+                if serializer.is_valid():
+                    num_rates += len(rates)
+                    if not dry_run:
+                        serializer.save()
+                else:
+                    for rate, error in zip(rates, serializer.errors):
+                        if not error:
+                            continue
+                        self.stderr.write(
+                            f"Rate {self.style.WARNING(rate)} has "
+                            f"error {self.style.ERROR(error)}!"
+                        )
+                pbar.update(1)
+                pagenum += 1
+        finally:
+            if pbar is not None:
+                pbar.close()
 
-        pbar.close()
-
-        if num_rates == 0:
-            self.stdout.write(self.style.WARNING(
-                f"No rates were written to the database."))
+        num_pages = pagenum - start_page
+        if dry_run:
+            self.stdout.write(
+                f"Processed {num_rates} rates in dry run mode "
+                f"over {num_pages} pages.")
         else:
-            self.stdout.write(self.style.SUCCESS(
-                f"Done writing {num_rates} rates to the database."))
+            if num_rates == 0:
+                self.stdout.write(self.style.WARNING(
+                    f"No rates were written to the database."))
+            else:
+                self.stdout.write(self.style.SUCCESS(
+                    f"Done writing {num_rates} rates to the database."))

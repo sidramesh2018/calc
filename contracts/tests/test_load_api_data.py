@@ -1,6 +1,6 @@
 import io
 from django.core.management import call_command, CommandError
-from django.test import LiveServerTestCase, SimpleTestCase
+from django.test import LiveServerTestCase, SimpleTestCase, override_settings
 from httmock import all_requests, response, HTTMock
 
 from contracts.mommy_recipes import get_contract_recipe
@@ -20,6 +20,21 @@ class LiveServerTests(LiveServerTestCase):
         self.assertRegex(
             stdout.getvalue(),
             f'No rates were written to the database'
+        )
+
+    @override_settings(PAGINATION=2)
+    def test_retrieving_multiple_pages_works(self):
+        get_contract_recipe().make(_quantity=5)
+        stdout = io.StringIO()
+        call_command(
+            'load_api_data',
+            url=f"{self.live_server_url}/api/rates/",
+            dry_run=True,
+            stdout=stdout
+        )
+        self.assertRegex(
+            stdout.getvalue(),
+            'Processed 5 rates in dry run mode over 3 pages'
         )
 
     def test_appending_from_self_doubles_contract_count(self):
