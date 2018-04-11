@@ -1,9 +1,11 @@
 import io
 from django.core.management import call_command, CommandError
-from django.test import LiveServerTestCase, TestCase
+from django.test import LiveServerTestCase, SimpleTestCase
+from httmock import all_requests, response, HTTMock
 
 from contracts.mommy_recipes import get_contract_recipe
 from contracts.models import Contract
+from contracts.management.commands.load_api_data import iter_api_pages
 
 
 class LiveServerTests(LiveServerTestCase):
@@ -37,8 +39,41 @@ class LiveServerTests(LiveServerTestCase):
         )
 
 
-class BasicTests(TestCase):
+def json_200(content):
+    @all_requests
+    def response_content(url, request):
+        headers = {'content-type': 'application/json'}
+        return response(200, content, headers)
+
+    return response_content
+
+
+EMPTY_RESPONSE = {
+    'count': 0,
+    'results': [],
+    'next': None,
+}
+
+
+CONTRACT = {
+    'id': 123,
+    'foo': 'blah',
+}
+
+
+class SimpleTests(SimpleTestCase):
     def test_start_page_must_be_leq_end_page(self):
         msg = 'Start page cannot be greater than end page'
         with self.assertRaisesRegex(CommandError, msg):
             call_command('load_api_data', start_page=5, end_page=1)
+
+    def test_results_are_ok(self):
+        res = {**EMPTY_RESPONSE, 'results': [CONTRACT]}
+        with HTTMock(json_200(res)):
+            results, total = next(iter_api_pages('http://blah', end_page=99))
+            self.assertEqual(results, [{'foo': 'blah'}])
+
+    def test_total_pages_is_correct_when_end_page_is_too_high(self):
+        with HTTMock(json_200(EMPTY_RESPONSE)):
+            results, total = next(iter_api_pages('http://blah', end_page=99))
+            self.assertEqual(total, 1)
