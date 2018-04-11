@@ -70,7 +70,7 @@ class SimpleTests(SimpleTestCase):
     def test_results_are_ok(self):
         res = {**EMPTY_RESPONSE, 'results': [CONTRACT]}
         with HTTMock(json_200(res)):
-            results, total = next(iter_api_pages('http://blah', end_page=99))
+            results, total = next(iter_api_pages('http://blah'))
             self.assertEqual(results, [{'foo': 'blah'}])
 
     def test_total_pages_is_correct_when_end_page_is_too_high(self):
