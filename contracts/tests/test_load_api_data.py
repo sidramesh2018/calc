@@ -37,6 +37,22 @@ class LiveServerTests(LiveServerTestCase):
             'Processed 5 rates in dry run mode over 3 pages'
         )
 
+    @override_settings(PAGINATION=2)
+    def test_stops_retrieving_at_end_page(self):
+        get_contract_recipe().make(_quantity=5)
+        stdout = io.StringIO()
+        call_command(
+            'load_api_data',
+            url=f"{self.live_server_url}/api/rates/",
+            dry_run=True,
+            end_page=1,
+            stdout=stdout
+        )
+        self.assertRegex(
+            stdout.getvalue(),
+            'Processed 2 rates in dry run mode over 1 pages'
+        )
+
     def test_appending_from_self_doubles_contract_count(self):
         count = 5
         get_contract_recipe().make(_quantity=count)
