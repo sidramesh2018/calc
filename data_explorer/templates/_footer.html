@@ -11,7 +11,7 @@
             {% elif user.is_authenticated %}
             <h2>Welcome!</h2>
             <p>You are logged in to CALC as {{ user.email }}, and can now <a href="{% url 'data_capture:step_1' %}">add price lists</a>.</p>
-            <div class="footer_extra">
+            <div class="footer__bottom-links">
               <p class="small"><a href="{% url 'user_account:index' %}">View activity</a>
               <p class="small"><a href="{% url 'logout' %}">Log out</a></p>
             </div><p>
@@ -24,7 +24,7 @@
               We're always looking for feedback on CALC!<br>
               To share your thoughts, email us at <a href="mailto:{{ HELP_EMAIL }}">{{ HELP_EMAIL }}</a>.
             </p>
-            <div class="footer_extra">
+            <div class="footer__bottom-links">
               <p class="small">
                 <a href="{% url 'updates' %}">Read about recent updates to CALC</a>
               </p>
