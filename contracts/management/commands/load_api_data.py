@@ -1,7 +1,7 @@
 import math
 import requests
 from tqdm import tqdm
-from django.core.management import BaseCommand
+from django.core.management import BaseCommand, CommandError
 
 from contracts.models import Contract
 from api.serializers import ContractSerializer
@@ -9,7 +9,6 @@ from api.serializers import ContractSerializer
 
 def iter_api_pages(url, start_page=1, end_page=None):
     page = start_page
-    projected_end_page = end_page
     while True:
         if end_page is not None and page > end_page:
             break
@@ -17,9 +16,17 @@ def iter_api_pages(url, start_page=1, end_page=None):
         results = res['results']
         for result in results:
             del result['id']
-        if projected_end_page is None:
-            projected_end_page = math.ceil(res['count'] / len(results))
-        yield results, projected_end_page - start_page + 1
+
+        if len(results):
+            max_page = math.ceil(res['count'] / len(results))
+        else:
+            max_page = page
+        if end_page is not None:
+            max_page = min(end_page, max_page)
+        total_pages = max_page - start_page + 1
+
+        yield results, total_pages
+
         if res['next'] is not None:
             page += 1
         else:
@@ -61,6 +68,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         url = options['url']
+        start_page = options['start_page']
+        end_page = options['end_page']
+
+        if end_page is not None and start_page > end_page:
+            raise CommandError('Start page cannot be greater than end page!')
 
         if not options['append']:
             self.stdout.write("Deleting all existing rate information.")
@@ -68,8 +80,6 @@ class Command(BaseCommand):
 
         self.stdout.write(f"Loading new rate information from {url}.")
 
-        start_page = options['start_page']
-        end_page = options['end_page']
         pagenum = start_page
         pbar = None
         num_rates = 0
@@ -91,8 +101,12 @@ class Command(BaseCommand):
             pbar.update(1)
             pagenum += 1
 
-        if pbar is not None:
-            pbar.close()
+        pbar.close()
 
-        self.stdout.write(self.style.SUCCESS(
-            f"Done writing {num_rates} rates to the database."))
+        if num_rates == 0:
+            self.stdout.write(self.style.WARNING(
+                f"No rates were written to the database."))
+        else:
+            pbar.close()
+            self.stdout.write(self.style.SUCCESS(
+                f"Done writing {num_rates} rates to the database."))
