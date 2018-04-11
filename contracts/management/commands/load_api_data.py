@@ -73,25 +73,11 @@ class Command(BaseCommand):
             help=f'URL of CALC API (default is {self.DEFAULT_URL})'
         )
 
-    def handle(self, *args, **options):
-        url = options['url']
-        start_page = options['start_page']
-        end_page = options['end_page']
-        dry_run = options['dry_run']
-
-        if end_page is not None and start_page > end_page:
-            raise CommandError('Start page cannot be greater than end page!')
-
-        if not options['append'] and not dry_run:
-            self.stdout.write("Deleting all existing rate information.")
-            Contract.objects.all().delete()
-
-        self.stdout.write(f"Loading new rate information from {url}.")
-
-        pagenum = start_page
-        pbar = None
+    def process_pages(self, pages, dry_run):
         num_rates = 0
-        pages = iter_api_pages(url, start_page, end_page)
+        num_pages = 0
+        pbar = None
+
         try:
             for rates, total_pages in pages:
                 if pbar is None:
@@ -110,12 +96,31 @@ class Command(BaseCommand):
                             f"error {self.style.ERROR(error)}!"
                         )
                 pbar.update(1)
-                pagenum += 1
+                num_pages += 1
         finally:
             if pbar is not None:
                 pbar.close()
 
-        num_pages = pagenum - start_page
+        return num_rates, num_pages
+
+    def handle(self, *args, **options):
+        url = options['url']
+        start_page = options['start_page']
+        end_page = options['end_page']
+        dry_run = options['dry_run']
+
+        if end_page is not None and start_page > end_page:
+            raise CommandError('Start page cannot be greater than end page!')
+
+        if not options['append'] and not dry_run:
+            self.stdout.write("Deleting all existing rate information.")
+            Contract.objects.all().delete()
+
+        self.stdout.write(f"Loading new rate information from {url}.")
+
+        pages = iter_api_pages(url, start_page, end_page)
+        num_rates, num_pages = self.process_pages(pages, dry_run)
+
         if dry_run:
             self.stdout.write(
                 f"Processed {num_rates} rates in dry run mode "
