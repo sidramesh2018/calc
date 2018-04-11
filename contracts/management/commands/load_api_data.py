@@ -88,9 +88,11 @@ class Command(BaseCommand):
                     if not dry_run:
                         serializer.save()
                 else:
-                    for rate, error in zip(rates, serializer.errors):
-                        if not error:
-                            continue
+                    rates_with_errors = [
+                        (r, e) for r, e in zip(rates, serializer.errors)
+                        if e
+                    ]
+                    for rate, error in rates_with_errors:
                         self.stderr.write(
                             f"Rate {self.style.WARNING(rate)} has "
                             f"error {self.style.ERROR(error)}!"
