@@ -60,7 +60,7 @@ class ProcessBulkUploadTests(TestCase):
         with self.assertRaises(StopIteration):
             next(generator)
 
-    def test_contract_creation_batching_does_not_yield_non_leftovers(self):
+    def test_contract_creation_batching_does_not_yield_empty_leftovers(self):
         rows = [['']] * 2
         generator = jobs._create_contract_batches(
             None,
