@@ -76,12 +76,12 @@ class Command(BaseCommand):
     def process_pages(self, pages, dry_run):
         num_rates = 0
         num_pages = 0
-        pbar = None
+        progress_bar = None
 
         try:
             for rates, total_pages in pages:
-                if pbar is None:
-                    pbar = tqdm(total=total_pages)
+                if progress_bar is None:
+                    progress_bar = tqdm(total=total_pages)
                 serializer = ContractSerializer(data=rates, many=True)
                 if serializer.is_valid():
                     num_rates += len(rates)
@@ -97,11 +97,11 @@ class Command(BaseCommand):
                             f"Rate {self.style.WARNING(rate)} has "
                             f"error {self.style.ERROR(error)}!"
                         )
-                pbar.update(1)
+                progress_bar.update(1)
                 num_pages += 1
         finally:
-            if pbar is not None:
-                pbar.close()
+            if progress_bar is not None:
+                progress_bar.close()
 
         return num_rates, num_pages
 
