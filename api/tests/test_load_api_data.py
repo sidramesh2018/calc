@@ -5,7 +5,7 @@ from httmock import all_requests, response, HTTMock
 
 from contracts.mommy_recipes import get_contract_recipe
 from contracts.models import Contract
-from contracts.management.commands.load_api_data import (
+from api.management.commands.load_api_data import (
     iter_api_pages,
     Command,
 )
