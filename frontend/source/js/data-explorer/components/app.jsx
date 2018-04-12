@@ -15,15 +15,10 @@ import Description from './description';
 import Highlights from './highlights';
 import Histogram from './histogram';
 import ProposedPrice from './proposed-price';
-import EducationLevel from './education-level';
-import Experience from './experience';
 import ExportData from './export-data';
 import ResultsTable from './results-table';
-import Schedule from './schedule';
-import ContractYear from './contract-year';
 import QueryType from './query-type';
-import Site from './site';
-import BusinessSize from './business-size';
+import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
 import LaborCategory from './labor-category';
 import LoadingIndicator from './loading-indicator';
 import TitleTagSynchronizer from './title-tag-synchronizer';
@@ -58,7 +53,7 @@ class App extends React.Component {
 
     return {
       search: true,
-      card: true,
+      content: true,
       loaded,
       loading,
       error,
@@ -186,22 +181,15 @@ class App extends React.Component {
               <div className="filter-container columns three">
                 <div className="filter-block">
                   <h5 className="filter-title">Optional filters</h5>
-                  <EducationLevel />
-                  <Experience />
-                  <Site />
-                  <BusinessSize />
-                  <Schedule />
-                  <ContractYear />
+                  <LoadableOptionalFilters />
                 </div>
               </div>
 
             </div>
             <div className="row">
-
               <div className="table-container">
                 <ResultsTable />
               </div>
-
             </div>
           </div>
         </section>
