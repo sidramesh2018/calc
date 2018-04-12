@@ -28,9 +28,6 @@ class EducationLevelField(serializers.Field):
 
 
 class ContractSerializer(serializers.ModelSerializer):
-    # TODO: Figure out whether we actually support a null value for
-    # this in the DB. Right now the model claims it can be null or
-    # blank, which isn't recommended for strings in Django.
     education_level = EducationLevelField(allow_null=True)
 
     class Meta:
