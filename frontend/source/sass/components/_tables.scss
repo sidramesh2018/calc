@@ -115,6 +115,11 @@ table {
   }
 }
 
+.return-link {
+  font-weight: $font-weight-bold;
+  text-align: right;
+}
+
 .sortable {
   td,
   td:first-child,
