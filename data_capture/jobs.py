@@ -14,15 +14,17 @@ from contracts.models import Contract, BulkUploadContractSource
 contracts_logger = logging.getLogger('contracts')
 
 
-def _create_contract_batches(upload_source, batch_size=5000):
-    r10_file = ContentFile(upload_source.original_file)
-    converter = Region10SpreadsheetConverter(r10_file)
+def _create_contract_batches(upload_source, batch_size=5000, rows=None):
+    if rows is None:
+        r10_file = ContentFile(upload_source.original_file)
+        converter = Region10SpreadsheetConverter(r10_file)
+        rows = converter.convert_next()
 
     contracts = []
     bad_rows = []
     i = 0
 
-    for row in converter.convert_next():
+    for row in rows:
         try:
             c = Region10Loader.make_contract(row, upload_source=upload_source)
             contracts.append(c)
