@@ -124,5 +124,3 @@ export const QUERY_TYPE_LABELS = {
 };
 
 export const MAX_QUERY_LENGTH = 255;
-
-export const API_RATES_CSV = '/rates/csv/';

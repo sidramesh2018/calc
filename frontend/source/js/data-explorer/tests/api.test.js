@@ -6,14 +6,14 @@ import sinon from 'sinon';
 import API from '../api';
 
 describe('API constructor', () => {
-  it('defaults to relative path', () => {
+  it('defaults to /api/ path', () => {
     const api = new API();
-    expect(api.basePath).toMatch('/');
+    expect(api.basePath).toMatch('/api/');
   });
 
   it('allows setting of basePath in constructor', () => {
-    const api = new API('/api');
-    expect(api.basePath).toMatch('/api/');
+    const api = new API('/api/v1');
+    expect(api.basePath).toMatch('/api/v1/');
 
     const api2 = new API('/api2/');
     expect(api2.basePath).toMatch('/api2/');
@@ -46,7 +46,7 @@ describe('API get', () => {
       expect(res).toMatchObject({ result: 'success' });
       done();
     });
-    expect(req.url).toEqual('/whatever');
+    expect(req.url).toEqual('/api/whatever');
     req.respond(200, resHeaders, JSON.stringify({ result: 'success' }));
   });
 
@@ -56,7 +56,7 @@ describe('API get', () => {
       expect(res).toMatchObject({ result: 'data_success' });
       done();
     });
-    expect(req.url).toEqual('/data?param=value');
+    expect(req.url).toEqual('/api/data?param=value');
     req.respond(200, resHeaders, JSON.stringify({ result: 'data_success' }));
   });
 

@@ -6,10 +6,8 @@ import { connect } from 'react-redux';
 
 import { getRatesParameters } from '../rates-request';
 
-import { API_RATES_CSV } from '../constants';
-
 export function ExportData({ querystring }) {
-  const href = API_RATES_CSV + querystring;
+  const href = `/api/rates/csv/${querystring}`;
 
   return (
     <a
