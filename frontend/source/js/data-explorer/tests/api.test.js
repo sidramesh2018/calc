@@ -18,12 +18,6 @@ describe('API constructor', () => {
     const api2 = new API('/api2/');
     expect(api2.basePath).toMatch('/api2/');
   });
-
-  it('uses window.API_HOST if defined', () => {
-    window.API_HOST = 'whatever';
-    const api = new API();
-    expect(api.basePath).toMatch('whatever/');
-  });
 });
 
 describe('API get', () => {

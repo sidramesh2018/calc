@@ -3,8 +3,8 @@ import xhr from 'xhr';
 import * as qs from 'querystring';
 
 export default class API {
-  constructor(basePath = '') {
-    this.basePath = window.API_HOST || basePath;
+  constructor(basePath = '/api/') {
+    this.basePath = basePath;
     if (this.basePath.charAt(this.basePath.length - 1) !== '/') {
       this.basePath += '/';
     }
