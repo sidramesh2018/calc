@@ -65,6 +65,24 @@ footer {
     }
   }
 }
+
+/* Applied to "main" element on some steps of data capture to create the appearance
+ * of a unified card (despite being composed of two separate "card" DOM elements.)
+ * Used in conjunction with the standard card classes above. */
+.card--collapse-header {
+  .card:first-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .card:nth-child(2) {
+    padding-top: 0;
+
+    h3 {
+      margin-top: 0; // alert h3
+    }
+  }
+}
+
 .card {
   background-color: $color-white;
   padding: $space-8x 0;
@@ -83,9 +101,6 @@ footer {
   margin-bottom: $space-10x; // same as .card:last-child
   margin-top: -$space-half; // to account for border on the bottom of the preceding card
   padding: $space-half 0;
-  > * {
-    //padding-top: $space-10x;
-  }
   button.usa-button-link {
     margin-top: $space-half;
     font-size: $small-font-size;
@@ -98,22 +113,6 @@ footer {
   margin-top: 0;
 }
 
-/* Applied to "main" element on some steps of data capture to create the appearance
- * of a unified card (despite being composed of two separate "card" DOM elements.)
- * Used in conjunction with the standard card classes above. */
-.card--collapse-header {
-  .card:first-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  .card:nth-child(2) {
-    padding-top: 0;
-
-    h3 {
-      margin-top: 0; // alert h3
-    }
-  }
-}
 
 .card--half-padding {
   .card {
