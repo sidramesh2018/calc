@@ -15,6 +15,7 @@ test_contract_link
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.support.ui import Select
 
 from contracts.mommy_recipes import get_contract_recipe
@@ -34,8 +35,9 @@ from .utils import build_static_assets
 WD_HUB_URL = os.environ.get('WD_HUB_URL')
 WD_TESTING_URL = os.environ.get('WD_TESTING_URL')
 WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
-                                    'phantomjs')
+                                    'chrome')
 WD_SOCKET_TIMEOUT = int(os.environ.get('WD_SOCKET_TIMEOUT', '5'))
+WD_CHROME_ARGS = filter(None, os.environ.get('WD_CHROME_ARGS', '').split())
 PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
 
@@ -43,7 +45,10 @@ WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
 def _get_webdriver(name):
     name = name.lower()
     if name == 'chrome':
-        return webdriver.Chrome()
+        options = ChromeOptions()
+        for arg in WD_CHROME_ARGS:
+            options.add_argument(arg)
+        return webdriver.Chrome(chrome_options=options)
     elif name == 'firefox':
         return webdriver.Firefox()
     elif name == 'phantomjs':
