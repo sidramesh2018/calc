@@ -127,6 +127,25 @@
   </div>
   {% endexample %}
 
+  <p>The data capture <code>step.html<code> template is set up to expect step headings to occur in their own card; however, the designs for some steps (specifically 3 and 5) call for a single-card look. To create this look, use the <code>card--collapse-header</code> class on <code>main</code>, which will remove the bottom border of the heading card and reduce the amount of padding applied to the second card.</p>
+
+  {% example %}
+    <main class="card--collapse-header clearfix"><!-- clearfix just fixes a styleguide display issue -->
+      <div class="container">
+        <div class="card">
+          <div class="content">
+            <p>Some compelling content goes here.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="content">
+            <p>Thrilling, isn't it?</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  {% endexample %}
+
 
   {% guide_section "Ajax Form + Upload Widget" %}
 
