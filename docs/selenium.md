@@ -4,9 +4,9 @@
 
 #### Required variables
 
-To run CALC's browser-based tests via Selenium/WebDriver in a real-world
-(i.e., non-PhantomJS) browser, you'll need to define the following
-environment variables, unless otherwise noted:
+To run CALC's browser-based tests via Selenium/WebDriver in a non-Chrome
+browser, you'll need to define the following environment variables,
+unless otherwise noted:
 
 * `DJANGO_LIVE_TEST_SERVER_ADDRESS` is the IP and port that CALC
   will bind itself to from the perspective of the machine (or

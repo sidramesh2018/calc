@@ -21,14 +21,14 @@ For more information on running only specific tests, see
 
 For more details on front end testing, see the [front end guide](frontend.md).
 
-### Using real-world browsers
+### Using non-Chrome browsers
 
-By default, CALC's browser-based tests will run via PhantomJS. This
+By default, CALC's browser-based tests will run via Chrome. This
 is nice because it requires no configuration (aside from installing
-PhantomJS, if you're not using the Docker setup).
+Chrome and chromedriver, if you're not using the Docker setup).
 
 However, it might also be preferable to run the browser-based tests in
-a real-world browser. This can be done via Selenium/WebDriver. The
+a different browser. This can be done via Selenium/WebDriver. The
 trade-off is that this requires configuration.
 
 For details on how to do this, see our in-depth [Selenium guide](selenium.md).

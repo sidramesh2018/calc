@@ -38,7 +38,6 @@ WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
                                     'chrome')
 WD_SOCKET_TIMEOUT = int(os.environ.get('WD_SOCKET_TIMEOUT', '5'))
 WD_CHROME_ARGS = filter(None, os.environ.get('WD_CHROME_ARGS', '').split())
-PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
 
 
@@ -51,10 +50,6 @@ def _get_webdriver(name):
         return webdriver.Chrome(chrome_options=options)
     elif name == 'firefox':
         return webdriver.Firefox()
-    elif name == 'phantomjs':
-        driver = webdriver.PhantomJS()
-        driver.command_executor.set_timeout(PHANTOMJS_TIMEOUT)
-        return driver
     raise Exception('No such webdriver: "%s"' % name)
 
 
