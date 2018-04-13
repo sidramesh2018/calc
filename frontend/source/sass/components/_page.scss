@@ -94,6 +94,10 @@ footer {
     border-bottom-color: $color-gray-light;
     margin-bottom: $space-10x;
   }
+  // When the first thing in the card's content is a heading, it needs no top margin
+  .content > h1:first-child {
+    margin-top: 0;
+  }
 }
 
 .card__footer {
@@ -111,13 +115,6 @@ footer {
 .card .content:first-child h2:first-child {
   // The first header on a card has too much space.
   margin-top: 0;
-}
-
-
-.card--half-padding {
-  .card {
-    padding: $space-4x 0;
-  }
 }
 
 .price-list__status-header {
