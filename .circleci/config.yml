@@ -106,6 +106,8 @@ jobs:
             echo $(node --version)
             echo $(npm --version)
             echo $(yarn --version)
+            echo $(google-chrome -version)
+            echo $(chromedriver -version)
             echo $(pwd)
       - run:
           name: Run linters and static analysis
