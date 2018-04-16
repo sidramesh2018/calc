@@ -63,7 +63,7 @@
 
   {% guide_section "Card Layout" %}
 
-  <p>Defined in {% scss "components/_page.scss" %}. The card layout is used on every page, and there are some general rules for using the styles successfully.</p>
+  <p>Defined in {% scss "components/_page.scss" %}. The card layout is used on every page, and there are some general rules, detailed below, for using the styles successfully.</p>
 
   <p>Basic layout:</p>
 
@@ -108,7 +108,7 @@
   </main>
   {% endexample %}
 
-  <p>By default, the cards are <code>980px</code> wide. This is too wide for sections like About and most of the price list upload, so you may need to use the <code>content--skinny</code> body class.</p>
+  <p>By default, the cards are too wide for text-only and most form-based sections, so you may need to use the <code>content--skinny</code> body class.</p>
 
   {% example %}
   <div class="content--skinny"><!-- goes on BODY in actuality -->
@@ -130,7 +130,7 @@
   </div>
   {% endexample %}
 
-  <p>The data capture <code>step.html</code> template is set up to expect step headings to occur in their own card; however, the designs for some steps (specifically 3 and 5) call for a single-card look. To create this look, use the <code>card--collapse-header</code> class on <code>main</code>, which will remove the bottom border of the heading card and reduce the amount of padding applied to the second card.</p>
+  <p>The data capture {% pathname "data_capture\templates\data_capture\step.html" %} template is set up to expect step headings to occur in their own card; however, the designs for some steps call for a single-card look. To create this look, use the <code>card--collapse-header</code> class on <code>main</code>, which will remove the bottom border of the heading card and reduce the amount of padding applied to the second card.</p>
 
   {% example %}
     <main class="card--collapse-header clearfix"><!-- clearfix just fixes a styleguide display issue -->
