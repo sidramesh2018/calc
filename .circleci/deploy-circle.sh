@@ -56,7 +56,7 @@ if cf app $APP_NAME ; then
   echo "Scaling down $APP_NAME to single instance."
   cf scale -i 1 $APP_NAME
 else
-  "$APP_NAME not found; skipping scale."
+  echo "$APP_NAME not found; skipping scale."
 fi
 
 
