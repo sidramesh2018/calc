@@ -28,9 +28,6 @@ ensure that the back-end and front-end integrate properly. The
 following environment variables may be useful when configuring these
 tests:
 
-* `WD_SOCKET_TIMEOUT` specifies the default socket timeout to use for
-  requests before giving up, in seconds.
-
 * `WD_CHROME_ARGS` are command-line flags to pass to Chrome,
   e.g. `--headless --no-sandbox --disable-setuid-sandbox`.
 
