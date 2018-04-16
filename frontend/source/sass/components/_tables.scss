@@ -58,13 +58,12 @@ table {
           text-decoration: underline;
           cursor: pointer;
           padding-right: 1.5em;
-          padding-bottom: 1em;
+          padding-bottom: 1.3em;
           &:after {
             display: inline-block;
             line-height: 1em;
             height: 1em;
             position: absolute;
-            padding-bottom: $space-2x;
             padding-right: 0;
             margin-top: -.5em;
             margin-right: .25em;
@@ -133,7 +132,7 @@ table {
   th:last-child {
     position: relative;
     padding: $space-2x $space-1x $space-half;
-    vertical-align: bottom;
+    vertical-align: top;
   }
 }
 
@@ -242,10 +241,10 @@ td.error {
 th.exclude a.restore {
   position: absolute;
   font-size: 1rem;
+  margin-bottom: $space-1x;
   padding: 2px 0;
   text-transform: uppercase;
   text-decoration: underline;
-  color: $color-gray;
   white-space: nowrap;
   vertical-align: bottom;
   bottom: 100%;
