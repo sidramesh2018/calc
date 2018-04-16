@@ -32,25 +32,9 @@ from . import axe
 from .utils import build_static_assets
 
 
-WD_HUB_URL = os.environ.get('WD_HUB_URL')
-WD_TESTING_URL = os.environ.get('WD_TESTING_URL')
-WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
-                                    'chrome')
 WD_SOCKET_TIMEOUT = int(os.environ.get('WD_SOCKET_TIMEOUT', '5'))
 WD_CHROME_ARGS = filter(None, os.environ.get('WD_CHROME_ARGS', '').split())
 WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
-
-
-def _get_webdriver(name):
-    name = name.lower()
-    if name == 'chrome':
-        options = ChromeOptions()
-        for arg in WD_CHROME_ARGS:
-            options.add_argument(arg)
-        return webdriver.Chrome(chrome_options=options)
-    elif name == 'firefox':
-        return webdriver.Firefox()
-    raise Exception('No such webdriver: "%s"' % name)
 
 
 class SeleniumTestCase(StaticLiveServerTestCase):
@@ -61,32 +45,10 @@ class SeleniumTestCase(StaticLiveServerTestCase):
 
     @classmethod
     def get_driver(cls):
-        if not WD_TESTING_URL:
-            return _get_webdriver(WD_TESTING_BROWSER)
-
-        if not WD_HUB_URL:
-            raise Exception('WD_HUB_URL must be defined!')
-
-        desired_cap = webdriver.DesiredCapabilities.CHROME
-        # these are the standard Selenium capabilities
-
-        if 'WD_TESTING_PLATFORM' in os.environ:
-            desired_cap['platform'] = os.environ['WD_TESTING_PLATFORM']
-        desired_cap['browserName'] = WD_TESTING_BROWSER
-        if 'WD_TESTING_BROWSER_VERSION' in os.environ:
-            desired_cap['version'] = os.environ['WD_TESTING_BROWSER_VERSION']
-
-        desired_cap['name'] = 'CALC'
-        print('capabilities:', desired_cap)
-
-        driver = webdriver.Remote(
-            desired_capabilities=desired_cap,
-            command_executor=WD_HUB_URL
-        )
-
-        # XXX should this be higher?
-        driver.implicitly_wait(20)
-        return driver
+        options = ChromeOptions()
+        for arg in WD_CHROME_ARGS:
+            options.add_argument(arg)
+        return webdriver.Chrome(chrome_options=options)
 
     @classmethod
     def setUpClass(cls):
@@ -123,8 +85,6 @@ class SeleniumTestCase(StaticLiveServerTestCase):
 
     def setUp(self):
         self.base_url = self.live_server_url
-        if WD_TESTING_URL:
-            self.base_url = WD_TESTING_URL
         self.driver.set_window_size(*self.window_size)
         super().setUp()
 

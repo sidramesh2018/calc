@@ -18,16 +18,10 @@ Welcome to CALC's developer documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Testing
-
-   testing
-   selenium
-
-.. toctree::
-   :maxdepth: 2
    :caption: Development
 
    Style guide <https://calc-dev.app.cloud.gov/styleguide/>
+   testing
    frontend
    api
    updating_data
