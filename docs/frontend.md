@@ -80,10 +80,9 @@ The source code is located in
 
 Tests are [QUnit][]-based and are located in
 [frontend/source/js/tests](../frontend/source/js/tests/).
+They are run as part of our Python test suite via [frontend/tests/test_qunit.py](../frontend/tests/test_qunit.py).
 
-To run the QUnit tests, visit
-[/tests/](https://calc-dev.app.cloud.gov/tests/) on your local
-development instance.
+You can also visit [`/tests/`](http://localhost:8000/tests/) on your local development instance to run the [QUnit][] tests directly in your browser.
 
 ### Administrative UI
 
