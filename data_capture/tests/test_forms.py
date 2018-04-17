@@ -11,6 +11,9 @@ from ..models import SubmittedPriceList
 
 @override_settings(DATA_CAPTURE_SCHEDULES=[FAKE_SCHEDULE])
 class Step1FormTests(TestCase):
+    def setUp(self):
+        registry._init()
+
     def make_form(self, contract_number='GS-BOOP'):
         return Step1Form({
             'contract_number': contract_number,
