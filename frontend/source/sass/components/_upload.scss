@@ -40,7 +40,7 @@ upload-widget {
 
   &.dragged-over {
     background-color: $color-green-lightest;
-    border: 2px dashed $color-green;
+    border: 2px dashed $color-green-darkest;
     .upload-chooser {
       * {
         visibility: hidden;
