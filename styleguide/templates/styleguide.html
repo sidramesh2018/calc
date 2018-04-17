@@ -110,27 +110,9 @@
 
   <p>By default, the cards are too wide for text-only and most form-based sections, so you may need to use the <code>content--skinny</code> body class.</p>
 
-  {% example %}
-  <div class="content--skinny"><!-- goes on BODY in actuality -->
-    <main class="clearfix"><!-- fixes a styleguide display issue -->
-      <div class="container">
-        <div class="card">
-          <div class="content">
-            <h2>Section of great importance!</h2>
-            <p>Some compelling content goes here.</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="content">
-            <p>Thrilling, isn't it?</p>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-  {% endexample %}
+  {% fullpage_example "content-skinny" %}
 
-  <p>The data capture {% pathname "data_capture\templates\data_capture\step.html" %} template is set up to expect step headings to occur in their own card; however, the designs for some steps call for a single-card look. To create this look, use the <code>card--collapse-header</code> class on <code>main</code>, which will remove the bottom border of the heading card and reduce the amount of padding applied to the second card.</p>
+  <p>The data capture {% pathname "data_capture/templates/data_capture/step.html" %} template is set up to expect step headings to occur in their own card; however, the designs for some steps call for a single-card look. To create this look, use the <code>card--collapse-header</code> class on <code>main</code>, which will remove the bottom border of the heading card and reduce the amount of padding applied to the second card.</p>
 
   {% example %}
     <main class="card--collapse-header clearfix"><!-- clearfix just fixes a styleguide display issue -->
