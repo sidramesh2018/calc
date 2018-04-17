@@ -90,7 +90,7 @@ def process_bulk_upload_and_send_email(upload_source_id):
     try:
         num_contracts, num_bad_rows = _process_bulk_upload(upload_source)
         email.bulk_upload_succeeded(upload_source, num_contracts, num_bad_rows)
-    except:
+    except Exception:
         contracts_logger.exception(
             'An exception occurred during bulk upload processing '
             '(pk=%d).' % upload_source_id
