@@ -47,12 +47,6 @@ class PostgresVersionTests(TestCase):
 
     version = Version(settings.POSTGRES_VERSION)
 
-    def test_docs_setup_md(self):
-        with open(path('docs', 'setup.md')) as f:
-            self.assertIn(
-                f'Postgres {self.version.major}.{self.version.minor}',
-                f.read())
-
     def test_docker_compose_yml(self):
         with open(path('docker-compose.yml')) as f:
             self.assertIn(f"image: postgres:{self.version}", f.read())
@@ -79,7 +73,3 @@ class NodeVersionTests(TestCase):
             package = json.load(f)
             min_version = package['engines']['node'].split()[0]
             self.assertEqual(min_version, f'>={self.version}')
-
-    def test_docs_setup_md(self):
-        with open(path('docs', 'setup.md')) as f:
-            self.assertIn(f'Node {self.version}', f.read())
