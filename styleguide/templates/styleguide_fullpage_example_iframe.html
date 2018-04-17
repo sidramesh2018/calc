@@ -4,8 +4,8 @@
         Example
         <a href="{{ url }}" target="_blank" title="Open in new tab"></a>
     </h3>
-    <div style="height: 475px; overflow: hidden;">
-      <iframe src="{{ url }}" style="width: 132.5%; transform: scale(0.75); transform-origin: 0 0; height: 600px; border: 1px solid gray" title="styleguide example"></iframe>
+    <div class="fullpage-example-wrapper">
+      <iframe src="{{ url }}" class="fullpage-example" title="styleguide example"></iframe>
     </div>
   </div>
   <pre><code class="language-html">{% filter force_escape %}{{ html }}{% endfilter %}</pre></code>
