@@ -24,7 +24,6 @@ Welcome to CALC's developer documentation!
    testing
    frontend
    api
-   updating_data
 
 .. toctree::
    :maxdepth: 2

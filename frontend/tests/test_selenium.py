@@ -11,37 +11,47 @@ from itertools import cycle
 import re
 import time
 import os
-import socket
+import atexit
 from datetime import datetime
 
 from . import axe
 from .utils import build_static_assets
 
 
-WD_SOCKET_TIMEOUT = int(os.environ.get('WD_SOCKET_TIMEOUT', '5'))
 WD_CHROME_ARGS = filter(None, os.environ.get('WD_CHROME_ARGS', '').split())
-WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
+
+_driver = None
+
+
+def get_driver():
+    global _driver
+
+    if _driver is None:
+        options = ChromeOptions()
+        for arg in WD_CHROME_ARGS:
+            options.add_argument(arg)
+        _driver = webdriver.Chrome(chrome_options=options)
+
+    return _driver
+
+
+@atexit.register
+def teardown_driver():
+    global _driver
+
+    if _driver is not None:
+        _driver.quit()
+        _driver = None
 
 
 class SeleniumTestCase(StaticLiveServerTestCase):
-    connect = None
-    driver = None
     screenshot_filename = 'selenium_tests_screenshot.png'
     window_size = (1000, 1000)
 
     @classmethod
-    def get_driver(cls):
-        options = ChromeOptions()
-        for arg in WD_CHROME_ARGS:
-            options.add_argument(arg)
-        return webdriver.Chrome(chrome_options=options)
-
-    @classmethod
     def setUpClass(cls):
-        cls._old_socket_timeout = socket.getdefaulttimeout()
-        socket.setdefaulttimeout(WD_SOCKET_TIMEOUT)
         build_static_assets()
-        cls.driver = cls.get_driver()
+        cls.driver = get_driver()
         cls.longMessage = True
         cls.maxDiff = None
         super().setUpClass()
@@ -49,10 +59,6 @@ class SeleniumTestCase(StaticLiveServerTestCase):
     @classmethod
     def tearDownClass(cls):
         cls.take_screenshot()
-        cls.driver.quit()
-        if cls.connect:
-            cls.connect.shutdown_connect()
-        socket.setdefaulttimeout(cls._old_socket_timeout)
         super().tearDownClass()
 
     @classmethod
@@ -78,17 +84,7 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         url = self.base_url + uri
         print('loading URL: %s' % url)
 
-        attempts = 0
-
-        while True:
-            try:
-                self.driver.get(url)
-                break
-            except socket.timeout:
-                if attempts >= WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS:
-                    raise
-                print("Socket timeout, trying again.")
-                attempts += 1
+        self.driver.get(url)
 
         # self.driver.execute_script('$("body").addClass("selenium")')
         return self.driver
