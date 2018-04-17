@@ -20,7 +20,7 @@ table {
       &:nth-child(odd) {
         background: #f9f9f9;
         td.sorted {
-          background: #f0f0f0;
+          background: $color-green-lighter;
         }
       }
     }
@@ -51,11 +51,11 @@ table {
       th {
         position: relative;
         vertical-align: top;
-        color: $color-gray;
-        border-bottom: 2px solid;
-        border-top: 2px solid;
+        color: $color-primary-darker;
+        border-bottom: 2px solid $color-primary-alt;
+        border-top: 2px solid $color-primary-alt;
         &.sortable {
-          text-decoration: underline;
+          text-decoration: none;
           cursor: pointer;
           padding-right: 1.5em;
           padding-bottom: 1.3em;
@@ -76,7 +76,7 @@ table {
         }
         &.sorted {
           color: $color-black;
-          background: #f8f8f8;
+          background: $color-green-lightest;
           position: relative;
           &:after {
             content: "▲";
@@ -137,7 +137,7 @@ table {
 }
 
 td.sorted {
-  background: #fafafa;
+  background: $color-green-lightest;
 }
 
 /* used on price list upload error page */
