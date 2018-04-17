@@ -165,6 +165,12 @@ gulp.task('clean', () => {
   del([].concat(styleDirs, scriptDirs));
 });
 
+// boolean flag to indicate to webpack that it should set up its watching
+let isWatching = false;
+gulp.task('set-watching', () => {
+  isWatching = true;
+});
+
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sourcemaps.init())
@@ -175,7 +181,7 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
       .on('error', () => {
         // When running a production build, break the stream
         // if there is an error so that the build fails.
-        if (isProd) { throw new Error('Errors in SASS build.'); }
+        if (!isWatching) { throw new Error('Errors in SASS build.'); }
       }))
     .pipe(rename({ suffix: '.min' }))
     .pipe(cleancss())
@@ -186,12 +192,6 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 gulp.task('js', ['lint', 'js:vendor', 'js:webpack']);
 
 gulp.task('js:vendor', vendoredBundles);
-
-// boolean flag to indicate to webpack that it should set up its watching
-let isWatching = false;
-gulp.task('set-watching', () => {
-  isWatching = true;
-});
 
 gulp.task('js:webpack', () => {
   // NOTE: Don't return this stream, otherwise other streams will get swallowed
