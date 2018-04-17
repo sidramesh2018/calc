@@ -24,7 +24,7 @@ pipeline.
 If you just want to build the assets once without watching for changes, run:
 
 ```sh
-yarn gulp build
+docker-compose run app yarn gulp build
 ```
 
 ## Developing the front end
@@ -48,16 +48,16 @@ The data explorer's test suite uses [Jest][], and the tests are located in [fron
 To run all the tests, run:
 
 ```sh
-yarn test
+docker-compose run app yarn test
 ```
 
 You can also run the tests in a continuous "watch" mode, which re-runs tests as you change your code:
 
 ```sh
-yarn test:watch
+docker-compose run app  yarn test:watch
 ```
 
-You can run `jest` directly, too. If you're using Docker, this can be done via `docker-compose run app jest`; otherwise use `yarn test`, followed by any [Jest CLI options](https://facebook.github.io/jest/docs/cli.html).
+You can run `jest` directly, too: `docker-compose run app jest`, followed by any [Jest CLI options](https://facebook.github.io/jest/docs/cli.html).
 
 #### Analyzing bundles
 

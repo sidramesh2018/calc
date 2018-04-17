@@ -42,10 +42,6 @@ class PythonVersionTests(TestCase):
                 str(data['jobs']['build']['docker'][0]['image']),
                 f'circleci/python:{self.python_version}-browsers')
 
-    def test_docs_setup_md(self):
-        with open(path('docs', 'setup.md')) as f:
-            self.assertIn(f'Python {self.python_version}', f.read())
-
 
 class PostgresVersionTests(TestCase):
 
