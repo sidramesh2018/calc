@@ -111,7 +111,4 @@ your own needs. Run it without any arguments for help.
 the container image. This means that every time you make a source code
 change, you will need to re-run `./docker-update.sh`.
 
-[18F Docker guide]: https://pages.18f.gov/dev-environment-standardization/virtualization/docker/
-[Docker]: https://www.docker.com/
-[Docker Compose]: https://docs.docker.com/compose/
 [docker-machine-cloud]: https://docs.docker.com/machine/get-started-cloud/

@@ -71,7 +71,7 @@ you can http://localhost:8000/ to see your local CALC instance.
 For more information on interacting with CALC's dockerized development environment, see the [Docker section](docker.md) of our docs.
 
 [Django]: https://www.djangoproject.com/
-[18F Docker guide]: https://pages.18f.gov/dev-environment-standardization/virtualization/docker/
+[18F Docker guide]: https://github.com/18F/development-guide/blob/master/project_setup/docker/README.md
 [Docker]: https://www.docker.com/
 [Docker Compose]: https://docs.docker.com/compose/
 [docker-machine-cloud]: https://docs.docker.com/machine/get-started-cloud/
