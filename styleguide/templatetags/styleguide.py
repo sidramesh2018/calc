@@ -9,6 +9,8 @@ from django.utils.module_loading import import_string
 from django.utils.html import escape
 from django.utils.text import slugify
 
+from styleguide import fullpage_example as _fullpage_example
+
 
 BASE_GITHUB_URL = 'https://github.com/18F/calc'
 
@@ -233,6 +235,15 @@ def pathname(name):
         escape(github_url_for_path(name)),
         escape(name)
     ))
+
+
+@register.simple_tag(takes_context=True)
+def fullpage_example(context, name):
+    t = context.template.engine.get_template(
+        'styleguide_fullpage_example_iframe.html')
+    url = _fullpage_example.get_url(name)
+    html = _fullpage_example.get_html_source(name)
+    return t.render(template.Context({'url': url, 'html': html}))
 
 
 @register.simple_tag(takes_context=True)
