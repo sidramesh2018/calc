@@ -378,6 +378,10 @@ if not UAA_CLIENT_SECRET:
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+DEBUG_TOOLBAR_DISABLE_FOR_URL_PREFIXES = [
+    '/styleguide/fullpage-example/',
+]
+
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': set([
         'debug_toolbar.panels.redirects.RedirectsPanel',

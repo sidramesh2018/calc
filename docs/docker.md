@@ -1,34 +1,6 @@
 ## Using Docker
 
-A Docker setup potentially makes development and deployment easier.
-
-To use it, install [Docker][] and [Docker Compose][] and read the
-[18F Docker guide][] if you haven't already.
-
-Then run:
-
-```sh
-cp .env.sample .env
-ln -sf docker-compose.local.yml docker-compose.override.yml
-./docker-update.sh
-```
-
-You can optionally load some data into your dockerized database with:
-
-```sh
-docker-compose run app python manage.py load_data
-docker-compose run app python manage.py load_s70
-```
-
-Once the above commands are successful, run:
-
-```sh
-docker-compose up
-```
-
-This will start up all required servers in containers and output their
-log information to stdout. You should be able to visit http://localhost:8000/
-directly to access the site.
+For setup instructions on using Docker and Docker Compose for CALC's development environment, see our [Setup](setup.md) guide.
 
 ### Changing the exposed port
 
@@ -139,7 +111,4 @@ your own needs. Run it without any arguments for help.
 the container image. This means that every time you make a source code
 change, you will need to re-run `./docker-update.sh`.
 
-[18F Docker guide]: https://pages.18f.gov/dev-environment-standardization/virtualization/docker/
-[Docker]: https://www.docker.com/
-[Docker Compose]: https://docs.docker.com/compose/
 [docker-machine-cloud]: https://docs.docker.com/machine/get-started-cloud/

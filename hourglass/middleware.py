@@ -45,6 +45,10 @@ def show_toolbar(request):
     if request.is_ajax():
         return False
 
+    for prefix in settings.DEBUG_TOOLBAR_DISABLE_FOR_URL_PREFIXES:
+        if request.path.startswith(prefix):
+            return False
+
     return True
 
 

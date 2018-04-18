@@ -104,3 +104,16 @@ kbd {
   line-height:1.4;
   white-space:nowrap;
 }
+
+.fullpage-example-wrapper {
+  height: 475px;
+  overflow: hidden;
+}
+
+.fullpage-example {
+  width: 132.5%;
+  transform: scale(0.75);
+  transform-origin: 0 0;
+  height: 600px;
+  border: 1px solid gray;
+}

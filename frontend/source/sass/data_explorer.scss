@@ -40,7 +40,7 @@ nav li:first-child {
   position: relative;
   padding: .25em .5em;
   &.selected {
-    color: $color-white;
+    color: $color-base;
     background: $color-primary-alt;
   }
   .count {

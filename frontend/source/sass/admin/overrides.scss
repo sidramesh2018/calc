@@ -33,7 +33,7 @@ nav ul {
   font-size: $h3-font-size;
   font-weight: $font-weight-bold;
   .info {
-    color: $color-green;
+    color: $color-green-darkest;
   }
 }
 /* end messagelist styling */
@@ -69,7 +69,7 @@ form .aligned p.help {
     text-decoration: none;
 
     &:hover {
-       border-bottom: 2px solid $color-gray-medium-dark;
+       border-bottom: 2px solid $color-gray-dark;
     }
   }
 

@@ -38,6 +38,17 @@ class StyleguideTests(TestCase):
             self.assertEqual(plaintext_response.status_code, 200)
 
 
+class FullpageExampleTests(TestCase):
+    def test_returns_200_if_name_is_valid(self):
+        response = self.client.get(
+            '/styleguide/fullpage-example/content-skinny')
+        self.assertEqual(response.status_code, 200)
+
+    def test_returns_404_if_name_is_invalid(self):
+        response = self.client.get('/styleguide/fullpage-example/lololol')
+        self.assertEqual(response.status_code, 404)
+
+
 class TemplateTagsTests(SimpleTestCase):
     def render_string(self, string):
         t = engines['django'].from_string(r'{% load styleguide %}' + string)
@@ -68,3 +79,7 @@ class TemplateTagsTests(SimpleTestCase):
             self.render_string('{% template_url "styleguide.html" %}'),
             f'{GITHUB_TREE_URL}/styleguide/templates/styleguide.html'
         )
+
+    def test_fullpage_example_raises_error_if_name_is_invalid(self):
+        with self.assertRaisesRegexp(FileNotFoundError, r'blahh\.html'):
+            self.render_string('{% fullpage_example "blahh" %}')
