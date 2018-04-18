@@ -29,10 +29,10 @@ Welcome to CALC's developer documentation!
    :maxdepth: 2
    :caption: Release and deployment
 
-   monitoring
-   changelog
-   release
    deploy
+   monitoring
+   release
+   changelog
 
 .. toctree::
    :maxdepth: 2
