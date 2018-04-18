@@ -18,7 +18,7 @@ Authorization is set up as follows:
 * **Staff users** in the **Technical Support Specialists** group can view attempted price list submissions that any users have made.
 * **Superusers** can do anything, but only infrastructure/operational engineers should be given this capability.
 
-Running `manage.py initgroups` will initialize or update all permission groups.
+Running `docker-compose run app python manage.py initgroups` will initialize or update all permission groups.
 
 ### Initial user creation
 
@@ -27,7 +27,7 @@ When CALC is run for the first time, there will be no users in its database.
 An initial superuser can be created by running:
 
 ```sh
-python manage.py createsuperuser --noinput --username <USER_NAME> --email <USER_EMAIL>
+docker-compose run app python manage.py createsuperuser --noinput --username <USER_NAME> --email <USER_EMAIL>
 ```
 
 where `<USER_EMAIL>` is a valid `@gsa.gov` email address, and `<USER_NAME>` is a descriptive (but ultimately unimportant) account name (e.g., `jseppi`).
