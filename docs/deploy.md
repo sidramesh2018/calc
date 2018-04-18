@@ -35,28 +35,23 @@ only production dependencies will be installed.
 
 ### Cloud Foundry structure
 
-- cloud.gov environment: `GovCloud`
-- Organization: `fas-calc`
-- Spaces: `dev`, `staging`, `prod`
-- Apps:
-  - `dev` space:
-    - `calc-dev`
-    - `calc-rqworker`
-    - `calc-rqscheduler`
-  - `staging` space:
-    - `calc-staging`
-    - `calc-rqworker`
-    - `calc-rqscheduler`
-  - `prod` space:
-    - `calc-prod`
-    - `calc-rqworker`
-    - `calc-rqscheduler`
-    - `calc-maintenance`
-- Routes:
-  - calc-dev.app.cloud.gov -> `dev` space, `calc-dev` app
-  - calc-staging.app.cloud.gov -> `staging` space, `calc-staging` app
-  - calc-prod.app.cloud.gov -> `prod` space, `calc-prod` app
-  - calc.gsa.gov -> `prod` space, `calc-prod` app
+* cloud.gov environment: `GovCloud`
+* Organization: `fas-calc`
+* Spaces: `dev`, `staging`, `prod`
+* Apps:
+  * `dev` space:
+    * `calc-dev`
+    * `calc-rqworker`
+    * `calc-rqscheduler`
+  * `prod` space:
+    * `calc-prod`
+    * `calc-rqworker`
+    * `calc-rqscheduler`
+    * `calc-maintenance`
+* Routes:
+  * calc-dev.app.cloud.gov -> `dev` space, `calc-dev` app
+  * calc-prod.app.cloud.gov -> `prod` space, `calc-prod` app
+  * calc.gsa.gov -> `prod` space, `calc-prod` app
     or the maintenance page app, `calc-maintenance`
 
 ### Services
