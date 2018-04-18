@@ -57,7 +57,7 @@ class Region10SpreadsheetConverter():
         '''
         try:
             self.get_heading_indices_map(raises=True)
-        except:
+        except Exception:
             return False
 
         return True

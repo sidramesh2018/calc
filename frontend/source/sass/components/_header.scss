@@ -61,7 +61,7 @@ header {
 
 .hero-callout {
   border-left: 4px solid $color-gray;
-  padding-left: $space-3x;
+  padding: 0 $space-3x;
 
   p {
     font-size: $medium-font-size;
@@ -89,6 +89,7 @@ header {
   font-size: $display-font-size;
   margin-top: 0;
   margin-bottom: .3em;
+  padding-right: 1em;
 }
 
 .description-secondary {
@@ -171,7 +172,7 @@ nav {
     margin-bottom: 0;
 
     li {
-      font-size: 1.5rem;
+      font-size: $base-font-size;
       list-style: none;
       display: inline-block;
       margin: 0 $space-2x;
