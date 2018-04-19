@@ -1,7 +1,7 @@
 @import '../base/variables';
 
 footer {
-  background: #cddc86; //add a variable for this
+  background: $color-green-light;
   background-image: url(../../images/background-footer.svg);
   background-size: 100%;
   background-repeat: no-repeat;
