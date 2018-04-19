@@ -88,6 +88,7 @@
     "npm": ">=3.10.0"
   },
   "jest": {
+    "roots": ["frontend"],
     "collectCoverage": true,
     "coverageReporters": [
       "lcov",
