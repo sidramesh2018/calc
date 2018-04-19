@@ -1,6 +1,7 @@
 // @ts-check
 /* global document */
 
+
 /**
  * Determines if `targetEl` is a descendant of the given `parentEl`.
  *
@@ -20,34 +21,40 @@ function isDescendantOf(parentEl, targetEl) {
   return result;
 }
 
+/**
+ * Sets the menu to an open or closed state based on `isOpen`.
+ *
+ * @param {Boolean} isOpen
+ */
+const toggleMenu = (isOpen) => {
+  const menu = document.querySelector('#usermenu');
+  const trigger = document.querySelector('#usermenu .usermenu-trigger');
+  const openLabel = 'Show user menu';
+  const closeLabel = 'Close user menu';
+
+  if (!menu || !trigger) { return; }
+
+  if (isOpen) {
+    menu.classList.add('is-open');
+  } else {
+    menu.classList.remove('is-open');
+  }
+
+  trigger.setAttribute('aria-expanded', isOpen.toString());
+  trigger.setAttribute('aria-label', isOpen ? closeLabel : openLabel);
+};
+
 function enableUsermenu() {
   const menu = document.querySelector('#usermenu');
   const trigger = document.querySelector('#usermenu .usermenu-trigger');
   const body = document.body;
-  const openLabel = 'Show user menu';
-  const closeLabel = 'Close user menu';
 
-  if (!menu || !trigger) {
-    return;
-  }
+  if (!menu || !trigger) { return; }
 
   trigger.setAttribute('aria-haspopup', true.toString());
-  trigger.setAttribute('aria-expanded', false.toString());
-  trigger.setAttribute('aria-label', openLabel);
 
-  /**
-   * @param {Boolean} isOpen
-   */
-  const toggleMenu = (isOpen) => {
-    if (isOpen) {
-      menu.classList.add('is-open');
-    } else {
-      menu.classList.remove('is-open');
-    }
-
-    trigger.setAttribute('aria-expanded', isOpen.toString());
-    trigger.setAttribute('aria-label', isOpen ? closeLabel : openLabel);
-  };
+  // start with the menu in the closed state
+  toggleMenu(false);
 
   trigger.addEventListener('click', (e) => {
     e.preventDefault();
