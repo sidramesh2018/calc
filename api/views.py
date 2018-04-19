@@ -17,6 +17,16 @@ from api.utils import get_histogram
 from contracts.models import Contract, EDUCATION_CHOICES
 
 
+DOCS_DESCRIPTION = dedent("""
+CALC's back-end exposes a public API for its labor rates data.
+This API is used by CALC's front-end Data Explorer application,
+and can also be accessed by any third-party application over
+the public internet.
+
+For more developer documentation on CALC, please visit
+[/docs/](/docs/).
+""")
+
 SIMPLE_QUERYARG_TYPE_MAP = {
     int: coreschema.Integer,
     str: coreschema.String,

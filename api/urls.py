@@ -9,9 +9,6 @@ urlpatterns = [
     url(r'^search/$', views.GetAutocomplete.as_view()),
     url(r'^docs/', include_docs_urls(
         title='CALC API',
-        description=(
-            "For more developer documentation on CALC, please "
-            "visit [/docs/](/docs/)."
-        ),
+        description=views.DOCS_DESCRIPTION,
     )),
 ]
