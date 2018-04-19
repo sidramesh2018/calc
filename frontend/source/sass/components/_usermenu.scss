@@ -73,7 +73,6 @@ $usermenu-width: 150px;
 
 a.usermenu-trigger {
   color: $color-primary-alt;
-  text-decoration: none;
 
   .icon-triangle {
     margin-left: 4px;
@@ -81,10 +80,6 @@ a.usermenu-trigger {
   }
 
   &:hover {
-    color: $color-white;
-
-    .icon-triangle {
-      fill: $color-white;
-    }
+    text-decoration: none;
   }
 }
