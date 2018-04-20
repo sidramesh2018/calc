@@ -1,24 +1,45 @@
 import re
 import datetime
 import pathlib
+from typing import Match
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 import markdown
 
 
-PATH = pathlib.Path(__file__).resolve().parent.parent / 'CHANGELOG.md'
+CHANGELOG = 'CHANGELOG.md'
+
+PATH = pathlib.Path(__file__).resolve().parent.parent / CHANGELOG
 
 ENCODING = 'utf-8'
 
-RELEASE_HEADER_RE = re.compile(
-    r'^## \[?([0-9.]+)[ \]]?',
-    re.MULTILINE
-    )
 
-UNRELEASED_LINK_RE = re.compile(
+class FriendlyRegex:
+    '''
+    Like a regular expression, but raises a friendly error on
+    failure.
+    '''
+
+    def __init__(self, name: str, pattern: str) -> None:
+        self.name = name
+        self.regex = re.compile(pattern, re.MULTILINE)
+
+    def search(self, contents: str, filename=CHANGELOG) -> Match:
+        match = self.regex.search(contents)
+        if match is None:
+            raise ValueError(f"{self.name} not found in {filename}!")
+        return match
+
+
+RELEASE_HEADER_RE = FriendlyRegex(
+    'Release header line (e.g. "## 1.2.3 - 2017-01-01")',
+    r'^## \[?([0-9.]+)[ \]]?'
+)
+
+UNRELEASED_LINK_RE = FriendlyRegex(
+    'Unreleased link (e.g. "[unreleased]: http://compare/v1.0.0...HEAD")',
     r'^\[unreleased\]: (.+\.\.\.HEAD)$',
-    re.MULTILINE
-    )
+)
 
 UNRELEASED_HEADER = '## [Unreleased][unreleased]'
 

@@ -98,11 +98,11 @@ class CurrentContractManager(models.Manager):
                 values = []
                 for i in range(num_updates):
                     values.append(r'(%s, %s)')
-                values = ", ".join(values)
+                values_str = ", ".join(values)
                 sql = (  # nosec
                     "UPDATE contracts_contract "
                     "  SET _normalized_labor_category = v.nlc"
-                    "  FROM (VALUES" + values + ") AS v (id, nlc)"
+                    "  FROM (VALUES" + values_str + ") AS v (id, nlc)"
                     "  WHERE contracts_contract.id = v.id"
                 )
                 cursor.execute(sql, updates)
