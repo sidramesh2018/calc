@@ -41,7 +41,7 @@ class StyleguideTests(TestCase):
 class FullpageExampleTests(TestCase):
     def test_returns_200_if_name_is_valid(self):
         response = self.client.get(
-            '/styleguide/fullpage-example/content-skinny')
+            '/styleguide/fullpage-example/card-skinny')
         self.assertEqual(response.status_code, 200)
 
     def test_returns_404_if_name_is_invalid(self):
