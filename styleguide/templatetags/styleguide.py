@@ -244,7 +244,11 @@ def fullpage_example(context, name):
     url = _fullpage_example.get_url(name)
     title = f"Example for {name}"
     html = _fullpage_example.get_html_source(name)
-    return t.render(template.Context({'url': url, 'html': html, 'title': title}))
+    return t.render(template.Context({
+        'url': url,
+        'html': html,
+        'title': title
+    }))
 
 
 @register.simple_tag(takes_context=True)
