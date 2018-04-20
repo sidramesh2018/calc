@@ -1,6 +1,14 @@
+from typing import List, Dict, Any, Tuple
+
 from django.conf import settings
 from django.forms import ValidationError
 from django.utils.module_loading import import_string
+
+from data_capture.schedules.base import BasePriceList
+
+
+CHOICES: List[Tuple[str, str]] = []
+CLASSES: Dict[str, BasePriceList] = {}
 
 
 def _classname(cls):
@@ -55,7 +63,7 @@ def smart_load_from_upload(classname, f):
     '''
 
     original_error = None
-    pricelist = None
+    pricelist: Any = None
 
     try:
         pricelist = load_from_upload(classname, f)
@@ -79,7 +87,8 @@ def smart_load_from_upload(classname, f):
                 pass
 
     if pricelist is None:
-        raise original_error
+        default_error = ValidationError('Unrecognized price list!')
+        raise original_error or default_error
 
     return pricelist
 
