@@ -14,6 +14,8 @@ def parse_pg_version(pg_version):
     # pg_version should be an integer that looks like 90410
     # returns a semantic_version.Version
     result = re.match(r'(\d)(\d\d)(\d\d)', str(pg_version))
+    if result is None:
+        raise ValueError(f"invalid postgres version: {pg_version}")
     return Version(f"{result[1]}.{int(result[2])}.{int(result[3])}")
 
 
