@@ -2,8 +2,9 @@
 
 @keyframes step-fade-in {
   to {
-    background-color: $color-primary;
-    color: $color-white;
+    background-color: $color-green-light;
+    border-color: $color-green-light;
+    color: $color-base;
   }
 }
 
@@ -14,7 +15,7 @@
     animation-name: step-fade-in;
     animation-fill-mode: forwards;
     background-color: $color-white;
-    color: $color-primary;
+    color: $color-gray-dark;
   }
 }
 
@@ -24,7 +25,7 @@
     margin-top: 0.2rem;
     font-size: 1.4rem;
     line-height: 1.2;
-    color: $color-primary;
+    color: $color-gray-dark;
     font-weight: $font-weight-bold;
   }
 }
@@ -46,7 +47,7 @@ ol.steps {
 
   li {
     list-style: none;
-    border-top: 2px solid $color-primary;
+    border-top: 2px solid $color-gray-lighter;
     padding-top: 14px;
     position: relative;
     float: left;
@@ -61,10 +62,10 @@ ol.steps {
       position: absolute;
       top: -12px;
       left: 0px;
-      background-color: $color-primary;
-      color: $color-white;
+      background-color: $color-gray-lighter;
+      color: $color-gray-dark;
       border-radius: 30px;
-      border: 2px solid $color-primary;
+      border: 2px solid $color-gray-lighter;
       text-align: center;
       font-size: 80%;
       font-weight: 700;
@@ -72,7 +73,7 @@ ol.steps {
 
     &.current ~ li::before {
       background-color: $color-white;
-      color: $color-primary;
+      color: $color-gray-dark;
     }
 
     &:last-child {
