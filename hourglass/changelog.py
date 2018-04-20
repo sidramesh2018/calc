@@ -2,6 +2,7 @@ import re
 import datetime
 import pathlib
 from typing import Match
+from django.conf import settings
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 import markdown
@@ -44,7 +45,7 @@ UNRELEASED_LINK_RE = FriendlyRegex(
 UNRELEASED_HEADER = '## [Unreleased][unreleased]'
 
 GH_ISSUE_RE = re.compile(r'(?P<issue_link>#(?P<issue_id>\d+))')
-GH_ISSUE_LINK = 'https://github.com/18F/calc/issues/'
+GH_ISSUE_LINK = f'{settings.BASE_GITHUB_URL}/issues/'
 
 
 def django_view(request):

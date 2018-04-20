@@ -1,16 +1,17 @@
 import datetime
 from textwrap import dedent
 from unittest import TestCase
-from semantic_version import Version
-from django.test import TestCase as DjangoTestCase
+
 import markdown
+
+from django.test import TestCase as DjangoTestCase
+from django.conf import settings
+from semantic_version import Version
 from bs4 import BeautifulSoup
 
 from ..version import __version__
 from .. import changelog
 
-
-repo_url = 'https://github.com/18F/calc'
 
 changetext = changelog.get_contents()
 
@@ -113,7 +114,7 @@ class DjangoViewTests(DjangoTestCase):
 
     def test_it_has_linked_gh_issues(self):
         res = self.client.get('/updates/')
-        self.assertContains(res, f'{repo_url}/issues/1640')
+        self.assertContains(res, f'{settings.BASE_GITHUB_URL}/issues/1640')
 
 
 class ChangelogMdTests(TestCase):
@@ -125,7 +126,7 @@ class ChangelogMdTests(TestCase):
         self.assertIn(changelog.UNRELEASED_HEADER, changetext)
         self.assertEqual(
             changelog.get_unreleased_link(changetext),
-            repo_url + '/compare/v%s...HEAD' % __version__
+            f'{settings.BASE_GITHUB_URL}/compare/v{__version__}...HEAD'
             )
 
     def test_latest_changelog_version_is_current_version(self):
@@ -153,7 +154,8 @@ class ChangelogMdTests(TestCase):
                 self.assertLessEqual(parsedate(last_date), parsedate(date))
                 self.assertEqual(
                     h.find('a').get('href'),
-                    repo_url + '/compare/v%s...v%s' % (last_version, version)
-                    )
+                    f'{settings.BASE_GITHUB_URL}/compare/'
+                    f'v{last_version}...v{version}'
+                )
             last_version = version
             last_date = date
