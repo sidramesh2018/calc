@@ -22,9 +22,13 @@ UNRELEASED_LINK_RE = re.compile(
 
 UNRELEASED_HEADER = '## [Unreleased][unreleased]'
 
+GH_ISSUE_RE = re.compile(r'(?P<issue_link>#(?P<issue_id>\d+))')
+GH_ISSUE_LINK = 'https://github.com/18F/calc/issues/'
+
 
 def django_view(request):
     contents = strip_preamble(get_contents())
+    contents = link_github_issues(contents)
     html = mark_safe(markdown.markdown(contents))  # nosec
     return render(request, 'changelog.html', dict(html=html))
 
@@ -36,6 +40,24 @@ def get_contents():
 
     with PATH.open('r', encoding=ENCODING) as f:
         return f.read()
+
+
+def link_github_issues(contents):
+    '''
+    Replaces all matches of GitHub-like issue/PR numbers (starting with '#')
+    with Markdown links to issues/PRs in CALC's GitHub repository.
+
+    Examples:
+
+    >>> link_github_issues('abcdef #123 hijklm')
+    'abcdef [#123](https://github.com/18F/calc/issues/123) hijklm'
+
+    >>> link_github_issues('abc #12 hij #34') # doctest: +NORMALIZE_WHITESPACE
+    'abc [#12](https://github.com/18F/calc/issues/12)
+     hij [#34](https://github.com/18F/calc/issues/34)'
+    '''
+    return GH_ISSUE_RE.sub(
+        f'[\g<issue_link>]({GH_ISSUE_LINK}\g<issue_id>)', contents)
 
 
 def get_unreleased_link(contents):

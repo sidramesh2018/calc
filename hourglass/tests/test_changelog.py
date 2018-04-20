@@ -111,6 +111,10 @@ class DjangoViewTests(DjangoTestCase):
         self.assertContains(res, 'Updates')
         self.assertEqual(res.status_code, 200)
 
+    def test_it_has_linked_gh_issues(self):
+        res = self.client.get('/updates/')
+        self.assertContains(res, f'{repo_url}/issues/1640')
+
 
 class ChangelogMdTests(TestCase):
     '''
