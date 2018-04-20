@@ -23,7 +23,7 @@ Welcome to CALC's developer documentation!
    Style guide <https://calc-dev.app.cloud.gov/styleguide/>
    testing
    frontend
-   api
+   API <https://calc-dev.app.cloud.gov/api/docs/>
 
 .. toctree::
    :maxdepth: 2

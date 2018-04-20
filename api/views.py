@@ -1,9 +1,11 @@
 import csv
+from decimal import Decimal
+from textwrap import dedent
 
 from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Count, Q, StdDev
-from decimal import Decimal
-
+from django.utils.safestring import SafeString
+from markdown import markdown
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.schemas import AutoSchema
@@ -14,6 +16,16 @@ from api.serializers import ContractSerializer
 from api.utils import get_histogram
 from contracts.models import Contract, EDUCATION_CHOICES
 
+
+DOCS_DESCRIPTION = dedent("""
+CALC's back-end exposes a public API for its labor rates data.
+This API is used by CALC's front-end Data Explorer application,
+and can also be accessed by any third-party application over
+the public internet.
+
+For more developer documentation on CALC, please visit
+[/docs/](/docs/).
+""")
 
 SIMPLE_QUERYARG_TYPE_MAP = {
     int: coreschema.Integer,
@@ -27,11 +39,13 @@ def queryarg(name, _type, description):
     less verbose syntax.
     '''
 
+    html_desc = SafeString(markdown(dedent(description)))
+
     return coreapi.Field(
         name,
         location="query",
         schema=SIMPLE_QUERYARG_TYPE_MAP[_type](
-            description=description,
+            description=html_desc,
         )
     )
 
@@ -61,36 +75,112 @@ Q_QUERYARG = queryarg("q", str, "Keywords to search by.")
 
 GET_CONTRACTS_QUERYARGS = [
     Q_QUERYARG,
-    queryarg("experience_range", str,
-             "Filter by a range of years of experience."),
-    queryarg("min_experience", int,
-             "Filter by minimum years of experience."),
-    queryarg("max_experience", int,
-             "Filter by maximum years of experience."),
+    queryarg(
+        "experience_range",
+        str,
+        """
+        Filter by a range of years of experience, e.g. `5-10`.
+        This is a convenient alternative to separately
+        specifying `min_experience` and `max_experience`.
+        """
+    ),
+    queryarg(
+        "min_experience",
+        int,
+        "Filter by minimum years of experience."
+    ),
+    queryarg(
+        "max_experience",
+        int,
+        "Filter by maximum years of experience."
+    ),
     queryarg(
         "min_education",
         str,
-        "Filter by a minimum level of education: " + ', '.join([
-            f"{code} = {desc}"
+        "Filter by a minimum level of education:\n\n" + '\n'.join([
+            f"* `{code}` = {desc}"
             for code, desc in EDUCATION_CHOICES
         ])
     ),
-    queryarg("schedule", str, "Filter by GSA schedule."),
-    queryarg("site", str, "Filter by worksite."),
-    queryarg("business_size", str,
-             "Filter by 's'(mall) or 'o'(ther)."),
-    queryarg("price", int, "Filter by exact price."),
-    queryarg("price__gte", int,
-             "Price must be greater than or equal to this integer."),
-    queryarg("price__lte", int,
-             "Price must be less than or equal to this integer."),
-    queryarg("sort", str,
-             "The column to sort on. Defaults to wage_field."),
+    queryarg(
+        "schedule",
+        str,
+        """
+        Filter by GSA schedule. One of the following will
+        return results:
+
+        * Environmental
+        * AIMS
+        * Logistics
+        * Language Services
+        * PES
+        * MOBIS
+        * Consolidated
+        * IT Schedule 70
+        """,
+    ),
+    queryarg(
+        "sin",
+        str,
+        """
+        Filter by SIN number. Examples include:
+
+        * 899 - Environmental
+        * 541 - AIMS
+        * 87405 - Logistics
+        * 73802 - Language Services
+        * 871 - PES
+        * 874 - MOBIS
+        * 132 - IT Schedule 70
+
+        Note that due to the current state of data, not all
+        results may be returned.  For more details, see
+        [#1033](https://github.com/18F/calc/issues/1033).
+        """,
+    ),
+    queryarg(
+        "site",
+        str,
+        """
+        Filter by worksite. Can be `customer`, `contractor`,
+        or `both`.
+        """
+    ),
+    queryarg(
+        "business_size",
+        str,
+        """
+        Filter by business size: `s` for small business, or
+        `o` for other than small business.
+        """
+    ),
+    queryarg(
+        "price",
+        int,
+        "Filter by exact price."
+    ),
+    queryarg(
+        "price__gte",
+        int,
+        "Price must be greater than or equal to this integer."
+    ),
+    queryarg(
+        "price__lte",
+        int,
+        "Price must be less than or equal to this integer."
+    ),
+    queryarg(
+        "sort",
+        str,
+        "The column to sort on. Defaults to `wage_field`."
+    ),
     queryarg(
         "query_type",
         str,
-        "Defines how the user's keyword search should work. "
-        "Can be match_all (default), match_phrase, or match_exact."
+        """
+        Defines how the user's keyword search should work.
+        Can be `match_all` (default), `match_phrase`, or `match_exact`.
+        """
     ),
     queryarg(
         "exclude",
@@ -225,14 +315,18 @@ class GetRates(APIView):
             queryarg(
                 "contract-year",
                 int,
-                "Return price for the given contract year (1 or 2). "
-                "Defaults to the current year pricing."
+                """
+                Return price for the given contract year (1 or 2).
+                Defaults to the current year pricing.
+                """
             ),
             queryarg(
                 "histogram",
                 int,
-                "Number of bins to divide a wage histogram into. "
-                "If not provided, no histogram data will be returned."
+                """
+                Number of bins to divide a wage histogram into.
+                If not provided, no histogram data will be returned.
+                """
             ),
         ] + GET_CONTRACTS_QUERYARGS
     )
@@ -353,8 +447,10 @@ class GetAutocomplete(APIView):
             queryarg(
                 "query_type",
                 str,
-                "Defines how the search query should work. "
-                "Can be match_all (default) or match_phrase."
+                """
+                Defines how the search query should work.
+                Can be `match_all` (default) or `match_phrase`.
+                """
             )
         ]
     )
