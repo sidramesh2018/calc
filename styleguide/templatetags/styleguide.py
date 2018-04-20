@@ -241,8 +241,13 @@ def fullpage_example(context, name):
     t = context.template.engine.get_template(
         'styleguide_fullpage_example_iframe.html')
     url = _fullpage_example.get_url(name)
+    title = f"Example for {name}"
     html = _fullpage_example.get_html_source(name)
-    return t.render(template.Context({'url': url, 'html': html}))
+    return t.render(template.Context({
+        'url': url,
+        'html': html,
+        'title': title
+    }))
 
 
 @register.simple_tag(takes_context=True)
