@@ -4,6 +4,7 @@ from textwrap import dedent
 from inspect import getsourcefile
 
 from django import template
+from django.conf import settings
 from django.utils.safestring import SafeString
 from django.utils.module_loading import import_string
 from django.utils.html import escape
@@ -11,8 +12,6 @@ from django.utils.text import slugify
 
 from styleguide import fullpage_example as _fullpage_example
 
-
-BASE_GITHUB_URL = 'https://github.com/18F/calc'
 
 DEFAULT_GITHUB_BRANCH = 'develop'
 
@@ -68,7 +67,7 @@ def github_url_for_path(path):
     '''
 
     return '{}/tree/{}/{}'.format(
-        BASE_GITHUB_URL,
+        settings.BASE_GITHUB_URL,
         DEFAULT_GITHUB_BRANCH,
         path
     )
