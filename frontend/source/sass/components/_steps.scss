@@ -1,23 +1,26 @@
 @import '../base/variables';
 
-@keyframes step-fade-in {
-  to {
+/* Something about the animation interferes with hover state. Needs research. */
+//@keyframes step-fade-in {
+  //to {
+    //background-color: $color-green-light;
+    //border-color: $color-green-light;
+    //color: $color-base;
+  //}
+//}
+
+//@supports ((animation-name: test) and (animation-fill-mode: forwards)) {
+  ol.steps li + li.current::before {
+    //animation-duration: 1s;
+    //animation-delay: 0.25s;
+    //animation-name: step-fade-in;
+    //animation-fill-mode: forwards;
     background-color: $color-green-light;
     border-color: $color-green-light;
     color: $color-base;
+    content: counter(li);
   }
-}
-
-@supports ((animation-name: test) and (animation-fill-mode: forwards)) {
-  ol.steps li + li.current::before {
-    animation-duration: 1s;
-    animation-delay: 0.25s;
-    animation-name: step-fade-in;
-    animation-fill-mode: forwards;
-    background-color: $color-white;
-    color: $color-gray-dark;
-  }
-}
+//}
 
 .step-bar {
   label {
@@ -31,7 +34,6 @@
 }
 
 ol.steps {
-  /*max-width: 200px;*/
   counter-reset: li;
   font-weight: 300;
   padding: 0;
@@ -53,9 +55,9 @@ ol.steps {
     float: left;
     width: 46px; // width of :before psuedoclass + $space-3x (22px + 24px)
 
-    &:before {
-      content: counter(li);
-      counter-increment: li;
+    &::before {
+      content: '*';
+      counter-increment: li; // This must be here, otherwise incrementing will start with .current step
       width: 2.2rem;
       height: 2.2rem;
       padding: 0;
@@ -71,9 +73,17 @@ ol.steps {
       font-weight: 700;
     }
 
+    &:hover::before,
+    &.current:hover::before {
+      background-color: $color-white;
+      border-color: $color-gray-lighter;
+      content: counter(li);
+    }
+
     &.current ~ li::before {
       background-color: $color-white;
       color: $color-gray-dark;
+      content: counter(li);
     }
 
     &:last-child {
