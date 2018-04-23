@@ -10,7 +10,7 @@
 //}
 
 //@supports ((animation-name: test) and (animation-fill-mode: forwards)) {
-  ol.steps li + li.current::before {
+  ol.steps li + li.current a {
     //animation-duration: 1s;
     //animation-delay: 0.25s;
     //animation-name: step-fade-in;
@@ -18,7 +18,9 @@
     background-color: $color-green-light;
     border-color: $color-green-light;
     color: $color-base;
-    content: counter(li);
+    &::before {
+      content: counter(li);
+    }
   }
 //}
 
@@ -55,11 +57,10 @@ ol.steps {
     float: left;
     width: 46px; // width of :before psuedoclass + $space-3x (22px + 24px)
 
-    &::before {
-      content: '*';
-      counter-increment: li; // This must be here, otherwise incrementing will start with .current step
+    a {
       width: 2.2rem;
       height: 2.2rem;
+      display: inline-block;
       padding: 0;
       position: absolute;
       top: -12px;
@@ -71,19 +72,29 @@ ol.steps {
       text-align: center;
       font-size: 80%;
       font-weight: 700;
+      text-decoration: none;
+
+      &::before {
+        content: '*';
+        counter-increment: li; // This must be here, otherwise incrementing will start with .current step
+      }
     }
 
-    &:hover::before,
-    &.current:hover::before {
+    a:hover,
+    &.current a:hover {
       background-color: $color-white;
       border-color: $color-gray-lighter;
-      content: counter(li);
+      &::before {
+        content: counter(li);
+      }
     }
 
-    &.current ~ li::before {
+    &.current ~ li a {
       background-color: $color-white;
       color: $color-gray-dark;
-      content: counter(li);
+      &::before {
+        content: counter(li);
+      }
     }
 
     &:last-child {
