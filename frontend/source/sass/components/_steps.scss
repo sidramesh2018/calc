@@ -26,12 +26,16 @@
 
 .step-bar {
   label {
+    display: none;
     font-weight: 100;
     margin-top: 0.2rem;
     font-size: 1.4rem;
     line-height: 1.2;
     color: $color-gray-dark;
     font-weight: $font-weight-bold;
+    &.current {
+      display: block;
+    }
   }
 }
 
@@ -75,8 +79,9 @@ ol.steps {
       text-decoration: none;
 
       &::before {
-        content: '*';
-        counter-increment: li; // This must be here, otherwise incrementing will start with .current step
+        content: url('../../images/icon-checkmark.svg');
+        // This must be here, otherwise incrementing will start with .current step
+        counter-increment: li;
       }
     }
 
@@ -84,6 +89,7 @@ ol.steps {
     &.current a:hover {
       background-color: $color-white;
       border-color: $color-gray-lighter;
+      color: $color-gray-dark;
       &::before {
         content: counter(li);
       }
