@@ -106,6 +106,7 @@ TEMPLATES = [{
 
 ALLOWED_HOSTS = ['*']
 
+BASE_GITHUB_URL = 'https://github.com/18F/calc'
 
 DATA_CAPTURE_APP_CONFIG = 'DefaultDataCaptureApp'
 
