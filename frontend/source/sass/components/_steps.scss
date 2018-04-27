@@ -10,7 +10,7 @@
 //}
 
 //@supports ((animation-name: test) and (animation-fill-mode: forwards)) {
-  ol.step-bar_bubbles li + li.current a {
+  ol.step-bar__bubbles li + li.current a {
     //animation-duration: 1s;
     //animation-delay: 0.25s;
     //animation-name: step-fade-in;
@@ -24,7 +24,7 @@
   }
 //}
 
-ol.step-bar_labels {
+ol.step-bar__labels {
   padding: 0;
   list-style-type: none;
   list-style-position: inside;
@@ -36,13 +36,13 @@ ol.step-bar_labels {
     line-height: 1.2;
     color: $color-gray-dark;
     font-weight: $font-weight-bold;
-    &.current {
+    &.js-show {
       display: block;
     }
   }
 }
 
-ol.step-bar_bubbles {
+ol.step-bar__bubbles {
   counter-reset: li;
   font-weight: 300;
   padding: 0;

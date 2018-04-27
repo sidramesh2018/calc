@@ -2,16 +2,16 @@
   <label class="sr-only">
       Step {{ current_step.number }} of {{ steps|length }}: {{ current_step.label }}
   </label>
-  <ol class="step-bar_labels" aria-hidden="true">
+  <ol class="step-bar__labels" aria-hidden="true">
   {% for step in steps %}
-    <li{% if step.current %} class="current"{% endif %}>
+    <li{% if step.current %} class="current js-show"{% endif %}>
       <label>
           {{ step.label }}
       </label>
     </li>
   {% endfor %}
   </ol>
-  <ol class="step-bar_bubbles" aria-hidden="true">
+  <ol class="step-bar__bubbles" aria-hidden="true">
     {% for step in steps %}
       <li{% if step.current %} class="current"{% endif %}>
         <a href="whatever-the-step-thing-is" title="{{ step.label }}"></a>
