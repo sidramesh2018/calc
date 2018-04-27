@@ -16,6 +16,14 @@ from ..settings_utils import (load_cups_from_vcap_services,
                               is_running_tests)
 
 
+class ApiTemplateTests(DjangoTestCase):
+    def test_drf_template_works(self):
+        res = self.client.get('/api/rates/', HTTP_ACCEPT='text/html')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
+        self.assertContains(res, 'CALC API')
+
+
 class ComplianceTests(DjangoTestCase):
     '''
     These tests ensure our site is configured with proper regulatory

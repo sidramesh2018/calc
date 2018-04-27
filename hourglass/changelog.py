@@ -1,30 +1,56 @@
 import re
 import datetime
 import pathlib
+from typing import Match
+from django.conf import settings
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 import markdown
 
 
-PATH = pathlib.Path(__file__).resolve().parent.parent / 'CHANGELOG.md'
+CHANGELOG = 'CHANGELOG.md'
+
+PATH = pathlib.Path(__file__).resolve().parent.parent / CHANGELOG
 
 ENCODING = 'utf-8'
 
-RELEASE_HEADER_RE = re.compile(
-    r'^## \[?([0-9.]+)[ \]]?',
-    re.MULTILINE
-    )
 
-UNRELEASED_LINK_RE = re.compile(
+class FriendlyRegex:
+    '''
+    Like a regular expression, but raises a friendly error on
+    failure.
+    '''
+
+    def __init__(self, name: str, pattern: str) -> None:
+        self.name = name
+        self.regex = re.compile(pattern, re.MULTILINE)
+
+    def search(self, contents: str, filename=CHANGELOG) -> Match:
+        match = self.regex.search(contents)
+        if match is None:
+            raise ValueError(f"{self.name} not found in {filename}!")
+        return match
+
+
+RELEASE_HEADER_RE = FriendlyRegex(
+    'Release header line (e.g. "## 1.2.3 - 2017-01-01")',
+    r'^## \[?([0-9.]+)[ \]]?'
+)
+
+UNRELEASED_LINK_RE = FriendlyRegex(
+    'Unreleased link (e.g. "[unreleased]: http://compare/v1.0.0...HEAD")',
     r'^\[unreleased\]: (.+\.\.\.HEAD)$',
-    re.MULTILINE
-    )
+)
 
 UNRELEASED_HEADER = '## [Unreleased][unreleased]'
+
+GH_ISSUE_RE = re.compile(r'(?P<issue_link>#(?P<issue_id>\d+))')
+GH_ISSUE_LINK = f'{settings.BASE_GITHUB_URL}/issues/'
 
 
 def django_view(request):
     contents = strip_preamble(get_contents())
+    contents = link_github_issues(contents)
     html = mark_safe(markdown.markdown(contents))  # nosec
     return render(request, 'changelog.html', dict(html=html))
 
@@ -36,6 +62,24 @@ def get_contents():
 
     with PATH.open('r', encoding=ENCODING) as f:
         return f.read()
+
+
+def link_github_issues(contents):
+    '''
+    Replaces all matches of GitHub-like issue/PR numbers (starting with '#')
+    with Markdown links to issues/PRs in CALC's GitHub repository.
+
+    Examples:
+
+    >>> link_github_issues('abcdef #123 hijklm')
+    'abcdef [#123](https://github.com/18F/calc/issues/123) hijklm'
+
+    >>> link_github_issues('abc #12 hij #34') # doctest: +NORMALIZE_WHITESPACE
+    'abc [#12](https://github.com/18F/calc/issues/12)
+     hij [#34](https://github.com/18F/calc/issues/34)'
+    '''
+    return GH_ISSUE_RE.sub(
+        f'[\g<issue_link>]({GH_ISSUE_LINK}\g<issue_id>)', contents)
 
 
 def get_unreleased_link(contents):
