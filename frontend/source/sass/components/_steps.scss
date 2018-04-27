@@ -10,7 +10,7 @@
 //}
 
 //@supports ((animation-name: test) and (animation-fill-mode: forwards)) {
-  ol.steps li + li.current a {
+  ol.step-bar_bubbles li + li.current a {
     //animation-duration: 1s;
     //animation-delay: 0.25s;
     //animation-name: step-fade-in;
@@ -24,8 +24,11 @@
   }
 //}
 
-.step-bar {
-  label {
+ol.step-bar_labels {
+  padding: 0;
+  list-style-type: none;
+  list-style-position: inside;
+  li {
     display: none;
     font-weight: 100;
     margin-top: 0.2rem;
@@ -39,7 +42,7 @@
   }
 }
 
-ol.steps {
+ol.step-bar_bubbles {
   counter-reset: li;
   font-weight: 300;
   padding: 0;
