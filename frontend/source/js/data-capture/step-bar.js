@@ -8,7 +8,7 @@ $(document).ready(() => {
   const currentStep = document.querySelector('.step-bar__labels .current');
 
   const hidePrevLabel = () => {
-    let prevLabel = document.querySelector('.step-bar__labels .js-show');
+    const prevLabel = document.querySelector('.step-bar__labels .js-show');
     prevLabel.classList.remove('js-show');
   };
 
@@ -17,14 +17,14 @@ $(document).ready(() => {
     selectedLabel.classList.add('js-show');
   };
 
-  for (let i = 0; i < steps.length; i++){
-    //find the step label with the same index and show it; hide all others
+  for (let i = 0; i < steps.length; i++) {
+    // find the step label with the same index as the hovered-over step bubble
     steps[i].addEventListener('mouseenter', () => {
       if (!stepLabels[i].classList.contains('js-show')) {
         showLabel(stepLabels[i]);
       }
     });
-    //set the label back to that of the current step
+    // set the label back to that of the current step
     steps[i].addEventListener('mouseleave', () => {
       showLabel(currentStep);
     });
