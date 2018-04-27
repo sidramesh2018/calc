@@ -1,16 +1,53 @@
 import csv
+from decimal import Decimal
+from textwrap import dedent
 
 from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Count, Q, StdDev
-from decimal import Decimal
-
+from django.utils.safestring import SafeString
+from markdown import markdown
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.schemas import AutoSchema
+from rest_framework.compat import coreapi, coreschema
 
 from api.pagination import ContractPagination
 from api.serializers import ContractSerializer
 from api.utils import get_histogram
 from contracts.models import Contract, EDUCATION_CHOICES
+
+
+DOCS_DESCRIPTION = dedent("""
+CALC's back-end exposes a public API for its labor rates data.
+This API is used by CALC's front-end Data Explorer application,
+and can also be accessed by any third-party application over
+the public internet.
+
+For more developer documentation on CALC, please visit
+[/docs/](/docs/).
+""")
+
+SIMPLE_QUERYARG_TYPE_MAP = {
+    int: coreschema.Integer,
+    str: coreschema.String,
+}
+
+
+def queryarg(name, _type, description):
+    '''
+    A simple helper method to generate a coreapi field out of a
+    less verbose syntax.
+    '''
+
+    html_desc = SafeString(markdown(dedent(description)))
+
+    return coreapi.Field(
+        name,
+        location="query",
+        schema=SIMPLE_QUERYARG_TYPE_MAP[_type](
+            description=html_desc,
+        )
+    )
 
 
 def parse_csv_style_string(s):
@@ -34,32 +71,133 @@ def parse_csv_style_string(s):
     return [qq.strip() for qq in list(reader)[0] if qq.strip()]
 
 
+Q_QUERYARG = queryarg("q", str, "Keywords to search by.")
+
+GET_CONTRACTS_QUERYARGS = [
+    Q_QUERYARG,
+    queryarg(
+        "experience_range",
+        str,
+        """
+        Filter by a range of years of experience, e.g. `5-10`.
+        This is a convenient alternative to separately
+        specifying `min_experience` and `max_experience`.
+        """
+    ),
+    queryarg(
+        "min_experience",
+        int,
+        "Filter by minimum years of experience."
+    ),
+    queryarg(
+        "max_experience",
+        int,
+        "Filter by maximum years of experience."
+    ),
+    queryarg(
+        "min_education",
+        str,
+        "Filter by a minimum level of education:\n\n" + '\n'.join([
+            f"* `{code}` = {desc}"
+            for code, desc in EDUCATION_CHOICES
+        ])
+    ),
+    queryarg(
+        "schedule",
+        str,
+        """
+        Filter by GSA schedule. One of the following will
+        return results:
+
+        * Environmental
+        * AIMS
+        * Logistics
+        * Language Services
+        * PES
+        * MOBIS
+        * Consolidated
+        * IT Schedule 70
+        """,
+    ),
+    queryarg(
+        "sin",
+        str,
+        """
+        Filter by SIN number. Examples include:
+
+        * 899 - Environmental
+        * 541 - AIMS
+        * 87405 - Logistics
+        * 73802 - Language Services
+        * 871 - PES
+        * 874 - MOBIS
+        * 132 - IT Schedule 70
+
+        Note that due to the current state of data, not all
+        results may be returned.  For more details, see
+        [#1033](https://github.com/18F/calc/issues/1033).
+        """,
+    ),
+    queryarg(
+        "site",
+        str,
+        """
+        Filter by worksite. Can be `customer`, `contractor`,
+        or `both`.
+        """
+    ),
+    queryarg(
+        "business_size",
+        str,
+        """
+        Filter by business size: `s` for small business, or
+        `o` for other than small business.
+        """
+    ),
+    queryarg(
+        "price",
+        int,
+        "Filter by exact price."
+    ),
+    queryarg(
+        "price__gte",
+        int,
+        "Price must be greater than or equal to this integer."
+    ),
+    queryarg(
+        "price__lte",
+        int,
+        "Price must be less than or equal to this integer."
+    ),
+    queryarg(
+        "sort",
+        str,
+        "The column to sort on. Defaults to `wage_field`."
+    ),
+    queryarg(
+        "query_type",
+        str,
+        """
+        Defines how the user's keyword search should work.
+        Can be `match_all` (default), `match_phrase`, or `match_exact`.
+        """
+    ),
+    queryarg(
+        "exclude",
+        str,
+        "Comma-separated list of ids to exclude from the search results."
+    )
+]
+
+
 def get_contracts_queryset(request_params, wage_field):
     """ Filters and returns contracts based on query params
 
     Args:
-        request_params (dict): the request query parameters
+        request_params (dict): the request query parameters, corresponding
+            to GET_CONTRACTS_QUERYARGS above.
         wage_field (str): the name of the field currently being used for
             wage calculations and sorting
-
-    Query Params:
-        q (str): keywords to search by
-        experience_range(str): filter by a range of years of experience
-        min_experience (int): filter by minimum years of experience
-        max_experience (int): filter by maximum years of experience
-        min_education (str): filter by a minimum level of education
-            (see EDUCATION_CHOICES)
-        schedule (str): filter by GSA schedule
-        site (str): filter by worksite
-        business_size (str): filter by 's'(mall) or 'o'(ther)
-        price (int): filter by exact price
-        price__gte (int): price must be greater than or equal to this integer
-        price__lte (int): price must be less than or equal to this integer
-        sort (str): the column to sort on, defaults to wage_field
-        query_type (str): defines how the user's keyword search should work.
-            [ match_all (default) | match_phrase | match_exact ]
-        exclude: (int): comma separated list of ids to exclude from the search
-            results
 
     Returns:
         QuerySet: a filtered and sorted QuerySet to retrieve Contract objects
@@ -164,6 +302,34 @@ def quantize(num, precision=2):
 
 
 class GetRates(APIView):
+    """
+    Get detailed information about all labor rates that match a search query.
+    """
+
+    # The AutoSchema will introspect this to ultimately generate
+    # documentation about our pagination query args.
+    pagination_class = ContractPagination
+
+    schema = AutoSchema(
+        manual_fields=[
+            queryarg(
+                "contract-year",
+                int,
+                """
+                Return price for the given contract year (1 or 2).
+                Defaults to the current year pricing.
+                """
+            ),
+            queryarg(
+                "histogram",
+                int,
+                """
+                Number of bins to divide a wage histogram into.
+                If not provided, no histogram data will be returned.
+                """
+            ),
+        ] + GET_CONTRACTS_QUERYARGS
+    )
 
     def get(self, request):
         bins = request.query_params.get('histogram', None)
@@ -189,7 +355,7 @@ class GetRates(APIView):
             values = contracts_all.values_list(wage_field, flat=True)
             page_stats['wage_histogram'] = get_histogram(values, int(bins))
 
-        pagination = ContractPagination(page_stats)
+        pagination = self.pagination_class(page_stats)
         results = pagination.paginate_queryset(contracts_all, request)
         serializer = ContractSerializer(results, many=True)
         return pagination.get_paginated_response(serializer.data)
@@ -206,19 +372,15 @@ class GetRates(APIView):
 
 
 class GetRatesCSV(APIView):
+    """
+    Returns a CSV of matched records and selected search and filter options.
+    """
+
+    schema = AutoSchema(
+        manual_fields=GET_CONTRACTS_QUERYARGS
+    )
 
     def get(self, request, format=None):
-        """
-        Returns a CSV of matched records and selected search and filter options
-
-        Query Params:
-            q (str): keywords to search by
-            min_experience (int): filter by minimum years of experience
-            min_education (str): filter by a minimum level of education
-            site (str): filter by worksite
-            business_size (str): filter by 's'(mall) or 'o'(ther)
-        """
-
         wage_field = 'current_price'
         contracts_all = get_contracts_queryset(request.GET, wage_field)
 
@@ -275,17 +437,27 @@ class GetRatesCSV(APIView):
 
 
 class GetAutocomplete(APIView):
+    """
+    Return autocomplete suggestions for a given query.
+    """
+
+    schema = AutoSchema(
+        manual_fields=[
+            Q_QUERYARG,
+            queryarg(
+                "query_type",
+                str,
+                """
+                Defines how the search query should work.
+                Can be `match_all` (default) or `match_phrase`.
+                """
+            )
+        ]
+    )
 
     MAX_RESULTS = 20
 
     def get(self, request, format=None):
-        """
-        Query Params:
-            q (str): the search query
-            query_type (str): defines how the search query should work.
-                [ match_all (default) | match_phrase ]
-        """
-
         q = request.query_params.get('q', False)
         query_type = request.query_params.get('query_type', 'match_all')
 

@@ -4,6 +4,7 @@ from textwrap import dedent
 from inspect import getsourcefile
 
 from django import template
+from django.conf import settings
 from django.utils.safestring import SafeString
 from django.utils.module_loading import import_string
 from django.utils.html import escape
@@ -11,8 +12,6 @@ from django.utils.text import slugify
 
 from styleguide import fullpage_example as _fullpage_example
 
-
-BASE_GITHUB_URL = 'https://github.com/18F/calc'
 
 DEFAULT_GITHUB_BRANCH = 'develop'
 
@@ -68,7 +67,7 @@ def github_url_for_path(path):
     '''
 
     return '{}/tree/{}/{}'.format(
-        BASE_GITHUB_URL,
+        settings.BASE_GITHUB_URL,
         DEFAULT_GITHUB_BRANCH,
         path
     )
@@ -242,8 +241,13 @@ def fullpage_example(context, name):
     t = context.template.engine.get_template(
         'styleguide_fullpage_example_iframe.html')
     url = _fullpage_example.get_url(name)
+    title = f"Example for {name}"
     html = _fullpage_example.get_html_source(name)
-    return t.render(template.Context({'url': url, 'html': html}))
+    return t.render(template.Context({
+        'url': url,
+        'html': html,
+        'title': title
+    }))
 
 
 @register.simple_tag(takes_context=True)
