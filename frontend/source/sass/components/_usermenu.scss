@@ -43,7 +43,6 @@ $usermenu-width: 150px;
       content: '';
       position: absolute;
       top: -$usermenu-caret-size;
-      // aligned in center of menu
       left: $usermenu-width/5 - $usermenu-caret-size/2;
       width: 0;
       height: 0;
