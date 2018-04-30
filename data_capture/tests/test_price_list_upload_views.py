@@ -59,7 +59,6 @@ class PriceListStepTestCase(StepTestCase):
 
     def setUp(self):
         super().setUp()
-        registry._init()
 
     def login(self, **kwargs):
         perms = kwargs.get('permissions', [])
@@ -108,8 +107,6 @@ class Step1Tests(PriceListStepTestCase, HandleCancelMixin):
             'data_capture.schedules.s70.Schedule70PriceList'],
     )
     def test_valid_post_with_diff_schedule_removes_gleaned_data(self):
-        # re-init registry to take overridden settings into account
-        registry._init()
         self.login()
 
         # first, post with Fake Schedule selected

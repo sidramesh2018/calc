@@ -36,10 +36,10 @@ def _classname(cls: type) -> str:
     return '%s.%s' % (cls.__module__, cls.__name__)
 
 
-def _init():
+def populate_from_settings():
     '''
-    Initialize the registry by loading from the list
-    of class names in Django's setting.DATA_CAPTURE_SCHEDULES.
+    Populate the registry by loading from the list
+    of class names in Django's settings.DATA_CAPTURE_SCHEDULES.
     '''
 
     global CHOICES, CLASSES
@@ -173,4 +173,4 @@ def deserialize(data: SerializedPriceList) -> BasePriceList:
     return CLASSES[classname].deserialize(d)
 
 
-_init()
+populate_from_settings()
