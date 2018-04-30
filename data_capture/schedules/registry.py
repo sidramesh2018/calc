@@ -1,21 +1,47 @@
-from typing import List, Dict, Any, Tuple
+from typing import Any, List, Dict, Iterator, NamedTuple, Type, Optional, Tuple
 
 from django.conf import settings
 from django.forms import ValidationError
+from django.core.files.uploadedfile import UploadedFile
 from django.utils.module_loading import import_string
 
 from data_capture.schedules.base import BasePriceList
 
 
-CHOICES: List[Tuple[str, str]] = []
-CLASSES: Dict[str, BasePriceList] = {}
+class Choice(NamedTuple):
+    '''
+    Represents a schedule choice for a price list upload.
+    '''
+
+    # The fully-qualified BasePriceList subclass name that
+    # encapsulates the schedule's business logic, e.g.
+    # "foo.bar.Schedule2PriceList".
+    classname: str
+
+    # The human-readable name of the schedule, e.g. "Schedule 2".
+    title: str
 
 
-def _classname(cls):
+# Global list of all schedule choices.
+CHOICES: List[Choice] = []
+
+# Global dictionary that maps fully-qualified class names to
+# their class instances.
+CLASSES: Dict[str, Type[BasePriceList]] = {}
+
+
+def _classname(cls: type) -> str:
+    '''Return the fully-qualified class name for a class.'''
+
     return '%s.%s' % (cls.__module__, cls.__name__)
 
 
 def _init():
+    '''
+    Initialize the registry by loading from the list
+    of class names in Django's setting.DATA_CAPTURE_SCHEDULES.
+    '''
+
     global CHOICES, CLASSES
 
     CHOICES = []
@@ -23,31 +49,53 @@ def _init():
 
     for classname in settings.DATA_CAPTURE_SCHEDULES:
         cls = import_string(classname)
-        CHOICES.append((classname, cls.title))
+        CHOICES.append(Choice(classname, cls.title))
         CLASSES[classname] = cls
 
 
-def get_choices():
+def get_choices() -> Iterator[Choice]:
+    '''
+    Return an iterator of all the schedules whose price lists can be uploaded.
+    '''
+
     for choice in CHOICES:
         yield choice
 
 
-def get_class(classname):
+def get_class(classname: str) -> Type[BasePriceList]:
+    '''
+    Given a fully-qualified BasePriceList subclass name that is registered,
+    return the subclass. Raises a KeyError if the subclass isn't
+    registered.
+    '''
+
     return CLASSES[classname]
 
 
-def get_classname(instance):
+def get_classname(instance: BasePriceList) -> str:
+    '''
+    Given a BasePriceList instance, returns its fully-qualified class
+    name.
+
+    If its class name isn't registered, raises a KeyError.
+    '''
+
     classname = _classname(instance.__class__)
     if classname not in CLASSES:
         raise KeyError(classname)
     return classname
 
 
-def load_from_upload(classname, f):
+def load_from_upload(classname: str, f: UploadedFile) -> BasePriceList:
+    '''
+    Loads the given uploaded price list using the given registered
+    price list class.
+    '''
+
     return CLASSES[classname].load_from_upload(f)
 
 
-def smart_load_from_upload(classname, f):
+def smart_load_from_upload(classname: str, f: UploadedFile) -> BasePriceList:
     '''
     Attempt to intelligently load the given Django UploadedFile,
     interpreting it as a price list for the given schedule class name.
@@ -63,14 +111,14 @@ def smart_load_from_upload(classname, f):
     '''
 
     original_error = None
-    pricelist: Any = None
+    pricelist: Optional[BasePriceList] = None
 
     try:
         pricelist = load_from_upload(classname, f)
     except ValidationError as e:
         original_error = e
 
-    if original_error or not pricelist.valid_rows:
+    if original_error or (pricelist and not pricelist.valid_rows):
         # See if any of our other registered schedules can make better sense
         # of it.
         next_best_pricelist = None
@@ -93,7 +141,19 @@ def smart_load_from_upload(classname, f):
     return pricelist
 
 
-def serialize(pricelist):
+# A serialized price list is a tuple comprised of its fully-qualified
+# class name and its class-specific serialization data.
+SerializedPriceList = Tuple[str, Any]
+
+
+def serialize(pricelist: BasePriceList) -> SerializedPriceList:
+    '''
+    Given a BasePriceList, returns its serialization.
+
+    Raises a KeyError if the BasePriceList's class is not
+    registered.
+    '''
+
     classname = _classname(pricelist.__class__)
 
     if classname not in CLASSES:
@@ -102,7 +162,12 @@ def serialize(pricelist):
     return (classname, pricelist.serialize())
 
 
-def deserialize(data):
+def deserialize(data: SerializedPriceList) -> BasePriceList:
+    '''
+    Given a serialized price list, deserializes it, returning
+    its BasePriceList representation.
+    '''
+
     classname, d = data
 
     return CLASSES[classname].deserialize(d)

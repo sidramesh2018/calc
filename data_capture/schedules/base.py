@@ -1,19 +1,18 @@
 import re
 import abc
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
+
 from django.template.loader import render_to_string
 from django.core.validators import (
     MinValueValidator, RegexValidator)
 from django.http import HttpRequest
 from django.utils.safestring import SafeString, mark_safe
+from django.forms import Form
 from django.core.files.uploadedfile import UploadedFile
 
 from contracts.loaders.region_10 import FEDERAL_MIN_CONTRACT_RATE
 from ..models import SubmittedPriceList
 
-if False:
-    from django.forms import Form  # NOQA
-    from typing import List  # NOQA
 
 min_price_validator = MinValueValidator(
     FEDERAL_MIN_CONTRACT_RATE,
@@ -39,14 +38,17 @@ class ConcreteBasePriceListMethods:
     # what to upload.
     upload_example_template = None  # type: Optional[str]
 
-    def __init__(self) -> None:
-        # This is a list of Django Form objects representing
-        # valid rows in the price list.
-        self.valid_rows = []  # type: List[Form]
+    # This is a list of Django Form objects representing
+    # valid rows in the price list.
+    valid_rows: List[Form]
 
-        # This is a list of Django Form objects representing
-        # invalid rows in the price list.
-        self.invalid_rows = []  # type: List[Form]
+    # This is a list of Django Form objects representing
+    # invalid rows in the price list.
+    invalid_rows: List[Form]
+
+    def __init__(self) -> None:
+        self.valid_rows = []
+        self.invalid_rows = []
 
     def is_empty(self) -> bool:
         '''
