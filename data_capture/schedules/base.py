@@ -46,7 +46,7 @@ class ConcreteBasePriceListMethods:
 
     # Path to the template used for presenting an example of
     # what to upload.
-    upload_example_template = None  # type: Optional[str]
+    upload_example_template: Optional[str] = None
 
     # This is a list of Django Form objects representing
     # valid rows in the price list.
@@ -103,7 +103,7 @@ class BasePriceList(ConcreteBasePriceListMethods, metaclass=abc.ABCMeta):
     title = 'Unknown Schedule'
 
     # Extra instructions text to use for the upload widget.
-    upload_widget_extra_instructions = None  # type: Optional[str]
+    upload_widget_extra_instructions: Optional[str] = None
 
     @abc.abstractmethod
     def add_to_price_list(self, price_list: SubmittedPriceList) -> None:
