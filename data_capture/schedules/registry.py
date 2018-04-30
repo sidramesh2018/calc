@@ -1,3 +1,16 @@
+'''
+This module manages the registration of different types of schedules whose
+price lists can be uploaded to CALC.
+
+Registering a schedule in CALC is a bit similar to adding an app to Django.
+Every schedule has a class that inherits from BasePriceList, and
+settings.DATA_CAPTURE_SCHEDULES refers to a list of strings that correspond
+to BasePriceList classes.
+
+Once a schedule is registered, it will appear as an option when a user
+chooses to upload a price list to CALC.
+'''
+
 from typing import Any, List, Dict, Iterator, NamedTuple, Type, Optional, Tuple
 
 from django.conf import settings
@@ -143,6 +156,9 @@ def smart_load_from_upload(classname: str, f: UploadedFile) -> BasePriceList:
 
 # A serialized price list is a tuple comprised of its fully-qualified
 # class name and its class-specific serialization data.
+#
+# This allows us to easily "route" a price list's serialized
+# representation to its class-specific deserializer.
 SerializedPriceList = Tuple[str, Any]
 
 

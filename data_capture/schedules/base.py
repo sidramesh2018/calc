@@ -1,3 +1,13 @@
+'''
+This module contains BasePriceList, the abstract base class for
+price lists being imported into CALC.
+
+Different schedules will need different kinds of business logic for
+parsing their particular kinds of price lists and adding them to CALC;
+BasePriceList contains a variety of extension points to accommodate
+for these specifics while providing a common interface to clients.
+'''
+
 import re
 import abc
 from typing import Dict, Any, Optional, List
