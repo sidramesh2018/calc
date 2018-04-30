@@ -437,9 +437,9 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertRegexpMatches(json_data['form_html'],
                                  r'This field is required')
         self.assertHasMessage(
-           res,
-           'error',
-           'Oops! Please correct the following error.'
+            res,
+            'error',
+            'Oops! Please correct the following error.'
         )
 
 

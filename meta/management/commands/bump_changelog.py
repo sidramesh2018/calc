@@ -31,14 +31,12 @@ def command():
     if new_version <= old_version:
         raise CommandError(
             'Please change hourglass/version.py to reflect the new '
-            'version you\'d like to bump CHANGELOG.md to.'
-            )
+            'version you\'d like to bump CHANGELOG.md to.')
 
     if base_release_notes == '':
         raise CommandError(
             'The new release has no release notes! Please add some '
-            'under the "Unreleased" section of CHANGELOG.md.'
-            )
+            'under the "Unreleased" section of CHANGELOG.md.')
 
     click.echo('Modifying CHANGELOG.md to reflect new '
                'release %s.' % new_version)

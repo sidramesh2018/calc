@@ -22,8 +22,7 @@ def post_to_webhook(payload: Dict[str, str]):
     res = requests.post(
         settings.SLACKBOT_WEBHOOK_URL,
         data={'payload': json.dumps(payload)},
-        timeout=TIMEOUT,
-        )
+        timeout=TIMEOUT)
     res.raise_for_status()
 
 
