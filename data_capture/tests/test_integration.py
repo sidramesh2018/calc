@@ -5,8 +5,8 @@ from django.test import override_settings
 from django.http import HttpResponse
 from django.core.management import call_command
 
-from hourglass.urls import urlpatterns
-from hourglass.tests.common import BaseLoginTestCase
+from calc.urls import urlpatterns
+from calc.tests.common import BaseLoginTestCase
 from data_capture.tests.common import FAKE_SCHEDULE, FAKE_SCHEDULE_EXAMPLE_PATH
 from data_capture.models import SubmittedPriceList
 from .browsers import BrowserTestCase

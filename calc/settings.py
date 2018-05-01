@@ -1,5 +1,5 @@
 """
-Django settings for hourglass project.
+Django settings for calc project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -80,16 +80,16 @@ NON_PROD_INSTANCE_NAME = os.environ.get('NON_PROD_INSTANCE_NAME', '')
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'DIRS': [
-        os.path.join(BASE_DIR, 'hourglass/templates'),
+        os.path.join(BASE_DIR, 'calc/templates'),
     ],
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
-            'hourglass.context_processors.canonical_url',
-            'hourglass.context_processors.show_debug_ui',
-            'hourglass.context_processors.google_analytics_tracking_id',
-            'hourglass.context_processors.help_email',
-            'hourglass.context_processors.non_prod_instance_name',
+            'calc.context_processors.canonical_url',
+            'calc.context_processors.show_debug_ui',
+            'calc.context_processors.google_analytics_tracking_id',
+            'calc.context_processors.help_email',
+            'calc.context_processors.non_prod_instance_name',
             'frontend.context_processors.is_safe_mode_enabled',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",
@@ -160,7 +160,7 @@ else:
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.cache.UpdateCacheMiddleware',
-    'hourglass.middleware.ComplianceMiddleware',
+    'calc.middleware.ComplianceMiddleware',
     WHITENOISE_MIDDLEWARE,
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -175,7 +175,7 @@ MIDDLEWARE_CLASSES = (
     # cause issues with other middlewares' process_view methods
     # when the ProfilingPanel is enabled
     # http://django-debug-toolbar.readthedocs.io/en/stable/panels.html#profiling
-    'hourglass.middleware.DebugOnlyDebugToolbarMiddleware',
+    'calc.middleware.DebugOnlyDebugToolbarMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
@@ -183,9 +183,9 @@ AUTHENTICATION_BACKENDS = (
     'uaa_client.authentication.UaaBackend',
 )
 
-ROOT_URLCONF = 'hourglass.urls'
+ROOT_URLCONF = 'calc.urls'
 
-WSGI_APPLICATION = 'hourglass.wsgi.application'
+WSGI_APPLICATION = 'calc.wsgi.application'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -247,7 +247,7 @@ LOGGING: Dict[str, Any] = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/hourglass.log'),
+            'filename': os.path.join(BASE_DIR, 'logs/calc.log'),
             'formatter': 'verbose'
         },
         'contracts_file': {
@@ -388,7 +388,7 @@ DEBUG_TOOLBAR_CONFIG = {
         'debug_toolbar.panels.redirects.RedirectsPanel',
         'debug_toolbar.panels.profiling.ProfilingPanel',
     ]),
-    'SHOW_TOOLBAR_CALLBACK': 'hourglass.middleware.show_toolbar',
+    'SHOW_TOOLBAR_CALLBACK': 'calc.middleware.show_toolbar',
 }
 
 DEBUG_TOOLBAR_PANELS = [
