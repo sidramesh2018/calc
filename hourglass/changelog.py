@@ -138,22 +138,18 @@ def bump_version(contents, new_version, date=None):
     new_version_header = '## [{}][] - {}'.format(new_version, date)
     new_unreleased_diff_link = unreleased_diff_link.replace(
         'v' + old_version,
-        'v' + new_version
-        )
+        'v' + new_version)
     new_version_diff_link = '[{}]: {}'.format(
         new_version,
-        unreleased_diff_link.replace('HEAD', 'v' + new_version)
-        )
+        unreleased_diff_link.replace('HEAD', 'v' + new_version))
 
     contents = contents.replace(
         UNRELEASED_HEADER,
-        UNRELEASED_HEADER + '\n\n' + new_version_header
-        )
+        UNRELEASED_HEADER + '\n\n' + new_version_header)
 
     contents = contents.replace(
         unreleased_diff_link,
-        new_unreleased_diff_link + '\n' + new_version_diff_link
-        )
+        new_unreleased_diff_link + '\n' + new_version_diff_link)
 
     return contents
 

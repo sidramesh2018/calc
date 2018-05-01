@@ -61,18 +61,15 @@ class UtilTests(TestCase):
         self.assertEqual(
             changelog.bump_version(self.BEFORE_BUMP, '1.0.1',
                                    datetime.date(2017, 1, 3)),
-            self.AFTER_BUMP
-            )
+            self.AFTER_BUMP)
 
     def test_get_unreleased_notes_works(self):
         self.assertEqual(
             changelog.get_unreleased_notes(self.BEFORE_BUMP).strip(),
-            '- Fixed some stuff.'
-            )
+            '- Fixed some stuff.')
         self.assertEqual(
             changelog.get_unreleased_notes(self.AFTER_BUMP).strip(),
-            ''
-            )
+            '')
 
     def test_replace_heading_leaders_works(self):
         txt = '### h #\n\n## b\n\nbop #'
@@ -84,26 +81,22 @@ class UtilTests(TestCase):
     def test_strip_preamble_includes_unreleased_when_nonempty(self):
         self.assertEqual(
             changelog.strip_preamble('BLARG\n' + self.BEFORE_BUMP)[:10],
-            '## [Unrele'
-            )
+            '## [Unrele')
 
     def test_strip_preamble_removes_unreleased_when_empty(self):
         self.assertEqual(
             changelog.strip_preamble('BLARG\n' + self.AFTER_BUMP)[:10],
-            '## [1.0.1]'
-            )
+            '## [1.0.1]')
 
     def test_release_header_re_matches_unbracketed_version(self):
         self.assertEqual(
             changelog.RELEASE_HEADER_RE.search('## 1.2.3 ').group(1),
-            '1.2.3'
-            )
+            '1.2.3')
 
     def test_release_header_re_matches_bracketed_version(self):
         self.assertEqual(
             changelog.RELEASE_HEADER_RE.search('## [1.2.3][]').group(1),
-            '1.2.3'
-            )
+            '1.2.3')
 
 
 class DjangoViewTests(DjangoTestCase):
@@ -126,14 +119,12 @@ class ChangelogMdTests(TestCase):
         self.assertIn(changelog.UNRELEASED_HEADER, changetext)
         self.assertEqual(
             changelog.get_unreleased_link(changetext),
-            f'{settings.BASE_GITHUB_URL}/compare/v{__version__}...HEAD'
-            )
+            f'{settings.BASE_GITHUB_URL}/compare/v{__version__}...HEAD')
 
     def test_latest_changelog_version_is_current_version(self):
         self.assertEqual(
             changelog.get_latest_release(changetext),
-            __version__
-            )
+            __version__)
 
     def test_changelog_versions_and_dates_are_valid(self):
         version_headers = changesoup.find_all('h2')[1:]

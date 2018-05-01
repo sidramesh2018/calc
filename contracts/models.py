@@ -403,8 +403,8 @@ class Contract(models.Model):
             # if there is an escalation rate, increase the
             # previous year's value by the escalation rate
             if escalation_rate > 0:
-                escalation_factor = Decimal(1 + escalation_rate/100)
-                prev_rate = self.get_hourly_rate(i-1)
+                escalation_factor = Decimal(1 + escalation_rate / 100)
+                prev_rate = self.get_hourly_rate(i - 1)
                 next_rate = escalation_factor * prev_rate
 
             self.set_hourly_rate(i, next_rate)
