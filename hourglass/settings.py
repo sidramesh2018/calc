@@ -146,6 +146,7 @@ INSTALLED_APPS = (
     'frontend',
     'slackbot.apps.SlackbotConfig',
     'uswds_forms',
+    'admin_reorder',
 )  # type: Tuple[str, ...]
 
 SITE_ID = 1
@@ -177,6 +178,7 @@ MIDDLEWARE_CLASSES = (
     # http://django-debug-toolbar.readthedocs.io/en/stable/panels.html#profiling
     'hourglass.middleware.DebugOnlyDebugToolbarMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -412,3 +414,23 @@ if DEBUG:
     INSTALLED_APPS += (
         'django.contrib.admindocs',
     )
+
+ADMIN_REORDER = (
+    # Reorder app models
+    { 'app': 'data_capture', 'label': 'User-submitted pricing data', 'models': (
+        'data_capture.SubmittedPriceListRow',
+        'data_capture.UnreviewedPriceList',
+        'data_capture.ApprovedPriceList',
+        'data_capture.RetiredPriceList',
+        'data_capture.RejectedPriceList',
+        'data_capture.AttemptedPriceListSubmission',
+        )
+    },
+    {'app': 'auth', 'label': 'Authentication and authorization', 'models': (
+        'auth.User',
+        {'model': 'auth.Group', 'label': 'User groups'},
+    )},
+    {'app': 'sites', 'label':'Available site settings', 'models': (
+        {'model': 'sites.Site', 'label': 'Site URLs'},
+    )},
+)

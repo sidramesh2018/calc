@@ -16,94 +16,51 @@
 
 {% if app_list %}
     {% for app in app_list %}
-      {% comment %}
-      The Sites app is created by the Django "sites" framework:
-      https://docs.djangoproject.com/en/2.0/ref/contrib/sites/
-      It's only used for creating the correct path outside of the request
-      context, i.e., in emails that link back to CALC. Therefore, we want to
-      force it to display at the bottom of the page in a way that reinforces the
-      idea that it should not be messed with.
-      See https://github.com/18F/calc/issues/1283 for more context.
-      {% endcomment %}
-      {% if app.app_label != 'sites' %}
-        <div class="app-{{ app.app_label }} module">
-          {% if app.app_label == 'auth' %}
-            <h2>Manage users and permissions</h2>
-          {% elif app.app_label == 'data_capture' %}
-            <h2>Manage pricing data</h2>
-            <p><strong>To review and exclude rows of user-submitted data:</strong> Select "Submitted price list rows," which contains all of the data that is not yet available in CALC. Note that this view shows data from multiple submitted price lists. Here you can "mute" rows that seem wrong or unusual to prevent them from showing up in CALC's data explorer.</p>
-            <p><strong>To edit new, not-yet-published, user-submitted data:</strong> Select "Unreviewed price lists" to see a list of all new, unpublished price lists. Click on the number of the list you wish to edit to be taken to a detail view.</p>
-            <p><strong>To approve and publish user-submitted data:</strong> Once you have muted any undesirable rows and edited any vendor or pricing data that require it, return to "Unreviewed price lists" to approve or reject pricing data.</p>
-            <p><strong>To reject user-submitted data:</strong> From the "Unreviewed price lists" view, select the price list you want to reject and choose "reject." (You can approve a rejected price list later from the "Rejected price lists" view if you reject a list by mistake!)
-            <p><strong>To remove user-submitted data:</strong> Select "Approved price lists" and choose the price list you want to remove from CALC. This is referred to as "retiring" a price list. The price list will remain available in the admin view, but will no longer be displayed to users in the data explorer.</p>
-            <p><strong>To edit data that has already been published:</strong> First, remove the data from public use by retiring it as explained above. View "Retired price lists" and click on the contract number of the desired list. Make any necessary edits, and then return to the "Retired price lists" view to approve and re-publish the pricing data.</p>
-            <p><strong>To help troubleshoot data submission attempts:</strong> Select "Attempted price list submissions" for a list of submissions that never made it all the way to completion. From here, you can "replay" submission attempts to try to see what glitches the user submitting data might have hit.</p>
-          {% endif %}
-        <table>
-        <caption>
-            <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">{{ app.name }}</a>
-        </caption>
-        {% for model in app.models %}
-            <tr class="model-{{ model.object_name|lower }}">
-            {% if model.admin_url %}
-                <th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
-            {% else %}
-                <th scope="row">{{ model.name }}</th>
-            {% endif %}
-
-            {% if model.add_url %}
-                <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
-            {% else %}
-                <td>&nbsp;</td>
-            {% endif %}
-
-            {% if model.admin_url %}
-                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
-            {% else %}
-                <td>&nbsp;</td>
-            {% endif %}
-            </tr>
-        {% endfor %}
-        </table>
-        </div>
-      {% endif %}
-    {% endfor %}
-    {% comment %}
-    Render the Sites app last -- this should probably be a custom filter
-    {% endcomment %}
-    {% for app in app_list %}
-      {% if app.app_label == 'sites' %}
-        <div class="app-{{ app.app_label }} module">
+      <div class="app-{{ app.app_label }} module">
+        {% if app.app_label == 'auth' %}
+          <h2>Manage users and permissions</h2>
+        {% elif app.app_label == 'sites' %}
           <h2>Update site settings</h2>
           <p class="usa-alert usa-alert-warning">This section is governed by the <a href="https://docs.djangoproject.com/en/2.0/ref/contrib/sites/">Django Sites Framework</a>, and enables emails sent from this system to reference the correct absolute base URL. You will probably never need to touch this unless the production database gets wiped or the project's URL changes.</p>
-        <table>
-        <caption>
-            <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">Available settings</a>
-        </caption>
-        {% for model in app.models %}
-            <tr class="model-{{ model.object_name|lower }}">
-            {% if model.admin_url %}
-                <th scope="row"><a href="{{ model.admin_url }}">Site URLs</a></th>
-            {% else %}
-                <th scope="row">{{ model.name }}</th>
-            {% endif %}
+        {% elif app.app_label == 'data_capture' %}
+          <h2>Manage pricing data</h2>
+          <ul>
+            <li><strong>To review and exclude rows of user-submitted data:</strong> Select "Submitted price list rows," which contains all of the data that is not yet available in CALC. Note that this view shows data from multiple submitted price lists. Here you can "mute" rows that seem wrong or unusual to prevent them from showing up in CALC's data explorer.</li>
+            <li><strong>To edit new, not-yet-published, user-submitted data:</strong> Select "Unreviewed price lists" to see a list of all new, unpublished price lists. Click on the number of the list you wish to edit to be taken to a detail view.</li>
+            <li><strong>To approve and publish user-submitted data:</strong> Once you have muted any undesirable rows and edited any vendor or pricing data that require it, return to "Unreviewed price lists" to approve or reject pricing data.</li>
+            <li><strong>To reject user-submitted data:</strong> From the "Unreviewed price lists" view, select the price list you want to reject and choose "reject." (You can approve a rejected price list later from the "Rejected price lists" view if you reject a list by mistake!)</li>
+            <li><strong>To remove user-submitted data:</strong> Select "Approved price lists" and choose the price list you want to remove from CALC. This is referred to as "retiring" a price list. The price list will remain available in the admin view, but will no longer be displayed to users in the data explorer.</li>
+            <li><strong>To edit data that has already been published:</strong> First, remove the data from public use by retiring it as explained above. View "Retired price lists" and click on the contract number of the desired list. Make any necessary edits, and then return to the "Retired price lists" view to approve and re-publish the pricing data.</li>
+            <li><strong>To help troubleshoot data submission attempts:</strong> Select "Attempted price list submissions" for a list of submissions that never made it all the way to completion. From here, you can "replay" submission attempts to try to see what glitches the user submitting data might have hit.</li>
+          </ul>
+        {% endif %}
+      <table>
+      <caption>
+          <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">{{ app.name }}</a>
+      </caption>
+      {% for model in app.models %}
+          <tr class="model-{{ model.object_name|lower }}">
+          {% if model.admin_url %}
+              <th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
+          {% else %}
+              <th scope="row">{{ model.name }}</th>
+          {% endif %}
 
-            {% if model.add_url %}
-                <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
-            {% else %}
-                <td>&nbsp;</td>
-            {% endif %}
+          {% if model.add_url %}
+              <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
+          {% else %}
+              <td>&nbsp;</td>
+          {% endif %}
 
-            {% if model.admin_url %}
-                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
-            {% else %}
-                <td>&nbsp;</td>
-            {% endif %}
-            </tr>
-        {% endfor %}
-        </table>
-        </div>
-      {% endif %}
+          {% if model.admin_url %}
+              <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
+          {% else %}
+              <td>&nbsp;</td>
+          {% endif %}
+          </tr>
+      {% endfor %}
+      </table>
+      </div>
     {% endfor %}
 {% else %}
     <p>{% trans "You don't have permission to edit anything." %}</p>
