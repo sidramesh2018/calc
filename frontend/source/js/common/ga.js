@@ -66,3 +66,57 @@ export function trackEvent(category, action, label) {
   ga('send', 'event', category, action, label);
   gas('send', 'event', category, action, label);
 }
+
+/**
+ * This is a list of local URL prefixes that, when the target of
+ * a link, imply that following the link will download
+ * something to the user's system (e.g. a CSV file or Excel
+ * spreadsheet).
+ */
+const LOCAL_DOWNLOAD_URLS = [
+  '/api/',
+  '/static/',
+];
+
+/**
+ * If the given element is an "interesting" link, tracks it in GA.
+ * Otherwise, this function does nothing.
+ * 
+ * By "interesting" we mean either a link that points to an external
+ * site, or a link that will trigger a local download.
+ * 
+ * @param {any} el The element that might be an interesting link.
+ */
+function trackInterestingLink(el) {
+  if (!(el instanceof HTMLAnchorElement)) {
+    return;
+  }
+
+  const isExternal = el.host !== window.location.host;
+
+  if (isExternal) {
+    // Note that the format of this event corresponds to
+    // how DAP tracks outbound links. This is intentional, as it
+    // means that anyone who wants to e.g. track statistics about
+    // outbound links across all federal properties can do so,
+    // and statistics from CALC will be included.
+    trackEvent('Outbound', el.hostname, el.pathname);
+  } else {
+    const isLocalDownload = LOCAL_DOWNLOAD_URLS.some(
+      url => el.pathname.indexOf(url) === 0
+    );
+
+    if (isLocalDownload) {
+      trackEvent('Local Download', el.pathname, el.href);
+    }
+  }
+}
+
+/**
+ * Auto-track all interesting link clicks made on the current page.
+ */
+export function autoTrackInterestingLinks() {
+  document.documentElement.addEventListener('click', (e) => {
+    trackInterestingLink(e.target);
+  }, true);
+}
