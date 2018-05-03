@@ -36,7 +36,7 @@ returned object has the following keys:
   the value of `is_everything_ok` will be `false`.
 
 For more details on the `/healthcheck/` endpoint, see
-[hourglass/healthcheck.py](../hourglass/healthcheck.py).
+[calc/healthcheck.py](../calc/healthcheck.py).
 
 ### Production tests
 

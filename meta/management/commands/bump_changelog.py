@@ -2,15 +2,15 @@ import djclick as click
 from semantic_version import Version
 from django.core.management.base import CommandError
 
-from hourglass.version import __version__
-from hourglass import changelog
+from calc.version import __version__
+from calc import changelog
 
 
 @click.command()
 def command():
     '''
     Updates CHANGELOG.md to reflect the new version specified in
-    hourglass/version.py.
+    calc/version.py.
 
     The "Unreleased" section of the changelog will be moved to a
     new release with the given version number.
@@ -30,7 +30,7 @@ def command():
 
     if new_version <= old_version:
         raise CommandError(
-            'Please change hourglass/version.py to reflect the new '
+            'Please change calc/version.py to reflect the new '
             'version you\'d like to bump CHANGELOG.md to.')
 
     if base_release_notes == '':
