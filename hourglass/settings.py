@@ -416,16 +416,16 @@ if DEBUG:
     )
 
 ADMIN_REORDER = (
-    # Reorder app models
+    # Use django-modeladmin reorder to rearrange/rename the apps and models
+    # https://pypi.org/project/django-modeladmin-reorder/
     { 'app': 'data_capture', 'label': 'User-submitted pricing data', 'models': (
-        'data_capture.SubmittedPriceListRow',
-        'data_capture.UnreviewedPriceList',
-        'data_capture.ApprovedPriceList',
-        'data_capture.RetiredPriceList',
-        'data_capture.RejectedPriceList',
-        'data_capture.AttemptedPriceListSubmission',
-        )
-    },
+        {'model': 'data_capture.SubmittedPriceListRow', 'label': 'Mute or unmute submitted price list rows'},
+        {'model': 'data_capture.UnreviewedPriceList', 'label': 'Approve or reject unreviewed price lists'},
+        {'model':'data_capture.ApprovedPriceList', 'label': 'Retire approved price lists' },
+        {'model': 'data_capture.RetiredPriceList', 'label': 'Edit and re-approve retired price lists'},
+        {'model': 'data_capture.RejectedPriceList', 'label': 'Approve rejected price lists'},
+        {'model': 'data_capture.AttemptedPriceListSubmission', 'label': 'Replay uncompleted price list submission attempts'},
+    )},
     {'app': 'auth', 'label': 'Authentication and authorization', 'models': (
         'auth.User',
         {'model': 'auth.Group', 'label': 'User groups'},
