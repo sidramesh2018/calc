@@ -418,7 +418,7 @@ if DEBUG:
 ADMIN_REORDER = (
     # Use django-modeladmin reorder to rearrange/rename the apps and models
     # https://pypi.org/project/django-modeladmin-reorder/
-    { 'app': 'data_capture', 'label': 'User-submitted pricing data', 'models': (
+    {'app': 'data_capture', 'label': 'User-submitted pricing data', 'models': (
         {
             'model': 'data_capture.SubmittedPriceListRow',
             'label': 'Mute or unmute submitted price list rows'
