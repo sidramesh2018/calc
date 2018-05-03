@@ -1,4 +1,5 @@
-/* global QUnit window */
+/* eslint-env browser */
+/* global QUnit */
 
 import * as ga from '../common/ga';
 
@@ -74,4 +75,49 @@ QUnit.test('trackEvent() does not throw', (assert) => {
     ]);
   };
   ga.trackEvent('funky-widget', 'click', 'someCategory');
+});
+
+QUnit.test('autoTrackInterestingLinks() works', (assert) => {
+  const a = document.createElement('a');
+
+  document.body.appendChild(a);
+  a.addEventListener('click', e => e.preventDefault());
+
+  function assertClickLogs(expectedLog, msg) {
+    const log = [];
+    window.ga = (...args) => {
+      log.push(args);
+    };
+    a.dispatchEvent(new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    }));
+    assert.deepEqual(log, expectedLog, msg);
+  }
+
+  try {
+    a.setAttribute('href', '/api/blorp');
+    assertClickLogs([[
+      "send",
+      "event",
+      "Local Download",
+      "/api/blorp",
+      `${location.origin}/api/blorp`
+    ]], "Local downloads are tracked");
+
+    a.setAttribute('href', 'https://example.com/blah');
+    assertClickLogs([[
+      "send",
+      "event",
+      "Outbound",
+      "example.com",
+      `/blah`
+    ]], "Outbound links are tracked");
+
+    a.setAttribute('href', '/');
+    assertClickLogs([], "Internal links are not tracked");
+  } finally {
+    document.body.removeChild(a);
+  }
 });
