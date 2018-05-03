@@ -3,7 +3,7 @@ import unittest
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User, Group
 
-from hourglass.utils import get_permissions_from_ns_codenames
+from calc.utils import get_permissions_from_ns_codenames
 
 
 class BaseTestCase(TestCase):

@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.forms import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from hourglass.tests.common import BaseLoginTestCase
+from calc.tests.common import BaseLoginTestCase
 from contracts.models import Contract
 from ..schedules.fake_schedule import FakeSchedulePriceList
 from ..models import (SubmittedPriceList, SubmittedPriceListRow,
