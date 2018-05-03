@@ -10,13 +10,9 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
+{% block header_nav %}{% endblock %}
 <div class="row">
-  <div class="card">
-    <div class="content">
-    {% block styleguide_body %}{% endblock %}
-    </div>
-  </div>
+  {% block styleguide_body %}{% endblock %}
 </div>
 
 {% if not is_safe_mode_enabled %}

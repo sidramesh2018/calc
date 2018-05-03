@@ -2,11 +2,12 @@
 {% load styleguide %}
 
 {% block styleguide_body %}
-  <h1>CALC Style Guide</h1>
 
   {% guide %}
-
-  {% guide_section "Introduction" %}
+  <div class="sidenav-layout__content">
+  <div class="card">
+  <div class="content">
+  <h1>CALC Style Guide</h1>
 
   <p>
     Welcome to the CALC Style Guide!
@@ -21,8 +22,9 @@
   <p>
     CALC uses <a href="http://bourbon.io/">Bourbon</a> and
     <a href="http://neat.bourbon.io/">Neat</a> as the foundation
-    for its styles, with alterations based on the
-    <a href="https://designsystem.digital.gov/">U.S. Web Design System (USWDS)</a>.
+    for its grid. Its visual styles are based on the
+    <a href="https://designsystem.digital.gov/">U.S. Web Design System (USWDS)</a>,
+    with alterations where deemed appropriate for branding and functionality.
   </p>
 
   <p>
@@ -696,4 +698,7 @@
   {% endif %}
 
   {% endguide %}
+</div><!--content-->
+</div><!--card-->
+</div><!--sidenav-layout__content-->
 {% endblock %}

@@ -1,0 +1,22 @@
+@import '../base/variables';
+
+.sidenav-layout__nav {
+  @include span-columns(3);
+  margin-top: $space-6x; // to offset the negative margin on <main>
+  ol, ul {
+    list-style-type: none;
+    margin-left: 0;
+    font-size: $small-font-size;
+    font-weight: bold;
+    a {
+      text-decoration: none;
+    }
+  }
+  li {
+    margin-bottom: $space-1x;
+  }
+}
+.sidenav-layout__content {
+  @include span-columns(9);
+  margin-right: 0; //default grid override
+}
