@@ -51,7 +51,7 @@ To release version 0.0.4 of CALC:
 5.  Wait for the stakeholders to sign-off on the release if there are
     functional or product changes.
 
-6.  Update the version number in `hourglass/version.py` to `0.0.4` and then
+6.  Update the version number in `calc/version.py` to `0.0.4` and then
     run:
 
     ```

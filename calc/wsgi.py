@@ -1,5 +1,5 @@
 """
-WSGI config for hourglass project.
+WSGI config for calc project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -10,12 +10,12 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 import os
 from django.core.wsgi import get_wsgi_application
 import newrelic.agent
-from hourglass.settings_utils import load_cups_from_vcap_services
+from calc.settings_utils import load_cups_from_vcap_services
 
 from .wsgi_middleware import static_url_rewriter
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hourglass.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "calc.settings")
 
 # Load user-provided service credentials into the environment so that
 # they are available for use here, before the app is loaded

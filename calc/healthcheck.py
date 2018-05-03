@@ -6,8 +6,8 @@ from django.http import JsonResponse
 from django.db.migrations.executor import MigrationExecutor
 from django.db import connections, DEFAULT_DB_ALIAS
 
-from hourglass import __version__
-from hourglass.site_utils import get_canonical_url
+from calc import __version__
+from calc.site_utils import get_canonical_url
 
 
 def parse_pg_version(pg_version):
