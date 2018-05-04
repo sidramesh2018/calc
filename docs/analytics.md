@@ -13,9 +13,11 @@ CALC supports two kinds of integration with Google Analytics (GA):
 For the most part, the same analytics metrics are sent to both
 GA accounts.
 
-The JavaScript logic for Google Analytics integration
-is in [ga.js](../frontend/source/js/common/ga.js). Please see
-this file for further documentation on how to track custom
+Most of the JavaScript logic for Google Analytics integration
+is in [ga.js](../frontend/source/js/common/ga.js), and
+snippets included in HTML templates are in
+[data_explorer/templates/analytics/](../data_explorer/templates/analytics/).
+Please see these files for further documentation on how to track custom
 events, virtual pageviews, and more.
 
 ### Server
