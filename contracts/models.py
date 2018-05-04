@@ -257,6 +257,27 @@ class CashField(models.DecimalField):
 
 
 class Contract(models.Model):
+    '''
+    The name of this model, "Contract", is a bit of a misnomer: in
+    reality it reflects an individual labor category of a
+    contract.
+
+    This model stores denormalized data about labor category
+    pricing in federal contracts. It is denormalized because
+    rather than having a separate model containing
+    general metadata about an individual contract (such as
+    a vendor name) and storing a foreign key in this model
+    that points to it, we store all such information
+    directly in this model. This means that such information
+    is duplicated across all model instances that correspond
+    to different labor categories in the same contract.
+    '''
+
+    # This field stores the contract number, but has an
+    # unusual name, which we think comes from:
+    #
+    #   IDV - "Indefinite Delivery Vehicle"
+    #   PIID - "Procurement Instrument Identification"
 
     idv_piid = models.CharField(max_length=128)  # index this field
     piid = models.CharField(max_length=128)  # index this field
@@ -290,6 +311,16 @@ class Contract(models.Model):
         db_index=True, max_length=128, null=True, blank=True)
     business_size = models.CharField(
         db_index=True, max_length=128, null=True, blank=True)
+
+    # SIN stands for "Special Item Number" and is is a categorization method
+    # that groups similar products, services, and solutions together.
+    #
+    # Unfortunately, this field isn't very useful because a labor category
+    # can actually apply to multiple SIN numbers, and in practice this
+    # field contains difficult-to-parse values like "874-1,2" and
+    # "874-1 thru 7". For more details, see:
+    #
+    #   https://github.com/18F/calc/issues/1033
     sin = models.TextField(null=True, blank=True)
 
     _normalized_labor_category = models.TextField(db_index=True, blank=True)
@@ -317,7 +348,9 @@ class Contract(models.Model):
     def normalize_labor_category(val):
         '''
         Normalize the given labor category by applying various synonyms
-        and such to it.
+        and such to it. This allows, for example, searches for
+        "senior engineer" to include labor categories like
+        "sr. engineer".
 
         Note that this would ideally be done by modifying postgres'
         dictionary configuration, but at the time of this writing,
@@ -403,8 +436,8 @@ class Contract(models.Model):
             # if there is an escalation rate, increase the
             # previous year's value by the escalation rate
             if escalation_rate > 0:
-                escalation_factor = Decimal(1 + escalation_rate/100)
-                prev_rate = self.get_hourly_rate(i-1)
+                escalation_factor = Decimal(1 + escalation_rate / 100)
+                prev_rate = self.get_hourly_rate(i - 1)
                 next_rate = escalation_factor * prev_rate
 
             self.set_hourly_rate(i, next_rate)

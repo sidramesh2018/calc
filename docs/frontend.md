@@ -88,7 +88,7 @@ You can also visit [`/tests/`](http://localhost:8000/tests/) on your local devel
 
 We skin the Django administrative UI to look like part of the CALC
 site; its templates are located in
-[hourglass/templates/admin](../hourglass/templates/admin).
+[calc/templates/admin](../calc/templates/admin).
 
 ### Other components
 
