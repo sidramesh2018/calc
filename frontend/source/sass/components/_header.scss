@@ -33,6 +33,52 @@
   &.banner__non-prod {
     background: $color-gold;
     color: $color-gray-dark;
+    z-index: 10000;
+
+    .developer-nav {
+      float: right;
+      font-size: $small-font-size;
+    }
+
+    a, details, summary {
+      outline-color: $color-primary-darkest;
+      color: $color-primary-darkest;
+    }
+
+    details {
+      font-size: $small-font-size;
+      cursor: pointer;
+      float: right;
+      position: relative;
+      padding-left: .2em;
+
+      ul {
+        background: $color-gold;
+
+        li {
+          a {
+            display: block;
+            white-space: nowrap;
+            text-decoration: none;
+            padding: .3em;
+            &:hover, &:focus {
+              background: $color-gold-lightest;
+            }
+
+            .email {
+              font-size: $em-base;
+              text-decoration: underline;
+            }
+          }
+        }
+
+        border: 1px solid $color-black;
+        list-style-type: none;
+        position: absolute;
+        top: .3em;
+        left: 0;
+      }
+    }
   }
 }
 
