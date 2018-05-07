@@ -30,6 +30,7 @@ Welcome to CALC's developer documentation!
    :caption: Release and deployment
 
    monitoring
+   analytics
    changelog
    release
    deploy
