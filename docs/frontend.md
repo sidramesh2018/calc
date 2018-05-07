@@ -4,7 +4,7 @@ In general, front end code is in the [frontend](../frontend/) directory.
 
 This guide is about the nuts-and-bolts of developing front end code; for
 details on how to use or style individual components, see the
-[style guide][].
+[style guide][https://calc-dev.app.cloud.gov/styleguide/].
 
 ## The static asset generator
 
@@ -29,21 +29,41 @@ docker-compose run app yarn gulp build
 
 ## Developing the front end
 
+### JavaScript
+Globally, we use [yarn](https://yarnpkg.com/en/) to manage our node dependencies and run node tasks.
+`yarn`, in addition to being faster than using `npm install`, has the
+benefit of locking dependency versions via a `yarn.lock` file.
+Read the [yarn workflow docs](https://yarnpkg.com/en/docs/yarn-workflow) if you are not familiar with how to use it.
+
+Parts of the site use React and Redux. More information available below.
+
+### CSS
+We use [Sass](https://sass-lang.com/) for our stylesheets. Their [basics guide](https://sass-lang.com/guide)
+is a good place to start if you've not used it before. Sass allows us to abstract frequently used parts of
+the CSS into reusable components like variables and mixins. The variables we're using can all be found in
+[frontend/source/sass/base/_variables.scss](../frontend/source/sass/_variables.scss).
+
+
+## Site section-specific implementation details
+
 Different parts of CALC are constructed in different ways, so
 developing the front end depends on which part you want to change.
 
-We use [yarn][] to manage our node dependencies and run node tasks.
-`yarn`, in addition to being faster than using `npm install`, has the
-benefit of locking dependency versions via a `yarn.lock` file.
-Read the [yarn workflow docs][] if you are not familiar with how to use it.
+There are three distinct sections of the site that rely on different technologies:
+The data explorer (the publicly available tool that lives at `calc.gsa.gov`),
+the data capture tool (which encapsulates both the workflow that starts at
+`calc.gsa.gov/data-capture/step/1` and the bulk upload available to site admins
+at `calc.gsa.gov/data-capture/bulk/region-10/step/1`), and the site admin
+(the place site admins can approve submitted price lists, manage users, and more,
+available at `calc.gsa.gov/admin/`).
 
 ### Data explorer
 
-The data explorer is a [React][]-based app that uses [Redux][] for data flow and state management. It's located in[frontend/source/js/data-explorer](../frontend/source/js/data-explorer/).
+The data explorer is a [React][https://reactjs.org/]-based app that uses [Redux][https://redux.js.org/] for data flow and state management. It's located in[frontend/source/js/data-explorer](../frontend/source/js/data-explorer/).
 
 #### Testing
 
-The data explorer's test suite uses [Jest][], and the tests are located in [frontend/source/js/data-explorer/tests](../frontend/source/js/data-explorer/tests/).
+The data explorer's test suite uses [Jest][https://facebook.github.io/jest/], and the tests are located in [frontend/source/js/data-explorer/tests](../frontend/source/js/data-explorer/tests/).
 
 To run all the tests, run:
 
@@ -84,7 +104,7 @@ They are run as part of our Python test suite via [frontend/tests/test_qunit.py]
 
 You can also visit [`/tests/`](http://localhost:8000/tests/) on your local development instance to run the [QUnit][] tests directly in your browser.
 
-### Administrative UI
+### Site admin
 
 We skin the Django administrative UI to look like part of the CALC
 site; its templates are located in
@@ -96,7 +116,7 @@ Other parts of CALC are usually stored in either Django templates
 or somewhere under the [frontend/source/](../frontend/source/)
 hierarchy.
 
-When in doubt, see the [style guide][]!
+When in doubt, see the [style guide][https://calc-dev.app.cloud.gov/styleguide/]!
 
 [QUnit]: https://qunitjs.com/
 [React]: https://facebook.github.io/react/
