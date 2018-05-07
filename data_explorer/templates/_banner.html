@@ -22,7 +22,7 @@
           <ul>
             {% for su in SAMPLE_USERS %}
               <li>
-                <a href="{% url 'login_sample_user' username=su.username %}?next={{ request.path }}">
+                <a href="{% url 'login_sample_user' username=su.username %}?next={{ request.path|urlencode }}">
                   {{ su.desc }}<br>
                   <span class="email">{{ su.email }}</span>
                 </a>
