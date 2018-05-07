@@ -117,3 +117,36 @@ kbd {
   height: 600px;
   border: 1px solid gray;
 }
+
+/*Colors*/
+
+.swatch {
+  float: left;
+  margin: 8px 8px 32px;
+}
+
+.swatch-color {
+  height: 9rem;
+  width: 9rem;
+  margin-bottom: 6px;
+}
+
+.icon-ok {
+  content: url('/static/frontend/images/icon-check.svg');
+  float: left;
+  width: 10px;
+  height: 10px;
+  margin-right: 0.4rem;
+  margin-top: 0.4rem;
+  vertical-align: bottom;
+}
+
+.icon-no {
+  content: url('/static/frontend/images/icon-no.svg');
+  float: left;
+  width: 10px;
+  height: 10px;
+  margin-right: 0.4rem;
+  margin-top: 0.4rem;
+  vertical-align: bottom;
+}
