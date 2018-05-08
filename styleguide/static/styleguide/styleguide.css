@@ -118,35 +118,12 @@ kbd {
   border: 1px solid gray;
 }
 
-/*Colors*/
-
-.swatch {
-  float: left;
-  margin: 8px 8px 32px;
-}
-
-.swatch-color {
-  height: 9rem;
-  width: 9rem;
-  margin-bottom: 6px;
-}
-
-.swatch__contrast-ok {
-  content: url('frontend/static/frontend/images/icon-checkmark.eps');
-  float: left;
-  width: 10px;
-  height: 10px;
-  margin-right: 0.4rem;
-  margin-top: 0.4rem;
-  vertical-align: bottom;
-}
-
-.swatch__contrast-bad {
-  content: url('frontend/static/frontend/images/icon-warning.svg');
-  float: left;
-  width: 10px;
-  height: 10px;
-  margin-right: 0.4rem;
-  margin-top: 0.4rem;
-  vertical-align: bottom;
+.styleguide-example .token.property,
+.styleguide-example .token.tag,
+.styleguide-example .token.boolean,
+.styleguide-example .token.number,
+.styleguide-example .token.constant,
+.styleguide-example .token.symbol,
+.styleguide-example .token.deleted {
+  color: #bc1630;
 }

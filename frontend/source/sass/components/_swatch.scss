@@ -1,0 +1,86 @@
+@import '../base/variables';
+
+.swatch {
+  float: left;
+  margin: 8px 8px 32px;
+}
+
+.swatch__color {
+  height: 9rem;
+  width: 9rem;
+  margin-bottom: 6px;
+
+  &.color-gray-darkest {
+    background-color: $color-gray-darkest;
+  }
+
+  &.color-gray-darker {
+    background-color: $color-gray-darker;
+  }
+
+  &.color-gray-dark {
+    background-color: $color-gray-dark;
+  }
+
+  &.color-gray {
+    background-color: $color-gray;
+  }
+
+  &.color-gray-medium {
+    background-color: $color-gray-medium;
+  }
+
+  &.color-gray-light {
+    background-color: $color-gray-light;
+  }
+
+  &.color-gray-lighter {
+    background-color: $color-gray-lighter;
+  }
+
+  &.color-gray-lightest {
+    background-color: $color-gray-lightest;
+  }
+}
+
+.swatch__key span {
+  display: block;
+  float: left;
+}
+
+.swatch__contrast-ok {
+  &::before {
+    content: "";
+    background-image: url('/static/frontend/images/icon-checkmark.svg');
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 1.6rem;
+    display: block;
+    float: left;
+    width: 1.6rem;
+    height: 2rem;
+    margin-right: 0.4rem;
+    margin-top: 0.4rem;
+  }
+}
+
+.swatch__contrast-bad {
+  color: $color-red-dark;
+  &::before {
+    content: "";
+    background-image: url('/static/frontend/images/icon-warning.svg');
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 1.6rem;
+    display: block;
+    float: left;
+    width: 3rem;
+    height: 2rem;
+    margin-left: 0.6rem;
+  }
+}
+
+.swatch__code {
+  font-family: monospace;
+  font-size: $medium-font-size;
+}
