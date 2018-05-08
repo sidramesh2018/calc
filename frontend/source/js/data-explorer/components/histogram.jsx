@@ -349,10 +349,10 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
 
   t.selectAll('.bar')
     .each((d) => {
-      d.x = x(d.min); // eslint-disable-line no-param-reassign
-      d.width = x(d.max) - d.x; // eslint-disable-line no-param-reassign
-      d.height = heightScale(d.count); // eslint-disable-line no-param-reassign
-      d.y = bottom - d.height; // eslint-disable-line no-param-reassign
+      d.x = x(d.min);
+      d.width = x(d.max) - d.x;
+      d.height = heightScale(d.count);
+      d.y = bottom - d.height;
     })
     .select('rect')
       .attr('x', d => d.x)

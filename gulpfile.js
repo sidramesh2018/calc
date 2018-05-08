@@ -1,4 +1,4 @@
-'use strict'; // eslint-disable-line
+'use strict';
 
 require('dotenv').config({ silent: true });
 
@@ -99,7 +99,7 @@ Object.keys(bundles).forEach((name) => {
   if (vendor.length) {
     const vendoredBundleName = `js:${dirName}:vendor`;
     gulp.task(vendoredBundleName, () =>
-      concatAndMapSources(  // eslint-disable-line no-use-before-define
+      concatAndMapSources(
         `${dirName}.vendor.js`,
         vendor.map(p => dirs.src.scripts + p),
         `${BUILT_FRONTEND_DIR}/js/`));

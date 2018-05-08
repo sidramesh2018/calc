@@ -31,7 +31,7 @@ const middlewares = [
 if (process.env.NODE_ENV !== 'production') {
   // We only want to include logging middleware code in non-production
   // JS bundles, so we're going to conditionally require it here.
-  const createLogger = require('redux-logger');  // eslint-disable-line global-require
+  const createLogger = require('redux-logger');
 
   middlewares.push(createLogger());
 }
