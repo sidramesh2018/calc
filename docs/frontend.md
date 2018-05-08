@@ -54,6 +54,8 @@ The `sass` files follow a few conventions:
 - Partials (also called includes or imports) are files that will get compiled into the main CSS file. These are prefixed
 with an underscore (such as `components/_footer.scss`).
 
+A more detailed explanation of how to use specific components can be found in the CALC [style guide][https://calc-dev.app.cloud.gov/styleguide/].
+
 
 ## Site section-specific implementation details
 
