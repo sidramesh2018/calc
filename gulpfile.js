@@ -37,7 +37,6 @@ const dirs = {
     style: 'frontend/source/sass/',
     scripts: 'frontend/source/js/',
     sphinx: 'docs/',
-    root: './',
   },
   dest: {
     style: {
@@ -51,7 +50,6 @@ const paths = {
   sass: '**/*.scss',
   js: '**/*.@(js|jsx)',
   sphinx: '*.@(md|py|rst)',
-  changelog: 'CHANGELOG.md',
 };
 
 const bundles = {
@@ -141,7 +139,6 @@ gulp.task('build', ['copy-uswds-assets', 'sass', 'js', 'sphinx']);
 gulp.task('watch', ['set-watching', 'copy-uswds-assets', 'sass', 'js', 'sphinx'], () => {
   gulp.watch([
     path.join(dirs.src.sphinx, paths.sphinx),
-    path.join(dirs.src.root, paths.changelog),
   ], ['sphinx']);
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
 
