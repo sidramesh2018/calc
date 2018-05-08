@@ -25,6 +25,17 @@ the public internet.
 
 For more developer documentation on CALC, please visit
 [/docs/](/docs/).
+
+Unless otherwise specified, list responses for endpoints are
+in JSON format and contain the following keys:
+
+* `count` is the total number of results across all pages.
+* `next` is a URL that points to the next page of results, or
+  `null` if no additional pages are available.
+* `previous` is a URL that points to the previous page of
+  results, or `null` if no previous pages are available.
+* `results` is an array containing the results for the
+  current page.
 """)
 
 SIMPLE_QUERYARG_TYPE_MAP = {
@@ -304,6 +315,21 @@ def quantize(num, precision=2):
 class GetRates(APIView):
     """
     Get detailed information about all labor rates that match a search query.
+
+    In addition to individual labor rates, this enspoint returns
+    aggregate details about the distribution of the search results:
+
+    * `average` is the average price of the rates.
+    * `minimum` is the minimum price of the rates.
+    * `maximum` is the maximum price of the rates.
+    * `first_standard_deviation` is the first standard deviation
+      of the rates.
+    * `wage_histogram` is an array that contains an object for
+      each bin in the histogram (the number of bins can be
+      specified via the `histogram` query parameter):
+        * `min` is the minimum price of the bin.
+        * `max` is the maximum price of the bin.
+        * `count` is the number of prices in the bin.
     """
 
     # The AutoSchema will introspect this to ultimately generate
