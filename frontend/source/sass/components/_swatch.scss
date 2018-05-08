@@ -6,8 +6,8 @@
 }
 
 .swatch__color {
-  height: 9rem;
-  width: 9rem;
+  height: 12rem;
+  width: 12rem;
   margin-bottom: 6px;
 
   &.color-gray-darkest {
@@ -46,21 +46,53 @@
 .swatch__key span {
   display: block;
   float: left;
+  margin-top: $space-4x;
+  margin-bottom: $space-6x;
 }
 
 .swatch__contrast-ok {
+  color: $color-green-darkest;
   &::before {
     content: "";
     background-image: url('/static/frontend/images/icon-checkmark.svg');
     background-repeat: no-repeat;
-    background-position: left top;
+    background-position: left center;
     background-size: 1.6rem;
     display: block;
     float: left;
-    width: 1.6rem;
+    width: 2.3rem;
     height: 2rem;
-    margin-right: 0.4rem;
-    margin-top: 0.4rem;
+    margin-left: 1.6rem;
+  }
+}
+
+.contrast-ok {
+  color: $color-green-darkest;
+  &::before {
+    content: "";
+    background-image: url('/static/frontend/images/icon-checkmark.svg');
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 1.3rem;
+    display: block;
+    float: left;
+    width: 1.8rem;
+    height: 2rem;
+  }
+}
+
+.contrast-bad {
+  color: $color-red-dark;
+  &::before {
+    content: "";
+    background-image: url('/static/frontend/images/icon-warning.svg');
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 1.3rem;
+    display: block;
+    float: left;
+    width: 1.8rem;
+    height: 2rem;
   }
 }
 
@@ -70,17 +102,29 @@
     content: "";
     background-image: url('/static/frontend/images/icon-warning.svg');
     background-repeat: no-repeat;
-    background-position: left top;
+    background-position: left center;
     background-size: 1.6rem;
     display: block;
     float: left;
-    width: 3rem;
+    width: 2.3rem;
     height: 2rem;
-    margin-left: 0.6rem;
+    margin-left: 1.6rem;
   }
 }
 
-.swatch__code {
-  font-family: monospace;
+.swatch__label {
+  font-family: $font-family-mono;
+  color: $color-gray;
+
+  p {
   font-size: $medium-font-size;
+  margin-top: .5rem;
+  margin-bottom: 0;
+  }
+
+  .contrast-bad,
+  .contrast-ok,
+  .swatch__hex {
+    font-size: $small-font-size;
+  }
 }
