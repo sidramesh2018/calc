@@ -9,7 +9,12 @@ CALC, which stands for Contracts Awarded Labor Category, is a tool to help contr
 
 ## Documentation
 
-All of CALC's developer documentation is in the [docs](docs/) directory.
+The most readable version of the project's developer documentation
+can be found at
+[calc-dev.app.cloud.gov/docs/](https://calc-dev.app.cloud.gov/docs/).
+
+However, if that doesn't work for some reason, the documentation is
+also available in this repository's [docs](docs/) directory.
 To get started, you'll probably want to start with either the
 [Setup guide](docs/setup.md) or the [Docker setup guide](docs/docker.md),
 depending on your preference.
