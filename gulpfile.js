@@ -15,7 +15,6 @@ const cleancss = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
 const rename = require('gulp-rename');
-const eslint = require('gulp-eslint');
 const gutil = require('gulp-util');
 const del = require('del');
 const uglify = require('gulp-uglify');
@@ -145,10 +144,6 @@ gulp.task('watch', ['set-watching', 'copy-uswds-assets', 'sass', 'js', 'sphinx']
   ], ['sphinx']);
   gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
 
-  if (!('ESLINT_CHILL_OUT' in process.env)) {
-    gulp.watch(path.join(dirs.src.scripts, paths.js), ['lint']);
-  }
-
   // Note: wepback bundles set up their own watch handling
   // so we don't want to re-trigger them here, ref #437
   gulp.watch(path.join(dirs.src.scripts, 'vendor', paths.js), ['js:vendor']);
@@ -188,8 +183,8 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sourcemaps.write('./'))
   .pipe(gulp.dest(dirs.dest.style.built)));
 
-// Compile and lint JavaScript sources
-gulp.task('js', ['lint', 'js:vendor', 'js:webpack']);
+// Compile JavaScript sources
+gulp.task('js', ['js:vendor', 'js:webpack']);
 
 gulp.task('js:vendor', vendoredBundles);
 
@@ -205,10 +200,6 @@ gulp.task('js:webpack', () => {
     .pipe(webpackUtil.webpackify({ isWatching, isProd }))
     .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/js/`));
 });
-
-gulp.task('lint', () => gulp.src(path.join(dirs.src.scripts, paths.js))
-    .pipe(eslint())
-    .pipe(eslint.format()));
 
 // set up a SIGTERM handler for quick graceful exit from docker
 process.on('SIGTERM', () => {
