@@ -131,8 +131,8 @@ kbd {
   margin-bottom: 6px;
 }
 
-.icon-ok {
-  content: url('/static/frontend/images/icon-check.svg');
+.swatch__contrast-ok {
+  content: url('frontend/static/frontend/images/icon-checkmark.eps');
   float: left;
   width: 10px;
   height: 10px;
@@ -141,8 +141,8 @@ kbd {
   vertical-align: bottom;
 }
 
-.icon-no {
-  content: url('/static/frontend/images/icon-no.svg');
+.swatch__contrast-bad {
+  content: url('frontend/static/frontend/images/icon-warning.svg');
   float: left;
   width: 10px;
   height: 10px;
