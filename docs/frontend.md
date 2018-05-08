@@ -56,6 +56,9 @@ with an underscore (such as `components/_footer.scss`).
 
 A more detailed explanation of how to use specific components can be found in the CALC [style guide][https://calc-dev.app.cloud.gov/styleguide/].
 
+### Templates
+The site makes use of Django's templating system to ensure common elements like the header, navigation, and footer are applied
+consistently. The main base template lives at [data_explorer/templates/base.html][../data_explorer/templates/base.html].
 
 ## Site section-specific implementation details
 
