@@ -4,7 +4,15 @@
  * Django admin CSS *
  * *****************/
 
-/* nav ul li temp styles until we can get the proper class added in the back end */
+// These styles are here to make the Django admin interface feel more like the
+// rest of the site. The class names are those automatically generated from
+// Django's templating system, so they don't follow our BEM methodology and
+// sometimes we hae to target things in clumsy ways.
+// There are a number of !important declarations used when trying to override
+// Django styles that are already at the highest possible level of specificity.
+
+// nav ul li temp styles until we can get the proper class added in the back end
+// This is a nasty hack to highlight the "Site admin" section in the nav.
 nav ul {
   margin-top: 0;
   li {
@@ -17,18 +25,15 @@ nav ul {
     }
   }
 }
-/* end temp styles */
 
-/* USWDS override, because we can't control Django's markup easily */
+// USWDS override, because Django's markup doesn't play nice by default
 .field-is_muted input[type=checkbox],
 .field-is_muted input[type=radio] {
     position: static;
     left: 0;
     width: auto;
 }
-/* end USWDS override */
 
-/* messagelist styling */
 .messagelist li {
   font-size: $h3-font-size;
   font-weight: $font-weight-bold;
@@ -36,7 +41,6 @@ nav ul {
     color: $color-green-darkest;
   }
 }
-/* end messagelist styling */
 
 label,
 .aligned label {
@@ -141,7 +145,7 @@ select[multiple="multiple"] {
     font-weight: 700;
     text-transform: uppercase;
     font-size: 1.2rem;
-    color: #ba2121 !important;
+    color: $color-red-dark !important;
     background: none !important;
   }
   input[type="submit"] {
@@ -151,13 +155,12 @@ select[multiple="multiple"] {
   }
 }
 
-/* Styling for ul/lis with action links */
+// Styling for ul/lis with action links
 .object-tools,
 .messagelist {
   list-style: none;
 }
 
-/* tables */
 table caption {
   background-color: $color-gray-lightest;
   padding: .5rem 1rem;
@@ -184,12 +187,12 @@ thead a:focus {
   max-width: none;
 }
 
-/* Django displays sort priorities when multiple cols are sorted. Hide 'em. */
+// Django displays sort priorities when multiple cols are sorted. Hide 'em.
 .sortpriority {
   display: none;
 }
 
-/* add/change buttons */
+// add/change buttons
 .add-related:after {
   content: "Add";
   margin-right: 10px;
@@ -233,7 +236,7 @@ thead a:focus {
   font-size: $small-font-size;
 }
 
-/* forms.css */
+//override forms.css
 .inline-group {
   border: none !important;
   .tabular td.original p {
@@ -241,7 +244,7 @@ thead a:focus {
   }
 }
 
-/* same as filter-block in changelists.css */
+// same as filter-block in changelists.scss
 .sidebar {
   background: $color-gray-lightest;
   border-radius: $border-radius;
@@ -297,7 +300,7 @@ thead a:focus {
   }
 }
 
-/* users and groups multiselect form */
+// users and groups multiselect form 
 .related-widget-wrapper {
   width: 100%;
   .selector .selector-available input {
