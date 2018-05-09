@@ -1,6 +1,8 @@
 @import 'variables.scss';
 
 // legacy sr-only class
+// This class is applied to things that should ONLY be rendered to screen readers,
+// such as descriptions of form fields that would be redundant for sighted users.
 .sr-only {
   position: absolute !important;
   height: 1px; width: 1px;
@@ -44,19 +46,6 @@
   clear: both;
 }
 
-.container {
-  width: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-@media (min-width: 980px) {
-  .container {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
 .skip-nav {
   position: absolute;
   left: -9999px;
@@ -74,8 +63,6 @@
     display: none;
 }
 
-
-/* tooltips */
 .tooltips {
   position: relative;
   display: inline;
@@ -83,7 +70,7 @@
     position: absolute;
     width:140px;
     color: $color-white;
-    background: i$color-black;
+    background: $color-black;
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -111,14 +98,8 @@ th:hover.tooltips span {
   z-index: 999;
 }
 
-/* Skeleton adds margin even to the first column in a row. */
-.row .column:first-child,
-.row .columns:first-child {
-  margin-left: 0;
-}
-
-/* Animate the id corresponding to the currently-visited URL hash to
- * make it easier for users to see. */
+// Animate the id corresponding to the currently-visited URL hash to
+// make it easier for users to see
 :target {
   animation-duration: 2s;
   animation-name: highlight-fade;
@@ -138,9 +119,9 @@ th:hover.tooltips span {
   overflow: hidden;
 }
 
+// Use this mixin when there is light text on a dark background to help
+// with font legibility.
 @mixin antialias {
-  // Use this mixin when there is light text on a dark background to help
-  // with font legibility.
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
