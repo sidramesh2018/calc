@@ -74,6 +74,46 @@
   &.color-green-bright {
     background-color: $color-green-bright;
   }
+
+  &.color-red-darkest {
+    background-color: $color-red-darkest;
+  }
+
+  &.color-red-dark {
+    background-color: $color-red-dark;
+  }
+
+  &.color-red-lightest {
+    background-color: $color-red-lightest;
+  }
+
+  &.color-blue-dark {
+    background-color: $color-blue-dark;
+  }
+
+  &.color-blue {
+    background-color: $color-blue;
+  }
+
+  &.color-blue-lightest {
+    background-color: $color-blue-lightest;
+  }
+
+  &.color-gold-darkest {
+    background-color: $color-gold-darkest;
+  }
+
+  &.color-gold {
+    background-color: $color-gold;
+  }
+
+  &.color-gold-lightest {
+    background-color: $color-gold-lightest;
+  }
+
+  &.color-visited {
+    background-color: $color-visited;
+  }
 }
 
 .swatch__key span {
