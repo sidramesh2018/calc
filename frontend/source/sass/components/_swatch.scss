@@ -2,13 +2,22 @@
 
 .swatch {
   float: left;
-  margin: 8px 8px 32px;
+  margin: 8px 0 32px;
 }
 
 .swatch__color {
   height: 12rem;
   width: 12rem;
   margin-bottom: 6px;
+
+  &.color-black {
+    background-color: $color-black;
+  }
+
+  &.color-white {
+    background-color: $color-white;
+    border: 1px solid $color-gray-lighter;
+  }
 
   &.color-gray-darkest {
     background-color: $color-gray-darkest;
@@ -40,6 +49,30 @@
 
   &.color-gray-lightest {
     background-color: $color-gray-lightest;
+  }
+
+  &.color-green-darkest {
+    background-color: $color-green-darkest;
+  }
+
+  &.color-green-medium {
+    background-color: $color-green-medium;
+  }
+
+  &.color-green {
+    background-color: $color-green;
+  }
+
+  &.color-green-light {
+    background-color: $color-green-light;
+  }
+
+  &.color-green-lighter {
+    background-color: $color-green-lighter;
+  }
+
+  &.color-green-bright {
+    background-color: $color-green-bright;
   }
 }
 
@@ -118,6 +151,7 @@
 
   p {
   font-size: $medium-font-size;
+  line-height: $small-line-height;
   margin-top: .5rem;
   margin-bottom: 0;
   }
