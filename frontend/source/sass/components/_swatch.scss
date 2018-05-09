@@ -16,7 +16,7 @@
 
   &.color-white {
     background-color: $color-white;
-    border: 1px solid $color-gray-lighter;
+    border: 1px solid $color-gray-light;
   }
 
   &.color-gray-darkest {
@@ -185,7 +185,7 @@
   }
 }
 
-.swatch__label {
+.label-mono {
   font-family: $font-family-mono;
   color: $color-gray;
 
@@ -200,5 +200,46 @@
   .contrast-ok,
   .swatch__hex {
     font-size: $small-font-size;
+  }
+}
+
+
+.color-combos {
+  min-height: 5rem;
+  padding: 1rem;
+  &.color-white {
+    background-color: $color-white;
+    border: 1px solid $color-gray-light;
+  }
+  &.color-gray-darkest {
+    background-color: $color-gray-darkest;
+  }
+  &.color-gray-lighter {
+    background-color: $color-gray-lighter;
+  }
+  &.color-green-light {
+    background-color: $color-green-light;
+  }
+}
+
+.color-name {
+  font-size: $h4-font-size;
+  font-weight: $font-weight-bold;
+  &.color-white {
+    color: $color-white;
+  }  &.color-black {
+    color: $color-base;
+  }
+  &.color-gray-darker {
+    color: $color-gray-darker;
+  }
+  &.color-gray-dark {
+    color: $color-gray-dark;
+  }
+  &.color-gray-light {
+    color: $color-gray-light;
+  }
+  &.color-green-bright {
+    color: $color-green-bright;
   }
 }
