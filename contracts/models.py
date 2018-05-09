@@ -381,11 +381,25 @@ class Contract(models.Model):
         return val
 
     @staticmethod
-    def get_education_code(text):
+    def get_education_code(text, raise_exception=False):
+        '''
+        Given a human-readable education level, return its
+        education code, e.g.:
+
+            >>> Contract.get_education_code('High School')
+            'HS'
+
+        Return None if no education code matches the given
+        text, unless, raise_exception is True, in which
+        case a ValueError is raised.
+        '''
+
         for pair in EDUCATION_CHOICES:
             if text.strip() in pair[1]:
                 return pair[0]
 
+        if raise_exception:
+            raise ValueError(text)
         return None
 
     @staticmethod
