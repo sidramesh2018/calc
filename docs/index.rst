@@ -31,7 +31,7 @@ Welcome to CALC's developer documentation!
 
    monitoring
    analytics
-   changelog
+   Change log <https://calc-dev.app.cloud.gov/updates/>
    release
    deploy
 
