@@ -1,5 +1,4 @@
 from contracts.models import Contract
-
 from .base import BaseMetric
 
 
