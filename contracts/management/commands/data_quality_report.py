@@ -1,7 +1,7 @@
 from textwrap import dedent, fill
 from django.core.management.base import BaseCommand
 
-from contracts.reports import finddupes
+from contracts.reports import dupes
 
 
 class Command(BaseCommand):
@@ -14,8 +14,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         self.report(f'''\
-            There are {finddupes.count_duplicates()} labor rates
+            There are {dupes.count_duplicates()} labor rates
             that share the same core fields
-            ({', '.join(finddupes.CORE_FIELDS)}) but
+            ({', '.join(dupes.CORE_FIELDS)}) but
             differ along other axes.
         ''')
