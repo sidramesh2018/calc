@@ -25,17 +25,6 @@ the public internet.
 
 For more developer documentation on CALC, please visit
 [/docs/](/docs/).
-
-Unless otherwise specified, list responses for endpoints are
-in JSON format and contain the following keys:
-
-* `count` is the total number of results across all pages.
-* `next` is a URL that points to the next page of results, or
-  `null` if no additional pages are available.
-* `previous` is a URL that points to the previous page of
-  results, or `null` if no previous pages are available.
-* `results` is an array containing the results for the
-  current page.
 """)
 
 SIMPLE_QUERYARG_TYPE_MAP = {
@@ -316,9 +305,41 @@ class GetRates(APIView):
     """
     Get detailed information about all labor rates that match a search query.
 
-    In addition to individual labor rates, this enspoint returns
-    aggregate details about the distribution of the search results:
+    The JSON response contains the following keys:
 
+    * `next` is a URL that points to the next page of results, or
+    `null` if no additional pages are available.
+    * `previous` is a URL that points to the previous page of
+    results, or `null` if no previous pages are available.
+    * `results` is an array containing the results for the
+    current page. Each item in the array contains the following keys:
+        * `id` is the internal ID of the rate in the CALC database.
+            This can be passed to the `exclude` query parameter to
+            exclude individual rates from search results.
+        * `idv_piid` is the contract number of the contract that
+            contains the labor rate.
+        * `vendor_name` is the name of the vendor that the
+            labor rate's contract is under.
+        * `education_level` is the minimum level of education
+            for the labor rate.
+        * `min_years_experience` is the minimum years of experience
+            for the labor rate.
+        * `hourly_rate_year1`, `current_price`, `next_year_price`,
+            and `second_year_price` contain pricing information for
+            the labor rate.
+        * `schedule` is the schedule the labor rate is under.
+        * `sin` describes the special item numbers (SINs) the labor
+            rate is under. See
+            [#1033](https://github.com/18F/calc/issues/1033) for
+            details on some limitations.
+        * `contractor_site` is the worksite of the labor rate.
+        * `business_size` is the business size of the vendor
+            offering the labor rate.
+
+    Additionally, the response contains aggregate details about
+    the distribution of the search results, across all pages:
+
+    * `count` is the total number rates.
     * `average` is the average price of the rates.
     * `minimum` is the minimum price of the rates.
     * `maximum` is the maximum price of the rates.
@@ -400,6 +421,10 @@ class GetRates(APIView):
 class GetRatesCSV(APIView):
     """
     Returns a CSV of matched records and selected search and filter options.
+
+    Note that the first two rows actually contain metadata about the requested
+    search and filter options. The subsequent rows contain the
+    matched records.
     """
 
     schema = AutoSchema(
@@ -465,6 +490,14 @@ class GetRatesCSV(APIView):
 class GetAutocomplete(APIView):
     """
     Return autocomplete suggestions for a given query.
+
+    The JSON response is an array containing objects
+    with the following keys:
+
+    * `labor_category` is the name of a labor category that
+      matches your query.
+
+    * `count` is the number of records with the labor category.
     """
 
     schema = AutoSchema(
