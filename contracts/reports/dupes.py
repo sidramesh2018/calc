@@ -36,9 +36,9 @@ class Metric(BaseMetric):
     ])
 
     SQL_QUERY = f'''
-    SELECT COUNT(c1.id) / 2  /* Divide by two to avoid double-counting */
+    SELECT COUNT(c1.id)
     FROM {CONTRACTS_TABLE} as c1, {CONTRACTS_TABLE} as c2
-    WHERE c1.id != c2.id
+    WHERE c1.id < c2.id   /* Use < to avoid counting duplicates */
     AND {CORE_FIELDS_ARE_EQUAL}
     '''
 
