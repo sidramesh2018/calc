@@ -53,10 +53,11 @@ class Metric(BaseMetric):
         return cursor.fetchone()[0]
 
     desc = f'''
-    labor rates share the same core fields but differ along other axes.
+    labor rates appear to be duplicates.
     '''
 
     footnote = f'''
-    Core fields include {', '.join(CORE_FIELD_NAMES[:-1])}
-    and {CORE_FIELD_NAMES[-1]}.
+    By "duplicates" we mean that they share the same values
+    for {', '.join(CORE_FIELD_NAMES[:-1])} and {CORE_FIELD_NAMES[-1]}.
+    They may (and likely do) vary across other fields.
     '''
