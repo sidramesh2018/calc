@@ -50,8 +50,7 @@ label input[type="radio"] {
   }
 }
 
-/* A <ul> holds a Django-rendered list of radio buttons. */
-
+// Hack to style Django radio buttons, which occur in a <ul>.
 form ul {
   list-style-type: none;
 }
@@ -73,8 +72,8 @@ fieldset + div + fieldset {
 }
 
 
-/* Django's default form rendering uses a <ul class="errorlist">
-   for errors, and <span class="helptext"> for help text. */
+// Django's default form rendering uses a <ul class="errorlist">
+// for errors, and <span class="helptext"> for help text.
 fieldset.fieldset-error {
   border-left: 3px solid $color-red-dark;
   background-color: #fef5f5;
@@ -205,7 +204,8 @@ input[type].form__inline,
       margin-left: 1rem;
     }
   }
-  // only square the corners of the first button -- relevant on homepage search
+  // only square the corners of the first button to make it butt up against the
+  // input -- relevant on homepage search
   ~ .usa-button:first-of-type,
   ~ button:first-of-type,
   ~ input[type=button]:first-of-type,

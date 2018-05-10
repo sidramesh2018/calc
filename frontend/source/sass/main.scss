@@ -1,7 +1,8 @@
 // The core styles for CALC.
 // Order matters here; styles defined in imports toward the bottome will override
 // those defined in imports toward the top. This is why variables and the
-// US Web Design System are toward the top.
+// US Web Design System are at the top of the list.
+
 @charset 'utf-8';
 @import 'libs/tooltipster';
 // Variables must be imported prior to the US Web Design System styles, otherwise

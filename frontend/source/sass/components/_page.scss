@@ -1,3 +1,6 @@
+// Some styles to dictate basic page layouts. This could probably be considered
+// a "base" file. Primarily styles the "card" layout: https://calc-dev.app.cloud.gov/styleguide/#card-layout
+
 @import '../base/variables';
 @import '../base/grid';
 $background-color: $color-gray-lightest;

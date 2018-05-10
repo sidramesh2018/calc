@@ -1,4 +1,7 @@
+// Styles for the dropdown under a logged-in user's name.
 
+// We need to do some math on these numbers for positioning, so we put 'em
+// in variables to ensure everything stays in sync and is more readable.
 $usermenu-caret-size: 6px;
 $usermenu-width: 150px;
 

@@ -1,5 +1,6 @@
 @import '../base/variables';
 
+// the "official gov site" banner
 #banner {
   color: $color-primary-darkest;
   font-size: 85%;
@@ -41,7 +42,7 @@ header {
   background: $color-primary-darkest;
   background-image: url(../../images/background-header.svg);
   background-size: 100%;
-  padding-bottom: $space-4x; //to create "stacked" look
+  padding-bottom: $space-4x; //to create "stacked" card look
   @include antialias();
 }
 
@@ -114,27 +115,6 @@ header {
     padding-bottom: $space-1x;
     margin-top: $space-1x;
     margin-bottom: 0;
-  }
-  .icon {
-    margin: ($space-1x + $space-half) 0 0;
-    background-repeat: no-repeat;
-    background-position: center left;
-    display: inline-block;
-    opacity: 0.6;
-    background-size: 30px;
-
-    &.icon-ceiling {
-      background-image: url('../../images/price-callout/roof.png');
-    }
-    &.icon-fully-burdened {
-      background-image: url('../../images/price-callout/mule.png');
-    }
-    &.icon-professional-services {
-      background-image: url('../../images/price-callout/briefcase.png');
-    }
-    &.icon-worldwide-rates {
-      background-image: url('../../images/price-callout/globe.png');
-    }
   }
 }
 
