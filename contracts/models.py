@@ -279,12 +279,12 @@ class Contract(models.Model):
     #   IDV - "Indefinite Delivery Vehicle"
     #   PIID - "Procurement Instrument Identification"
 
-    idv_piid = models.CharField(max_length=128)  # index this field
+    idv_piid = models.CharField(max_length=128, db_index=True)  # index this field
     piid = models.CharField(max_length=128)  # index this field
     contract_start = models.DateField(null=True, blank=True)
     contract_end = models.DateField(null=True, blank=True)
     contract_year = models.IntegerField(null=True, blank=True)
-    vendor_name = models.CharField(max_length=128)
+    vendor_name = models.CharField(max_length=128, db_index=True)
     labor_category = models.TextField(db_index=True)
     education_level = models.CharField(
         db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True,
