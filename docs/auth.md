@@ -22,9 +22,9 @@ Running `docker-compose run app python manage.py initgroups` will initialize or 
 
 ### Initial user creation
 
-When CALC is run for the first time, there will be no users in its database.
+During development, a menu is available at the top of every page which allows you to quickly log in as a variety of example users, each of which represents a different kind of CALC role.
 
-An initial superuser can be created by running:
+Otherwise, you can create an initial superuser by running:
 
 ```sh
 docker-compose run app python manage.py createsuperuser --noinput --username <USER_NAME> --email <USER_EMAIL>
