@@ -36,7 +36,6 @@ release-*-instructions.txt
 release-*-instructions.html
 jest/*
 Dockerfile.cloud
-docs/changelog.md
 docs/_build
 docs/static
 data_capture_uploaded_files/
