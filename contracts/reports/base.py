@@ -1,6 +1,8 @@
 from typing import Union
 from textwrap import dedent, fill
 import abc
+from django.utils.safestring import SafeString
+import markdown
 
 number = Union[int, float]
 
@@ -39,3 +41,12 @@ class BaseMetric(metaclass=abc.ABCMeta):
     @property
     def desc_text(self) -> str:
         return fill(dedent(self.desc)).strip()
+
+    @property
+    def desc_html(self) -> SafeString:
+        html = markdown.markdown(self.desc_text)
+
+        # Unwrap the <p></p> that markdown wraps it in.
+        html = html[len('<p>'):-len('</p>')]
+
+        return SafeString(html)
