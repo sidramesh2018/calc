@@ -82,43 +82,6 @@ alerts-widget:focus {
   outline: none;
 }
 
-// .message-* classes are deprecated; used only in data_capture/templates/data_capture/messages.html
-.message-error {
-  @extend .usa-alert;
-  @extend .usa-alert-error;
-  &.no-bg {
-    background-color: transparent;
-    border: none;
-  }
-  h3,
-  p {
-    color: $color-red-dark;
-    font-weight: $font-weight-bold;
-  }
-  h3:before {
-    width: $h3-font-size;
-    height: $h3-font-size;
-    content: url('../../images/icon-warning.svg');
-    padding-right: $space-half;
-  }
-}
-.message-success {
-  @extend .usa-alert;
-  @extend .usa-alert-success;
-  h3 {
-    color: $color-green-darkest;
-    margin-bottom: 0;
-  }
-}
-.message-info {
-  @extend .usa-alert;
-  @extend .usa-alert-info;
-  h3 {
-    color: $color-primary-alt-darkest;
-    margin-bottom: 0;
-  }
-}
-
 .alert-submitted-price-lists {
   ul {
     list-style: none;
