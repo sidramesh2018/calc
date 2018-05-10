@@ -26,13 +26,11 @@ class Metric(BaseMetric):
             current_price__gt=self.MIN_PRICE,
         ).count()
 
-    def describe(self, count) -> str:
-        return f'''
-            {count} labor rates
-            require a {self.EDU_LEVEL} education
-            and under {self.EXPERIENCE_CAP} years
-            of experience but pay over ${self.MIN_PRICE}
-            per hour, which seems excessive. It's
-            possible the price is actually their *daily*
-            rate rather than their *hourly* rate.
-        '''
+    desc = f'''
+    labor rates require a {EDU_LEVEL} education
+    and under {EXPERIENCE_CAP} years
+    of experience but pay over ${MIN_PRICE}
+    per hour, which seems excessive. It's
+    possible the price is actually their *daily*
+    rate rather than their *hourly* rate.
+    '''

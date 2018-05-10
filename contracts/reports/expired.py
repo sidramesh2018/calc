@@ -14,7 +14,4 @@ class Metric(BaseMetric):
             contract_end__lt=timezone.now()
         ).count()
 
-    def describe(self, count) -> str:
-        return f'''
-            {count} labor rates are from expired contracts.
-        '''
+    desc = 'labor rates are from expired contracts.'

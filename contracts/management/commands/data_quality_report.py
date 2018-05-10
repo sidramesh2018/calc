@@ -1,4 +1,3 @@
-from textwrap import dedent, fill
 from typing import List
 from django.core.management.base import BaseCommand
 
@@ -19,9 +18,8 @@ class Command(BaseCommand):
     '''
 
     def report(self, metric: BaseMetric):
-        count = metric.count()
-        msg = metric.describe(count)
-        self.stdout.write(fill(dedent(msg)).strip())
+        msg = f"{metric.count()} {metric.desc_text}"
+        self.stdout.write(msg)
         self.stdout.write("\n")
 
     def handle(self, *args, **kwargs):

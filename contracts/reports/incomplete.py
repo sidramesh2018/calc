@@ -12,8 +12,4 @@ class Metric(BaseMetric):
             education_level=None,
         ).count()
 
-    def describe(self, count) -> str:
-        return f'''
-            {count} labor rates
-            do not specify a minimum education level.
-        '''
+    desc = 'labor rates do not specify a minimum education level.'

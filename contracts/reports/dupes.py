@@ -47,10 +47,7 @@ class Metric(BaseMetric):
         cursor.execute(self.SQL_QUERY)
         return cursor.fetchone()[0]
 
-    def describe(self, count) -> str:
-        return f'''
-            {count} labor rates
-            share the same core fields
-            ({', '.join(self.CORE_FIELDS)}) but
-            differ along other axes.
-        '''
+    desc = f'''
+    labor rates share the same core fields
+    ({', '.join(CORE_FIELDS)}) but differ along other axes.
+    '''
