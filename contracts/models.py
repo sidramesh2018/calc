@@ -390,7 +390,7 @@ class Contract(models.Model):
             'HS'
 
         Return None if no education code matches the given
-        text, unless, raise_exception is True, in which
+        text, unless raise_exception is True, in which
         case a ValueError is raised.
         '''
 
