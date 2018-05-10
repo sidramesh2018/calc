@@ -5,5 +5,5 @@
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'frontend/built/style/main.min.css' %}"/>
   </head>
-{{ html }}
+  {% block body %}{% endblock %}
 </html>
