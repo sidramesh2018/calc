@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Count, Q, StdDev
 from django.utils.safestring import SafeString
 from markdown import markdown
+from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.schemas import AutoSchema
@@ -216,10 +217,20 @@ def get_contracts_queryset(request_params, wage_field):
     price = request_params.get('price', None)
     price__gte = request_params.get('price__gte')
     price__lte = request_params.get('price__lte')
-    sort = request_params.get('sort', wage_field)
+    sort = request_params.get('sort', wage_field).split(',')
     # query_type can be: [ match_all (default) | match_phrase | match_exact ]
     query_type = request_params.get('query_type', 'match_all')
     exclude = request_params.getlist('exclude')
+
+    all_fields = set([f.name for f in Contract._meta.fields])
+    sortable_fields = set([f.name for f in Contract._meta.fields if f.db_index])
+    for field in sort:
+        if field.startswith('-'):
+            field = field[1:]
+        if field not in all_fields:
+            raise serializers.ValidationError(f'"{field}" is not a valid field to sort on')
+        if field not in sortable_fields:
+            raise serializers.ValidationError(f'Unable to sort on the field "{field}"')
 
     contracts = Contract.objects.all()
 
@@ -292,7 +303,7 @@ def get_contracts_queryset(request_params, wage_field):
         if price__lte:
             contracts = contracts.filter(**{wage_field + '__lte': price__lte})
 
-    return contracts.order_by(*sort.split(','))
+    return contracts.order_by(*sort)
 
 
 def quantize(num, precision=2):
