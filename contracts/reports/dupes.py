@@ -48,6 +48,9 @@ class Metric(BaseMetric):
         return cursor.fetchone()[0]
 
     desc = f'''
-    labor rates share the same core fields
-    ({', '.join(CORE_FIELDS)}) but differ along other axes.
+    labor rates share the same core fields but differ along other axes.
+    '''
+
+    footnote = f'''
+    Core fields include {', '.join(CORE_FIELDS[:-1])} and {CORE_FIELDS[-1]}.
     '''

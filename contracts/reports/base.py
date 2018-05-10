@@ -7,6 +7,19 @@ import markdown
 number = Union[int, float]
 
 
+def format_text(text: str) -> str:
+    return fill(dedent(text)).strip()
+
+
+def format_html(markdown_text: str) -> SafeString:
+    html = markdown.markdown(format_text(markdown_text))
+
+    # Unwrap the <p></p> that markdown wraps it in.
+    html = html[len('<p>'):-len('</p>')]
+
+    return SafeString(html)
+
+
 class BaseMetric(metaclass=abc.ABCMeta):
     '''
     An abstract base class that describes a metric that can be
@@ -39,14 +52,31 @@ class BaseMetric(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @property
+    def footnote(self) -> str:
+        '''
+        Return a markdown sentence that offers a footnote for
+        the description. This can include further details
+        that explain how the count is calculated, why the
+        count might have the value it does, and so on.
+
+        The value of this property defaults to the empty
+        string, meaning that there is no footnote.
+        '''
+
+        return ''
+
+    @property
     def desc_text(self) -> str:
-        return fill(dedent(self.desc)).strip()
+        return format_text(self.desc)
 
     @property
     def desc_html(self) -> SafeString:
-        html = markdown.markdown(self.desc_text)
+        return format_html(self.desc)
 
-        # Unwrap the <p></p> that markdown wraps it in.
-        html = html[len('<p>'):-len('</p>')]
+    @property
+    def footnote_text(self) -> str:
+        return format_text(self.footnote)
 
-        return SafeString(html)
+    @property
+    def footnote_html(self) -> SafeString:
+        return format_html(self.footnote)

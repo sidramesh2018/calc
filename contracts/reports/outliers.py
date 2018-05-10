@@ -30,7 +30,10 @@ class Metric(BaseMetric):
     labor rates require a {EDU_LEVEL} education
     and under {EXPERIENCE_CAP} years
     of experience but pay over ${MIN_PRICE}
-    per hour, which seems excessive. It's
-    possible the price is actually their *daily*
-    rate rather than their *hourly* rate.
+    per hour.
+    '''
+
+    footnote = f'''
+    It's possible such pricing reflects *daily*
+    rates rather *hourly* rates.
     '''

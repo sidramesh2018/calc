@@ -9,7 +9,18 @@
         <h1>Data quality report</h1>
 
         {% for metric in ALL_METRICS %}
-        <p><strong>{{ metric.count }}</strong> {{ metric.desc_html }}</p>
+        <p>
+          <strong>{{ metric.count }}</strong> {{ metric.desc_html }}
+          {% if metric.footnote %}
+            <sup>{{ forloop.counter }}</sup>
+          {% endif %}
+        </p>
+        {% endfor %}
+        <hr>
+        {% for metric in ALL_METRICS %}
+        {% if metric.footnote %}
+          <p><small><sup>{{ forloop.counter }}</sup> {{ metric.footnote_html }}</small></p>
+        {% endif %}
         {% endfor %}
       </div>
   </div>
