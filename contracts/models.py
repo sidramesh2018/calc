@@ -279,7 +279,9 @@ class Contract(models.Model):
     #   IDV - "Indefinite Delivery Vehicle"
     #   PIID - "Procurement Instrument Identification"
 
-    idv_piid = models.CharField(max_length=128, db_index=True)  # index this field
+    idv_piid = models.CharField(
+        max_length=128, db_index=True,
+        verbose_name="contract number")  # index this field
     piid = models.CharField(max_length=128)  # index this field
     contract_start = models.DateField(null=True, blank=True)
     contract_end = models.DateField(null=True, blank=True)
