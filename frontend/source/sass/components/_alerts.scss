@@ -49,7 +49,15 @@
   &.alert__no-bg {
     background-color: transparent;
     border: none;
+
+    h3:before {
+      width: $h3-font-size;
+      height: $h3-font-size;
+      content: url('../../images/icon-warning.svg');
+      padding-right: $space-half;
+    }
   }
+
   h3 {
     color: $color-red-dark;
   }
