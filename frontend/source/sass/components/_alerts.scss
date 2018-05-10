@@ -1,3 +1,5 @@
+// Overrides and extensions of the U.S. Web Design System alerts
+
 @import '../base/variables';
 .usa-alert {
   margin: 1rem 0;
@@ -43,6 +45,11 @@
 .usa-alert-error {
   border: 2px solid $color-red-dark;
   background-color: $color-red-lightest;
+  // Used for styling paragraphs of error text where a background doesn't make visual sense.
+  &.alert__no-bg {
+    background-color: transparent;
+    border: none;
+  }
   h3 {
     color: $color-red-dark;
   }
@@ -67,6 +74,7 @@ alerts-widget:focus {
   outline: none;
 }
 
+// .message-* classes are deprecated; used only in data_capture/templates/data_capture/messages.html
 .message-error {
   @extend .usa-alert;
   @extend .usa-alert-error;
@@ -116,7 +124,8 @@ alerts-widget:focus {
   }
 }
 
-/* for Django admin */
+// These classes are used in the Django admin. They're automatically created
+// by Django, so styling them is more straightfoward than renaming them.
 .messagelist li {
   @extend .usa-alert;
   @extend .usa-alert-info;
