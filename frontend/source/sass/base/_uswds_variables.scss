@@ -1,6 +1,8 @@
 // Variable overrides for the U.S. Web Design Standards.
 // These names should not be changed unless the WDS names change.
 
+@import 'rem';
+
 // Set the base path for assets (used for font and image paths)
 $asset-path: '../vendor/uswds/' !default;
 
@@ -14,8 +16,8 @@ $color-green:                #bbcb70;
 $color-green-light:          #ccdc86;
 $color-green-lighter:        #dae6a3;
 
-$color-primary-alt:          $color-green-bright;
-$color-secondary:            $color-green-bright;
+$color-primary-alt:          #ccde61;
+$color-secondary:            $color-primary-alt;
 // Solve later: disconnect between ^this^ and other "secondary" colors
 
 $color-red-dark:             #BC1630;
@@ -68,5 +70,3 @@ $h6-font-size:        rem(12px);
 
 $base-line-height:    1.5;
 $heading-line-height: 1.3;
-
-

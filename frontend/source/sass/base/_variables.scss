@@ -11,7 +11,7 @@
 $color-green-darkest:        #61701c;
 $color-green-medium:         #a0ad64;
 
-$color-green-bright:         #ccde61;
+$color-green-bright:         $color-secondary;
 
 $color-blue-dark:            #0b6199;
 $color-blue-lightest:        #d4f6fe;
@@ -22,7 +22,8 @@ $color-gray-darker:          #2d4d59;
 $color-gold-darkest:         #825c1e;
 
 // Mobile First Breakpoints
-// WDS' breakpoints go from 600px to 1201px, and that doesn't work for a lot of things
+// WDS' breakpoints go from 600px to 1201px.
+// We really need a breakpoint in between.
 $medium-large-screen: 900px;
 
 // Fonts
@@ -36,7 +37,7 @@ $display-font-size:   rem(40px);
 
 $small-line-height: 1.3;
 
-$line-length-max-width: rem(720px); // not in WDS; 75% of Skeleton's container max-width
+$line-length-max-width: rem(720px); // 75% of container max-width
 
 // Neat grid overrides
 $column: 5rem;
