@@ -63,6 +63,76 @@ h3.styleguide-section {
   float: right;
 }
 
+
+/* TODO: solve this …
+.styleguide-example :not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: green;
+}
+ */
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #7da1b0; /* $color-gray-medium */
+}
+
+.styleguide-example .token.punctuation {
+	color: #7da1b0; /* $color-gray-medium */
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #981b1e; /* $color-red-darkest */
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #61701c; /* $color-green-darkest */
+}
+
+/* TODO: Color this. Do we need? …
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+	color: #a67f59;
+	background: hsla(0, 0%, 100%, .5);
+}
+ */
+
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #0b6199; /* $color-blue-dark */
+}
+
+/* TODO: Color this. Do we need? …
+.token.function {
+	color: #DD4A68;
+}
+*/
+
+/* TODO: Color this. Do we need? …
+.token.regex,
+.token.important,
+.token.variable {
+	color: #e90;
+}
+*/
+
 /* This selector looks weird because we're waging a war on
  * two fronts between CodeClimate's CSS linter and
  * Prism's default CSS. */
