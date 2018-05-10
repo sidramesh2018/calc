@@ -920,8 +920,8 @@ class GetRatesTests(TestCase):
     def test_query_type__match_exact(self):
         self.make_test_set()
         get_contract_recipe().make(
-                _quantity=1,
-                labor_category='Professional Legal Services I'
+            _quantity=1,
+            labor_category='Professional Legal Services I'
         )
         resp = self.c.get(
             self.path, {'q': 'legal services', 'query_type': 'match_exact'})

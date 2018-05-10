@@ -9,7 +9,7 @@ from django.template.defaultfilters import pluralize
 from django.conf import settings
 
 from frontend import email_css
-from hourglass.site_utils import absolute_reverse
+from calc.site_utils import absolute_reverse
 from .models import SubmittedPriceList
 
 
