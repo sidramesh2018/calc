@@ -1,15 +1,6 @@
-from typing import List
 from django.core.management.base import BaseCommand
 
-from contracts.reports.base import BaseMetric
-from contracts.reports import dupes, outliers, incomplete, expired
-
-ALL_METRICS: List[BaseMetric] = [
-    dupes.Metric(),
-    outliers.Metric(),
-    incomplete.Metric(),
-    expired.Metric(),
-]
+from contracts.reports import BaseMetric, ALL_METRICS
 
 
 class Command(BaseCommand):
