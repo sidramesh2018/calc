@@ -23,6 +23,11 @@ class Metric(BaseMetric):
         'current_price',
     ]
 
+    CORE_FIELD_NAMES = [
+        Contract._meta.get_field(field).verbose_name
+        for field in CORE_FIELDS
+    ]
+
     CONTRACTS_TABLE = Contract._meta.db_table
 
     CORE_FIELD_COLUMNS = [
@@ -52,5 +57,6 @@ class Metric(BaseMetric):
     '''
 
     footnote = f'''
-    Core fields include {', '.join(CORE_FIELDS[:-1])} and {CORE_FIELDS[-1]}.
+    Core fields include {', '.join(CORE_FIELD_NAMES[:-1])}
+    and {CORE_FIELD_NAMES[-1]}.
     '''
