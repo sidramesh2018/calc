@@ -72,14 +72,14 @@ h3.styleguide-section {
 	background-color: #f5f8fa; /* $color-gray-lightest */
 }
 
-styleguide-example .token {
+.styleguide-example .token {
 	color: #021014; /* $color-black */
 }
 
-styleguide-example .token.comment,
-styleguide-example .token.prolog,
-styleguide-example .token.doctype,
-styleguide-example .token.cdata {
+.styleguide-example .token.comment,
+.styleguide-example .token.prolog,
+.styleguide-example .token.doctype,
+.styleguide-example .token.cdata {
 	color: #7da1b0; /* $color-gray-medium */
 }
 
@@ -87,48 +87,48 @@ styleguide-example .token.cdata {
 	color: #7da1b0; /* $color-gray-medium */
 }
 
-styleguide-example .token.property,
-styleguide-example .token.tag,
-styleguide-example .token.boolean,
-styleguide-example .token.number,
-styleguide-example .token.constant,
-styleguide-example .token.symbol,
-styleguide-example .token.deleted {
+.styleguide-example .token.property,
+.styleguide-example .token.tag,
+.styleguide-example .token.boolean,
+.styleguide-example .token.number,
+.styleguide-example .token.constant,
+.styleguide-example .token.symbol,
+.styleguide-example .token.deleted {
 	color: #981b1e; /* $color-red-darkest */
 }
 
-styleguide-example .token.selector,
-styleguide-example .token.attr-name,
-styleguide-example .token.string,
-styleguide-example .token.char,
-styleguide-example .token.builtin,
-styleguide-example .token.inserted {
+.styleguide-example .token.selector,
+.styleguide-example .token.attr-name,
+.styleguide-example .token.string,
+.styleguide-example .token.char,
+.styleguide-example .token.builtin,
+.styleguide-example .token.inserted {
 	color: #61701c; /* $color-green-darkest */
 }
 
-styleguide-example .token.operator,
-styleguide-example .token.entity,
-styleguide-example .token.url,
-styleguide-example .language-css .token.string,
-styleguide-example .style .token.string {
+.styleguide-example .token.operator,
+.styleguide-example .token.entity,
+.styleguide-example .token.url,
+.styleguide-example .language-css .token.string,
+.styleguide-example .style .token.string {
 	color: #a67f59; /* TODO: revisit this color */
 	background: hsla(0, 0%, 100%, .5);
 }
 
 
-styleguide-example .token.atrule,
-styleguide-example .token.attr-value,
-styleguide-example .token.keyword {
+.styleguide-example .token.atrule,
+.styleguide-example .token.attr-value,
+.styleguide-example .token.keyword {
 	color: #0b6199; /* $color-blue-dark */
 }
 
-styleguide-example .token.function {
+.styleguide-example .token.function {
 	color: #DD4A68; /* TODO: revisit this color */
 }
 
-styleguide-example .token.regex,
-styleguide-example .token.important,
-styleguide-example .token.variable {
+.styleguide-example .token.regex,
+.styleguide-example .token.important,
+.styleguide-example .token.variable {
 	color: #e90; /* TODO: revisit this color */
 }
 
