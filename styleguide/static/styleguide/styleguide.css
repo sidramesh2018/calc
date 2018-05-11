@@ -117,3 +117,13 @@ kbd {
   height: 600px;
   border: 1px solid gray;
 }
+
+.styleguide-example .token.property,
+.styleguide-example .token.tag,
+.styleguide-example .token.boolean,
+.styleguide-example .token.number,
+.styleguide-example .token.constant,
+.styleguide-example .token.symbol,
+.styleguide-example .token.deleted {
+  color: #bc1630;
+}

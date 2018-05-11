@@ -20,7 +20,7 @@ $color-primary-alt:          $color-green-bright; // Modified from USWDS
 $color-secondary:            $color-green-bright; // Modified from USWDS
 // Solve later: disconnect between ^this^ and other "secondary" colors
 
-$color-red-dark:             #BC1630; // Modified from USWDS
+$color-red-dark:             #bc1630; // Modified from USWDS
 $color-red-darkest:          #981b1e; // No change from USWDS, including for visual reference
 $color-red-lightest:         #ffe0e0; // Modified from USWDS
 
@@ -38,8 +38,8 @@ $color-gray-dark:            #436a79; // Modified from USWDS
 $color-gray:                 #547d8c; // Modified from USWDS
 $color-gray-medium:          #7da1b0; // Modified from USWDS
 $color-gray-light:           #c5d6de; // Modified from USWDS
-$color-gray-lighter:         #dfe7ee; // Modified from USWDS
-$color-gray-lightest:        #f0f6fa; // Modified from USWDS
+$color-gray-lighter:         #ebf1f5; // Modified from USWDS
+$color-gray-lightest:        #f2f7fa; // Modified from USWDS
 
 $color-gold:                 #fdb81e; // No change from USWDS, including for visual reference
 $color-gold-darkest:         #825c1e; // CALC-specific variable
@@ -67,7 +67,7 @@ $small-line-height: 1.3;
 
 $font-family-main: 'Libre Franklin', 'Helvetica', 'Arial', sans-serif;
 $font-sans: $font-family-main;
-$font-family-mono: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+$font-family-mono: 'Roboto Mono', 'Liberation Mono', 'Source Code Pro', Courier, monospace;
 $font-weight-bold: 700;
 $font-weight-normal: 400;
 $font-weight-light: 200;
