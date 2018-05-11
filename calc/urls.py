@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 from uaa_client.decorators import staff_login_required
 
 import data_explorer.views
+from .sample_users import login_sample_user
 from .healthcheck import healthcheck
 from .robots import robots_txt
 from .changelog import django_view as view_changelog
@@ -41,5 +42,7 @@ if settings.DEBUG:
         url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     ] + urlpatterns + [
         url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^login-sample-user/(?P<username>[A-Za-z0-9_\-]+)$',
+            login_sample_user, name='login_sample_user'),
         tests_url,
     ]

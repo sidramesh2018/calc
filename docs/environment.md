@@ -103,10 +103,6 @@ string), the boolean is true; otherwise, it's false.
   will be sent messages whenever certain kinds of
   [events](../slackbot/signals.py) occur in the app.
 
-* `ESLINT_CHILL_OUT` is a boolean; if true, it will change the behavior
-  of gulp's watch mode such that it doesn't run `eslint` every time a
-  file changes.
-
 * `USE_POLLING` is a boolean; if true, this will force all the watchers
   to use filesystem polling instead of OS notifications, which works
   better with some configurations, such as Windows, VirtualBox, and

@@ -90,6 +90,7 @@ TEMPLATES = [{
             'calc.context_processors.google_analytics_tracking_id',
             'calc.context_processors.help_email',
             'calc.context_processors.non_prod_instance_name',
+            'calc.context_processors.sample_users',
             'frontend.context_processors.is_safe_mode_enabled',
             "django.contrib.auth.context_processors.auth",
             "django.template.context_processors.debug",
