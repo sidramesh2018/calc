@@ -104,7 +104,7 @@ TestType = namedtuple('TestType', ['name', 'cmd'])
 
 TESTTYPES = [
     TestType(name='flake8', cmd='flake8 .'),
-    TestType(name='eslint', cmd='yarn failable-eslint'),
+    TestType(name='eslint', cmd='yarn eslint'),
     TestType(name='bandit', cmd='bandit -r .'),
     TestType(name='mypy', cmd='mypy .'),
     TestType(name='typescript', cmd='yarn typescript'),
