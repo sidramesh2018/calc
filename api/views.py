@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Count, Q, StdDev
 from django.utils.safestring import SafeString
 from markdown import markdown
+from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.schemas import AutoSchema
@@ -216,10 +217,20 @@ def get_contracts_queryset(request_params, wage_field):
     price = request_params.get('price', None)
     price__gte = request_params.get('price__gte')
     price__lte = request_params.get('price__lte')
-    sort = request_params.get('sort', wage_field)
+    sort = request_params.get('sort', wage_field).split(',')
     # query_type can be: [ match_all (default) | match_phrase | match_exact ]
     query_type = request_params.get('query_type', 'match_all')
     exclude = request_params.getlist('exclude')
+
+    all_fields = set([f.name for f in Contract._meta.fields])
+    sortable_fields = set([f.name for f in Contract._meta.fields if f.db_index])
+    for field in sort:
+        if field.startswith('-'):
+            field = field[1:]
+        if field not in all_fields:
+            raise serializers.ValidationError(f'"{field}" is not a valid field to sort on')
+        if field not in sortable_fields:
+            raise serializers.ValidationError(f'Unable to sort on the field "{field}"')
 
     contracts = Contract.objects.all()
 
@@ -292,7 +303,7 @@ def get_contracts_queryset(request_params, wage_field):
         if price__lte:
             contracts = contracts.filter(**{wage_field + '__lte': price__lte})
 
-    return contracts.order_by(*sort.split(','))
+    return contracts.order_by(*sort)
 
 
 def quantize(num, precision=2):
@@ -304,6 +315,53 @@ def quantize(num, precision=2):
 class GetRates(APIView):
     """
     Get detailed information about all labor rates that match a search query.
+
+    The JSON response contains the following keys:
+
+    * `next` is a URL that points to the next page of results, or
+    `null` if no additional pages are available.
+    * `previous` is a URL that points to the previous page of
+    results, or `null` if no previous pages are available.
+    * `results` is an array containing the results for the
+    current page. Each item in the array contains the following keys:
+        * `id` is the internal ID of the rate in the CALC database.
+            This can be passed to the `exclude` query parameter to
+            exclude individual rates from search results.
+        * `idv_piid` is the contract number of the contract that
+            contains the labor rate.
+        * `vendor_name` is the name of the vendor that the
+            labor rate's contract is under.
+        * `education_level` is the minimum level of education
+            for the labor rate.
+        * `min_years_experience` is the minimum years of experience
+            for the labor rate.
+        * `hourly_rate_year1`, `current_price`, `next_year_price`,
+            and `second_year_price` contain pricing information for
+            the labor rate.
+        * `schedule` is the schedule the labor rate is under.
+        * `sin` describes the special item numbers (SINs) the labor
+            rate is under. See
+            [#1033](https://github.com/18F/calc/issues/1033) for
+            details on some limitations.
+        * `contractor_site` is the worksite of the labor rate.
+        * `business_size` is the business size of the vendor
+            offering the labor rate.
+
+    Additionally, the response contains aggregate details about
+    the distribution of the search results, across all pages:
+
+    * `count` is the total number rates.
+    * `average` is the average price of the rates.
+    * `minimum` is the minimum price of the rates.
+    * `maximum` is the maximum price of the rates.
+    * `first_standard_deviation` is the first standard deviation
+      of the rates.
+    * `wage_histogram` is an array that contains an object for
+      each bin in the histogram (the number of bins can be
+      specified via the `histogram` query parameter):
+        * `min` is the minimum price of the bin.
+        * `max` is the maximum price of the bin.
+        * `count` is the number of prices in the bin.
     """
 
     # The AutoSchema will introspect this to ultimately generate
@@ -374,6 +432,10 @@ class GetRates(APIView):
 class GetRatesCSV(APIView):
     """
     Returns a CSV of matched records and selected search and filter options.
+
+    Note that the first two rows actually contain metadata about the requested
+    search and filter options. The subsequent rows contain the
+    matched records.
     """
 
     schema = AutoSchema(
@@ -439,6 +501,14 @@ class GetRatesCSV(APIView):
 class GetAutocomplete(APIView):
     """
     Return autocomplete suggestions for a given query.
+
+    The JSON response is an array containing objects
+    with the following keys:
+
+    * `labor_category` is the name of a labor category that
+      matches your query.
+
+    * `count` is the number of records with the labor category.
     """
 
     schema = AutoSchema(
