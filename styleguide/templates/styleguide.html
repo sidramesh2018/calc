@@ -2,14 +2,15 @@
 {% load styleguide %}
 
 {% block styleguide_body %}
-  <h1>CALC Style Guide</h1>
 
   {% guide %}
-
-  {% guide_section "Introduction" %}
+  <div class="sidenav-layout__content">
+  <div class="card">
+  <div class="content">
+  <h1>CALC Style Guide</h1>
 
   <p>
-    Welcome to the CALC Style Guide!
+    Welcome to the CALC Style Guide! Here you’ll find the design building blocks of the site, from basics like typography and colors, to components such as form elements, to sample page layouts. This guide assumes knowledge of html, css, and other technologies used to build this website.
   </p>
 
   <p>
@@ -21,8 +22,9 @@
   <p>
     CALC uses <a href="http://bourbon.io/">Bourbon</a> and
     <a href="http://neat.bourbon.io/">Neat</a> as the foundation
-    for its styles, with alterations based on the
-    <a href="https://designsystem.digital.gov/">U.S. Web Design System (USWDS)</a>.
+    for its grid. Its visual styles are based on the
+    <a href="https://designsystem.digital.gov/">U.S. Web Design System (USWDS)</a>,
+    with alterations where deemed appropriate for branding and functionality.
   </p>
 
   <p>
@@ -60,6 +62,288 @@
     <li>Order from chaos</li>
   </ul>
   {% endexample %}
+
+  {% guide_section "Colors" %}
+
+  <p>
+    Our color palette is grounded in a subtly gradated bluish gray, with shades of bright green serving as accents.
+  </p>
+
+  <p class="swatch__key">
+    <span><strong>508 compliance with white:</strong></span>
+    <span class="swatch__contrast-ok">Sufficient contrast</span>
+    <span class="swatch__contrast-bad">Insufficient contrast</span>
+  </p>
+
+  <h3>Core</h3>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-black"></div>
+      <div class="label-mono">
+        <p>$color-black</p>
+        <p>$color-base</p>
+        <p class="swatch__hex">#021014</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-white"></div>
+      <div class="label-mono">
+        <p>$color-white</p>
+        <p class="swatch__hex">#ffffff</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-gray-darkest"></div>
+      <div class="label-mono">
+        <p>$color-gray-darkest</p>
+        <p class="swatch__hex">#092d39</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-gray-darker"></div>
+      <div class="label-mono">
+        <p>$color-gray-darker</p>
+        <p class="swatch__hex">#2d4d59</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-gray-dark"></div>
+      <div class="label-mono">
+        <p>$color-gray-dark</p>
+        <p class="swatch__hex">#436a79</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-gray"></div>
+      <div class="label-mono">
+        <p>$color-gray</p>
+        <p class="swatch__hex">#547d8c</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-gray-medium"></div>
+      <div class="label-mono">
+        <p>$color-gray-medium</p>
+        <p class="swatch__hex">#7da1b0</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-gray-light"></div>
+      <div class="label-mono">
+        <p>$color-gray-light</p>
+        <p class="swatch__hex">#c5d6de</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-gray-lighter"></div>
+      <div class="label-mono">
+        <p>$color-gray-lighter</p>
+        <p class="swatch__hex">#ebf1f5</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-gray-lightest"></div>
+      <div class="label-mono">
+        <p>$color-gray-lightest</p>
+        <p class="swatch__hex">#f2f7fa</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-green-darkest"></div>
+      <div class="label-mono">
+        <p>$color-green-darkest</p>
+        <p class="swatch__hex">#61701c</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-green-medium"></div>
+      <div class="label-mono">
+        <p>$color-green-medium</p>
+        <p class="swatch__hex">#a0ad64</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-green"></div>
+      <div class="label-mono">
+        <p>$color-green</p>
+        <p class="swatch__hex">#bbcb70</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-green-light"></div>
+      <div class="label-mono">
+        <p>$color-green-light</p>
+        <p class="swatch__hex">#ccdc86</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="swatch columns three">
+      <div class="swatch__color color-green-lighter"></div>
+      <div class="label-mono">
+        <p>$color-green-lighter</p>
+        <p class="swatch__hex">#dae6a3</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-green-bright"></div>
+      <div class="label-mono">
+        <p>$color-green-bright</p>
+        <p class="swatch__hex">#ccde61</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Utility</h3>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-red-darkest"></div>
+      <div class="label-mono">
+        <p>$color-red-darkest</p>
+        <p class="swatch__hex">#981b1e</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-red-dark"></div>
+      <div class="label-mono">
+        <p>$color-red-dark</p>
+        <p class="swatch__hex">#bc1630</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-red-lightest"></div>
+      <div class="label-mono">
+        <p>$color-red-lightest</p>
+        <p class="swatch__hex">#ffe0e0</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue-dark"></div>
+      <div class="label-mono">
+        <p>$color-blue-dark</p>
+        <p class="swatch__hex">#0b6199</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue"></div>
+      <div class="label-mono">
+        <p>$color-blue</p>
+        <p class="swatch__hex">#077bc7</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue-lightest"></div>
+      <div class="label-mono">
+        <p>$color-blue-lightest</p>
+        <p class="swatch__hex">#d4f6fe</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-gold"></div>
+      <div class="label-mono">
+        <p>$color-gold</p>
+        <p class="swatch__hex">#fdb81e</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-gold-darkest"></div>
+      <div class="label-mono">
+        <p>$color-gold-darkest</p>
+        <p class="swatch__hex">#825c1e</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-gold-lightest"></div>
+      <div class="label-mono">
+        <p>$color-gold-lightest</p>
+        <p class="swatch__hex">#fbeebe</p>
+        <p class="contrast-bad">508 fail</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-visited"></div>
+      <div class="label-mono">
+        <p>$color-visited</p>
+        <p class="swatch__hex">#4c2c92</p>
+        <p class="contrast-ok">508</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Acceptable color combinations for typography</h3>
+  <h4>Core: over white background</h4>
+  <p><strong>$color-black</strong> over white is the default style for the website. Only on rare occasions should type be colored differently than this.</p>
+  <div class="color-combos columns twelve color-white">
+    <div class="color-name black">$color-black ($color-base)</div>
+    <div class="color-name color-gray-dark">$color-gray-dark</div>
+  </div>
+  <div class="label-mono small">Background-color: $color-white</div>
+  <h4>Special situations: colored backgrounds</h4>
+  <p>These more colorful combinations are used sparingly in the CALC design, such as in the header and footer. They are included here primarily for the sake of completeness.</p>
+  <div class="color-combos columns twelve color-gray-darkest">
+    <div class="color-name color-white">$color-white</div>
+    <div class="color-name color-gray-light">$color-gray-light</div>
+    <div class="color-name color-green-bright">$color-green-bright</div>
+  </div>
+  <div class="label-mono">Background-color: $color-gray-darkest</div>
+  <div class="color-combos columns twelve color-green-light">
+    <div class="color-name color-black">$color-black</div>
+  </div>
+  <div class="label-mono">Background-color: $color-green-light</div>
+  <div class="color-combos columns twelve color-gray-lighter">
+    <div class="color-name color-black">$color-black</div>
+    <div class="color-name color-gray-darker">$color-gray-darker</div>
+  </div>
+  <div class="label-mono">Background-color: $color-gray-lighter</div>
+
+  {% guide_section "Header" %}
+
+  <p>Part of the base template. New pages should extend <code>data_explorer/templates/base.html</code> to include the header, which is visible for reference purposes only below.</p>
+  <p>The header is made up of a few separate file includes and blocks in <code>data_explorer/templates/base.html</code>:</p>
+  <p><code>_banner.html</code> is the "official government website" banner.</p>
+  <p><code>_header.html</code> contains the basic, slim header consisting of the logo and user menu.</p>
+  <p>The <code>header_extension</code> block is used to add extra things to the header, such as the content
+  in the header on the data explorer.</p>
+  <p>The <code>header_nav</code> block is used to include the default navigation. Some pages don't need this.</p>
+  {% fullpage_example "header" show_html=False %}
+
+  {% guide_section "Footer" %}
+  <p>Part of the base template. New pages should extend <code>data_explorer/templates/base.html</code> to include the footer, which is visible for reference purposes only below.
+  {% fullpage_example "footer" show_html=False %}
 
   {% guide_section "Card Layout" %}
 
@@ -696,4 +980,7 @@
   {% endif %}
 
   {% endguide %}
+</div><!--content-->
+</div><!--card-->
+</div><!--sidenav-layout__content-->
 {% endblock %}

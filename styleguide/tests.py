@@ -1,7 +1,7 @@
 from django.test import TestCase, SimpleTestCase
 from django.template import engines
 
-from styleguide import email_examples
+from styleguide import email_examples, fullpage_example
 from styleguide.templatetags.styleguide import (
     template_tag_library,
     github_url_for_path,
@@ -47,6 +47,12 @@ class FullpageExampleTests(TestCase):
     def test_returns_404_if_name_is_invalid(self):
         response = self.client.get('/styleguide/fullpage-example/lololol')
         self.assertEqual(response.status_code, 404)
+
+    def test_get_snippet_works(self):
+        self.assertEqual(fullpage_example._get_snippet(
+            'foo\n{# BEGIN SNIPPET #}\nblarg\n{# END SNIPPET #}\nbar'
+        ), 'blarg\n')
+        self.assertEqual(fullpage_example._get_snippet('flarg'), None)
 
 
 class TemplateTagsTests(SimpleTestCase):
