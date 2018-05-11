@@ -40,8 +40,12 @@ Parts of the site use React and Redux. More information available below.
 ### CSS
 We use [Sass](https://sass-lang.com/) for our stylesheets. Their [basics guide](https://sass-lang.com/guide)
 is a good place to start if you've not used it before. Sass allows us to abstract frequently used parts of
-the CSS into reusable components like variables and mixins. The variables we're using can all be found in
-[frontend/source/sass/base/_variables.scss](../frontend/source/sass/_variables.scss).
+the CSS into reusable components like variables and mixins. Some variables come directly from the
+[U.S. Web Design System][https://github.com/uswds/uswds/blob/develop/src/stylesheets/core/_variables.scss]
+and we define new values for them in
+[frontend/source/sass/base/_uswds_variables.scss](../frontend/source/sass/base/_uswds_variables.scss).
+Other variables are specific to CALC, and those are defined in
+[frontend/source/sass/base/_variables.scss](../frontend/source/sass/base/_variables.scss).
 
 This project generally follows a modified (BEM)[https://frontend.18f.gov/css/naming/#bem] (Block, Element, Modifier)
 naming scheme. This prevents namespace collisions and alleviates the need for too much nested Sass.
@@ -49,7 +53,7 @@ naming scheme. This prevents namespace collisions and alleviates the need for to
 The `sass` files follow a few conventions:
 - Core styles are divided into four categories: [admin](../frontend/source/sass/admin/) (controls styling for the Django site admin),
 [base](../frontend/source/sass/base/) (styles like resets, grid, and variables), [components](../frontend/source/sass/components/)
-(individual site components like the header and footer), and [libs](../frontend/source/sass/libs) (vendored CSS).
+(individual site components like the header and footer), and [libs](../frontend/source/sass/libs/) (vendored CSS).
 - All of the site's core styles are imported in [frontend/source/sass/main.scss](../frontend/source/sass/main.scss).
 - Partials (also called includes or imports) are files that will get compiled into the main CSS file. These are prefixed
 with an underscore (such as `components/_footer.scss`).
