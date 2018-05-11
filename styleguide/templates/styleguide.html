@@ -332,15 +332,18 @@
 
   {% guide_section "Header" %}
 
-  <p>The header is made up of a few separate file includes:</p>
+  <p>Part of the base template. New pages should extend <code>data_explorer/templates/base.html</code> to include the header, which is visible for reference purposes only below.</p>
+  <p>The header is made up of a few separate file includes and blocks in <code>data_explorer/templates/base.html</code>:</p>
   <p><code>_banner.html</code> is the "official government website" banner.</p>
   <p><code>_header.html</code> contains the basic, slim header consisting of the logo and user menu.</p>
   <p>The <code>header_extension</code> block is used to add extra things to the header, such as the content
   in the header on the data explorer.</p>
   <p>The <code>header_nav</code> block is used to include the default navigation. Some pages don't need this.</p>
-  <p>The header looks like the below, but please note that you should NOT copy and paste this generated
-  HTML. Use the blocks and templates defined in <code>data_explorer/templates/base.html</code> to make changes.</p>
   {% fullpage_example "header" show_html=False %}
+
+  {% guide_section "Footer" %}
+  <p>Part of the base template. New pages should extend <code>data_explorer/templates/base.html</code> to include the footer, which is visible for reference purposes only below.
+  {% fullpage_example "footer" show_html=False %}
 
   {% guide_section "Card Layout" %}
 

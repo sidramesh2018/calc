@@ -2,7 +2,7 @@
 
 {% block body %}
 {# BEGIN SNIPPET #}
-<body>
+<body class="content--skinny">
   {% include '_banner.html' %}
   <header>
     <div class="container">
@@ -16,6 +16,12 @@
         </div>
     </div>
   </header>
+  <main id="main" class="{% block main_class %}{% endblock %}">
+      <div class="container">
+        <div class="card">
+        </div>
+      </div>
+    </main>
 </body>
 {# END SNIPPET #}
 {% endblock %}
