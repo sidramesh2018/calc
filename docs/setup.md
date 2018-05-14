@@ -74,13 +74,15 @@ Now you can start the development server:
 docker-compose up
 ```
 
-This will start up all required servers in containers and output their log information to `stdout`. It might take a couple minutes for all the front end assets to be built, but once you see a message that looks like
+This will start up all required servers in containers and output their log information to `stdout`. It might take a couple minutes for all the front end assets to be built, but once you see a message that looks something like this:
 
 ```sh
-gulp_1          | [19:38:15] Finished 'default' after 23 μs
+gulp_1          | [19:15:54] -----------------------------------------
+gulp_1          | [19:15:54] Visit your CALC at: http://localhost:8000
+gulp_1          | [19:15:54] -----------------------------------------
 ```
 
-you can http://localhost:8000/ to see your local CALC instance.
+You can visit http://localhost:8000/ to see your local CALC instance.
 
 ### More information
 
