@@ -4,7 +4,7 @@ In general, front end code is in the [frontend](../frontend/) directory.
 
 This guide is about the nuts-and-bolts of developing front end code; for
 details on how to use or style individual components, see the
-[style guide][https://calc-dev.app.cloud.gov/styleguide/].
+[style guide][].
 
 ## The static asset generator
 
@@ -30,10 +30,10 @@ docker-compose run app yarn gulp build
 ## Developing the front end
 
 ### JavaScript
-Globally, we use [yarn](https://yarnpkg.com/en/) to manage our node dependencies and run node tasks.
+Globally, we use [yarn][] to manage our node dependencies and run node tasks.
 `yarn`, in addition to being faster than using `npm install`, has the
 benefit of locking dependency versions via a `yarn.lock` file.
-Read the [yarn workflow docs](https://yarnpkg.com/en/docs/yarn-workflow) if you are not familiar with how to use it.
+Read the [yarn workflow docs][] if you are not familiar with how to use it.
 
 Parts of the site use React and Redux. More information available below.
 
@@ -50,7 +50,7 @@ Other variables are specific to CALC, and those are defined in
 This project generally follows a modified (BEM)[https://frontend.18f.gov/css/naming/#bem] (Block, Element, Modifier)
 naming scheme. This prevents namespace collisions and alleviates the need for too much nested Sass.
 
-The `sass` files follow a few conventions:
+The Sass files follow a few conventions:
 - Core styles are divided into four categories: [admin](../frontend/source/sass/admin/) (controls styling for the Django site admin),
 [base](../frontend/source/sass/base/) (styles like resets, grid, and variables), [components](../frontend/source/sass/components/)
 (individual site components like the header and footer), and [libs](../frontend/source/sass/libs/) (vendored CSS).
@@ -58,7 +58,7 @@ The `sass` files follow a few conventions:
 - Partials (also called includes or imports) are files that will get compiled into the main CSS file. These are prefixed
 with an underscore (such as `components/_footer.scss`).
 
-A more detailed explanation of how to use specific components can be found in the CALC [style guide][https://calc-dev.app.cloud.gov/styleguide/].
+A more detailed explanation of how to use specific components can be found in the CALC [style guide][].
 
 ### Templates
 The site makes use of Django's templating system to ensure common elements like the header, navigation, and footer are applied
@@ -79,11 +79,11 @@ available at `calc.gsa.gov/admin/`).
 
 ### Data explorer
 
-The data explorer is a [React][https://reactjs.org/]-based app that uses [Redux][https://redux.js.org/] for data flow and state management. It's located in[frontend/source/js/data-explorer](../frontend/source/js/data-explorer/).
+The data explorer is a [React][]-based app that uses [Redux][] for data flow and state management. It's located in[frontend/source/js/data-explorer](../frontend/source/js/data-explorer/).
 
 #### Testing
 
-The data explorer's test suite uses [Jest][https://facebook.github.io/jest/], and the tests are located in [frontend/source/js/data-explorer/tests](../frontend/source/js/data-explorer/tests/).
+The data explorer's test suite uses [Jest][], and the tests are located in [frontend/source/js/data-explorer/tests](../frontend/source/js/data-explorer/tests/).
 
 To run all the tests, run:
 
@@ -136,7 +136,7 @@ Other parts of CALC are usually stored in either Django templates
 or somewhere under the [frontend/source/](../frontend/source/)
 hierarchy.
 
-When in doubt, see the [style guide][https://calc-dev.app.cloud.gov/styleguide/]!
+When in doubt, see the [style guide][]!
 
 [QUnit]: https://qunitjs.com/
 [React]: https://facebook.github.io/react/
