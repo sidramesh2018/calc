@@ -1,16 +1,5 @@
 @import 'variables.scss';
 
-// legacy sr-only class
-// This class is applied to things that should ONLY be rendered to screen readers,
-// such as descriptions of form fields that would be redundant for sighted users.
-.sr-only {
-  position: absolute !important;
-  height: 1px; width: 1px;
-  overflow: hidden;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px);
-}
-
 // link styles
 @mixin link ($link, $visit, $hover, $active) {
   a {
