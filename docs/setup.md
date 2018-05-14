@@ -21,12 +21,28 @@ which will output the version numbers of each tool if the installation worked as
 
 ### Configuration
 
+During development, the project reads environment variables from a `.env` file, which
+you can create by running:
+
 ```sh
 cp .env.sample .env
-ln -sf docker-compose.local.yml docker-compose.override.yml
 ```
 
 Edit the `.env` file to your tastes. You shouldn't need to change much here; but if you'd like to see the available options, see [Environment variables](environment.md) for details on configuration.
+
+You'll also need to symlink `docker-compose.local.yml` to `docker-compose.override.yml`. On Linux and OS X, this can be done via:
+
+```sh
+ln -sf docker-compose.local.yml docker-compose.override.yml
+```
+
+However, if you're on Windows, use:
+
+```sh
+mklink docker-compose.override.yml docker-compose.local.yml
+```
+
+If that doesn't work, you will have to copy the file instead of symlinking it.
 
 ### Installing or updating dependencies
 
@@ -68,7 +84,7 @@ you can http://localhost:8000/ to see your local CALC instance.
 
 ### More information
 
-For more information on interacting with CALC's dockerized development environment, see the [Docker section](docker.md) of our docs.
+For more information on interacting with CALC's dockerized development environment, see the [Using Docker](docker.md) section of our docs.
 
 [Django]: https://www.djangoproject.com/
 [18F Docker guide]: https://github.com/18F/development-guide/blob/master/project_setup/docker/README.md
