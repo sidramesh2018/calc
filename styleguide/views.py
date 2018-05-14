@@ -65,6 +65,5 @@ def index(request):
     ctx.update(date_example.create_template_context())
     ctx.update(radio_checkbox_example.create_template_context())
     ctx['email_examples'] = email_examples.examples
-    import pdb; pdb.set_trace()
 
     return render(request, 'styleguide.html', ctx)
