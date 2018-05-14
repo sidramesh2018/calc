@@ -9,9 +9,9 @@ details on how to use or style individual components, see the
 ## The static asset generator
 
 If you haven't already, make sure you've followed the
-[setup guide](setup.md); it explains how to get the gulp-based
-static asset generator up and running. It will watch for changes to
-front end code and re-build bundles as needed.
+[setup guide](setup.md); it explains how to run `docker-compose up`,
+which (among other things) will watch for changes to front end
+code and re-build bundles as needed.
 
 All the static assets (SASS for CSS and ES6 JavaScript) are
 located in the [frontend/source/](../frontend/source/) directory. Outputs
@@ -54,7 +54,7 @@ docker-compose run app yarn test
 You can also run the tests in a continuous "watch" mode, which re-runs tests as you change your code:
 
 ```sh
-docker-compose run app  yarn test:watch
+docker-compose run app yarn test:watch
 ```
 
 You can run `jest` directly, too: `docker-compose run app jest`, followed by any [Jest CLI options](https://facebook.github.io/jest/docs/cli.html).
