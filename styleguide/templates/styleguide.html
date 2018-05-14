@@ -337,11 +337,10 @@
   {% guide_section "Header" %}
 
   <p>Part of the base template. New pages should extend {% pathname "data_explorer/templates/base.html" %} to include the header, which is visible for reference purposes only below.</p>
-  <p>The header is made up of a few separate file includes and blocks in {% pathname "data_explorer/templates/base.html" %}:</p>
-  <p><code>_banner.html</code> is the "official government website" banner.</p>
-  <p><code>_header.html</code> contains the basic, slim header consisting of the logo and user menu.</p>
-  <p>The <code>header_extension</code> block is used to add extra things to the header, such as the content
-  in the header on the data explorer.</p>
+  <p>The header is made up of a few separate file includes and blocks in {% pathname "data_explorer/templates/base.html" %}.</p>
+  <p>The "official government website" banner file can be found at {% pathname "data_explorer/templates/_banner.html" %}.</p>
+  The slim header for sub-pages consists of the logo and user menu, and is at {% pathname "data_explorer/templates/_header.html" %}.</p>
+  <p>The <code>header_extension</code> block is used to add extra things to the header, such as the content in the header on the data explorer.</p>
   <p>The <code>header_nav</code> block is used to include the default navigation. Some pages don't need this.</p>
   {% fullpage_example "header" show_html=False %}
 
