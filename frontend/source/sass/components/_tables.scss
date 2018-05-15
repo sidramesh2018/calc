@@ -1,4 +1,7 @@
+// A variety of table styles.
+
 @import '../base/variables';
+
 table {
   width: 100%;
   margin-top: 2rem;
@@ -216,8 +219,8 @@ td.error {
       }
     }
   }
+  /* make tooltip readable to screen readers */
   [role=tooltip] {
-    /* make tooltip readable to screen readers */
     position: absolute;
     overflow: hidden;
     height: 1px;
@@ -269,26 +272,6 @@ th.number {
 td.number {
   font-family: $font-family-mono;
   text-align: right;
-}
-
-
-/* Not used because the corresponding JS conflicts with the tooltips. Only here for future reference. */
-th.collapsible {
-  position: relative;
-  &.collapsed {
-    width: 0;
-    font-size: 0;
-  }
-  &:last-child a.toggle-collapse {
-    left: auto;
-    right: 0;
-    text-align: right;
-  }
-}
-th.collapsed,
-td.collapsed {
-  width: 1.5em !important;
-  border-left: 1px dotted $color-gray-lightest;
 }
 
 /* Some labor categories (especially the "interpreter" categories)

@@ -1,5 +1,6 @@
 @import '../base/variables';
 
+// the "official gov site" banner
 #banner {
   color: $color-primary-darkest;
   font-size: 85%;
@@ -33,6 +34,52 @@
   &.banner__non-prod {
     background: $color-gold;
     color: $color-gray-dark;
+    z-index: 10000;
+
+    .developer-nav {
+      float: right;
+      font-size: $small-font-size;
+    }
+
+    a, details, summary {
+      outline-color: $color-primary-darkest;
+      color: $color-primary-darkest;
+    }
+
+    details {
+      font-size: $small-font-size;
+      cursor: pointer;
+      float: right;
+      position: relative;
+      padding-left: .2em;
+
+      ul {
+        background: $color-gold;
+
+        li {
+          a {
+            display: block;
+            white-space: nowrap;
+            text-decoration: none;
+            padding: .3em;
+            &:hover, &:focus {
+              background: $color-gold-lightest;
+            }
+
+            .email {
+              font-size: $em-base;
+              text-decoration: underline;
+            }
+          }
+        }
+
+        border: 1px solid $color-black;
+        list-style-type: none;
+        position: absolute;
+        top: .3em;
+        left: 0;
+      }
+    }
   }
 }
 
@@ -41,7 +88,7 @@ header {
   background: $color-primary-darkest;
   background-image: url(../../images/background-header.svg);
   background-size: 100%;
-  padding-bottom: $space-4x; //to create "stacked" look
+  padding-bottom: $space-4x; //to create "stacked" card look
   @include antialias();
 }
 
@@ -114,27 +161,6 @@ header {
     padding-bottom: $space-1x;
     margin-top: $space-1x;
     margin-bottom: 0;
-  }
-  .icon {
-    margin: ($space-1x + $space-half) 0 0;
-    background-repeat: no-repeat;
-    background-position: center left;
-    display: inline-block;
-    opacity: 0.6;
-    background-size: 30px;
-
-    &.icon-ceiling {
-      background-image: url('../../images/price-callout/roof.png');
-    }
-    &.icon-fully-burdened {
-      background-image: url('../../images/price-callout/mule.png');
-    }
-    &.icon-professional-services {
-      background-image: url('../../images/price-callout/briefcase.png');
-    }
-    &.icon-worldwide-rates {
-      background-image: url('../../images/price-callout/globe.png');
-    }
   }
 }
 

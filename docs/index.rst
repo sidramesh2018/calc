@@ -30,7 +30,8 @@ Welcome to CALC's developer documentation!
    :caption: Release and deployment
 
    monitoring
-   changelog
+   analytics
+   Change log <https://calc-dev.app.cloud.gov/updates/>
    release
    deploy
 
@@ -39,6 +40,7 @@ Welcome to CALC's developer documentation!
    :caption: Useful links
 
    CALC home <https://calc-dev.app.cloud.gov/>
+   CALC data quality report <https://calc-dev.app.cloud.gov/data-quality-report/>
    GitHub <https://github.com/18F/calc>
 
 Indices and tables
