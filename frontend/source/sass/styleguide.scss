@@ -52,6 +52,17 @@ h3.styleguide-section {
   }
 }
 
+/* Prism overrides */
+.styleguide-example .token.property,
+.styleguide-example .token.tag,
+.styleguide-example .token.boolean,
+.styleguide-example .token.number,
+.styleguide-example .token.constant,
+.styleguide-example .token.symbol,
+.styleguide-example .token.deleted {
+  color: #bc1630;
+}
+
 /* This selector looks weird because we're waging a war on
  * two fronts between CodeClimate's CSS linter and
  * Prism's default CSS. */
