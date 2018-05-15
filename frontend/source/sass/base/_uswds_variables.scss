@@ -1,0 +1,72 @@
+// Variable overrides for the U.S. Web Design Standards.
+// These names should not be changed unless the WDS names change.
+
+@import 'rem';
+
+// Set the base path for assets (used for font and image paths)
+$asset-path: '../vendor/uswds/' !default;
+
+// Color overrides
+// Addtional colors specific to CALC are defined in _variables.scss
+$color-primary:              #2D6580;
+$color-primary-darker:       #274E60;
+$color-primary-darkest:      #092D39;
+
+$color-green:                #bbcb70;
+$color-green-light:          #ccdc86;
+$color-green-lighter:        #dae6a3;
+
+$color-primary-alt:          #ccde61;
+$color-secondary:            $color-primary-alt;
+// Solve later: disconnect between ^this^ and other "secondary" colors
+
+$color-red-dark:             #BC1630;
+$color-red-darkest:          #981b1e; // No change from USWDS, including for visual reference
+$color-red-lightest:         #ffe0e0;
+
+$color-blue:                 #077bc7; // Link color
+
+$color-white:                #ffffff; // No change from USWDS, including for visual reference
+$color-base:                 #021014;
+$color-black:                $color-base;
+
+$color-gray-dark:            #436a79;
+$color-gray:                 #547d8c;
+$color-gray-medium:          #7da1b0;
+$color-gray-light:           #c5d6de;
+$color-gray-lighter:         #dfe7ee;
+$color-gray-lightest:        #f0f6fa;
+
+$color-gold:                 #fdb81e; // No change from USWDS, including for visual reference
+
+$color-gold-lightest:        #fbeebe;
+$color-visited:              #4c2c92; // No change from USWDS, including for visual reference
+
+// Mobile First Breakpoints
+$small-screen:      481px;
+$medium-screen:     600px;
+$large-screen:      1201px;
+
+// Magic Numbers
+$border-radius: 3px;
+$button-border-radius: $border-radius;
+$box-shadow: 0 0 2px rgba(#000, 0.3);
+
+$input-max-width: 46rem;
+
+// Fonts
+$font-sans:'Libre Franklin', 'Helvetica', 'Arial', sans-serif;
+
+$em-base:             10px;
+$base-font-size:      rem(16px);
+$medium-font-size:    rem(14px);
+$small-font-size:     rem(12px);
+$h1-font-size:        rem(34px);
+$h2-font-size:        rem(28px);
+$h3-font-size:        rem(22px);
+$h4-font-size:        rem(18px);
+$h5-font-size:        rem(16px);
+$h6-font-size:        rem(12px);
+
+$base-line-height:    1.5;
+$heading-line-height: 1.3;
