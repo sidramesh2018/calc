@@ -42,7 +42,9 @@
   </ol>
 
   {% guide_section "Accessibility" %}
-<p>We think anyone should be able to use CALC (and since this is a federal website, it’s also the <a href="https://www.section508.gov/content/learn/laws-and-policies" target="_blank">law</a>). So we stick to the requirements laid down in the <a href ="https://accessibility.18f.gov/index.html"  target="_blank">18F accessibility guide</a>. Based upon the <a href="https://www.w3.org/TR/WCAG20/"  target="_blank">WCAG2.0 AA</a> standard, this site includes guidelines for such things as minimum <a href="https://accessibility.18f.gov/color/"  target="_blank">color contrast</a> for text, <a href="https://accessibility.18f.gov/keyboard/" target="_blank">keyboard access</a>, <a href="https://accessibility.18f.gov/forms/" target="_blank">form creation</a>, and more. There’s also a handy <a href="https://accessibility.18f.gov/checklist/"  target="_blank">checklist</a> to help you ensure that any new content you create for CALC is fully accessible.</p>
+  <p>
+  We think anyone should be able to use CALC (and since this is a federal website, it’s also the <a href="https://www.section508.gov/content/learn/laws-and-policies" target="_blank">law</a>). So we stick to the requirements laid down in the <a href ="https://accessibility.18f.gov/index.html"  target="_blank">18F accessibility guide</a>. Based upon the <a href="https://www.w3.org/TR/WCAG20/"  target="_blank">WCAG2.0 AA</a> standard, this site includes guidelines for such things as minimum <a href="https://accessibility.18f.gov/color/" target="_blank">color contrast</a> for text, <a href="https://accessibility.18f.gov/keyboard/" target="_blank">keyboard access</a>, <a href="https://accessibility.18f.gov/forms/" target="_blank">form creation</a>, and more. There’s also a handy <a href="https://accessibility.18f.gov/checklist/"  target="_blank">checklist</a> to help you ensure that any new content you create for CALC is fully accessible.
+  </p>
 
   {% guide_section "Typography" %}
 
@@ -69,16 +71,20 @@
   {% guide_section "Colors" %}
 
   <p>
-    Our color palette is grounded in a subtly gradated bluish gray, with shades of bright green serving as accents.
+    Our color palette is grounded in a subtly gradated bluish gray, with shades of bright green for accent.
   </p>
 
-  <p class="swatch__key">
-    <span><strong>508 compliance with white:</strong></span>
-    <span class="swatch__contrast-ok">Sufficient contrast</span>
-    <span class="swatch__contrast-bad">Insufficient contrast</span>
+  <p>
+    In order to ensure that text on the site is <a href="#accessibility">accessible</a> (as mandated by Section 508 of the Rehabilitation Act), all text must have a <strong>minimum contrast ratio of 4.5:1</strong> with its background color.
   </p>
 
-  <h3>Core</h3>
+  <p class="swatch__contrast-ok"> <strong>Colors with this symbol are okay to pair with white.</strong>
+  </p>
+  <p class="swatch__contrast-bad"> <strong>Do not pair with these colors with white.</strong>
+  </p>
+
+
+  <h3>Core palette</h3>
   <div class="row clearfix">
     <div class="swatch columns three">
       <div class="swatch__color color-black"></div>
@@ -86,7 +92,7 @@
         <p>$color-black</p>
         <p>$color-base</p>
         <p class="swatch__hex">#021014</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -94,7 +100,6 @@
       <div class="label-mono">
         <p>$color-white</p>
         <p class="swatch__hex">#ffffff</p>
-        <p class="contrast-ok">508</p>
       </div>
     </div>
   </div>
@@ -104,7 +109,7 @@
       <div class="label-mono">
         <p>$color-gray-darkest</p>
         <p class="swatch__hex">#092d39</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -112,7 +117,7 @@
       <div class="label-mono">
         <p>$color-gray-darker</p>
         <p class="swatch__hex">#2d4d59</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -120,7 +125,7 @@
       <div class="label-mono">
         <p>$color-gray-dark</p>
         <p class="swatch__hex">#436a79</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -128,7 +133,7 @@
       <div class="label-mono">
         <p>$color-gray</p>
         <p class="swatch__hex">#547d8c</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
   </div>
@@ -138,7 +143,7 @@
       <div class="label-mono">
         <p>$color-gray-medium</p>
         <p class="swatch__hex">#7da1b0</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -146,7 +151,7 @@
       <div class="label-mono">
         <p>$color-gray-light</p>
         <p class="swatch__hex">#c5d6de</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -154,7 +159,7 @@
       <div class="label-mono">
         <p>$color-gray-lighter</p>
         <p class="swatch__hex">#ebf1f5</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -162,7 +167,7 @@
       <div class="label-mono">
         <p>$color-gray-lightest</p>
         <p class="swatch__hex">#f2f7fa</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
   </div>
@@ -172,7 +177,7 @@
       <div class="label-mono">
         <p>$color-green-darkest</p>
         <p class="swatch__hex">#61701c</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -180,7 +185,7 @@
       <div class="label-mono">
         <p>$color-green-medium</p>
         <p class="swatch__hex">#a0ad64</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -188,7 +193,7 @@
       <div class="label-mono">
         <p>$color-green</p>
         <p class="swatch__hex">#bbcb70</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -196,7 +201,7 @@
       <div class="label-mono">
         <p>$color-green-light</p>
         <p class="swatch__hex">#ccdc86</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
   </div>
@@ -206,7 +211,7 @@
       <div class="label-mono">
         <p>$color-green-lighter</p>
         <p class="swatch__hex">#dae6a3</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -214,7 +219,7 @@
       <div class="label-mono">
         <p>$color-green-bright</p>
         <p class="swatch__hex">#ccde61</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
   </div>
@@ -226,7 +231,7 @@
       <div class="label-mono">
         <p>$color-red-darkest</p>
         <p class="swatch__hex">#981b1e</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -234,7 +239,7 @@
       <div class="label-mono">
         <p>$color-red-dark</p>
         <p class="swatch__hex">#bc1630</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -242,7 +247,7 @@
       <div class="label-mono">
         <p>$color-red-lightest</p>
         <p class="swatch__hex">#ffe0e0</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
   </div>
@@ -252,7 +257,7 @@
       <div class="label-mono">
         <p>$color-blue-dark</p>
         <p class="swatch__hex">#0b6199</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
   </div>
@@ -262,7 +267,7 @@
       <div class="label-mono">
         <p>$color-blue</p>
         <p class="swatch__hex">#077bc7</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -270,7 +275,7 @@
       <div class="label-mono">
         <p>$color-blue-lightest</p>
         <p class="swatch__hex">#d4f6fe</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
   </div>
@@ -280,7 +285,7 @@
       <div class="label-mono">
         <p>$color-gold</p>
         <p class="swatch__hex">#fdb81e</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -288,7 +293,7 @@
       <div class="label-mono">
         <p>$color-gold-darkest</p>
         <p class="swatch__hex">#825c1e</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
   </div>
@@ -298,7 +303,7 @@
       <div class="label-mono">
         <p>$color-gold-lightest</p>
         <p class="swatch__hex">#fbeebe</p>
-        <p class="contrast-bad">508 fail</p>
+        <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
     <div class="swatch columns three">
@@ -306,7 +311,7 @@
       <div class="label-mono">
         <p>$color-visited</p>
         <p class="swatch__hex">#4c2c92</p>
-        <p class="contrast-ok">508</p>
+        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
   </div>
