@@ -14,13 +14,7 @@
 
     {% include 'analytics/ga.html' %}
     {% include 'frontend/safe_mode/script_tag.html' %}
-    <link rel="stylesheet" href="{% static 'frontend/built/style/main.min.css' %}"/>
-
-    <![if gt IE 8]>
-    <script src="{% static 'frontend/built/js/common.js' %}"></script>
-
-    <![endif]>
-    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
+    {% include '_head.html' %}
     {% block head %}
     {% endblock %}
   </head>

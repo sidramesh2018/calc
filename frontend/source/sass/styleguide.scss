@@ -62,6 +62,7 @@ h3.styleguide-section {
   .example-heading a[target="_blank"] {
     float: right;
   }
+  // Prism overrides for making code samples use our colors
   :not(pre) > code[class*="language-"] {
   	background-color: #f5f8fa; /* $color-gray-lightest */
   }
@@ -122,7 +123,6 @@ h3.styleguide-section {
     }
   }
 }
-
 
 /* This selector looks weird because we're waging a war on
  * two fronts between CodeClimate's CSS linter and
