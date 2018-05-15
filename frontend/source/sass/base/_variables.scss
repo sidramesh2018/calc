@@ -1,87 +1,44 @@
+// The variables in this file are created following the naming conventions
+// established by the USWDS variables in _uswds-variables.scss
+// (and https://github.com/uswds/uswds/blob/develop/src/stylesheets/core/_variables.scss)
+// New variables added to the project should go here.
+
 @import '../../../../node_modules/uswds/src/stylesheets/core/_utilities.scss';
 @import 'rem';
+@import 'uswds_variables';
 
-// Set the base path for assets (used for font and image paths)
-$asset-path: '../vendor/uswds/' !default;
+// Colors
+$color-green-darkest:        #61701c;
+$color-green-medium:         #a0ad64;
 
-// Color
-$color-primary:              #2D6580; // Modified from USWDS
-$color-primary-darker:       #274E60; // Modified from USWDS
-$color-primary-darkest:      #092D39; // Modified from USWDS
+$color-green-bright:         $color-secondary;
 
-$color-green-darkest:        #61701c; // CALC-specific variable
-$color-green-medium:         #a0ad64; // CALC-specific variable
-$color-green:                #bbcb70; // Modified from USWDS
-$color-green-light:          #ccdc86; // Modified from USWDS
-$color-green-lighter:        #dae6a3; // Modified from USWDS
-$color-green-bright:         #ccde61; // CALC-specific variable
+$color-blue-dark:            #0b6199;
+$color-blue-lightest:        #d4f6fe;
 
-$color-primary-alt:          $color-green-bright; // Modified from USWDS
-$color-secondary:            $color-green-bright; // Modified from USWDS
-// Solve later: disconnect between ^this^ and other "secondary" colors
+$color-gray-darkest:         #092d39;
+$color-gray-darker:          #2d4d59;
 
-$color-red-dark:             #bc1630; // Modified from USWDS
-$color-red-darkest:          #981b1e; // No change from USWDS, including for visual reference
-$color-red-lightest:         #ffe0e0; // Modified from USWDS
+$color-gold-darkest:         #825c1e;
 
-$color-white:                #ffffff; // No change from USWDS, including for visual reference
-$color-base:                 #021014; // Modified from USWDS
-$color-black:                $color-base; // Modified from USWDS
-
-$color-blue-dark:            #0b6199; // CALC-specific variable
-$color-blue:                 #077bc7; // Link color, modified from USWDS
-$color-blue-lightest:        #d4f6fe; // CALC-specific variable
-
-$color-gray-darkest:         #092d39; // CALC-specific variable
-$color-gray-darker:          #2d4d59; // CALC-specific variable
-$color-gray-dark:            #436a79; // Modified from USWDS
-$color-gray:                 #547d8c; // Modified from USWDS
-$color-gray-medium:          #7da1b0; // Modified from USWDS
-$color-gray-light:           #c5d6de; // Modified from USWDS
-$color-gray-lighter:         #ebf1f5; // Modified from USWDS
-$color-gray-lightest:        #f2f7fa; // Modified from USWDS
-
-$color-gold:                 #fdb81e; // No change from USWDS, including for visual reference
-$color-gold-darkest:         #825c1e; // CALC-specific variable
-$color-gold-lightest:        #fbeebe; // Modified from USWDS
-$color-visited:              #4c2c92; // No change from USWDS, including for visual reference
+// Mobile First Breakpoints
+// WDS' breakpoints go from 600px to 1201px.
+// We really need a breakpoint in between.
+$medium-large-screen: 900px;
 
 // Fonts
-$em-base:             10px;
-$base-font-size:      rem(16px);
-$medium-font-size:    rem(14px);
-$small-font-size:     rem(12px);
-$display-font-size:   rem(40px);
-$h1-font-size:        rem(34px);
-$h2-font-size:        rem(28px);
-$h3-font-size:        rem(22px);
-$h4-font-size:        rem(18px);
-$h5-font-size:        rem(16px);
-$h6-font-size:        rem(12px);
-
-$line-length-max-width: rem(720px); // not in WDS; 75% of Skeleton's container max-width
-
-$base-line-height:    1.5;
-$heading-line-height: 1.3;
-$small-line-height: 1.3;
-
 $font-family-main: 'Libre Franklin', 'Helvetica', 'Arial', sans-serif;
-$font-sans: $font-family-main;
-$font-family-mono: 'Roboto Mono', 'Liberation Mono', 'Source Code Pro', Courier, monospace;
+$font-family-mono: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+
 $font-weight-bold: 700;
 $font-weight-normal: 400;
 $font-weight-light: 200;
 
-// Mobile First Breakpoints
-$small-screen:      481px;
-$medium-screen:     600px;
-$medium-large-screen: 900px;
-$large-screen:      1201px;
+$display-font-size:   rem(40px);
 
-// Magic Numbers
-$border-radius: 3px;
-$button-border-radius: $border-radius;
-$box-shadow: 0 0 2px rgba(#000, 0.3);
+$small-line-height: 1.3;
+
+$line-length-max-width: rem(720px); // 75% of container max-width
 
 // Neat grid overrides
 $column: 5rem;
@@ -101,4 +58,3 @@ $space-10x: $base-spacing-unit * 10; // 80px
 
 // Form variable overrides
 $form-width: 100%; // was 32rem, but causes weirdness on main page
-$input-max-width: 46rem;

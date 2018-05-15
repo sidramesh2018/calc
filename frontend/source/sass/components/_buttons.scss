@@ -21,7 +21,7 @@ button,
   font-weight: $font-weight-bold;
   line-height: 1.7; // adjusted from 1, which makes links show funky
 
-
+  // Stand-in for deprecated WDS style that we need
   &.usa-button-outline {
     border: 1px solid $color-gray;
     background: $color-white;
@@ -51,6 +51,7 @@ input[type="reset"] {
   padding-bottom: 0.9rem; //compensates for the 1px border
 }
 
+// Stand-in for deprecated WDS style that we need
 .usa-button-gray,
 .usa-button-gray:hover,
 .usa-button-gray:active,
@@ -78,6 +79,7 @@ input.usa-button-secondary[type="button"] {
   }
 }
 
+// Stand-in for deprecated WDS style that we need
 button.usa-button-link,
 input.usa-button-link[type="submit"],
 input.usa-button-link[type="reset"],
