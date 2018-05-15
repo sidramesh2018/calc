@@ -109,6 +109,9 @@ class ContractTestCase(TestCase):
         self.assertEqual(c.get_education_code('Bachelors'), 'BA')
         self.assertIsNone(c.get_education_code('Nursing'), None)
 
+        with self.assertRaises(ValueError):
+            c.get_education_code('Nursing', raise_exception=True)
+
     def test_normalize_rate(self):
         c = get_contract_recipe().make()
         self.assertEqual(c.normalize_rate('$1,000.00,'), 1000.0)

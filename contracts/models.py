@@ -279,7 +279,9 @@ class Contract(models.Model):
     #   IDV - "Indefinite Delivery Vehicle"
     #   PIID - "Procurement Instrument Identification"
 
-    idv_piid = models.CharField(max_length=128, db_index=True)  # index this field
+    idv_piid = models.CharField(
+        max_length=128, db_index=True,
+        verbose_name="contract number")  # index this field
     piid = models.CharField(max_length=128)  # index this field
     contract_start = models.DateField(null=True, blank=True)
     contract_end = models.DateField(null=True, blank=True)
@@ -381,11 +383,25 @@ class Contract(models.Model):
         return val
 
     @staticmethod
-    def get_education_code(text):
+    def get_education_code(text, raise_exception=False):
+        '''
+        Given a human-readable education level, return its
+        education code, e.g.:
+
+            >>> Contract.get_education_code('High School')
+            'HS'
+
+        Return None if no education code matches the given
+        text, unless raise_exception is True, in which
+        case a ValueError is raised.
+        '''
+
         for pair in EDUCATION_CHOICES:
             if text.strip() in pair[1]:
                 return pair[0]
 
+        if raise_exception:
+            raise ValueError(text)
         return None
 
     @staticmethod
