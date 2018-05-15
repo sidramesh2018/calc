@@ -41,13 +41,13 @@ Parts of the site use React and Redux. More information available below.
 We use [Sass](https://sass-lang.com/) for our stylesheets. Their [basics guide](https://sass-lang.com/guide)
 is a good place to start if you've not used it before. Sass allows us to abstract frequently used parts of
 the CSS into reusable components like variables and mixins. Some variables come directly from the
-[U.S. Web Design System][https://github.com/uswds/uswds/blob/develop/src/stylesheets/core/_variables.scss]
+[U.S. Web Design System](https://github.com/uswds/uswds/blob/develop/src/stylesheets/core/_variables.scss)
 and we define new values for them in
 [frontend/source/sass/base/_uswds_variables.scss](../frontend/source/sass/base/_uswds_variables.scss).
 Other variables are specific to CALC, and those are defined in
 [frontend/source/sass/base/_variables.scss](../frontend/source/sass/base/_variables.scss).
 
-This project generally follows a modified (BEM)[https://frontend.18f.gov/css/naming/#bem] (Block, Element, Modifier)
+This project generally follows a modified [BEM](https://frontend.18f.gov/css/naming/#bem) (Block, Element, Modifier)
 naming scheme. This prevents namespace collisions and alleviates the need for too much nested Sass.
 
 The Sass files follow a few conventions:
@@ -62,7 +62,7 @@ A more detailed explanation of how to use specific components can be found in th
 
 ### Templates
 The site makes use of Django's templating system to ensure common elements like the header, navigation, and footer are applied
-consistently. The main base template lives at [data_explorer/templates/base.html][../data_explorer/templates/base.html].
+consistently. The main base template lives at [data_explorer/templates/base.html](../data_explorer/templates/base.html).
 
 ## Site section-specific implementation details
 
@@ -79,7 +79,7 @@ available at `calc.gsa.gov/admin/`).
 
 ### Data explorer
 
-The data explorer is a [React][]-based app that uses [Redux][] for data flow and state management. It's located in[frontend/source/js/data-explorer](../frontend/source/js/data-explorer/).
+The data explorer is a [React][]-based app that uses [Redux][] for data flow and state management. It's located in [frontend/source/js/data-explorer](../frontend/source/js/data-explorer/).
 
 #### Testing
 
