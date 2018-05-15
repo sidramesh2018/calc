@@ -1,5 +1,12 @@
 ## Using Docker
 
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+
+If you're ever having problems because `docker-compose up` explodes in an unfriendly way, it's quite likely that `./docker-update.sh` will fix it.
+
+</div>
+
 For setup instructions on using Docker and Docker Compose for CALC's development environment, see our [Setup](setup.md) guide.
 
 ### Updating the containers
@@ -10,8 +17,6 @@ Whenever you update your repository via e.g. `git pull` or
 ```
 ./docker-update.sh
 ```
-
-**If you're ever having problems because `docker-compose up` explodes in an unfriendly way, it's quite likely that `./docker-update.sh` will fix it.**
 
 ### Starting over
 
@@ -81,7 +86,7 @@ To drop into an interactive debugging section:
 
    We'll call this the "debugging terminal".
 
-2. Add `import pdb; pdb.set_trace()` at whatever line you want
+2. Add `import ipdb; ipdb.set_trace()` at whatever line you want
    to invoke the debugger at (this is a standard Python convention).
 
 3. Trigger a code path that executes the line you just added.
