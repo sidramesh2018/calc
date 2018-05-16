@@ -48,15 +48,6 @@ input[type="reset"] {
   padding-bottom: 0.9rem; //compensates for the 1px border
 }
 
-// Stand-in for deprecated WDS style that we need
-.usa-button-gray,
-.usa-button-gray:hover,
-.usa-button-gray:active,
-.usa-button-gray:focus {
-  color: $color-white;
-  border: 0;
-}
-
 // The WDS used to style secondary buttons in the secondary color,
 // but now styles them as outlines. Use the old style.
 .usa-button.usa-button-secondary,
