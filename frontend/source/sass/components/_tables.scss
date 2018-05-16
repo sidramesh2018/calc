@@ -272,6 +272,13 @@ th.number {
 td.number {
   font-family: $font-family-mono;
   text-align: right;
+  &.number--currency:before {
+    content: "$";
+    display: block;
+    float: left;
+    width: 1em;
+    height: $medium-font-size;
+  }
 }
 
 /* Some labor categories (especially the "interpreter" categories)
