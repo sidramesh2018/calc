@@ -7,6 +7,84 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Added
+
+- The administrative UI now has introductory documentation,
+  which will make it easier for new staff to onboard (#1844).
+- A data quality report has been added at `/data-quality-report/`,
+  which makes it easier to get an idea of how healthy CALC's
+  data is (#1875).
+- On local development instances, a "switch user" menu has
+  been added to the top-right of every page, and sample users
+  have been added, which makes it easier to see how the site
+  looks and functions depending on the kind of user that is
+  logged in (#1859).
+- A `load_api_data` management command has been added, which
+  makes it easy to "mirror" production CALC data on one's
+  local instance (#1734). This obviated the need for the
+  `load_data` and `load_s70` commands, so they were removed (#1774).
+- CALC now uses react-loadable to load different UI components
+  in separate bundles, which improves page load time. A
+  Webpack bundle analyzer has also been added to make it
+  easier to introspect the composition of our bundles.
+  Documentation can be found in the "Analyzing bundles"
+  section of the developer documentation's front end guide (#1736).
+
+### Changed
+
+- CALC now has a revamped look-and-feel! We think it's awesome.
+- The new CALC look-and-feel has been documented in the styleguide.
+- Clicking anywhere outside of the user menu now closes it (#1804).
+- CALC no longer uses api.data.gov to access its own API in
+  production. Because of this, the `API_HOST` and `WHITELISTED_IPS`
+  settings have been removed (#1766).
+- A number of changes have been made to the project's use of
+  Google Analytics (GA):
+    - Clicks on the "download graph" button in the Data Explorer are now
+      tracked by GA (#1706).
+    - Both Google Analytics accounts (DAP and standard GA) now
+      behave in almost exactly the same ways, which should
+      reduce confusion (#1852, #1853).
+    - DAP is no longer used when users are authenticated (#1843).
+- The developer documentation has been updated in a
+  number of ways (#1698). In particular:
+    - The Docker way of developing is now the default and _only_
+      documented way of doing things. In other words, we no
+      longer document how to get CALC up and running without
+      Docker (#1793).
+    - Docker troubleshooting documentation is now significantly
+      more helpful (#1904).
+    - API documentation has been moved to `/api/docs/`. It is now
+      interactive (that is, users can enter search criteria and
+      see the response returned by the server). It is auto-generated
+      by Django REST Framework, which has been upgraded to
+      3.8.2 (#1797, #1811, #1870, #1893).
+    - A documentation section on analytics has been added (#1857).
+- More source code has been documented and refactored for
+  readability/maintainability. In particular:
+    - Data capture schedule code has been documented and type-annotated (#1826).
+    - The `Contract` model is now documented (#1850).
+    - The project's CSS is now documented (#1871).
+- Issue/PR numbers in the `/updates/` page are now automatically
+  linked to their corresponding pages on GitHub (#1816).
+- Searching for users in the admin panel works again (#1794).
+- Upgraded React to 16 (#1685).
+- Upgraded Babel, Webpack, and Node (#1687).
+- Upgraded gulp-sass (#1785).
+- Upgraded flake8/pyflakes (#1790).
+- The usage of eslint has been rolled back to be less
+  aggressive (#1852, #1867, #1868).
+- API requests now validate the `sort` field properly to provide
+  better feedback and mitigate DoS attacks (#1869).
+- CALC's Selenium tests now use headless Chrome instead of
+  PhantomJS, in both Docker and CircleCI (#1767).
+- The Docker setup of CALC has been modified to limit container
+  memory to their cloud.gov settings, ensuring better
+  dev/prod parity (#1809).
+- mypy is now run on all files, rather than a whitelist (#1815).
+- All non-historic references to `hourglass` have been changed to
+  `calc` (#1845).
+
 ## [2.8.6][] - 2018-04-06
 
 ### Changed
