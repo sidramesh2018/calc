@@ -225,10 +225,10 @@
   font-size: $h4-font-size;
   font-weight: $font-weight-bold;
   &:first-child {
-    margin-top: 0rem;
+    margin-top: 0;
   }
   &:last-child {
-    margin-bottom: 0rem;
+    margin-bottom: 0;
   }
 
   &.color-white {
