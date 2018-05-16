@@ -317,31 +317,39 @@
   </div>
 
   <h3>Color combinations used for typography</h3>
-  <h4>Core: over white background</h4>
+  <h4>Over white background</h4>
   <p><strong>$color-black</strong> over white is the default style for the website. Only on rare occasions should type be colored differently than this.</p>
-  <div class="color-combos columns twelve color-white">
+  <div class="color-combos">
+    <div class="columns twelve background-fill color-white">
     <p class="color-name black">$color-black ($color-base)</p>
     <p class="color-name color-gray-dark">$color-gray-dark</p>
+    </div>
+    <p class="label-mono">Background-color: $color-white</p>
   </div>
-  <p class="label-mono small">Background-color: $color-white</p>
 
-  <h4>Special situations: colored backgrounds</h4>
+  <h4>Special situations: over colored backgrounds</h4>
   <p>These more colorful combinations are used sparingly in the CALC design, such as in the header and footer. They are included here primarily for the sake of completeness.</p>
-  <div class="color-combos columns twelve color-gray-darkest">
-    <p class="color-name color-white">$color-white</p>
-    <p class="color-name color-gray-light">$color-gray-light</p>
-    <p class="color-name color-green-bright">$color-green-bright</p>
+  <div class="color-combos">
+    <div class="columns twelve background-fill color-gray-darkest">
+      <p class="color-name color-white">$color-white</p>
+      <p class="color-name color-gray-light">$color-gray-light</p>
+      <p class="color-name color-green-bright">$color-green-bright</p>
+    </div>
+    <p class="label-mono">Background-color: $color-gray-darkest</p>
   </div>
-  <p class="label-mono small">Background-color: $color-gray-darkest</p>
-  <div class="color-combos columns twelve color-green-light">
-    <p class="color-name color-black">$color-black</p>
+  <div class="color-combos">
+    <div class="columns twelve background-fill color-green-light">
+      <p class="color-name color-black">$color-black</p>
+    </div>
+    <p class="label-mono">Background-color: $color-green-light</p>
   </div>
-  <p class="label-mono">Background-color: $color-green-light</p>
-  <div class="color-combos columns twelve color-gray-lighter">
-    <p class="color-name color-black">$color-black</p>
-    <p class="color-name color-gray-darker">$color-gray-darker</p>
+  <div class="color-combos">
+    <div class="columns twelve background-fill color-gray-lighter">
+      <p class="color-name color-black">$color-black</p>
+      <p class="color-name color-gray-darker">$color-gray-darker</p>
+    </div>
+    <p class="label-mono">Background-color: $color-gray-lighter</p>
   </div>
-  <p class="label-mono small">Background-color: $color-gray-lighter</p>
 
   {% guide_section "Header" %}
 

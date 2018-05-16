@@ -196,29 +196,45 @@
 
 
 .color-combos {
-  min-height: 5rem;
-  padding: 1rem;
-  &.color-white {
-    background-color: $color-white;
-    border: 1px solid $color-gray-light;
+
+  .background-fill {
+    padding: 3rem;
+
+    &.color-white {
+      background-color: $color-white;
+      border: 1px solid $color-gray-light;
+    }
+    &.color-gray-darkest {
+      background-color: $color-gray-darkest;
+    }
+    &.color-gray-lighter {
+      background-color: $color-gray-lighter;
+    }
+    &.color-green-light {
+      background-color: $color-green-light;
+    }
   }
-  &.color-gray-darkest {
-    background-color: $color-gray-darkest;
-  }
-  &.color-gray-lighter {
-    background-color: $color-gray-lighter;
-  }
-  &.color-green-light {
-    background-color: $color-green-light;
+
+  p.label-mono {
+    font-size: $medium-font-size;
+    padding-top: .5rem;
   }
 }
 
 .color-name {
   font-size: $h4-font-size;
   font-weight: $font-weight-bold;
+  &:first-child {
+    margin-top: 0rem;
+  }
+  &:last-child {
+    margin-bottom: 0rem;
+  }
+
   &.color-white {
     color: $color-white;
-  }  &.color-black {
+  }
+  &.color-black {
     color: $color-base;
   }
   &.color-gray-darker {
