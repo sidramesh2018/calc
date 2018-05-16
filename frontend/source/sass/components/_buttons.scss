@@ -116,9 +116,12 @@ input.usa-button-link[type="button"] {
 .usa-button.usa-button-disabled {
   background-color: $color-gray-lighter;
   cursor: default;
-  color: $color-gray;
+}
+
+.usa-button-disabled {
+  color: $color-gray-medium;
   &:hover {
-    color: $color-gray;
+    color: $color-gray-medium;
   }
 }
 
@@ -128,6 +131,6 @@ input.usa-button-disabled[type="submit"],
 input.usa-button-disabled[type="reset"],
 input.usa-button-disabled[type="button"] {
   &:focus {
-    outline: 1px dotted $color-gray-dark;
+    outline: 1px dotted $color-gray;
   }
 }
