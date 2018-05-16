@@ -62,6 +62,66 @@ h3.styleguide-section {
   .example-heading a[target="_blank"] {
     float: right;
   }
+  // Prism overrides for making code samples use our colors
+  :not(pre) > code[class*="language-"] {
+  	background-color: #f5f8fa; /* $color-gray-lightest */
+  }
+  pre[class*="language-"] {
+  	background-color: #f5f8fa; /* $color-gray-lightest */
+  }
+  .language-css .token.string,
+  .style .token.string {
+    color: #a67f59; /* TODO: revisit this color */
+    background: hsla(0, 0%, 100%, .5);
+  }
+  .token {
+  	color: #021014; /* $color-black */
+    &.comment,
+    &.prolog,
+    &.doctype,
+    &.cdata {
+  	   color: #7da1b0; /* $color-gray-medium */
+    }
+    &.punctuation {
+    	color: #7da1b0; /* $color-gray-medium */
+    }
+    &.property,
+    &.tag,
+    &.boolean,
+    &.number,
+    &.constant,
+    &.symbol,
+    &.deleted {
+    	color: #981b1e; /* $color-red-darkest */
+    }
+    &.selector,
+    &.attr-name,
+    &.string,
+    &.char,
+    &.builtin,
+    &.inserted {
+    	color: #61701c; /* $color-green-darkest */
+    }
+    &.operator,
+    &.entity,
+    &.url {
+      color: #a67f59; /* TODO: revisit this color */
+      background: hsla(0, 0%, 100%, .5);
+    }
+    &.atrule,
+    &.attr-value,
+    &.keyword {
+    	color: #0b6199; /* $color-blue-dark */
+    }
+    &.function {
+    	color: #DD4A68; /* TODO: revisit this color */
+    }
+    &.regex,
+    &.important,
+    &.variable {
+    	color: #e90; /* TODO: revisit this color */
+    }
+  }
 }
 
 /* This selector looks weird because we're waging a war on
