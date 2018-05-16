@@ -19,13 +19,14 @@ button,
   font-weight: $font-weight-bold;
 
   // Stand-in for deprecated WDS style that we need
-  &.usa-button-outline {
-    border: 1px solid $color-gray;
-    background: $color-white;
+  &.usa-button.usa-button-outline {
+    background-color: $color-white;
+    border: 2px solid $color-gray;
     color: $color-gray;
     &:hover,
-    &.usa-button-hover {
-      border-color: $color-gray-light;
+    &.usa-button.usa-button-hover {
+      border-color: $color-gray-dark;
+      color: $color-gray-dark;
     }
   }
 
@@ -106,11 +107,11 @@ input.usa-button-link[type="button"] {
 
 .usa-button.usa-button-disabled {
   background-color: $color-gray-lighter;
+  color: $color-gray-medium;
+  cursor: default;
+  &:hover {
     color: $color-gray-medium;
-  cursor: default; {
-    &:hover {
-      color: $color-gray-medium;
-    }
+  }
 }
 
 .usa-button.usa-button-disabled,
