@@ -20,7 +20,7 @@
 
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="cancel" class="usa-button-outline" formnovalidate>Exit this replay</button>
+            <button type="submit" name="cancel" class="usa-button usa-button-outline" formnovalidate>Exit this replay</button>
           </form>
         </div>
       {% endif %}
@@ -70,7 +70,7 @@
           </button>
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="cancel" class="usa-button-secondary">
+            <button type="submit" name="cancel" class="usa-button usa-button-secondary">
               Yes, discard my work
             </button>
           </form>
