@@ -106,14 +106,11 @@ input.usa-button-link[type="button"] {
 
 .usa-button.usa-button-disabled {
   background-color: $color-gray-lighter;
-  cursor: default;
-}
-
-.usa-button-disabled {
-  color: $color-gray-medium;
-  &:hover {
     color: $color-gray-medium;
-  }
+  cursor: default; {
+    &:hover {
+      color: $color-gray-medium;
+    }
 }
 
 .usa-button.usa-button-disabled,
