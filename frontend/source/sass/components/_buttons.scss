@@ -15,11 +15,8 @@ button,
   // WDS override
   margin-bottom: 0;
   margin-top: 0;
-  font-size: $small-font-size;
-  text-transform: uppercase;
-  font-size: $small-font-size; // original is $base-font, which is too large here
+  font-size: $medium-font-size;
   font-weight: $font-weight-bold;
-  line-height: 1.7; // adjusted from 1, which makes links show funky
 
   // Stand-in for deprecated WDS style that we need
   &.usa-button-outline {
@@ -69,12 +66,12 @@ button.usa-button-secondary,
 input.usa-button-secondary[type="submit"],
 input.usa-button-secondary[type="reset"],
 input.usa-button-secondary[type="button"] {
-  background-color: $color-secondary;
-  color: $color-white;
+  background-color: $color-green-bright;
+  color: $color-base;
   box-shadow: none;
   &:hover {
-    color: $color-white;
-    background-color: $color-red-dark;
+    color: $color-base;
+    background-color: $color-green;
     box-shadow: none;
   }
 }
