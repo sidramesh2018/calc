@@ -13,7 +13,7 @@ environment variables on cloud.gov, see
 boolean value, if the variable exists with *any* value (even the empty
 string), the boolean is true; otherwise, it's false.
 
-### Development settings
+### Local development settings
 
 These settings are likely to only be useful during local development
 and/or the deployment of non-production instances of CALC.
@@ -54,7 +54,7 @@ and/or the deployment of non-production instances of CALC.
   that they are viewing a non-production instance of CALC. This value
   can contain HTML, so it's possible to e.g. wrap the value in a hyperlink.
 
-### General settings
+### Deployment settings
 
 These are useful for any kind of deployment of CALC.
 
