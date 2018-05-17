@@ -21,14 +21,17 @@
 }
 
 @mixin focus-color ($bg-color: $color-white, $spacing: 2px, $style: dotted) {
-  @if $bg-color == $color-primary-darkest {
+  // Use $color-gray for links which run over white
+  // Use $color-gray-darker for links which run over light colors (e.g. green in footer)
+  // Use $color-gray-light for links which run over dark colors (e.g. header)
+  @if $bg-color == "white" {
+    outline: $spacing $style $color-gray;
+  }
+  @if $bg-color == "light-color" {
+    outline: $spacing $style $color-gray-darker;
+  }
+  @if $bg-color == "dark-color" {
     outline: $spacing $style $color-gray-light;
-  }
-  @if $bg-color == $color-white {
-    outline: $spacing $style $color-gray-dark;
-  }
-  @if $bg-color == $color-green-light {
-    outline: $spacing $style $color-gray-dark;
   }
 }
 
@@ -36,22 +39,22 @@
 .usa-focus,
 :focus,
 a:focus {
-  @include focus-color($bg-color: $color-white);
-}
-
-header {
-  .usa-focus,
-  :focus,
-  a:focus {
-    @include focus-color($bg-color: $color-primary-darkest);
-  }
+  @include focus-color($bg-color: "white");
 }
 
 footer {
   .usa-focus,
   :focus,
   a:focus {
-    @include focus-color($bg-color: $color-green-light);
+    @include focus-color($bg-color: "light-color");
+  }
+}
+
+header {
+  .usa-focus,
+  :focus,
+  a:focus {
+    @include focus-color($bg-color: "dark-color");
   }
 }
 
