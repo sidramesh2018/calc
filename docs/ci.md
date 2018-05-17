@@ -1,12 +1,11 @@
 ## Continuous integration
 
-CALC uses a number of third-party services to ensure that its code quality
-is not so bad.
+CALC uses a number of third-party services to ensure consistent code quality.
 
 ### CircleCI
 
-[CircleCI][] is used to ensure that all tests still pass as CALC's codebase
-changes. Its configuration is stored in [.circleci/config.yml][].
+[CircleCI][] ensures that, when CALC's codebase changes, all tests still pass.
+Its configuration is stored in [.circleci/config.yml][].
 
 Aside from running tests, CircleCI is also used to automatically deploy
 CALC; see the [Release process](release.md) documentation for further
@@ -16,7 +15,7 @@ Finally, CircleCI is also used for some [monitoring](monitoring.md) tasks.
 
 #### Disabling tests
 
-Because test passing on CircleCI blocks deployment, it's important to
+Because a single failing test on CircleCI blocks deployment, it's important to
 know how to disable some of them in emergencies. In particular:
 
 * Selenium has a history of acting up on CI and sometimes needs
