@@ -16,6 +16,7 @@ from api.pagination import ContractPagination
 from api.serializers import ContractSerializer
 from api.utils import get_histogram
 from contracts.models import Contract, EDUCATION_CHOICES
+from calc.utils import humanlist, backtickify
 
 
 DOCS_DESCRIPTION = dedent("""
@@ -32,6 +33,12 @@ SIMPLE_QUERYARG_TYPE_MAP = {
     int: coreschema.Integer,
     str: coreschema.String,
 }
+
+ALL_CONTRACT_FIELDS = ContractSerializer.Meta.fields
+
+SORTABLE_CONTRACT_FIELDS = list(set(
+    ContractSerializer.Meta.fields
+).intersection(set([f.name for f in Contract._meta.fields if f.db_index])))
 
 
 def queryarg(name, _type, description):
@@ -173,7 +180,13 @@ GET_CONTRACTS_QUERYARGS = [
     queryarg(
         "sort",
         str,
-        "The column to sort on. Defaults to `wage_field`."
+        f"""
+        Comma-separated list of columns to sort on.
+        Defaults to the field used for pricing.
+
+        Sortable columns include
+        {humanlist(backtickify(SORTABLE_CONTRACT_FIELDS))}.
+        """
     ),
     queryarg(
         "query_type",
@@ -222,14 +235,12 @@ def get_contracts_queryset(request_params, wage_field):
     query_type = request_params.get('query_type', 'match_all')
     exclude = request_params.getlist('exclude')
 
-    all_fields = set([f.name for f in Contract._meta.fields])
-    sortable_fields = set([f.name for f in Contract._meta.fields if f.db_index])
     for field in sort:
         if field.startswith('-'):
             field = field[1:]
-        if field not in all_fields:
+        if field not in ALL_CONTRACT_FIELDS:
             raise serializers.ValidationError(f'"{field}" is not a valid field to sort on')
-        if field not in sortable_fields:
+        if field not in SORTABLE_CONTRACT_FIELDS:
             raise serializers.ValidationError(f'Unable to sort on the field "{field}"')
 
     contracts = Contract.objects.all()

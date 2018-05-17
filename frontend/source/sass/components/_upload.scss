@@ -1,11 +1,14 @@
+// The widget that allows users to upload a price list.
+// Read more: https://calc-dev.app.cloud.gov/styleguide/#ajax-form-upload-widget
+
 @import "../base/variables";
 
 upload-widget {
-  margin: 3rem 0;
+  margin: $space-3x 0;
   display: flex;
   position: relative;
   align-items: center;
-  padding: 1rem 3em;
+  padding: $space-1x $space-3x;
   background-color: $color-gray-lightest;
   transition: background-color 0.5s, border-color 0.5s;
   -webkit-transition: background-color 0.5s, border-color 0.5s;
@@ -17,7 +20,7 @@ upload-widget {
 
   label {
     color: $color-primary;
-    font-weight: bold;
+    font-weight: $font-weight-bold;
     display: inline;
     cursor: pointer;
   }
@@ -51,7 +54,7 @@ upload-widget {
         color: $color-primary;
         display: block;
         position: absolute;
-        margin-top: 0rem;
+        margin-top: 0;
       }
     }
   }
@@ -87,7 +90,7 @@ upload-widget[aria-live] {
 
 // Rules specific to non-JS-upgraded widgets.
 upload-widget:not([aria-live]) {
-  font-size: 1.3rem;
+  font-size: $medium-font-size;
   display: block;
   border: none;
   padding-top: 1em;
