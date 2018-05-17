@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 from uaa_client.decorators import staff_login_required
 
 import data_explorer.views
+import contracts.views
+from .sample_users import login_sample_user
 from .healthcheck import healthcheck
 from .robots import robots_txt
 from .changelog import django_view as view_changelog
@@ -21,6 +23,8 @@ urlpatterns = [
     url(r'^safe-mode/', include('frontend.safe_mode', namespace='safe_mode')),
     url(r'^healthcheck/', healthcheck),
     url(r'^api/', include('api.urls')),
+    url(r'^data-quality-report/',
+        contracts.views.data_quality_report, name='data_quality_report'),
     url(r'^data-capture/',
         include('data_capture.urls', namespace='data_capture')),
     url(r'^admin/', include(admin.site.urls)),
@@ -41,5 +45,7 @@ if settings.DEBUG:
         url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     ] + urlpatterns + [
         url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^login-sample-user/(?P<username>[A-Za-z0-9_\-]+)$',
+            login_sample_user, name='login_sample_user'),
         tests_url,
     ]

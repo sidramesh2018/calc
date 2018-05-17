@@ -1,3 +1,6 @@
+// "Safe mode" or "compatibility mode" is triggered when the app detects a problem with JS.
+// Read more: https://calc-dev.app.cloud.gov/styleguide/#compatibility-mode
+
 aside.safe-mode {
   position: fixed;
   background-color: $color-red-darkest;

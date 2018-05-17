@@ -31,14 +31,16 @@ Welcome to CALC's developer documentation!
 
    deploy
    monitoring
+   analytics
    release
-   changelog
+   Change log <https://calc-dev.app.cloud.gov/updates/>
 
 .. toctree::
    :maxdepth: 2
    :caption: Useful links
 
    CALC home <https://calc-dev.app.cloud.gov/>
+   CALC data quality report <https://calc-dev.app.cloud.gov/data-quality-report/>
    GitHub <https://github.com/18F/calc>
 
 Indices and tables
