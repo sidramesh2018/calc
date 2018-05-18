@@ -2,7 +2,11 @@ from typing import Union
 from textwrap import dedent, fill
 import abc
 from django.utils.safestring import SafeString
+from django.urls import reverse
 import markdown
+
+from ..models import Contract, ContractsQuerySet
+
 
 number = Union[int, float]
 
@@ -26,13 +30,20 @@ class BaseMetric(metaclass=abc.ABCMeta):
     shown in a report.
     '''
 
-    @abc.abstractmethod
+    def get_queryset(self) -> ContractsQuerySet:
+        '''
+        Return a ContractsQuerySet that represents the data
+        behind the metric.
+        '''
+
+        return Contract.objects.none()
+
     def count(self) -> number:
         '''
         Count the metric.
         '''
 
-        raise NotImplementedError()
+        return self.get_queryset().count()
 
     @abc.abstractproperty
     def desc(self) -> str:
@@ -80,3 +91,16 @@ class BaseMetric(metaclass=abc.ABCMeta):
     @property
     def footnote_html(self) -> SafeString:
         return format_html(self.footnote)
+
+    @property
+    def slug(self) -> str:
+        return self.__class__.__module__.split('.')[-1]
+
+    @property
+    def verbose_name(self) -> str:
+        return self.slug
+
+    def get_absolute_url(self) -> str:
+        return reverse('data_quality_report_detail', kwargs={
+            'slug': self.slug
+        })
