@@ -124,7 +124,15 @@ ol.steps li {
 }
 
 // Indents nested lists
-ul ul {
+ul ul,
+ul ol,
+ol ul {
+  margin-left: 4.8rem;
+}
+
+ul ul ul,
+ul ol ul,
+ol ul ul {
   margin-left: 4.8rem;
 }
 
