@@ -123,6 +123,11 @@ ol.steps li {
   font-family: $font-family-main;
 }
 
+// Indents nested lists
+ul ul {
+  margin-left: 4.8rem;
+}
+
 //the buttons that download a graph on the main page
 .download-buttons p {
   margin-top: 2rem;
