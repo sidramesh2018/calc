@@ -1,7 +1,17 @@
-from django.db import connection
+from django.db.models import Count, Sum, Q
 
 from contracts.models import Contract
 from .base import BaseMetric
+
+
+# Sometimes we want to dynamically build a Q object by starting
+# with a "null query" that has nothing in it, and then adding
+# more Q objects via the OR operator (i.e., "|").
+#
+# This particular null query has the advantage that no database query
+# is executed if nothing is OR'd with it. It was taken from
+# https://stackoverflow.com/a/46225056.
+NULL_QUERY = Q(pk__in=[])
 
 
 class Metric(BaseMetric):
@@ -28,45 +38,30 @@ class Metric(BaseMetric):
         for field in CORE_FIELDS
     ]
 
-    CONTRACTS_TABLE = Contract._meta.db_table
-
-    CORE_FIELD_COLUMNS = [
-        Contract._meta.get_field(field).column
-        for field in CORE_FIELDS
-    ]
-
-    CORE_FIELDS_ARE_EQUAL = ' AND '.join([
-        f"c1.{column} = c2.{column}"
-        for column in CORE_FIELD_COLUMNS
-    ])
-
-    COUNT_SQL_QUERY = f'''
-    SELECT COUNT(c1.id)
-    FROM {CONTRACTS_TABLE} as c1, {CONTRACTS_TABLE} as c2
-    WHERE c1.id < c2.id   /* Use < to avoid counting duplicates */
-    AND {CORE_FIELDS_ARE_EQUAL}
-    '''
-
-    IDS_SQL_QUERY = f'''
-    SELECT c1.id, c2.id
-    FROM {CONTRACTS_TABLE} as c1, {CONTRACTS_TABLE} as c2
-    WHERE c1.id < c2.id   /* Use < to avoid counting duplicates */
-    AND {CORE_FIELDS_ARE_EQUAL}
-    '''
+    def _get_dupe_info(self):
+        return Contract.objects.values(*self.CORE_FIELDS)\
+            .annotate(count=Count(self.CORE_FIELDS[0]))\
+            .filter(count__gt=1)\
+            .distinct()
 
     def get_examples_queryset(self):
-        cursor = connection.cursor()
-        cursor.execute(self.IDS_SQL_QUERY)
-        ids = []
-        for c1_id, c2_id in cursor.fetchmany(self.MAX_EXAMPLES / 2):
-            ids.append(c1_id)
-            ids.append(c2_id)
-        return Contract.objects.filter(id__in=ids).order_by(*self.CORE_FIELDS)
+        total = 0
+        q = NULL_QUERY
+
+        for row in self._get_dupe_info():
+            total += row['count']
+            criteria = {field: row[field] for field in self.CORE_FIELDS}
+            next_q = Q(**criteria)
+            q = q | next_q
+            if total > self.MAX_EXAMPLES:
+                break
+
+        return Contract.objects.filter(q)\
+            .order_by(*self.CORE_FIELDS)[:self.MAX_EXAMPLES]
 
     def count(self) -> int:
-        cursor = connection.cursor()
-        cursor.execute(self.COUNT_SQL_QUERY)
-        return cursor.fetchone()[0]
+        return self._get_dupe_info()\
+            .aggregate(Sum('count'))['count__sum'] or 0
 
     desc = f'''
     labor rates appear to be duplicates.

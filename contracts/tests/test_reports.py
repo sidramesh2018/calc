@@ -39,18 +39,24 @@ class Tests(TestCase):
     def test_dupes_works(self):
         get_contract_recipe().make(labor_category='not a dupe')
 
-        for sin in ['874-1', '874-2']:
-            get_contract_recipe().make(
-                vendor_name='foo',
-                labor_category='senior dupe',
-                idv_piid='GS-123-4567',
-                current_price=50,
-                sin=sin
-            )
+        res = self.client.get('/data-quality-report/dupes/')
+        self.assertNotContains(res, 'Examples')
+        self.assertEqual(reports.dupes.Metric().count(), 0)
 
-        self.assertEqual(reports.dupes.Metric().count(), 1)
+        for level in ['junior', 'senior', 'executive']:
+            for sin in ['874-1', '874-2', '874-3', '874-4']:
+                get_contract_recipe().make(
+                    vendor_name='foo',
+                    labor_category=f'{level} dupe',
+                    idv_piid='GS-123-4567',
+                    current_price=50,
+                    sin=sin
+                )
+
+        self.assertEqual(reports.dupes.Metric().count(), 12)
 
         res = self.client.get('/data-quality-report/dupes/')
+        self.assertContains(res, 'Examples')
         self.assertContains(res, 'senior dupe')
         self.assertNotContains(res, 'not a dupe')
 
