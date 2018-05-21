@@ -35,21 +35,26 @@ def data_quality_report(request):
     })
 
 
+def _get_example_row(contract):
+    row = []
+    for field in EXAMPLE_FIELDS:
+        value = getattr(contract, field)
+        if isinstance(value, str):
+            value = unbroken_hyphenize(value)
+        row.append(value)
+    return row
+
+
 def data_quality_report_detail(request, slug):
     metrics = [metric for metric in ALL_METRICS if metric.slug == slug]
     if not metrics:
         raise Http404('Unknown metric')
     metric = metrics[0]
 
-    examples = []
-    for contract in metric.get_examples_queryset():
-        row = []
-        for field in EXAMPLE_FIELDS:
-            value = getattr(contract, field)
-            if isinstance(value, str):
-                value = unbroken_hyphenize(value)
-            row.append(value)
-        examples.append(row)
+    examples = [
+        _get_example_row(contract)
+        for contract in metric.get_examples_queryset()
+    ]
 
     return render(request, 'data_quality_report_detail.html', {
         'metric': metric,
