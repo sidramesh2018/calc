@@ -42,7 +42,7 @@ $color-gray-lightest:        #f0f6fa;
 $color-gold:                 #fdb81e; // No change from USWDS, including for visual reference
 
 $color-gold-lightest:        #fbeebe;
-$color-visited:              #10428f; // TODO: apply this as visited color
+$color-visited:              $color-blue;
 
 // Mobile First Breakpoints
 $small-screen:      481px;
