@@ -1,4 +1,5 @@
-@import 'variables.scss';
+@import '_uswds_variables';
+@import 'variables';
 
 // link styles
 @mixin link ($link, $visit, $hover, $active) {
@@ -16,6 +17,40 @@
     &:active {
       color: $active;
     }
+  }
+}
+
+@mixin focus-color ($bg-color: "light-color", $spacing: 2px, $style: dotted) {
+  // Use $color-gray-darker for links which run over light colors (e.g. white, or green in footer)
+  // Use $color-gray-light for links which run over dark colors (e.g. header)
+  @if $bg-color == "light-color" {
+    outline: $spacing $style $color-gray-darker;
+  }
+  @if $bg-color == "dark-color" {
+    outline: $spacing $style $color-gray-light;
+  }
+}
+
+// default focus style
+.usa-focus,
+:focus,
+a:focus {
+  @include focus-color($bg-color: "light-color");
+}
+
+footer {
+  .usa-focus,
+  :focus,
+  a:focus {
+    @include focus-color($bg-color: "light-color");
+  }
+}
+
+header {
+  .usa-focus,
+  :focus,
+  a:focus {
+    @include focus-color($bg-color: "dark-color");
   }
 }
 

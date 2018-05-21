@@ -29,12 +29,6 @@ upload-widget {
     text-decoration: underline;
   }
 
-  input:focus + div.upload-chooser label,
-  input:focus + div.upload-current label {
-    outline: 1px dotted $color-black;
-    outline: -webkit-focus-ring-color auto 5px;
-  }
-
   .upload-changer {
     position: absolute;
     font-size: 1.25rem;
