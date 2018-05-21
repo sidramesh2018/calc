@@ -127,13 +127,7 @@ ol.steps li {
 ul ul,
 ul ol,
 ol ul {
-  margin-left: 4.8rem;
-}
-
-ul ul ul,
-ul ol ul,
-ol ul ul {
-  margin-left: 9.6rem;
+  margin-left: $space-6x;
 }
 
 //the buttons that download a graph on the main page
