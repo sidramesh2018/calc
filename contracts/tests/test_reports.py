@@ -24,3 +24,7 @@ class Tests(TestCase):
     def test_data_quality_report_detail_view_does_not_explode(self):
         res = self.client.get('/data-quality-report/outliers/')
         self.assertContains(res, 'senior outlier')
+
+    def test_invalid_data_quality_report_detail_returns_404(self):
+        res = self.client.get('/data-quality-report/boooooooop/')
+        self.assertEqual(res.status_code, 404)
