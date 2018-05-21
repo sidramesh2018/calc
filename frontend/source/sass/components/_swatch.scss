@@ -87,8 +87,12 @@
     background-color: $color-red-lightest;
   }
 
-  &.color-blue-dark {
-    background-color: $color-blue-dark;
+  &.color-blue-darkest {
+    background-color: $color-blue-darkest;
+  }
+
+  &.color-blue-darker {
+    background-color: $color-blue-darker;
   }
 
   &.color-blue {
