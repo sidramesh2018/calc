@@ -1,22 +1,32 @@
-from django.db import models
 from django.shortcuts import render
 from django.http import Http404
 
-from .models import Contract
 from .reports import ALL_METRICS
 
 
 MAX_EXAMPLES = 10
 
 EXAMPLE_FIELDS = [
-    field.name for field in Contract._meta.get_fields()
-    if isinstance(field, (
-        models.IntegerField,
-        models.CharField,
-        models.DecimalField,
-        models.DateField,
-        models.TextField,
-    ))
+    'pk',
+    'labor_category',
+    'education_level',
+    'min_years_experience',
+    'current_price',
+    'next_year_price',
+    'second_year_price',
+    'idv_piid',
+    'vendor_name',
+    'schedule',
+    'contractor_site',
+    'business_size',
+    'contract_start',
+    'contract_end',
+    'contract_year',
+    'hourly_rate_year1',
+    'hourly_rate_year2',
+    'hourly_rate_year3',
+    'hourly_rate_year4',
+    'hourly_rate_year5',
 ]
 
 
