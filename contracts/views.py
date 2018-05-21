@@ -2,9 +2,7 @@ from django.shortcuts import render
 from django.http import Http404
 
 from .reports import ALL_METRICS
-
-
-MAX_EXAMPLES = 10
+from calc.utils import unbroken_hyphenize
 
 EXAMPLE_FIELDS = [
     'pk',
@@ -19,6 +17,7 @@ EXAMPLE_FIELDS = [
     'schedule',
     'contractor_site',
     'business_size',
+    'sin',
     'contract_start',
     'contract_end',
     'contract_year',
@@ -41,13 +40,16 @@ def data_quality_report_detail(request, slug):
     if not metrics:
         raise Http404('Unknown metric')
     metric = metrics[0]
-    queryset = metric.get_queryset()
 
     examples = []
-    for contract in queryset[:MAX_EXAMPLES]:
-        examples.append([
-            getattr(contract, field) for field in EXAMPLE_FIELDS
-        ])
+    for contract in metric.get_examples_queryset():
+        row = []
+        for field in EXAMPLE_FIELDS:
+            value = getattr(contract, field)
+            if isinstance(value, str):
+                value = unbroken_hyphenize(value)
+            row.append(value)
+        examples.append(row)
 
     return render(request, 'data_quality_report_detail.html', {
         'metric': metric,

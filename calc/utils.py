@@ -14,6 +14,17 @@ def get_permissions_from_ns_codenames(ns_codenames):
     ]
 
 
+def unbroken_hyphenize(text: str) -> str:
+    '''
+    Replace all hyphens with non-breaking hyphens.
+
+        >>> unbroken_hyphenize('874‑1, 874‑2')
+        '874\u20111, 874\u20112'
+    '''
+
+    return text.replace('-', '\u2011')
+
+
 def backtickify(items: Iterable[Any]) -> List[str]:
     '''
     Wrap all list items in backticks, e.g.:

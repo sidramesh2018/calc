@@ -40,16 +40,32 @@ class Metric(BaseMetric):
         for column in CORE_FIELD_COLUMNS
     ])
 
-    SQL_QUERY = f'''
+    COUNT_SQL_QUERY = f'''
     SELECT COUNT(c1.id)
     FROM {CONTRACTS_TABLE} as c1, {CONTRACTS_TABLE} as c2
     WHERE c1.id < c2.id   /* Use < to avoid counting duplicates */
     AND {CORE_FIELDS_ARE_EQUAL}
     '''
 
+    IDS_SQL_QUERY = f'''
+    SELECT c1.id, c2.id
+    FROM {CONTRACTS_TABLE} as c1, {CONTRACTS_TABLE} as c2
+    WHERE c1.id < c2.id   /* Use < to avoid counting duplicates */
+    AND {CORE_FIELDS_ARE_EQUAL}
+    '''
+
+    def get_examples_queryset(self):
+        cursor = connection.cursor()
+        cursor.execute(self.IDS_SQL_QUERY)
+        ids = []
+        for c1_id, c2_id in cursor.fetchmany(self.MAX_EXAMPLES / 2):
+            ids.append(c1_id)
+            ids.append(c2_id)
+        return Contract.objects.filter(id__in=ids).order_by(*self.CORE_FIELDS)
+
     def count(self) -> int:
         cursor = connection.cursor()
-        cursor.execute(self.SQL_QUERY)
+        cursor.execute(self.COUNT_SQL_QUERY)
         return cursor.fetchone()[0]
 
     desc = f'''

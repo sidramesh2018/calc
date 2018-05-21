@@ -26,9 +26,12 @@ def format_html(markdown_text: str) -> SafeString:
 
 class BaseMetric(metaclass=abc.ABCMeta):
     '''
-    An abstract base class that describes a metric that can be
-    shown in a report.
+    An abstract base class that describes a contract-related
+    metric that can be shown in a report, along with examples of
+    labor rates behind the metric.
     '''
+
+    MAX_EXAMPLES = 10
 
     def get_queryset(self) -> ContractsQuerySet:
         '''
@@ -37,6 +40,14 @@ class BaseMetric(metaclass=abc.ABCMeta):
         '''
 
         return Contract.objects.none()
+
+    def get_examples_queryset(self) -> ContractsQuerySet:
+        '''
+        Return a ContractsQuerySet containing examples
+        of data behind the metric.
+        '''
+
+        return self.get_queryset()[:self.MAX_EXAMPLES]
 
     def count(self) -> number:
         '''
