@@ -51,7 +51,7 @@ These tests are run nightly as a workflow build in CircleCI.
 
 ### New Relic
 
-The server-side supports New Relic integration via the
+The server side supports New Relic integration via the
 `NEW_RELIC_LICENSE_KEY` environment variable.  If set, the
 [New Relic Python agent][] will instrument a variety of
 CALC's internals to help identify and solve performance issues.
