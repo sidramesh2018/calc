@@ -144,6 +144,12 @@ gulp.task('watch', ['set-watching', 'copy-uswds-assets', 'sass', 'js', 'sphinx']
   // Note: wepback bundles set up their own watch handling
   // so we don't want to re-trigger them here, ref #437
   gulp.watch(path.join(dirs.src.scripts, 'vendor', paths.js), ['js:vendor']);
+
+  const calcURL = `http://localhost:${process.env.DOCKER_EXPOSED_PORT}`;
+
+  gutil.log("-----------------------------------------");
+  gutil.log(`Visit your CALC at: ${calcURL}`);
+  gutil.log("-----------------------------------------");
 });
 
 gulp.task('clean', () => {
