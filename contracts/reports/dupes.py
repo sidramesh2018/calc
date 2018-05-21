@@ -49,10 +49,10 @@ class Metric(BaseMetric):
         q = NULL_QUERY
 
         for row in self._get_dupe_info():
-            total += row['count']
             criteria = {field: row[field] for field in self.CORE_FIELDS}
-            next_q = Q(**criteria)
-            q = q | next_q
+            q = q | Q(**criteria)
+
+            total += row['count']
             if total > self.MAX_EXAMPLES:
                 break
 
