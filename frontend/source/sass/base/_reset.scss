@@ -12,10 +12,10 @@ body {
 }
 
 a {
-  color: $color-blue;
+  color: $color-primary;
 
   &:hover {
-    color: $color-blue-darker;
+    color: $color-primary-darker;
   }
 }
 
