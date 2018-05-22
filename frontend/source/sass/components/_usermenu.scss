@@ -34,10 +34,10 @@ $usermenu-width: 150px;
 
     a {
       text-decoration: none;
-      color: $color-blue-darkest;
+      color: $color-primary-darker;
 
       &:hover {
-        border-bottom: 2px solid $color-blue-darkest;
+        border-bottom: 2px solid $color-primary-darker;
       }
     }
 
