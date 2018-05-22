@@ -10,9 +10,9 @@ $asset-path: '../vendor/uswds/' !default;
 // Addtional colors specific to CALC are defined in _variables.scss
 $color-blue:                 #0770b5; // Link color
 $color-primary:              $color-blue;
-$color-blue-darker:          #136b94;
+$color-blue-darker:          #136b94; // Primary button color
 $color-primary-darker:       $color-blue-darker;
-$color-blue-darkest:         #0c4c6f;
+$color-blue-darkest:         #0c4c6f; // Primary button hover color
 $color-primary-darkest:      $color-blue-darkest;
 
 $color-green:                #bbcb70;
