@@ -269,11 +269,31 @@ th.number {
   text-align: left;
 }
 
+
 td.number {
   font-family: $font-family-mono;
   text-align: right;
+  &.number--currency:before {
+    content: "$";
+    display: block;
+    float: left;
+    width: 1em;
+    height: $medium-font-size;
+  }
 }
-
+// field-base_year_rate applies to Django admin tables
+// same styling as number/currency styles
+.field-base_year_rate {
+  font-family: $font-family-mono;
+  text-align: right;
+  &:before {
+    content: "$";
+    display: block;
+    float: left;
+    width: 1em;
+    height: $medium-font-size;
+  }
+}
 /* Some labor categories (especially the "interpreter" categories)
  * are incredibly long, so we should limit the width. */
 th.column-labor_category {
