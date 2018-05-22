@@ -52,10 +52,10 @@ h3.styleguide-section {
   }
   // Prism overrides for making code samples use our colors
   :not(pre) > code[class*="language-"] {
-  	background-color: #f5f8fa; /* $color-gray-lightest */
+  	background-color: $color-gray-lightest;
   }
   pre[class*="language-"] {
-  	background-color: #f5f8fa; /* $color-gray-lightest */
+  	background-color: $color-gray-lightest;
   }
   .language-css .token.string,
   .style .token.string {
@@ -63,15 +63,15 @@ h3.styleguide-section {
     background: hsla(0, 0%, 100%, .5);
   }
   .token {
-  	color: #021014; /* $color-black */
+  	color: $color-black;
     &.comment,
     &.prolog,
     &.doctype,
     &.cdata {
-  	   color: #7da1b0; /* $color-gray-medium */
+  	   color: $color-gray-medium;
     }
     &.punctuation {
-    	color: #7da1b0; /* $color-gray-medium */
+    	color: $color-gray-medium;
     }
     &.property,
     &.tag,
@@ -80,7 +80,7 @@ h3.styleguide-section {
     &.constant,
     &.symbol,
     &.deleted {
-    	color: #981b1e; /* $color-red-darkest */
+    	color: $color-red-darkest;
     }
     &.selector,
     &.attr-name,
@@ -88,7 +88,7 @@ h3.styleguide-section {
     &.char,
     &.builtin,
     &.inserted {
-    	color: #61701c; /* $color-green-darkest */
+    	color: $color-green-darkest;
     }
     &.operator,
     &.entity,
@@ -99,7 +99,7 @@ h3.styleguide-section {
     &.atrule,
     &.attr-value,
     &.keyword {
-    	color: #136b94; /* $color-blue-darker */
+    	color: $color-blue-darker;
     }
     &.function {
     	color: #DD4A68; /* TODO: revisit this color */
