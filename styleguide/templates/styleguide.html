@@ -78,9 +78,9 @@
     In order to ensure that text on the site is <a href="#accessibility">accessible</a> (as mandated by Section 508 of the Rehabilitation Act), all text must have a <strong>minimum contrast ratio of 4.5:1</strong> with its background color.
   </p>
 
-  <p class="swatch__contrast-ok"> <strong>Colors with this symbol are okay to pair with white.</strong>
+  <p class="swatch__contrast-ok"> <strong>Text in a color with this symbol is okay to pair with white.</strong>
   </p>
-  <p class="swatch__contrast-bad"> <strong>Do not pair with these colors with white.</strong>
+  <p class="swatch__contrast-bad"> <strong>Do not pair text in one of these colors with white.</strong>
   </p>
 
 
@@ -183,7 +183,7 @@
     <div class="swatch columns three">
       <div class="swatch__color color-green-medium"></div>
       <div class="label-mono">
-        <p>$color-green-medium</p>
+        <p>$color-green-dark</p>
         <p class="swatch__hex">#a0ad64</p>
         <p class="contrast-bad">Insuff. contrast</p>
       </div>
@@ -253,15 +253,21 @@
   </div>
   <div class="row clearfix">
     <div class="swatch columns three">
-      <div class="swatch__color color-blue-dark"></div>
+      <div class="swatch__color color-blue-darkest"></div>
       <div class="label-mono">
-        <p>$color-blue-dark</p>
-        <p class="swatch__hex">#0b6199</p>
+        <p>$color-blue-darkest</p>
+        <p class="swatch__hex">#0c4c6f</p>
         <p class="contrast-ok">OK with white</p>
       </div>
     </div>
-  </div>
-  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue-darker"></div>
+      <div class="label-mono">
+        <p>$color-blue-darker</p>
+        <p class="swatch__hex">#136b94</p>
+        <p class="contrast-ok">OK with white</p>
+      </div>
+    </div>
     <div class="swatch columns three">
       <div class="swatch__color color-blue"></div>
       <div class="label-mono">
@@ -304,14 +310,6 @@
         <p>$color-gold-lightest</p>
         <p class="swatch__hex">#fbeebe</p>
         <p class="contrast-bad">Insuff. contrast</p>
-      </div>
-    </div>
-    <div class="swatch columns three">
-      <div class="swatch__color color-visited"></div>
-      <div class="label-mono">
-        <p>$color-visited</p>
-        <p class="swatch__hex">#4c2c92</p>
-        <p class="contrast-ok">OK with white</p>
       </div>
     </div>
   </div>
