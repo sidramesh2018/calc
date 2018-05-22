@@ -46,17 +46,27 @@ class Metric(BaseMetric):
 
     def get_examples_queryset(self):
         total = 0
-        q = NULL_QUERY
+        dupes = NULL_QUERY
 
-        for row in self._get_dupe_info():
-            criteria = {field: row[field] for field in self.CORE_FIELDS}
-            q = q | Q(**criteria)
+        # There might be a way to do this all with one database
+        # query, but since we don't expect this report to
+        # be executed often, and since we only need MAX_EXAMPLES
+        # examples, it's not a big deal.
+        for dupeinfo in self._get_dupe_info():
+            # Find all the records that share the same core fields
+            # and add them to our set of duplicates.
+            dupes = dupes | Q(**{
+                field: dupeinfo[field] for field in self.CORE_FIELDS
+            })
 
-            total += row['count']
+            total += dupeinfo['count']
             if total > self.MAX_EXAMPLES:
                 break
 
-        return Contract.objects.filter(q)\
+        # We want to order the results by our core fields so it's
+        # easier to visually group them together and see what the
+        # differences between them (if any) are.
+        return Contract.objects.filter(dupes)\
             .order_by(*self.CORE_FIELDS)[:self.MAX_EXAMPLES]
 
     def count(self) -> int:
