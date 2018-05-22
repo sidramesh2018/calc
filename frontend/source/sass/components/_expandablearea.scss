@@ -16,7 +16,7 @@
 @media screen {
   expandable-area > *[role="button"] {
     cursor: pointer;
-    color: $color-blue;
+    color: $color-primary;
     text-decoration: underline;
 
     &[aria-expanded="false"] {
