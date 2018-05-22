@@ -107,7 +107,6 @@ input.usa-button-link[type="button"] {
   &:focus,
   &.usa-button-focus {
     color: $color-primary-darker;
-    outline: 1px dotted $color-primary-darker;
   }
 
   &:active,
@@ -122,15 +121,5 @@ input.usa-button-link[type="button"] {
   color: $color-gray;
   &:hover {
     color: $color-gray;
-  }
-}
-
-.usa-button.usa-button-disabled,
-button.usa-button-disabled,
-input.usa-button-disabled[type="submit"],
-input.usa-button-disabled[type="reset"],
-input.usa-button-disabled[type="button"] {
-  &:focus {
-    outline: 1px dotted $color-gray-dark;
   }
 }
