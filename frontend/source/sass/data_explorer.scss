@@ -11,7 +11,7 @@ body {
 
 // to fake selection of home link
 nav li:first-child {
-  border-bottom: $space-1x solid $color-primary-alt;
+  border-bottom: $space-1x solid $color-green-bright;
   a {
     font-weight: $font-weight-bold;
     display: block;
@@ -44,7 +44,7 @@ nav li:first-child {
   padding: .25em .5em;
   &.selected {
     color: $color-base;
-    background: $color-primary-alt;
+    background: $color-gray-lighter;
   }
   .count {
     position: absolute;
