@@ -19,7 +19,7 @@ nav ul {
     padding-bottom: ($space-1x + $space-half);
     border-bottom: 0;
     a[href*="admin"]{
-      border-bottom: $space-1x solid $color-primary-alt;
+      border-bottom: $space-1x solid $color-green-bright;
       padding-bottom: 6px;
       font-weight: $font-weight-bold;
     }
@@ -264,9 +264,9 @@ thead a:focus {
     li {
       margin-bottom: 0;
       &.selected a {
-        color: $color-primary;
+        color: $color-blue-darker;
         font-weight: bold;
-        border-left: .5rem solid $color-primary;
+        border-left: .5rem solid $color-blue-darker;
         margin-left: -2rem;
         padding-left: 1.5rem;
       }
