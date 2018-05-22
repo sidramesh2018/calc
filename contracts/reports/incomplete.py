@@ -7,9 +7,16 @@ class Metric(BaseMetric):
     Find labor rates that are missing key data.
     '''
 
-    def count(self) -> int:
+    def get_queryset(self):
         return Contract.objects.filter(
             education_level=None,
-        ).count()
+        )
 
-    desc = 'labor rates do not specify a minimum education level.'
+    desc = 'labor rates have missing data.'
+
+    footnote = '''
+    By "missing key data", we currently mean rates that
+    have no minimum education level.
+    '''
+
+    verbose_name = 'incomplete rates'
