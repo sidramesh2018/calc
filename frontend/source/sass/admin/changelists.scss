@@ -38,9 +38,9 @@ th.action-checkbox-column {
     li {
       margin-bottom: 0;
       &.selected a {
-        color: $color-primary;
+        color: $color-blue-darker;
         font-weight: bold;
-        border-left: .5rem solid $color-primary;
+        border-left: .5rem solid $color-blue-darker;
         margin-left: -2rem;
         padding-left: 1.5rem;
       }
