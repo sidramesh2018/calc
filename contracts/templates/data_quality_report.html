@@ -11,16 +11,9 @@
         {% for metric in ALL_METRICS %}
         <p>
           <strong>{{ metric.count }}</strong> {{ metric.desc_html }}
-          {% if metric.footnote %}
-            <sup>{{ forloop.counter }}</sup>
-          {% endif %}
+          <small><a href="{{ metric.get_absolute_url }}">Learn more<span class="usa-sr-only">
+            about {{ metric.verbose_name }}</span>&hellip;</a></small>
         </p>
-        {% endfor %}
-        <hr>
-        {% for metric in ALL_METRICS %}
-        {% if metric.footnote %}
-          <p><small><sup>{{ forloop.counter }}</sup> {{ metric.footnote_html }}</small></p>
-        {% endif %}
         {% endfor %}
       </div>
   </div>
