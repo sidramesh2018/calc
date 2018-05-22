@@ -19,9 +19,10 @@ $color-green:                #bbcb70;
 $color-green-light:          #cddc86;
 $color-green-lighter:        #dae6a3;
 $color-green-lightest:       #e6edc2;
+$color-green-bright:         #ccde61;
 
-$color-secondary:            #ccde61;
-$color-primary-alt:          $color-secondary;
+$color-secondary:            $color-green-bright;
+$color-primary-alt:          $color-green-bright;
 // TODO: solve disconnect between ^this^ and other "secondary" colors
 
 $color-red-dark:             #BC1630;
