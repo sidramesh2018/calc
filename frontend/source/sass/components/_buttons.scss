@@ -21,8 +21,8 @@ button,
   // Stand-in for deprecated WDS style that we need
   &.usa-button.usa-button-outline {
     background-color: $color-white;
-    border: 2px solid $color-gray;
-    color: $color-gray;
+    border: 2px solid $color-blue-darker;
+    color: $color-blue-darker;
     &:hover,
     &.usa-button.usa-button-hover {
       border-color: $color-gray-dark;
