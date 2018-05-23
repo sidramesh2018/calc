@@ -22,6 +22,7 @@
     &[aria-expanded="false"] {
       &:before {
         content: '\25B6';
+        font-size: $medium-font-size;
         padding-right: 4px;
         display: inline-block;
       }
