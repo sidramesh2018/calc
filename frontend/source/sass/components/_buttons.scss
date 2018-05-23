@@ -25,8 +25,9 @@ button,
     color: $color-blue-darker;
     &:hover,
     &.usa-button.usa-button-hover {
-      border-color: $color-gray-dark;
-      color: $color-gray-dark;
+      background-color: $color-gray-lightest;
+      border-color: $color-blue-darkest;
+      color: $color-blue-darkest;
     }
   }
 
