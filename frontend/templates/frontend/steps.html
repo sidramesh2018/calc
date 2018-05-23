@@ -1,5 +1,5 @@
 <div class="step-bar">
-  <label class="sr-only">
+  <label class="usa-sr-only">
       Step {{ current_step.number }} of {{ steps|length }}: {{ current_step.label }}
   </label>
   <ol class="step-bar__labels" aria-hidden="true">
@@ -14,7 +14,7 @@
   <ol class="step-bar__bubbles" aria-hidden="true">
     {% for step in steps %}
       <li{% if step.current %} class="current"{% endif %}>
-        <a href="whatever-the-step-thing-is" title="{{ step.label }}"></a>
+        <a href="javascript:void(0)" title="{{ step.label }}"></a>
       </li>
     {% endfor %}
   </ol>

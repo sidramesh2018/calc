@@ -3,29 +3,15 @@
 
 @import '../base/variables';
 
-/* Something about the animation interferes with hover state. Needs research. */
-//@keyframes step-fade-in {
-  //to {
-    //background-color: $color-green-light;
-    //border-color: $color-green-light;
-    //color: $color-base;
-  //}
-//}
+ol.step-bar__bubbles li + li.current a {
 
-//@supports ((animation-name: test) and (animation-fill-mode: forwards)) {
-  ol.step-bar__bubbles li + li.current a {
-    //animation-duration: 1s;
-    //animation-delay: 0.25s;
-    //animation-name: step-fade-in;
-    //animation-fill-mode: forwards;
-    background-color: $color-green-light;
-    border-color: $color-green-light;
-    color: $color-base;
-    &::before {
-      content: counter(li);
-    }
+  background-color: $color-green-light;
+  border-color: $color-green-light;
+  color: $color-base;
+  &::before {
+    content: counter(li);
   }
-//}
+}
 
 ol.step-bar__labels {
   padding: 0;
@@ -85,7 +71,7 @@ ol.step-bar__bubbles {
       text-decoration: none;
 
       &::before {
-        content: url('../../images/icon-checkmark.svg');
+        content: url('../../images/icon-step-checkmark.svg');
         // This must be here, otherwise incrementing will start with .current step
         counter-increment: li;
       }
