@@ -35,6 +35,7 @@
     &[aria-expanded="true"] {
       &:before {
         content: '\25BC';
+        font-size: $medium-font-size;
         padding-right: 4px;
         display: inline-block;
       }
