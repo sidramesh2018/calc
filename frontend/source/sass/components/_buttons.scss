@@ -31,15 +31,14 @@ button,
     }
   }
 
-  &.button-footer {
+  &.button-small_white {
     background-color: $color-white;
     border-radius: $border-radius;
-    color: $color-gray-medium;
+    color: $color-base;
 
     &:hover,
     &.button-hover {
-      background-color: $color-gray-lighter;
-      color: $color-gray-dark;
+      background-color: $color-gray-lightest;
     }
   }
 }
