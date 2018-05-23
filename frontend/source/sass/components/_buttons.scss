@@ -19,7 +19,7 @@ button,
   font-weight: $font-weight-bold;
 
   // Stand-in for deprecated WDS style that we need
-  &.usa-button.usa-button-outline {
+  &.usa-button.usa-button-secondary {
     background-color: $color-white;
     border: 2px solid $color-blue-darker;
     color: $color-blue-darker;
@@ -58,7 +58,7 @@ button.usa-button-secondary,
 input.usa-button-secondary[type="submit"],
 input.usa-button-secondary[type="reset"],
 input.usa-button-secondary[type="button"] {
-  background-color: $color-green-bright;
+  background-color: $color-white;
   color: $color-base;
   box-shadow: none;
   &:hover {
@@ -110,5 +110,16 @@ input.usa-button-link[type="button"] {
   cursor: default;
   &:hover {
     color: $color-gray-medium;
+  }
+}
+
+.button-green {
+  background-color: $color-green-bright;
+  color: $color-base;
+  box-shadow: none;
+  &:hover {
+    color: $color-base;
+    background-color: $color-green;
+    box-shadow: none;
   }
 }
