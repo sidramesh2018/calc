@@ -79,7 +79,7 @@ input.usa-button-link[type="button"] {
   padding-bottom: 0;
   text-transform: none;
   text-decoration: underline;
-  color: $color-primary;
+  color: $color-blue-darker;
   font-size: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
@@ -89,18 +89,18 @@ input.usa-button-link[type="button"] {
 
   &:hover,
   &.usa-button-hover {
-    color: $color-primary-darker;
+    color: $color-blue-darkest;
     background-color: transparent;
   }
 
   &:focus,
   &.usa-button-focus {
-    color: $color-primary-darker;
+    color: $color-blue-darkest;
   }
 
   &:active,
   &.usa-button-active {
-    color: $color-primary-darker;
+    color: $color-blue-darkest;
   }
 }
 
