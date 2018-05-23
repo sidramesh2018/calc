@@ -2,7 +2,11 @@ from typing import Union
 from textwrap import dedent, fill
 import abc
 from django.utils.safestring import SafeString
+from django.urls import reverse
 import markdown
+
+from ..models import Contract, ContractsQuerySet
+
 
 number = Union[int, float]
 
@@ -22,17 +26,35 @@ def format_html(markdown_text: str) -> SafeString:
 
 class BaseMetric(metaclass=abc.ABCMeta):
     '''
-    An abstract base class that describes a metric that can be
-    shown in a report.
+    An abstract base class that describes a contract-related
+    metric that can be shown in a report, along with examples of
+    labor rates behind the metric.
     '''
 
-    @abc.abstractmethod
+    MAX_EXAMPLES = 10
+
+    def get_queryset(self) -> ContractsQuerySet:
+        '''
+        Return a ContractsQuerySet that represents the data
+        behind the metric.
+        '''
+
+        return Contract.objects.none()
+
+    def get_examples_queryset(self) -> ContractsQuerySet:
+        '''
+        Return a ContractsQuerySet containing examples
+        of data behind the metric.
+        '''
+
+        return self.get_queryset()[:self.MAX_EXAMPLES]
+
     def count(self) -> number:
         '''
         Count the metric.
         '''
 
-        raise NotImplementedError()
+        return self.get_queryset().count()
 
     @abc.abstractproperty
     def desc(self) -> str:
@@ -80,3 +102,16 @@ class BaseMetric(metaclass=abc.ABCMeta):
     @property
     def footnote_html(self) -> SafeString:
         return format_html(self.footnote)
+
+    @property
+    def slug(self) -> str:
+        return self.__class__.__module__.split('.')[-1]
+
+    @property
+    def verbose_name(self) -> str:
+        return self.slug
+
+    def get_absolute_url(self) -> str:
+        return reverse('data_quality_report_detail', kwargs={
+            'slug': self.slug
+        })
