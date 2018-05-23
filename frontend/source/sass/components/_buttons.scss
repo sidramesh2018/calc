@@ -112,6 +112,7 @@ input.usa-button-link[type="button"] {
   &:active,
   &.usa-button-active {
     color: $color-primary-darker;
+    background-color: transparent;
   }
 }
 
