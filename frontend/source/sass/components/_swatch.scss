@@ -6,8 +6,8 @@
 }
 
 .swatch__color {
-  height: 12rem;
-  width: 12rem;
+  height: 15rem;
+  width: 100%;
   margin-bottom: 6px;
 
   &.color-black {
@@ -56,7 +56,7 @@
   }
 
   &.color-green-medium {
-    background-color: $color-green-medium;
+    background-color: $color-green-dark;
   }
 
   &.color-green {
@@ -87,8 +87,12 @@
     background-color: $color-red-lightest;
   }
 
-  &.color-blue-dark {
-    background-color: $color-blue-dark;
+  &.color-blue-darkest {
+    background-color: $color-blue-darkest;
+  }
+
+  &.color-blue-darker {
+    background-color: $color-blue-darker;
   }
 
   &.color-blue {
@@ -116,13 +120,6 @@
   }
 }
 
-.swatch__key span {
-  display: block;
-  float: left;
-  margin-top: $space-4x;
-  margin-bottom: $space-6x;
-}
-
 .swatch__contrast-ok {
   color: $color-green-darkest;
   &::before {
@@ -130,12 +127,11 @@
     background-image: url('/static/frontend/images/icon-checkmark.svg');
     background-repeat: no-repeat;
     background-position: left center;
-    background-size: 1.6rem;
+    background-size: 2rem;
     display: block;
     float: left;
-    width: 2.3rem;
+    width: 2.6rem;
     height: 2rem;
-    margin-left: 1.6rem;
   }
 }
 
@@ -176,12 +172,11 @@
     background-image: url('/static/frontend/images/icon-warning.svg');
     background-repeat: no-repeat;
     background-position: left center;
-    background-size: 1.6rem;
+    background-size: 2rem;
     display: block;
     float: left;
-    width: 2.3rem;
+    width: 2.6rem;
     height: 2rem;
-    margin-left: 1.6rem;
   }
 }
 
@@ -205,29 +200,45 @@
 
 
 .color-combos {
-  min-height: 5rem;
-  padding: 1rem;
-  &.color-white {
-    background-color: $color-white;
-    border: 1px solid $color-gray-light;
+
+  .background-fill {
+    padding: 3rem;
+
+    &.color-white {
+      background-color: $color-white;
+      border: 1px solid $color-gray-light;
+    }
+    &.color-gray-darkest {
+      background-color: $color-gray-darkest;
+    }
+    &.color-gray-lighter {
+      background-color: $color-gray-lighter;
+    }
+    &.color-green-light {
+      background-color: $color-green-light;
+    }
   }
-  &.color-gray-darkest {
-    background-color: $color-gray-darkest;
-  }
-  &.color-gray-lighter {
-    background-color: $color-gray-lighter;
-  }
-  &.color-green-light {
-    background-color: $color-green-light;
+
+  p.label-mono {
+    font-size: $medium-font-size;
+    padding-top: .5rem;
   }
 }
 
 .color-name {
   font-size: $h4-font-size;
   font-weight: $font-weight-bold;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   &.color-white {
     color: $color-white;
-  }  &.color-black {
+  }
+  &.color-black {
     color: $color-base;
   }
   &.color-gray-darker {

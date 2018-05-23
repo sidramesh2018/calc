@@ -9,9 +9,11 @@ class Metric(BaseMetric):
     Find labor rates whose contracts are expired.
     '''
 
-    def count(self) -> int:
+    def get_queryset(self):
         return Contract.objects.filter(
             contract_end__lt=timezone.now()
-        ).count()
+        )
 
     desc = 'labor rates are from expired contracts.'
+
+    verbose_name = 'expired rates'

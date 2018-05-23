@@ -2,6 +2,8 @@
 
 ### Browser
 
+#### Google Analytics
+
 CALC supports two kinds of integration with Google Analytics (GA):
 
 1. The [Digital Analytics Program (DAP)][DAP] is a government-wide
@@ -20,12 +22,18 @@ snippets included in HTML templates are in
 Please see these files for further documentation on how to track custom
 events, virtual pageviews, and more.
 
+#### New Relic
+
+If the `NEW_RELIC_LICENSE_KEY` environment variable has been set
+and the associated New Relic account has [New Relic Browser][]
+enabled, the New Relic Python agent will automatically
+inject JavaScript analytics script tags into CALC pages.
+
+[New Relic Browser]: https://docs.newrelic.com/docs/browser/new-relic-browser/getting-started/introduction-new-relic-browser
+
 ### Server
 
-The server-side supports New Relic integration via the
-`NEW_RELIC_LICENSE_KEY` environment variable.
-
-Additionally, when deploying via Cloud Foundry, Kibana
+When deploying via Cloud Foundry, Kibana
 can be used to obtain server-side analytics.
 
 For more details, see the [Deploying to Cloud Foundry](deploy.md)

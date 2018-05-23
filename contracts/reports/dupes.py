@@ -1,7 +1,17 @@
-from django.db import connection
+from django.db.models import Count, Sum, Q
 
 from contracts.models import Contract
 from .base import BaseMetric
+
+
+# Sometimes we want to dynamically build a Q object by starting
+# with a "null query" that has nothing in it, and then adding
+# more Q objects via the OR operator (i.e., "|").
+#
+# This particular null query has the advantage that no database query
+# is executed if nothing is OR'd with it. It was taken from
+# https://stackoverflow.com/a/46225056.
+NULL_QUERY = Q(pk__in=[])
 
 
 class Metric(BaseMetric):
@@ -28,29 +38,40 @@ class Metric(BaseMetric):
         for field in CORE_FIELDS
     ]
 
-    CONTRACTS_TABLE = Contract._meta.db_table
+    def _get_dupe_info(self):
+        return Contract.objects.values(*self.CORE_FIELDS)\
+            .annotate(count=Count(self.CORE_FIELDS[0]))\
+            .filter(count__gt=1)\
+            .distinct()
 
-    CORE_FIELD_COLUMNS = [
-        Contract._meta.get_field(field).column
-        for field in CORE_FIELDS
-    ]
+    def get_examples_queryset(self):
+        total = 0
+        dupes = NULL_QUERY
 
-    CORE_FIELDS_ARE_EQUAL = ' AND '.join([
-        f"c1.{column} = c2.{column}"
-        for column in CORE_FIELD_COLUMNS
-    ])
+        # There might be a way to do this all with one database
+        # query, but since we don't expect this report to
+        # be executed often, and since we only need MAX_EXAMPLES
+        # examples, it's not a big deal.
+        for dupeinfo in self._get_dupe_info():
+            # Find all the records that share the same core fields
+            # and add them to our set of duplicates.
+            dupes = dupes | Q(**{
+                field: dupeinfo[field] for field in self.CORE_FIELDS
+            })
 
-    SQL_QUERY = f'''
-    SELECT COUNT(c1.id)
-    FROM {CONTRACTS_TABLE} as c1, {CONTRACTS_TABLE} as c2
-    WHERE c1.id < c2.id   /* Use < to avoid counting duplicates */
-    AND {CORE_FIELDS_ARE_EQUAL}
-    '''
+            total += dupeinfo['count']
+            if total > self.MAX_EXAMPLES:
+                break
+
+        # We want to order the results by our core fields so it's
+        # easier to visually group them together and see what the
+        # differences between them (if any) are.
+        return Contract.objects.filter(dupes)\
+            .order_by(*self.CORE_FIELDS)[:self.MAX_EXAMPLES]
 
     def count(self) -> int:
-        cursor = connection.cursor()
-        cursor.execute(self.SQL_QUERY)
-        return cursor.fetchone()[0]
+        return self._get_dupe_info()\
+            .aggregate(Sum('count'))['count__sum'] or 0
 
     desc = f'''
     labor rates appear to be duplicates.
