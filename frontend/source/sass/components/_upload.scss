@@ -19,14 +19,15 @@ upload-widget {
   font-size: 2rem;
 
   label {
-    color: $color-primary;
+    color: $color-blue;
     font-weight: $font-weight-bold;
     display: inline;
+    text-decoration: underline;
     cursor: pointer;
   }
 
   label:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   .upload-changer {
@@ -45,7 +46,7 @@ upload-widget {
       &:before {
         content: "Drop file here!";
         font-weight: $font-weight-bold;
-        color: $color-primary;
+        color: $color-gray-darkest;
         display: block;
         position: absolute;
         margin-top: 0;
@@ -93,7 +94,7 @@ upload-widget:not([aria-live]) {
   input {
     border: none;
     font-size: 1.3rem;
-    color: $color-primary;
+    color: $color-blue;
     font-weight: $font-weight-bold;
     padding: 1.5rem 0 1rem;
     // TODO: This is just clearing out the margin-bottom from our standard
