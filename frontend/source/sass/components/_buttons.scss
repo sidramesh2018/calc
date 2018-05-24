@@ -114,4 +114,7 @@ input.usa-button-link[type="button"] {
     background-color: $color-green;
     box-shadow: none;
   }
+  &:active {
+    background-color: $color-green;
+  }
 }
