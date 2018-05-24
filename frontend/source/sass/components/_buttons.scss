@@ -15,32 +15,30 @@ button,
   // WDS override
   margin-bottom: 0;
   margin-top: 0;
-  font-size: $small-font-size;
-  text-transform: uppercase;
-  font-size: $small-font-size; // original is $base-font, which is too large here
+  font-size: $medium-font-size;
   font-weight: $font-weight-bold;
-  line-height: 1.7; // adjusted from 1, which makes links show funky
 
   // Stand-in for deprecated WDS style that we need
-  &.usa-button-outline {
-    border: 1px solid $color-gray;
-    background: $color-white;
-    color: $color-gray;
+  &.usa-button.usa-button-secondary {
+    background-color: $color-white;
+    border: 2px solid $color-blue-darker;
+    color: $color-blue-darker;
     &:hover,
-    &.usa-button-hover {
-      border-color: $color-gray-light;
+    &.usa-button.usa-button-hover {
+      background-color: $color-gray-lightest;
+      border-color: $color-blue-darkest;
+      color: $color-blue-darkest;
     }
   }
 
-  &.button-footer {
+  &.button-small_white {
     background-color: $color-white;
     border-radius: $border-radius;
-    color: $color-gray-medium;
+    color: $color-base;
 
     &:hover,
     &.button-hover {
-      background-color: $color-gray-lighter;
-      color: $color-gray-dark;
+      background-color: $color-gray-lightest;
     }
   }
 }
@@ -49,15 +47,6 @@ button,
 input[type="reset"] {
   padding-top: 0.9rem;
   padding-bottom: 0.9rem; //compensates for the 1px border
-}
-
-// Stand-in for deprecated WDS style that we need
-.usa-button-gray,
-.usa-button-gray:hover,
-.usa-button-gray:active,
-.usa-button-gray:focus {
-  color: $color-white;
-  border: 0;
 }
 
 // The WDS used to style secondary buttons in the secondary color,
@@ -69,12 +58,12 @@ button.usa-button-secondary,
 input.usa-button-secondary[type="submit"],
 input.usa-button-secondary[type="reset"],
 input.usa-button-secondary[type="button"] {
-  background-color: $color-secondary;
-  color: $color-white;
+  background-color: $color-white;
+  color: $color-base;
   box-shadow: none;
   &:hover {
-    color: $color-white;
-    background-color: $color-red-dark;
+    color: $color-base;
+    background-color: $color-green;
     box-shadow: none;
   }
 }
@@ -90,7 +79,7 @@ input.usa-button-link[type="button"] {
   padding-bottom: 0;
   text-transform: none;
   text-decoration: underline;
-  color: $color-primary;
+  color: $color-blue-darker;
   font-size: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
@@ -100,13 +89,13 @@ input.usa-button-link[type="button"] {
 
   &:hover,
   &.usa-button-hover {
-    color: $color-primary-darker;
+    color: $color-blue-darkest;
     background-color: transparent;
   }
 
   &:focus,
   &.usa-button-focus {
-    color: $color-primary-darker;
+    color: $color-blue-darkest;
   }
 
   &:active,
@@ -118,9 +107,20 @@ input.usa-button-link[type="button"] {
 
 .usa-button.usa-button-disabled {
   background-color: $color-gray-lighter;
+  color: $color-gray-medium;
   cursor: default;
-  color: $color-gray;
   &:hover {
-    color: $color-gray;
+    color: $color-gray-medium;
+  }
+}
+
+.button-green {
+  background-color: $color-green-bright;
+  color: $color-base;
+  box-shadow: none;
+  &:hover {
+    color: $color-base;
+    background-color: $color-green;
+    box-shadow: none;
   }
 }
