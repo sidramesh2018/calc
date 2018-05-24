@@ -11,6 +11,11 @@ ol.step-bar__bubbles li.current a {
   &::before {
     content: counter(li);
   }
+  &:hover {
+    background-color: $color-green-light;
+    border-color: $color-green-light;
+    color: $color-base;
+  }
 }
 
 ol.step-bar__labels {
@@ -51,7 +56,7 @@ ol.step-bar__bubbles {
     padding-top: 14px;
     position: relative;
     float: left;
-    width: 46px; // width of :before psuedoclass + $space-3x (22px + 24px)
+    width: 38px; // width of :before psuedoclass + $space-2x (22px + 16px)
 
     a {
       width: 2.6rem;
@@ -92,6 +97,9 @@ ol.step-bar__bubbles {
       color: $color-gray-dark;
       &::before {
         content: counter(li);
+      }
+      &:hover {
+        background-color: $color-gray-lighter;
       }
     }
 
