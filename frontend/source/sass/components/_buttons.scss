@@ -30,6 +30,14 @@ button,
   }
 }
 
+.usa-button {
+  &[type="submit"],
+  &[type="button"] {
+    height: auto;
+    display: inline;
+  }
+}
+
 .usa-button.reset,
 input[type="reset"] {
   padding-top: 0.9rem;
