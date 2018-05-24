@@ -47,24 +47,24 @@ ol.step-bar__bubbles {
 
   li {
     list-style: none;
-    border-top: 2px solid $color-gray-lighter;
+    border-top: 3px solid $color-gray-lighter;
     padding-top: 14px;
     position: relative;
     float: left;
     width: 46px; // width of :before psuedoclass + $space-3x (22px + 24px)
 
     a {
-      width: 2.2rem;
-      height: 2.2rem;
+      width: 2.6rem;
+      height: 2.6rem;
       display: inline-block;
-      padding: 0;
+      padding-top: .1rem;
       position: absolute;
       top: -12px;
       left: 0px;
       background-color: $color-gray-lighter;
       color: $color-gray-dark;
       border-radius: 30px;
-      border: 2px solid $color-gray-lighter;
+      border: 3px solid $color-gray-lighter;
       text-align: center;
       font-size: 80%;
       font-weight: 700;
@@ -79,7 +79,7 @@ ol.step-bar__bubbles {
 
     a:hover,
     &.current a:hover {
-      background-color: $color-white;
+      background-color: $color-gray-lighter;
       border-color: $color-gray-lighter;
       color: $color-gray-dark;
       &::before {
