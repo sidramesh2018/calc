@@ -56,7 +56,7 @@
   }
 
   &.color-green-medium {
-    background-color: $color-green-medium;
+    background-color: $color-green-dark;
   }
 
   &.color-green {
@@ -87,8 +87,12 @@
     background-color: $color-red-lightest;
   }
 
-  &.color-blue-dark {
-    background-color: $color-blue-dark;
+  &.color-blue-darkest {
+    background-color: $color-blue-darkest;
+  }
+
+  &.color-blue-darker {
+    background-color: $color-blue-darker;
   }
 
   &.color-blue {
@@ -126,7 +130,7 @@
     background-size: 2rem;
     display: block;
     float: left;
-    width: 2.3rem;
+    width: 2.6rem;
     height: 2rem;
   }
 }
@@ -171,7 +175,7 @@
     background-size: 2rem;
     display: block;
     float: left;
-    width: 2.3rem;
+    width: 2.6rem;
     height: 2rem;
   }
 }
