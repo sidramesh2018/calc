@@ -108,11 +108,9 @@ input.usa-button-link[type="button"] {
 .button-green {
   background-color: $color-green-bright;
   color: $color-base;
-  box-shadow: none;
   &:hover {
     color: $color-base;
     background-color: $color-green;
-    box-shadow: none;
   }
   &:active {
     background-color: $color-green;
