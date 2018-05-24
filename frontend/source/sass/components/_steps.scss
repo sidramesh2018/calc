@@ -3,7 +3,7 @@
 
 @import '../base/variables';
 
-ol.step-bar__bubbles li + li.current a {
+ol.step-bar__bubbles li.current a {
 
   background-color: $color-green-light;
   border-color: $color-green-light;
