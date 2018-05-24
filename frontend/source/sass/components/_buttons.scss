@@ -54,7 +54,7 @@ input.usa-button-secondary[type="button"] {
     box-shadow: none;
   }
   &:active {
-    background-color: $color-gray-light;
+    background-color: $color-gray-lighter;
     box-shadow: none;
   }
 }
@@ -91,6 +91,7 @@ input.usa-button-link[type="button"] {
 
   &:active,
   &.usa-button-active {
+    background-color: transparent;
     color: $color-blue-darkest;
   }
 }
@@ -109,6 +110,9 @@ input.usa-button-link[type="button"] {
   color: $color-base;
   &:hover {
     color: $color-base;
+    background-color: $color-green;
+  }
+  &:active {
     background-color: $color-green;
   }
 }
