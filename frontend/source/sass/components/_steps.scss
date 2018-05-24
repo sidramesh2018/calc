@@ -4,7 +4,6 @@
 @import '../base/variables';
 
 ol.step-bar__bubbles li.current a {
-
   background-color: $color-green-light;
   border-color: $color-green-light;
   color: $color-base;
@@ -56,7 +55,7 @@ ol.step-bar__bubbles {
     padding-top: 14px;
     position: relative;
     float: left;
-    width: 38px; // width of :before psuedoclass + $space-2x (22px + 16px)
+    width: 38px; // width of `a` tag bubble + margin (26px + 12px)
 
     a {
       width: 2.6rem;
@@ -64,7 +63,7 @@ ol.step-bar__bubbles {
       display: inline-block;
       padding-top: .1rem;
       position: absolute;
-      top: -12px;
+      top: -15px;
       left: 0px;
       background-color: $color-gray-lighter;
       color: $color-gray-dark;
@@ -82,8 +81,7 @@ ol.step-bar__bubbles {
       }
     }
 
-    a:hover,
-    &.current a:hover {
+    a:hover {
       background-color: $color-gray-lighter;
       border-color: $color-gray-lighter;
       color: $color-gray-dark;
