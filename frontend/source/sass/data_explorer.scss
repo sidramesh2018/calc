@@ -11,13 +11,13 @@ body {
 
 // temp styles to mimic .card without indenting the table
 section.search,
-.results .container .row:first-child {
+.results > .container > .row:first-child {
   margin: auto $space-8x;
 
 }
 @media only screen and (max-width: $medium-large-screen) {
   section.search,
-  .results .container .row:first-child {
+  .results > .container > .row:first-child {
     margin: 0;
   }
 }
