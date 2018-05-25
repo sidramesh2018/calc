@@ -30,6 +30,15 @@ button,
   }
 }
 
+.usa-button {
+  &[type="submit"],
+  &[type="button"] {
+    height: auto;
+    display: inline;
+    padding: 1rem 2rem;
+  }
+}
+
 .usa-button.reset,
 input[type="reset"] {
   padding-top: 0.9rem;
@@ -44,18 +53,16 @@ input.usa-button-secondary[type="submit"],
 input.usa-button-secondary[type="reset"],
 input.usa-button-secondary[type="button"] {
   background-color: $color-white;
-  border: 2px solid $color-blue-darker;
+  box-shadow: inset 0 0 0 2px $color-blue-darker;
   color: $color-blue-darker;
-  box-shadow: none;
   &:hover {
     background-color: $color-gray-lightest;
-    border-color: $color-blue-darkest;
+    box-shadow: inset 0 0 0 2px $color-blue-darkest;
     color: $color-blue-darkest;
-    box-shadow: none;
   }
   &:active {
+    box-shadow: inset 0 0 0 2px $color-blue-darkest;
     background-color: $color-gray-lighter;
-    box-shadow: none;
   }
 }
 
