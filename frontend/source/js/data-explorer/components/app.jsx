@@ -91,7 +91,7 @@ class App extends React.Component {
       >
         <TitleTagSynchronizer />
         <section className="search">
-          <div className="container">
+          <div className="container clearfix">
             <p className="help-text">
               Enter your search terms below, separated by commas.
               {' '}

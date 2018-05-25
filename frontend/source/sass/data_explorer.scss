@@ -9,6 +9,12 @@ body {
   background-color: $color-gray-lighter; //override to steps.scss
 }
 
+// temp styles to mimic .card without indenting the table
+section.search,
+.results .container .row:first-child {
+  margin-left: $space-3x;
+}
+
 // to fake selection of home link
 nav li:first-child {
   border-bottom: $space-1x solid $color-green-bright;
