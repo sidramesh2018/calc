@@ -100,18 +100,18 @@ input.usa-button-link[type="button"] {
 
   &:hover,
   &.usa-button-hover {
-    color: $color-blue-darkest;
+    color: $color-blue-darker;
     background-color: transparent;
   }
 
   &:focus,
   &.usa-button-focus {
-    color: $color-blue-darkest;
+    color: $color-blue-darker;
   }
 
   &:active,
   &.usa-button-active {
-    color: $color-blue-darkest;
+    color: $color-blue-darker;
   }
 }
 
