@@ -314,7 +314,7 @@ input[type="checkbox"]:checked ~ label {
 .avg-price-highlight,
 h5.sd-highlight,
 h5.proposed-price-highlight {
-  color: $color-blue-darker;
+  color: $color-blue-dark;
   font-weight: 400;
   font-size: 2.4rem;
 }
@@ -418,7 +418,7 @@ tr:hover td.column-min_years_experience .years {
 }
 
 .column-idv_piid:hover .document-icon {
-  fill: $color-blue-darker;
+  fill: $color-blue-dark;
 }
 
 a.focus-input {
@@ -462,7 +462,7 @@ a.focus-input {
 }
 
 .contract-year-selected {
-  background-color: $color-blue-darker;
+  background-color: $color-blue-dark;
   color: $color-white;
 }
 
@@ -554,7 +554,7 @@ label.radio {
 }
 
 label.checkbox :checked + span {
-  background-color: $color-blue-darker;
+  background-color: $color-blue-dark;
   box-shadow: 0 0 0 0 $color-white;
   position: relative;
   &:after {
@@ -568,7 +568,7 @@ label.checkbox :checked + span {
 }
 
 label.radio :checked + span {
-  background-color: $color-blue-darker;
+  background-color: $color-blue-dark;
   color: $color-white;
   position: relative;
 }
