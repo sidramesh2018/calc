@@ -39,6 +39,13 @@ class Metric(BaseMetric):
     ]
 
     def _get_dupe_info(self):
+        '''
+        Return a queryset where each entry contains information
+        about a specific type of duplicate: its core field
+        values and its count (i.e., the number of Contract models
+        that match its core fields).
+        '''
+
         return Contract.objects.values(*self.CORE_FIELDS)\
             .annotate(count=Count(self.CORE_FIELDS[0]))\
             .filter(count__gt=1)\
