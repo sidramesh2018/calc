@@ -39,24 +39,24 @@ a {
 }
 
 .btn a {
-  border: 1px solid $color-primary-alt; // To override USWDS
+  border: 1px solid $color-green-bright; // To override USWDS
   border-radius: 3px;
   color: $color-base;
   font-size: 18px;
 }
 
 .btn-primary table td {
-  background-color: $color-primary-alt;
+  background-color: $color-green-bright;
 }
 
 .btn-primary a {
-  background-color: $color-primary-alt;
-  border-color: $color-primary-alt; // To override USWDS
+  background-color: $color-green-bright;
+  border-color: $color-green-bright; // To override USWDS
   color: $color-base;
 }
 
 .btn-primary table td:hover {
-  background-color: $color-primary-alt !important;
+  background-color: $color-green-bright !important;
 }
 
 .btn-primary a:hover {
