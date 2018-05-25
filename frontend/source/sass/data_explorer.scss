@@ -11,18 +11,33 @@ body {
 
 // temp styles to mimic .card without indenting the table
 section.search,
-.results > .container > .row:first-child {
+section.search + .graph-block,
+.help-text.columns.nine {
   margin: auto $space-8x;
-
 }
+
+section.search .container {
+  padding: 0;
+}
+
+#search.container {
+  padding-right: 0;
+}
+
 @media only screen and (max-width: $medium-large-screen) {
   section.search,
-  .results > .container > .row:first-child {
+  section.search + .graph-block,
+  .help-text.columns.nine {
     margin: 0;
   }
 }
-section.search {
+
+.help-text.columns.nine {
   padding-top: $space-8x;
+}
+
+#labor_category {
+  width: 55%;
 }
 
 // to fake selection of home link
@@ -139,6 +154,7 @@ span.dollars {
   .filter-container {
     float: right;
     margin-bottom: 1em;
+    margin-top: 2rem;
   }
 }
 
