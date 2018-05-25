@@ -1,8 +1,6 @@
 /* global jQuery, document */
 
-const $ = jQuery;
-
-$(document).ready(() => {
+window.addEventListener('DOMContentLoaded', () => {
   const steps = document.querySelectorAll('.step-bar__bubbles li');
   const stepLabels = document.querySelectorAll('.step-bar__labels li');
   const currentStep = document.querySelector('.step-bar__labels .current');
