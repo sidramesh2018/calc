@@ -98,8 +98,9 @@ p {
 }
 
 a {
+  color: $color-blue;
   &:visited {
-    color: $color-primary; // WDS override
+    color: $color-blue; // WDS override
   }
 }
 
