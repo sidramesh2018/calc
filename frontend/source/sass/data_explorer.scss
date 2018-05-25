@@ -12,7 +12,17 @@ body {
 // temp styles to mimic .card without indenting the table
 section.search,
 .results .container .row:first-child {
-  margin-left: $space-3x;
+  margin: auto $space-8x;
+
+}
+@media only screen and (max-width: $medium-large-screen) {
+  section.search,
+  .results .container .row:first-child {
+    margin: 0;
+  }
+}
+section.search {
+  padding-top: $space-8x;
 }
 
 // to fake selection of home link
@@ -327,10 +337,6 @@ h5.proposed-price-highlight {
 
 .slider {
   margin: 5px 0 5px 0;
-}
-
-section.search {
-  padding: .5rem 0 3rem 0;
 }
 
 .results {
