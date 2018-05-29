@@ -13,15 +13,17 @@ body {
 section.search,
 section.search + .graph-block,
 .help-text.columns.nine {
-  margin: auto $space-8x;
+  margin-right: 0;
+  margin-left: $space-8x;
 }
 
 section.search .container {
   padding: 0;
 }
 
-#search.container {
-  padding-right: 0;
+#search.container,
+.results .container {
+  padding: 0;
 }
 
 @media only screen and (max-width: $medium-large-screen) {
@@ -141,6 +143,7 @@ span.dollars {
 .filter-block {
   background: $color-gray-lightest;
   border-radius: $border-radius;
+  margin-right: $space-1x;
   margin-bottom: 0;
   padding: 1rem 2rem;
 
@@ -153,8 +156,8 @@ span.dollars {
 @media (min-width: 550px) {
   .filter-container {
     float: right;
+    margin-top: 1rem;
     margin-bottom: 1em;
-    margin-top: 2rem;
   }
 }
 
@@ -407,7 +410,7 @@ label[for=schedule] {
 
 .table-container {
   width: 100%;
-  overflow: scroll;
+  overflow-x: scroll;
   clear: both;
 }
 
