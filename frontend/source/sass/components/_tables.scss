@@ -288,8 +288,7 @@ td.number {
   text-align: right;
   &:before {
     content: "$";
-    display: block;
-    float: left;
+    display: inline;
     width: 1em;
     height: $medium-font-size;
   }
