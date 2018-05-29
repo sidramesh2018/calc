@@ -95,6 +95,10 @@
     background-color: $color-blue-darker;
   }
 
+  &.color-blue-dark {
+    background-color: $color-blue-dark;
+  }
+
   &.color-blue {
     background-color: $color-blue;
   }
@@ -167,6 +171,7 @@
 
 .swatch__contrast-bad {
   color: $color-red-dark;
+  margin-bottom: $space-3x;
   &::before {
     content: "";
     background-image: url('/static/frontend/images/icon-warning.svg');

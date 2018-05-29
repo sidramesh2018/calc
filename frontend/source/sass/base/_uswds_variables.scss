@@ -9,8 +9,8 @@ $asset-path: '../vendor/uswds/' !default;
 // Color overrides
 // Addtional colors specific to CALC are defined in _variables.scss
 $color-blue:                 #0770b5;
-$color-blue-darker:          #136b94;
-$color-blue-darkest:         #0c4c6f;
+$color-blue-darker:          #0c4c6f;
+$color-blue-darkest:         #0a2d39;
 
 $color-green:                #bbcb70;
 $color-green-light:          #cddc86;
@@ -18,8 +18,8 @@ $color-green-lighter:        #dae6a3;
 $color-green-lightest:       #e6edc2;
 $color-green-bright:         #ccde61;
 
-$color-primary:              $color-blue;
-$color-primary-darker:       $color-blue-darker;
+$color-primary:              $color-blue-darker;
+$color-primary-darker:       $color-blue-darkest;
 $color-primary-darkest:      $color-blue-darkest;
 $color-secondary:            $color-green-bright;
 $color-primary-alt:          $color-green-bright;
