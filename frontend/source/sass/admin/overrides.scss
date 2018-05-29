@@ -264,9 +264,9 @@ thead a:focus {
     li {
       margin-bottom: 0;
       &.selected a {
-        color: $color-blue-darker;
+        color: $color-blue-dark;
         font-weight: bold;
-        border-left: .5rem solid $color-blue-darker;
+        border-left: .5rem solid $color-blue-dark;
         margin-left: -2rem;
         padding-left: 1.5rem;
       }

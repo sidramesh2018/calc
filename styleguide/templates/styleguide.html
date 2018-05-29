@@ -83,8 +83,6 @@
   <p class="swatch__contrast-bad"> <strong>Do not pair text in one of these colors with white.</strong>
   </p>
 
-
-  <h3>Core palette</h3>
   <div class="row clearfix">
     <div class="swatch columns three">
       <div class="swatch__color color-black"></div>
@@ -223,8 +221,50 @@
       </div>
     </div>
   </div>
-
-  <h3>Utility</h3>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue-darkest"></div>
+      <div class="label-mono">
+        <p>$color-blue-darkest</p>
+        <p class="swatch__hex">0a2d39</p>
+        <p class="contrast-ok">OK with white</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue-darker"></div>
+      <div class="label-mono">
+        <p>$color-blue-darker</p>
+        <p class="swatch__hex">#0c4c6f</p>
+        <p class="contrast-ok">OK with white</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue-dark"></div>
+      <div class="label-mono">
+        <p>$color-blue-dark</p>
+        <p class="swatch__hex">#136b94</p>
+        <p class="contrast-ok">OK with white</p>
+      </div>
+    </div>
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue"></div>
+      <div class="label-mono">
+        <p>$color-blue</p>
+        <p class="swatch__hex">#0770b5</p>
+        <p class="contrast-ok">OK with white</p>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="swatch columns three">
+      <div class="swatch__color color-blue-lightest"></div>
+      <div class="label-mono">
+        <p>$color-blue-lightest</p>
+        <p class="swatch__hex">#d4f6fe</p>
+        <p class="contrast-bad">Insuff. contrast</p>
+      </div>
+    </div>
+  </div>
   <div class="row clearfix">
     <div class="swatch columns three">
       <div class="swatch__color color-red-darkest"></div>
@@ -247,40 +287,6 @@
       <div class="label-mono">
         <p>$color-red-lightest</p>
         <p class="swatch__hex">#ffe0e0</p>
-        <p class="contrast-bad">Insuff. contrast</p>
-      </div>
-    </div>
-  </div>
-  <div class="row clearfix">
-    <div class="swatch columns three">
-      <div class="swatch__color color-blue-darkest"></div>
-      <div class="label-mono">
-        <p>$color-blue-darkest</p>
-        <p class="swatch__hex">#0c4c6f</p>
-        <p class="contrast-ok">OK with white</p>
-      </div>
-    </div>
-    <div class="swatch columns three">
-      <div class="swatch__color color-blue-darker"></div>
-      <div class="label-mono">
-        <p>$color-blue-darker</p>
-        <p class="swatch__hex">#136b94</p>
-        <p class="contrast-ok">OK with white</p>
-      </div>
-    </div>
-    <div class="swatch columns three">
-      <div class="swatch__color color-blue"></div>
-      <div class="label-mono">
-        <p>$color-blue</p>
-        <p class="swatch__hex">#077bc7</p>
-        <p class="contrast-ok">OK with white</p>
-      </div>
-    </div>
-    <div class="swatch columns three">
-      <div class="swatch__color color-blue-lightest"></div>
-      <div class="label-mono">
-        <p>$color-blue-lightest</p>
-        <p class="swatch__hex">#d4f6fe</p>
         <p class="contrast-bad">Insuff. contrast</p>
       </div>
     </div>
@@ -523,14 +529,13 @@
 
   {% example %}
   <button>Default button</button>
-  <a class="usa-button usa-button-primary" href="#">Link</a>
-  <button class="usa-button-primary">Button</button>
-  <input class="usa-button-primary" type="button" value="Input">
-  <input class="usa-button-primary" type="submit" value="Submit">
-  <button class="usa-button-disabled">Disabled button</button>
-  <button class="usa-button-secondary">Secondary button</button>
-  <button class="usa-button-gray">Gray button</button>
-  <button class="usa-button-link">Link button</button>
+  <button class="usa-button usa-button-primary">Button</button>
+  <input class="usa-button usa-button-primary" type="button" value="Input">
+  <input class="usa-button usa-button-primary" type="submit" value="Submit">
+  <button class="usa-button usa-button-disabled">Disabled</button>
+  <button class="usa-button usa-button-secondary">Secondary</button>
+  <button class="button-green">Green</button>
+  <button class="usa-button usa-button-link">Link button</button>
   {% endexample %}
 
   {% guide_section "Steps Widget" %}
@@ -821,11 +826,11 @@
 
   {% example %}
   <div class="form-button-row clearfix">
-    <a href="#" class="usa-button usa-button-outline button-previous">Previous</a>
+    <a href="#" class="usa-button usa-button-secondary button-previous">Previous</a>
 
 
     <div class="submit-group">
-      <button type="submit" class="usa-button-primary">Next</button>
+      <button type="submit" class="usa-button usa-button-primary">Next</button>
       <span class="submit-label">
         Provide details about the contract.
       </span>
@@ -847,7 +852,7 @@
 
   {% example %}
   <expandable-area>
-    <h6>Why are computers so hard to use?</h6>
+    <p><strong>Why are computers so hard to use?</strong></h6>
     <p>Here is a paragraph of explanatory text.</p>
     <p>Here is another paragraph of explanatory text.</p>
   </expandable-area>
@@ -914,7 +919,7 @@
         </p>
 
         <div class="dialog-buttons">
-          <button class="usa-button-primary" data-a11y-dialog-hide>
+          <button class="usa-button usa-button-primary" data-a11y-dialog-hide>
             Dismiss dialog
           </button>
         </div>
@@ -991,7 +996,7 @@
     on this page via the button below.
   </p>
 
-  <button class="usa-button-secondary"
+  <button class="usa-button usa-button-secondary"
           onclick="throw new Error('I am an intentional error')">
     Trigger JavaScript Error
   </button>
