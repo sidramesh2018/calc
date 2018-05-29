@@ -9,6 +9,39 @@ body {
   background-color: $color-gray-lighter; //override to steps.scss
 }
 
+// temp styles to mimic .card without indenting the table
+section.search,
+section.search + .graph-block,
+.help-text.columns.nine {
+  margin-right: 0;
+  margin-left: $space-8x;
+}
+
+section.search .container {
+  padding: 0;
+}
+
+#search.container,
+.results .container {
+  padding: 0;
+}
+
+@media only screen and (max-width: $medium-large-screen) {
+  section.search,
+  section.search + .graph-block,
+  .help-text.columns.nine {
+    margin: 0;
+  }
+}
+
+.help-text.columns.nine {
+  padding-top: $space-8x;
+}
+
+#labor_category {
+  width: 55%;
+}
+
 // to fake selection of home link
 nav li:first-child {
   border-bottom: $space-1x solid $color-green-bright;
@@ -110,6 +143,7 @@ span.dollars {
 .filter-block {
   background: $color-gray-lightest;
   border-radius: $border-radius;
+  margin-right: $space-1x;
   margin-bottom: 0;
   padding: 1rem 2rem;
 
@@ -122,6 +156,7 @@ span.dollars {
 @media (min-width: 550px) {
   .filter-container {
     float: right;
+    margin-top: 1rem;
     margin-bottom: 1em;
   }
 }
@@ -323,10 +358,6 @@ h5.proposed-price-highlight {
   margin: 5px 0 5px 0;
 }
 
-section.search {
-  padding: .5rem 0 3rem 0;
-}
-
 .results {
   padding: 1rem 0;
 }
@@ -379,7 +410,7 @@ label[for=schedule] {
 
 .table-container {
   width: 100%;
-  overflow: scroll;
+  overflow-x: scroll;
   clear: both;
 }
 
