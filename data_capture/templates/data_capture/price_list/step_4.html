@@ -119,7 +119,7 @@
     {% elif gleaned_data.invalid_rows %}
       <a href="{% url 'data_capture:step_3_errors' %}" class="usa-button usa-button-secondary button-previous">Previous</a>
     {% else %}
-      <a href="{% url 'data_capture:step_3' %}" class="usa-button usa-button-previous">Previous</a>
+      <a href="{% url 'data_capture:step_3' %}" class="usa-button usa-button-secondary button-previous">Previous</a>
     {% endif %}
 
     {% if gleaned_data.valid_rows %}
