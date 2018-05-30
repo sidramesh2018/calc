@@ -12,18 +12,18 @@
   }
 
   .rc-slider-track {
-    background-color: $color-blue-darker;
+    background-color: $color-blue-dark;
     height: 6px;
   }
 
   .rc-slider-handle {
     margin-top: -4px;
-    border-color: $color-blue;
-    background-color: $color-blue;
+    border-color: $color-blue-dark;
+    background-color: $color-blue-dark;
 
     &:hover {
-      border-color: $color-blue-dark;
-      background-color: $color-blue-dark;
+      border-color: $color-blue-darker;
+      background-color: $color-blue-darker;
     }
   }
 
