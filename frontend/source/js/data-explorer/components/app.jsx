@@ -111,7 +111,7 @@ class App extends React.Component {
                       {' '}
                       <input
                         onClick={this.handleResetClick}
-                        className="reset usa-button usa-button-outline"
+                        className="reset usa-button usa-button-secondary"
                         type="reset"
                         value="Clear search"
                       />
