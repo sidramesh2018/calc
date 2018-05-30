@@ -30,7 +30,7 @@ section.search .container {
   section.search,
   section.search + .graph-block,
   .help-text.columns.nine {
-    margin: 0;
+    margin-left: $space-3x;
   }
 }
 
@@ -39,7 +39,7 @@ section.search .container {
 }
 
 #labor_category {
-  width: 55%;
+  width: 65%;
 }
 
 // to fake selection of home link
