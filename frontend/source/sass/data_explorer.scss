@@ -30,7 +30,7 @@ section.search .container {
   section.search,
   section.search + .graph-block,
   .help-text.columns.nine {
-    margin: 0;
+    margin-left: $space-3x;
   }
 }
 
@@ -39,7 +39,7 @@ section.search .container {
 }
 
 #labor_category {
-  width: 55%;
+  width: 65%;
 }
 
 // to fake selection of home link
@@ -223,6 +223,9 @@ dl.dropdown {
     line-height: 24px;
     overflow: hidden;
     padding: 6px 10px;
+    &:focus {
+      outline: #2d4d59 dotted 2px;
+    }
   }
   span.value {
     display:none;
@@ -633,6 +636,11 @@ label.radio :checked + span {
 .checkbox-focus {
   background-color: $color-white;
   padding: 1px 8px;
+}
+
+input[type=radio]:focus+.checkbox-focus,
+input[type=checkbox]:focus+.checkbox-focus {
+  outline: #2d4d59 dotted 2px;
 }
 
 .contract-list-item {

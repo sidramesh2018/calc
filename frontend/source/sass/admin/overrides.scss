@@ -16,7 +16,7 @@
 nav ul {
   margin-top: 0;
   li {
-    padding-bottom: ($space-1x + $space-half);
+    padding-bottom: 1.1rem;
     border-bottom: 0;
     a[href*="admin"]{
       border-bottom: $space-1x solid $color-green-bright;
