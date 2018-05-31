@@ -15,7 +15,7 @@ RUN apt-get update && \
   # This is some kind of dependency for headless chrome; See https://crbug.com/795759.
   libgconf-2-4 \
   # Install latest chrome stable package and dependencies.
-  # Note that ideall we'd explicitly specify the version of Chrome to use,
+  # Note that ideally we'd explicitly specify the version of Chrome to use,
   # but there are complications; see https://github.com/18F/calc/issues/1964
   # for more details.
   google-chrome-stable ttf-freefont \
