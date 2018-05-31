@@ -1,14 +1,50 @@
+// Original styles for the data explorer tool. These could be abstracted into
+// components and then included here.
+
 @import 'base/variables';
 @import 'components/tables';
 @import 'components/experienceslider';
 
 body {
-  background-color: $color-white; //override to steps.scss
+  background-color: $color-gray-lighter; //override to steps.scss
+}
+
+// temp styles to mimic .card without indenting the table
+section.search,
+section.search + .graph-block,
+.help-text.columns.nine {
+  margin-right: 0;
+  margin-left: $space-8x;
+}
+
+section.search .container {
+  padding: 0;
+}
+
+#search.container,
+.results .container {
+  padding: 0;
+}
+
+@media only screen and (max-width: $medium-large-screen) {
+  section.search,
+  section.search + .graph-block,
+  .help-text.columns.nine {
+    margin-left: $space-3x;
+  }
+}
+
+.help-text.columns.nine {
+  padding-top: $space-8x;
+}
+
+#labor_category {
+  width: 65%;
 }
 
 // to fake selection of home link
 nav li:first-child {
-  border-bottom: $space-1x solid $color-primary-alt;
+  border-bottom: $space-1x solid $color-green-bright;
   a {
     font-weight: $font-weight-bold;
     display: block;
@@ -40,8 +76,8 @@ nav li:first-child {
   position: relative;
   padding: .25em .5em;
   &.selected {
-    color: $color-white;
-    background: $color-primary-alt;
+    color: $color-base;
+    background: $color-gray-lighter;
   }
   .count {
     position: absolute;
@@ -76,16 +112,6 @@ nav li:first-child {
   border: 2px solid $color-gold !important;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
-  box-shadow: $focus-shadow;
-}
-
-.filter_focus {
-  border: 2px solid $color-focus !important;
-}
-
 input.price,
 input#min_experience {
   width: 4em;
@@ -117,6 +143,7 @@ span.dollars {
 .filter-block {
   background: $color-gray-lightest;
   border-radius: $border-radius;
+  margin-right: $space-1x;
   margin-bottom: 0;
   padding: 1rem 2rem;
 
@@ -129,6 +156,7 @@ span.dollars {
 @media (min-width: 550px) {
   .filter-container {
     float: right;
+    margin-top: 1rem;
     margin-bottom: 1em;
   }
 }
@@ -196,8 +224,7 @@ dl.dropdown {
     overflow: hidden;
     padding: 6px 10px;
     &:focus {
-      border: 1px solid $color-primary-alt !important;
-      box-shadow: $focus-shadow;
+      outline: #2d4d59 dotted 2px;
     }
   }
   span.value {
@@ -325,17 +352,13 @@ input[type="checkbox"]:checked ~ label {
 .avg-price-highlight,
 h5.sd-highlight,
 h5.proposed-price-highlight {
-  color: $color-primary;
+  color: $color-blue-dark;
   font-weight: 400;
   font-size: 2.4rem;
 }
 
 .slider {
   margin: 5px 0 5px 0;
-}
-
-section.search {
-  padding: .5rem 0 3rem 0;
 }
 
 .results {
@@ -390,7 +413,7 @@ label[for=schedule] {
 
 .table-container {
   width: 100%;
-  overflow: scroll;
+  overflow-x: scroll;
   clear: both;
 }
 
@@ -422,14 +445,14 @@ tr:hover td.column-min_years_experience .years {
 }
 
 .document-icon {
-  fill: $color-primary;
+  fill: $color-blue;
   height: 12px;
   margin-left: 3px;
   width: 12px;
 }
 
 .column-idv_piid:hover .document-icon {
-  fill: $color-primary-darker;
+  fill: $color-blue-dark;
 }
 
 a.focus-input {
@@ -473,7 +496,7 @@ a.focus-input {
 }
 
 .contract-year-selected {
-  background-color: $color-primary;
+  background-color: $color-blue-dark;
   color: $color-white;
 }
 
@@ -565,7 +588,7 @@ label.radio {
 }
 
 label.checkbox :checked + span {
-  background-color: $color-primary;
+  background-color: $color-blue-dark;
   box-shadow: 0 0 0 0 $color-white;
   position: relative;
   &:after {
@@ -579,7 +602,7 @@ label.checkbox :checked + span {
 }
 
 label.radio :checked + span {
-  background-color: $color-primary;
+  background-color: $color-blue-dark;
   color: $color-white;
   position: relative;
 }
@@ -605,13 +628,6 @@ label.radio :checked + span {
   width: 1px;
 }
 
-input[type="checkbox"]:focus + .checkbox-focus,
-input[type="radio"]:focus + .checkbox-focus {
-  -webkit-box-shadow: 0px 0px 5px 2px $color-focus;
-  -moz-box-shadow: 0px 0px 5px 2px $color-focus;
-  box-shadow: 0px 0px 5px 2px $color-focus;
-}
-
 .fieldset-inputs label {
   margin: 0;
   cursor: pointer;
@@ -620,6 +636,11 @@ input[type="radio"]:focus + .checkbox-focus {
 .checkbox-focus {
   background-color: $color-white;
   padding: 1px 8px;
+}
+
+input[type=radio]:focus+.checkbox-focus,
+input[type=checkbox]:focus+.checkbox-focus {
+  outline: #2d4d59 dotted 2px;
 }
 
 .contract-list-item {

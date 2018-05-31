@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
-import Range from 'rc-slider/lib/Range';
+import { Range } from 'rc-slider';
 
 import {
   setExperience,
@@ -91,7 +91,7 @@ export class Experience extends React.Component {
             className="experience-slider"
           />
           <div className="experience_range">
-            <label htmlFor={minId} className="sr-only">Minimum Years</label>
+            <label htmlFor={minId} className="usa-sr-only">Minimum Years</label>
             <select
               id={minId} value={min} name="min_experience"
               onChange={onChange('min')}
@@ -100,7 +100,7 @@ export class Experience extends React.Component {
               {makeOptions(MIN_EXPERIENCE, max)}
             </select>
             {' - '}
-            <label htmlFor={maxId} className="sr-only">Maximum Years</label>
+            <label htmlFor={maxId} className="usa-sr-only">Maximum Years</label>
             <select
               id={maxId} value={max} name="max_experience"
               onChange={onChange('max')}

@@ -18,26 +18,21 @@ Welcome to CALC's developer documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Testing
-
-   testing
-   selenium
-
-.. toctree::
-   :maxdepth: 2
    :caption: Development
 
    Style guide <https://calc-dev.app.cloud.gov/styleguide/>
+   testing
    frontend
-   api
-   updating_data
+   API <https://calc-dev.app.cloud.gov/api/docs/>
 
 .. toctree::
    :maxdepth: 2
    :caption: Release and deployment
 
    monitoring
-   changelog
+   analytics
+   ci
+   Change log <https://calc-dev.app.cloud.gov/updates/>
    release
    deploy
 
@@ -46,6 +41,7 @@ Welcome to CALC's developer documentation!
    :caption: Useful links
 
    CALC home <https://calc-dev.app.cloud.gov/>
+   CALC data quality report <https://calc-dev.app.cloud.gov/data-quality-report/>
    GitHub <https://github.com/18F/calc>
 
 Indices and tables

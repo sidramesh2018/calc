@@ -7,32 +7,39 @@
             {% if not user.is_authenticated %}
               <h2>Log in to add price lists</h2>
               <p>Now contracting officers and other acquisition professionals can upload price lists to CALC.</p>
-              <a href="{% url 'uaa_client:login' %}" class="button button-footer">Log in</a>
+              <a href="{% url 'uaa_client:login' %}" class="usa-button button-small_white">Log in</a>
             {% elif user.is_authenticated %}
-              <p>You are logged in as {{ user.email }}</p>
-              <p><a href="{% url 'user_account:index' %}">View account</a> | <a href="{% url 'logout' %}">Log out</a></p>
+            <h2>Welcome!</h2>
+            <p>You are logged in to CALC as {{ user.email }}, and can now <a href="{% url 'data_capture:step_1' %}">add price lists</a>.</p>
+            <div class="footer__bottom-links">
+              <p class="small"><a href="{% url 'user_account:index' %}">View activity</a>
+              <p class="small"><a href="{% url 'logout' %}">Log out</a></p>
+            </div><p>
             {% endif %}
           </div>
 
-          <div class="eight columns divider_footer">
-            <div id="logos">
-              <a href="http://gsa.gov"><img alt="General Services Administration logo"
-                src="{% static 'frontend/images/logo-gsa.png' %}"></a>
-              <a href="https://18f.gsa.gov"><img alt="18F logo"
-                src="{% static 'frontend/images/logo-18f.svg' %}"></a>
-            </div>
+          <div class="five columns footer__divider">
             <h2>Get in touch</h2>
             <p>
               We're always looking for feedback on CALC!<br>
               To share your thoughts, email us at <a href="mailto:{{ HELP_EMAIL }}">{{ HELP_EMAIL }}</a>.
             </p>
-            <div class="footer_extra">
+            <div class="footer__bottom-links">
               <p class="small">
                 <a href="{% url 'updates' %}">Read about recent updates to CALC</a>
               </p>
               <p class="small">
                 <a href="https://github.com/18F/calc">View our code on GitHub</a>
               </p>
+            </div>
+          </div>
+
+          <div class="three columns">
+            <div id="logos">
+              <a href="http://gsa.gov"><img alt="General Services Administration logo"
+                src="{% static 'frontend/images/logo-gsa.png' %}"></a>
+              <a href="https://18f.gsa.gov"><img alt="18F logo"
+                src="{% static 'frontend/images/logo-18f.svg' %}"></a>
             </div>
           </div>
 
