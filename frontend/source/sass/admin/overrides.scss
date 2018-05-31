@@ -188,8 +188,17 @@ thead a:focus {
 }
 
 // Django displays sort priorities when multiple cols are sorted. Hide 'em.
-.sortpriority {
+.sortpriority,
+table th span:not(.tooltipstered).sortpriority {
   display: none;
+}
+
+// Display the sort direction arrow beside the text it refers to
+#result_list .text {
+  display: inline;
+  + .clear {
+    display: none;
+  }
 }
 
 // add/change buttons
