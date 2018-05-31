@@ -32,12 +32,22 @@ to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- CALC now has a revamped look-and-feel! We think it's awesome.
+- CALC now has a revamped logo and look-and-feel! We think it's awesome.
 - The new CALC look-and-feel has been documented in the styleguide.
 - Clicking anywhere outside of the user menu now closes it (#1804).
 - CALC no longer uses api.data.gov to access its own API in
   production. Because of this, the `API_HOST` and `WHITELISTED_IPS`
   settings have been removed (#1766).
+- A number of changes have been made to CALC's CSS:
+    - CALC now uses the US Web Design System; it was formerly using
+      bits and pieces of it that we had copy-and-pasted from USWDS.
+      For more details on how we override USWDS and define our own
+      custom variables, see the front-end developer guide.
+    - CALC now uses USWDS's `usa-sr-only` class for screenreader-only
+      content instead of `sr-only` (#1958).
+    - CALC no longer uses words like "primary" and "secondary" in its
+      SASS color names, instead opting for the actual names of the
+      colors, such as `color-blue-darker` and `color-green-bright` (#1947).
 - A number of changes have been made to the project's use of
   Google Analytics (GA):
     - Clicks on the "download graph" button in the Data Explorer are now
@@ -84,6 +94,12 @@ to [Semantic Versioning](http://semver.org/).
 - mypy is now run on all files, rather than a whitelist (#1815).
 - All non-historic references to `hourglass` have been changed to
   `calc` (#1845).
+- Upgraded d3-timer (#1977).
+
+### Removed
+
+- The `Contract` model's `piid` field has been removed, as it
+  wasn't being used (#1935).
 
 ## [2.8.6][] - 2018-04-06
 
