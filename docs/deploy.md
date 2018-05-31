@@ -228,10 +228,14 @@ cf unmap-route calc-maintenance
 ### Logs
 
 Logs in cloud.gov-deployed applications are generally viewable by running
-`cf logs <APP_NAME> --recent`
+`cf logs <APP_NAME> --recent`.
 
 Note that the web application and the `rq` worker application have separate
 logs, so you will need to look at each individually.
+
+If more detailed log analysis is needed, Kibana can be used to generate
+a variety of visualizations and dashboards. For more details, see the
+[cloud.gov Logs documentation](https://cloud.gov/docs/apps/logs/).
 
 ### Initial superuser
 
@@ -248,55 +252,6 @@ export TMPDIR=/home/vcap/tmp
 cd /home/vcap/app
 source /home/vcap/app/.profile.d/python.sh
 ```
-
-### Setting up the API
-
-As mentioned in the [API documentation](api.md), CALC's public API
-is actually proxied by api.data.gov.
-
-In order to configure the proxying between api.data.gov and CALC,
-you will need to obtain an administrative account on api.data.gov.
-For more information on doing this, see the [api.data.gov User Manual][].
-
-You'll then want to tell api.data.gov what host it will listen for, and
-what host your API backend is listening on. For example:
-
-<table border="1" class="docutils">
-  <tr>
-    <th>Frontend Host</th>
-    <th>Backend Host</th>
-  </tr>
-  <tr>
-    <td>api.data.gov</td>
-    <td>calc-prod.app.cloud.gov</td>
-  </tr>
-</table>
-
-You will also want to configure your API backend on
-api.data.gov with one **Matching URL Prefixes** entry.
-The **Backend Prefix** should always be `/api/`, while the
-**Frontend Prefix** is up to you. Here's an example:
-
-<table border="1" class="docutils">
-  <tr>
-    <th>Frontend Prefix</th>
-    <th>Backend Prefix</th>
-  </tr>
-  <tr>
-    <td>/gsa/calc/</td>
-    <td>/api/</td>
-  </tr>
-</table>
-
-Now you'll need to configure `API_HOST` on your CALC instance to be
-the combination of your **Frontend Host** and **Frontend Prefix**.
-For example, given the earlier examples listed above, your
-`API_HOST` setting on CALC would be `https://api.data.gov/gsa/calc/`.
-
-Finally, as mentioned in the [Securing your API backend][] section of the
-user manual, you will likely need to configure `WHITELISTED_IPS` on
-your CALC instance to ensure that clients can't bypass rate limiting by
-directly contacting your CALC instance.
 
 ### Testing production deployments
 

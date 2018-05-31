@@ -22,11 +22,13 @@ exports[`<BusinessSize> matches snapshot 1`] = `
       (all)
     </option>
     <option
+      key="s"
       value="s"
     >
       small business
     </option>
     <option
+      key="o"
       value="o"
     >
       other than small

@@ -1,9 +1,10 @@
 @import '../base/variables';
 
+// the "official gov site" banner
 #banner {
-  color: $color-gray-lighter;
+  color: $color-gray-darker;
   font-size: 85%;
-  background: $color-gray-dark;
+  background: $color-white;
   padding: .2em 0;
   text-align: center;
 
@@ -33,40 +34,112 @@
   &.banner__non-prod {
     background: $color-gold;
     color: $color-gray-dark;
+    z-index: 10000;
+
+    .developer-nav {
+      float: right;
+      font-size: $small-font-size;
+    }
+
+    a, details, summary {
+      color: $color-gray-darker;
+    }
+
+    details {
+      font-size: $small-font-size;
+      cursor: pointer;
+      float: right;
+      position: relative;
+      padding-left: .2em;
+
+      ul {
+        background: $color-gold;
+
+        li {
+          a {
+            display: block;
+            white-space: nowrap;
+            text-decoration: none;
+            padding: .3em;
+            &:hover, &:focus {
+              background: $color-gold-lightest;
+            }
+
+            .email {
+              font-size: $em-base;
+              text-decoration: underline;
+            }
+          }
+        }
+
+        border: 1px solid $color-black;
+        list-style-type: none;
+        position: absolute;
+        top: .3em;
+        left: 0;
+      }
+    }
   }
 }
 
 header {
   color: $color-white;
-  background: $color-primary-darker;
-  background-image: url(../../images/background-header.png);
-  background-repeat: repeat;
-  background-size: auto 100%;
-  padding-bottom: $space-4x; //to create "stacked" look
+  background: $color-gray-darker;
+  background-image: url(../../images/background-header.svg);
+  background-size: 100%;
+  padding-bottom: $space-4x; //to create "stacked" card look
   @include antialias();
+}
+
+.hero {
+  margin-bottom: $space-8x;
+
+  a {
+    color: $color-green-bright;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.hero-callout {
+  border-left: 4px solid $color-gray;
+  padding: 0 $space-3x;
+
+  p {
+    font-size: $medium-font-size;
+    margin: 0;
+  }
 }
 
 .base-header {
   display: flex;
-  margin-top: 1.6em;
+  margin-top: 3em;
   + .row {
-    margin-top: 1.6em;
+    margin-top: 2em;
   }
 }
 
 .logo {
   display: inline-block;
-  height: 58px;
+  height: 42px;
+  max-width: none;
   padding-bottom: 0;
 }
+
 .description-main {
   color: $color-white;
-  font-size: $h1-font-size;
+  font-size: $display-font-size;
   margin-top: 0;
   margin-bottom: .3em;
+  padding-right: 1em;
 }
+
 .description-secondary {
-  color: $color-primary-alt-lightest;
+  color: $color-gray-light;
   font-size: $h4-font-size;
   font-weight: $font-weight-normal;
   line-height: 1.5;
@@ -83,39 +156,17 @@ header {
   h3 {
     font-size: $base-font-size;
     font-weight: $font-weight-normal;
-    border-bottom: 1px solid #436a79;
+    border-bottom: 1px solid $color-gray-dark;
     padding-bottom: $space-1x;
     margin-top: $space-1x;
     margin-bottom: 0;
-  }
-  .icon {
-    margin: ($space-1x + $space-half) 0 0;
-    background-repeat: no-repeat;
-    background-position: center left;
-    display: inline-block;
-    opacity: 0.6;
-    background-size: 30px;
-
-    &.icon-ceiling {
-      background-image: url('../../images/price-callout/roof.png');
-    }
-    &.icon-fully-burdened {
-      background-image: url('../../images/price-callout/mule.png');
-    }
-    &.icon-professional-services {
-      background-image: url('../../images/price-callout/briefcase.png');
-    }
-    &.icon-worldwide-rates {
-      background-image: url('../../images/price-callout/globe.png');
-    }
   }
 }
 
 .user-id {
   margin: 0 0 0.8rem 0;
-  float: right;
+  padding-left: 2.8rem;
   font-size: 1.5rem;
-  text-align: right;
 
   > a {
     color: $color-white;
@@ -136,20 +187,20 @@ nav {
     display: table;
     clear: both;
   }
+
   ul {
-    @include span-columns(12 of 12);
-    @include shift(0);
     list-style: none;
-    text-align: center;
+    text-align: left;
     color: $color-white;
     padding: 0;
     margin-top: 0;
     margin-bottom: 0;
 
     li {
+      font-size: $base-font-size;
       list-style: none;
       display: inline-block;
-      margin: 0 $space-3x;
+      margin: 0 $space-2x;
       border-bottom: $space-1x solid transparent; //so pages with no applicable item still have the right spacing
       &:first-child {
         margin-left: 0em;
@@ -157,8 +208,9 @@ nav {
       &:last-child {
         margin-right: 0em;
       }
+
       &.selected {
-        border-bottom: $space-1x solid $color-primary-alt;
+        border-bottom: $space-1x solid $color-green-bright;
         a {
           font-weight: $font-weight-bold;
           display: block;
@@ -166,10 +218,13 @@ nav {
         }
       }
       a {
-        /*font-weight: normal;*/
         color: $color-white;
         text-decoration: none;
-        &:hover {
+        &:hover,
+        &:visited,
+        &:visited:hover,
+        &:visited:active,
+        &:visited:focus{
           color: $color-white;
         }
       }

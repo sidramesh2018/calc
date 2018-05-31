@@ -1,19 +1,17 @@
 @import '../base/variables';
 
 footer {
-  color: $color-white;
-  background: $color-gray-medium-dark;
-  padding: 4rem 0 4rem 0;
-  line-height: 1.4;
-  font-weight: $font-weight-light;
-  @include antialias();
+  background: $color-green-light;
+  background-image: url(../../images/background-footer.svg);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  border-top: 4px solid $color-white;
+  padding: $space-8x 0 4rem 0;
 
   a {
-    color: $color-white;
-    &:hover,
-    &:active {
-      color: $color-white;
-      text-decoration: none;
+    color: $color-base;
+    &:visited {
+      color: $color-base; //WDS override
     }
   }
 
@@ -21,25 +19,31 @@ footer {
     font-size: 1.8rem;
     letter-spacing: 0;
     font-weight: $font-weight-bold;
+    margin-top: 0;
     margin-bottom: .1em;
   }
-
 }
 
-.divider_footer {
-  border-left: 1px solid $color-gray-light;
+.footer__divider {
+  border-left: 4px solid $color-green-dark;
   padding-left: 3rem;
 }
 
-.footer_extra {
-  margin-top: 3rem;
+.footer__bottom-links {
+  margin-top: $space-3x;
+
+  p {
+    &:last-child {
+    margin-bottom: 0;
+    }
+  }
 }
 
 #logos {
   float: right;
   a {
     display: inline-block;
-    margin-left: 2rem;
+    margin-left: $space-2x;
     margin-top: 2rem;
     img {
       width: 60px;

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import path from 'path';
 import vm from 'vm';
 import gulp from 'gulp';
@@ -69,7 +73,7 @@ describe('webpackify', () => {
       isProd: false,
     }).then((file) => {
       const sandbox = execInVm(file);
-      expect(execInVm(file).myNodeEnv).toEqual('');
+      expect(execInVm(file).myNodeEnv).toEqual('development');
       expect(sandbox.log).toEqual('I AM NOT PRODUCTION');
     }));
 });

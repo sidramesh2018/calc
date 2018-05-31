@@ -9,7 +9,7 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import ReactTransitionGroup from 'react-addons-transition-group';
+import { TransitionGroup } from 'react-transition-group';
 
 import { FirstChild } from './util';
 
@@ -72,9 +72,9 @@ export default function SlideyPanel(props) {
   }
 
   return (
-    <ReactTransitionGroup component={FirstChild}>
+    <TransitionGroup component={FirstChild}>
       {innerPanel}
-    </ReactTransitionGroup>
+    </TransitionGroup>
   );
 }
 
