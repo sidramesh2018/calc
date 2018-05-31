@@ -4,9 +4,11 @@ from rest_framework import serializers
 
 class ContractListSerializer(serializers.ListSerializer):
     def create(self, validated_data):
-        return Contract.objects.bulk_create([
+        results = Contract.objects.bulk_create([
             Contract(**item) for item in validated_data
         ])
+        Contract.objects.update_search_index()
+        return results
 
 
 class EducationLevelField(serializers.Field):
