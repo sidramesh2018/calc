@@ -10,6 +10,11 @@ input[type="radio"] + label {
   margin-top: 0;
 }
 
+input[type="radio"]:focus + label::before,
+input[type="checkbox"]:focus + label::before {
+  @include focus-color($bg-color: "light-color");
+}
+
 label {
   font-weight: 700;
   margin-top: 0;
