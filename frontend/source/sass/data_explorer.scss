@@ -12,9 +12,18 @@ body {
 // temp styles to mimic .card without indenting the table
 section.search,
 section.search + .graph-block,
-.help-text.columns.nine {
+.search-header.columns.nine {
   margin-right: 0;
   margin-left: $space-8x;
+}
+
+.search-header p {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.search-header h2 {
+  margin-top: $space-8x;
 }
 
 section.search .container {
@@ -29,7 +38,7 @@ section.search .container {
 @media only screen and (max-width: $medium-large-screen) {
   section.search,
   section.search + .graph-block,
-  .help-text.columns.nine {
+  .search-header.columns.nine {
     margin-left: $space-3x;
   }
 }
