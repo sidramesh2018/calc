@@ -2,9 +2,9 @@
 
 It's often convenient to install editor integrations for
 CALC's languages to provide useful functionality like autocompletion
-and inline linting and type-checking. However, doing this often requires
-setting up CALC's JavaScript and/or Python environment on the host system,
-outside of Docker.
+and instant feedback from CALC's [linters and type checkers](linting.md).
+However, doing this often requires setting up CALC's JavaScript and/or
+Python environment on the host system, outside of Docker.
 
 ### JavaScript
 
