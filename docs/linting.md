@@ -1,6 +1,6 @@
 ## Linting and strong typing
 
-CALC uses a number of linters to maintain the style and hygeine of its
+CALC uses a number of linters to maintain the style and hygiene of its
 codebase, along with optional tools that provide type checking
 functionality.
 

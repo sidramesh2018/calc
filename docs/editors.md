@@ -1,7 +1,7 @@
 ## Editor integration
 
-In practice, it's often convenient to install editor integrations for
-CALC's languages, to provide useful functionality like autocompletion
+It's often convenient to install editor integrations for
+CALC's languages to provide useful functionality like autocompletion
 and inline linting and type-checking. However, doing this often requires
 setting up CALC's JavaScript and/or Python environment on the host system,
 outside of Docker.
