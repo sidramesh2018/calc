@@ -1,9 +1,20 @@
-/* global jQuery, document */
+/* global window, document */
+import 'document-register-element';
 
-window.addEventListener('DOMContentLoaded', () => {
-  const steps = document.querySelectorAll('.step-bar__bubbles li');
-  const stepLabels = document.querySelectorAll('.step-bar__labels li');
-  const currentStep = document.querySelector('.step-bar__labels .current');
+const STEP_CLASS = '.step-bar__bubbles li';
+const STEP_LABEL_CLASS = '.step-bar__labels li';
+const CURRENT_STEP_CLASS = '.step-bar__labels .current';
+
+class StepBar extends window.HTMLElement {
+  attachedCallback() {
+    if ('isUpgraded' in this) {
+      // We've already been attached.
+      return;
+  }
+
+  this.steps = this.querySelectorAll(STEP_CLASS);
+  this.stepLabels = this.querySelectorAll(STEP_LABEL_CLASS);
+  this.currentStep = this.querySelector(CURRENT_STEP_CLASS);
 
   // Add event listeners to show/hide labels corresponding to hovered-over step bubble
   const setUpStepBar = () => {
@@ -33,8 +44,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // view frontend/steps.py, but accessing URL patterns from that file creates
     // a circular import. Attempted in https://github.com/18F/calc/pull/1981
     // This code assumes the path of the page is in the form of
-    // /data_capture/step/1 or /bulk_upload/step/23, i.e., the step number is at
-    // the end of the URL as per our current established patterns in urls.py
+    // /data-capture/step/1 or data-capture/bulk/region-10/step/3,
+    // i.e., the step number is at the end of the URL as per patterns in urls.py
     const createPath = () => {
       let path = window.location.pathname;
       const currentStepNum = getIndexOfClass('current', steps) + 1;
@@ -69,8 +80,13 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  if (steps && stepLabels && currentStep) {
+  if (this.steps && this.stepLabels && this.currentStep) {
     setUpStepBar();
   }
+}
 
+document.registerElement('step-bar', {
+  prototype: StepBar.prototype,
 });
+
+module.exports = StepBar;

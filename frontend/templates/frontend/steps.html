@@ -1,21 +1,23 @@
-<div class="step-bar">
-  <label class="usa-sr-only">
-      Step {{ current_step.number }} of {{ steps|length }}: {{ current_step.label }}
-  </label>
-  <ol class="step-bar__labels" aria-hidden="true">
-  {% for step in steps %}
-    <li{% if step.current %} class="current js-show"{% endif %}>
-      <label>
-          {{ step.label }}
-      </label>
-    </li>
-  {% endfor %}
-  </ol>
-  <ol class="step-bar__bubbles" aria-hidden="true">
+<step-bar>
+  <div class="step-bar">
+    <label class="usa-sr-only">
+        Step {{ current_step.number }} of {{ steps|length }}: {{ current_step.label }}
+    </label>
+    <ol class="step-bar__labels" aria-hidden="true">
     {% for step in steps %}
-      <li{% if step.current %} class="current"{% endif %}>
-        <a href="javascript:void(0)" title="{{ step.label }}"></a>
+      <li{% if step.current %} class="current js-show"{% endif %}>
+        <label>
+            {{ step.label }}
+        </label>
       </li>
     {% endfor %}
-  </ol>
-</div>
+    </ol>
+    <ol class="step-bar__bubbles" aria-hidden="true">
+      {% for step in steps %}
+        <li{% if step.current %} class="current"{% endif %}>
+          <a href="javascript:void(0)" title="{{ step.label }}"></a>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</step-bar>
