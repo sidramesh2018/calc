@@ -87,8 +87,7 @@ class CurrentContractManager(models.Manager):
         pks = []
         updates = []
         num_updates = 0
-        for contract in self.all().only('id', 'labor_category',
-                                        '_normalized_labor_category'):
+        for contract in self.only('id', 'labor_category', '_normalized_labor_category'):
             if contract.update_normalized_labor_category():
                 pks.append(contract.id)
                 updates.append(contract.id)
