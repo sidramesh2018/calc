@@ -533,8 +533,11 @@ a.focus-input {
 
 #query-types {
   padding: 0 1rem;
+  // radio buttons + labels
+  li {
+    display: inline-block;
+  }
   label {
-    //display: inline-block;
     font-weight: normal;
     margin: 0 2.5rem 0 0;
     input {
