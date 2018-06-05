@@ -614,7 +614,6 @@ label.checkbox :checked + span {
 label.radio :checked + span {
   background-color: $color-blue-dark;
   color: $color-white;
-  position: relative;
 }
 
 .contract-list-item input[type="checkbox"],
