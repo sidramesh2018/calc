@@ -91,11 +91,14 @@ class App extends React.Component {
         role="form"
       >
         <div className="row">
-          <p className="help-text columns nine">
-            Enter your search terms below, separated by commas.
-            {' '}
-            (For example: Engineer, Consultant)
-          </p>
+          <div className="search-header columns nine">
+            <h2>Search labor categories</h2>
+            <p>
+              Enter your search terms below, separated by commas.
+              {' '}
+              (For example: Engineer, Consultant)
+            </p>
+          </div>
         </div>
         <div className="row">
           <div className="columns nine">
