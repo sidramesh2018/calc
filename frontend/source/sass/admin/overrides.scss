@@ -16,10 +16,10 @@
 nav ul {
   margin-top: 0;
   li {
-    padding-bottom: ($space-1x + $space-half);
+    padding-bottom: 1.1rem;
     border-bottom: 0;
     a[href*="admin"]{
-      border-bottom: $space-1x solid $color-primary-alt;
+      border-bottom: $space-1x solid $color-green-bright;
       padding-bottom: 6px;
       font-weight: $font-weight-bold;
     }
@@ -188,8 +188,17 @@ thead a:focus {
 }
 
 // Django displays sort priorities when multiple cols are sorted. Hide 'em.
-.sortpriority {
+.sortpriority,
+table th span:not(.tooltipstered).sortpriority {
   display: none;
+}
+
+// Display the sort direction arrow beside the text it refers to
+#result_list .text {
+  display: inline;
+  + .clear {
+    display: none;
+  }
 }
 
 // add/change buttons
@@ -264,9 +273,9 @@ thead a:focus {
     li {
       margin-bottom: 0;
       &.selected a {
-        color: $color-primary;
+        color: $color-blue-dark;
         font-weight: bold;
-        border-left: .5rem solid $color-primary;
+        border-left: .5rem solid $color-blue-dark;
         margin-left: -2rem;
         padding-left: 1.5rem;
       }

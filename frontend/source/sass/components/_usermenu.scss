@@ -34,10 +34,10 @@ $usermenu-width: 150px;
 
     a {
       text-decoration: none;
-      color: $color-primary-darker;
+      color: $color-blue-darker;
 
       &:hover {
-        border-bottom: 2px solid $color-primary-darker;
+        border-bottom: 2px solid $color-blue-darker;
       }
     }
 
@@ -74,11 +74,11 @@ $usermenu-width: 150px;
 }
 
 a.usermenu-trigger {
-  color: $color-primary-alt;
+  color: $color-green-bright;
 
   .icon-triangle {
     margin-left: 4px;
-    fill: $color-primary-alt;
+    fill: $color-green-bright;
   }
 
   &:hover {

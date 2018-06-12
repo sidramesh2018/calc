@@ -74,8 +74,8 @@
 }
 
 .usa-alert-info {
-  background-color: #D2F6FF;
-  border: 2px solid $color-primary-alt; //borders added for consistency with error style
+  background-color: $color-blue-lightest;
+  border: 2px solid $color-blue-darker; //borders added for consistency with error style
 }
 
 alerts-widget:focus {

@@ -8,12 +8,12 @@
 @import 'uswds_variables';
 
 // Colors
+$color-blue-dark:            $color-primary;
 $color-green-darkest:        #61701c;
-$color-green-medium:         #a0ad64;
+$color-green-dark:           #a0ad64;
 
 $color-green-bright:         $color-secondary;
 
-$color-blue-dark:            #0b6199;
 $color-blue-lightest:        #d4f6fe;
 
 $color-gray-darkest:         #092d39;
@@ -28,7 +28,7 @@ $medium-large-screen: 900px;
 
 // Fonts
 $font-family-main: 'Libre Franklin', 'Helvetica', 'Arial', sans-serif;
-$font-family-mono: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+$font-family-mono: 'Roboto Mono', 'Liberation Mono', 'Source Code Pro', Courier, monospace;
 
 $font-weight-bold: 700;
 $font-weight-normal: 400;
