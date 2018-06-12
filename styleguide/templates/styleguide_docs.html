@@ -1,0 +1,35 @@
+{% extends "styleguide_base.html" %}
+{% load styleguide %}
+
+{% block styleguide_body %}
+
+  {% guide %}
+  <div class="sidenav-layout__content">
+  <div class="card">
+  <div class="content">
+  <h1>CALC Style Guide Documentation</h1>
+
+  <p>
+    Welcome to the CALC Style Guide Documentation! Here you'll find guidelines on how to update the <a href="{% url 'styleguide:index' %}">CALC Style Guide</a>.
+  </p>
+
+  {% guide_section "Overview" %}
+  <p>
+    The style guide is a Django app in the {% pathname "styleguide" %} directory. The
+    bulk of its textual content is in {% pathname "styleguide/templates/styleguide.html" %},
+    which is a standard Django template.
+  </p>
+
+  {% guide_section "Template tags" %}
+  <p>
+    The style guide comes with a number of template tags defined in
+    {% pathname "styleguide/templatetags/styleguide.py" %}.  In
+    addition to being convenient, they're also designed to prevent
+    documentation rot.
+  </p>
+
+  {% endguide %}
+</div><!--content-->
+</div><!--card-->
+</div><!--sidenav-layout__content-->
+{% endblock %}

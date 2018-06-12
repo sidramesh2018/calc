@@ -67,3 +67,7 @@ def index(request):
     ctx['email_examples'] = email_examples.examples
 
     return render(request, 'styleguide.html', ctx)
+
+
+def docs(request):
+    return render(request, 'styleguide_docs.html')
