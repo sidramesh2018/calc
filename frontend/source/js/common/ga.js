@@ -1,6 +1,8 @@
 // @ts-check
 /* eslint-env browser */
 
+import { parse as urlParse } from "url";
+
 /**
  * This is DAP's weird exported Google Analytics function, documented
  * at:
@@ -92,7 +94,16 @@ function trackInterestingLink(el) {
     return;
   }
 
-  const isExternal = el.host !== window.location.host;
+  // Anchors on most modern browsers actually have properties on
+  // them that contain parsed values of the URLs, but not IE11,
+  // so we're going to parse the URL manually.
+  const { pathname, host, hostname } = urlParse(el.href);
+
+  if (!(pathname && host && hostname)) {
+    return;
+  }
+
+  const isExternal = host !== window.location.host;
 
   if (isExternal) {
     // Note that the format of this event corresponds to
@@ -100,14 +111,14 @@ function trackInterestingLink(el) {
     // means that anyone who wants to e.g. track statistics about
     // outbound links across all federal properties can do so,
     // and statistics from CALC will be included.
-    trackEvent('Outbound', el.hostname, el.pathname);
+    trackEvent('Outbound', hostname, pathname);
   } else {
     const isLocalDownload = LOCAL_DOWNLOAD_URLS.some(
-      url => el.pathname.indexOf(url) === 0
+      url => pathname.indexOf(url) === 0
     );
 
     if (isLocalDownload) {
-      trackEvent('Local Download', el.pathname, el.href);
+      trackEvent('Local Download', pathname, el.href);
     }
   }
 }
