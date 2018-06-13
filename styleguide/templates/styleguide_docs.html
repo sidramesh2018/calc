@@ -23,15 +23,15 @@
   {% guide_section "Template tags" %}
   <p>
     The style guide comes with a number of template tags defined in
-    {% pathname "styleguide/templatetags/styleguide.py" %}.  In
-    addition to being convenient, they're also designed to prevent
+    the {% template_tag_library "styleguide" %} template tag library.
+    In addition to being convenient, they're also designed to prevent
     documentation rot.
   </p>
 
-  <h3><code>pathname</code></h3>
+  {% guide_section "Linking to source files" %}
 
   <p>
-    The <code>pathname</code> template tag is useful for linking
+    The {% templatetag "styleguide.pathname" %} template tag is useful for linking
     to any CALC source file or directory relative to the root of the
     repository. The relative path is displayed along with a
     hyperlink to view the file or directory on GitHub.

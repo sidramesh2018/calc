@@ -108,8 +108,7 @@ class WebComponentHTMLParser(HTMLParser):
                 self.extends = val
 
 
-@register.simple_tag
-def template_tag_library(name):
+def get_templatetag_library(name):
     from importlib import import_module
     from django.template.backends.django import get_installed_libraries
 
@@ -124,6 +123,24 @@ def template_tag_library(name):
         raise ValueError(f'template tag library {name} is not in project')
 
     url = github_url_for_path(os.path.relpath(mod.__file__, ROOT_DIR))
+
+    return mod, url
+
+
+@register.simple_tag
+def templatetag(name):
+    library, tag = name.split('.')
+
+    mod, url = get_templatetag_library(library)
+    func = mod.register.tags[tag]
+    lineno = func.__wrapped__.__code__.co_firstlineno
+
+    return SafeString(f'<code><a href="{url}#L{lineno}">{{% {tag} %}}</a></code>')
+
+
+@register.simple_tag
+def template_tag_library(name):
+    mod, url = get_templatetag_library(name)
 
     return SafeString(f'<code><a href="{url}">{name}</a></code>')
 
