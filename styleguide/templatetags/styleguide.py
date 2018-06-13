@@ -133,7 +133,9 @@ def templatetag(name):
 
     mod, url = get_templatetag_library(library)
     func = mod.register.tags[tag]
-    lineno = func.__wrapped__.__code__.co_firstlineno
+    while hasattr(func, '__wrapped__'):
+        func = func.__wrapped__
+    lineno = func.__code__.co_firstlineno
 
     return SafeString(f'<code><a href="{url}#L{lineno}">{{% {tag} %}}</a></code>')
 
