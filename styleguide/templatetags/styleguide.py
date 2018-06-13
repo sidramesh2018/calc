@@ -108,7 +108,7 @@ class WebComponentHTMLParser(HTMLParser):
                 self.extends = val
 
 
-def get_templatetag_library(name):
+def get_template_tag_library(name):
     from importlib import import_module
     from django.template.backends.django import get_installed_libraries
 
@@ -128,10 +128,10 @@ def get_templatetag_library(name):
 
 
 @register.simple_tag
-def templatetag(name):
+def template_tag(name):
     library, tag = name.split('.')
 
-    mod, url = get_templatetag_library(library)
+    mod, url = get_template_tag_library(library)
     func = mod.register.tags[tag]
     while hasattr(func, '__wrapped__'):
         func = func.__wrapped__
@@ -142,7 +142,7 @@ def templatetag(name):
 
 @register.simple_tag
 def template_tag_library(name):
-    mod, url = get_templatetag_library(name)
+    mod, url = get_template_tag_library(name)
 
     return SafeString(f'<code><a href="{url}">{name}</a></code>')
 
