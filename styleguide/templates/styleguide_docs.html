@@ -20,20 +20,13 @@
     which is a standard Django template.
   </p>
 
-  {% guide_section "Template tags" %}
-  <p>
-    The style guide comes with a number of template tags defined in
-    the {% template_tag_library "styleguide" %} template tag library.
-    In addition to being convenient, they're also designed to prevent
-    documentation rot.
-  </p>
-
   {% guide_section "Linking to source files" %}
 
   <p>
-    The {% template_tag "styleguide.pathname" %} template tag is useful for linking
-    to any CALC source file or directory relative to the root of the
-    repository. The relative path is displayed along with a
+    The {% template_tag "styleguide.pathname" %} template tag, which is
+    part of the {% template_tag_library "styleguide" %} template tag library,
+    is useful for linking to any CALC source file or directory relative to
+    the root of the repository. The relative path is displayed along with a
     hyperlink to view the file or directory on GitHub.
   </p>
 
@@ -45,6 +38,43 @@
 
   {% template_example %}
   See {% pathname "README.md" %} for some basic info.
+  {% endtemplate_example %}
+
+  <p>
+    More specialized template tags are available for linking to specific
+    types of source files.
+  </p>
+
+  <h4>SASS</h4>
+
+  <p>
+    You can link to SASS relative to the root of CALC's SASS directory in
+    {% pathname SCSS_DIR %}:
+  </p>
+
+  {% template_example %}
+  See {% scss "base/_debug.scss" %} for some debug-specific SASS.
+  {% endtemplate_example %}
+
+  <h4>JavaScript</h4>
+
+  <p>
+    You can link to JS relative to the root of CALC's JS directory in
+    {% pathname JS_DIR %}:
+  </p>
+
+  {% template_example %}
+  See {% js "common/ga.js" %} for Google Analytics stuff.
+  {% endtemplate_example %}
+
+  <h4>Django templates</h4>
+
+  <p>
+    You can also link to a template via its template path:
+  </p>
+
+  {% template_example %}
+  See our admin overrides at {% template_link "admin/base.html" %}.
   {% endtemplate_example %}
 
   {% endguide %}

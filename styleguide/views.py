@@ -6,6 +6,7 @@ from frontend.steps import StepsWidget
 from data_capture.schedules.s70 import Schedule70PriceList
 from . import (ajaxform_example, date_example, radio_checkbox_example,
                email_examples)
+from .templatetags.styleguide import SCSS_DIR, JS_DIR
 
 
 def get_degraded_upload_widget():
@@ -70,4 +71,7 @@ def index(request):
 
 
 def docs(request):
-    return render(request, 'styleguide_docs.html')
+    return render(request, 'styleguide_docs.html', {
+        'SCSS_DIR': SCSS_DIR,
+        'JS_DIR': JS_DIR,
+    })
