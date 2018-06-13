@@ -27,6 +27,34 @@ register = template.Library()
 
 
 @register.tag
+def template_example(parser, token):
+    first_token = parser.tokens[0]
+    nodelist = parser.parse(('endtemplate_example',))
+    last_token = parser.tokens[0]
+    parser.delete_first_token()
+    contents = parser.origin.loader.get_contents(parser.origin)
+    lines = contents.splitlines()
+    text = '\n'.join(lines[first_token.lineno:last_token.lineno - 1])
+    return TemplateExampleNode(text, nodelist)
+
+
+class TemplateExampleNode(template.Node):
+    def __init__(self, source_text, nodelist):
+        self.source_text = source_text
+        self.nodelist = nodelist
+
+    def render(self, context):
+        html = self.nodelist.render(context)
+
+        return SafeString(
+            f'here is template source:'
+            f'<pre>{self.source_text}</pre>'
+            f'and rendering:' +
+            html
+        )
+
+
+@register.tag
 def guide(parser, token):
     '''
     A {% guide %} represents an HTML document composed into sections with a
