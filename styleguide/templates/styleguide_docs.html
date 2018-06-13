@@ -28,8 +28,23 @@
     documentation rot.
   </p>
 
+  <h3><code>pathname</code></h3>
+
+  <p>
+    The <code>pathname</code> template tag is useful for linking
+    to any CALC source file or directory relative to the root of the
+    repository. The relative path is displayed along with a
+    hyperlink to view the file or directory on GitHub.
+  </p>
+
+  <p>
+    At render time, the existence of the file or directory is
+    also verified and an exception is thrown if it doesn't
+    exist, to prevent documentation rot.
+  </p>
+
   {% template_example %}
-  {% pathname "data_explorer/templates/base.html" %}
+  See {% pathname "README.md" %} for some basic info.
   {% endtemplate_example %}
 
   {% endguide %}

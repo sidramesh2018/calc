@@ -39,19 +39,17 @@ def template_example(parser, token):
 
 
 class TemplateExampleNode(template.Node):
-    def __init__(self, source_text, nodelist):
-        self.source_text = source_text
+    def __init__(self, template_source, nodelist):
+        self.template_source = template_source
         self.nodelist = nodelist
 
     def render(self, context):
-        html = self.nodelist.render(context)
+        t = context.template.engine.get_template('styleguide_template_example.html')
 
-        return SafeString(
-            f'here is template source:'
-            f'<pre>{self.source_text}</pre>'
-            f'and rendering:' +
-            html
-        )
+        return t.render(template.Context({
+            'template_rendering': self.nodelist.render(context),
+            'template_source': self.template_source,
+        }))
 
 
 @register.tag
