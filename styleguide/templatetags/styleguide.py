@@ -314,10 +314,15 @@ def pathname(name):
 
 @register.simple_tag(takes_context=True)
 def fullpage_example(context, name, show_html=True):
+    num_key = f'_fullpage_example_{name}'
+    num = context.get(num_key, 0) + 1
+    context[num_key] = num
+    num_str = "" if num == 1 else f"#{num}"
+
     t = context.template.engine.get_template(
         'styleguide_fullpage_example_iframe.html')
     url = _fullpage_example.get_url(name)
-    title = f"Example for {name}"
+    title = f"Example for {name}{num_str}"
     if show_html:
         html = _fullpage_example.get_html_source(name)
     else:
