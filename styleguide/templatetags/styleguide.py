@@ -137,7 +137,9 @@ def template_tag(name):
         func = func.__wrapped__
     lineno = func.__code__.co_firstlineno
 
-    return SafeString(f'<code><a href="{url}#L{lineno}">{{% {tag} %}}</a></code>')
+    return SafeString(
+        f'<code><a href="{url}#L{lineno}">{{%&nbsp;{tag}&nbsp;%}}</a></code>'
+    )
 
 
 @register.simple_tag
