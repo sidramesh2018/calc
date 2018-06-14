@@ -94,9 +94,11 @@ function trackInterestingLink(el) {
     return;
   }
 
-  // Anchors on most modern browsers actually have properties on
-  // them that contain parsed values of the URLs, but not IE11,
-  // so we're going to parse the URL manually.
+  // The 'host' and 'hostname' properties on IE11 are
+  // unreliable, so we'll parse the URL manually.
+  //
+  // For more details, see:
+  // https://github.com/18F/calc/pull/2007#discussion_r195593715
   const { pathname, host, hostname } = urlParse(el.href);
 
   if (!(pathname && host && hostname)) {
