@@ -79,6 +79,34 @@
   See {% js "common/ga.js" %} for Google Analytics stuff.
   {% endtemplate_example %}
 
+  <h4>Web components</h4>
+
+  <p>
+    The {% template_tag 'styleguide.webcomponent' %} tag can be used to
+    link to the source code for a web component (also known
+    as a custom element).
+  </p>
+
+  {% template_example %}
+  We use an {% webcomponent '<upload-widget>' %} with a nested
+  {% webcomponent '<input is="upload-input">' %} to
+  progressively enhance the front end.
+  {% endtemplate_example %}
+
+  <p>
+    Determining the source file of a web component is actually
+    non-trivial, and a <code>SOURCE_FILENAME</code> property
+    needs to be defined on the prototype of every web component
+    mentioned in the style guide, or else an alert will be displayed.
+  </p>
+
+  <p>
+    Under the hood, this is accomplished via the
+    {% webcomponent '<a is="web-component-link">' %} component. See
+    its source code for more guidance on how to define the
+    <code>SOURCE_FILENAME</code> property on your custom elements.
+  </p>
+
   <h4>Django templates</h4>
 
   <p>
