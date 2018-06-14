@@ -2,6 +2,7 @@ import os.path
 from html.parser import HTMLParser
 from textwrap import dedent
 from inspect import getsourcefile
+from importlib import import_module
 
 from django import template
 from django.conf import settings
@@ -9,6 +10,7 @@ from django.utils.safestring import SafeString
 from django.utils.module_loading import import_string
 from django.utils.html import escape
 from django.utils.text import slugify
+from django.template.backends.django import get_installed_libraries
 
 from styleguide import fullpage_example as _fullpage_example
 
@@ -28,6 +30,12 @@ register = template.Library()
 
 @register.tag
 def template_example(parser, token):
+    '''
+    Render both the original source code and the rendered output
+    of the Django template code between this tag and
+    its corresponding {% endtemplate_example %}.
+    '''
+
     first_token = parser.tokens[0]
     nodelist = parser.parse(('endtemplate_example',))
     last_token = parser.tokens[0]
@@ -108,9 +116,11 @@ class WebComponentHTMLParser(HTMLParser):
                 self.extends = val
 
 
-def get_template_tag_library(name):
-    from importlib import import_module
-    from django.template.backends.django import get_installed_libraries
+def get_template_tag_library_and_url(name):
+    '''
+    Return a tuple containing the Python module for the given template tag
+    library, and the GitHub URL to its source code.
+    '''
 
     libs = get_installed_libraries()
 
@@ -131,7 +141,7 @@ def get_template_tag_library(name):
 def template_tag(name):
     library, tag = name.split('.')
 
-    mod, url = get_template_tag_library(library)
+    mod, url = get_template_tag_library_and_url(library)
     func = mod.register.tags[tag]
     while hasattr(func, '__wrapped__'):
         func = func.__wrapped__
@@ -144,7 +154,12 @@ def template_tag(name):
 
 @register.simple_tag
 def template_tag_library(name):
-    mod, url = get_template_tag_library(name)
+    '''
+    Render the name of a template tag library that is hyperlinked
+    to its source code.
+    '''
+
+    mod, url = get_template_tag_library_and_url(name)
 
     return SafeString(f'<code><a href="{url}">{name}</a></code>')
 
