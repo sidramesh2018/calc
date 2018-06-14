@@ -36,7 +36,7 @@
   </p>
 
   <p>
-    The {% template_tag "styleguide.pathname" %} template tag
+    The {% template_tag "styleguide" "pathname" %} template tag
     is useful for linking to any CALC source file or directory relative to
     the root of the repository. The relative path is displayed along with a
     hyperlink to view the file or directory on GitHub.
@@ -82,7 +82,7 @@
   <h4>Web components</h4>
 
   <p>
-    The {% template_tag 'styleguide.webcomponent' %} tag can be used to
+    The {% template_tag 'styleguide' 'webcomponent' %} tag can be used to
     link to the source code for a web component (also known
     as a custom element).
   </p>
@@ -130,28 +130,30 @@
 
   <p>
     You can also render just the GitHub URL for the template source
-    with the {% template_tag 'styleguide.template_url' %} tag.
+    with the {% template_tag 'styleguide' 'template_url' %} tag.
   </p>
 
-  <h4>Template tag libraries</h4>
+  <h4>Template tags</h4>
 
   <p>
-    You can link to
-    <a href="https://docs.djangoproject.com/en/1.11/howto/custom-template-tags/">template tag libraries</a>
-    via the name of the library:
+    You can link to the source code for
+    <a href="https://docs.djangoproject.com/en/1.11/howto/custom-template-tags/">custom template tags</a>
+    via {% template_tag 'styleguide' 'template_tag' %}, and
+    tag libraries via
+    {% template_tag 'styleguide' 'template_tag_library' %}:
   </p>
 
   {% template_example %}
-  See the {% template_tag_library 'styleguide' %}
-  template tag library for lots of utilities.
+  The {% template_tag 'styleguide' 'template_tag' %} tag from
+  the {% template_tag_library 'styleguide' %} library is nice.
   {% endtemplate_example %}
 
   {% guide_section "Sections" %}
 
   <p>
-    The {% template_tag "styleguide.guide" %} tag can be used to create
+    The {% template_tag "styleguide" "guide" %} tag can be used to create
     a table of contents (TOC). Between its start and end tags,
-    {% template_tag "styleguide.guide_section" %} can be used to
+    {% template_tag "styleguide" "guide_section" %} can be used to
     add individual sections, which are linked from the TOC.
   </p>
 

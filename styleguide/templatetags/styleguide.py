@@ -138,8 +138,11 @@ def get_template_tag_library_and_url(name):
 
 
 @register.simple_tag
-def template_tag(name):
-    library, tag = name.split('.')
+def template_tag(library, tag):
+    '''
+    Render the name of a template tag from the given template tag library,
+    hyperlinked to its source code.
+    '''
 
     mod, url = get_template_tag_library_and_url(library)
     func = mod.register.tags[tag]
