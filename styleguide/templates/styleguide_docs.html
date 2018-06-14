@@ -148,11 +148,11 @@
   the {% template_tag_library 'styleguide' %} library is nice.
   {% endtemplate_example %}
 
-  {% guide_section "Example snippets" %}
+  {% guide_section "Example areas" %}
 
   <p>
     The {% template_tag "styleguide" "example" %} tag can be used
-    to provide inline HTML example snippets with source code
+    to provide inline example areas with their HTML source code
     displayed:
   </p>
 
@@ -163,14 +163,14 @@
   {% endtemplate_example %}
 
   <p>
-    If you need to include example template code, you can
-    do so with the {% template_tag "styleguide" "template_example" %} tag.
+    If you are documenting Django template code instead of pure HTML,
+    you can do so with the {% template_tag "styleguide" "template_example" %} tag.
   </p>
 
   <h4>Full-page examples</h4>
 
   <p>
-    It's sometimes useful to have example snippets
+    It's sometimes useful to have example areas
     be contained in their own iframes that can be popped-out into
     separate browser tabs for further inspection. This can be done
     using the {% template_tag "styleguide" "fullpage_example" %} tag.
@@ -179,21 +179,44 @@
   <p>
     To use this tag, you'll need to make a template in the
     {% pathname "styleguide/templates/styleguide_fullpage_examples" %}
-    directory. The area to be shown in the source code
-    snippet should be surrounded by
-    <code>{% templatetag opencomment %}&nbsp;BEGIN SNIPPET&nbsp;{% templatetag closecomment %}</code>
-    and
-    <code>{% templatetag opencomment %}&nbsp;END SNIPPET&nbsp;{% templatetag closecomment %}</code>.
+    directory.
   </p>
 
   <p>
-    For example, we've created a simple template at
-    {% template_link "styleguide_fullpage_examples/inception.html" %},
-    and we'll embed it as a full-page example with the following:
+    For example, suppose we've created a simple template at
+    {% template_link inception_path %}
+    with the following content:
+  </p>
+
+  <pre><code class="language-django">{{ inception_source }}</code></pre>
+
+  <p>
+    Note the presence of
+    <code>{% templatetag opencomment %}&nbsp;BEGIN SNIPPET&nbsp;{% templatetag closecomment %}</code>
+    and
+    <code>{% templatetag opencomment %}&nbsp;END SNIPPET&nbsp;{% templatetag closecomment %}</code>:
+    these aren't just comments, they actually specify what
+    should be shown in the source code area of the example. This allows us
+    to easily omit code that's necessary for the rendering of
+    the template, but extraneous to the concept being communicated.
+  </p>
+
+  <p>
+    We can embed the template as a full-page example area by passing
+    the name of the template without its file extension:
   </p>
 
   {% template_example %}
   {% fullpage_example "inception" %}
+  {% endtemplate_example %}
+
+  <p>
+    Sometimes we may not want to show any source code in the example, which
+    can be accomplished by passing an extra argument to the tag:
+  </p>
+
+  {% template_example %}
+  {% fullpage_example "inception" show_html=False %}
   {% endtemplate_example %}
 
   {% guide_section "Sections" %}

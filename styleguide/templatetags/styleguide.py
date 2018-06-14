@@ -3,6 +3,7 @@ from html.parser import HTMLParser
 from textwrap import dedent
 from inspect import getsourcefile
 from importlib import import_module
+from pathlib import Path
 
 from django import template
 from django.conf import settings
@@ -11,6 +12,7 @@ from django.utils.module_loading import import_string
 from django.utils.html import escape
 from django.utils.text import slugify
 from django.template.backends.django import get_installed_libraries
+from django.template import Engine
 
 from styleguide import fullpage_example as _fullpage_example
 
@@ -167,10 +169,9 @@ def template_tag_library(name):
     return SafeString(f'<code><a href="{url}">{name}</a></code>')
 
 
-@register.simple_tag(takes_context=True)
-def template_url(context, template_name):
+def get_template_path(template_name: str) -> Path:
     '''
-    Return a GitHub URL to the source of the given template.
+    Given a Django template path, return an absolute path to it.
     '''
 
     # Note that we can't simply use the `origin` property of a Template
@@ -180,7 +181,7 @@ def template_url(context, template_name):
 
     candidates = []
 
-    for loader in context.template.engine.template_loaders:
+    for loader in Engine.get_default().template_loaders:
         for candidate in loader.get_template_sources(template_name):
             candidates.append(candidate)
 
@@ -194,7 +195,17 @@ def template_url(context, template_name):
     if path is None:
         raise ValueError(f'Template {template_name} not found')
 
-    return github_url_for_path(os.path.relpath(path, ROOT_DIR))
+    return Path(path)
+
+
+@register.simple_tag(takes_context=True)
+def template_url(context, template_name):
+    '''
+    Return a GitHub URL to the source of the given template.
+    '''
+
+    path = get_template_path(template_name)
+    return github_url_for_path(path.relative_to(ROOT_DIR))
 
 
 @register.simple_tag(takes_context=True)
