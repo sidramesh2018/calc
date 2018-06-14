@@ -40,25 +40,42 @@
   }
 }
 
-.usa-alert-error {
+// Used for styling paragraphs of alert text where a background doesn't make visual sense.
+.alert__no-bg {
+  background-color: transparent;
+  border: none;
+  background-image: none;
+  padding: 0;
   &::before {
-    background-color: $color-red-dark;
+    width: 0;
   }
-  // Used for styling paragraphs of error text where a background doesn't make visual sense.
-  &.alert__no-bg {
-    background-color: transparent;
-    border: none;
 
-    h3:before {
+  h3 {
+    margin-left: 0;
+    &::before {
       width: $h3-font-size;
       height: $h3-font-size;
-      content: url('../../images/icon-warning.svg');
+      content: ""; // specify icon in alert classes below; see .usa-alert-error for example
       padding-right: $space-half;
     }
   }
 
+  p {
+    margin-left: 0;
+  }
+}
+
+.usa-alert-error {
+  &::before {
+    background-color: $color-red-dark;
+  }
+
   h3 {
     color: $color-red-dark;
+  }
+
+  &.alert__no-bg h3::before {
+    content: url('../../images/icon-warning.svg');
   }
 }
 
