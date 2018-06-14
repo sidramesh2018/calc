@@ -20,11 +20,23 @@
     which is a standard Django template.
   </p>
 
+  <p>
+    Supporting the style guide is the {% template_tag_library "styleguide" %} template tag
+    library, which provides some of the technical infrastructure to display the
+    guide and ensure its content is accurate.
+  </p>
+
   {% guide_section "Linking to source files" %}
 
   <p>
-    The {% template_tag "styleguide.pathname" %} template tag, which is
-    part of the {% template_tag_library "styleguide" %} template tag library,
+    Providing direct links to source files on GitHub is a great way to
+    familiarize newcomers with the codebase and figure out where all
+    the code related to a particular piece of front-end technology is
+    located.
+  </p>
+
+  <p>
+    The {% template_tag "styleguide.pathname" %} template tag
     is useful for linking to any CALC source file or directory relative to
     the root of the repository. The relative path is displayed along with a
     hyperlink to view the file or directory on GitHub.
@@ -76,6 +88,24 @@
   {% template_example %}
   See our admin overrides at {% template_link "admin/base.html" %}.
   {% endtemplate_example %}
+
+  {% guide_section "Creating sections" %}
+
+  <p>
+    The {% template_tag "styleguide.guide" %} tag can be used to create
+    a table of contents (TOC). Between its start and end tags,
+    {% template_tag "styleguide.guide_section" %} can be used to
+    add individual sections, which are linked from the TOC.
+  </p>
+
+  {% fullpage_example "guide" %}
+
+  <p>
+    Currently, the TOC is flat rather than hierarchical: 
+    there's no way to define subsections of sections. You can manually
+    create subsections by using the <code>&lt;h4&gt;</code> tag,
+    but these won't be listed in the TOC.
+  </p>
 
   {% endguide %}
 </div><!--content-->
