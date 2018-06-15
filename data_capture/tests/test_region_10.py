@@ -34,8 +34,7 @@ class GleaningTests(TestCase):
             'labor_category': 'Consultant II',
             'unit_of_issue': 'Hour',
             'price_including_iff': '90.68'
-            },
-            {
+        }, {
             'education_level': '',
             'sin': '123-2',
             'min_years_experience': '0',

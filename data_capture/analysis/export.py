@@ -9,7 +9,7 @@ COMPARABLES_NOT_FOUND = 'Error: Comparables not found'
 
 
 def pct_diff(a, b):
-    return (a - b)/((a + b) / 2) * 100
+    return (a - b) / ((a + b) / 2) * 100
 
 
 ExportRow = namedtuple('ExportRow', [

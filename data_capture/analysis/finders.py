@@ -112,7 +112,7 @@ class GteEduAndExpFinder(ContractFinder):
                 return [
                     # No idea why mypy suddenly doesn't like this but I
                     # don't have time to deal with it now.
-                    ed[0] for ed in EDUCATION_CHOICES[index:]  # type: ignore
+                    ed[0] for ed in EDUCATION_CHOICES[index:]
                 ]
 
         raise AssertionError('this should never be reached')

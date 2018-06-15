@@ -25,7 +25,7 @@ ANALYSIS_STOP_WORDS = []
 
 # http://stackoverflow.com/a/28777781
 def write_roman(num):
-    roman = OrderedDict()
+    roman: OrderedDict[int, str] = OrderedDict()
     roman[1000] = "M"
     roman[900] = "CM"
     roman[500] = "D"
@@ -63,7 +63,7 @@ del i
 def powerset(iterable):
     "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
     s = list(iterable)
-    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
+    return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
 
 
 def get_best_permutations(vocab, lexemes, min_count=1, min_length=4,
@@ -109,7 +109,7 @@ def get_best_permutations(vocab, lexemes, min_count=1, min_length=4,
 class Vocabulary(dict):
     def __init__(self):
         super()
-        self._cinfo = {}
+        self._cinfo = {}  # type: ignore
 
     @classmethod
     def from_list(cls, docs):
@@ -194,7 +194,7 @@ def filter_and_sort_lexemes(vocab, lexemes):
 
 class PartOfSpeechMapper:
     def __init__(self, words):
-        self._tags = {}
+        self._tags = {}  # type: ignore
         if nltk is not None:
             self._tags.update(dict(nltk.pos_tag(
                 [word.lower() for word in words] +

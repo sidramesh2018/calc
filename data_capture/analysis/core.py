@@ -162,15 +162,17 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         if stddev < MIN_STDDEV:
             stddev = MIN_STDDEV
 
+        stddevs = math.ceil(price_delta / stddev)
+
         result['stddev'] = stddev
-        result['stddevs'] = math.ceil(price_delta / stddev)
+        result['stddevs'] = stddevs
 
         result['most_common_edu_levels'] = get_most_common_edu_levels(
             fc.contracts)
 
         if result['severe']:
             result['preposition'] = \
-                'w' + ('a' * result['stddevs']) + 'y ' + \
+                'w' + ('a' * stddevs) + 'y ' + \
                 ('below' if price < avg else 'above')
 
         result['labor_category'] = fc.phrase
