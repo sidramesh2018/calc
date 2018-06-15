@@ -65,6 +65,15 @@
   }
 }
 
+.usa-alert-error,
+.usa-alert-info,
+.usa-alert-success,
+.usa-alert-warning {
+  &::before {
+    border-radius: $border-radius 0 0 $border-radius;
+  }
+}
+
 .usa-alert-error {
   &::before {
     background-color: $color-red-dark;
