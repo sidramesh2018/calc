@@ -160,13 +160,16 @@
 
   {% template_example %}
   {% example %}
-  <p>Inception!</p>
+  <p>CALC's about page URL is at {% url 'about' %}.</p>
   {% endexample %}
   {% endtemplate_example %}
 
   <p>
-    If you are documenting Django template code instead of pure HTML,
-    you can do so with the {% template_tag "styleguide" "template_example" %} tag:
+    It's important to note that the code snippet shown is the
+    the example's source <em>after</em> it's been processed by the templating
+    engine. If you instead want the original, "raw" source
+    to be shown in the code snippet, you can use the
+    {% template_tag "styleguide" "template_example" %} tag:
   </p>
 
   {% template_example %}
