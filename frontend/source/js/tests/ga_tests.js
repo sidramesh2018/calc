@@ -88,11 +88,16 @@ QUnit.test('autoTrackInterestingLinks() works', (assert) => {
     window.ga = (...args) => {
       log.push(args);
     };
-    a.dispatchEvent(new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true
-    }));
+
+    // There's an easier way to synthesize this event, but
+    // this is the only way that works on IE11.
+    const event = document.createEvent("MouseEvent");
+    event.initMouseEvent(
+      'click', true, true, window,
+      0, 0, 0, 0, 0, false, false, false, false, 1, null
+    );
+
+    a.dispatchEvent(event);
     assert.deepEqual(log, expectedLog, msg);
   }
 

@@ -21,6 +21,8 @@ Welcome to CALC's developer documentation!
    :caption: Development
 
    Style guide <https://calc-dev.app.cloud.gov/styleguide/>
+   linting
+   editors
    testing
    frontend
    API <https://calc-dev.app.cloud.gov/api/docs/>
@@ -29,12 +31,12 @@ Welcome to CALC's developer documentation!
    :maxdepth: 2
    :caption: Release and deployment
 
+   deploy
    monitoring
    analytics
    ci
-   Change log <https://calc-dev.app.cloud.gov/updates/>
    release
-   deploy
+   Change log <https://calc-dev.app.cloud.gov/updates/>
 
 .. toctree::
    :maxdepth: 2
