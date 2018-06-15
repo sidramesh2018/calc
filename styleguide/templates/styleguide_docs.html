@@ -166,8 +166,14 @@
 
   <p>
     If you are documenting Django template code instead of pure HTML,
-    you can do so with the {% template_tag "styleguide" "template_example" %} tag.
+    you can do so with the {% template_tag "styleguide" "template_example" %} tag:
   </p>
+
+  {% template_example %}
+  {% template_example %}
+  <p>CALC's about page URL is at {% url 'about' %}.</p>
+  {% endtemplate_example %}
+  {% endtemplate_example %}
 
   <h4>Full-page examples</h4>
 
