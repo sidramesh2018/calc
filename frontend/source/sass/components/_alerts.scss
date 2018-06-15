@@ -79,10 +79,6 @@
     background-color: $color-red-dark;
   }
 
-  h3 {
-    color: $color-red-dark;
-  }
-
   &.alert__no-bg h3::before {
     content: url('../../images/icon-warning.svg');
   }
