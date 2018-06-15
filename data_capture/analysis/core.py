@@ -7,6 +7,7 @@ from django.utils.module_loading import import_string
 from django.utils import timezone
 from django.db import connection, transaction
 from django.db.models import Avg, StdDev, Count
+from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 
 from contracts.models import Contract
@@ -216,7 +217,10 @@ def analyze_gleaned_data(gleaned_data):
         vocab = Vocabulary.from_db(cursor)
         with transaction.atomic():
             sid = transaction.savepoint()
+            fake_user = User.objects.create_user('fake_analysis_user')
             price_list = SubmittedPriceList(
+                contract_number='(price list analysis)',
+                submitter=fake_user,
                 is_small_business=False,
                 submitter_id=0,
                 escalation_rate=0,
