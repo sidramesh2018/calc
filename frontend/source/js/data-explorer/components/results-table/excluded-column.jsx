@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -19,7 +20,7 @@ function BaseDataCell({ excludeRow, result }) {
     excludeRow(rowId);
   };
 
-  const tooltip = `Exclude ${result.labor_category} from your search`;
+  const tooltip = 'Exclude this row from your search';
 
   return (
     <td className="cell column-exclude">
@@ -39,8 +40,8 @@ function BaseDataCell({ excludeRow, result }) {
 BaseDataCell.cellKey = 'exclude';
 
 BaseDataCell.propTypes = {
-  excludeRow: React.PropTypes.func.isRequired,
-  result: React.PropTypes.object.isRequired,
+  excludeRow: PropTypes.func.isRequired,
+  result: PropTypes.object.isRequired,
 };
 
 export const DataCell = connect(

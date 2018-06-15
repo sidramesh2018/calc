@@ -1,26 +1,26 @@
+import PropTypes from 'prop-types';
 import * as qs from 'querystring';
 
 import React from 'react';
 import { connect } from 'react-redux';
 
 import { getRatesParameters } from '../rates-request';
-
-import { API_RATES_CSV } from '../constants';
+import { API_BASE, API_PATH_RATES_CSV } from '../api';
 
 export function ExportData({ querystring }) {
-  const href = API_RATES_CSV + querystring;
+  const href = `${API_BASE}${API_PATH_RATES_CSV}/${querystring}`;
 
   return (
     <a
-      className="button button-primary export-data"
+      className="usa-button usa-button-primary export-data"
       title="Click to export your search results to an Excel file (CSV)"
       href={href}
-    >⬇ Export Data (CSV)</a>
+    >⬇ Export data (CSV)</a>
   );
 }
 
 ExportData.propTypes = {
-  querystring: React.PropTypes.string.isRequired,
+  querystring: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {

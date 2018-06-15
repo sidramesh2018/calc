@@ -20,32 +20,21 @@
 {% endblock head %}
 
 {% block header_extension %}
-<div class="row clearfix">
+<div class="hero row clearfix">
   <div class="eight columns">
     <h1 class="description-main">Search awarded ceiling rates for labor categories</h1>
-    <h2 class="description-secondary">CALC lets you conduct market research on professional service labor categories quickly and easily, helping you make better informed decisions. Results shown are awarded hourly rates from GSA IDIQ service schedules.</h2>
+    <a href="{% url 'about' %}">Learn about CALC ></a>
   </div>
-  <div class="price-callout four columns">
-    <h3>CALC offers &hellip;</h3>
-    <div class="icon icon-ceiling">
-      <p>Ceiling prices</p>
-    </div>
-    <div class="icon icon-fully-burdened">
-      <p>Fully burdened costs</p>
-    </div>
-    <div class="icon icon-professional-services">
-      <p>Services data</p>
-    </div>
-    <div class="icon icon-worldwide-rates">
-      <p>Worldwide rates</p>
-    </div>
+  <div class="hero-callout four columns">
+    <p><b>The Contract-Awarded Labor Category</b> (CALC) tool helps federal contracting officers and others find awarded prices to use in negotiations for labor contracts. It offers ceiling prices, fully burdened costs, services data, and worldwide rates.
+    </p>
   </div>
 </div>
 {% endblock header_extension %}
 
 {% block body %}
-<div data-embed-jsx-app-here class="card--half-padding">
-  <div class="card">
+<div data-embed-jsx-app-here style="background-color: #fff; border-bottom-color: #c5d6de; margin-bottom: 8rem;">
+  <div class="content">
     <noscript>
       Please enable JavaScript to use this page's functionality.
     </noscript>

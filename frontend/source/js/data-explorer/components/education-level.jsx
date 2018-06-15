@@ -1,5 +1,7 @@
 /* global document */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -105,7 +107,7 @@ export class EducationLevel extends React.Component {
     if (levels.length === 0) {
       linkContent = (
         <span className="eduSelect">Select
-          <span className="sr-only"> to reveal Education Level options</span>
+          <span className="usa-sr-only"> to reveal Education Level options</span>
         </span>
       );
     } else {
@@ -143,7 +145,7 @@ export class EducationLevel extends React.Component {
           <dd>
             <div className="multiSelect">
               <fieldset>
-                <legend className="sr-only">Education level:</legend>
+                <legend className="usa-sr-only">Education level:</legend>
 
                 <SlideyPanel
                   component="ul"
@@ -161,9 +163,9 @@ export class EducationLevel extends React.Component {
 }
 
 EducationLevel.propTypes = {
-  levels: React.PropTypes.array.isRequired,
-  idPrefix: React.PropTypes.string,
-  toggleEducationLevel: React.PropTypes.func.isRequired,
+  levels: PropTypes.array.isRequired,
+  idPrefix: PropTypes.string,
+  toggleEducationLevel: PropTypes.func.isRequired,
 };
 
 EducationLevel.defaultProps = {

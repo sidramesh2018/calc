@@ -5,6 +5,7 @@
 *.swp
 *.swo
 *.DS_Store
+.mypy_cache
 .coverage
 coverage.xml
 htmlcov
@@ -14,7 +15,7 @@ venv
 ghostdriver.log
 *.log
 node_modules
-selenium_tests/screenshot.png
+selenium_tests_screenshot.png
 .cache
 .env
 .Python
@@ -36,7 +37,6 @@ release-*-instructions.html
 ~*.xls[x]
 jest/*
 Dockerfile.cloud
-docs/changelog.md
 docs/_build
 docs/static
 data_capture_uploaded_files/

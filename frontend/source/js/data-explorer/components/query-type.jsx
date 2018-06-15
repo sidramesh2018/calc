@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -27,7 +28,7 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
     const id = `${idPrefix}${idSuffix}`;
 
     return (
-      <span>
+      <li>
         <input
           id={id} type="radio" name="query_type" value={type}
           checked={type === queryType}
@@ -36,23 +37,23 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
         <label htmlFor={id}>
           {QUERY_TYPE_LABELS[type]}
         </label>
-      </span>
+      </li>
     );
   };
 
   return (
-    <div role="group" aria-label="Labor category query type">
+    <ul role="group" aria-label="Labor category query type">
       {input(QUERY_TYPE_MATCH_ALL)}
       {input(QUERY_TYPE_MATCH_PHRASE)}
       {input(QUERY_TYPE_MATCH_EXACT)}
-    </div>
+    </ul>
   );
 }
 
 QueryType.propTypes = {
-  queryType: React.PropTypes.string.isRequired,
-  setQueryType: React.PropTypes.func.isRequired,
-  idPrefix: React.PropTypes.string,
+  queryType: PropTypes.string.isRequired,
+  setQueryType: PropTypes.func.isRequired,
+  idPrefix: PropTypes.string,
 };
 
 QueryType.defaultProps = {

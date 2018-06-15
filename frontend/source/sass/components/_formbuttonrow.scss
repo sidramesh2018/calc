@@ -1,3 +1,5 @@
+// These styles create the row of buttons on the bottom of each data capture page.
+
 @import '../base/variables';
 
 .form-button-row {
@@ -13,7 +15,7 @@
   }
   button,
   button[type="submit"],
-  .button {
+  .usa-button {
     display: inline-block;
     margin: 0 2em 0 0;
   }
@@ -22,7 +24,7 @@
     display: inline-block;
 
     button,
-    .button {
+    .usa-button {
       margin: 0;
     }
   }
@@ -33,7 +35,7 @@
     height: 38px;
     color: $color-gray-medium;
     margin-right: $space-2x;
-    max-width: 110px;
+    max-width: 110px; // hacky magic number
     font-size: $small-font-size;
     line-height: $small-line-height;
   }

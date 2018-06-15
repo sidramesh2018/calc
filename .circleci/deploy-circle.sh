@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# DEPLOY_ENV must be set to "dev", "staging", or "prod"
+# DEPLOY_ENV must be set to "dev" or "prod"
 
-# CF_DEV_USER, CF_STAGING_USER, CF_PROD_USER, and the associated
-# CF_DEV_PASSWORD, CF_STAGING_PASSWORD, and CF_PROD_PASSWORD
+# CF_DEV_USER, CF_PROD_USER, and the associated
+# CF_DEV_PASSWORD and CF_PROD_PASSWORD
 # are defined as private Environment Variables
 # in the CircleCI web UI: https://circleci.com/gh/18F/calc/edit#env-vars
 
@@ -13,10 +13,6 @@ if [ "$DEPLOY_ENV" == "dev" ]; then
   DEPLOY_USER=$CF_DEV_USER
   DEPLOY_PASS=$CF_DEV_PASSWORD
   SPACE=dev
-elif [ "$DEPLOY_ENV" == "staging" ]; then
-  DEPLOY_USER=$CF_STAGING_USER
-  DEPLOY_PASS=$CF_STAGING_PASSWORD
-  SPACE=staging
 elif [ "$DEPLOY_ENV" == "prod" ]; then
   DEPLOY_USER=$CF_PROD_USER
   DEPLOY_PASS=$CF_PROD_PASSWORD
@@ -37,7 +33,7 @@ MANIFEST="manifests/manifest-$DEPLOY_ENV.yml"
 
 # make a production build
 unset DEBUG
-yarn gulp -- build
+yarn gulp build
 
 # install cf cli
 curl -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
@@ -52,7 +48,13 @@ echo "Deploying to $SPACE space."
 cf login -a $API -u $DEPLOY_USER -p $DEPLOY_PASS -o $ORG -s $SPACE
 
 # scale down the app instances to avoid overrunning our memory allotment
-cf scale -i 1 $APP_NAME
+if cf app $APP_NAME ; then
+  echo "Scaling down $APP_NAME to single instance."
+  cf scale -i 1 $APP_NAME
+else
+  echo "$APP_NAME not found; skipping scale."
+fi
+
 
 cf zero-downtime-push $APP_NAME -f $MANIFEST
 

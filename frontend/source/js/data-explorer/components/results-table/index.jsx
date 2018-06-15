@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -67,7 +68,7 @@ export class ResultsTable extends React.Component {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={COLUMNS.length}>
+            <td colSpan={COLUMNS.length} className="results-table_return-link">
               <a href={idHref}>Return to the top</a>
             </td>
           </tr>
@@ -78,11 +79,11 @@ export class ResultsTable extends React.Component {
 }
 
 ResultsTable.propTypes = {
-  sort: React.PropTypes.object.isRequired,
-  setSort: React.PropTypes.func.isRequired,
-  results: React.PropTypes.array.isRequired,
-  contractYear: React.PropTypes.string.isRequired,
-  idPrefix: React.PropTypes.string,
+  sort: PropTypes.object.isRequired,
+  setSort: PropTypes.func.isRequired,
+  results: PropTypes.array.isRequired,
+  contractYear: PropTypes.string.isRequired,
+  idPrefix: PropTypes.string,
 };
 
 ResultsTable.defaultProps = {

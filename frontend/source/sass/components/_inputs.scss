@@ -1,12 +1,22 @@
+// Styling for input boxes of various kinds
+
 @import '../base/variables';
-@import '../uswds/inputs';
 
 legend {
   font-size: $base-font-size;
 }
 
-input[type="radio"] + label {
+input[type="radio"] + label,
+input[type="checkbox"] + label {
   margin-top: 0;
+  &:before {
+    margin-right: 1rem;
+  }
+}
+
+input[type="radio"]:focus + label::before,
+input[type="checkbox"]:focus + label::before {
+  @include focus-color($bg-color: "light-color");
 }
 
 label {
@@ -35,6 +45,7 @@ select {
 
 select {
   border-radius: $border-radius;
+  background-image: none !important; // WDS override; possible Chrome bug
   &.select-small {
     background-position: right 1rem center;
     padding: 0.34em;

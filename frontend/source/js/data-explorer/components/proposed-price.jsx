@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -72,7 +73,7 @@ export class ProposedPrice extends React.Component {
 
     return (
       <div className="proposed-price">
-        <label htmlFor={id} className="sr-only">Proposed price</label>
+        <label htmlFor={id} className="usa-sr-only">Proposed price</label>
         <input
           id={id} type="text" name="proposed-price"
           className="form__inline"
@@ -89,9 +90,9 @@ export class ProposedPrice extends React.Component {
 }
 
 ProposedPrice.propTypes = {
-  proposedPrice: React.PropTypes.number.isRequired,
-  setProposedPrice: React.PropTypes.func.isRequired,
-  idPrefix: React.PropTypes.string,
+  proposedPrice: PropTypes.number.isRequired,
+  setProposedPrice: PropTypes.func.isRequired,
+  idPrefix: PropTypes.string,
 };
 
 ProposedPrice.defaultProps = {

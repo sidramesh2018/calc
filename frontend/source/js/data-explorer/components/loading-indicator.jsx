@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -18,7 +19,7 @@ export function LoadingIndicator({ error, inProgress }) {
       {/* Note that in order for this aria-live region to work
         * across most screen readers, it needs to be in the DOM
         * on page load! */}
-      <div className="sr-only" role="status" aria-live="polite">
+      <div className="usa-sr-only" role="status" aria-live="polite">
         {ariaStatus}
       </div>
       {/* CSS for the following element was originally designed with
@@ -34,8 +35,8 @@ export function LoadingIndicator({ error, inProgress }) {
 }
 
 LoadingIndicator.propTypes = {
-  error: React.PropTypes.string,
-  inProgress: React.PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  inProgress: PropTypes.bool.isRequired,
 };
 
 LoadingIndicator.defaultProps = {

@@ -6,8 +6,10 @@
  * degrades to a panel without animation.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
-import ReactTransitionGroup from 'react-addons-transition-group';
+import { TransitionGroup } from 'react-transition-group';
 
 import { FirstChild } from './util';
 
@@ -38,9 +40,9 @@ class InnerSlideyPanel extends React.Component {
 }
 
 InnerSlideyPanel.propTypes = {
-  component: React.PropTypes.any,
-  children: React.PropTypes.any.isRequired,
-  $: React.PropTypes.func,
+  component: PropTypes.any,
+  children: PropTypes.any.isRequired,
+  $: PropTypes.func,
 };
 
 InnerSlideyPanel.defaultProps = {
@@ -70,14 +72,14 @@ export default function SlideyPanel(props) {
   }
 
   return (
-    <ReactTransitionGroup component={FirstChild}>
+    <TransitionGroup component={FirstChild}>
       {innerPanel}
-    </ReactTransitionGroup>
+    </TransitionGroup>
   );
 }
 
 SlideyPanel.propTypes = Object.assign({}, InnerSlideyPanel.propTypes, {
-  expanded: React.PropTypes.bool,
+  expanded: PropTypes.bool,
 });
 
 SlideyPanel.defaultProps = Object.assign({}, InnerSlideyPanel.defaultProps, {

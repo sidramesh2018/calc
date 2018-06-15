@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
 
@@ -5,6 +6,7 @@ const getDataCellClasses = (key, sort) => ({
   cell: true,
   sorted: sort.key === key,
   [`column-${key}`]: true,
+  number: key === 'current_price',
 });
 
 export const createDataCellConnector = key => (Component) => {
@@ -17,8 +19,8 @@ export const createDataCellConnector = key => (Component) => {
   );
 
   wrappedComponent.propTypes = {
-    sort: React.PropTypes.object.isRequired,
-    result: React.PropTypes.object.isRequired,
+    sort: PropTypes.object.isRequired,
+    result: PropTypes.object.isRequired,
   };
 
   // Let's use the same naming convention as react-redux here.
@@ -39,8 +41,8 @@ export function GenericDataCell({ className, value }) {
 }
 
 GenericDataCell.propTypes = {
-  className: React.PropTypes.string.isRequired,
-  value: React.PropTypes.any,
+  className: PropTypes.string.isRequired,
+  value: PropTypes.any,
 };
 
 GenericDataCell.defaultProps = {
