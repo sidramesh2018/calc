@@ -67,16 +67,16 @@
 
   <br>
 
-  <a href="{% url 'data_capture:export_analysis' %}?f=csv" class="button" download>
+  <a href="{% url 'data_capture:export_analysis' %}?f=csv" class="usa-button" download>
     ⬇ Download Analysis (CSV)
   </a>
 
-  <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="button" download>
+  <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="usa-button" download>
     ⬇ Download Analysis (Excel)
   </a>
 
   <div class="form-button-row clearfix">
-    <a href="{% url 'index' %}" class="button button-outline">CALC home</a>
-    <a href="{% url 'data_capture:analyze_step_1' %}" class="button button-primary">Analyze another price list</a>
+    <a href="{% url 'index' %}" class="usa-button usa-button-secondary">CALC home</a>
+    <a href="{% url 'data_capture:analyze_step_1' %}" class="usa-button usa-button-primary">Analyze another price list</a>
   </div>
 {% endblock %}
