@@ -77,12 +77,12 @@ To release version 0.0.4 of CALC:
 9.  Visit the [production instance][production] and make sure all is functioning as
     expected.
 
-10. Merge `v0.0.4-rc` back into `develop` on the remote repository:
+10. Merge `master` back into `develop` on the remote repository:
 
     ```
     git checkout develop
     git pull https://github.com/18F/calc.git develop
-    git merge v0.0.4-rc
+    git merge master
     git push https://github.com/18F/calc.git develop
     ```
 
