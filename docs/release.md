@@ -29,7 +29,7 @@ To release version 0.0.4 of CALC:
 2.  Create a branch off `develop` called `v0.0.4-rc` and push it to
     GitHub:
 
-    ```sh
+    ```
     git checkout -b v0.0.4-rc develop
     git push -u https://github.com/18F/calc.git v0.0.4-rc
     ```
@@ -41,7 +41,7 @@ To release version 0.0.4 of CALC:
     on OS X, you can easily copy this to your clipboard with the following
     command:
 
-    ```sh
+    ```
     docker-compose run app python manage.py unreleased_changelog | pbcopy
     ```
 
@@ -54,7 +54,7 @@ To release version 0.0.4 of CALC:
 6.  Update the version number in `calc/version.py` to `0.0.4` and then
     run:
 
-    ```sh
+    ```
     docker-compose run app python manage.py bump_changelog
     ```
 
@@ -64,7 +64,7 @@ To release version 0.0.4 of CALC:
 
 7.  Commit the changes to git, tag the release, and push everything:
 
-    ```sh
+    ```
     git commit -a -m "Release v0.0.4."
     git tag -a v0.0.4 -F tag-message-v0.0.4.txt
     git push
@@ -79,7 +79,7 @@ To release version 0.0.4 of CALC:
 
 10. Merge `v0.0.4-rc` back into `develop` on the remote repository:
 
-    ```sh
+    ```
     git checkout develop
     git pull https://github.com/18F/calc.git develop
     git merge v0.0.4-rc
