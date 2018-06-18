@@ -7,7 +7,7 @@
 {% block step_body %}
   {% with rows=gleaned_data.invalid_rows %}
     {% with total=rows|length %}
-      <div class="usa-alert usa-alert-error alert__no-bg" role="alert">
+      <div class="usa-alert usa-alert-error" role="alert">
         {% if not gleaned_data.valid_rows %}
           <h4>No valid rows found!</h4>
           <p>
