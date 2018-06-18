@@ -7,6 +7,28 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.9.1][] - 2018-06-15
+
+### Added
+
+- Added developer documentation for linting, type checking, and editor
+  integration (#1992).
+- Added title to search page (#1988).
+
+### Changed
+
+- The `load_api_data` management command now updates search indices
+  properly (#1987).
+- Updated `django-uswds-forms` version and made it installable from
+  PyPI (#1999).
+- Fixed a bug in the way IE 11 reports certain events to Google
+  Analytics (#2007).
+
+### Removed
+
+- CALC no longer has a `staging` deployment (#1795).
+
+
 ## [2.9.0][] - 2018-05-31
 
 ### Added
@@ -421,7 +443,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.9.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.9.1...HEAD
+[2.9.1]: https://github.com/18F/calc/compare/v2.9.0...v2.9.1
 [2.9.0]: https://github.com/18F/calc/compare/v2.8.6...v2.9.0
 [2.8.6]: https://github.com/18F/calc/compare/v2.8.5...v2.8.6
 [2.8.5]: https://github.com/18F/calc/compare/v2.8.4...v2.8.5
