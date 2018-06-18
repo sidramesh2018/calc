@@ -16,7 +16,15 @@ simultaneously!
 
 To release version 0.0.4 of CALC:
 
-1.  Verify that the ["Unreleased" section of `CHANGELOG.md`][unreleased]
+1.  Create a branch off `develop` called `v0.0.4-rc` and push it to
+    GitHub:
+
+    ```
+    git checkout -b v0.0.4-rc develop
+    git push -u https://github.com/18F/calc.git v0.0.4-rc
+    ```
+
+2.  Verify that the ["Unreleased" section of `CHANGELOG.md`][unreleased]
     is up-to-date by comparing it against GitHub's commit list (you can
     see that by clicking on the "Unreleased" section heading), and then
     describe the changes in a human-meaningful form (see previous release
@@ -26,12 +34,12 @@ To release version 0.0.4 of CALC:
     of the list. Remember, it will be read by both developers *and* users,
     so avoid the use of jargon where possible.
 
-2.  Create a branch off `develop` called `v0.0.4-rc` and push it to
-    GitHub:
+    If you've changed anything in `CHANGELOG.md`, go ahead and commit it now:
 
     ```
-    git checkout -b v0.0.4-rc develop
-    git push -u https://github.com/18F/calc.git v0.0.4-rc
+    git add CHANGELOG.md
+    git commit -m "Updated changelog."
+    git push
     ```
 
 3.  [Issue a PR][pr] to merge your branch into `master` titled
