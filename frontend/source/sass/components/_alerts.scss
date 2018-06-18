@@ -5,7 +5,7 @@
   margin: 1rem 0;
   border-radius: $border-radius;
 
-  h3 {
+  h4 {
     font-weight: $font-weight-bold;
     margin-top: 0;
     margin-bottom: 0;
@@ -50,11 +50,11 @@
     width: 0;
   }
 
-  h3 {
+  h4 {
     margin-left: 0;
     &::before {
-      width: $h3-font-size;
-      height: $h3-font-size;
+      width: $h4-font-size;
+      height: $h4-font-size;
       content: ""; // specify icon in alert classes below; see .usa-alert-error for example
       padding-right: $space-half;
     }
@@ -65,16 +65,21 @@
   }
 }
 
+.usa-alert-error,
+.usa-alert-info,
+.usa-alert-success,
+.usa-alert-warning {
+  &::before {
+    border-radius: $border-radius 0 0 $border-radius;
+  }
+}
+
 .usa-alert-error {
   &::before {
     background-color: $color-red-dark;
   }
 
-  h3 {
-    color: $color-red-dark;
-  }
-
-  &.alert__no-bg h3::before {
+  &.alert__no-bg h4::before {
     content: url('../../images/icon-warning.svg');
   }
 }
