@@ -26,6 +26,13 @@ class WebComponentLink extends window.HTMLAnchorElement {
   }
 }
 
+// This is the critical piece of metadata that will tell
+// WebComponentLink where a web component's source code
+// is located. It needs to be defined on the prototype of
+// every web component that's pointed at by a
+// WebComponentLink, or else a JS alert will be raised.
+WebComponentLink.prototype.SOURCE_FILENAME = __filename;
+
 document.registerElement('web-component-link', {
   extends: 'a',
   prototype: WebComponentLink.prototype,
