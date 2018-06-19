@@ -16,7 +16,15 @@ simultaneously!
 
 To release version 0.0.4 of CALC:
 
-1.  Verify that the ["Unreleased" section of `CHANGELOG.md`][unreleased]
+1.  Create a branch off `develop` called `v0.0.4-rc` and push it to
+    GitHub:
+
+    ```
+    git checkout -b v0.0.4-rc develop
+    git push -u https://github.com/18F/calc.git v0.0.4-rc
+    ```
+
+2.  Verify that the ["Unreleased" section of `CHANGELOG.md`][unreleased]
     is up-to-date by comparing it against GitHub's commit list (you can
     see that by clicking on the "Unreleased" section heading), and then
     describe the changes in a human-meaningful form (see previous release
@@ -26,12 +34,12 @@ To release version 0.0.4 of CALC:
     of the list. Remember, it will be read by both developers *and* users,
     so avoid the use of jargon where possible.
 
-2.  Create a branch off `develop` called `v0.0.4-rc` and push it to
-    GitHub:
+    If you've changed anything in `CHANGELOG.md`, go ahead and commit it now:
 
-    ```sh
-    git checkout -b v0.0.4-rc develop
-    git push -u https://github.com/18F/calc.git v0.0.4-rc
+    ```
+    git add CHANGELOG.md
+    git commit -m "Updated changelog."
+    git push
     ```
 
 3.  [Issue a PR][pr] to merge your branch into `master` titled
@@ -41,20 +49,19 @@ To release version 0.0.4 of CALC:
     on OS X, you can easily copy this to your clipboard with the following
     command:
 
-    ```sh
+    ```
     docker-compose run app python manage.py unreleased_changelog | pbcopy
     ```
 
-4.  Make sure that all automated QA services (CircleCI, etc) think
-    the PR looks good.
+4.  Wait for the stakeholders to sign-off on the release if there are
+    functional or product changes, but **do not merge the PR yet**.
+    The release candidate has just been approved to become the new
+    release, so you'll need one more commit to make it official.
 
-5.  Wait for the stakeholders to sign-off on the release if there are
-    functional or product changes.
-
-6.  Update the version number in `calc/version.py` to `0.0.4` and then
+5.  Update the version number in `calc/version.py` to `0.0.4` and then
     run:
 
-    ```sh
+    ```
     docker-compose run app python manage.py bump_changelog
     ```
 
@@ -62,13 +69,15 @@ To release version 0.0.4 of CALC:
     and it will also output your new version's release notes to
     `tag-message-v0.0.4.txt`.
 
-7.  Commit the changes to git, tag the release, and push everything:
+6.  Commit the changes to git and push them:
 
-    ```sh
+    ```
     git commit -a -m "Release v0.0.4."
-    git tag -a v0.0.4 -F tag-message-v0.0.4.txt
     git push
     ```
+
+7.  Make sure that all automated QA services (CircleCI, etc) think
+    the PR looks good.
 
 8.  Merge the PR into `master` via the **Create a merge commit** merge
     strategy (i.e., do *not* squash or rebase). Once [CircleCI][] is finished,
@@ -77,12 +86,21 @@ To release version 0.0.4 of CALC:
 9.  Visit the [production instance][production] and make sure all is functioning as
     expected.
 
-10. Merge `v0.0.4-rc` back into `develop` on the remote repository:
+10. Tag the release and push it, so that the release shows up in
+    the project's [releases][] page:
 
-    ```sh
+    ```
+    git tag -a v0.0.4 -F tag-message-v0.0.4.txt
+    git push origin v0.0.4
+    ```
+
+11. Merge `master` back into `develop` on the remote repository:
+
+    ```
+    git fetch
     git checkout develop
     git pull https://github.com/18F/calc.git develop
-    git merge v0.0.4-rc
+    git merge origin/master
     git push https://github.com/18F/calc.git develop
     ```
 
@@ -93,3 +111,4 @@ Hooray, you're done!
 [pr2]: https://github.com/18F/calc/compare/master...staging
 [production]: https://calc.gsa.gov
 [CircleCI]: https://circleci.com/gh/18F/calc
+[releases]: https://github.com/18F/calc/releases
