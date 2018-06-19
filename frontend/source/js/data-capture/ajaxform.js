@@ -1,7 +1,5 @@
 /* global jQuery, document, window */
 
-import 'document-register-element';
-
 import * as supports from './feature-detection';
 
 import { trackVirtualPageview } from '../common/ga';

@@ -1,7 +1,5 @@
 /* global $, window, document */
 
-import 'document-register-element';
-
 import * as supports from './feature-detection';
 
 import dispatchBubbly from './custom-event';

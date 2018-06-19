@@ -1,7 +1,5 @@
 /* global window, document */
 
-import 'document-register-element';
-
 const KEY_DASH = 189;
 const KEY_PERIOD = 190;
 const KEY_SLASH = 191;
