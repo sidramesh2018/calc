@@ -520,6 +520,9 @@ class ScheduleMetadata(models.Model):
     such as the schedule's SIN number and description.
     '''
 
+    class Meta:
+        ordering = ['sin', 'name']
+
     # This column corresponds to the "schedule" column of the Contract model
     # and can essentially be viewed as an optional foreign key.
     schedule = models.CharField(
@@ -563,3 +566,6 @@ class ScheduleMetadata(models.Model):
     @property
     def description_html(self):
         return mark_safe(markdown.markdown(self.description))  # nosec
+
+    def __str__(self):
+        return self.full_name

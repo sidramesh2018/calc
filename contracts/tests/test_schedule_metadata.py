@@ -56,3 +56,7 @@ class SimpleTests(SimpleTestCase):
             '<p>hello <em>there</em></p>'
         )
         self.assertIsInstance(sm.description_html, SafeText)
+
+    def test_str_works(self):
+        sm = ScheduleMetadata(sin='123', name='blarg')
+        self.assertEqual(str(sm), '123 - blarg')
