@@ -1,14 +1,12 @@
 import re
-
 from datetime import datetime
 from decimal import Decimal
-
 from django.db import models, connection
 from django.contrib.auth.models import User
 from django.db.models.expressions import Value
 from django.contrib.postgres.search import SearchVectorField, SearchVector
-from django.utils.safestring import mark_safe
-import markdown
+
+from calc.utils import markdown_to_sanitized_html
 
 
 EDUCATION_CHOICES = (
@@ -565,7 +563,7 @@ class ScheduleMetadata(models.Model):
 
     @property
     def description_html(self):
-        return mark_safe(markdown.markdown(self.description))  # nosec
+        return markdown_to_sanitized_html(self.description)
 
     def __str__(self):
         return self.full_name
