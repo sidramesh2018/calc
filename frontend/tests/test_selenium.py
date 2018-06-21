@@ -189,13 +189,6 @@ class DataExplorerTests(SeleniumTestCase):
         self.load('/styleguide/docs/')
         axe.run_and_validate(self.driver)
 
-    def test_schedule_column_is_open_by_default(self):
-        get_contract_recipe().make(_quantity=5)
-        driver = self.load()
-        col_header = find_column_header(driver, 'schedule')
-
-        self.assertFalse(has_class(col_header, 'collapsed'))
-
     def test_schedule_column_is_last(self):
         get_contract_recipe().make(_quantity=5)
         driver = self.load_and_wait()
