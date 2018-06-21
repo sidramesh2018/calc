@@ -5,17 +5,19 @@ from textwrap import dedent
 from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Count, Q, StdDev
 from django.utils.safestring import SafeString
+
 from markdown import markdown
 from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.schemas import AutoSchema
 from rest_framework.compat import coreapi, coreschema
+from rest_framework import generics
 
 from api.pagination import ContractPagination
-from api.serializers import ContractSerializer
+from api.serializers import ContractSerializer, ScheduleMetadataSerializer
 from api.utils import get_histogram
-from contracts.models import Contract, EDUCATION_CHOICES
+from contracts.models import Contract, EDUCATION_CHOICES, ScheduleMetadata
 from calc.utils import humanlist, backtickify
 
 
@@ -438,6 +440,22 @@ class GetRates(APIView):
 
     def get_queryset(self, request, wage_field):
         return get_contracts_queryset(request, wage_field)
+
+
+class ScheduleMetadataList(generics.ListAPIView):
+    """
+    Returns an array of objects representing metadata about
+    Schedules offered by CALC. Each object contains the following keys:
+
+    * `schedule` is the identifier for the schedule as it appears in
+      other CALC API endpoints.
+    * `full_name` is the full name of the schedule as it should appear
+      to end users.
+    * `sin` is the SIN number of the schedule, if one exists.
+    """
+
+    queryset = ScheduleMetadata.objects.all()
+    serializer_class = ScheduleMetadataSerializer
 
 
 class GetRatesCSV(APIView):
