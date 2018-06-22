@@ -75,6 +75,7 @@ fieldset + div + fieldset {
 // Django's default form rendering uses a <ul class="errorlist">
 // for errors, and <span class="helptext"> for help text.
 fieldset.fieldset-error {
+  border-left: 3px solid $color-red-dark;
   margin: 3rem 0 0 -10px;
   padding: 10px;
   ul {
@@ -110,6 +111,13 @@ form > .fieldset-error {
     margin-bottom: 0;
   }
 }
+
+// Applied by form-validation.js as an enhancement for html5 validation styles
+.form--invalid {
+  border: 3px solid $color-red-dark;
+  border-left: 3px solid $color-red-dark;
+}
+
 
 .helptext {
   color: $color-gray;
