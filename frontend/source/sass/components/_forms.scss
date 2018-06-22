@@ -113,9 +113,21 @@ form > .fieldset-error {
 }
 
 // Applied by form-validation.js as an enhancement for html5 validation styles
-.form--invalid {
+.form--invalid:not(.usa-input-inline) {
   border: 3px solid $color-red-dark;
+}
+
+.fieldset__form--invalid {
   border-left: 3px solid $color-red-dark;
+  margin: 3rem 0 0 -10px;
+  padding: 10px;
+}
+
+p.form--invalid__message {
+  margin: 0;
+  padding: 0;
+  font-weight: $font-weight-bold;
+  color: $color-red-dark;
 }
 
 
@@ -136,13 +148,13 @@ form > .fieldset-error {
       margin-right: 0;
     }
   }
-  p {
-    display: inline-block;
-    padding: 0px 40px;
-    vertical-align: bottom;
-    margin-bottom: 15px;
-    font-weight: bold;
-  }
+  //p {
+    //display: inline-block;
+    //padding: 0px 40px;
+    //vertical-align: bottom;
+    //margin-bottom: 15px;
+    //font-weight: bold;
+  //}
 }
 
 dl.contract-details {

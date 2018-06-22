@@ -91,10 +91,10 @@ window.addEventListener('DOMContentLoaded', () => {
       });
 
       // 'input' will fire each time the user types.
-      input.addEventListener('input', function () {
+      //input.addEventListener('input', function () {
         // just hide or update the error so it doesn't show when typing.
-        checkValidity({showErrorMsg: false});
-      });
+        //checkValidity({showErrorMsg: false});
+      //});
     }
   });
 });
