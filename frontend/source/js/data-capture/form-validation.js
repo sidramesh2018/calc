@@ -45,7 +45,8 @@ window.addEventListener('DOMContentLoaded', () => {
         const parent = findParentNode(input);
         const errorContainer = parent.querySelector(`.${INVALID_MESSAGE_CLASS}`)
           ||  document.createElement('p');
-        const fieldsetLabel = parent.getElementsByTagName('legend')[0];
+        // grouped inputs like radios have legends; single inputs just have labels
+        const fieldsetLabel = parent.getElementsByTagName('legend')[0] || parent.getElementsByTagName('label')[0];
 
         if (!input.validity.valid && input.validationMessage) {
           errorContainer.className = INVALID_MESSAGE_CLASS;
