@@ -9,6 +9,7 @@
 
 const INVALID_CLASS = 'form--invalid';
 const INVALID_MESSAGE_CLASS = 'form--invalid__message';
+const FIELD_PARENT_NODE = 'fieldset';
 const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
 const ERROR_MESSAGES = {
   valueMissing: 'Please fill out this required field.',
@@ -32,18 +33,29 @@ window.addEventListener('DOMContentLoaded', () => {
 
   inputs.forEach(function (input) {
     if (input.type != 'hidden') {
-      const parent = input.parentNode;
+      function findParentNode(node) {
+        if (node.parentNode.tagName != 'FIELDSET') {
+          return findParentNode(node.parentNode);
+        } else {
+          return node.parentNode;
+        }
+      }
 
       function toggleErrorMessage(options) {
+        const parent = findParentNode(input);
         const errorContainer = parent.querySelector(`.${INVALID_MESSAGE_CLASS}`)
           ||  document.createElement('p');
+        const fieldsetLabel = parent.getElementsByTagName('legend')[0];
 
         if (!input.validity.valid && input.validationMessage) {
           errorContainer.className = INVALID_MESSAGE_CLASS;
           errorContainer.textContent = input.validationMessage;
 
+          // TODO: only if input is not of type radio, checkbox,
+          // or has a parent with the class usa-form-group
+
           if (options.showErrorMsg) {
-            parent.insertBefore(errorContainer, input);
+            parent.insertBefore(errorContainer, fieldsetLabel);
             parent.classList.add(INVALID_PARENT_CLASS);
           }
         } else {
@@ -52,7 +64,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      function setValidityClass() {
+      function setValidityClass(options) {
         input.classList.remove(INVALID_CLASS)
         ? input.validity.valid
         : input.classList.add(INVALID_CLASS);
