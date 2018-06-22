@@ -33,6 +33,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   inputs.forEach(function (input) {
     if (input.type != 'hidden') {
+      // Radio buttons, inputs and USWDS date fields have deep nesting structures.
+      // We need to find the `fieldset` that contains the input in question and
+      // set the error message on that, otherwise we end up with multiple messages.
+      // Because we're using django-uswds-forms, 
       function findParentNode(node) {
         if (node.parentNode.tagName != 'FIELDSET') {
           return findParentNode(node.parentNode);
@@ -52,9 +56,6 @@ window.addEventListener('DOMContentLoaded', () => {
           errorContainer.className = INVALID_MESSAGE_CLASS;
           errorContainer.textContent = input.validationMessage;
 
-          // TODO: only if input is not of type radio, checkbox,
-          // or has a parent with the class usa-form-group
-
           if (options.showErrorMsg) {
             parent.insertBefore(errorContainer, fieldsetLabel);
             parent.classList.add(INVALID_PARENT_CLASS);
@@ -66,15 +67,14 @@ window.addEventListener('DOMContentLoaded', () => {
       }
 
       function setValidityClass(options) {
-        input.classList.remove(INVALID_CLASS)
-        ? input.validity.valid
+        input.validity.valid
+        ? input.classList.remove(INVALID_CLASS)
         : input.classList.add(INVALID_CLASS);
 
         toggleErrorMessage(options);
       }
 
-      // Each time the user types or submits, this will
-      // check validity, and set a custom message if invalid.
+      // Each time the user submits, this will set a custom message if invalid.
       function checkValidity (options) {
         const message = input.validity.valid
           ? null
@@ -89,12 +89,6 @@ window.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         checkValidity({showErrorMsg: true});
       });
-
-      // 'input' will fire each time the user types.
-      //input.addEventListener('input', function () {
-        // just hide or update the error so it doesn't show when typing.
-        //checkValidity({showErrorMsg: false});
-      //});
     }
   });
 });
