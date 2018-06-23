@@ -48,13 +48,13 @@ $.fn.tooltipster('setDefaults', {
   speed: 200,
 });
 
-historySynchronizer.initialize(store, () => {
-  trackVirtualPageview();
-});
-
-store.dispatch(invalidateRates());
-
 function startApp() {
+  historySynchronizer.initialize(store, () => {
+    trackVirtualPageview();
+  });
+
+  store.dispatch(invalidateRates());
+
   ReactDOM.render(
     React.createElement(
       Provider,
