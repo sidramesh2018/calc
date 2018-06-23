@@ -1,7 +1,7 @@
 // @ts-check
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { populateScheduleLabels } from '../constants';
+import { populateScheduleLabels } from '../schedule-metadata';
 
 populateScheduleLabels([{
   sin: '899',

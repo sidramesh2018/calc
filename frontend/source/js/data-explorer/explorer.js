@@ -20,7 +20,7 @@ import StoreRatesAutoRequester from './rates-request';
 
 import API from './api';
 
-import { populateScheduleLabels } from './constants';
+import { populateScheduleLabels } from './schedule-metadata';
 
 const api = new API();
 const historySynchronizer = new StoreHistorySynchronizer(window);

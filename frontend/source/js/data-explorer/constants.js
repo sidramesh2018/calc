@@ -1,7 +1,5 @@
 // @ts-check
 
-/** @typedef {import('./api').ScheduleMetadata} ScheduleMetadata */
-
 /* global window */
 
 export const MAX_EXPERIENCE = 45;
@@ -34,20 +32,6 @@ export const SITE_LABELS = {
   contractor: 'contractor',
   both: 'both',
 };
-
-export const SCHEDULE_LABELS = {};
-
-/**
- * Populate the SCHEDULE_LABELS constant from schedule
- * metadata.
- * 
- * @param {ScheduleMetadata[]} schedules 
- */
-export function populateScheduleLabels(schedules) {
-  schedules.forEach((schedule) => {
-    SCHEDULE_LABELS[schedule.schedule] = schedule.full_name;
-  });
-}
 
 export const CONTRACT_YEAR_CURRENT = 'current';
 export const CONTRACT_YEAR_1 = '1';
