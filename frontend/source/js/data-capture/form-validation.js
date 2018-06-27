@@ -54,9 +54,9 @@ function toggleErrorMsg(options, node) {
     const fieldsetLabel = parent.getElementsByTagName('legend')[0] || parent.getElementsByTagName('label')[0];
 
     if (options.showErrorMsg) {
-      if (!node.validity.valid && node.validationMessage) {
+      if (!node.validity.valid && options.message) {
         errorContainer.className = INVALID_MESSAGE_CLASS;
-        errorContainer.textContent = node.validationMessage;
+        errorContainer.textContent = options.message;
         parent.insertBefore(errorContainer, fieldsetLabel);
         parent.classList.add(INVALID_PARENT_CLASS);
       }
@@ -67,16 +67,17 @@ function toggleErrorMsg(options, node) {
   }
 }
 
-function toggleCombinedErrorMsg(options, node) {
-  const parent = findParentNode(node);
-  if (parent) {
+function toggleCombinedErrorMsg(options) {
+  if (options.parent) {
+    // I'm tired of typing `options`
+    const parent = options.parent;
     const errorContainer = parent.querySelector(`.${INVALID_MESSAGE_CLASS}`)
       ||  document.createElement('p');
     // grouped inputs like radios have legends; single inputs just have labels
     const fieldsetLabel = parent.getElementsByTagName('legend')[0] || parent.getElementsByTagName('label')[0];
     if (options.showErrorMsg) {
       errorContainer.className = INVALID_MESSAGE_CLASS;
-      errorContainer.textContent = options.errorMsg;
+      errorContainer.textContent = options.message;
       parent.insertBefore(errorContainer, fieldsetLabel);
       parent.classList.add(INVALID_PARENT_CLASS);
     } else {
@@ -106,32 +107,43 @@ function checkInputs(inputs) {
     }
 
     input.checkValidity()
-      ? toggleErrorMsg({showErrorMsg: false}, input)
-      : toggleErrorMsg({showErrorMsg: true}, input);
+      ? toggleErrorMsg({showErrorMsg: false, message: input.validationMessage}, input)
+      : toggleErrorMsg({showErrorMsg: true, message: input.validationMessage}, input);
   });
 
   inputs.combinedInputs.forEach(function(inputSet) {
+    // Only set these to false/message if one of the inputs returns invalid.
     let groupIsValid = true;
-    let errorMsg = null;
+    let message = null;
+    let parent = null;
 
     inputSet.forEach(function(input) {
+      // Set a custom message if the input is invalid.
+      // Note that this overrides HTML5's built-in checkValidity() function,
+      // which is why it's within the forEach scope -- we don't want to override
+      // the master form's checkValidity() call.
       function checkValidity() {
-        const message = input.validity.valid
+        const validationMsg = input.validity.valid
           ? null
           : getCustomMessage(input.type, input.validity);
 
-        input.setCustomValidity(message || '');
+        input.setCustomValidity(validationMsg || '');
       }
 
       if (input.checkValidity() == false) {
         groupIsValid = false;
-        errorMsg = input.validationMessage;
+        message = input.validationMessage;
+        // We only need the parent to attach an error message to. Since all inputs
+        // in a group have the same parent, don't bother setting this more than once.
+        if (!parent) {
+          parent = findParentNode(input);
+        }
       }
     });
 
     groupIsValid
-      ? toggleCombinedErrorMsg({showErrorMsg: false, errorMsg: errorMsg}, inputSet[0])
-      : toggleCombinedErrorMsg({showErrorMsg: true, errorMsg: errorMsg}, inputSet[0]);
+      ? toggleCombinedErrorMsg({showErrorMsg: false, message: message, parent: parent || null})
+      : toggleCombinedErrorMsg({showErrorMsg: true, message: message, parent: parent || null});
   });
 }
 
