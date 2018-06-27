@@ -44,38 +44,16 @@ function findParentNode(node) {
   }
 }
 
-function toggleErrorMsg(options, node) {
-  const parent = findParentNode(node);
-
-  if (parent) {
-    const errorContainer = parent.querySelector(`.${INVALID_MESSAGE_CLASS}`)
-      ||  document.createElement('p');
-    // grouped inputs like radios have legends; single inputs just have labels
-    const fieldsetLabel = parent.getElementsByTagName('legend')[0] || parent.getElementsByTagName('label')[0];
-
-    if (options.showErrorMsg) {
-      if (!node.validity.valid && options.message) {
-        errorContainer.className = INVALID_MESSAGE_CLASS;
-        errorContainer.textContent = options.message;
-        parent.insertBefore(errorContainer, fieldsetLabel);
-        parent.classList.add(INVALID_PARENT_CLASS);
-      }
-    } else {
-      parent.classList.remove(INVALID_PARENT_CLASS);
-      errorContainer.remove();
-    }
-  }
-}
-
-function toggleCombinedErrorMsg(options) {
+function toggleErrorMsg(options) {
   if (options.parent) {
     // I'm tired of typing `options`
-    const parent = options.parent;
+    const parent = options.parent
     const errorContainer = parent.querySelector(`.${INVALID_MESSAGE_CLASS}`)
       ||  document.createElement('p');
     // grouped inputs like radios have legends; single inputs just have labels
     const fieldsetLabel = parent.getElementsByTagName('legend')[0] || parent.getElementsByTagName('label')[0];
-    if (options.showErrorMsg) {
+
+    if (options.showErrorMsg && options.message) {
       errorContainer.className = INVALID_MESSAGE_CLASS;
       errorContainer.textContent = options.message;
       parent.insertBefore(errorContainer, fieldsetLabel);
@@ -107,8 +85,8 @@ function checkInputs(inputs) {
     }
 
     input.checkValidity()
-      ? toggleErrorMsg({showErrorMsg: false, message: input.validationMessage}, input)
-      : toggleErrorMsg({showErrorMsg: true, message: input.validationMessage}, input);
+      ? toggleErrorMsg({showErrorMsg: false, message: input.validationMessage, parent: findParentNode(input)}, input)
+      : toggleErrorMsg({showErrorMsg: true, message: input.validationMessage, parent: findParentNode(input)}, input);
   });
 
   inputs.combinedInputs.forEach(function(inputSet) {
@@ -149,8 +127,8 @@ function checkInputs(inputs) {
     });
 
     groupIsValid
-      ? toggleCombinedErrorMsg({showErrorMsg: false, message: message, parent: parent || null})
-      : toggleCombinedErrorMsg({showErrorMsg: true, message: message, parent: parent || null});
+      ? toggleErrorMsg({showErrorMsg: false, message: message, parent: parent || null})
+      : toggleErrorMsg({showErrorMsg: true, message: message, parent: parent || null});
   });
 }
 
