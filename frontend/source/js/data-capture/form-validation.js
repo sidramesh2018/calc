@@ -115,9 +115,20 @@ function checkInputs(inputs) {
     // Only set these to false/message if one of the inputs returns invalid.
     let groupIsValid = true;
     let message = null;
-    let parent = null;
+    let parent;
 
     inputSet.forEach(function(input) {
+      // prevent showing the HTML5 tooltip
+      input.addEventListener('invalid', function (e) {
+        e.preventDefault();
+      });
+
+      // We only need the parent to show/hide the error message. Since all inputs
+      // in a group have the same parent, don't bother setting this more than once.
+      if (!parent) {
+        parent = findParentNode(input);
+      }
+
       // Set a custom message if the input is invalid.
       // Note that this overrides HTML5's built-in checkValidity() function,
       // which is why it's within the forEach scope -- we don't want to override
@@ -130,14 +141,10 @@ function checkInputs(inputs) {
         input.setCustomValidity(validationMsg || '');
       }
 
+      message = input.validationMessage;
+
       if (input.checkValidity() == false) {
         groupIsValid = false;
-        message = input.validationMessage;
-        // We only need the parent to attach an error message to. Since all inputs
-        // in a group have the same parent, don't bother setting this more than once.
-        if (!parent) {
-          parent = findParentNode(input);
-        }
       }
     });
 
