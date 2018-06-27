@@ -3,14 +3,16 @@
 /**
  * HTML5 form validation doesn't apply our styles. Documented here:
  * https://github.com/18F/calc/issues/2017
- * This implementation is mostly taken from
+ * This implementation is inspired by
  * https://pageclip.co/blog/2018-02-20-you-should-use-html5-form-validation.html
  */
 
 const INVALID_MESSAGE_CLASS = 'form--invalid__message';
-const FIELD_PARENT_NODE = 'fieldset';
 const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
-// We can expand this list as needed depending on which errors we need messaging for.
+const FIELD_PARENT_NODE = 'fieldset';
+// We can expand this list as needed depending on which errors we need custom messaging for.
+// See list of possible error properties in this table:
+// https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation#Constraint_validation_API_properties
 const ERROR_MESSAGES = {
   valueMissing: 'Please fill out this required field.',
 };
@@ -37,7 +39,7 @@ function findParentNode(node) {
   if (node.parentNode.tagName != FIELD_PARENT_NODE.toUpperCase() && node.parentNode.tagName != 'BODY') {
     return findParentNode(node.parentNode);
   } else if (node.parentNode.tagName == 'BODY') {
-    // just in case we can't find the parent node, prevent infinite loop
+    // just in case we try to run this on something not in a fieldset, prevent infinite loop
     return null;
   } else {
     return node.parentNode;
@@ -90,7 +92,11 @@ function checkInputs(inputs) {
   });
 
   inputs.combinedInputs.forEach(function(inputSet) {
-    // Only set these to false/message if one of the inputs returns invalid.
+    // This does for a group of sibling inputs what the above function does for singles.
+    // The biggest difference is that we need to track per-group errors -- if one
+    // sibling is invalid, the whole group is invalid.
+
+    // These only change if one of the inputs returns invalid.
     let groupIsValid = true;
     let message = null;
     let parent;
