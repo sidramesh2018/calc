@@ -17,7 +17,7 @@ const ERROR_MESSAGES = {
   valueMissing: 'Please fill out this required field.',
 };
 
-function getCustomMessage (type, validity) {
+export function getCustomMessage (type, validity) {
   if (validity.typeMismatch) {
     return ERROR_MESSAGES[`${type}Mismatch`];
   } else {
@@ -153,6 +153,14 @@ export function parseInputs(inputs){
     singleInputs: singleInputs
   }
 }
+
+var fakeDocument = {
+  getElementByTagName: () => return { new fakeForm(); },
+};
+var fakeForm = {
+  checkValidity: () => { return true; },
+  submit: () => { return true; },
+};
 
 window.addEventListener('DOMContentLoaded', () => {
   // there are several forms on the page; get the one within the .content div
