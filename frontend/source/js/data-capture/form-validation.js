@@ -154,14 +154,6 @@ export function parseInputs(inputs){
   }
 }
 
-var fakeDocument = {
-  getElementByTagName: () => return { new fakeForm(); },
-};
-var fakeForm = {
-  checkValidity: () => { return true; },
-  submit: () => { return true; },
-};
-
 window.addEventListener('DOMContentLoaded', () => {
   // there are several forms on the page; get the one within the .content div
   // TODO: make this a more reliable ID selector or something
