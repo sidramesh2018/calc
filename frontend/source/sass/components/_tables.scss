@@ -23,7 +23,7 @@ table {
       &:nth-child(odd) {
         background: $color-gray-lightest;
         td.sorted {
-          background: #f0f0f0;
+          background: $color-gray-lighter;
         }
       }
     }
@@ -79,7 +79,7 @@ table {
         }
         &.sorted {
           color: $color-black;
-          background: #f8f8f8;
+          background: $color-gray-lightest;
           position: relative;
           &:after {
             content: "▲";
@@ -140,7 +140,7 @@ table {
 }
 
 td.sorted {
-  background: #fafafa;
+  background: $color-gray-lightest;
 }
 
 /* used on price list upload error page */
