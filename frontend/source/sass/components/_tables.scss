@@ -54,14 +54,17 @@ table {
       th {
         position: relative;
         vertical-align: top;
-        color: $color-gray;
-        border-bottom: 2px solid;
-        border-top: 2px solid;
+        color: $color-blue;
+        border-bottom: 2px solid $color-gray-medium;
+        border-top: 2px solid $color-gray-medium;
         &.sortable {
-          text-decoration: underline;
+          text-decoration: none;
           cursor: pointer;
           padding-right: 1.5em;
           padding-bottom: 1.3em;
+          &:hover {
+            text-decoration: underline;
+          }
           &:after {
             display: inline-block;
             line-height: 1em;
