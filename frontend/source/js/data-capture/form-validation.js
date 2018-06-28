@@ -138,11 +138,11 @@ function checkInputs(inputs) {
   });
 }
 
-function getCombinedInputs(inputWrapper){
+function getCombinedInputs(inputWrapper) {
   return inputWrapper.querySelectorAll('input');
 }
 
-function parseInputs(inputs){
+export function parseInputs(inputs){
   const singleInputs = Array.from(inputs).filter(input => input.type != 'hidden' && !input.classList.contains('usa-input-inline'));
   // Dates must be validated as a set of inputs, otherwise one valid date part
   // will remove the message for the whole thing even though the set is not valid
@@ -160,15 +160,16 @@ window.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementsByTagName('form')[0];
   const inputs = parseInputs(document.querySelectorAll('input, select, textarea'));
   const submitButton = document.querySelector('.submit-group button[type="submit"]');
-
-  submitButton.addEventListener('click', function() {
-    let isValid = form.checkValidity();
-    if (isValid) {
-      form.submit();
-    } else {
-      // if the form is invalid, loop through the elements to discover which need invalid messages.
-      // check each valid element to make sure it doesn't have an error message displayed.
-      checkInputs(inputs);
-    }
-  });
+  if (form && inputs && submitButton) {
+    submitButton.addEventListener('click', function() {
+      let isValid = form.checkValidity();
+      if (isValid) {
+        form.submit();
+      } else {
+        // if the form is invalid, loop through the elements to discover which need invalid messages.
+        // check each valid element to make sure it doesn't have an error message displayed.
+        checkInputs(inputs);
+      }
+    });
+  }
 });
