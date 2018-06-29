@@ -103,12 +103,13 @@ table {
     tbody {
       tr {
         &:hover > * {
-          background: $color-gold-lightest !important;
+          background: $color-green-lightest !important;
         }
       }
     }
   }
 }
+
 .price-list-table {
   td,
   td:first-child,
