@@ -34,7 +34,7 @@ export function getCustomMessage (type, validity) {
 // set the error message on that, otherwise we end up with multiple messages.
 // Because we're using django-uswds-forms, every form should be encapsulated
 // in a fieldset automatically.
-function findParentNode(node) {
+export function findParentNode(node) {
   // tagName is always uppercase
   if (node.parentNode.tagName != FIELD_PARENT_NODE.toUpperCase() && node.parentNode.tagName != 'BODY') {
     return findParentNode(node.parentNode);
@@ -46,7 +46,7 @@ function findParentNode(node) {
   }
 }
 
-function toggleErrorMsg(options) {
+export function toggleErrorMsg(options) {
   if (options.parent) {
     // I'm tired of typing `options`
     const parent = options.parent
@@ -142,7 +142,7 @@ function getCombinedInputs(inputWrapper) {
   return inputWrapper.querySelectorAll('input');
 }
 
-export function parseInputs(inputs){
+function parseInputs(inputs){
   const singleInputs = Array.from(inputs).filter(input => input.type != 'hidden' && !input.classList.contains('usa-input-inline'));
   // Dates must be validated as a set of inputs, otherwise one valid date part
   // will remove the message for the whole thing even though the set is not valid
@@ -154,12 +154,13 @@ export function parseInputs(inputs){
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  // there are several forms on the page; get the one within the .content div
+export function domContentLoaded(win) {
+  // there are sçeveral forms on the page; get the one within the .content div
   // TODO: make this a more reliable ID selector or something
-  const form = document.getElementsByTagName('form')[0];
-  const inputs = parseInputs(document.querySelectorAll('input, select, textarea'));
-  const submitButton = document.querySelector('.submit-group button[type="submit"]');
+  const form = win.document.getElementsByTagName('form')[0];
+  const inputs = parseInputs(win.document.querySelectorAll('input, select, textarea'));
+  const submitButton = win.document.querySelector('.submit-group button[type="submit"]');
+  // return {form, inputs, submitButton};
   if (form && inputs && submitButton) {
     submitButton.addEventListener('click', function() {
       let isValid = form.checkValidity();
@@ -172,4 +173,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
+}
+
+window.addEventListener('DOMContentLoaded', () => domContentLoaded(window));
