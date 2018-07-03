@@ -10,8 +10,9 @@ import {
   EDU_LABELS,
   SITE_LABELS,
   BUSINESS_SIZE_LABELS,
-  SCHEDULE_LABELS,
 } from '../constants';
+
+import { scheduleLabels } from '../schedule-metadata';
 
 import { formatCommas, stripTrailingComma } from '../util';
 
@@ -77,7 +78,7 @@ export function Description({
   if (schedule) {
     filters.push(
       <DescriptionFilter key="sch" label="schedule">
-        {SCHEDULE_LABELS[schedule]}
+        {scheduleLabels[schedule]}
       </DescriptionFilter>,
     );
   }
