@@ -36,11 +36,14 @@ class FakeWindow {
         getElementsByTagName: sinon.stub(),
         querySelectorAll: sinon.stub(),
         querySelector: sinon.stub(),
-        createElement: () => {
-          return {
-            remove: sinon.stub(),
-          };
+        createElement: (el) => {
+          return document.createElement(el);
         }
+        //createElement: () => {
+          //return {
+            //remove: sinon.stub(),
+          //};
+        //}
       },
       sessionStorage: options.sessionStorage || {},
       listeners: {},
@@ -55,8 +58,7 @@ class FakeWindow {
   }
 }
 
-
-function makeInputSet(isDate = true) {
+function makeInputSet(isDate = true, hasErrorMsg = false) {
   const groupedFieldset = document.createElement('fieldset');
   const input1 = document.createElement('input');
   const input2 = document.createElement('input');
@@ -68,6 +70,13 @@ function makeInputSet(isDate = true) {
     subgroup = document.createElement('uswds-date');
   }
 
+  if (hasErrorMsg) {
+    const errorMsg = document.createElement('p');
+    errorMsg.className = INVALID_MESSAGE_CLASS;
+    errorMsg.innerText = 'DOES NOT COMPUTE';
+    groupedFieldset.appendChild(errorMsg);
+  }
+
   subgroup.appendChild(input1);
   subgroup.appendChild(input2);
   groupedFieldset.appendChild(legend);
@@ -76,11 +85,20 @@ function makeInputSet(isDate = true) {
   return {groupedFieldset, input1, input2};
 }
 
-function makeInput() {
+function makeInput(hasErrorMsg = false) {
+  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
   const fieldset = document.createElement('fieldset');
   const input = document.createElement('input');
   const label = document.createElement('label');
   label.innerText = 'Label me like one of your French girls';
+
+  if (hasErrorMsg) {
+    const errorMsg = document.createElement('p');
+    errorMsg.className = INVALID_MESSAGE_CLASS;
+    errorMsg.innerText = 'DOES NOT COMPUTE';
+    fieldset.appendChild(errorMsg);
+  }
+
   fieldset.appendChild(label);
   fieldset.appendChild(input);
 
@@ -129,24 +147,83 @@ QUnit.test('findParentNode works', (assert) => {
   assert.equal(validation.findParentNode(faultyInput), null);
 });
 
-QUnit.test('toggleErrorMsg shows errors on single formfields', (assert) => {
+QUnit.test('toggleErrorMsg creates errors on single fields', (assert) => {
   const win = new FakeWindow();
   const INVALID_MESSAGE_CLASS = 'form--invalid__message';
   const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
-  debugger;
   const {fieldset, input} = makeInput();
   const parent = fieldset;
-  debugger;
 
   const options = {
     showErrorMsg: true,
     message: "I am an empty input",
     parent: parent,
   };
-
-  assert.ok(validation.toggleErrorMsg(win, options));
+  validation.toggleErrorMsg(win, options);
+  assert.ok(parent.classList.contains(INVALID_PARENT_CLASS));
+  // This means the error message has been successfully appended to the DOM
+  assert.ok(parent.childNodes[0].classList.contains('form--invalid__message'));
 });
 
+QUnit.test('toggleErrorMsg creates errors on grouped fields', (assert) => {
+  const win = new FakeWindow();
+  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
+  const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
+  const {groupedFieldset, input1} = makeInputSet();
+  const parent = groupedFieldset;
+  const input = input1;
+  const options = {
+    showErrorMsg: true,
+    message: "I am an empty input",
+    parent: parent,
+  };
+
+  validation.toggleErrorMsg(win, options);
+  assert.ok(parent.classList.contains(INVALID_PARENT_CLASS));
+  // This means the error message has been successfully appended to the DOM
+  assert.ok(parent.childNodes[0].classList.contains('form--invalid__message'));
+});
+
+QUnit.test('toggleErrorMsg removes errors on single fields', (assert) => {
+  const win = new FakeWindow();
+  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
+  const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
+  const hasErrorMsg = true;
+  const {fieldset, input} = makeInput(hasErrorMsg);
+  const parent = fieldset;
+  const options = {
+    showErrorMsg: false,
+    message: null,
+    parent: parent,
+  };
+
+  validation.toggleErrorMsg(win, options);
+
+  // Error class & div have been removed
+  assert.equal(parent.classList.length, 0);
+  assert.equal(parent.firstChild.tagName, 'LABEL');
+});
+
+QUnit.test('toggleErrorMsg removes errors on grouped fields', (assert) => {
+  const win = new FakeWindow();
+  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
+  const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
+  const hasErrorMsg = true;
+  const {groupedFieldset, input1} = makeInputSet(hasErrorMsg);
+  const parent = groupedFieldset;
+  const input = input1;
+  const options = {
+    showErrorMsg: false,
+    message: null,
+    parent: parent,
+  };
+
+  validation.toggleErrorMsg(win, options);
+
+  // Error class & div have been removed
+  assert.equal(parent.classList.length, 0);
+  assert.equal(parent.firstChild.tagName, 'LEGEND');
+});
 
 QUnit.test('domContentLoaded submits the form when valid', (assert) => {
   let win = new FakeWindow();
