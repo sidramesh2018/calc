@@ -451,10 +451,12 @@ td.column-idv_piid a {
   }
 }
 
-td.column-min_years_experience .years {
-  display: none;
-  font-style: italic;
-  color: $color-gray-dark;
+td.column-min_years_experience {
+  .years {
+    color: $color-gray-dark;
+    display: none;
+    font-style: italic;
+  }
 }
 
 tr:hover td.column-min_years_experience .years {

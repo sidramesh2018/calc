@@ -60,7 +60,6 @@ table {
         &.sortable {
           text-decoration: none;
           cursor: pointer;
-          padding-right: 1.5em;
           padding-bottom: 1.3em;
           &:hover {
             text-decoration: underline;
@@ -72,7 +71,6 @@ table {
             position: absolute;
             padding-right: 0;
             margin-top: -.5em;
-            margin-right: .25em;
             font-weight: normal;
             font-size: .9em;
           }
@@ -118,7 +116,7 @@ table {
   th:first-child,
   th:last-child {
     position: relative;
-    padding-left: $space-2x $space-1x;
+    padding: $space-2x $space-1x;
   }
   td {
     vertical-align: top;
