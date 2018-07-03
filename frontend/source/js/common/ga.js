@@ -133,3 +133,20 @@ export function autoTrackInterestingLinks() {
     trackInterestingLink(e.target);
   }, true);
 }
+
+/**
+ * Track an exception. For more details, see:
+ * 
+ *   https://developers.google.com/analytics/devguides/collection/analyticsjs/exceptions
+ * 
+ * @param {string} description - A description of the exception.
+ * @param {boolean?} isFatal - true if the exception was fatal.
+ */
+export function trackException(description, isFatal) {
+  const fieldsObject = {
+    exDescription: description,
+    exFatal: isFatal || false
+  };
+  ga('send', 'exception', fieldsObject);
+  gas('send', 'exception', fieldsObject);
+}
