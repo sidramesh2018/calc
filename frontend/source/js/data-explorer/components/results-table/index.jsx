@@ -14,9 +14,9 @@ import * as ContractNumberColumn from './contract-number-column';
 const COLUMNS = [
   ExcludedColumn,
   LaborCategoryColumn,
+  PriceColumn,
   EducationColumn,
   ExperienceColumn,
-  PriceColumn,
   ContractNumberColumn,
   createSortableColumn({
     key: 'vendor_name',
