@@ -302,6 +302,7 @@ td.number {
 th.column-labor_category {
   font-weight: $font-weight-bold;
   word-wrap: break-word;
+  padding-left: 0;
   overflow-wrap: break-word;
   max-width: 22rem;
 }
