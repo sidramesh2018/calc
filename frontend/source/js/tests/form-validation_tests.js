@@ -36,6 +36,11 @@ class FakeWindow {
         getElementsByTagName: sinon.stub(),
         querySelectorAll: sinon.stub(),
         querySelector: sinon.stub(),
+        createElement: () => {
+          return {
+            remove: sinon.stub(),
+          };
+        }
       },
       sessionStorage: options.sessionStorage || {},
       listeners: {},
@@ -55,6 +60,8 @@ function makeInputSet(isDate = true) {
   const groupedFieldset = document.createElement('fieldset');
   const input1 = document.createElement('input');
   const input2 = document.createElement('input');
+  const legend = document.createElement('legend');
+  legend.innerText = 'I am legend';
   let subgroup = document.createElement('div');
 
   if (isDate) {
@@ -63,14 +70,18 @@ function makeInputSet(isDate = true) {
 
   subgroup.appendChild(input1);
   subgroup.appendChild(input2);
+  groupedFieldset.appendChild(legend);
   groupedFieldset.appendChild(subgroup);
 
-  return {groupedFieldset, subgroup, input1, input2};
+  return {groupedFieldset, input1, input2};
 }
 
 function makeInput() {
   const fieldset = document.createElement('fieldset');
   const input = document.createElement('input');
+  const label = document.createElement('label');
+  label.innerText = 'Label me like one of your French girls';
+  fieldset.appendChild(label);
   fieldset.appendChild(input);
 
   return {fieldset, input};
@@ -114,25 +125,40 @@ QUnit.test('findParentNode works', (assert) => {
   faultyInputBody.appendChild(faultyInputParent);
 
   assert.equal(validation.findParentNode(singleField), singleFieldParent);
-  assert.equal(validation.findParentNode(input1), fieldset);
+  assert.equal(validation.findParentNode(input1), groupedFieldset);
   assert.equal(validation.findParentNode(faultyInput), null);
 });
 
-QUnit.skip('toggleErrorMsg works', (assert) => {
+QUnit.test('toggleErrorMsg shows errors on single formfields', (assert) => {
+  const win = new FakeWindow();
   const INVALID_MESSAGE_CLASS = 'form--invalid__message';
   const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
+  debugger;
+  const {fieldset, input} = makeInput();
+  const parent = fieldset;
+  debugger;
 
+  const options = {
+    showErrorMsg: true,
+    message: "I am an empty input",
+    parent: parent,
+  };
+
+  assert.ok(validation.toggleErrorMsg(win, options));
 });
 
 
-QUnit.test('domContentLoaded', (assert) => {
+QUnit.test('domContentLoaded submits the form when valid', (assert) => {
   let win = new FakeWindow();
   validation.window = win;
 
   let fakeForm = new FakeForm();
 
   let fakeSubmitButton = {
-    addEventListener: sinon.stub(),
+    addEventListener: (eventType, fn) => {
+      console.log("called addEventListener!");
+      fn();
+    },
   };
 
   let input = makeInput().input;
@@ -144,7 +170,31 @@ QUnit.test('domContentLoaded', (assert) => {
   fakeForm.checkValidity.returns(true);
 
   const result = validation.domContentLoaded(win);
-  assert.ok(fakeSubmitButton.addEventListener.calledWith('click'));
-  assert.ok(fakeForm.checkValidity.called);
+  assert.ok(fakeForm.submit.called);
+});
+
+
+QUnit.test('domContentLoaded does not submit the form when invalid', (assert) => {
+  let win = new FakeWindow();
+  validation.window = win;
+
+  let fakeForm = new FakeForm();
+
+  let fakeSubmitButton = {
+    addEventListener: (eventType, fn) => {
+      fn();
+    },
+  };
+
+  let input = makeInput().input;
+
+  win.document.getElementsByTagName.withArgs('form').returns([fakeForm]);
+  win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);
+  win.document.querySelector.withArgs('.submit-group button[type="submit"]').returns(fakeSubmitButton);
+
+  fakeForm.checkValidity.returns(false);
+
+  const result = validation.domContentLoaded(win);
+  assert.ok(fakeForm.submit.notCalled);
 });
 

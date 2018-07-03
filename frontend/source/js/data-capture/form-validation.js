@@ -46,12 +46,16 @@ export function findParentNode(node) {
   }
 }
 
-export function toggleErrorMsg(options) {
+export function documentCreateElement(window, type) {
+  return window.document.createElement(type);
+}
+
+export function toggleErrorMsg(window, options) {
   if (options.parent) {
     // I'm tired of typing `options`
-    const parent = options.parent
+    const parent = options.parent;
     const errorContainer = parent.querySelector(`.${INVALID_MESSAGE_CLASS}`)
-      ||  document.createElement('p');
+      || documentCreateElement(window, 'p');
     // grouped inputs like radios have legends; single inputs just have labels
     const fieldsetLabel = parent.getElementsByTagName('legend')[0] || parent.getElementsByTagName('label')[0];
 
@@ -67,7 +71,7 @@ export function toggleErrorMsg(options) {
   }
 }
 
-function checkInputs(inputs) {
+function checkInputs(window, inputs) {
   inputs.singleInputs.forEach(function(input) {
     // prevent showing the HTML5 tooltip
     input.addEventListener('invalid', function (e) {
@@ -86,9 +90,7 @@ function checkInputs(inputs) {
       input.setCustomValidity(message || '');
     }
 
-    input.checkValidity()
-      ? toggleErrorMsg({showErrorMsg: false, message: input.validationMessage, parent: findParentNode(input)}, input)
-      : toggleErrorMsg({showErrorMsg: true, message: input.validationMessage, parent: findParentNode(input)}, input);
+    toggleErrorMsg(window, {showErrorMsg: !input.checkValidity(), message: input.validationMessage, parent: findParentNode(input)}, input)
   });
 
   inputs.combinedInputs.forEach(function(inputSet) {
@@ -132,9 +134,7 @@ function checkInputs(inputs) {
       }
     });
 
-    groupIsValid
-      ? toggleErrorMsg({showErrorMsg: false, message: message, parent: parent || null})
-      : toggleErrorMsg({showErrorMsg: true, message: message, parent: parent || null});
+    toggleErrorMsg(window, {showErrorMsg: !groupIsValid, message: message, parent: parent || null})
   });
 }
 
@@ -142,7 +142,7 @@ function getCombinedInputs(inputWrapper) {
   return inputWrapper.querySelectorAll('input');
 }
 
-function parseInputs(inputs){
+export function parseInputs(inputs){
   const singleInputs = Array.from(inputs).filter(input => input.type != 'hidden' && !input.classList.contains('usa-input-inline'));
   // Dates must be validated as a set of inputs, otherwise one valid date part
   // will remove the message for the whole thing even though the set is not valid
@@ -155,12 +155,11 @@ function parseInputs(inputs){
 }
 
 export function domContentLoaded(win) {
-  // there are sçeveral forms on the page; get the one within the .content div
+  // there are several forms on the page; get the one within the .content div
   // TODO: make this a more reliable ID selector or something
   const form = win.document.getElementsByTagName('form')[0];
   const inputs = parseInputs(win.document.querySelectorAll('input, select, textarea'));
   const submitButton = win.document.querySelector('.submit-group button[type="submit"]');
-  // return {form, inputs, submitButton};
   if (form && inputs && submitButton) {
     submitButton.addEventListener('click', function() {
       let isValid = form.checkValidity();
@@ -169,7 +168,7 @@ export function domContentLoaded(win) {
       } else {
         // if the form is invalid, loop through the elements to discover which need invalid messages.
         // check each valid element to make sure it doesn't have an error message displayed.
-        checkInputs(inputs);
+        checkInputs(win, inputs);
       }
     });
   }
