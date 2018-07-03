@@ -445,6 +445,9 @@ ADMIN_REORDER = (
             'label': 'Replay uncompleted price list submission attempts'
         },
     )},
+    {'app': 'contracts', 'label': 'Contracting Metadata', 'models': (
+        {'model': 'contracts.ScheduleMetadata', 'label': 'Available schedules'},
+    )},
     {'app': 'auth', 'label': 'Authentication and authorization', 'models': (
         'auth.User',
         {'model': 'auth.Group', 'label': 'User groups'},

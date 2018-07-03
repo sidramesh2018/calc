@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { filterActive } from '../util';
 import { makeOptions } from './util';
 import { setSchedule as setScheduleAction } from '../actions';
-import { SCHEDULE_LABELS } from '../constants';
+import { scheduleLabels } from '../schedule-metadata';
 
 export function Schedule({ idPrefix, schedule, setSchedule }) {
   const id = `${idPrefix}schedule`;
@@ -22,7 +22,7 @@ export function Schedule({ idPrefix, schedule, setSchedule }) {
         onChange={handleChange}
         className={filterActive(schedule !== '')}
       >
-        {makeOptions(SCHEDULE_LABELS)}
+        {makeOptions(scheduleLabels)}
       </select>
     </div>
   );

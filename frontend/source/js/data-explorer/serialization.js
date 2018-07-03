@@ -11,7 +11,6 @@ import {
   MAX_EXPERIENCE,
   SITE_LABELS,
   BUSINESS_SIZE_LABELS,
-  SCHEDULE_LABELS,
   CONTRACT_YEAR_LABELS,
   DEFAULT_CONTRACT_YEAR,
   DEFAULT_SORT,
@@ -20,6 +19,10 @@ import {
   SORT_KEYS,
   MAX_QUERY_LENGTH,
 } from './constants';
+
+import {
+  scheduleLabels,
+} from './schedule-metadata';
 
 import {
   parsePrice,
@@ -97,7 +100,7 @@ export const deserializers = {
   'contract-year': stringInSet(CONTRACT_YEAR_LABELS, DEFAULT_CONTRACT_YEAR),
   site: stringInSet(SITE_LABELS),
   business_size: stringInSet(BUSINESS_SIZE_LABELS),
-  schedule: stringInSet(SCHEDULE_LABELS),
+  schedule: stringInSet(scheduleLabels),
   min_experience: coercedExperience(MIN_EXPERIENCE),
   max_experience: coercedExperience(MAX_EXPERIENCE),
   'proposed-price': parsePrice,
