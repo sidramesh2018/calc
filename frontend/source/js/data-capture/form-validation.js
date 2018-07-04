@@ -138,16 +138,22 @@ function checkInputs(window, inputs) {
   });
 }
 
-function getCombinedInputs(inputWrapper) {
+export function getCombinedInputs(inputWrapper) {
   return inputWrapper.querySelectorAll('input');
 }
 
-export function parseInputs(inputs){
-  const singleInputs = Array.from(inputs).filter(input => input.type != 'hidden' && !input.classList.contains('usa-input-inline'));
-  // Dates must be validated as a set of inputs, otherwise one valid date part
-  // will remove the message for the whole thing even though the set is not valid
-  // (i.e., having a year but no month or day will be invalid, but will have no error message)
-  const combinedInputs = Array.from(document.querySelectorAll('uswds-date')).map(uswdsDate => getCombinedInputs(uswdsDate));
+export function parseInputs(inputs, groupedInputs){
+  let singleInputs;
+  let combinedInputs;
+  if (inputs) {
+    singleInputs = Array.from(inputs).filter(input => input.type != 'hidden' && !input.classList.contains('usa-input-inline'));
+  }
+  if (groupedInputs){
+    // Dates must be validated as a set of inputs, otherwise one valid date part
+    // will remove the message for the whole thing even though the set is not valid
+    // (i.e., having a year but no month or day will be invalid, but will have no error message)
+    combinedInputs = Array.from(groupedInputs).map(uswdsDate => getCombinedInputs(uswdsDate));
+  }
   return {
     combinedInputs: combinedInputs,
     singleInputs: singleInputs
@@ -158,7 +164,7 @@ export function domContentLoaded(win) {
   // there are several forms on the page; get the one within the .content div
   // TODO: make this a more reliable ID selector or something
   const form = win.document.getElementsByTagName('form')[0];
-  const inputs = parseInputs(win.document.querySelectorAll('input, select, textarea'));
+  const inputs = parseInputs(win.document.querySelectorAll('input, select, textarea'), win.document.querySelectorAll('uswds-date'));
   const submitButton = win.document.querySelector('.submit-group button[type="submit"]');
   if (form && inputs && submitButton) {
     submitButton.addEventListener('click', function() {

@@ -61,7 +61,9 @@ class FakeWindow {
 function makeInputSet(isDate = true, hasErrorMsg = false) {
   const groupedFieldset = document.createElement('fieldset');
   const input1 = document.createElement('input');
+  input1.classList.add('usa-input-inline');
   const input2 = document.createElement('input');
+  input2.classList.add('usa-input-inline');
   const legend = document.createElement('legend');
   legend.innerText = 'I am legend';
   let subgroup = document.createElement('div');
@@ -82,7 +84,7 @@ function makeInputSet(isDate = true, hasErrorMsg = false) {
   groupedFieldset.appendChild(legend);
   groupedFieldset.appendChild(subgroup);
 
-  return {groupedFieldset, input1, input2};
+  return {groupedFieldset, subgroup, input1, input2};
 }
 
 function makeInput(hasErrorMsg = false) {
@@ -162,7 +164,7 @@ QUnit.test('toggleErrorMsg creates errors on single fields', (assert) => {
   validation.toggleErrorMsg(win, options);
   assert.ok(parent.classList.contains(INVALID_PARENT_CLASS));
   // This means the error message has been successfully appended to the DOM
-  assert.ok(parent.childNodes[0].classList.contains('form--invalid__message'));
+  assert.ok(parent.firstChild.classList.contains('form--invalid__message'));
 });
 
 QUnit.test('toggleErrorMsg creates errors on grouped fields', (assert) => {
@@ -181,7 +183,7 @@ QUnit.test('toggleErrorMsg creates errors on grouped fields', (assert) => {
   validation.toggleErrorMsg(win, options);
   assert.ok(parent.classList.contains(INVALID_PARENT_CLASS));
   // This means the error message has been successfully appended to the DOM
-  assert.ok(parent.childNodes[0].classList.contains('form--invalid__message'));
+  assert.ok(parent.firstChild.classList.contains('form--invalid__message'));
 });
 
 QUnit.test('toggleErrorMsg removes errors on single fields', (assert) => {
@@ -202,6 +204,7 @@ QUnit.test('toggleErrorMsg removes errors on single fields', (assert) => {
   // Error class & div have been removed
   assert.equal(parent.classList.length, 0);
   assert.equal(parent.firstChild.tagName, 'LABEL');
+  assert.ok(!parent.firstChild.classList.contains('form--invalid__message'));
 });
 
 QUnit.test('toggleErrorMsg removes errors on grouped fields', (assert) => {
@@ -223,6 +226,7 @@ QUnit.test('toggleErrorMsg removes errors on grouped fields', (assert) => {
   // Error class & div have been removed
   assert.equal(parent.classList.length, 0);
   assert.equal(parent.firstChild.tagName, 'LEGEND');
+  assert.ok(!parent.firstChild.classList.contains('form--invalid__message'));
 });
 
 QUnit.test('domContentLoaded submits the form when valid', (assert) => {
@@ -239,9 +243,11 @@ QUnit.test('domContentLoaded submits the form when valid', (assert) => {
   };
 
   let input = makeInput().input;
+  let subgroup = makeInputSet().subgroup;
 
   win.document.getElementsByTagName.withArgs('form').returns([fakeForm]);
   win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);
+  win.document.querySelectorAll.withArgs('uswds-date').returns([subgroup]);
   win.document.querySelector.withArgs('.submit-group button[type="submit"]').returns(fakeSubmitButton);
 
   fakeForm.checkValidity.returns(true);
@@ -249,7 +255,6 @@ QUnit.test('domContentLoaded submits the form when valid', (assert) => {
   const result = validation.domContentLoaded(win);
   assert.ok(fakeForm.submit.called);
 });
-
 
 QUnit.test('domContentLoaded does not submit the form when invalid', (assert) => {
   let win = new FakeWindow();
@@ -264,9 +269,11 @@ QUnit.test('domContentLoaded does not submit the form when invalid', (assert) =>
   };
 
   let input = makeInput().input;
+  let subgroup = makeInputSet().subgroup;
 
   win.document.getElementsByTagName.withArgs('form').returns([fakeForm]);
   win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);
+  win.document.querySelectorAll.withArgs('uswds-date').returns([subgroup]);
   win.document.querySelector.withArgs('.submit-group button[type="submit"]').returns(fakeSubmitButton);
 
   fakeForm.checkValidity.returns(false);
@@ -275,3 +282,11 @@ QUnit.test('domContentLoaded does not submit the form when invalid', (assert) =>
   assert.ok(fakeForm.submit.notCalled);
 });
 
+QUnit.test('parseInputs works', (assert) => {
+  const {subgroup, input1, input2} = makeInputSet();
+  const inputs = [input1, input2, document.createElement('input'), document.createElement('select'), document.createElement('textarea')];
+  const groupedInputs = [subgroup];
+  const result = validation.parseInputs(inputs, groupedInputs);
+  assert.equal(result.singleInputs.length, 3);
+  assert.equal(result.combinedInputs.length, 1);
+});
