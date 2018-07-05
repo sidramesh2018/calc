@@ -258,7 +258,6 @@ QUnit.test('domContentLoaded submits the form when valid', (assert) => {
 
 QUnit.test('domContentLoaded does not submit the form when invalid', (assert) => {
   let win = new FakeWindow();
-  validation.window = win;
 
   let fakeForm = new FakeForm();
 
