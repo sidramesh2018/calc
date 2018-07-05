@@ -71,7 +71,7 @@ export function toggleErrorMsg(window, options) {
   }
 }
 
-function checkInputs(window, inputs) {
+export function checkInputs(window, inputs) {
   inputs.singleInputs.forEach(function(input) {
     // prevent showing the HTML5 tooltip
     input.addEventListener('invalid', function (e) {

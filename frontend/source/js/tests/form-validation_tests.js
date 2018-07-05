@@ -283,4 +283,18 @@ QUnit.test('parseInputs works', (assert) => {
   const result = validation.parseInputs(inputs, groupedInputs);
   assert.equal(result.singleInputs.length, 3);
   assert.equal(result.combinedInputs.length, 1);
-});
+})
+
+
+QUnit.test('checkInputs works on single inputs', (assert) => {
+  let win = new FakeWindow();
+  const {fieldset, input} = makeInput();
+  const {subgroup, input1, input2} = makeInputSet();
+  const inputs = [input, input1, input2];
+  const groupedInputs = [subgroup];
+  const result = validation.parseInputs(inputs, groupedInputs);
+
+  validation.checkInputs(win, result);
+
+  
+});;;
