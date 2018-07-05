@@ -39,11 +39,6 @@ class FakeWindow {
         createElement: (el) => {
           return document.createElement(el);
         }
-        //createElement: () => {
-          //return {
-            //remove: sinon.stub(),
-          //};
-        //}
       },
       sessionStorage: options.sessionStorage || {},
       listeners: {},
