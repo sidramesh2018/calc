@@ -35,7 +35,7 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
 }
 
 .bars .bar rect {
-  fill: #0770b5;
+  fill: #cddc86;
 }
 
 .range-fill {
