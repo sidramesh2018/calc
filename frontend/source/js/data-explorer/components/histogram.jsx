@@ -54,7 +54,7 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
 }
 
 .stddev-text {
-  fill: #436a79;
+  fill: #021014;
 }
 
 .axis .chart-label {
@@ -82,7 +82,6 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
 .avg .value, .pp .value,
 .axis .tick.primary text {
   font-weight: bold;
-  -webkit-font-smoothing: antialiased;
 }
 
 .average {
@@ -91,13 +90,6 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
 
 .proposed {
   fill: #981b1e;
-}
-
-rect {
-  fill: #547d8c;
-  stroke: #fff;
-  stroke-width: 1;
-  shape-rendering: crispEdges;
 }
 
 .avg-label-box, .pp-label-box {
