@@ -85,8 +85,12 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
   -webkit-font-smoothing: antialiased;
 }
 
-.average, .proposed {
-  fill: #fff;
+.average {
+  fill: #021014;
+}
+
+.proposed {
+  fill: #981b1e;
 }
 
 rect {
@@ -97,13 +101,18 @@ rect {
 }
 
 .avg-label-box, .pp-label-box {
-  fill: #021014;
+  fill: #fff;
   stroke: none;
 }
 
-.avg line, .pp line {
+.avg line {
   stroke-width: 1;
   stroke: #021014;
+}
+
+.pp line {
+  stroke-width: 1;
+  stroke: #981b1e;
 }`;
 
 function updateHistogram(rootEl, data, proposedPrice, showTransition) {
@@ -244,11 +253,11 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('class', 'avg');
 
     avg.append('rect')
-      .attr('y', avgOffset - 25)
+      .attr('y', avgOffset - 23)
       .attr('x', -55)
       .attr('class', 'avg-label-box')
       .attr('width', 116)
-      .attr('height', 26)
+      .attr('height', 23)
       .attr('rx', 4)
       .attr('ry', 4);
 
