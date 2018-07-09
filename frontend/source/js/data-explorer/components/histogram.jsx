@@ -359,7 +359,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('x', d => d.x)
       .attr('y', d => d.y)
       .attr('height', d => d.height)
-      .attr('width', d => d.width);
+      .attr('width', d => d.width - 2);
 
   const ticks = bins.map(d => d.min)
     .concat([data.maximum]);
