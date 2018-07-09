@@ -233,7 +233,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
 
   pp.select('line')
     .attr('y1', ppOffset)
-    .attr('y2', (bottom - top) + 8);
+    .attr('y2', (bottom - top));
   pp.select('.value')
     .text(`$${proposedPriceStr} proposed`);
 
@@ -270,7 +270,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
 
   avg.select('line')
     .attr('y1', avgOffset)
-    .attr('y2', (bottom - top) + 8);
+    .attr('y2', (bottom - top));
   avg.select('.value')
     .text(`${formatDollars(data.average)} average`);
 
