@@ -62,16 +62,21 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
   font-style: italic;
 }
 
-.axis line,
-.axis path {
-  fill: none;
-  stroke-width: 1;
-  stroke: #021014;
-  shape-rendering: crispEdges;
-}
-
 .axis text {
   font-size: 13px;
+}
+
+.axis.x path {
+  stroke: none;
+}
+
+.axis.y path {
+  stroke-width: 2;
+  stroke: #c5d6de;
+}
+
+.tick line {
+  stroke: none;
 }
 
 .stddev-text-label {
