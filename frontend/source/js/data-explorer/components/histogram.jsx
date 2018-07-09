@@ -63,6 +63,7 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
 }
 
 .axis text {
+  fill: #436a79;
   font-size: 13px;
 }
 
@@ -84,8 +85,8 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
   fill: #436a79;
 }
 
-.avg .value, .pp .value,
-.axis .tick.primary text {
+.avg .value,
+.pp .value {
   font-weight: bold;
 }
 
