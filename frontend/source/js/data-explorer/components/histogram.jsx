@@ -89,7 +89,7 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
 }
 
 .proposed {
-  fill: #981b1e;
+  fill: #436a79;
 }
 
 .avg-label-box, .pp-label-box {
@@ -104,7 +104,7 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
 
 .pp line {
   stroke-width: 1;
-  stroke: #981b1e;
+  stroke: #436a79;
 }`;
 
 function updateHistogram(rootEl, data, proposedPrice, showTransition) {
