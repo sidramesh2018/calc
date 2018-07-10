@@ -380,7 +380,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       return formatPrice(d);
     });
   xAxis.call(xa)
-    .attr('transform', `translate(${[0, bottom -2]})`)
+    .attr('transform', `translate(${[0, bottom - 2]})`)
     .selectAll('.tick')
     .classed('primary', (d, i) => i === 0 || i === bins.length)
     .select('text')
