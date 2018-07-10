@@ -38,7 +38,9 @@ section.search .container {
 
 .icon-search {
   background-image: url(../../images/icon-search.svg);
-  padding: $space-half $space-3x;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 8rem;
 }
 
 @media only screen and (max-width: $medium-large-screen) {
