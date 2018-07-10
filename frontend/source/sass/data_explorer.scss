@@ -12,7 +12,7 @@ body {
 // temp styles to mimic .card without indenting the table
 section.search,
 section.search + .graph-block,
-.search-header.columns.nine {
+.search-header.columns.twelve {
   margin-right: 0;
   margin-left: $space-8x;
 }
@@ -36,6 +36,11 @@ section.search .container {
   padding: 0;
 }
 
+.icon-search {
+  background-image: url(../../images/icon-search.svg);
+  padding: $space-half $space-3x;
+}
+
 @media only screen and (max-width: $medium-large-screen) {
   section.search,
   section.search + .graph-block,
@@ -49,7 +54,8 @@ section.search .container {
 }
 
 #labor_category {
-  width: 65%;
+  max-width: 72rem;
+  width: 100%;
 }
 
 // to fake selection of home link

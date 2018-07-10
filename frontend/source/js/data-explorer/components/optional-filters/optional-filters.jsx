@@ -4,7 +4,6 @@ import BusinessSize from '../business-size';
 import ContractYear from '../contract-year';
 import EducationLevel from '../education-level';
 import Experience from '../experience';
-import Schedule from '../schedule';
 import Site from '../site';
 
 const OptionalFilters = () => (
@@ -13,10 +12,8 @@ const OptionalFilters = () => (
     <Experience />
     <Site />
     <BusinessSize />
-    <Schedule />
     <ContractYear />
   </Fragment>
 );
 
 export default OptionalFilters;
-
