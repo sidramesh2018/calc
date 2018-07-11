@@ -1,14 +1,15 @@
 /* eslint-env browser */
+/* eslint-disable no-unused-vars */
 /* global QUnit document */
 
-import * as validation from '../data-capture/form-validation';
-
 import * as sinon from 'sinon';
+
+import * as validation from '../data-capture/form-validation';
 
 QUnit.module('form-validation');
 
 class FakeForm {
-  constructor(options = {}) {
+  constructor(options = {}) { // eslint-disable-line no-unused-vars
     Object.assign(this, {
       checkValidity: sinon.stub(),
       submit: sinon.stub(),
@@ -36,7 +37,7 @@ class FakeWindow {
         getElementsByTagName: sinon.stub(),
         querySelectorAll: sinon.stub(),
         querySelector: sinon.stub(),
-        createElement: (el) => {
+        createElement(el) {
           return document.createElement(el);
         }
       },
@@ -54,6 +55,7 @@ class FakeWindow {
 }
 
 function makeInputSet(isDate = true, hasErrorMsg = false) {
+  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
   const groupedFieldset = document.createElement('fieldset');
   const input1 = document.createElement('input');
   input1.classList.add('usa-input-inline');
@@ -79,7 +81,7 @@ function makeInputSet(isDate = true, hasErrorMsg = false) {
   groupedFieldset.appendChild(legend);
   groupedFieldset.appendChild(subgroup);
 
-  return {groupedFieldset, subgroup, input1, input2};
+  return { groupedFieldset, subgroup, input1, input2 };
 }
 
 function makeInput(hasErrorMsg = false) {
@@ -99,7 +101,7 @@ function makeInput(hasErrorMsg = false) {
   fieldset.appendChild(label);
   fieldset.appendChild(input);
 
-  return {fieldset, input};
+  return { fieldset, input };
 }
 
 QUnit.test('getCustomMessage works', (assert) => {
@@ -122,7 +124,6 @@ QUnit.test('getCustomMessage works', (assert) => {
 });
 
 QUnit.test('findParentNode works', (assert) => {
-  const FIELD_PARENT_NODE = 'fieldset';
   // simple inputs
   const singleFieldParent = document.createElement('fieldset');
   const singleField = document.createElement('input');
@@ -130,7 +131,7 @@ QUnit.test('findParentNode works', (assert) => {
   singleFieldParent.appendChild(singleField);
 
   // compound inputs
-  const {groupedFieldset, input1} = makeInputSet();
+  const { groupedFieldset, input1 } = makeInputSet();
 
   // inputs not wrapped in `fieldset`
   const faultyInputBody = document.createElement('body');
@@ -146,15 +147,14 @@ QUnit.test('findParentNode works', (assert) => {
 
 QUnit.test('toggleErrorMsg creates errors on single fields', (assert) => {
   const win = new FakeWindow();
-  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
   const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
-  const {fieldset, input} = makeInput();
+  const fieldset = makeInput().fieldset;
   const parent = fieldset;
 
   const options = {
     showErrorMsg: true,
     message: "I am an empty input",
-    parent: parent,
+    parent,
   };
   validation.toggleErrorMsg(win, options);
   assert.ok(parent.classList.contains(INVALID_PARENT_CLASS));
@@ -164,15 +164,14 @@ QUnit.test('toggleErrorMsg creates errors on single fields', (assert) => {
 
 QUnit.test('toggleErrorMsg creates errors on grouped fields', (assert) => {
   const win = new FakeWindow();
-  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
   const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
-  const {groupedFieldset, input1} = makeInputSet();
+  const { groupedFieldset, input1 } = makeInputSet();
   const parent = groupedFieldset;
   const input = input1;
   const options = {
     showErrorMsg: true,
     message: "I am an empty input",
-    parent: parent,
+    parent,
   };
 
   validation.toggleErrorMsg(win, options);
@@ -183,15 +182,13 @@ QUnit.test('toggleErrorMsg creates errors on grouped fields', (assert) => {
 
 QUnit.test('toggleErrorMsg removes errors on single fields', (assert) => {
   const win = new FakeWindow();
-  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
-  const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
   const hasErrorMsg = true;
-  const {fieldset, input} = makeInput(hasErrorMsg);
+  const { fieldset, input } = makeInput(hasErrorMsg);
   const parent = fieldset;
   const options = {
     showErrorMsg: false,
     message: null,
-    parent: parent,
+    parent,
   };
 
   validation.toggleErrorMsg(win, options);
@@ -204,16 +201,14 @@ QUnit.test('toggleErrorMsg removes errors on single fields', (assert) => {
 
 QUnit.test('toggleErrorMsg removes errors on grouped fields', (assert) => {
   const win = new FakeWindow();
-  const INVALID_MESSAGE_CLASS = 'form--invalid__message';
-  const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
   const hasErrorMsg = true;
-  const {groupedFieldset, input1} = makeInputSet(hasErrorMsg);
+  const { groupedFieldset, input1 } = makeInputSet(hasErrorMsg);
   const parent = groupedFieldset;
   const input = input1;
   const options = {
     showErrorMsg: false,
     message: null,
-    parent: parent,
+    parent,
   };
 
   validation.toggleErrorMsg(win, options);
@@ -225,20 +220,19 @@ QUnit.test('toggleErrorMsg removes errors on grouped fields', (assert) => {
 });
 
 QUnit.test('domContentLoaded submits the form when valid', (assert) => {
-  let win = new FakeWindow();
+  const win = new FakeWindow();
   validation.window = win;
 
-  let fakeForm = new FakeForm();
+  const fakeForm = new FakeForm();
 
-  let fakeSubmitButton = {
+  const fakeSubmitButton = {
     addEventListener: (eventType, fn) => {
-      console.log("called addEventListener!");
       fn();
     },
   };
 
-  let input = makeInput().input;
-  let subgroup = makeInputSet().subgroup;
+  const input = makeInput().input;
+  const subgroup = makeInputSet().subgroup;
 
   win.document.getElementsByTagName.withArgs('form').returns([fakeForm]);
   win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);
@@ -252,18 +246,18 @@ QUnit.test('domContentLoaded submits the form when valid', (assert) => {
 });
 
 QUnit.test('domContentLoaded does not submit the form when invalid', (assert) => {
-  let win = new FakeWindow();
+  const win = new FakeWindow();
 
-  let fakeForm = new FakeForm();
+  const fakeForm = new FakeForm();
 
-  let fakeSubmitButton = {
+  const fakeSubmitButton = {
     addEventListener: (eventType, fn) => {
       fn();
     },
   };
 
-  let input = makeInput().input;
-  let subgroup = makeInputSet().subgroup;
+  const input = makeInput().input;
+  const subgroup = makeInputSet().subgroup;
 
   win.document.getElementsByTagName.withArgs('form').returns([fakeForm]);
   win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);
@@ -277,24 +271,10 @@ QUnit.test('domContentLoaded does not submit the form when invalid', (assert) =>
 });
 
 QUnit.test('parseInputs works', (assert) => {
-  const {subgroup, input1, input2} = makeInputSet();
+  const { subgroup, input1, input2 } = makeInputSet();
   const inputs = [input1, input2, document.createElement('input'), document.createElement('select'), document.createElement('textarea')];
   const groupedInputs = [subgroup];
   const result = validation.parseInputs(inputs, groupedInputs);
   assert.equal(result.singleInputs.length, 3);
   assert.equal(result.combinedInputs.length, 1);
-})
-
-
-QUnit.test('checkInputs works on single inputs', (assert) => {
-  let win = new FakeWindow();
-  const {fieldset, input} = makeInput();
-  const {subgroup, input1, input2} = makeInputSet();
-  const inputs = [input, input1, input2];
-  const groupedInputs = [subgroup];
-  const result = validation.parseInputs(inputs, groupedInputs);
-
-  validation.checkInputs(win, result);
-
-  
-});;;
+});
