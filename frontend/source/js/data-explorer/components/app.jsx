@@ -113,7 +113,17 @@ class App extends React.Component {
                   {' '}
                 </LaborCategory>
                 <LoadableScheduleFilter />
-                <LoadableOptionalFilters />
+              </div>
+              <div>
+                <ul className="usa-accordion">
+                  <li>
+                    <button class="usa-accordion-button"
+                    aria-expanded="false"
+                    aria-controls="a2">
+                      <LoadableOptionalFilters />
+                    </button>
+                  </li>
+                </ul>
               </div>
             </section>
 
