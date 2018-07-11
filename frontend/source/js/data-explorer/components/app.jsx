@@ -108,7 +108,7 @@ class App extends React.Component {
             <section className="search">
               <div className="container clearfix">
                 <LaborCategory api={this.props.api}>
-                  <button className="submit usa-button-primary icon-search">
+                  <button className="submit usa-button-primary icon-search"> 
                   </button>
                   {' '}
                 </LaborCategory>
@@ -120,7 +120,7 @@ class App extends React.Component {
               <div>
                 <ul className="usa-accordion">
                   <li>
-                    <button class="usa-accordion-button"
+                    <button className="usa-accordion-button"
                     aria-expanded="false"
                     aria-controls="a2">
                       <LoadableOptionalFilters />
