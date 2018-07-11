@@ -112,6 +112,7 @@ class App extends React.Component {
                   {' '}
                 </LaborCategory>
                 <LoadableScheduleFilter />
+                <LoadableOptionalFilters />
               </div>
             </section>
 
@@ -172,7 +173,7 @@ class App extends React.Component {
           <div className="filter-container columns three">
             <div className="filter-block">
               <h5 className="filter-title">Optional filters</h5>
-              <LoadableOptionalFilters />
+              <LoadableContractYearFilter />
             </div>
           </div>
         </div>
