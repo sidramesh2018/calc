@@ -85,7 +85,6 @@ TEMPLATES = [{
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
-            'calc.context_processors.canonical_url',
             'calc.context_processors.show_debug_ui',
             'calc.context_processors.google_analytics_tracking_id',
             'calc.context_processors.help_email',
