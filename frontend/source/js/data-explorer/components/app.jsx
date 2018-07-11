@@ -108,13 +108,10 @@ class App extends React.Component {
             <section className="search">
               <div className="container clearfix">
                 <LaborCategory api={this.props.api}>
-                  <button className="submit usa-button-primary icon-search"> 
+                  <button className="submit usa-button-primary icon-search">
                   </button>
                   {' '}
                 </LaborCategory>
-                <div id={prefixId('query-types')}>
-                  <QueryType />
-                </div>
                 <LoadableScheduleFilter />
               </div>
               <div>
