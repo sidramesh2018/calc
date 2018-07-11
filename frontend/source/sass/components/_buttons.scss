@@ -123,3 +123,13 @@ input.usa-button-link[type="button"] {
     background-color: $color-green;
   }
 }
+
+.button-small-icon {
+  background-color: $color-gray-lighter;
+  &.graph {
+    background-image: url('../../images/icon-graph.svg')
+  }
+  &.csv {
+    background-image: url('../../images/icon-spreadsheet.svg')
+  }
+}
