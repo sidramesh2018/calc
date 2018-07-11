@@ -112,6 +112,9 @@ class App extends React.Component {
                   </button>
                   {' '}
                 </LaborCategory>
+                <div id={prefixId('query-types')}>
+                  <QueryType />
+                </div>
                 <LoadableScheduleFilter />
               </div>
               <div>
