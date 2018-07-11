@@ -1,5 +1,4 @@
 /* eslint-env browser */
-/* eslint-disable no-unused-vars */
 /* global QUnit document */
 
 import * as sinon from 'sinon';
@@ -9,7 +8,7 @@ import * as validation from '../data-capture/form-validation';
 QUnit.module('form-validation');
 
 class FakeForm {
-  constructor(options = {}) { // eslint-disable-line no-unused-vars
+  constructor() {
     Object.assign(this, {
       checkValidity: sinon.stub(),
       submit: sinon.stub(),
@@ -165,9 +164,8 @@ QUnit.test('toggleErrorMsg creates errors on single fields', (assert) => {
 QUnit.test('toggleErrorMsg creates errors on grouped fields', (assert) => {
   const win = new FakeWindow();
   const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
-  const { groupedFieldset, input1 } = makeInputSet();
+  const { groupedFieldset } = makeInputSet();
   const parent = groupedFieldset;
-  const input = input1;
   const options = {
     showErrorMsg: true,
     message: "I am an empty input",
@@ -183,7 +181,7 @@ QUnit.test('toggleErrorMsg creates errors on grouped fields', (assert) => {
 QUnit.test('toggleErrorMsg removes errors on single fields', (assert) => {
   const win = new FakeWindow();
   const hasErrorMsg = true;
-  const { fieldset, input } = makeInput(hasErrorMsg);
+  const { fieldset } = makeInput(hasErrorMsg);
   const parent = fieldset;
   const options = {
     showErrorMsg: false,
@@ -202,9 +200,8 @@ QUnit.test('toggleErrorMsg removes errors on single fields', (assert) => {
 QUnit.test('toggleErrorMsg removes errors on grouped fields', (assert) => {
   const win = new FakeWindow();
   const hasErrorMsg = true;
-  const { groupedFieldset, input1 } = makeInputSet(hasErrorMsg);
+  const { groupedFieldset } = makeInputSet(hasErrorMsg);
   const parent = groupedFieldset;
-  const input = input1;
   const options = {
     showErrorMsg: false,
     message: null,
@@ -241,7 +238,7 @@ QUnit.test('domContentLoaded submits the form when valid', (assert) => {
 
   fakeForm.checkValidity.returns(true);
 
-  const result = validation.domContentLoaded(win);
+  const result = validation.domContentLoaded(win); // eslint-disable-line no-unused-vars
   assert.ok(fakeForm.submit.called);
 });
 
@@ -266,7 +263,7 @@ QUnit.test('domContentLoaded does not submit the form when invalid', (assert) =>
 
   fakeForm.checkValidity.returns(false);
 
-  const result = validation.domContentLoaded(win);
+  const result = validation.domContentLoaded(win); // eslint-disable-line no-unused-vars
   assert.ok(fakeForm.submit.notCalled);
 });
 
