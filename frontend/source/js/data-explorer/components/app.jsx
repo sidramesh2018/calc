@@ -20,6 +20,7 @@ import ResultsTable from './results-table';
 import QueryType from './query-type';
 import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
 import LoadableScheduleFilter from './optional-filters/loadable-schedule-filter';
+import LoadableContractYearFilter from './optional-filters/loadable-contract-year-filter';
 import LaborCategory from './labor-category';
 import LoadingIndicator from './loading-indicator';
 import TitleTagSynchronizer from './title-tag-synchronizer';
