@@ -1,4 +1,5 @@
 /* global window */
+/* eslint-disable consistent-return, no-else-return */
 
 /**
  * HTML5 form validation doesn't apply our styles. Documented here:
@@ -17,11 +18,11 @@ const ERROR_MESSAGES = {
   valueMissing: 'Please fill out this required field.',
 };
 
-export function getCustomMessage (type, validity) {
+export function getCustomMessage(type, validity) {
   if (validity.typeMismatch) {
     return ERROR_MESSAGES[`${type}Mismatch`];
   } else {
-    for (const invalidKey in ERROR_MESSAGES) {
+    for (const invalidKey in ERROR_MESSAGES) { // eslint-disable-line no-restricted-syntax
       if (validity[invalidKey]) {
         return ERROR_MESSAGES[invalidKey];
       }
@@ -36,9 +37,9 @@ export function getCustomMessage (type, validity) {
 // in a fieldset automatically.
 export function findParentNode(node) {
   // tagName is always uppercase
-  if (node.parentNode.tagName != FIELD_PARENT_NODE.toUpperCase() && node.parentNode.tagName != 'BODY') {
+  if (node.parentNode.tagName !== FIELD_PARENT_NODE.toUpperCase() && node.parentNode.tagName !== 'BODY') {
     return findParentNode(node.parentNode);
-  } else if (node.parentNode.tagName == 'BODY') {
+  } else if (node.parentNode.tagName === 'BODY') {
     // just in case we try to run this on something not in a fieldset, prevent infinite loop
     return null;
   } else {
@@ -72,9 +73,9 @@ export function toggleErrorMsg(window, options) {
 }
 
 export function checkInputs(window, inputs) {
-  inputs.singleInputs.forEach(function(input) {
+  inputs.singleInputs.forEach((input) => {
     // prevent showing the HTML5 tooltip
-    input.addEventListener('invalid', function (e) {
+    input.addEventListener('invalid', (e) => {
       e.preventDefault();
     });
 
@@ -82,7 +83,7 @@ export function checkInputs(window, inputs) {
     // Note that this overrides HTML5's built-in checkValidity() function,
     // which is why it's within the forEach scope -- we don't want to override
     // the master form's checkValidity() call.
-    function checkValidity() {
+    function checkValidity() { // eslint-disable-line no-unused-vars
       const message = input.validity.valid
         ? null
         : getCustomMessage(input.type, input.validity);
@@ -90,10 +91,14 @@ export function checkInputs(window, inputs) {
       input.setCustomValidity(message || '');
     }
 
-    toggleErrorMsg(window, {showErrorMsg: !input.checkValidity(), message: input.validationMessage, parent: findParentNode(input)}, input)
+    toggleErrorMsg(window, {
+      showErrorMsg: !input.checkValidity(),
+      message: input.validationMessage,
+      parent: findParentNode(input),
+    }, input);
   });
 
-  inputs.combinedInputs.forEach(function(inputSet) {
+  inputs.combinedInputs.forEach((inputSet) => {
     // This does for a group of sibling inputs what the above function does for singles.
     // The biggest difference is that we need to track per-group errors -- if one
     // sibling is invalid, the whole group is invalid.
@@ -103,9 +108,9 @@ export function checkInputs(window, inputs) {
     let message = null;
     let parent;
 
-    inputSet.forEach(function(input) {
+    inputSet.forEach((input) => {
       // prevent showing the HTML5 tooltip
-      input.addEventListener('invalid', function (e) {
+      input.addEventListener('invalid', (e) => {
         e.preventDefault();
       });
 
@@ -119,7 +124,7 @@ export function checkInputs(window, inputs) {
       // Note that this overrides HTML5's built-in checkValidity() function,
       // which is why it's within the forEach scope -- we don't want to override
       // the master form's checkValidity() call.
-      function checkValidity() {
+      function checkValidity() { // eslint-disable-line no-unused-vars
         const validationMsg = input.validity.valid
           ? null
           : getCustomMessage(input.type, input.validity);
@@ -129,12 +134,16 @@ export function checkInputs(window, inputs) {
 
       message = input.validationMessage;
 
-      if (input.checkValidity() == false) {
+      if (input.checkValidity() === false) {
         groupIsValid = false;
       }
     });
 
-    toggleErrorMsg(window, {showErrorMsg: !groupIsValid, message: message, parent: parent || null})
+    toggleErrorMsg(window, {
+      showErrorMsg: !groupIsValid,
+      message,
+      parent: parent || null,
+    });
   });
 }
 
@@ -142,22 +151,22 @@ export function getCombinedInputs(inputWrapper) {
   return inputWrapper.querySelectorAll('input');
 }
 
-export function parseInputs(inputs, groupedInputs){
+export function parseInputs(inputs, groupedInputs) {
   let singleInputs;
   let combinedInputs;
   if (inputs) {
-    singleInputs = Array.from(inputs).filter(input => input.type != 'hidden' && !input.classList.contains('usa-input-inline'));
+    singleInputs = Array.from(inputs).filter(input => input.type !== 'hidden' && !input.classList.contains('usa-input-inline'));
   }
-  if (groupedInputs){
+  if (groupedInputs) {
     // Dates must be validated as a set of inputs, otherwise one valid date part
     // will remove the message for the whole thing even though the set is not valid
     // (i.e., having a year but no month or day will be invalid, but will have no error message)
     combinedInputs = Array.from(groupedInputs).map(uswdsDate => getCombinedInputs(uswdsDate));
   }
   return {
-    combinedInputs: combinedInputs,
-    singleInputs: singleInputs
-  }
+    combinedInputs,
+    singleInputs,
+  };
 }
 
 export function domContentLoaded(win) {
@@ -167,13 +176,14 @@ export function domContentLoaded(win) {
   const inputs = parseInputs(win.document.querySelectorAll('input, select, textarea'), win.document.querySelectorAll('uswds-date'));
   const submitButton = win.document.querySelector('.submit-group button[type="submit"]');
   if (form && inputs && submitButton) {
-    submitButton.addEventListener('click', function() {
-      let isValid = form.checkValidity();
+    submitButton.addEventListener('click', () => {
+      const isValid = form.checkValidity();
       if (isValid) {
         form.submit();
       } else {
-        // if the form is invalid, loop through the elements to discover which need invalid messages.
-        // check each valid element to make sure it doesn't have an error message displayed.
+        // if the form is invalid, loop through the elements to discover
+        // which need invalid messages. Check each valid element to make sure
+        // it doesn't have an error message displayed.
         checkInputs(win, inputs);
       }
     });
