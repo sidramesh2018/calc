@@ -13,12 +13,16 @@ export function Schedule({ idPrefix, schedule, setSchedule }) {
 
   return (
     <div className="filter filter-schedule">
-      <label htmlFor={id}>SIN / Schedule:</label>
+      <label htmlFor={id}>
+SIN / Schedule:
+      </label>
       <a href="/about#schedules" className="filter-more-info">
         What&apos;s this?
       </a>
       <select
-        id={id} name="schedule" value={schedule}
+        id={id}
+        name="schedule"
+        value={schedule}
         onChange={handleChange}
         className={filterActive(schedule !== '')}
       >

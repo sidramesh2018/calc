@@ -56,7 +56,7 @@ const coercedString = (val) => {
 const coercedExperience = defaultVal => (val) => {
   const valInt = parseInt(val, 10);
 
-  if (isNaN(valInt)) {
+  if (isNaN(valInt)) { /* eslint-disable-line no-restricted-globals */
     return defaultVal;
   }
 
@@ -87,15 +87,13 @@ export const serializers = {
 };
 
 export const deserializers = {
-  exclude: list =>
-    coercedString(list)
-      .split(',')
-      .map(x => parseInt(x, 10))
-      .filter(x => !isNaN(x)),
-  education: list =>
-    coercedString(list)
-      .split(',')
-      .filter(x => x in EDU_LABELS),
+  exclude: list => coercedString(list)
+    .split(',')
+    .map(x => parseInt(x, 10))
+    .filter(x => !isNaN(x)), /* eslint-disable-line no-restricted-globals */
+  education: list => coercedString(list)
+    .split(',')
+    .filter(x => x in EDU_LABELS),
   q: s => coercedString(s).slice(0, MAX_QUERY_LENGTH),
   'contract-year': stringInSet(CONTRACT_YEAR_LABELS, DEFAULT_CONTRACT_YEAR),
   site: stringInSet(SITE_LABELS),

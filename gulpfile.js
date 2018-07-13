@@ -6,7 +6,7 @@ if (!('DEBUG' in process.env)) {
   process.env.NODE_ENV = 'production';
 }
 
-const spawn = require('child_process').spawn;
+const { spawn } = require('child_process');
 const path = require('path');
 
 const gulp = require('gulp');
@@ -95,11 +95,13 @@ Object.keys(bundles).forEach((name) => {
 
   if (vendor.length) {
     const vendoredBundleName = `js:${dirName}:vendor`;
-    gulp.task(vendoredBundleName, () =>
-    concatAndMapSources(  // eslint-disable-line no-use-before-define
+    gulp.task(
+      vendoredBundleName, () => concatAndMapSources( // eslint-disable-line no-use-before-define
         `${dirName}.vendor.js`,
         vendor.map(p => dirs.src.scripts + p),
-        `${BUILT_FRONTEND_DIR}/js/`));
+        `${BUILT_FRONTEND_DIR}/js/`
+      )
+    );
 
     vendoredBundles.push(vendoredBundleName);
   }
@@ -172,17 +174,17 @@ gulp.task('set-watching', () => {
 // compile SASS sources
 gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sourcemaps.init())
-    .pipe(sass({
-      includePaths: [bourbonNeatPaths, 'node_modules'],
-    })
-      .on('error', sass.logError)
-      .on('error', () => {
-        // When running a production build, break the stream
-        // if there is an error so that the build fails.
-        if (!isWatching) { throw new Error('Errors in SASS build.'); }
-      }))
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(cleancss())
+  .pipe(sass({
+    includePaths: [bourbonNeatPaths, 'node_modules'],
+  })
+    .on('error', sass.logError)
+    .on('error', () => {
+      // When running a production build, break the stream
+      // if there is an error so that the build fails.
+      if (!isWatching) { throw new Error('Errors in SASS build.'); }
+    }))
+  .pipe(rename({ suffix: '.min' }))
+  .pipe(cleancss())
   .pipe(sourcemaps.write('./'))
   .pipe(gulp.dest(dirs.dest.style.built)));
 
