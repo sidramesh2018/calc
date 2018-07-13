@@ -281,17 +281,9 @@ input[type="checkbox"]:checked ~ label {
 .highlights-container {
   margin-bottom: 2em;
   margin-top: 1em;
-  text-align: center;
-  position: relative;
-  display: flex;
-  justify-content: space-between;
 }
 
 .price-block {
-  background: $color-gray-lightest;
-  border: 1px solid $color-gray-lighter;
-  border-radius: $border-radius;
-  flex-grow: 9;
   .row {
     display: flex;
     align-items: flex-end;
@@ -311,7 +303,6 @@ input[type="checkbox"]:checked ~ label {
   display: inline-block;
   margin: 0 auto;
   padding: .4em;
-  text-align: center;
 }
 
 .proposed-price-block {
@@ -352,19 +343,16 @@ input[type="checkbox"]:checked ~ label {
 }
 
 .avg-price-block {
-    border-right: 1px solid $color-gray-lighter;
-    border-left: 1px solid $color-gray-lighter;
   h5 {
-    font-size: 2.4rem;
+    font-weight: $font-weight-bold;
   }
 }
 
+.avg-price-block,
 .avg-price-highlight,
 h5.sd-highlight,
 h5.proposed-price-highlight {
-  color: $color-blue-dark;
-  font-weight: 400;
-  font-size: 2.4rem;
+  font-size: $h3-font-size;
 }
 
 .slider {
