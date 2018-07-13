@@ -1,8 +1,8 @@
 import React from 'react';
 
-export function makeOptions(labels) {
+export function makeOptions(labels, defaultMsg = '(all)') {
   return [
-    { key: '', value: '', label: '(all)' },
+    { key: '', value: '', label: defaultMsg },
   ].concat(Object.keys(labels).map(
     value => ({ value, label: labels[value] }),
   )).map(({ value, label }) => (

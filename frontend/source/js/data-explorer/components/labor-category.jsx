@@ -56,7 +56,8 @@ export class LaborCategory extends React.Component {
                                    'form__inline');
 
     return (
-      <div>
+      <div className ="search-group">
+        <label htmlFor={id} className="usa-sr-only">Type a labor category</label>
         <input
           id={id} name="q" placeholder="Type a labor category"
           className={className} type="text"
@@ -66,7 +67,6 @@ export class LaborCategory extends React.Component {
           onKeyDown={handleEnter(this.handleEnter)}
           maxLength={MAX_QUERY_LENGTH}
         />
-        <label htmlFor={id} className="usa-sr-only">Type a labor category</label>
         {this.props.children}
       </div>
     );

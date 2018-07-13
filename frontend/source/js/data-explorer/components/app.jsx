@@ -108,11 +108,11 @@ class App extends React.Component {
             <section className="search">
               <div className="container clearfix">
                 <LaborCategory api={this.props.api}>
+                  <LoadableScheduleFilter />
                   <button className="submit usa-button-primary icon-search">
                   </button>
                   {' '}
                 </LaborCategory>
-                <LoadableScheduleFilter />
               </div>
               <div>
                 <ul className="usa-accordion">

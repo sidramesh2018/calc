@@ -10,16 +10,17 @@ import { scheduleLabels } from '../schedule-metadata';
 export function Schedule({ idPrefix, schedule, setSchedule }) {
   const id = `${idPrefix}schedule`;
   const handleChange = (e) => { setSchedule(e.target.value); };
+  const defaultMsg = 'Any contracting vehicle';
 
   return (
-    <div className="filter filter-schedule">
-      <label htmlFor={id}>contract vehicle:</label>
+    <div className="filter--schedule">
+      <label htmlFor={id} className="usa-sr-only">Select a contract vehicle:</label>
       <select
         id={id} name="schedule" value={schedule}
         onChange={handleChange}
         className={filterActive(schedule !== '')}
       >
-        {makeOptions(scheduleLabels)}
+        {makeOptions(scheduleLabels, defaultMsg)}
       </select>
     </div>
   );

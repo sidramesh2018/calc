@@ -13,7 +13,7 @@ body {
 section.search,
 section.search + .graph-block,
 .search-header {
-  margin-right: 0;
+  margin-right: $space-8x;
   margin-left: $space-8x;
 }
 
@@ -56,9 +56,40 @@ section.search .container {
   padding-top: $space-8x;
 }
 
-#labor_category {
-  max-width: 77.2rem;
-  width: 100%;
+.search-group {
+  display: flex;
+  padding: 0;
+  border-radius: $border-radius;
+  border-top: 1px solid $color-gray;
+  border-right: none;
+  border-left: 1px solid $color-gray;
+  border-bottom: 1px solid $color-gray;
+
+  input {
+    border: 0;
+    &[type].form__inline,
+    &[type].form__inline~button:first-of-type {
+      margin: 0;
+    }
+    &[type].form__inline {
+      flex-grow: 6;
+    }
+    button {
+      flex-grow: 1;
+    }
+  }
+}
+
+.filter--schedule {
+  flex-grow: 2;
+  margin: 0;
+  height: 40px;
+  background-color: $color-gray-light;
+  select {
+    border: 0;
+    margin: 0;
+    background-color: transparent;
+  }
 }
 
 // to fake selection of home link
@@ -544,10 +575,6 @@ a.focus-input {
   .empty .not-empty {
     display: none;
   }
-}
-
-#labor_category {
-  margin-bottom: .5rem;
 }
 
 #query-types {
