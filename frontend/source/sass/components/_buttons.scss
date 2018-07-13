@@ -124,12 +124,27 @@ input.usa-button-link[type="button"] {
   }
 }
 
-.button-small-icon {
+.button-gray-icon {
   background-color: $color-gray-lighter;
+  color: $color-gray-darker;
+  font-size: $medium-font-size;
+  height: 3.2rem;
+  padding: 1rem 1rem 1rem 3rem;
+  span {
+    font-weight: $font-weight-normal;
+  }
+  &:hover {
+    background-color: $color-gray-light;
+    color: $color-gray-darker;
+  }
   &.graph {
-    background-image: url('../../images/icon-graph.svg')
+    background-image: url('../../images/icon-graph.svg');
+    background-position: $base-spacing-unit 50%;
+    background-repeat: no-repeat;
   }
   &.csv {
-    background-image: url('../../images/icon-spreadsheet.svg')
+    background-image: url('../../images/icon-spreadsheet.svg');
+    background-position: $base-spacing-unit 50%;
+    background-repeat: no-repeat;
   }
 }
