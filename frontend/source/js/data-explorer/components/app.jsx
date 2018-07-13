@@ -188,6 +188,7 @@ class App extends React.Component {
             </div>
           </div>
         </div>
+        </section>
         <section className="results">
           <div className="container">
             <div className="row">
