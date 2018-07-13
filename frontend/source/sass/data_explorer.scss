@@ -12,15 +12,15 @@ body {
 // temp styles to mimic .card without indenting the table
 section.search,
 section.search + .graph-block,
-.search-header.columns.nine {
-  margin-right: 0;
+.search-header {
+  margin-right: $space-8x;
   margin-left: $space-8x;
 }
 
 .search-header {
   p {
-  margin-bottom: 0;
-  margin-top: 0;
+    margin-bottom: 0;
+    margin-top: 0;
   }
   h2 {
     margin-top: $space-8x;
@@ -36,6 +36,14 @@ section.search .container {
   padding: 0;
 }
 
+.icon-search {
+  background-image: url(../../images/icon-search.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 2.4rem;
+  width: 8rem;
+}
+
 @media only screen and (max-width: $medium-large-screen) {
   section.search,
   section.search + .graph-block,
@@ -48,8 +56,40 @@ section.search .container {
   padding-top: $space-8x;
 }
 
-#labor_category {
-  width: 65%;
+.search-group {
+  display: flex;
+  padding: 0;
+  border-radius: $border-radius;
+  border-top: 1px solid $color-gray;
+  border-right: none;
+  border-left: 1px solid $color-gray;
+  border-bottom: 1px solid $color-gray;
+
+  input {
+    border: 0;
+    &[type].form__inline,
+    &[type].form__inline~button:first-of-type {
+      margin: 0;
+    }
+    &[type].form__inline {
+      flex-grow: 6;
+    }
+    button {
+      flex-grow: 1;
+    }
+  }
+}
+
+.filter--schedule {
+  flex-grow: 2;
+  margin: 0;
+  height: 40px;
+  background-color: $color-gray-light;
+  select {
+    border: 0;
+    margin: 0;
+    background-color: transparent;
+  }
 }
 
 // to fake selection of home link
@@ -521,10 +561,6 @@ a.focus-input {
   .empty .not-empty {
     display: none;
   }
-}
-
-#labor_category {
-  margin-bottom: .5rem;
 }
 
 #query-types {

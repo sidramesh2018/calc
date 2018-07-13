@@ -19,6 +19,8 @@ import ExportData from './export-data';
 import ResultsTable from './results-table';
 import QueryType from './query-type';
 import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
+import LoadableScheduleFilter from './optional-filters/loadable-schedule-filter';
+import LoadableContractYearFilter from './optional-filters/loadable-contract-year-filter';
 import LaborCategory from './labor-category';
 import LoadingIndicator from './loading-indicator';
 import TitleTagSynchronizer from './title-tag-synchronizer';
@@ -91,7 +93,7 @@ class App extends React.Component {
         role="form"
       >
         <div className="row">
-          <div className="search-header columns nine">
+          <div className="search-header columns twelve">
             <h2>Search labor categories</h2>
             <p>
               Enter your search terms below, separated by commas.
@@ -101,31 +103,27 @@ class App extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="columns nine">
+          <div className="columns twelve">
             <TitleTagSynchronizer />
             <section className="search">
               <div className="container clearfix">
-                <div className="row">
-                  <div className="twelve columns">
-                    <LaborCategory api={this.props.api}>
-                      <button className="submit usa-button-primary">
-                        Search
-                      </button>
-                      {' '}
-                      <input
-                        onClick={this.handleResetClick}
-                        className="reset usa-button usa-button-secondary"
-                        type="reset"
-                        value="Reset"
-                      />
-                    </LaborCategory>
-                  </div>
-                  <div className="twelve columns">
-                    <div id={prefixId('query-types')}>
-                      <QueryType />
-                    </div>
-                  </div>
-                </div>
+                <LaborCategory api={this.props.api}>
+                  <LoadableScheduleFilter />
+                  <button className="submit usa-button-primary icon-search">
+                  </button>
+                  {' '}
+                </LaborCategory>
+              </div>
+              <div>
+                <ul className="usa-accordion">
+                  <li>
+                    <button className="usa-accordion-button"
+                    aria-expanded="false"
+                    aria-controls="a2">
+                      <LoadableOptionalFilters />
+                    </button>
+                  </li>
+                </ul>
               </div>
             </section>
 
@@ -186,7 +184,7 @@ class App extends React.Component {
           <div className="filter-container columns three">
             <div className="filter-block">
               <h5 className="filter-title">Optional filters</h5>
-              <LoadableOptionalFilters />
+              <LoadableContractYearFilter />
             </div>
           </div>
         </div>
