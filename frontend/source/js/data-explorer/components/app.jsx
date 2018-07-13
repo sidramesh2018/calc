@@ -114,17 +114,9 @@ class App extends React.Component {
                   {' '}
                 </LaborCategory>
               </div>
-              <div>
-                <ul className="usa-accordion">
-                  <li>
-                    <button className="usa-accordion-button"
-                    aria-expanded="false"
-                    aria-controls="a2">
-                      <LoadableOptionalFilters />
-                    </button>
-                  </li>
-                </ul>
-              </div>
+              <expandable-area>
+                <LoadableOptionalFilters />
+              </expandable-area>
             </section>
 
             <div className="graph-block">

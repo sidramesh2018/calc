@@ -7,10 +7,20 @@ import Site from '../site';
 
 const OptionalFilters = () => (
   <Fragment>
-    <EducationLevel />
-    <Experience />
-    <Site />
-    <BusinessSize />
+    <div className="row">
+      <div className="columns three">
+        <EducationLevel />
+      </div>
+      <div className="columns three">
+        <Experience />
+      </div>
+      <div className="columns three">
+        <Site />
+      </div>
+      <div className="columns three">
+        <BusinessSize />
+      </div>
+    </div>
   </Fragment>
 );
 

@@ -59,6 +59,8 @@ section.search .container {
 .search-group {
   display: flex;
   padding: 0;
+  margin-top: $space-1x;
+  margin-bottom: $space-3x;
   border-radius: $border-radius;
   border-top: 1px solid $color-gray;
   border-right: none;
