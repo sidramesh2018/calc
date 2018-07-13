@@ -1,7 +1,12 @@
 {% extends 'data_capture/base.html' %}
-{% load data_capture %}
+{% load data_capture data_explorer_tags %}
 
-{% block title %}Add price data to CALC / {{ step.description|capfirst }}: {% block subtitle %}{% endblock %}{% endblock %}
+{% block head_meta %}
+  {% capture as title %}
+    Add price data to CALC / {{ step.description|capfirst }}
+  {% endcapture %}
+  {% head_meta title=title %}
+{% endblock %}
 
 {% block body %}
   <div class="card">
