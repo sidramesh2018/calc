@@ -85,7 +85,7 @@ describe('<SlideyPanel>', () => {
 
   it('slides down when expanded', () => {
     const wrapper = mount(
-      <SlideyPanel>
+      <SlideyPanel $={fake$}>
         <p>
           hi
         </p>
@@ -102,7 +102,7 @@ describe('<SlideyPanel>', () => {
 
   it('slides up when collapsed', () => {
     const wrapper = mount(
-      <SlideyPanel>
+      <SlideyPanel $={fake$}>
         <p>
           hi
         </p>
