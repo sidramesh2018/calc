@@ -118,7 +118,10 @@ class App extends React.Component {
                 <LoadableOptionalFilters />
               </expandable-area>
             </section>
-
+          </div>
+        </div>
+        <div className="row clearfix">
+          <div className="columns nine">
             <div className="graph-block">
               {/* for converting the histogram into an img --> */}
               <canvas
@@ -133,7 +136,6 @@ class App extends React.Component {
 
               <h4>Hourly rate data</h4>
 
-              <ProposedPrice />
               <LoadingIndicator />
 
               <div className="graph">
@@ -141,8 +143,6 @@ class App extends React.Component {
                   <Histogram ref={(el) => { this.histogram = el; }} />
                 </div>
               </div>
-
-              <Highlights />
 
               <div className="download-buttons row">
                 <div className="four columns">
@@ -159,7 +159,6 @@ class App extends React.Component {
                 <div>
                   <ExportData />
                 </div>
-
                 <p className="help-text">
                   The rates shown here are fully burdened, applicable
                   {' '}
@@ -172,7 +171,12 @@ class App extends React.Component {
               </div>
             </div>
           </div>
-
+          <div className="columns three">
+            <ProposedPrice />
+            <Highlights />
+          </div>
+        </div>
+        <div className="row clearfix">
           <div className="filter-container columns three">
             <div className="filter-block">
               <h5 className="filter-title">Optional filters</h5>
