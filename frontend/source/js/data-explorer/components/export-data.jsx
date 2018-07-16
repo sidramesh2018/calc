@@ -11,11 +11,12 @@ export function ExportData({ querystring }) {
   const href = `${API_BASE}${API_PATH_RATES_CSV}/${querystring}`;
 
   return (
-    <a
-      className="usa-button usa-button-primary export-data"
+    <button
+      className="button-gray-icon csv export-data"
       title="Click to export your search results to an Excel file (CSV)"
       href={href}
-    >⬇ Export data (CSV)</a>
+    >Export data <span>.csv</span>
+    </button>
   );
 }
 
