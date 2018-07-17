@@ -6,7 +6,6 @@ import {
   formatPrice,
 } from '../util';
 
-import ProposedPrice from './proposed-price';
 
 export function Highlights({
   stdDeviation,
@@ -14,10 +13,8 @@ export function Highlights({
 }) {
   const stdDevMinus = avgPrice - stdDeviation;
   const stdDevPlus = avgPrice + stdDeviation;
-
   return (
     <div className="highlights-container">
-      <ProposedPrice />
       <div className="price-block">
         <div className="row">
           <div className="standard-deviation-block">

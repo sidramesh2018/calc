@@ -14,6 +14,7 @@ import histogramToImg from '../histogram-to-img';
 
 import { trackEvent } from '../../common/ga';
 import Description from './description';
+import ProposedPrice from './proposed-price';
 import Highlights from './highlights';
 import Histogram from './histogram';
 import ExportData from './export-data';
@@ -176,6 +177,7 @@ Hourly rate data
             </div>
           </div>
           <div className="columns three">
+            <ProposedPrice />
             <Highlights />
           </div>
         </div>

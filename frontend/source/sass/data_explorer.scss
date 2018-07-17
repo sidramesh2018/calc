@@ -20,7 +20,8 @@ section.search,
   margin-left: $space-8x;
 }
 
-.highlights-container {
+.highlights-container,
+.proposed-price {
   margin-right: $space-8x;
 }
 
@@ -59,7 +60,8 @@ section.search .container {
   .graph-block {
     margin-left: $space-3x;
   }
-  .highlights-container {
+  .highlights-container,
+  .proposed-price {
     margin-right: $space-3x;
   }
 }

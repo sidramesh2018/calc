@@ -2,19 +2,14 @@
 
 exports[`<Schedule> matches snapshot 1`] = `
 <div
-  className="filter filter-schedule"
+  className="filter--schedule"
 >
   <label
+    className="usa-sr-only"
     htmlFor="zzz_schedule"
   >
-    SIN / Schedule:
+    Select a contract vehicle:
   </label>
-  <a
-    className="filter-more-info"
-    href="/about#schedules"
-  >
-    What's this?
-  </a>
   <select
     className=""
     id="zzz_schedule"
@@ -25,7 +20,7 @@ exports[`<Schedule> matches snapshot 1`] = `
     <option
       value=""
     >
-      (all)
+      Any contracting vehicle
     </option>
     <option
       key="Environmental"

@@ -2,7 +2,7 @@
 
 exports[`<Highlights> matches snapshot 1`] = `
 <div
-  className="highlights-container row"
+  className="highlights-container"
 >
   <div
     className="price-block"
@@ -56,26 +56,6 @@ exports[`<Highlights> matches snapshot 1`] = `
         </h5>
       </div>
     </div>
-  </div>
-  <div
-    className="proposed-price-block"
-    style={
-      Object {
-        "display": "block",
-      }
-    }
-  >
-    <h5
-      className="proposed-price-title"
-    >
-      Proposed price
-    </h5>
-    <h5
-      className="proposed-price-highlight"
-    >
-      $
-      5
-    </h5>
   </div>
 </div>
 `;
