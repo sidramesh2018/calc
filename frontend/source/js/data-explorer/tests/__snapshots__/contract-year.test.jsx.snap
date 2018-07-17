@@ -15,10 +15,10 @@ exports[`<ContractYear> matches snapshot 1`] = `
     >
       <Tooltip
         show={false}
-        text="Show rates for the initial, second ("+1"), or third ("+2") year of the contract."
+        text="Show rates for the initial year of the contract, or for subsequent years (+1 or +2)."
       >
         <a
-          aria-label="Show rates for the initial, second ("+1"), or third ("+1") year of the contract."
+          aria-label="Show rates for the initial year of the contract, or for subsequent years (+1 or +2)."
           href=""
           onClick={[Function]}
         >
