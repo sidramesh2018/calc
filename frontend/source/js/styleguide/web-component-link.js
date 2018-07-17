@@ -18,8 +18,8 @@ class WebComponentLink extends window.HTMLAnchorElement {
 
     if (!proto.SOURCE_FILENAME) {
       window.alert(
-        `prototype for web component ${this.textContent} ` +
-        'has no SOURCE_FILENAME property!',
+        `prototype for web component ${this.textContent} `
+        + 'has no SOURCE_FILENAME property!',
       );
     }
     this.setAttribute('href', this.href + proto.SOURCE_FILENAME);

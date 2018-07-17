@@ -129,18 +129,18 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   const extent = [data.minimum, data.maximum];
   const bins = data.wage_histogram;
   const x = d3.scaleLinear()
-      .domain(extent)
-      .range([left, right]);
+    .domain(extent)
+    .range([left, right]);
   const countExtent = d3.extent(bins, d => d.count);
   const heightScale = d3.scaleLinear()
-      .domain([0].concat(countExtent))
-      .range([0, 1, bottom - top]);
+    .domain([0].concat(countExtent))
+    .range([0, 1, bottom - top]);
 
   let stdDevMin = data.average - data.first_standard_deviation;
   let stdDevMax = data.average + data.first_standard_deviation;
 
-  if (isNaN(stdDevMin)) stdDevMin = 0;
-  if (isNaN(stdDevMax)) stdDevMax = 0;
+  if (isNaN(stdDevMin)) stdDevMin = 0; /* eslint-disable-line no-restricted-globals */
+  if (isNaN(stdDevMax)) stdDevMax = 0; /* eslint-disable-line no-restricted-globals */
 
   let stdDev = svg.select('.stddev');
   if (stdDev.empty()) {
@@ -160,8 +160,8 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       ])
       .enter()
       .append('g')
-        .attr('transform', 'translate(0,0)')
-        .attr('class', d => `chart-label ${d.type}`);
+      .attr('transform', 'translate(0,0)')
+      .attr('class', d => `chart-label ${d.type}`);
     stdDevLabels.append('line')
       .attr('class', 'label-rule')
       .attr('y1', -5)
@@ -362,10 +362,10 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       d.y = bottom - d.height;
     })
     .select('rect')
-      .attr('x', d => d.x)
-      .attr('y', d => d.y)
-      .attr('height', d => d.height)
-      .attr('width', d => d.width - 2);
+      .attr('x', d => d.x) /* eslint-disable-line indent */
+      .attr('y', d => d.y) /* eslint-disable-line indent */
+      .attr('height', d => d.height) /* eslint-disable-line indent */
+      .attr('width', d => d.width - 2); /* eslint-disable-line indent */
 
   const ticks = bins.map(d => d.min)
     .concat([data.maximum]);
@@ -382,12 +382,12 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   xAxis.call(xa)
     .attr('transform', `translate(${[0, bottom - 2]})`)
     .selectAll('.tick')
-      .classed('primary', (d, i) => i === 0 || i === bins.length)
-      .select('text')
-        .classed('min', (d, i) => i === 0)
-        .classed('max', (d, i) => i === bins.length)
-        .style('text-anchor', 'end')
-        .attr('transform', 'rotate(-35)');
+    .classed('primary', (d, i) => i === 0 || i === bins.length)
+    .select('text')
+    .classed('min', (d, i) => i === 0)
+    .classed('max', (d, i) => i === bins.length)
+    .style('text-anchor', 'end')
+    .attr('transform', 'rotate(-35)');
 
   // remove existing labels
   svg.selectAll('text.chart-label').remove();
@@ -439,12 +439,16 @@ class Histogram extends React.Component {
         className="graph histogram has-data"
         ref={(svg) => { this.svgEl = svg; }}
       >
-        <title>Price histogram</title>
+        <title>
+Price histogram
+        </title>
         <desc>
           A histogram showing the distribution of labor category prices.
           Each bar represents a range within that distribution.
         </desc>
-        <style>{INLINE_STYLES}</style>
+        <style>
+          {INLINE_STYLES}
+        </style>
       </svg>
     );
   }

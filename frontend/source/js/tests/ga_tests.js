@@ -108,7 +108,7 @@ QUnit.test('autoTrackInterestingLinks() works', (assert) => {
       "event",
       "Local Download",
       "/api/blorp",
-      `${location.origin}/api/blorp`
+      `${location.origin}/api/blorp` /* eslint-disable-line no-restricted-globals */
     ]], "Local downloads are tracked");
 
     a.setAttribute('href', 'https://example.com/blah');

@@ -8,8 +8,8 @@ import dispatchBubbly from './custom-event';
 
 const $ = jQuery;
 
-const MISC_ERROR = 'Sorry, we’re having trouble. ' +
-                   'Please try again later or refresh your browser.';
+const MISC_ERROR = 'Sorry, we’re having trouble. '
+                   + 'Please try again later or refresh your browser.';
 
 class Delegate {
   constructor(window) {
@@ -75,8 +75,8 @@ exports.MISC_ERROR = MISC_ERROR;
 
 class AjaxForm extends window.HTMLFormElement {
   attachedCallback() {
-    this.isDegraded = !supports.formData() ||
-                      supports.isForciblyDegraded(this);
+    this.isDegraded = !supports.formData()
+                      || supports.isForciblyDegraded(this);
     if (!this.isDegraded) {
       $(this).on('submit', this._onUpgradedSubmit.bind(this));
     }
