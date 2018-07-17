@@ -72,12 +72,12 @@ export class ProposedPrice extends React.Component {
     const id = `${this.props.idPrefix}proposed-price`;
 
     return (
-      <div className="proposed-price">
-        <label htmlFor={id} className="usa-sr-only">Proposed price</label>
+      <div className="proposed-price clearfix">
+        <label htmlFor={id}>Proposed price</label>
         <input
           id={id} type="text" name="proposed-price"
           className="form__inline"
-          placeholder="Proposed price" value={this.state.typed}
+          placeholder="&#36;" value={this.state.typed}
           onChange={this.handleChange}
         />
         <button

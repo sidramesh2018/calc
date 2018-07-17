@@ -14,7 +14,6 @@ import { trackEvent } from '../../common/ga';
 import Description from './description';
 import Highlights from './highlights';
 import Histogram from './histogram';
-import ProposedPrice from './proposed-price';
 import ExportData from './export-data';
 import ResultsTable from './results-table';
 import QueryType from './query-type';
@@ -172,7 +171,6 @@ class App extends React.Component {
             </div>
           </div>
           <div className="columns three">
-            <ProposedPrice />
             <Highlights />
           </div>
         </div>

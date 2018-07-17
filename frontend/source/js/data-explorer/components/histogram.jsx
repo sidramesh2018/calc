@@ -122,7 +122,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   const right = width - pad[1];
   const bottom = height - pad[2];
   const svg = d3.select(rootEl)
-    .attr('viewBox', [0, 0, width, height].join(' '))
+    .attr('viewBox', [0, 0, width + 40, height].join(' '))
     .attr('preserveAspectRatio', 'xMinYMid meet');
   const formatDollars = n => `$${formatPrice(n)}`;
 

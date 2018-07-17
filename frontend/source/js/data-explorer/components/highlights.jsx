@@ -6,6 +6,8 @@ import {
   formatPrice,
 } from '../util';
 
+import ProposedPrice from './proposed-price';
+
 export function Highlights({
   stdDeviation,
   avgPrice,
@@ -19,7 +21,8 @@ export function Highlights({
   // out as it was set/unset. We might want to do the same thing here.
 
   return (
-    <div className="highlights-container row">
+    <div className="highlights-container">
+      <ProposedPrice />
       <div className="price-block">
         <div className="row">
           <div className="standard-deviation-block">
@@ -41,12 +44,6 @@ export function Highlights({
             </h5>
           </div>
         </div>
-      </div>
-      <div className="proposed-price-block" style={proposedPriceStyle}>
-        <h5 className="proposed-price-title">Proposed price</h5>
-        <h5 className="proposed-price-highlight">
-          ${formatPrice(proposedPrice)}
-        </h5>
       </div>
     </div>
   );

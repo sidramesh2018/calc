@@ -11,10 +11,17 @@ body {
 
 // temp styles to mimic .card without indenting the table
 section.search,
-section.search + .graph-block,
 .search-header {
   margin-right: $space-8x;
   margin-left: $space-8x;
+}
+
+.graph-block {
+  margin-left: $space-8x;
+}
+
+.highlights-container {
+  margin-right: $space-8x;
 }
 
 .search-header {
@@ -46,9 +53,14 @@ section.search .container {
 
 @media only screen and (max-width: $medium-large-screen) {
   section.search,
-  section.search + .graph-block,
   .search-header.columns.nine {
     margin-left: $space-3x;
+  }
+  .graph-block {
+    margin-left: $space-3x;
+  }
+  .highlights-container {
+    margin-right: $space-3x;
   }
 }
 
@@ -181,10 +193,6 @@ span.dollars {
 .filter-more-info {
   float: right;
   font-size: 70%;
-}
-
-.graph-block {
-  margin-left: 0;
 }
 
 .filter-title {
@@ -325,57 +333,31 @@ input[type="checkbox"]:checked ~ label {
   margin-top: 1em;
 }
 
-.price-block {
-  .row {
-    display: flex;
-    align-items: flex-end;
-    div {
-      flex-grow: 1;
-    }
-  }
-}
 
-@media (min-width: 550px) {
-  .price-block {
-    max-width: 65.5%;
-  }
-}
 .avg-price-block,
 .standard-deviation-block {
-  display: inline-block;
-  margin: 0 auto;
   padding: .4em;
 }
 
-.proposed-price-block {
-  background: $color-gray-lightest;
-  border: 1px solid $color-gray-lighter;
-  border-radius: $border-radius;
-  padding: 0.4em 1.8em;
-  margin-left: 3rem;
-  float: right;
-  display: none;
-  flex-grow: 1;
-}
-
 .proposed-price {
-  float: right;
+  background-color: $color-gray-lightest;
+  padding: $space-1x;
   input {
     margin: 0;
-    width: 155px;
+    width: 100px;
     display: inline-block;
   }
   .go {
     cursor: pointer;
     display: block;
     float: right;
-    margin-left: 0.4rem;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 
 .avg-price-block,
-.standard-deviation-block,
-.proposed-price-block {
+.standard-deviation-block {
   h5 {
     margin-top: 0;
     margin-bottom: 0;
