@@ -1,9 +1,11 @@
+import bleach
 import csv
 from decimal import Decimal
 from textwrap import dedent
 
 from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Count, Q, StdDev
+from django.utils.html import strip_tags
 from django.utils.safestring import SafeString
 
 from markdown import markdown
@@ -17,7 +19,7 @@ from rest_framework import generics
 from api.pagination import ContractPagination
 from api.serializers import ContractSerializer, ScheduleMetadataSerializer
 from api.utils import get_histogram
-from contracts.models import Contract, EDUCATION_CHOICES, ScheduleMetadata
+from contracts.models import Contract, EDUCATION_CHOICES, ScheduleMetadata, normalize_labor_category
 from calc.utils import humanlist, backtickify
 
 
@@ -60,25 +62,52 @@ def queryarg(name, _type, description):
     )
 
 
-def parse_csv_style_string(s):
+def clean_search(query):
     '''
-    Parses comma-delimited string into an array of strings.
-    Quoted sub-strings (like "engineer, junior") will be kept together to
-    allow for commas in sub-strings.
+    Takes a query input, sanitizes it, and finds synoymns.
+
+    If there are multiple search terms (comma-delimited)
+    it will parse the string into an array of strings.
+
+    We're using the CSV module rather than a simple split()
+    so quoted sub-strings (like "engineer, junior") will be kept together,
+    allowing for commas in sub-strings.
+
+    Note that after normalization, all terms will be lower-case and
+    abbreviated synonyms are changed to the long version.
 
     Examples:
 
-        >>> parse_csv_style_string('jane,jim,jacky,joe')
+        >>> clean_search('Lone Ranger')
+        ['lone ranger']
+
+        >>> clean_search('jane,jim,Jacky,joe')
         ['jane', 'jim', 'jacky', 'joe']
 
-        >>> parse_csv_style_string('carrot, beet  , sunchoke')
+        >>> clean_search('carrot, beet  , Sunchoke')
         ['carrot', 'beet', 'sunchoke']
 
-        >>> parse_csv_style_string('turkey, "hog, wild", cow')
+        >>> clean_search('turkey, "Hog, wild", cow')
         ['turkey', 'hog, wild', 'cow']
+
+        >>> clean_search("an <script>EVIL()</script> example")
+        ['an evil() example']
+
+        >>> clean_search('sr. frog, sme, disco chicken')
+        ['senior frog', 'subject matter expert', 'disco chicken']
     '''
-    reader = csv.reader([s], skipinitialspace=True)
-    return [qq.strip() for qq in list(reader)[0] if qq.strip()]
+    # First, let's clean the query and not allow any tags in there.
+    stripped = strip_tags(query)
+    clean_query = bleach.clean(stripped, tags=[], strip=True)
+    # Then extract the terms to a list
+    if ',' in clean_query:
+        reader = csv.reader([clean_query], skipinitialspace=True)
+        terms = [qq.strip() for qq in list(reader)[0] if qq.strip()]
+    else:
+        terms = [clean_query]
+    # Finally, normalize and look for synonyms
+    terms = [normalize_labor_category(t) for t in terms]
+    return terms
 
 
 Q_QUERYARG = queryarg("q", str, "Keywords to search by.")
@@ -116,16 +145,32 @@ GET_CONTRACTS_QUERYARGS = [
         "schedule",
         str,
         """
-        Filter by GSA schedule. See [/api/schedules/](/api/schedules/)
-        for a list of valid values.
+        Filter by GSA schedule. One of the following will
+        return results:
+
+        * Environmental
+        * AIMS
+        * Logistics
+        * Language Services
+        * PES
+        * MOBIS
+        * Consolidated
+        * IT Schedule 70
         """,
     ),
     queryarg(
         "sin",
         str,
         """
-        Filter by SIN number. See [/api/schedules/](/api/schedules/)
-        for a list of example values.
+        Filter by SIN number. Examples include:
+
+        * 899 - Environmental
+        * 541 - AIMS
+        * 87405 - Logistics
+        * 73802 - Language Services
+        * 871 - PES
+        * 874 - MOBIS
+        * 132 - IT Schedule 70
 
         Note that due to the current state of data, not all
         results may be returned.  For more details, see
@@ -202,8 +247,12 @@ def get_contracts_queryset(request_params, wage_field):
     Returns:
         QuerySet: a filtered and sorted QuerySet to retrieve Contract objects
     """
-
     query = request_params.get('q', None)
+    # If we don't have a query, let's skip a lot of work
+    # and just return an empty queryset now.
+    if not query:
+        return Contract.objects.none()
+    # TO-DO: ensure all of these params are clean and of the expected type.
     experience_range = request_params.get('experience_range', None)
     min_experience = request_params.get('min_experience', None)
     max_experience = request_params.get('max_experience', None)
@@ -229,30 +278,45 @@ def get_contracts_queryset(request_params, wage_field):
         if field not in SORTABLE_CONTRACT_FIELDS:
             raise serializers.ValidationError(f'Unable to sort on the field "{field}"')
 
-    contracts = Contract.objects.all()
+    # Now that we have a query, get all contracts for later filtering
+    # but excludes records w/o rates for the selected contract period
+    # Note that currrent_price filtering is already happening
+    # automatically in the CurrentContractManager
+    contracts = Contract.objects.exclude(**{wage_field + '__isnull': True})
 
     if exclude:
         # getlist only works for key=val&key=val2, not for key=val1,val2
+        # TO-DO: take a list of phrases, pass them through
+        # `parse_csv_style_string` and then exclude those labor categories.
         exclude = exclude[0].split(',')
         contracts = contracts.exclude(id__in=exclude)
 
-    # excludes records w/o rates for the selected contract period
-    contracts = contracts.exclude(**{wage_field + '__isnull': True})
+    search_phrases = clean_search(query)
 
-    if query:
-        qs = parse_csv_style_string(query)
-
+    # We'll build a queryset for each search phrase, starting with the first.
+    if query_type == 'match_exact':
+        contracts = contracts.filter(labor_category__iexact=search_phrases[0])
+        # now that we have a starting point we'll union in any others.
+        # See django.db.models.query.QuerySet.union
+        for phrase in search_phrases[1:]:
+            contracts.union(contracts.filter(labor_category__iexact=phrase))
+    else:
+        # same thing, but using icontains instead of iexact
+        contracts = contracts.filter(labor_category__icontains=search_phrases[0])
+        for phrase in search_phrases[1:]:
+            contracts.union(contracts.filter(labor_category__icontains=phrase))
+    """
         if query_type not in ('match_phrase', 'match_exact'):
-            contracts = contracts.multi_phrase_search(qs)
+        contracts = contracts.multi_phrase_search(search_terms)
         else:
             q_objs = Q()
-            for q in qs:
+        for q in search_terms:
                 if query_type == 'match_phrase':
                     q_objs.add(Q(labor_category__icontains=q), Q.OR)
                 elif query_type == 'match_exact':
                     q_objs.add(Q(labor_category__iexact=q.strip()), Q.OR)
             contracts = contracts.filter(q_objs)
-
+    """
     if experience_range:
         years = experience_range.split(',')
         min_experience = int(years[0])
@@ -309,6 +373,21 @@ def quantize(num, precision=2):
     return Decimal(num).quantize(Decimal(10) ** -precision)
 
 
+class ScheduleMetadataList(generics.ListAPIView):
+    """
+    Returns an array of objects representing metadata about
+    Schedules offered by CALC. Each object contains the following keys:
+    * `schedule` is the identifier for the schedule as it appears in
+      other CALC API endpoints, such as [/api/rates/](/api/rates/).
+    * `full_name` is the full name of the schedule as it should appear
+      to end users.
+    * `sin` is the SIN number of the schedule, if one exists.
+    """
+
+    queryset = ScheduleMetadata.objects.all()
+    serializer_class = ScheduleMetadataSerializer
+
+
 class GetRates(APIView):
     """
     Get detailed information about all labor rates that match a search query.
@@ -335,8 +414,7 @@ class GetRates(APIView):
         * `hourly_rate_year1`, `current_price`, `next_year_price`,
             and `second_year_price` contain pricing information for
             the labor rate.
-        * `schedule` is the schedule the labor rate is under. See
-           [/api/schedules/](/api/schedules/) for a list of valid values.
+        * `schedule` is the schedule the labor rate is under.
         * `sin` describes the special item numbers (SINs) the labor
             rate is under. See
             [#1033](https://github.com/18F/calc/issues/1033) for
@@ -425,22 +503,6 @@ class GetRates(APIView):
 
     def get_queryset(self, request, wage_field):
         return get_contracts_queryset(request, wage_field)
-
-
-class ScheduleMetadataList(generics.ListAPIView):
-    """
-    Returns an array of objects representing metadata about
-    Schedules offered by CALC. Each object contains the following keys:
-
-    * `schedule` is the identifier for the schedule as it appears in
-      other CALC API endpoints, such as [/api/rates/](/api/rates/).
-    * `full_name` is the full name of the schedule as it should appear
-      to end users.
-    * `sin` is the SIN number of the schedule, if one exists.
-    """
-
-    queryset = ScheduleMetadata.objects.all()
-    serializer_class = ScheduleMetadataSerializer
 
 
 class GetRatesCSV(APIView):

@@ -74,6 +74,42 @@ def convert_to_tsquery_union(queries):
     return " | ".join(queries)
 
 
+def normalize_labor_category(val):
+    '''
+    Utility to normalize the given labor category by applying various
+    synonyms and such to it. This allows, for example, searches for
+    "senior engineer" to include labor categories like
+    "sr. engineer".
+
+    Note that this would ideally be done by modifying postgres'
+    dictionary configuration, but at the time of this writing,
+    that is untenable. For more details, see:
+
+        https://github.com/18F/calc/issues/1375
+    '''
+
+    # Note also that any logic changes to this code should
+    # eventually be followed-up with
+    # `manage.py update_search_field`. Otherwise,
+    # all pre-existing contracts will still have search
+    # index information corresponding to the old logic.
+
+    synonyms = {
+        'jr': 'junior',
+        'sr': 'senior',
+        'sme': 'subject matter expert',
+    }
+
+    val = val.lower().replace('.', ' ')
+
+    val = ' '.join([
+        synonyms.get(word, word)
+        for word in val.split()
+    ])
+
+    return val
+
+
 class CurrentContractManager(models.Manager):
     def bulk_update_normalized_labor_categories(self):
         '''
@@ -136,7 +172,7 @@ class MultiPhraseSearchQuery(Value):
         if isinstance(queries, str):
             queries = [queries]
         queries = [
-            Contract.normalize_labor_category(q)
+            normalize_labor_category(q)
             for q in queries
         ]
         tsquery = convert_to_tsquery_union(queries)
@@ -346,42 +382,6 @@ class Contract(models.Model):
             return 'other than small business'
 
     @staticmethod
-    def normalize_labor_category(val):
-        '''
-        Normalize the given labor category by applying various synonyms
-        and such to it. This allows, for example, searches for
-        "senior engineer" to include labor categories like
-        "sr. engineer".
-
-        Note that this would ideally be done by modifying postgres'
-        dictionary configuration, but at the time of this writing,
-        that is untenable. For more details, see:
-
-            https://github.com/18F/calc/issues/1375
-        '''
-
-        # Note also that any logic changes to this code should
-        # eventually be followed-up with
-        # `manage.py update_search_field`. Otherwise,
-        # all pre-existing contracts will still have search
-        # index information corresponding to the old logic.
-
-        synonyms = {
-            'jr': 'junior',
-            'sr': 'senior',
-            'sme': 'subject matter expert',
-        }
-
-        val = val.lower().replace('.', ' ')
-
-        val = ' '.join([
-            synonyms.get(word, word)
-            for word in val.split()
-        ])
-
-        return val
-
-    @staticmethod
     def get_education_code(text, raise_exception=False):
         '''
         Given a human-readable education level, return its
@@ -501,7 +501,7 @@ class Contract(models.Model):
         setattr(self, 'hourly_rate_year{}'.format(year), val)
 
     def update_normalized_labor_category(self):
-        val = self.normalize_labor_category(self.labor_category)
+        val = normalize_labor_category(self.labor_category)
         if self._normalized_labor_category != val:
             self._normalized_labor_category = val
             return True

@@ -7,10 +7,10 @@ from django.db import connection
 from django.test import TestCase, SimpleTestCase
 from contracts.mommy_recipes import get_contract_recipe
 
-from ..models import Contract, convert_to_tsquery, CashField
+from ..models import Contract, convert_to_tsquery, CashField, normalize_labor_category
 
 
-_normalize = Contract.normalize_labor_category
+_normalize = normalize_labor_category
 
 
 class CashFieldTests(SimpleTestCase):
