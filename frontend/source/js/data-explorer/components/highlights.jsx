@@ -11,13 +11,9 @@ import ProposedPrice from './proposed-price';
 export function Highlights({
   stdDeviation,
   avgPrice,
-  proposedPrice,
 }) {
   const stdDevMinus = avgPrice - stdDeviation;
   const stdDevPlus = avgPrice + stdDeviation;
-
-  // TODO: The original implementation faded the proposed price in and
-  // out as it was set/unset. We might want to do the same thing here.
 
   return (
     <div className="highlights-container">
