@@ -54,7 +54,6 @@ function mapStateToProps(state) {
   return {
     stdDeviation: state.rates.data.first_standard_deviation,
     avgPrice: state.rates.data.average,
-    proposedPrice: state['proposed-price'],
   };
 }
 
