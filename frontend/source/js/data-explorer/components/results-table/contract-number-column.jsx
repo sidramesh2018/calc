@@ -18,7 +18,7 @@ const column = createSortableColumn({
   description: 'Contract number',
 });
 
-export const HeaderCell = column.HeaderCell;
+export const { HeaderCell } = column;
 
 function createGsaAdvantageUrl(contractNumber) {
   const id = contractNumber.split('-').join('');
@@ -30,7 +30,9 @@ export const DataCell = column.connectDataCell(
   ({ className, value }) => (
     <td className={className}>
       <a target="_blank" rel="noopener noreferrer" href={createGsaAdvantageUrl(value)}>
-        {value} {DOCUMENT_SVG}
+        {value} 
+        {' '}
+        {DOCUMENT_SVG}
       </a>
     </td>
   ),
