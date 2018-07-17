@@ -56,7 +56,7 @@ export class LaborCategory extends React.Component {
                                    'form__inline');
 
     return (
-      <div className ="search-group">
+      <div className="search-group">
         <label htmlFor={id} className="usa-sr-only">Type a labor category</label>
         <input
           id={id} name="q" placeholder="Type a labor category"

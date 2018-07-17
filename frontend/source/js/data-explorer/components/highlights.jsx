@@ -15,7 +15,6 @@ export function Highlights({
 }) {
   const stdDevMinus = avgPrice - stdDeviation;
   const stdDevPlus = avgPrice + stdDeviation;
-  const proposedPriceStyle = proposedPrice ? { display: 'block' } : null;
 
   // TODO: The original implementation faded the proposed price in and
   // out as it was set/unset. We might want to do the same thing here.

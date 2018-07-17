@@ -16,7 +16,6 @@ import Highlights from './highlights';
 import Histogram from './histogram';
 import ExportData from './export-data';
 import ResultsTable from './results-table';
-import QueryType from './query-type';
 import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
 import LoadableScheduleFilter from './optional-filters/loadable-schedule-filter';
 import LoadableContractYearFilter from './optional-filters/loadable-contract-year-filter';
@@ -108,8 +107,7 @@ class App extends React.Component {
               <div className="container clearfix">
                 <LaborCategory api={this.props.api}>
                   <LoadableScheduleFilter />
-                  <button className="submit usa-button-primary icon-search">
-                  </button>
+                  <button className="submit usa-button-primary icon-search" />
                   {' '}
                 </LaborCategory>
               </div>
