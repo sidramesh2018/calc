@@ -25,8 +25,8 @@ class ExpandableArea extends window.HTMLElement {
     // just means we won't progressively enhance on those browsers.
     this.expander = this.firstElementChild;
 
-    this.isUpgraded = Boolean(this.expander &&
-                              !supports.isForciblyDegraded(this));
+    this.isUpgraded = Boolean(this.expander
+                              && !supports.isForciblyDegraded(this));
 
     if (this.isUpgraded) {
       this.expander.setAttribute('aria-expanded', 'false');
@@ -48,11 +48,11 @@ class ExpandableArea extends window.HTMLElement {
     }
 
     const newVal = this.expander.getAttribute('aria-expanded') === 'true'
-                   ? 'false' : 'true';
+      ? 'false' : 'true';
     this.expander.setAttribute('aria-expanded', newVal);
     trackEvent('expandable area',
-               newVal === 'true' ? 'expand' : 'collapse',
-               this.expander.textContent);
+      newVal === 'true' ? 'expand' : 'collapse',
+      this.expander.textContent);
   }
 }
 
