@@ -107,11 +107,6 @@ Object.keys(bundles).forEach((name) => {
   }
 });
 
-
-// default task
-// running `gulp` will default to watching and dist'ing files
-gulp.task('default', ['watch']);
-
 gulp.task('sphinx', (cb) => {
   const sphinx = spawn('make', ['html'], {
     stdio: 'inherit',
@@ -129,30 +124,6 @@ gulp.task('sphinx', (cb) => {
 
 gulp.task('copy-uswds-assets', () => gulp.src(`${USWDS_DIST}/@(js|fonts|img)/**/**`)
   .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/vendor/uswds/`)));
-
-// production build task
-// will need to run before collectstatic
-
-// `yarn gulp build` or `gulp run build` if gulp-cli is installed globally
-gulp.task('build', ['copy-uswds-assets', 'sass', 'js', 'sphinx']);
-
-// watch files for changes
-gulp.task('watch', ['set-watching', 'copy-uswds-assets', 'sass', 'js', 'sphinx'], () => {
-  gulp.watch([
-    path.join(dirs.src.sphinx, paths.sphinx),
-  ], ['sphinx']);
-  gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
-
-  // Note: wepback bundles set up their own watch handling
-  // so we don't want to re-trigger them here, ref #437
-  gulp.watch(path.join(dirs.src.scripts, 'vendor', paths.js), ['js:vendor']);
-
-  const calcURL = `http://localhost:${process.env.DOCKER_EXPOSED_PORT}`;
-
-  gutil.log("-----------------------------------------");
-  gutil.log(`Visit your CALC at: ${calcURL}`);
-  gutil.log("-----------------------------------------");
-});
 
 gulp.task('clean', () => {
   function getPaths(obj) {
@@ -188,23 +159,45 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
   .pipe(sourcemaps.write('./'))
   .pipe(gulp.dest(dirs.dest.style.built)));
 
+gulp.task('js:vendor', gulp.series(vendoredBundles));
+
+gulp.task('js:webpack', () => gulp.src(
+  webpackUtil.scriptSources({ bundles, rootDir: dirs.src.scripts })
+)
+  .pipe(named(webpackUtil.getLastFolderName))
+  .pipe(webpackUtil.webpackify({ isWatching, isProd }))
+  .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/js/`)));
+
 // Compile JavaScript sources
-gulp.task('js', ['js:vendor', 'js:webpack']);
+gulp.task('js', gulp.parallel('js:vendor', 'js:webpack'));
 
-gulp.task('js:vendor', vendoredBundles);
+// production build task
+// will need to run before collectstatic
+// `yarn gulp build` or `gulp run build` if gulp-cli is installed globally
+gulp.task('build', gulp.series('copy-uswds-assets', 'sass', 'js', 'sphinx'));
 
-gulp.task('js:webpack', () => {
-  // NOTE: Don't return this stream, otherwise other streams will get swallowed
-  // I think this is because when watching, webpack-stream does not ever
-  // return its stream
-  gulp.src(webpackUtil.scriptSources({
-    bundles,
-    rootDir: dirs.src.scripts,
-  }))
-    .pipe(named(webpackUtil.getLastFolderName))
-    .pipe(webpackUtil.webpackify({ isWatching, isProd }))
-    .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/js/`));
+// watch files for changes
+gulp.task('watch', gulp.parallel('set-watching', 'copy-uswds-assets', 'sass', 'js', 'sphinx'), () => {
+  gulp.watch([
+    path.join(dirs.src.sphinx, paths.sphinx),
+  ], ['sphinx']);
+  gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
+
+  // Note: wepback bundles set up their own watch handling
+  // so we don't want to re-trigger them here, ref #437
+  gulp.watch(path.join(dirs.src.scripts, 'vendor', paths.js), ['js:vendor']);
+
+  const calcURL = `http://localhost:${process.env.DOCKER_EXPOSED_PORT}`;
+
+  gutil.log("-----------------------------------------");
+  gutil.log(`Visit your CALC at: ${calcURL}`);
+  gutil.log("-----------------------------------------");
 });
+
+// default task
+// running `gulp` will default to watching and dist'ing files
+// gulp.task('default', ['watch']);
+gulp.task('default', gulp.series('watch'));
 
 // set up a SIGTERM handler for quick graceful exit from docker
 process.on('SIGTERM', () => {
