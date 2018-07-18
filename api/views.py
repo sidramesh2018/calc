@@ -19,7 +19,7 @@ from rest_framework import generics
 from api.pagination import ContractPagination
 from api.serializers import ContractSerializer, ScheduleMetadataSerializer
 from api.utils import get_histogram
-from contracts.models import Contract, EDUCATION_CHOICES, ScheduleMetadata, normalize_labor_category
+from contracts.models import Contract, EDUCATION_CHOICES, ScheduleMetadata
 from calc.utils import humanlist, backtickify
 
 
@@ -106,7 +106,7 @@ def clean_search(query):
     else:
         terms = [clean_query]
     # Finally, normalize and look for synonyms
-    terms = [normalize_labor_category(t) for t in terms]
+    terms = [Contract.normalize_labor_category(t) for t in terms]
     return terms
 
 
@@ -247,12 +247,8 @@ def get_contracts_queryset(request_params, wage_field):
     Returns:
         QuerySet: a filtered and sorted QuerySet to retrieve Contract objects
     """
+
     query = request_params.get('q', None)
-    # If we don't have a query, let's skip a lot of work
-    # and just return an empty queryset now.
-    if not query:
-        return Contract.objects.none()
-    # TO-DO: ensure all of these params are clean and of the expected type.
     experience_range = request_params.get('experience_range', None)
     min_experience = request_params.get('min_experience', None)
     max_experience = request_params.get('max_experience', None)
@@ -278,46 +274,30 @@ def get_contracts_queryset(request_params, wage_field):
         if field not in SORTABLE_CONTRACT_FIELDS:
             raise serializers.ValidationError(f'Unable to sort on the field "{field}"')
 
-    # Now that we have a query, get all contracts for later filtering
-    # but excludes records w/o rates for the selected contract period
-    # Note that currrent_price filtering is already happening
-    # automatically in the CurrentContractManager
-    contracts = Contract.objects.exclude(**{wage_field + '__isnull': True})
+    contracts = Contract.objects.all()
 
     if exclude:
         # getlist only works for key=val&key=val2, not for key=val1,val2
-        # TO-DO: take a list of phrases, pass them through
-        # `parse_csv_style_string` and then exclude those labor categories.
         exclude = exclude[0].split(',')
         contracts = contracts.exclude(id__in=exclude)
 
-    search_phrases = clean_search(query)
+    # excludes records w/o rates for the selected contract period
+    contracts = contracts.exclude(**{wage_field + '__isnull': True})
 
-    """
-    # We'll build a queryset for each search phrase, starting with the first.
-    if query_type == 'match_exact':
-        contracts = contracts.filter(labor_category__iexact=search_phrases[0])
-        # now that we have a starting point we'll union in any others.
-        # See django.db.models.query.QuerySet.union
-        for phrase in search_phrases[1:]:
-            contracts.union(contracts.filter(labor_category__iexact=phrase))
-    else:
-        # same thing, but using icontains instead of iexact
-        contracts = contracts.filter(labor_category__icontains=search_phrases[0])
-        for phrase in search_phrases[1:]:
-            contracts.union(contracts.filter(labor_category__icontains=phrase))
-    """
-    if query_type not in ('match_phrase', 'match_exact'):
-        contracts = contracts.multi_phrase_search(search_terms)
-    else:
-        q_objs = Q()
-        for q in search_terms:
-            if query_type == 'match_phrase':
-                q_objs.add(Q(labor_category__icontains=q), Q.OR)
-            elif query_type == 'match_exact':
-                q_objs.add(Q(labor_category__iexact=q.strip()), Q.OR)
-        contracts = contracts.filter(q_objs)
-    
+    if query:
+        qs = clean_search(query)
+
+        if query_type not in ('match_phrase', 'match_exact'):
+            contracts = contracts.multi_phrase_search(qs)
+        else:
+            q_objs = Q()
+            for q in qs:
+                if query_type == 'match_phrase':
+                    q_objs.add(Q(labor_category__icontains=q), Q.OR)
+                elif query_type == 'match_exact':
+                    q_objs.add(Q(labor_category__iexact=q.strip()), Q.OR)
+            contracts = contracts.filter(q_objs)
+
     if experience_range:
         years = experience_range.split(',')
         min_experience = int(years[0])
