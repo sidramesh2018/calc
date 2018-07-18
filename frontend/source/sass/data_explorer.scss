@@ -343,10 +343,11 @@ input[type="checkbox"]:checked ~ label {
 
 .proposed-price {
   background-color: $color-gray-lightest;
-  padding: $space-1x;
+  font-size: $medium-font-size;
+  padding: 1em;
   input {
     margin: 0;
-    width: 100px;
+    width: 90px;
     display: inline-block;
   }
   .go {
