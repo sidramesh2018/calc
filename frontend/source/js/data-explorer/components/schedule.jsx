@@ -14,9 +14,13 @@ export function Schedule({ idPrefix, schedule, setSchedule }) {
 
   return (
     <div className="filter--schedule">
-      <label htmlFor={id} className="usa-sr-only">Select a contract vehicle:</label>
+      <label htmlFor={id} className="usa-sr-only">
+        Select a contract vehicle:
+      </label>
       <select
-        id={id} name="schedule" value={schedule}
+        id={id}
+        name="schedule"
+        value={schedule}
         onChange={handleChange}
         className={filterActive(schedule !== '')}
       >

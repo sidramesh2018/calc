@@ -1,3 +1,5 @@
+/* eslint-disable react/button-has-type, jsx-a11y/anchor-is-valid */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -12,12 +14,11 @@ import histogramToImg from '../histogram-to-img';
 
 import { trackEvent } from '../../common/ga';
 import Description from './description';
+import ProposedPrice from './proposed-price';
 import Highlights from './highlights';
 import Histogram from './histogram';
-import ProposedPrice from './proposed-price';
 import ExportData from './export-data';
 import ResultsTable from './results-table';
-import QueryType from './query-type';
 import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
 import LoadableScheduleFilter from './optional-filters/loadable-schedule-filter';
 import LoadableContractYearFilter from './optional-filters/loadable-contract-year-filter';
@@ -90,11 +91,12 @@ class App extends React.Component {
         id={prefixId('search')}
         className={classNames(this.getContainerClassNames())}
         onSubmit={this.handleSubmit}
-        role="form"
       >
         <div className="row">
           <div className="search-header columns twelve">
-            <h2>Search labor categories</h2>
+            <h2>
+              Search labor categories
+            </h2>
             <p>
               Enter your search terms below, separated by commas.
               {' '}
@@ -109,8 +111,7 @@ class App extends React.Component {
               <div className="container clearfix">
                 <LaborCategory api={this.props.api}>
                   <LoadableScheduleFilter />
-                  <button className="submit usa-button-primary icon-search">
-                  </button>
+                  <button className="submit usa-button-primary icon-search" aria-label="Search CALC" />
                   {' '}
                 </LaborCategory>
               </div>
@@ -127,14 +128,18 @@ class App extends React.Component {
               <canvas
                 ref={(el) => { this.canvasEl = el; }}
                 id={prefixId('graph') /* Selenium needs it. */}
-                className="hidden" width="710" height="280"
+                className="hidden"
+                width="710"
+                height="280"
               />
 
               <div id={prefixId('description')}>
                 <Description />
               </div>
 
-              <h4>Hourly rate data</h4>
+              <h4>
+Hourly rate data
+              </h4>
 
               <LoadingIndicator />
 
@@ -179,7 +184,9 @@ class App extends React.Component {
         <div className="row clearfix">
           <div className="filter-container columns three">
             <div className="filter-block">
-              <h5 className="filter-title">Optional filters</h5>
+              <h5 className="filter-title">
+                Optional filters
+              </h5>
               <LoadableContractYearFilter />
             </div>
           </div>

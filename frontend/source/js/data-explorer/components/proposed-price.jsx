@@ -33,14 +33,14 @@ export class ProposedPrice extends React.Component {
     if (prevState.typed !== this.state.typed) {
       const value = this.state.typed;
       const floatValue = value ? parseFloat(value) : 0;
-      if (!isNaN(floatValue) && floatValue >= 0) {
+      if (!isNaN(floatValue) && floatValue >= 0) { /* eslint-disable-line no-restricted-globals */
         this.props.setProposedPrice(floatValue);
       }
     }
   }
 
   handleChange(e) {
-    const value = e.target.value;
+    const { value } = e.target;
     const filteredChars = [];
     let decimalFound = false;
     let centDigits = 0;
@@ -72,18 +72,25 @@ export class ProposedPrice extends React.Component {
     const id = `${this.props.idPrefix}proposed-price`;
 
     return (
-      <div className="proposed-price">
-        <label htmlFor={id} className="usa-sr-only">Proposed price</label>
+      <div className="proposed-price clearfix">
+        <label htmlFor={id}>
+          Proposed price
+        </label>
         <input
-          id={id} type="text" name="proposed-price"
+          id={id}
+          type="text"
+          name="proposed-price"
           className="form__inline"
-          placeholder="Proposed price" value={this.state.typed}
+          placeholder="&#36;"
+          value={this.state.typed}
           onChange={this.handleChange}
         />
         <button
           type="button"
           className="button-primary go"
-        >Go</button>
+        >
+Go
+        </button>
       </div>
     );
   }
