@@ -335,18 +335,24 @@ input[type="checkbox"]:checked ~ label {
   margin-top: 1em;
 }
 
-
 .avg-price-block,
 .standard-deviation-block {
-  padding: .4em;
+  padding: .5rem;
+}
+
+.price-block {
+  border-bottom: 1px solid $color-gray-light;
+  padding-bottom: $space-2x;
 }
 
 .proposed-price {
   background-color: $color-gray-lightest;
-  padding: $space-1x;
+  border-radius: $border-radius;
+  font-size: $medium-font-size;
+  padding: 1em;
   input {
     margin: 0;
-    width: 100px;
+    width: 90px;
     display: inline-block;
   }
   .go {
@@ -364,7 +370,6 @@ input[type="checkbox"]:checked ~ label {
     margin-top: 0;
     margin-bottom: 0;
     font-weight: 300;
-    line-height: 3.12rem; // to standardize the height of larger and smaller h5s used
   }
 }
 
