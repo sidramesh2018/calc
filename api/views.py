@@ -293,6 +293,7 @@ def get_contracts_queryset(request_params, wage_field):
 
     search_phrases = clean_search(query)
 
+    """
     # We'll build a queryset for each search phrase, starting with the first.
     if query_type == 'match_exact':
         contracts = contracts.filter(labor_category__iexact=search_phrases[0])
@@ -306,17 +307,17 @@ def get_contracts_queryset(request_params, wage_field):
         for phrase in search_phrases[1:]:
             contracts.union(contracts.filter(labor_category__icontains=phrase))
     """
-        if query_type not in ('match_phrase', 'match_exact'):
+    if query_type not in ('match_phrase', 'match_exact'):
         contracts = contracts.multi_phrase_search(search_terms)
-        else:
-            q_objs = Q()
+    else:
+        q_objs = Q()
         for q in search_terms:
-                if query_type == 'match_phrase':
-                    q_objs.add(Q(labor_category__icontains=q), Q.OR)
-                elif query_type == 'match_exact':
-                    q_objs.add(Q(labor_category__iexact=q.strip()), Q.OR)
-            contracts = contracts.filter(q_objs)
-    """
+            if query_type == 'match_phrase':
+                q_objs.add(Q(labor_category__icontains=q), Q.OR)
+            elif query_type == 'match_exact':
+                q_objs.add(Q(labor_category__iexact=q.strip()), Q.OR)
+        contracts = contracts.filter(q_objs)
+    
     if experience_range:
         years = experience_range.split(',')
         min_experience = int(years[0])
