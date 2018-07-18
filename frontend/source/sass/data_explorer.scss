@@ -335,10 +335,14 @@ input[type="checkbox"]:checked ~ label {
   margin-top: 1em;
 }
 
-
 .avg-price-block,
 .standard-deviation-block {
   padding: .5rem;
+}
+
+.price-block {
+  border-bottom: 1px solid $color-gray-light;
+  padding-bottom: $space-2x;
 }
 
 .proposed-price {
