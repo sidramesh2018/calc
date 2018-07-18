@@ -111,7 +111,7 @@ class App extends React.Component {
               <div className="container clearfix">
                 <LaborCategory api={this.props.api}>
                   <LoadableScheduleFilter />
-                  <button className="submit usa-button-primary icon-search" />
+                  <button className="submit usa-button-primary icon-search" aria-label="Search CALC" />
                   {' '}
                 </LaborCategory>
               </div>
