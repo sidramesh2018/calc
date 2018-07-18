@@ -347,6 +347,7 @@ input[type="checkbox"]:checked ~ label {
 
 .proposed-price {
   background-color: $color-gray-lightest;
+  border-radius: $border-radius;
   font-size: $medium-font-size;
   padding: 1em;
   input {
