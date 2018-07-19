@@ -10,8 +10,12 @@ export const Loading = ({ error, pastDelay }) => {
         <p>Error loading component. Try refreshing the page.</p>
       </div>
     );
-  } else if (pastDelay) {
-    return (<div>Loading...</div>);
+  } if (pastDelay) {
+    return (
+      <div>
+        Loading...
+      </div>
+    );
   }
   // default to an empty loading component
   return null;

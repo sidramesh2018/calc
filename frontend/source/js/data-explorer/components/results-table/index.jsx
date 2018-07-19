@@ -14,9 +14,9 @@ import * as ContractNumberColumn from './contract-number-column';
 const COLUMNS = [
   ExcludedColumn,
   LaborCategoryColumn,
+  PriceColumn,
   EducationColumn,
   ExperienceColumn,
-  PriceColumn,
   ContractNumberColumn,
   createSortableColumn({
     key: 'vendor_name',
@@ -69,7 +69,9 @@ export class ResultsTable extends React.Component {
         <tfoot>
           <tr>
             <td colSpan={COLUMNS.length} className="results-table_return-link">
-              <a href={idHref}>Return to the top</a>
+              <a href={idHref}>
+Return to the top
+              </a>
             </td>
           </tr>
         </tfoot>
