@@ -40,31 +40,6 @@
   }
 }
 
-// Used for styling paragraphs of alert text where a background doesn't make visual sense.
-.alert__no-bg {
-  background-color: transparent;
-  border: none;
-  background-image: none;
-  padding: 0;
-  &::before {
-    width: 0;
-  }
-
-  h4 {
-    margin-left: 0;
-    &::before {
-      width: $h4-font-size;
-      height: $h4-font-size;
-      content: ""; // specify icon in alert classes below; see .usa-alert-error for example
-      padding-right: $space-half;
-    }
-  }
-
-  p {
-    margin-left: 0;
-  }
-}
-
 .usa-alert-error,
 .usa-alert-info,
 .usa-alert-success,
@@ -77,10 +52,6 @@
 .usa-alert-error {
   &::before {
     background-color: $color-red-dark;
-  }
-
-  &.alert__no-bg h4::before {
-    content: url('../../images/icon-warning.svg');
   }
 }
 
