@@ -8,7 +8,7 @@
 <p>We need a little more information about the vendor and contract.</p>
 {% endblock %}
 {% block step_body %}
-  <form method="post">
+  <form method="post" class="form--contract_details">
   {% csrf_token %}
 
   {{ form.non_field_errors }}

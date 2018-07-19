@@ -172,9 +172,9 @@ export function parseInputs(inputs, groupedInputs) {
 export function domContentLoaded(win) {
   // there are several forms on the page; get the one within the .content div
   // TODO: make this a more reliable ID selector or something
-  const form = win.document.getElementsByTagName('form')[0];
+  const form = win.document.getElementsByClassName('form--contract_details')[0];
   const inputs = parseInputs(win.document.querySelectorAll('input, select, textarea'), win.document.querySelectorAll('uswds-date'));
-  const submitButton = win.document.querySelector('.submit-group button[type="submit"]');
+  const submitButton = win.document.querySelector('.form--contract_details .submit-group button[type="submit"]');
   if (form && inputs && submitButton) {
     submitButton.addEventListener('click', () => {
       const isValid = form.checkValidity();

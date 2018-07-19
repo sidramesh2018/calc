@@ -33,7 +33,7 @@ class FakeWindow {
         documentElement: { scrollTop: 0 },
         readyState: options.readyState || 'loading',
         getElementById() { return null; },
-        getElementsByTagName: sinon.stub(),
+        getElementsByClassName: sinon.stub(),
         querySelectorAll: sinon.stub(),
         querySelector: sinon.stub(),
         createElement(el) {
@@ -231,10 +231,10 @@ QUnit.test('domContentLoaded submits the form when valid', (assert) => {
   const input = makeInput().input;
   const subgroup = makeInputSet().subgroup;
 
-  win.document.getElementsByTagName.withArgs('form').returns([fakeForm]);
+  win.document.getElementsByClassName.withArgs('form--contract_details').returns([fakeForm]);
   win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);
   win.document.querySelectorAll.withArgs('uswds-date').returns([subgroup]);
-  win.document.querySelector.withArgs('.submit-group button[type="submit"]').returns(fakeSubmitButton);
+  win.document.querySelector.withArgs('.form--contract_details .submit-group button[type="submit"]').returns(fakeSubmitButton);
 
   fakeForm.checkValidity.returns(true);
 
@@ -256,7 +256,7 @@ QUnit.test('domContentLoaded does not submit the form when invalid', (assert) =>
   const input = makeInput().input;
   const subgroup = makeInputSet().subgroup;
 
-  win.document.getElementsByTagName.withArgs('form').returns([fakeForm]);
+  win.document.getElementsByClassName.withArgs('form--contract_details').returns([fakeForm]);
   win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);
   win.document.querySelectorAll.withArgs('uswds-date').returns([subgroup]);
   win.document.querySelector.withArgs('.submit-group button[type="submit"]').returns(fakeSubmitButton);
