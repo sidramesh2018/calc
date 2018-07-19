@@ -2,11 +2,7 @@
 <alerts-widget>
   {% for message in messages %}
     <div class="usa-alert usa-alert-{{ message.tags }}">
-      {% if message|first == '<' %}
-        {{ message }}
-      {% else %}
-        <h4>{{ message }}</h4>
-      {% endif %}
+      <h4>{{ message }}</h4>
     </div>
   {% endfor %}
 </alerts-widget>
