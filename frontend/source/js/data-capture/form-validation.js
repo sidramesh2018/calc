@@ -54,7 +54,7 @@ export function documentCreateElement(window, type) {
 export function toggleErrorMsg(window, options) {
   if (options.parent) {
     // I'm tired of typing `options`
-    const parent = options.parent;
+    const { parent } = options;
     const errorContainer = parent.querySelector(`.${INVALID_MESSAGE_CLASS}`)
       || documentCreateElement(window, 'p');
     // grouped inputs like radios have legends; single inputs just have labels
@@ -170,8 +170,6 @@ export function parseInputs(inputs, groupedInputs) {
 }
 
 export function domContentLoaded(win) {
-  // there are several forms on the page; get the one within the .content div
-  // TODO: make this a more reliable ID selector or something
   const form = win.document.getElementsByClassName('form--contract_details')[0];
   const inputs = parseInputs(win.document.querySelectorAll('input, select, textarea'), win.document.querySelectorAll('uswds-date'));
   const submitButton = win.document.querySelector('.form--contract_details .submit-group button[type="submit"]');

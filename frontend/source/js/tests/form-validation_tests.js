@@ -80,7 +80,12 @@ function makeInputSet(isDate = true, hasErrorMsg = false) {
   groupedFieldset.appendChild(legend);
   groupedFieldset.appendChild(subgroup);
 
-  return { groupedFieldset, subgroup, input1, input2 };
+  return {
+    groupedFieldset,
+    subgroup,
+    input1,
+    input2
+  };
 }
 
 function makeInput(hasErrorMsg = false) {
@@ -147,7 +152,7 @@ QUnit.test('findParentNode works', (assert) => {
 QUnit.test('toggleErrorMsg creates errors on single fields', (assert) => {
   const win = new FakeWindow();
   const INVALID_PARENT_CLASS = 'fieldset__form--invalid';
-  const fieldset = makeInput().fieldset;
+  const { fieldset } = makeInput();
   const parent = fieldset;
 
   const options = {
@@ -228,8 +233,8 @@ QUnit.test('domContentLoaded submits the form when valid', (assert) => {
     },
   };
 
-  const input = makeInput().input;
-  const subgroup = makeInputSet().subgroup;
+  const { input } = makeInput();
+  const { subgroup } = makeInputSet();
 
   win.document.getElementsByClassName.withArgs('form--contract_details').returns([fakeForm]);
   win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);
@@ -253,8 +258,8 @@ QUnit.test('domContentLoaded does not submit the form when invalid', (assert) =>
     },
   };
 
-  const input = makeInput().input;
-  const subgroup = makeInputSet().subgroup;
+  const { input } = makeInput();
+  const { subgroup } = makeInputSet();
 
   win.document.getElementsByClassName.withArgs('form--contract_details').returns([fakeForm]);
   win.document.querySelectorAll.withArgs('input, select, textarea').returns([input]);

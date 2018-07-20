@@ -6,8 +6,12 @@ export const Loading = ({ error, pastDelay }) => {
   if (error) {
     return (
       <div className="usa-alert usa-alert-error" role="alert">
-        <h4>Oops!</h4>
-        <p>Error loading component. Try refreshing the page.</p>
+        <h4>
+          Oops!
+        </h4>
+        <p>
+          Error loading component. Try refreshing the page.
+        </p>
       </div>
     );
   } if (pastDelay) {
