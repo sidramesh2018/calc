@@ -82,8 +82,8 @@ class ContractTestCase(TestCase):
         self.assertEqual(c1._normalized_labor_category, 'lol foo')
         self.assertEqual(c2._normalized_labor_category, 'lol bar')
 
-        # results = Contract.objects.multi_phrase_search('lol foo')
-        # self.assertEqual([r.labor_category for r in results], ['foo'])
+        results = Contract.objects.multi_phrase_search('lol foo')
+        self.assertEqual([r.labor_category for r in results], ['foo'])
 
     def test_update_normalized_labor_category_returns_bool(self):
         c = get_contract_recipe().prepare(labor_category='jr person')
