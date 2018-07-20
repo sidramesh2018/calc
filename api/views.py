@@ -4,8 +4,7 @@ from decimal import Decimal
 from textwrap import dedent
 
 from django.http import HttpResponse
-from django.db.models import Avg, Max, Min, Count, Q, StdDev
-from django.utils.html import strip_tags
+from django.db.models import Avg, Max, Min, Count, StdDev
 from django.utils.safestring import SafeString
 
 from markdown import markdown
@@ -60,54 +59,6 @@ def queryarg(name, _type, description):
             description=html_desc,
         )
     )
-
-
-def clean_search(query):
-    '''
-    Takes a query input, sanitizes it, and finds synoymns.
-
-    If there are multiple search terms (comma-delimited)
-    it will parse the string into an array of strings.
-
-    We're using the CSV module rather than a simple split()
-    so quoted sub-strings (like "engineer, junior") will be kept together,
-    allowing for commas in sub-strings.
-
-    Note that after normalization, all terms will be lower-case and
-    abbreviated synonyms are changed to the long version.
-
-    Examples:
-
-        >>> clean_search('Lone Ranger')
-        ['lone ranger']
-
-        >>> clean_search('jane,jim,Jacky,joe')
-        ['jane', 'jim', 'jacky', 'joe']
-
-        >>> clean_search('carrot, beet  , Sunchoke')
-        ['carrot', 'beet', 'sunchoke']
-
-        >>> clean_search('turkey, "Hog, wild", cow')
-        ['turkey', 'hog, wild', 'cow']
-
-        >>> clean_search("an <script>EVIL()</script> example")
-        ['an evil() example']
-
-        >>> clean_search('sr. frog, sme, disco chicken')
-        ['senior frog', 'subject matter expert', 'disco chicken']
-    '''
-    # First, let's clean the query and not allow any tags in there.
-    stripped = strip_tags(query)
-    clean_query = bleach.clean(stripped, tags=[], strip=True)
-    # Then extract the terms to a list
-    if ',' in clean_query:
-        reader = csv.reader([clean_query], skipinitialspace=True)
-        terms = [qq.strip() for qq in list(reader)[0] if qq.strip()]
-    else:
-        terms = [clean_query]
-    # Finally, normalize and look for synonyms
-    terms = [Contract.normalize_labor_category(t) for t in terms]
-    return terms
 
 
 Q_QUERYARG = queryarg("q", str, "Keywords to search by.")
@@ -249,94 +200,91 @@ def get_contracts_queryset(request_params, wage_field):
     """
 
     query = request_params.get('q', None)
-    experience_range = request_params.get('experience_range', None)
-    min_experience = request_params.get('min_experience', None)
-    max_experience = request_params.get('max_experience', None)
-    min_education = request_params.get('min_education', None)
-    education = request_params.get('education', None)
-    schedule = request_params.get('schedule', None)
-    sin = request_params.get('sin', None)
-    site = request_params.get('site', None)
-    business_size = request_params.get('business_size', None)
-    price = request_params.get('price', None)
-    price__gte = request_params.get('price__gte')
-    price__lte = request_params.get('price__lte')
-    sort = request_params.get('sort', wage_field).split(',')
-    # query_type can be: [ match_all (default) | match_phrase | match_exact ]
-    query_type = request_params.get('query_type', 'match_all')
+    # Ideally we'd go ahead and return a plain queryset here if there is
+    # no query to avoid doing extra work, but before we can do that
+    # we'll have to ensure other fields can't do anything in the absence
+    # of a query or Very Strange Things happen.
+
+    # Exclude records w/o rates for the selected contract period.
+    # Additional price filtering is already in the CurrentContractManager
+    contracts = Contract.objects.exclude(**{wage_field + '__isnull': True})
+
+    # Since our query can be multi-phrase, leave the original queryset alone.
+    # Instead, start with an empty queryset, then find matching subsets
+    # in the original and chain them together.
+    if query:
+        query_type = request_params.get('query_type', 'match_all')
+        # We're doing most of the lifting in the manager here.
+        contracts = Contract.objects.multi_phrase_search(query, query_type)
+
     exclude = request_params.getlist('exclude')
-
-    for field in sort:
-        if field.startswith('-'):
-            field = field[1:]
-        if field not in ALL_CONTRACT_FIELDS:
-            raise serializers.ValidationError(f'"{field}" is not a valid field to sort on')
-        if field not in SORTABLE_CONTRACT_FIELDS:
-            raise serializers.ValidationError(f'Unable to sort on the field "{field}"')
-
-    contracts = Contract.objects.all()
-
     if exclude:
         # getlist only works for key=val&key=val2, not for key=val1,val2
+        # this is safe because any non-integer value in the request params
+        # wouldn't match id__in anyway.
+
+        # TO-DO: take a list of phrases, pass them through
+        # `clean_search` and then exclude those phrases
         exclude = exclude[0].split(',')
         contracts = contracts.exclude(id__in=exclude)
 
-    # excludes records w/o rates for the selected contract period
-    contracts = contracts.exclude(**{wage_field + '__isnull': True})
-
-    if query:
-        qs = clean_search(query)
-
-        if query_type not in ('match_phrase', 'match_exact'):
-            contracts = contracts.multi_phrase_search(qs)
-        else:
-            q_objs = Q()
-            for q in qs:
-                if query_type == 'match_phrase':
-                    q_objs.add(Q(labor_category__icontains=q), Q.OR)
-                elif query_type == 'match_exact':
-                    q_objs.add(Q(labor_category__iexact=q.strip()), Q.OR)
-            contracts = contracts.filter(q_objs)
-
+    # *** EXPERIENCE ***
+    min_experience = request_params.get('min_experience', None)
+    max_experience = request_params.get('max_experience', None)
+    experience_range = request_params.get('experience_range', None)
     if experience_range:
         years = experience_range.split(',')
-        min_experience = int(years[0])
+        min_experience = years[0]
         if len(years) > 1:
-            max_experience = int(years[1])
-
-    if min_experience:
+            max_experience = years[1]
+    # Ensure the input matches expected numeric format to avoid injections
+    if min_experience and min_experience.isdigit():
         contracts = contracts.filter(min_years_experience__gte=min_experience)
 
-    if max_experience is not None:
+    if max_experience and max_experience.isdigit():
         contracts = contracts.filter(min_years_experience__lte=max_experience)
 
+    # *** EDUCATION ***
+    ed_levels = [x[0] for x in EDUCATION_CHOICES]
+    min_education = request_params.get('min_education', None)
     if min_education:
-        for index, pair in enumerate(EDUCATION_CHOICES):
-            if min_education == pair[0]:
-                contracts = contracts.filter(
-                    education_level__in=[
-                        ed[0] for ed in EDUCATION_CHOICES[index:]
-                    ]
-                )
+        min_level = ed_levels.index(min_education)
+        if min_level:  # The submitted value matched a choice and wasn't weird.
+            contracts = contracts.filter(education_level__in=ed_levels[min_level:])
 
+    education = request_params.get('education', None)
     if education:
-        degrees = education.split(',')
-        selected_degrees = []
-        for index, pair in enumerate(EDUCATION_CHOICES):
-            if pair[0] in degrees:
-                selected_degrees.append(pair[0])
-        contracts = contracts.filter(education_level__in=selected_degrees)
+        # Find submitted levels that are within our group of accepted values
+        degrees = [value for value in education.split(',') if value in ed_levels]
+        if degrees:
+            contracts = contracts.filter(education_level__in=degrees)
 
+    schedule = request_params.get('schedule', None)
+    if schedule:
+        schedule = bleach.clean(schedule)
+        contracts = contracts.filter(schedule__iexact=schedule)
+
+    site = request_params.get('site', None)
+    if site:
+        site = bleach.clean(site)
+        contracts = contracts.filter(contractor_site__icontains=site)
+
+    business_size = request_params.get('business_size', None)
+    if business_size and business_size in ('s', 'o'):
+        if business_size == 's':
+            contracts = contracts.filter(business_size__istartswith='s')
+        else:
+            contracts = contracts.filter(business_size__istartswith='o')
+
+    # WE NEED TO DOUBLE CHECK SIN AND PRICE.
+    # THEY DO NOT APPEAR TO BE ON THE SEARCH PAGE.
+    sin = request_params.get('sin', None)
     if sin:
         contracts = contracts.filter(sin__icontains=sin)
-    if schedule:
-        contracts = contracts.filter(schedule__iexact=schedule)
-    if site:
-        contracts = contracts.filter(contractor_site__icontains=site)
-    if business_size == 's':
-        contracts = contracts.filter(business_size__istartswith='s')
-    elif business_size == 'o':
-        contracts = contracts.filter(business_size__istartswith='o')
+
+    price = request_params.get('price', None)
+    price__gte = request_params.get('price__gte')
+    price__lte = request_params.get('price__lte')
     if price:
         contracts = contracts.filter(**{wage_field + '__exact': price})
     else:
@@ -344,6 +292,16 @@ def get_contracts_queryset(request_params, wage_field):
             contracts = contracts.filter(**{wage_field + '__gte': price__gte})
         if price__lte:
             contracts = contracts.filter(**{wage_field + '__lte': price__lte})
+
+    # get any sorting params and sort by them.
+    sort = request_params.get('sort', wage_field).split(',')
+    for field in sort:
+        if field.startswith('-'):
+            field = field[1:]
+        if field not in ALL_CONTRACT_FIELDS:
+            raise serializers.ValidationError(f'"{field}" is not a valid field to sort on')
+        if field not in SORTABLE_CONTRACT_FIELDS:
+            raise serializers.ValidationError(f'Unable to sort on the field "{field}"')
 
     return contracts.order_by(*sort)
 
@@ -449,8 +407,17 @@ class GetRates(APIView):
     def get(self, request):
         bins = request.query_params.get('histogram', None)
 
-        wage_field = self.get_wage_field(
-            request.query_params.get('contract-year'))
+        """
+        wage_field determines prices for a given year:
+        This year, next year, or the year after.
+        Relies on indexing a list, which may be less reliable than a tuple.
+
+        This is used both here in get() and downstream in get_query_set(),
+        so we have to pass it through.
+        """
+        possible_wage_fields = ['current_price', 'next_year_price', 'second_year_price']
+        year = request.query_params.get('contract-year', 0)
+        wage_field = possible_wage_fields[int(year)]
         contracts_all = self.get_queryset(request.query_params, wage_field)
 
         stats = contracts_all.aggregate(
@@ -474,13 +441,6 @@ class GetRates(APIView):
         results = pagination.paginate_queryset(contracts_all, request)
         serializer = ContractSerializer(results, many=True)
         return pagination.get_paginated_response(serializer.data)
-
-    def get_wage_field(self, year):
-        wage_fields = ['current_price', 'next_year_price', 'second_year_price']
-        if year in ['1', '2']:
-            return wage_fields[int(year)]
-        else:
-            return 'current_price'
 
     def get_queryset(self, request, wage_field):
         return get_contracts_queryset(request, wage_field)
@@ -589,10 +549,7 @@ class GetAutocomplete(APIView):
         query_type = request.query_params.get('query_type', 'match_all')
 
         if q:
-            if query_type == 'match_phrase':
-                data = Contract.objects.filter(labor_category__icontains=q)
-            else:
-                data = Contract.objects.multi_phrase_search(q)
+            data = Contract.objects.multi_phrase_search(q, query_type)
 
             data = data.values('_normalized_labor_category').annotate(
                 count=Count('_normalized_labor_category')).order_by('-count')
