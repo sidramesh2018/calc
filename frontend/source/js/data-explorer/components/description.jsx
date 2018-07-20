@@ -42,7 +42,8 @@ export function Description({
   if (education.length) {
     filters.push(
       <DescriptionFilter
-        key="edu" label="education level"
+        key="edu"
+        label="education level"
         extraClassName="education-filter"
       >
         {education.map(x => EDU_LABELS[x]).join(', ')}
@@ -50,11 +51,16 @@ export function Description({
     );
   }
 
-  if (minExperience !== MIN_EXPERIENCE ||
-      maxExperience !== MAX_EXPERIENCE) {
+  if (minExperience !== MIN_EXPERIENCE
+      || maxExperience !== MAX_EXPERIENCE) {
     filters.push(
       <DescriptionFilter key="exp" label="experience">
-        {minExperience} - {maxExperience} years
+        {minExperience}
+        {' '}
+-
+        {maxExperience}
+        {' '}
+years
       </DescriptionFilter>,
     );
   }
@@ -96,7 +102,9 @@ export function Description({
   return (
     <p className="">
       {`Showing ${formatCommas(shownResults)} of `}
-      <span className="total">{formatCommas(totalResults)}</span>
+      <span className="total">
+        {formatCommas(totalResults)}
+      </span>
       {results}
       <span className={filtersClasses.join(' ')}>
         {filters}

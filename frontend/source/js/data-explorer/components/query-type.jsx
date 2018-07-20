@@ -30,7 +30,10 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
     return (
       <li>
         <input
-          id={id} type="radio" name="query_type" value={type}
+          id={id}
+          type="radio"
+          name="query_type"
+          value={type}
           checked={type === queryType}
           onChange={() => { setQueryType(type); }}
         />

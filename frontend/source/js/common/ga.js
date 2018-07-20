@@ -47,7 +47,7 @@ export function ga(...args) {
  *   search query.
  */
 export function trackVirtualPageview(url) {
-  ga('set', 'page', url || location.pathname + location.search);
+  ga('set', 'page', url || location.pathname + location.search); /* eslint-disable-line no-restricted-globals */
   ga('send', 'pageview');
   gas('send', 'pageview', url);
 }

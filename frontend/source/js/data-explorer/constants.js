@@ -1,5 +1,5 @@
 // @ts-check
-
+/* eslint-disable no-unused-vars */
 /* global window */
 
 export const MAX_EXPERIENCE = 45;
