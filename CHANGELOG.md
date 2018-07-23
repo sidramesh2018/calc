@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.10.0][] - 2018-07-23
+
 ### Added
 - Made it possible for data administrators to edit and add schedule names, descriptions, and SIN numbers, by centralizing schedule metadata in an API call (#2018).
 - Added OpenGraph metadata tags (#2033).
@@ -458,7 +460,8 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.9.1...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v2.10.0...HEAD
+[2.10.0]: https://github.com/18F/calc/compare/v2.9.1...v2.10.0
 [2.9.1]: https://github.com/18F/calc/compare/v2.9.0...v2.9.1
 [2.9.0]: https://github.com/18F/calc/compare/v2.8.6...v2.9.0
 [2.8.6]: https://github.com/18F/calc/compare/v2.8.5...v2.8.6
