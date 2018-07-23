@@ -444,14 +444,23 @@ td.column-idv_piid {
   color-white-space: nowrap;
 }
 
-td.column-min_years_experience .years {
-  display: none;
-  font-style: italic;
-  color: $color-gray;
+td.column-idv_piid a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+td.column-min_years_experience {
+  .years {
+    color: $color-gray-dark;
+    display: none;
+    font-style: italic;
+  }
 }
 
 tr:hover td.column-min_years_experience .years {
-  display: inline;
+  display: block;
 }
 
 .document-icon {

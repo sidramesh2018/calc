@@ -1,3 +1,5 @@
+/* eslint-disable react/button-has-type, jsx-a11y/anchor-is-valid */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -88,11 +90,12 @@ class App extends React.Component {
         id={prefixId('search')}
         className={classNames(this.getContainerClassNames())}
         onSubmit={this.handleSubmit}
-        role="form"
       >
         <div className="row">
           <div className="search-header columns nine">
-            <h2>Search labor categories</h2>
+            <h2>
+Search labor categories
+            </h2>
             <p>
               Enter your search terms below, separated by commas.
               {' '}
@@ -134,14 +137,18 @@ class App extends React.Component {
               <canvas
                 ref={(el) => { this.canvasEl = el; }}
                 id={prefixId('graph') /* Selenium needs it. */}
-                className="hidden" width="710" height="280"
+                className="hidden"
+                width="710"
+                height="280"
               />
 
               <div id={prefixId('description')}>
                 <Description />
               </div>
 
-              <h4>Hourly rate data</h4>
+              <h4>
+Hourly rate data
+              </h4>
 
               <ProposedPrice />
               <LoadingIndicator />
@@ -185,7 +192,9 @@ class App extends React.Component {
 
           <div className="filter-container columns three">
             <div className="filter-block">
-              <h5 className="filter-title">Optional filters</h5>
+              <h5 className="filter-title">
+Optional filters
+              </h5>
               <LoadableOptionalFilters />
             </div>
           </div>
