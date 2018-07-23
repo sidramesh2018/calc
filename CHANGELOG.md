@@ -7,8 +7,6 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
-## [2.10.0] - 2018-07-23
-
 ### Added
 - Made it possible for data administrators to edit and add schedule names, descriptions, and SIN numbers, by centralizing schedule metadata in an API call (#2018).
 - Added OpenGraph metadata tags (#2033).
