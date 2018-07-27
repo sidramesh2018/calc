@@ -24,7 +24,7 @@ const COLUMNS = [
   }),
   createSortableColumn({
     key: 'schedule',
-    title: 'Schedule',
+    title: 'Contract vehicle',
   }),
 ];
 

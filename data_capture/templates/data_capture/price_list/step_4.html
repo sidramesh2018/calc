@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block step_body %}
-<form method="post">
+<form method="post" class="form--contract_details">
   {% csrf_token %}
 
 <h3>Verify vendor and contract details</h3>
@@ -110,7 +110,7 @@
 
 {% if replay %}
 <div class="usa-alert usa-alert-warning" role="alert">
-  <h3>Remember, this is a replay!</h3>
+  <h4>Remember, this is a replay!</h4>
 
   <p>
     While we won't <em>stop</em> you from submitting this price list
