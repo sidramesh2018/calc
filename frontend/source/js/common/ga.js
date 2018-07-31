@@ -47,7 +47,7 @@ export function ga(...args) {
  *   search query.
  */
 export function trackVirtualPageview(url) {
-  ga('set', 'page', url || location.pathname + location.search);
+  ga('set', 'page', url || location.pathname + location.search); /* eslint-disable-line no-restricted-globals */
   ga('send', 'pageview');
   gas('send', 'pageview', url);
 }
@@ -132,4 +132,21 @@ export function autoTrackInterestingLinks() {
   document.documentElement.addEventListener('click', (e) => {
     trackInterestingLink(e.target);
   }, true);
+}
+
+/**
+ * Track an exception. For more details, see:
+ * 
+ *   https://developers.google.com/analytics/devguides/collection/analyticsjs/exceptions
+ * 
+ * @param {string} description - A description of the exception.
+ * @param {boolean?} isFatal - true if the exception was fatal.
+ */
+export function trackException(description, isFatal) {
+  const fieldsObject = {
+    exDescription: description,
+    exFatal: isFatal || false
+  };
+  ga('send', 'exception', fieldsObject);
+  gas('send', 'exception', fieldsObject);
 }
