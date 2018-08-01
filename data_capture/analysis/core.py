@@ -201,7 +201,6 @@ def analyze_price_list_row(cursor, vocab, row):
     )
     return {
         'analysis': analysis,
-        'sin': row.sin,
         'labor_category': row.labor_category,
         'education_level': row.education_level,
         'min_years_experience': row.min_years_experience,
