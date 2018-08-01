@@ -1,17 +1,14 @@
 {% extends 'data_capture/step.html' %}
-
-{% block body_class %}secondary-step card--narrow card--no-header{% endblock %}
+{% block body_class %}content--skinny{% endblock %}
 
 {% block title %}Analyze price list / {{ step.description|capfirst }}{% endblock %}
 
 {% block step_heading %}
   <h2>Upload price list</h2>
+  <p>Choose the price list you'd like to analyze.</p>
+  {% include 'data_capture/_upload_example.html' %}
 {% endblock %}
 {% block step_body %}
-  <p>Choose the price list you'd like to analyze.</p>
-
-  {% include 'data_capture/_upload_example.html' %}
-
   {% include 'data_capture/analyze_price_list/upload_form.html' %}
 {% endblock %}
 {% block card_footer %}
