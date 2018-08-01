@@ -6,6 +6,9 @@
 
 {% block step_heading %}
   <h2>Price list analysis</h2>
+  {% if gleaned_data.valid_rows %}
+    <p>Below is the analysis of your price list.</p>
+    {% endif %}
 {% endblock %}
 {% block step_body %}
   {% if gleaned_data.invalid_rows %}
@@ -35,8 +38,6 @@
   {% endif %}
 
   {% if gleaned_data.valid_rows %}
-    <p>Below is the analysis of your price list.</p>
-
     <table class="price-list-table">
         <thead>
           <tr>
