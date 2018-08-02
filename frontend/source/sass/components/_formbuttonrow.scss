@@ -18,6 +18,9 @@
   .usa-button {
     display: inline-block;
     margin: 0 2em 0 0;
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 
   .submit-group {
