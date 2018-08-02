@@ -138,12 +138,12 @@ input.usa-button-link[type="button"] {
     color: $color-gray-darker;
   }
   &.graph {
-    background-image: url('../../images/icon-graph.svg');
+    background-image: url('../../images/icon-graph-gray.svg');
     background-position: $base-spacing-unit 50%;
     background-repeat: no-repeat;
   }
   &.csv {
-    background-image: url('../../images/icon-spreadsheet.svg');
+    background-image: url('../../images/icon-spreadsheet-gray.svg');
     background-position: $base-spacing-unit 50%;
     background-repeat: no-repeat;
   }

@@ -66,12 +66,13 @@
 
   <br>
 
-  <button href="{% url 'data_capture:export_analysis' %}?f=csv" class="button-gray-icon graph" download>
-    CSV
-  </button>
+  <label>Download analysis:</label>
+  <a href="{% url 'data_capture:export_analysis' %}?f=csv" class="usa-button button-gray-icon csv" download>
+    CSV file
+  </a>
 
-  <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="usa-button" download>
-    ⬇ Download Analysis (Excel)
+  <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="usa-button button-gray-icon graph" download>
+    Excel file
   </a>
 
   <div class="form-button-row clearfix">
