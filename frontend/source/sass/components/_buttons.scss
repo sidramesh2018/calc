@@ -148,3 +148,34 @@ input.usa-button-link[type="button"] {
     background-repeat: no-repeat;
   }
 }
+
+.button-unboxed {
+  background: transparent;
+  color: $color-blue;
+  font-size: $medium-font-size;
+  margin: 0 .5rem 0 -.75rem; // Negative margin to properly align ghost button
+  padding: 1rem 1rem .5rem 3.5rem;
+  span {
+    font-weight: $font-weight-normal;
+  }
+  &:hover {
+    background-color: $color-blue-lightest;
+    color: $color-blue-darker;
+  }
+  &.graph {
+    background-image: url('../../images/icon-graph-blue.svg');
+    background-position: 10% center;
+    background-repeat: no-repeat;
+    &:hover {
+      background-image: url('../../images/icon-graph-blue-dark.svg');
+    }
+  }
+  &.csv {
+    background-image: url('../../images/icon-spreadsheet-blue.svg');
+    background-position: 10% center;
+    background-repeat: no-repeat;
+    &:hover {
+      background-image: url('../../images/icon-spreadsheet-blue-dark.svg');
+    }
+  }
+}
