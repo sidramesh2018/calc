@@ -144,16 +144,27 @@ td.sorted {
 }
 
 /* price analysis results styles */
-.analysis td {
-  border-bottom: 4px solid transparent;
-}
+.analysis {
+  td {
+    border-bottom: 3px solid white;
+  }
 
-td.table-error-severe {
-  background-color: $color-red-lightest;
-  border-left: 4px solid $color-red-dark;
-  font-weight: $font-weight-bold;
-  span {
-    font-weight: $font-weight-normal;
+  td.table-error-severe {
+    background-color: $color-red-lightest;
+    font-weight: $font-weight-bold;
+    padding-left: 1.5rem;
+    span {
+      font-weight: $font-weight-normal;
+    }
+    &:before {
+      background-color: $color-red-dark;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 4px;
+    }
   }
 }
 
