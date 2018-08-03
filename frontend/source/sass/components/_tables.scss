@@ -143,6 +143,20 @@ td.sorted {
   background: #fafafa;
 }
 
+/* price analysis results styles */
+.analysis td {
+  border-bottom: 4px solid transparent;
+}
+
+td.table-error-severe {
+  background-color: $color-red-lightest;
+  border-left: 4px solid $color-red-dark;
+  font-weight: $font-weight-bold;
+  span {
+    font-weight: $font-weight-normal;
+  }
+}
+
 /* used on price list upload error page */
 td.error {
   color: $color-red-dark;
