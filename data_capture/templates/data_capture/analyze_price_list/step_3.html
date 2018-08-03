@@ -55,7 +55,7 @@
             <td>{{ row.education_level }}</td>
             <td class="number">{{ row.min_years_experience }}</td>
             <td class="number">${{ row.price|floatformat:2 }}</td>
-            <td {% if row.analysis.severe %}class="error"{% endif %}>
+            <td {% if row.analysis.severe %}class="table-error-severe"{% endif %}>
               {{ row.analysis.description }}
             </td>
           </tr>
