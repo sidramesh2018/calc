@@ -25,7 +25,7 @@ class AnalyzeStep1Form(forms.Step1Form):
         del self.fields['contract_number']
 
 
-@steps.step(label='Basic information')
+@steps.step(label='Select a schedule')
 @require_http_methods(["GET", "POST"])
 def analyze_step_1(request, step):
     if request.method == 'GET':
@@ -49,7 +49,7 @@ def analyze_step_1(request, step):
     })
 
 
-@steps.step(label='Upload price list')
+@steps.step(label='Upload a price list to analyze')
 @require_http_methods(["GET", "POST"])
 @handle_cancel
 def analyze_step_2(request, step):
