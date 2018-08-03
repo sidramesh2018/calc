@@ -65,11 +65,11 @@
   {% endif %}
 
   <label>Download analysis:</label>
-  <a href="{% url 'data_capture:export_analysis' %}?f=csv" class="usa-button button-unboxed csv" download>
+  <a href="{% url 'data_capture:export_analysis' %}?f=csv" class="usa-button ghost-button csv" download>
     CSV file
   </a>
 
-  <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="usa-button button-unboxed graph" download>
+  <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="usa-button ghost-button graph" download>
     Excel file
   </a>
 
