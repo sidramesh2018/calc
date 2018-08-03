@@ -23,6 +23,15 @@
     }
   }
 
+  .download-group {
+    float: left;
+    text-align: left;
+
+    .ghost-button {
+    margin: 0 .3rem 0 -.75rem; // Negative margin to properly align ghost button
+    }
+  }
+
   .submit-group {
     display: inline-block;
 
