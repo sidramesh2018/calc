@@ -6,6 +6,9 @@
 
 {% block step_heading %}
   <h2>Price list analysis</h2>
+  {% if gleaned_data.valid_rows %}
+    <p>Below is the analysis of your price list.</p>
+    {% endif %}
 {% endblock %}
 {% block step_body %}
   {% if gleaned_data.invalid_rows %}
@@ -35,15 +38,12 @@
   {% endif %}
 
   {% if gleaned_data.valid_rows %}
-    <p>Below is the analysis of your price list.</p>
-
-    <table class="price-list-table">
+    <table class="price-list-table analysis">
         <thead>
           <tr>
-            <th>SIN</th>
-            <th>Service proposed</th>
-            <th>Minimum education</th>
-            <th class="number">Minimum years of experience</th>
+            <th>Service proposed <span class="help_text">(e.g. Labor Category or Job Title/Task)</span></th>
+            <th>Min. education <span class="help_text">(or certification level)</span></th>
+            <th class="number">Min. years of experience</th>
             <th class="number">Price</th>
             <th>Analysis</th>
           </tr>
@@ -51,12 +51,11 @@
         <tbody>
         {% for row in analyzed_rows %}
           <tr>
-            <td>{{ row.sin }}</td>
             <td>{{ row.labor_category }}</td>
             <td>{{ row.education_level }}</td>
             <td class="number">{{ row.min_years_experience }}</td>
             <td class="number">${{ row.price|floatformat:2 }}</td>
-            <td {% if row.analysis.severe %}class="error"{% endif %}>
+            <td {% if row.analysis.severe %}class="table-error-severe"{% endif %}>
               {{ row.analysis.description }}
             </td>
           </tr>
@@ -65,17 +64,18 @@
     </table>
   {% endif %}
 
-  <br>
-
-  <a href="{% url 'data_capture:export_analysis' %}?f=csv" class="usa-button" download>
-    ⬇ Download Analysis (CSV)
-  </a>
-
-  <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="usa-button" download>
-    ⬇ Download Analysis (Excel)
-  </a>
-
   <div class="form-button-row clearfix">
+    <div class="download-group">
+      <label>Download analysis:</label>
+      <a href="{% url 'data_capture:export_analysis' %}?f=csv" class="usa-button ghost-button csv" download>
+        CSV file
+      </a>
+
+      <a href="{% url 'data_capture:export_analysis' %}?f=xlsx" class="usa-button ghost-button csv" download>
+        Excel file
+      </a>
+    </div>
+
     <a href="{% url 'index' %}" class="usa-button usa-button-secondary">CALC home</a>
     <a href="{% url 'data_capture:analyze_step_1' %}" class="usa-button usa-button-primary">Analyze another price list</a>
   </div>

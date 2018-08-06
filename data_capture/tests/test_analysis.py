@@ -126,9 +126,8 @@ class DescribeTests(BaseDescribeTestCase):
 
 class ExportTests(BaseDescribeTestCase):
     @staticmethod
-    def to_spl_row(sin, **describe_kwargs):
+    def to_spl_row(**describe_kwargs):
         return SubmittedPriceListRow(
-            sin=sin,
             labor_category=describe_kwargs['labor_category'],
             min_years_experience=describe_kwargs['min_years_experience'],
             education_level=describe_kwargs['education_level'],
@@ -144,9 +143,9 @@ class ExportTests(BaseDescribeTestCase):
         if not self.setup_rows:
             self.setup_rows = True
             self.row_without_comparables = self.to_analyzed_row(
-                self.to_spl_row('1234', **self.ROW_WITHOUT_COMPARABLES))
+                self.to_spl_row(**self.ROW_WITHOUT_COMPARABLES))
             self.row_with_comparables = self.to_analyzed_row(
-                self.to_spl_row('5678', **self.ROW_WITH_COMPARABLES))
+                self.to_spl_row(**self.ROW_WITH_COMPARABLES))
             self.rows = [
                 self.row_without_comparables,
                 self.row_with_comparables
@@ -161,7 +160,6 @@ class ExportTests(BaseDescribeTestCase):
                          'attachment; filename="analysis.csv"')
         self.assertEqual(response['Content-Type'], 'text/csv')
         self.assertContains(response, 'Average Price')
-        self.assertContains(response, '5678')
 
     def test_to_xlsx_works(self):
         response = AnalysisExport(self.rows).to_xlsx()
