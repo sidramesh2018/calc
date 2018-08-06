@@ -1,8 +1,9 @@
+import bleach
+
+from markdown import markdown
 from typing import Any, List, Iterable
 from django.contrib.auth.models import Permission
 from django.utils.text import SafeText
-from markdown import markdown
-import bleach
 
 
 def get_permissions_from_ns_codenames(ns_codenames):
