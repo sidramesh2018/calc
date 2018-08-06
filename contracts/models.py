@@ -1,13 +1,14 @@
-import re
+import bleach
+import csv
 from datetime import datetime
 from decimal import Decimal
+
 from django.db import models, connection
 from django.contrib.auth.models import User
-from django.db.models.expressions import Value
 from django.contrib.postgres.search import SearchVectorField, SearchVector
+from django.utils.html import strip_tags
 
 from calc.utils import markdown_to_sanitized_html
-
 
 EDUCATION_CHOICES = (
     ('HS', 'High School'),
@@ -22,56 +23,52 @@ MAX_ESCALATION_RATE = 99
 NUM_CONTRACT_YEARS = 5
 
 
-def convert_to_tsquery(query):
-    """
-    Converts multi-word phrases into AND boolean queries for postgresql.
+def clean_search(query):
+    '''
+    Takes a query input, sanitizes it, and finds synoymns.
+
+    If there are multiple search terms (comma-delimited)
+    it will parse the string into an array of strings.
+
+    We're using the CSV module rather than a simple split()
+    so quoted sub-strings (like "engineer, junior") will be kept together,
+    allowing for commas in sub-strings.
+
+    Note that after normalization, all terms will be lower-case and
+    abbreviated synonyms are changed to the long version.
 
     Examples:
 
-        >>> convert_to_tsquery('interpretation')
-        'interpretation:*'
+        >>> clean_search('Lone Ranger')
+        ['lone ranger']
 
-        >>> convert_to_tsquery('interpretation services')
-        'interpretation:* & services:*'
+        >>> clean_search('jane,jim,Jacky,joe')
+        ['jane', 'jim', 'jacky', 'joe']
 
-        >>> convert_to_tsquery('123')
-        '123:*'
-    """
+        >>> clean_search('carrot, beet  , Sunchoke')
+        ['carrot', 'beet', 'sunchoke']
 
-    # remove all non-alphanumeric or whitespace chars
-    pattern = re.compile('[^a-zA-Z0-9\s]')
-    query = pattern.sub('', query)
-    query_parts = query.split()
-    # remove empty strings and add :* to use prefix matching on each chunk
-    query_parts = ["%s:*" % s for s in query_parts if s]
-    tsquery = ' & '.join(query_parts)
+        >>> clean_search('turkey, "Hog, wild", cow')
+        ['turkey', 'hog, wild', 'cow']
 
-    return tsquery
+        >>> clean_search("an <script>EVIL()</script> example")
+        ['an evil() example']
 
-
-def convert_to_tsquery_union(queries):
+        >>> clean_search('sr. frog, sme, disco chicken')
+        ['senior frog', 'subject matter expert', 'disco chicken']
     '''
-    Converts a list of multi-word phrases into OR boolean queries for
-    postgresql.
-
-    Examples:
-
-        >>> convert_to_tsquery_union(['foo', 'bar'])
-        'foo:* | bar:*'
-
-        >>> convert_to_tsquery_union(['foo', 'bar baz'])
-        'foo:* | bar:* & baz:*'
-
-    Also, unrecognizable/garbage phrases will be removed:
-
-        >>> convert_to_tsquery_union(['foo', '$@#%#@!', 'bar'])
-        'foo:* | bar:*'
-    '''
-
-    queries = [convert_to_tsquery(query) for query in queries]
-    # remove empty strings
-    queries = filter(None, queries)
-    return " | ".join(queries)
+    # First, let's clean the query and not allow any tags in there.
+    stripped = strip_tags(query)
+    clean_query = bleach.clean(stripped, tags=[], strip=True)
+    # Then extract the terms to a list
+    if ',' in clean_query:
+        reader = csv.reader([clean_query], skipinitialspace=True)
+        terms = [qq.strip() for qq in list(reader)[0] if qq.strip()]
+    else:
+        terms = [clean_query]
+    # Finally, normalize and look for synonyms
+    terms = [Contract.normalize_labor_category(t) for t in terms]
+    return terms
 
 
 class CurrentContractManager(models.Manager):
@@ -117,8 +114,46 @@ class CurrentContractManager(models.Manager):
         self.filter(pk__in=[c.pk for c in contracts]).update_search_index()
         return contracts
 
-    def multi_phrase_search(self, *args, **kwargs):
-        return self.get_queryset().multi_phrase_search(*args, **kwargs)
+    def multi_phrase_search(self, query, *args, **kwargs):
+        """
+        Given a query as string, runs it through clean_search to get a list of search terms,
+        then returns a matching subset of Contract objects for each of those terms.
+
+        Optional arguments:
+            'match_exact' only returns exact matches.
+            'match_any" matches any word, so "business manager" will also match "dev manager"
+        """
+        matches = Contract.objects.none()
+        qs = self.get_queryset()
+        phrases = clean_search(query)
+        if 'match_exact' in args:
+            # This will match each phrase they enter exactly.
+            # We use an or operator here to build up the total queryset from
+            # each exactly matched item they found.
+            for phrase in phrases:
+                matches = matches | qs.filter(_normalized_labor_category__iexact=phrase)
+        else:
+            # Match any: Break phrases down into individual words
+            # So "business manager" finds results with "business" AND "manager"
+            # anywhere in the labor category.
+            # Note this is relatively hard on the DB, producing one query per word,
+            # but given our number of users, small queries and indexing, we should be OK.
+
+            for phrase in phrases:
+                # If the phrase is quoted, we want to use it as
+                if phrase.startswith("'") or phrase.startswith('"'):
+                    matches = matches | qs.filter(_normalized_labor_category__icontains=phrase)
+                else:
+                    # Break out the individual words. Here, we only want results with AND matching.
+                    # So 'business analyst' will only return phrases matching both words.
+                    words = phrase.split(' ')
+                    # We need a starter queryset for the intersection
+                    wmatches = qs.filter(_normalized_labor_category__icontains=words[0])
+                    for w in words:
+                        wmatches = wmatches & qs.filter(_normalized_labor_category__icontains=w)
+                    # Now add the word matches onto the overall matches as an OR
+                    matches = matches | wmatches
+        return matches
 
     def search(self, *args, **kwargs):
         return self.get_queryset().search(*args, **kwargs)
@@ -129,25 +164,7 @@ class CurrentContractManager(models.Manager):
             .exclude(current_price__isnull=True)
 
 
-class MultiPhraseSearchQuery(Value):
-    def as_sql(self, compiler, connection):
-        queries = self.value
-
-        if isinstance(queries, str):
-            queries = [queries]
-        queries = [
-            Contract.normalize_labor_category(q)
-            for q in queries
-        ]
-        tsquery = convert_to_tsquery_union(queries)
-
-        return f"to_tsquery('pg_catalog.english', %s)", [tsquery]
-
-
 class ContractsQuerySet(models.QuerySet):
-
-    def multi_phrase_search(self, queries):
-        return self.search(MultiPhraseSearchQuery(queries))
 
     def search(self, query):
         return self.filter(search_index=query)
@@ -215,7 +232,6 @@ class CashField(models.DecimalField):
     '''
     Custom field class for storing cash amounts in U.S. dollars and cents.
     '''
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.decimal_places != 2:
@@ -335,21 +351,14 @@ class Contract(models.Model):
         on_delete=models.CASCADE,
     )
 
-    # use a manager that filters by current contracts with a valid
-    # current_price
+    # use a manager that filters by current contracts with a valid current_price
     objects = CurrentContractManager()
-
-    def get_readable_business_size(self):
-        if 's' in self.business_size.lower():
-            return 'small business'
-        else:
-            return 'other than small business'
 
     @staticmethod
     def normalize_labor_category(val):
         '''
-        Normalize the given labor category by applying various synonyms
-        and such to it. This allows, for example, searches for
+        Utility to normalize the given labor category by applying various
+        synonyms and such to it. This allows, for example, searches for
         "senior engineer" to include labor categories like
         "sr. engineer".
 
@@ -358,6 +367,11 @@ class Contract(models.Model):
         that is untenable. For more details, see:
 
             https://github.com/18F/calc/issues/1375
+
+        TO-DO: move this out so it's not cluttering up the model.
+        This will require sorting out the
+        `test_bulk_update_normalized_labor_categories_works` test
+        that calls it, and probably simplifying the bulk_upload method.
         '''
 
         # Note also that any logic changes to this code should
@@ -380,6 +394,17 @@ class Contract(models.Model):
         ])
 
         return val
+
+    def get_readable_business_size(self):
+        """
+        There appears to be a mismatch between how we store business size
+        in the DB and how we collect it in form submissions that makes startswith
+        a safer check than equivalency
+        """
+        if self.business_size.lower().startswith('s'):
+            return 'small business'
+        else:  # We expect it should be 'o' but are not locking it down.
+            return 'other than small business'
 
     @staticmethod
     def get_education_code(text, raise_exception=False):
