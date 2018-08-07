@@ -151,14 +151,14 @@ Hourly rate data
 
               <div className="download-buttons row">
                 <div className="four columns">
-                  <a
-                    className="usa-button usa-button-primary"
+                  <button
+                    className="button-gray-icon graph"
                     id={prefixId('download-histogram') /* Selenium needs it. */}
                     href=""
                     onClick={this.handleDownloadClick}
                   >
-                    ⬇ Download graph
-                  </a>
+                    Download graph<span>.png</span>
+                  </button>
                 </div>
 
                 <div>

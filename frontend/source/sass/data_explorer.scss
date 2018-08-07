@@ -89,6 +89,7 @@ section.search .container {
     }
     &[type].form__inline {
       flex-grow: 6;
+      border-right: 2px solid $color-gray-light;
     }
     button {
       flex-grow: 1;
@@ -100,7 +101,6 @@ section.search .container {
   flex-grow: 2;
   margin: 0;
   height: 40px;
-  background-color: $color-gray-light;
   select {
     border: 0;
     margin: 0;
