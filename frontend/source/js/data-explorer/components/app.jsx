@@ -23,6 +23,7 @@ import QueryType from './query-type';
 import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
 import LaborCategory from './labor-category';
 import LoadingIndicator from './loading-indicator';
+import Schedule from './schedule';
 import TitleTagSynchronizer from './title-tag-synchronizer';
 
 import { autobind } from '../util';
@@ -91,36 +92,28 @@ class App extends React.Component {
         className={classNames(this.getContainerClassNames())}
         onSubmit={this.handleSubmit}
       >
-        <div className="row">
-          <div className="search-header columns nine">
+        <div className="row card">
+          <div className="search-header columns twelve content">
             <h2>
-Search labor categories
+              Search labor categories
             </h2>
             <p>
               Enter your search terms below, separated by commas.
               {' '}
               (For example: Engineer, Consultant)
             </p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="columns nine">
             <TitleTagSynchronizer />
             <section className="search">
               <div className="container clearfix">
                 <div className="row">
                   <div className="twelve columns">
                     <LaborCategory api={this.props.api}>
-                      <button className="submit usa-button-primary">
-                        Search
-                      </button>
-                      {' '}
-                      <input
-                        onClick={this.handleResetClick}
-                        className="reset usa-button usa-button-secondary"
-                        type="reset"
-                        value="Reset"
+                      <Schedule />
+                      <button
+                        className="submit usa-button-primary icon-search"
+                         aria-label="Search CALC"
                       />
+                      {' '}
                     </LaborCategory>
                   </div>
                   <div className="twelve columns">
@@ -131,6 +124,10 @@ Search labor categories
                 </div>
               </div>
             </section>
+          </div>
+        </div>
+        <div className="row card">
+          <div className="columns nine">
 
             <div className="graph-block">
               {/* for converting the histogram into an img --> */}

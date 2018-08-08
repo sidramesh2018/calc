@@ -10,9 +10,7 @@ body {
 }
 
 // temp styles to mimic .card without indenting the table
-section.search,
-section.search + .graph-block,
-.search-header.columns.nine {
+.graph-block {
   margin-right: 0;
   margin-left: $space-8x;
 }
@@ -37,9 +35,7 @@ section.search .container {
 }
 
 @media only screen and (max-width: $medium-large-screen) {
-  section.search,
-  section.search + .graph-block,
-  .search-header.columns.nine {
+.graph-block {
     margin-left: $space-3x;
   }
 }
@@ -48,8 +44,41 @@ section.search .container {
   padding-top: $space-8x;
 }
 
-#labor_category {
-  width: 65%;
+.search-group {
+  display: flex;
+  padding: 0;
+  margin-top: $space-1x;
+  margin-bottom: $space-3x;
+  border-radius: $border-radius;
+  border-top: 1px solid $color-gray;
+  border-right: none;
+  border-left: 1px solid $color-gray;
+  border-bottom: 1px solid $color-gray;
+   input {
+    border: 0;
+    &[type].form__inline,
+    &[type].form__inline~button:first-of-type {
+      margin: 0;
+    }
+    &[type].form__inline {
+      flex-grow: 6;
+      border-right: 2px solid $color-gray-light;
+    }
+    button {
+      flex-grow: 1;
+    }
+  }
+}
+
+.filter--schedule {
+  flex-grow: 2;
+  margin: 0;
+  height: 40px;
+  select {
+    border: 0;
+    margin: 0;
+    background-color: transparent;
+  }
 }
 
 // to fake selection of home link
@@ -139,10 +168,6 @@ span.dollars {
 .filter-more-info {
   float: right;
   font-size: 70%;
-}
-
-.graph-block {
-  margin-left: 0;
 }
 
 .filter-title {
@@ -535,10 +560,6 @@ a.focus-input {
   .empty .not-empty {
     display: none;
   }
-}
-
-#labor_category {
-  margin-bottom: .5rem;
 }
 
 #query-types {
