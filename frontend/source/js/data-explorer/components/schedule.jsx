@@ -3,36 +3,50 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { filterActive } from '../util';
-import { makeOptions } from './util';
 import { setSchedule as setScheduleAction } from '../actions';
 import { scheduleLabels } from '../schedule-metadata';
 
-export function Schedule({ idPrefix, schedule, setSchedule }) {
-  const id = `${idPrefix}schedule`;
+export function Schedule({ idPrefix, selectedSchedule, setSchedule }) {
   const handleChange = (e) => { setSchedule(e.target.value); };
-  const defaultMsg = 'Any contracting vehicle';
+  const defaultMsg = `In all (${scheduleLabels.keys}) contract vehicles`;
+  const makeInput = (value, label) => {
+    const id = value.replace(/ /g, '-').toLowerCase();
+    return (
+      <li>
+        <input
+          type="radio"
+          id={id}
+          name={id}
+          value={value}
+          onChange={handleChange}
+          checked={selectedSchedule === value}
+        />
+        <label htmlFor={id}>
+          {label}
+        </label>
+      </li>
+    );
+  }
+
+  const makeChoices = (labels) => {
+    return [
+      { key: '', value: '', label: defaultMsg },
+    ].concat(Object.keys(labels).map(
+      value => ({ value, label: labels[value] }),
+    )).map(({ value, label }) => (
+      makeInput(value, label)
+    ));
+  }
 
   return (
-    <div className="filter--schedule">
-      <label htmlFor={id} className="usa-sr-only">
-        Select a contract vehicle:
-      </label>
-
-      <select
-        id={id}
-        name="schedule"
-        value={schedule}
-        onChange={handleChange}
-        className={filterActive(schedule !== '')}
-      >
-        {makeOptions(scheduleLabels, defaultMsg)}
-      </select>
-    </div>
+    <ul className="filter--schedule">
+      {makeChoices(scheduleLabels, defaultMsg)}
+    </ul>
   );
 }
 
 Schedule.propTypes = {
-  schedule: PropTypes.string.isRequired,
+  selectedSchedule: PropTypes.string.isRequired,
   setSchedule: PropTypes.func.isRequired,
   idPrefix: PropTypes.string,
 };
@@ -42,6 +56,6 @@ Schedule.defaultProps = {
 };
 
 export default connect(
-  state => ({ schedule: state.schedule }),
+  state => ({ selectedSchedule: state.schedule }),
   { setSchedule: setScheduleAction },
 )(Schedule);

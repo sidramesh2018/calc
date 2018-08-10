@@ -23,7 +23,7 @@ import QueryType from './query-type';
 import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
 import LaborCategory from './labor-category';
 import LoadingIndicator from './loading-indicator';
-import Schedule from './schedule';
+import SearchCategory from './search-category';
 import TitleTagSynchronizer from './title-tag-synchronizer';
 
 import { autobind } from '../util';
@@ -108,7 +108,7 @@ class App extends React.Component {
                 <div className="row">
                   <div className="twelve columns">
                     <LaborCategory api={this.props.api}>
-                      <Schedule />
+                      <SearchCategory />
                       <button
                         className="submit usa-button-primary icon-search"
                          aria-label="Search CALC"
