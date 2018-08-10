@@ -2,6 +2,7 @@
 // components and then included here.
 
 @import 'base/variables';
+@import 'components/forms';
 @import 'components/tables';
 @import 'components/experienceslider';
 
@@ -67,17 +68,6 @@ section.search .container {
     button {
       flex-grow: 1;
     }
-  }
-}
-
-.filter--schedule {
-  flex-grow: 2;
-  margin: 0;
-  height: 40px;
-  select {
-    border: 0;
-    margin: 0;
-    background-color: transparent;
   }
 }
 

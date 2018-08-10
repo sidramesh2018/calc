@@ -234,6 +234,29 @@ input[type].form__inline,
   }
 }
 
+/* positioning for dropdown inline with search box on data explorer */
+.form__inline--dropdown {
+  position: relative;
+  flex-grow: 2;
+  font-size: $small-font-size;
+  background: $color-gray-lightest;
+  height: 40px; // same as the inline input box/button -- TODO: make this a variable
+  .form__inline--dropdown__choices {
+    position: absolute;
+    top: 40px; // offset from input by input's height
+    z-index: 9999;
+    background: $color-gray-lightest;
+    padding: $space-1x $space-2x;
+
+    // override the WDS standard radio buttons
+    [type=radio]:checked + label::before,
+    label::before {
+      box-shadow: none;
+      background-color: transparent;
+    }
+  }
+}
+
 // WDS override for date groupings
 input[type="number"] {
   padding-left: 0.4em;
