@@ -582,8 +582,6 @@ class ScheduleMetadata(models.Model):
 
     @property
     def full_name(self):
-        if self.sin:
-            return f'{self.sin} - {self.name}'
         return self.name
 
     @property
