@@ -254,7 +254,17 @@ input[type].form__inline,
       box-shadow: none;
       background-color: transparent;
     }
+
+    [type=radio]:checked + label::before {
+      background-image: url('../../images/icon-checkmark-floating.svg');
+      background-repeat: no-repeat;
+    }
   }
+}
+
+.label__suffix {
+  color: $color-gray;
+  padding-left: $space-1x;
 }
 
 // WDS override for date groupings
