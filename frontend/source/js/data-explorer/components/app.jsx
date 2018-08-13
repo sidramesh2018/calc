@@ -107,8 +107,8 @@ class App extends React.Component {
               <div className="container clearfix">
                 <div className="row">
                   <div className="twelve columns">
+                    <SearchCategory />
                     <LaborCategory api={this.props.api}>
-                      <SearchCategory />
                       <button
                         className="submit usa-button-primary icon-search"
                          aria-label="Search CALC"

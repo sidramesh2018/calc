@@ -149,13 +149,6 @@ p.form--invalid__message {
       margin-right: 0;
     }
   }
-  //p {
-    //display: inline-block;
-    //padding: 0px 40px;
-    //vertical-align: bottom;
-    //margin-bottom: 15px;
-    //font-weight: bold;
-  //}
 }
 
 dl.contract-details {
@@ -189,6 +182,33 @@ dl.contract-details {
     }
   }
 }
+
+.search-group {
+  display: flex;
+  padding: 0;
+  margin-top: $space-1x;
+  margin-bottom: $space-3x;
+  border-radius: $border-radius;
+  border-top: 1px solid $color-gray;
+  border-right: none;
+  border-left: 1px solid $color-gray;
+  border-bottom: 1px solid $color-gray;
+   input {
+    border: 0;
+    &[type].form__inline,
+    &[type].form__inline~button:first-of-type {
+      margin: 0;
+    }
+    &[type].form__inline {
+      flex-grow: 6;
+      max-width: 100%; // WDS override
+    }
+    button {
+      flex-grow: 1;
+    }
+  }
+}
+
 
 /* search -- inline form + button
  * input[type=search] rule is for admin page searches, e.g. users or groups
@@ -234,31 +254,42 @@ input[type].form__inline,
   }
 }
 
-/* positioning for dropdown inline with search box on data explorer */
-.form__inline--dropdown {
-  position: relative;
-  flex-grow: 2;
+.html-dropdown {
+  display: inline-block;
   font-size: $small-font-size;
   background: $color-gray-lightest;
-  height: 40px; // same as the inline input box/button -- TODO: make this a variable
-  .form__inline--dropdown__choices {
-    position: absolute;
-    top: 40px; // offset from input by input's height
-    z-index: 9999;
-    background: $color-gray-lightest;
-    padding: $space-1x $space-2x;
+}
 
-    // override the WDS standard radio buttons
-    [type=radio]:checked + label::before,
-    label::before {
-      box-shadow: none;
-      background-color: transparent;
-    }
+.html-dropdown__trigger {
+  padding: $space-1x $space-1x * 5 $space-1x $space-2x;
+  background-image: url(../../images/uswds/arrow-down.svg);
+  background-position: right $space-2x top 1.2rem; // top is same as $font-small
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  span {
+    margin-left: $space-half;
+  }
+}
 
-    [type=radio]:checked + label::before {
-      background-image: url('../../images/icon-checkmark-floating.svg');
-      background-repeat: no-repeat;
-    }
+.html-dropdown__choices {
+  z-index: 9999;
+  background: $color-gray-lightest;
+  padding: 0 $space-2x $space-1x;
+
+  ul {
+    margin: 0; // override standard margins
+  }
+
+  // override the WDS standard radio buttons
+  [type=radio]:checked + label::before,
+  label::before {
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  [type=radio]:checked + label::before {
+    background-image: url('../../images/icon-checkmark-floating.svg');
+    background-repeat: no-repeat;
   }
 }
 
