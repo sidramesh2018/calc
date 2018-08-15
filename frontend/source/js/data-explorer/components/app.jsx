@@ -97,11 +97,6 @@ class App extends React.Component {
             <h2>
               Search labor categories
             </h2>
-            <p>
-              Enter your search terms below, separated by commas.
-              {' '}
-              (For example: Engineer, Consultant)
-            </p>
             <TitleTagSynchronizer />
             <section className="search">
               <div className="container clearfix">

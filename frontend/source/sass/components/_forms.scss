@@ -255,19 +255,18 @@ input[type].form__inline,
 
 .html-dropdown {
   display: inline-block;
-  font-size: $small-font-size;
   background: $color-gray-lightest;
   &.usa-accordion {
     width: auto; // WDS override
     .usa-accordion-button {
-      background-position: right $space-2x top 1.2rem; // top is same as $font-small
+      background-position: right $space-2x top $space-2x; // top is same as $font-small
       background-repeat: no-repeat;
-      background-size: 1rem;
+      background-size: 1em;
       &[aria-expanded=false] {
         background-image: url(../../images/uswds/arrow-down.svg);
       }
       &[aria-expanded=true] {
-        background-image: url(../../images/uswds/arrow-down.svg);
+        background-image: url(../../images/uswds/arrow-up.svg);
       }
     }
     li {
@@ -281,13 +280,14 @@ input[type].form__inline,
 
   // allot for data explorer search dropdown
   + .search-group {
-    margin-top: $space-6x;
+    margin-top: $space-8x;
   }
 }
 
 
 .html-dropdown__trigger {
-  padding: $space-1x $space-1x * 5 $space-1x $space-2x;
+  padding: $space-2x ($space-1x * 5) $space-2x $space-2x;
+  font-size: $base-font-size;
   span {
     margin-left: $space-half;
     font-weight: normal;
@@ -296,8 +296,25 @@ input[type].form__inline,
 
 .html-dropdown__choices {
   z-index: 9999;
+  padding: 0; // ul override
+  color: $color-gray-darker;
   background: $color-gray-lightest;
-  padding: 0 $space-2x $space-1x;
+  label {
+    margin-bottom: $space-1x;
+    margin-top: $space-1x;
+  }
+  li {
+    padding: $space-half $space-2x;
+    &:hover {
+      background-color: $color-gray-lighter;
+    }
+    label {
+      margin-bottom: 0; // default style override
+    }
+  }
+  .filter--schedule li:first-child {
+    color: $color-black;
+  }
   &[aria-hidden=true] {
     display: none;
   }
@@ -320,8 +337,8 @@ input[type].form__inline,
 }
 
 .label__suffix {
-  color: $color-gray;
-  padding-left: $space-1x;
+  font-size: $small-font-size;
+  padding-left: $space-half;
 }
 
 // WDS override for date groupings
