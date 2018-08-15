@@ -95,7 +95,7 @@ class App extends React.Component {
         <div className="row card">
           <div className="search-header columns twelve content">
             <h2>
-              Search labor categories
+              Search CALC
             </h2>
             <TitleTagSynchronizer />
             <section className="search">

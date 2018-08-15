@@ -260,7 +260,7 @@ input[type].form__inline,
   &.usa-accordion {
     width: auto; // WDS override
     .usa-accordion-button {
-      background-position: right $space-2x top $space-2x; // top is same as $font-small
+      background-position: right $space-2x top 1.9rem;
       background-repeat: no-repeat;
       background-size: 1em;
       border-radius: $border-radius;
@@ -290,7 +290,7 @@ input[type].form__inline,
 
 
 .html-dropdown__trigger {
-  padding: $space-2x ($space-1x * 5) $space-2x $space-2x;
+  padding: $space-2x $space-6x $space-2x $space-2x;
   font-size: $base-font-size;
   span {
     margin-left: $space-half;
