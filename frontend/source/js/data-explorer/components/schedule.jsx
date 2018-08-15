@@ -14,7 +14,7 @@ export function Schedule({ idPrefix, selectedSchedule, setSchedule }) {
   // Since the legacy modifier only is found in schedule.full_name, we have to regex.
   const legacyPrefix = "Legacy "
   const makeInput = (value, label) => {
-    const id = value.replace(/ /g, '-').toLowerCase();
+    const id = value.replace(/ /g, '-').toLowerCase() || 'all-schedules';
     const makeLabel = (label) => {
       let scheduleLabel = label;
       let labelSuffix;
