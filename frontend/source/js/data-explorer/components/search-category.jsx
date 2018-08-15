@@ -10,19 +10,29 @@ export function SearchCategory({ selectedSchedule }) {
   // Will need to track which schedule has been chosen, or if vendor/contract
   // has been selected.
   return (
-    <div className="html-dropdown">
-      <div className="html-dropdown__trigger">
-        <strong>
-          Search labor categories
-        </strong>
-        <span>
-          in {scheduleLabels[selectedSchedule]}
-        </span>
-      </div>
-      <div className="html-dropdown__choices">
-        <Schedule />
-      </div>
-    </div>
+    <ul className="html-dropdown usa-accordion">
+      <li>
+        <button
+          className="html-dropdown__trigger usa-accordion-button"
+          aria-controls="data-explorer__search-category"
+          aria-expanded="false"
+         >
+          <strong>
+            Search labor categories
+          </strong>
+          <span>
+            in { scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
+          </span>
+        </button>
+        <div
+          className="html-dropdown__choices usa-accordion-content"
+          id="data-explorer__search-category"
+          aria-hidden="true"
+         >
+          <Schedule />
+        </div>
+      </li>
+    </ul>
   );
 }
 

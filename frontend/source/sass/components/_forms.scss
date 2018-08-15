@@ -209,7 +209,6 @@ dl.contract-details {
   }
 }
 
-
 /* search -- inline form + button
  * input[type=search] rule is for admin page searches, e.g. users or groups
  * .actions label select rule is for admin page action dropdown on users/groups */
@@ -258,16 +257,40 @@ input[type].form__inline,
   display: inline-block;
   font-size: $small-font-size;
   background: $color-gray-lightest;
+  &.usa-accordion {
+    width: auto; // WDS override
+    .usa-accordion-button {
+      background-position: right $space-2x top 1.2rem; // top is same as $font-small
+      background-repeat: no-repeat;
+      background-size: 1rem;
+      &[aria-expanded=false] {
+        background-image: url(../../images/uswds/arrow-down.svg);
+      }
+      &[aria-expanded=true] {
+        background-image: url(../../images/uswds/arrow-down.svg);
+      }
+    }
+    li {
+      margin-bottom: 0; // WDS override
+    }
+  }
 }
+
+.search .html-dropdown {
+  position: absolute; // to force it to pop over the data explorer search
+
+  // allot for data explorer search dropdown
+  + .search-group {
+    margin-top: $space-6x;
+  }
+}
+
 
 .html-dropdown__trigger {
   padding: $space-1x $space-1x * 5 $space-1x $space-2x;
-  background-image: url(../../images/uswds/arrow-down.svg);
-  background-position: right $space-2x top 1.2rem; // top is same as $font-small
-  background-repeat: no-repeat;
-  background-size: 1rem;
   span {
     margin-left: $space-half;
+    font-weight: normal;
   }
 }
 
@@ -275,6 +298,9 @@ input[type].form__inline,
   z-index: 9999;
   background: $color-gray-lightest;
   padding: 0 $space-2x $space-1x;
+  &[aria-hidden=true] {
+    display: none;
+  }
 
   ul {
     margin: 0; // override standard margins

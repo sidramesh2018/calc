@@ -8,7 +8,7 @@ import { scheduleLabels } from '../schedule-metadata';
 
 export function Schedule({ idPrefix, selectedSchedule, setSchedule }) {
   const handleChange = (e) => { setSchedule(e.target.value); };
-  const defaultMsg = `all (${Object.keys(scheduleLabels).length}) contract vehicles`;
+  const defaultMsg = `In all ${Object.keys(scheduleLabels).length} of these contract vehicles:`;
   // In most instances, we display legacy schedules as "Legacy Schedule," i.e., "Legacy MOBIS."
   // Here, however, we want to display the "Legacy" modifier in parenthesis after the name.
   // Since the legacy modifier only is found in schedule.full_name, we have to regex.
