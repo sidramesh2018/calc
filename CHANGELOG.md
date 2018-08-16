@@ -7,6 +7,17 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+- Changes to the options available for search. `match_phrase` has been removed as an
+option due to observed limited utility and bugginess in the implementation. Any API
+calls to `query_type` relying on `match_phrase` will return `match_words` results instead. The
+`match_words` and `match_exact` options have also been refactored to remove outstanding bugs. (#2061)
+- Updated UI to reflect search API changes (#2090).
+- Fixed an issue with front end files not being built properly (#2088).
+- Labelling across the site now reflects the potential availability of multiple
+contract vehicles, not just schedules (#2067).
+- Contract year buttons now have an explanatory tooltip ((#2056).
+
 ## [2.10.0][] - 2018-07-23
 
 ### Added
