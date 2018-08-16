@@ -257,25 +257,24 @@ input[type].form__inline,
   display: inline-block;
   background: $color-gray-lightest;
   border-radius: $border-radius;
-  &.usa-accordion {
-    width: auto; // WDS override
-    .usa-accordion-button {
-      background-position: right $space-2x top 1.9rem;
-      background-repeat: no-repeat;
-      background-size: 1em;
-      border-radius: $border-radius;
-      &[aria-expanded=false] {
-        background-image: url(../../images/arrow-down-gray.svg);
-      }
-      &[aria-expanded=true] {
-        background-image: url(../../images/arrow-up-gray.svg);
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-      }
+  button {
+    background-position: right $space-2x top 1.9rem;
+    background-repeat: no-repeat;
+    background-size: 1em;
+    border-radius: $border-radius;
+    background-color: transparent;
+    color: $color-base;
+    &[aria-expanded=false] {
+      background-image: url(../../images/arrow-down-gray.svg);
     }
-    li {
-      margin-bottom: 0; // WDS override
+    &[aria-expanded=true] {
+      background-image: url(../../images/arrow-up-gray.svg);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
+  }
+  li {
+    margin-bottom: 0; // WDS override
   }
 }
 
