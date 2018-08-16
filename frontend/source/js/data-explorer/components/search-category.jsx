@@ -16,12 +16,18 @@ export class SearchCategory extends React.Component {
     this.state = {
       expanded: false,
     };
-    autobind(this, ['toggleDropdown']);
+    autobind(this, ['toggleDropdown', 'closeMenuOnClick']);
   }
 
   toggleDropdown(e) {
     this.setState({
       expanded: !this.state.expanded, /* eslint-disable-line react/no-access-state-in-setstate */
+    });
+  }
+
+  closeMenuOnClick() {
+    this.setState({
+      expanded: false,
     });
   }
 
@@ -51,7 +57,7 @@ export class SearchCategory extends React.Component {
         <div
           className="html-dropdown__choices"
           id="data-explorer__search-category"
-          onClick={this.toggleDropdown}
+          onClick={this.closeMenuOnClick}
           aria-hidden={!this.state.expanded}
          >
           <Schedule />
