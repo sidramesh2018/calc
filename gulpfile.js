@@ -137,7 +137,7 @@ gulp.task('clean', () => {
 });
 
 // boolean flag to indicate to webpack that it should set up its watching
-var taskNum = 1;
+let taskNum = 1; // eslint-disable-line prefer-const
 let isWatching = false;
 gulp.task('set-watching', (done) => {
   isWatching = true;
@@ -163,7 +163,7 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 
 gulp.task('js:vendor', gulp.series(vendoredBundles));
 
-gulp.task('js:webpack', (done) => gulp.src(
+gulp.task('js:webpack', done => gulp.src(
   webpackUtil.scriptSources({ bundles, rootDir: dirs.src.scripts })
 )
   .pipe(named(webpackUtil.getLastFolderName))

@@ -65,7 +65,7 @@ exports.webpackify = ({ isWatching, isProd }, cb, taskNum) => webpackStream({
     chunkFilename: '[name].bundle.js',
     publicPath: '/static/frontend/built/js/',
   },
-}, webpack, (err, stats) => {
+}, webpack, () => {
   // Only execute this callback the first time, so that gulp knows
   // we're done.
   if (taskNum === 1) {
