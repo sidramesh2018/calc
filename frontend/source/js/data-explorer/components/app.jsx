@@ -106,7 +106,7 @@ class App extends React.Component {
                     <LaborCategory api={this.props.api}>
                       <button
                         className="submit usa-button-primary icon-search"
-                         aria-label="Search CALC"
+                        aria-label="Search CALC"
                       />
                       {' '}
                     </LaborCategory>

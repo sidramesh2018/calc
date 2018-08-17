@@ -2,27 +2,26 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { filterActive } from '../util';
 import { setSchedule as setScheduleAction } from '../actions';
 import { scheduleLabels } from '../schedule-metadata';
 
-export function Schedule({ idPrefix, selectedSchedule, setSchedule }) {
+export function Schedule({ selectedSchedule, setSchedule }) {
   const handleChange = (e) => { setSchedule(e.target.value); };
   const defaultMsg = `In all ${Object.keys(scheduleLabels).length} of these contract vehicles:`;
   // In most instances, we display legacy schedules as "Legacy Schedule," i.e., "Legacy MOBIS."
   // Here, however, we want to display the "Legacy" modifier in parenthesis after the name.
   // Since the legacy modifier only is found in schedule.full_name, we have to regex.
-  const legacyPrefix = "Legacy "
+  const legacyPrefix = "Legacy ";
   const makeInput = (value, label) => {
     const id = value.replace(/ /g, '-').toLowerCase() || 'all-schedules';
-    const makeLabel = (label) => {
-      let scheduleLabel = label;
+    const makeLabel = (title) => {
+      let scheduleLabel = title;
       let labelSuffix;
-      if (label.includes(legacyPrefix)) {
-        scheduleLabel = label.replace(legacyPrefix, '');
+      if (title.includes(legacyPrefix)) {
+        scheduleLabel = title.replace(legacyPrefix, '');
         labelSuffix = "(Legacy)";
       }
-      return {scheduleLabel, labelSuffix};
+      return { scheduleLabel, labelSuffix };
     };
     const { scheduleLabel, labelSuffix } = makeLabel(label);
     return (
@@ -43,17 +42,15 @@ export function Schedule({ idPrefix, selectedSchedule, setSchedule }) {
         </label>
       </li>
     );
-  }
+  };
 
-  const makeChoices = (labels) => {
-    return [
-      { key: '', value: '', label: defaultMsg },
-    ].concat(Object.keys(labels).map(
-      value => ({ value, label: labels[value] }),
-    )).map(({ value, label }) => (
-      makeInput(value, label)
-    ));
-  }
+  const makeChoices = labels => [
+    { key: '', value: '', label: defaultMsg },
+  ].concat(Object.keys(labels).map(
+    value => ({ value, label: labels[value] }),
+  )).map(({ value, label }) => (
+    makeInput(value, label)
+  ));
 
   return (
     <ul className="filter--schedule">
@@ -65,11 +62,6 @@ export function Schedule({ idPrefix, selectedSchedule, setSchedule }) {
 Schedule.propTypes = {
   selectedSchedule: PropTypes.string.isRequired,
   setSchedule: PropTypes.func.isRequired,
-  idPrefix: PropTypes.string,
-};
-
-Schedule.defaultProps = {
-  idPrefix: '',
 };
 
 export default connect(

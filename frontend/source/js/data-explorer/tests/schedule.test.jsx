@@ -21,7 +21,6 @@ describe('<Schedule>', () => {
     // should have options for all schedules + 1 for "(all)"
     expect(options.length).toBe(Object.keys(scheduleLabels).length + 1);
     Object.keys(scheduleLabels).forEach((sched) => {
-      const title = scheduleLabels[sched];
       const opt = wrapper.find(`input[value="${sched}"]`);
       expect(opt.exists()).toBeTruthy();
     });

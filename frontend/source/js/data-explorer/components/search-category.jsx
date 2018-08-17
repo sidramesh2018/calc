@@ -19,7 +19,7 @@ export class SearchCategory extends React.Component {
     autobind(this, ['toggleDropdown', 'closeMenuOnClick']);
   }
 
-  toggleDropdown(e) {
+  toggleDropdown() {
     this.setState({
       expanded: !this.state.expanded, /* eslint-disable-line react/no-access-state-in-setstate */
     });
@@ -39,24 +39,32 @@ export class SearchCategory extends React.Component {
     return (
       <div className="html-dropdown">
         <button
+          type="button"
           className="html-dropdown__trigger"
-          aria-controls="data-explorer__search-category"
+          aria-controls="data-explorer__search-category" /* eslint-disable-line jsx-a11y/aria-proptypes */
           onClick={this.toggleDropdown}
+          onKeyDown={handleEnterOrSpace(this.toggleDropdown)}
           aria-expanded={this.state.expanded}
-         >
+        >
           <strong>
             Search labor categories
           </strong>
           <span>
-            in { scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
+            in 
+            {' '}
+            { scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
           </span>
         </button>
-        <div
+        {/* setting a key event on this div makes it impossible to select
+          * an option with the keyboard.
+          * TODO: fix this after contract/vendor name are added and the HTML is in final form. */}
+        <div /* eslint-disable-line max-len, jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus */
           className="html-dropdown__choices"
           id="data-explorer__search-category"
           onClick={this.closeMenuOnClick}
           aria-hidden={!this.state.expanded}
-         >
+          role="menu"
+        >
           <Schedule />
         </div>
       </div>
@@ -66,6 +74,10 @@ export class SearchCategory extends React.Component {
 
 SearchCategory.propTypes = {
   selectedSchedule: PropTypes.string,
+};
+
+SearchCategory.defaultProps = {
+  selectedSchedule: '',
 };
 
 export default connect(

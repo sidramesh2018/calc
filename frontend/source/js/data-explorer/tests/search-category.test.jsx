@@ -1,12 +1,11 @@
 import { SearchCategory } from '../components/search-category';
-import { Schedule } from '../components/schedule';
 import makeSetup from './testSetup';
 
 const defaultProps = {
   selectedSchedule: '',
 };
 
-const setup = makeSetup(SearchCategory, defaultProps, {wrapperOnly: true});
+const setup = makeSetup(SearchCategory, defaultProps, { wrapperOnly: true });
 
 describe('<SearchCategory>', () => {
   it('renders correctly', () => {
