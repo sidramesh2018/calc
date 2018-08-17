@@ -258,7 +258,7 @@ input[type].form__inline,
   background: $color-gray-lightest;
   border-radius: $border-radius;
   button {
-    background-position: right $space-2x top 1.9rem;
+    background-position: right .6rem top 1.6rem;
     background-repeat: no-repeat;
     background-size: 1em;
     border-radius: $border-radius;
@@ -289,7 +289,7 @@ input[type].form__inline,
 
 
 .html-dropdown__trigger {
-  padding: $space-2x $space-6x $space-2x $space-2x;
+  padding: $space-3x/2 3.5rem $space-3x/2 $space-3x/2;
   font-size: $base-font-size;
   span {
     margin-left: $space-half;
