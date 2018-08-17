@@ -37,10 +37,7 @@ export class SearchCategory extends React.Component {
   render() {
     const { selectedSchedule } = this.props;
     return (
-      <div
-        className="html-dropdown"
-        ref={(el) => { this.dropdownEl = el; }}
-      >
+      <div className="html-dropdown">
         <button
           className="html-dropdown__trigger"
           aria-controls="data-explorer__search-category"
@@ -66,6 +63,10 @@ export class SearchCategory extends React.Component {
     );
   }
 }
+
+SearchCategory.propTypes = {
+  selectedSchedule: PropTypes.string,
+};
 
 export default connect(
   state => ({ selectedSchedule: state.schedule })
