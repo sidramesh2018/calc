@@ -187,7 +187,7 @@ dl.contract-details {
   display: flex;
   padding: 0;
   margin-top: $space-1x;
-  margin-bottom: $space-3x;
+  margin-bottom: 7px;
   border-radius: $border-radius;
   border-top: 1px solid $color-gray;
   border-right: none;
@@ -283,7 +283,7 @@ input[type].form__inline,
 
   // allot for data explorer search dropdown
   + .search-group {
-    margin-top: $space-8x;
+    margin-top: 5.6rem;
   }
 }
 
