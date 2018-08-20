@@ -109,6 +109,12 @@ class App extends React.Component {
                         aria-label="Search CALC"
                       />
                       {' '}
+                      <input
+                        onClick={this.handleResetClick}
+                        className="reset usa-button usa-button-secondary"
+                        type="reset"
+                        value="Reset"
+                      />
                     </LaborCategory>
                   </div>
                   <div className="twelve columns">

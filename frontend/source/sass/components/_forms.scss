@@ -188,20 +188,21 @@ dl.contract-details {
   padding: 0;
   margin-top: $space-1x;
   margin-bottom: 7px;
-  border-radius: $border-radius;
-  border-top: 1px solid $color-gray;
-  border-right: none;
-  border-left: 1px solid $color-gray;
-  border-bottom: 1px solid $color-gray;
    input {
     border: 0;
     &[type].form__inline,
-    &[type].form__inline~button:first-of-type {
+    &[type].form__inline~button:first-of-type,
+    &[type].form__inline~.usa-button {
       margin: 0;
     }
     &[type].form__inline {
       flex-grow: 6;
       max-width: 100%; // WDS override
+      border-radius: $border-radius;
+      border-top: 1px solid $color-gray;
+      border-right: none;
+      border-left: 1px solid $color-gray;
+      border-bottom: 1px solid $color-gray;
     }
     button {
       flex-grow: 1;
