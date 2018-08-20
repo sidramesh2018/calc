@@ -434,7 +434,7 @@ th.column-min_years_experience {  width: 10%; }
 th.column-wage {                  width:  8%; }
 th.column-idv_piid {              width: 12%; }
 th.column-vendor_name {           width: 25%; }
-th.column-schedule {              width: 10%; }
+th.column-schedule {              min-width: 145px;} /* temp fix until we combine vendor/contract # */
 
 th.column-education_level {
   color-white-space: nowrap;

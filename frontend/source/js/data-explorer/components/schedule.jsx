@@ -14,7 +14,7 @@ export function Schedule({ idPrefix, schedule, setSchedule }) {
   return (
     <div className="filter filter-schedule">
       <label htmlFor={id}>
-SIN / Schedule:
+Contract vehicle:
       </label>
       <a href="/about#schedules" className="filter-more-info">
         What&apos;s this?
