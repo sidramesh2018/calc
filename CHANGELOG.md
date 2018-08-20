@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [3.0.0][] - 2018-08-20
+
 ### Changed
 - Changes to the options available for search. `match_phrase` has been removed as an
 option due to observed limited utility and bugginess in the implementation. Any API
@@ -471,7 +473,8 @@ contract vehicles, not just schedules (#2067).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.10.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/18F/calc/compare/v2.10.0...v3.0.0
 [2.10.0]: https://github.com/18F/calc/compare/v2.9.1...v2.10.0
 [2.9.1]: https://github.com/18F/calc/compare/v2.9.0...v2.9.1
 [2.9.0]: https://github.com/18F/calc/compare/v2.8.6...v2.9.0
