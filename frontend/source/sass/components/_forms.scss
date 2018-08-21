@@ -259,12 +259,14 @@ input[type].form__inline,
   background: $color-gray-lightest;
   border-radius: $border-radius;
   button {
-    background-position: right .6rem top 1.6rem;
+    background-position: right 1.4rem top 1.6rem;
     background-repeat: no-repeat;
     background-size: 1em;
     border-radius: $border-radius;
     background-color: transparent;
     color: $color-base;
+    margin-right: 0;
+    padding-right: $space-6x;
     &:hover {
       background-color: $color-gray-lighter;
       color: $color-base;
