@@ -265,6 +265,10 @@ input[type].form__inline,
     border-radius: $border-radius;
     background-color: transparent;
     color: $color-base;
+    &:hover {
+      background-color: $color-gray-lighter;
+      color: $color-base;
+    }
     &[aria-expanded=false] {
       background-image: url(../../images/arrow-down-gray.svg);
     }
