@@ -2,8 +2,6 @@
 
 {% block body_class %}secondary-step card--wide card--no-header{% endblock %}
 
-{% block title %}Analyze price list / {{ step.description|capfirst }}{% endblock %}
-
 {% block step_heading %}
   <h2>Price list analysis</h2>
   {% if gleaned_data.valid_rows %}
@@ -41,11 +39,14 @@
     <table class="price-list-table analysis">
         <thead>
           <tr>
-            <th>Service proposed <span class="help_text">(e.g. Labor Category or Job Title/Task)</span></th>
-            <th>Min. education <span class="help_text">(or certification level)</span></th>
-            <th class="number">Min. years of experience</th>
-            <th class="number">Price</th>
-            <th>Analysis</th>
+            <th>Service proposed</th>
+            <th>Min.<br />edu.</th>
+            <th>Min.<br />exp.</th>
+            <th>Price</th>
+            <th>Avg. price</th>
+            <th>+/- average</th>
+            <th>+/- std. dev.</th>
+            <th># of results</th>
           </tr>
         </thead>
         <tbody>
@@ -53,11 +54,24 @@
           <tr>
             <td>{{ row.labor_category }}</td>
             <td>{{ row.education_level }}</td>
-            <td class="number">{{ row.min_years_experience }}</td>
+            <td>{{ row.min_years_experience }}</td>
             <td class="number">${{ row.price|floatformat:2 }}</td>
-            <td {% if row.analysis.severe %}class="table-error-severe"{% endif %}>
-              {{ row.analysis.description }}
+            <td class="number">${{ row.analysis.avg|floatformat:2 }}</td>
+            <td>
+              <span class="number">
+                ${{ row.analysis.dist_from_avg|floatformat:2 }}
+              </span> {{ row.analysis.preposition }} average
             </td>
+            <td {% if row.analysis.severe %}class="table-error-severe"{% endif %}>
+              {% if row.analysis.preposition == 'above' %}
+                +
+              {% elif row.analysis.preposition == 'below' %}
+                -
+              {% endif %}
+              {{ row.analysis.stddev|floatformat:2 }}%<br />
+              ({{ row.analysis.stddevs }} std. devs. {{ row.analysis.preposition }} average)
+            </td>
+            <td>{{ row.analysis.count }}</td>
           </tr>
         {% endfor %}
         </tbody>

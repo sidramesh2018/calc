@@ -171,10 +171,8 @@ def describe(cursor, vocab, labor_category, min_years_experience,
         result['most_common_edu_levels'] = get_most_common_edu_levels(
             fc.contracts)
 
-        if result['severe']:
-            result['preposition'] = \
-                'w' + ('a' * stddevs) + 'y ' + \
-                ('below' if price < avg else 'above')
+        result['dist_from_avg'] = avg - price if price < avg else price - avg
+        result['preposition'] = ('below' if price < avg else 'above')
 
         result['labor_category'] = fc.phrase
         result['url'] = get_data_explorer_url(fc)
