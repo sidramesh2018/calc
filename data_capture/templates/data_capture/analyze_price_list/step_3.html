@@ -59,7 +59,9 @@
             <td class="number">${{ row.price|floatformat:2 }}</td>
             <td class="number">${{ row.analysis.avg|floatformat:2 }}</td>
             <td>
-             {% if row.analysis.preposition == 'below' %}
+             {% if row.analysis.preposition == 'above' %}
+                +
+              {% elif row.analysis.preposition == 'below' %}
                 -
               {% endif %}
               <span class="number">
@@ -67,7 +69,9 @@
               </span>
             </td>
             <td>
-              {% if row.analysis.preposition == 'below' %}
+              {% if row.analysis.preposition == 'above' %}
+                +
+              {% elif row.analysis.preposition == 'below' %}
                 -
               {% endif %}
               <span class="number">
