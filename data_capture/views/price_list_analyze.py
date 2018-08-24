@@ -114,9 +114,23 @@ def analyze_step_2_errors(request):
     if gleaned_data is None:
         return redirect('data_capture:analyze_step_2')
 
+    step_1_post_data = get_nested_item(request.session, (
+        'data_capture:analyze_price_list',
+        'step_1_POST'
+    ))
+
+    step_1_form = AnalyzeStep1Form(step_1_post_data)
+
+    form_kwargs = dict(
+        schedule=step_1_form.cleaned_data['schedule'],
+    )
+
+    form = forms.PriceListUploadForm(**form_kwargs)
+
     return render(request,
         'data_capture/analyze_price_list/step_2_errors.html',
         step.context({
+            'form': form,
             'gleaned_data': gleaned_data,
         }, request))
 
