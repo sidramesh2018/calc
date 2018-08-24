@@ -44,7 +44,8 @@
             <th>Min.<br />exp.</th>
             <th>Price</th>
             <th>Avg. price</th>
-            <th>+/- average</th>
+            <th>+/- avg.</th>
+            <th>% +/- avg.</th>
             <th>+/- std. dev.</th>
             <th># of results</th>
           </tr>
@@ -60,16 +61,22 @@
             <td>
               <span class="number">
                 ${{ row.analysis.dist_from_avg|floatformat:2 }}
-              </span> {{ row.analysis.preposition }} average
+              </span>
+              <span class="helptext">
+                {{ row.analysis.preposition }} avg.
+              </span>
+            </td>
+            <td>
+              {{ row.analysis.dist_from_avg_percent|floatformat:2 }}%
+              <span class="helptext">
+                {{ row.analysis.preposition }} avg.
+              </span>
             </td>
             <td {% if row.analysis.severe %}class="table-error-severe"{% endif %}>
-              {% if row.analysis.preposition == 'above' %}
-                +
-              {% elif row.analysis.preposition == 'below' %}
-                -
-              {% endif %}
-              {{ row.analysis.stddev|floatformat:2 }}%<br />
-              ({{ row.analysis.stddevs }} std. devs. {{ row.analysis.preposition }} average)
+              {{ row.analysis.stddevs }} std. devs.
+              <span class="helptext">
+                {{ row.analysis.preposition }} avg.
+              </span>
             </td>
             <td>{{ row.analysis.count }}</td>
           </tr>

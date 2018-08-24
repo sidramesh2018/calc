@@ -172,6 +172,7 @@ def describe(cursor, vocab, labor_category, min_years_experience,
             fc.contracts)
 
         result['dist_from_avg'] = avg - price if price < avg else price - avg
+        result['dist_from_avg_percent'] = (result['dist_from_avg'] / avg) * 100
         result['preposition'] = ('below' if price < avg else 'above')
 
         result['labor_category'] = fc.phrase
