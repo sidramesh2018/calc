@@ -20,6 +20,8 @@ urlpatterns = [
         name='replace_step_1_errors'),
 
     url(r'^analyze/', include(price_list_analyze.steps.urls)),
+    url(r'^analyze/2/errors$', price_list_analyze.analyze_step_2_errors,
+        name='analyze_step_2_errors'),
     url(r'^analyze/export$', price_list_analyze.export_analysis,
         name='export_analysis'),
 ]
