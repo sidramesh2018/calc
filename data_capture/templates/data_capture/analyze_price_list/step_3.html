@@ -74,7 +74,9 @@
               {% elif row.analysis.preposition == 'below' %}
                 -
               {% endif %}
-              {{ row.analysis.dist_from_avg_percent|floatformat:2 }}%
+              <span class="number">
+                {{ row.analysis.dist_from_avg_percent|floatformat:2 }}%
+              </span>
             </td>
             <td {% if row.analysis.severe %}class="table-error-severe"{% endif %}>
              {% if row.analysis.preposition == 'above' %}
