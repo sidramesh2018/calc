@@ -59,24 +59,30 @@
             <td class="number">${{ row.price|floatformat:2 }}</td>
             <td class="number">${{ row.analysis.avg|floatformat:2 }}</td>
             <td>
+             {% if row.analysis.preposition == 'above' %}
+                +
+              {% elif row.analysis.preposition == 'below' %}
+                -
+              {% endif %}
               <span class="number">
                 ${{ row.analysis.dist_from_avg|floatformat:2 }}
               </span>
-              <span class="helptext">
-                {{ row.analysis.preposition }} avg.
-              </span>
             </td>
             <td>
+              {% if row.analysis.preposition == 'above' %}
+                +
+              {% elif row.analysis.preposition == 'below' %}
+                -
+              {% endif %}
               {{ row.analysis.dist_from_avg_percent|floatformat:2 }}%
-              <span class="helptext">
-                {{ row.analysis.preposition }} avg.
-              </span>
             </td>
             <td {% if row.analysis.severe %}class="table-error-severe"{% endif %}>
+             {% if row.analysis.preposition == 'above' %}
+                +
+              {% elif row.analysis.preposition == 'below' %}
+                -
+              {% endif %}
               {{ row.analysis.stddevs }} std. devs.
-              <span class="helptext">
-                {{ row.analysis.preposition }} avg.
-              </span>
             </td>
             <td>{{ row.analysis.count }}</td>
           </tr>
