@@ -354,17 +354,6 @@ class Contract(models.Model):
     # Ojects should be current contracts with a valid current_price
     objects = CurrentContractManager()
 
-    def get_readable_business_size(self):
-        """
-        There appears to be a mismatch between how we store business size
-        in the DB and how we collect it in form submissions that makes startswith
-        a safer check than equivalency
-        """
-        if self.business_size.lower().startswith('s'):
-            return 'small business'
-        else:  # We expect it should be 'o' but are not locking it down.
-            return 'other than small business'
-
     @staticmethod
     def normalize_labor_category(val):
         '''
