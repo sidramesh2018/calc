@@ -150,6 +150,9 @@ td.sorted {
 .analysis {
   td {
     border-bottom: 3px solid white;
+    &:first-of-type {
+      font-weight: $font-weight-bold;
+    }
   }
   td.table-error-severe {
     background-color: $color-red-lightest;
