@@ -53,7 +53,7 @@
         <tbody>
         {% for row in analyzed_rows %}
           <tr>
-            <td>{{ row.labor_category }}</td>
+            <td><a href={{ row.analysis.url }}>{{ row.labor_category }}</a></td>
             <td>{{ row.education_level }}</td>
             <td>{{ row.min_years_experience }}</td>
             <td class="number">${{ row.price|floatformat:2 }}</td>
