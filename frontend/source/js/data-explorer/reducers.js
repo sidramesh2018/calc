@@ -25,6 +25,7 @@ import {
   SET_SCHEDULE,
   SET_CONTRACT_YEAR,
   SET_QUERY_TYPE,
+  TOGGLE_MATCH_EXACT,
   SET_SITE,
   SET_BUSINESS_SIZE,
   SET_QUERY,
@@ -162,6 +163,13 @@ function queryType(state = DEFAULT_QUERY_TYPE, action) {
   return state;
 }
 
+function matchExact(state = false, action) {
+  if (action.type === TOGGLE_MATCH_EXACT) {
+    return !action.matchExact;
+  }
+  return state;
+}
+
 const combinedReducer = combineReducers({
   exclude,
   q,
@@ -176,6 +184,7 @@ const combinedReducer = combineReducers({
   'proposed-price': proposedPrice,
   sort,
   query_type: queryType,
+  match_exact: matchExact,
 });
 
 export default (state, action) => {

@@ -12,6 +12,7 @@ export const TOGGLE_EDU_LEVEL = 'TOGGLE_EDU_LEVEL';
 export const SET_SCHEDULE = 'SET_SCHEDULE';
 export const SET_CONTRACT_YEAR = 'SET_CONTRACT_YEAR';
 export const SET_QUERY_TYPE = 'SET_QUERY_TYPE';
+export const TOGGLE_MATCH_EXACT = 'TOGGLE_MATCH_EXACT';
 export const SET_SITE = 'SET_SITE';
 export const SET_BUSINESS_SIZE = 'SET_BUSINESS_SIZE';
 export const SET_QUERY = 'SET_QUERY';
@@ -78,6 +79,10 @@ export function setContractYear(year) {
 
 export function setQueryType(queryType) {
   return { type: SET_QUERY_TYPE, queryType };
+}
+
+export function toggleMatchExact(matchExact) {
+  return { type: TOGGLE_MATCH_EXACT, matchExact };
 }
 
 export function setSite(site) {
