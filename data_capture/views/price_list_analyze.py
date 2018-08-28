@@ -131,11 +131,12 @@ def analyze_step_2_errors(request):
     form = forms.PriceListUploadForm(**form_kwargs)
 
     return render(request,
-        'data_capture/analyze_price_list/step_2_errors.html',
-        step.context({
-            'form': form,
-            'gleaned_data': gleaned_data,
-        }, request))
+                  'data_capture/analyze_price_list/step_2_errors.html',
+                  step.context({
+                      'form': form,
+                      'gleaned_data': gleaned_data,
+                  }, request))
+
 
 @steps.step(label='Analysis')
 @require_http_methods(["GET"])
