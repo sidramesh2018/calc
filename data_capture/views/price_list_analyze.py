@@ -85,6 +85,7 @@ def analyze_step_2(request, step):
                 request.session.modified = True
 
             if gleaned_data.invalid_rows:
+
                 return ajaxform.redirect(request, 'data_capture:analyze_step_2_errors')
 
             return ajaxform.redirect(request, 'data_capture:analyze_step_3')
@@ -120,6 +121,8 @@ def analyze_step_2_errors(request):
     ))
 
     step_1_form = AnalyzeStep1Form(step_1_post_data)
+    if not step_1_form.is_valid():
+        raise AssertionError('invalid step 1 data in session')
 
     form_kwargs = dict(
         schedule=step_1_form.cleaned_data['schedule'],
