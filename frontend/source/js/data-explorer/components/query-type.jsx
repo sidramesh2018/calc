@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import { setQueryType as setQueryTypeAction } from '../actions';
 import {
-  QUERY_TYPE_MATCH_ALL,
   QUERY_TYPE_MATCH_EXACT,
   QUERY_TYPE_LABELS,
 } from '../constants';
@@ -19,7 +18,7 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
   const input = (type) => {
     const { idSuffix } = INPUT_INFOS[type];
     const id = `${idPrefix}${idSuffix}`;
-    const matchExactIsChecked = (queryType === QUERY_TYPE_MATCH_EXACT ? true : false);
+    const matchExactIsChecked = (queryType === QUERY_TYPE_MATCH_EXACT);
 
     return (
       <li>

@@ -163,9 +163,8 @@ function queryType(state = DEFAULT_QUERY_TYPE, action) {
     // set the state equal to the opposite of what is currently set.
     if (action.queryType === QUERY_TYPE_MATCH_ALL) {
       return QUERY_TYPE_MATCH_EXACT;
-    } else {
-      return QUERY_TYPE_MATCH_ALL;
-    }
+    } 
+    return QUERY_TYPE_MATCH_ALL;
   }
   return state;
 }
