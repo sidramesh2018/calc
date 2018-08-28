@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setQueryType as setQueryTypeAction } from '../actions';
-import { toggleMatchExact as toggleMatchExactAction } from '../actions';
 import {
+  QUERY_TYPE_MATCH_ALL,
   QUERY_TYPE_MATCH_EXACT,
   QUERY_TYPE_LABELS,
 } from '../constants';
@@ -15,10 +15,11 @@ const INPUT_INFOS = {
   },
 };
 
-export function QueryType({ matchExact, toggleMatchExact, idPrefix }) {
+export function QueryType({ queryType, setQueryType, idPrefix }) {
   const input = (type) => {
     const { idSuffix } = INPUT_INFOS[type];
     const id = `${idPrefix}${idSuffix}`;
+    const matchExactIsChecked = (queryType === QUERY_TYPE_MATCH_EXACT ? true : false);
 
     return (
       <li>
@@ -26,9 +27,9 @@ export function QueryType({ matchExact, toggleMatchExact, idPrefix }) {
           id={id}
           type="checkbox"
           name="query_type"
-          value={type}
-          checked={matchExact}
-          onChange={() => { toggleMatchExact(matchExact); }}
+          value={queryType}
+          checked={matchExactIsChecked}
+          onChange={() => { setQueryType(queryType); }}
         />
         <label htmlFor={id}>
           {QUERY_TYPE_LABELS[type]}
@@ -55,6 +56,6 @@ QueryType.defaultProps = {
 };
 
 export default connect(
-  state => ({ matchExact: state.match_exact }),
-  { toggleMatchExact: toggleMatchExactAction },
+  state => ({ queryType: state.query_type }),
+  { setQueryType: setQueryTypeAction },
 )(QueryType);
