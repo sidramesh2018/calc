@@ -41,14 +41,6 @@ class InitialScheduleMetadataTests(TestCase):
 
 
 class SimpleTests(SimpleTestCase):
-    def test_full_name_includes_sin_when_present(self):
-        sm = ScheduleMetadata(sin='123', name='blarg')
-        self.assertEqual(sm.full_name, '123 - blarg')
-
-    def test_full_name_works_when_sin_is_absent(self):
-        sm = ScheduleMetadata(name='blarg')
-        self.assertEqual(sm.full_name, 'blarg')
-
     def test_description_html_works(self):
         sm = ScheduleMetadata(description='hello *there*')
         self.assertEqual(
@@ -56,7 +48,3 @@ class SimpleTests(SimpleTestCase):
             '<p>hello <em>there</em></p>'
         )
         self.assertIsInstance(sm.description_html, SafeText)
-
-    def test_str_works(self):
-        sm = ScheduleMetadata(sin='123', name='blarg')
-        self.assertEqual(str(sm), '123 - blarg')
