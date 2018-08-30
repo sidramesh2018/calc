@@ -149,13 +149,6 @@ p.form--invalid__message {
       margin-right: 0;
     }
   }
-  //p {
-    //display: inline-block;
-    //padding: 0px 40px;
-    //vertical-align: bottom;
-    //margin-bottom: 15px;
-    //font-weight: bold;
-  //}
 }
 
 dl.contract-details {
@@ -186,6 +179,33 @@ dl.contract-details {
     &.contract-details__start-date:after {
       font-weight: normal;
       content: ' to ';
+    }
+  }
+}
+
+.search-group {
+  display: flex;
+  padding: 0;
+  margin-top: $space-1x;
+  margin-bottom: 7px;
+   input {
+    border: 0;
+    &[type].form__inline,
+    &[type].form__inline~button:first-of-type,
+    &[type].form__inline~.usa-button {
+      margin: 0;
+    }
+    &[type].form__inline {
+      flex-grow: 6;
+      max-width: 100%; // WDS override
+      border-radius: $border-radius;
+      border-top: 1px solid $color-gray;
+      border-right: none;
+      border-left: 1px solid $color-gray;
+      border-bottom: 1px solid $color-gray;
+    }
+    button {
+      flex-grow: 1;
     }
   }
 }
@@ -232,6 +252,105 @@ input[type].form__inline,
   input.select-across ~ button[type=submit] {
     border-radius: 0 $border-radius $border-radius 0;
   }
+}
+
+.html-dropdown {
+  display: inline-block;
+  background: $color-gray-lightest;
+  border-radius: $border-radius;
+  button {
+    background-position: right 1.4rem top 1.6rem;
+    background-repeat: no-repeat;
+    background-size: 1em;
+    border-radius: $border-radius;
+    background-color: transparent;
+    color: $color-base;
+    margin-right: 0;
+    padding-right: $space-6x;
+    &:hover {
+      background-color: $color-gray-lighter;
+      color: $color-base;
+    }
+    &[aria-expanded=false] {
+      background-image: url(../../images/arrow-down-gray.svg);
+    }
+    &[aria-expanded=true] {
+      background-image: url(../../images/arrow-up-gray.svg);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+  li {
+    margin-bottom: 0; // WDS override
+  }
+}
+
+.search .html-dropdown {
+  position: absolute; // to force it to pop over the data explorer search
+
+  // allot for data explorer search dropdown
+  + .search-group {
+    margin-top: 5.6rem;
+  }
+}
+
+
+.html-dropdown__trigger {
+  padding: $space-3x/2 3.5rem $space-3x/2 $space-3x/2;
+  font-size: $base-font-size;
+  span {
+    margin-left: $space-half;
+    font-weight: normal;
+  }
+}
+
+.html-dropdown__choices {
+  z-index: 9999;
+  padding: 0; // ul override
+  color: $color-gray-dark;
+  background: $color-gray-lightest;
+  border-bottom-left-radius: $border-radius;
+  border-bottom-right-radius: $border-radius;
+  label {
+    margin-bottom: $space-1x;
+    margin-top: $space-1x;
+  }
+  li {
+    padding: $space-half $space-2x;
+    &:hover {
+      background-color: $color-gray-lighter;
+    }
+    label {
+      margin-bottom: 0; // default style override
+    }
+  }
+  .filter--schedule li:first-child {
+    color: $color-black;
+  }
+  &[aria-hidden=true] {
+    display: none;
+  }
+
+  ul {
+    margin: 0; // override standard margins
+  }
+
+  // override the WDS standard radio buttons
+  [type=radio]:checked + label::before,
+  label::before {
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  [type=radio]:checked + label::before {
+    background-image: url('../../images/icon-checkmark-floating.svg');
+    background-repeat: no-repeat;
+  }
+}
+
+.label__suffix {
+  font-size: $small-font-size;
+  padding-left: $space-half;
 }
 
 // WDS override for date groupings

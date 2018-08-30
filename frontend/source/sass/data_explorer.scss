@@ -2,6 +2,7 @@
 // components and then included here.
 
 @import 'base/variables';
+@import 'components/forms';
 @import 'components/tables';
 @import 'components/experienceslider';
 
@@ -10,9 +11,7 @@ body {
 }
 
 // temp styles to mimic .card without indenting the table
-section.search,
-section.search + .graph-block,
-.search-header.columns.nine {
+.graph-block {
   margin-right: 0;
   margin-left: $space-8x;
 }
@@ -24,6 +23,7 @@ section.search + .graph-block,
   }
   h2 {
     margin-top: $space-8x;
+    margin-bottom: $space-4x;
   }
 }
 
@@ -37,19 +37,13 @@ section.search .container {
 }
 
 @media only screen and (max-width: $medium-large-screen) {
-  section.search,
-  section.search + .graph-block,
-  .search-header.columns.nine {
+.graph-block {
     margin-left: $space-3x;
   }
 }
 
 .help-text.columns.nine {
   padding-top: $space-8x;
-}
-
-#labor_category {
-  width: 65%;
 }
 
 // to fake selection of home link
@@ -139,10 +133,6 @@ span.dollars {
 .filter-more-info {
   float: right;
   font-size: 70%;
-}
-
-.graph-block {
-  margin-left: 0;
 }
 
 .filter-title {
