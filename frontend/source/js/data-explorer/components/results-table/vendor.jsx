@@ -13,9 +13,8 @@ const DOCUMENT_SVG = (
 );
 
 const column = createSortableColumn({
-  key: 'idv_piid',
-  title: 'Contract',
-  description: 'Contract number',
+  key: 'vendor_name',
+  title: 'Vendor / Contract',
 });
 
 export const { HeaderCell } = column;
@@ -25,15 +24,16 @@ function createGsaAdvantageUrl(contractNumber) {
 
   return `https://www.gsaadvantage.gov/ref_text/${id}/${id}_online.htm`;
 }
-
 export const DataCell = column.connectDataCell(
-  ({ className, value }) => (
+  ({ className, value, result }) => (
     <td className={className}>
-      <a target="_blank" rel="noopener noreferrer" href={createGsaAdvantageUrl(value)}>
-        {value} 
+      {value}
+      <br />
+      <a target="_blank" rel="noopener noreferrer" href={createGsaAdvantageUrl(result.idv_piid)}>
+        {result.idv_piid}
         {' '}
         {DOCUMENT_SVG}
       </a>
     </td>
-  ),
+  )
 );

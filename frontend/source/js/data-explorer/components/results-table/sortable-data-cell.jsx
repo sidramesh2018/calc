@@ -32,7 +32,7 @@ export const createDataCellConnector = key => (Component) => {
 };
 
 
-export function GenericDataCell({ className, value }) {
+export function GenericDataCell({ className, value, result = {} }) {
   return (
     <td className={className}>
       {value}
