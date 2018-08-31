@@ -18,7 +18,6 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
   const input = (type) => {
     const { idSuffix } = INPUT_INFOS[type];
     const id = `${idPrefix}${idSuffix}`;
-    const matchExactIsChecked = (queryType === QUERY_TYPE_MATCH_EXACT);
 
     return (
       <li>
@@ -27,7 +26,7 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
           type="checkbox"
           name="query_type"
           value={queryType}
-          checked={matchExactIsChecked}
+          checked={queryType === QUERY_TYPE_MATCH_EXACT}
           onChange={() => { setQueryType(queryType); }}
         />
         <label htmlFor={id}>
