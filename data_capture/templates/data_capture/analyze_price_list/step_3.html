@@ -16,20 +16,21 @@
             <th>Service proposed</th>
             <th>Min.<br />edu.</th>
             <th>Min.<br />exper.</th>
-            <th>Price</th>
-            <th>Average</th>
+            <th># of results</th>
+            <th>Proposed<br />price</th>
+            <th>Average<br />price</th>
             <th>+/- avg.</th>
             <th>% +/- avg.</th>
             <th>+/- std. dev.</th>
-            <th># of results</th>
           </tr>
         </thead>
         <tbody>
         {% for row in analyzed_rows %}
           <tr>
-            <td><a href={{ row.analysis.url }}>{{ row.labor_category }}</a></td>
+            <td><a href={{ row.analysis.url }} target="_blank">{{ row.labor_category }}</a></td>
             <td>{{ row.education_level }}</td>
             <td>{{ row.min_years_experience }}</td>
+            <td><a href={{ row.analysis.url }} target="_blank">{{ row.analysis.count }}</a></td>
             <td class="number">${{ row.price|floatformat:2 }}</td>
             <td class="number">${{ row.analysis.avg|floatformat:2 }}</td>
             <td>
@@ -60,7 +61,6 @@
               {% endif %}
               {{ row.analysis.stddevs }} std. devs.
             </td>
-            <td>{{ row.analysis.count }}</td>
           </tr>
         {% endfor %}
         </tbody>
