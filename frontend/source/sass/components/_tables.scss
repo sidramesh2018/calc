@@ -95,7 +95,15 @@ table {
           }
         }
       }
+      span {
+        font-weight: $font-weight-normal;
+      }
     }
+  }
+
+  .umbrella-header {
+    border-bottom: none;
+    border-top: none;
   }
 
   &.hoverable {

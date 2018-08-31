@@ -5,18 +5,21 @@
 {% block step_heading %}
   <h2>Price list analysis</h2>
   {% if gleaned_data.valid_rows %}
-    <p>Below is the analysis of your price list.</p>
+    <p>Here's how the rates in your proposed contract compare with CALC data. Click on any link in the table to view the full search results for a proposed service, at the specified education and experience levels.</p>
     {% endif %}
 {% endblock %}
 {% block step_body %}
   {% if gleaned_data.valid_rows %}
     <table class="price-list-table analysis">
         <thead>
+          <tr class="umbrella-header">
+            <th colspan="4">Uploaded price list data</th>
+            <th colspan="4">CALC analysis</th>
+          </tr>
           <tr>
-            <th>Service proposed</th>
+            <th>Proposed service<br /><span>(# of CALC results)</span></th>
             <th>Min.<br />edu.</th>
             <th>Min.<br />exper.</th>
-            <th># of results</th>
             <th>Proposed<br />price</th>
             <th>Average<br />price</th>
             <th>+/- avg.</th>
@@ -27,10 +30,9 @@
         <tbody>
         {% for row in analyzed_rows %}
           <tr>
-            <td><a href={{ row.analysis.url }} target="_blank">{{ row.labor_category }}</a></td>
+            <td><a href={{ row.analysis.url }} target="_blank">{{ row.labor_category }}<span> ({{ row.analysis.count }})</span></a></td>
             <td>{{ row.education_level }}</td>
             <td>{{ row.min_years_experience }}</td>
-            <td><a href={{ row.analysis.url }} target="_blank">{{ row.analysis.count }}</a></td>
             <td class="number">${{ row.price|floatformat:2 }}</td>
             <td class="number">${{ row.analysis.avg|floatformat:2 }}</td>
             <td>
