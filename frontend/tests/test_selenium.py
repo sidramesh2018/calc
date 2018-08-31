@@ -335,8 +335,8 @@ class DataExplorerTests(SeleniumTestCase):
                 for _field in fields:
                     # the exact match toggle changes value based on querytype,
                     # but always possesses the name "match_exact"
-                    if _field.get_attribute('value') == value or
-                        _field.get_attribute('name').find(value):
+                    if _field.get_attribute('value') == value or \
+                            _field.get_attribute('name').find(value):
                         self.get_label_for_input(_field, form).click()
             else:
                 field.send_keys(str(value))
