@@ -28,7 +28,6 @@ export const DataCell = column.connectDataCell(
   ({ className, value, result }) => (
     <td className={className}>
       {value}
-      <br />
       <a target="_blank" rel="noopener noreferrer" href={createGsaAdvantageUrl(result.idv_piid)}>
         {result.idv_piid}
         {' '}

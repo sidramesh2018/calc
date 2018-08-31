@@ -422,19 +422,15 @@ th.column-labor_category {        width: 23%; }
 th.column-education_level {       width: 10%; }
 th.column-min_years_experience {  width: 10%; }
 th.column-wage {                  width:  8%; }
-th.column-idv_piid {              width: 12%; }
 th.column-vendor_name {           width: 25%; }
-th.column-schedule {              min-width: 145px;} /* temp fix until we combine vendor/contract # */
 
 th.column-education_level {
   color-white-space: nowrap;
 }
 
-td.column-idv_piid {
-  color-white-space: nowrap;
-}
-
-td.column-idv_piid a {
+td.column-vendor_name a {
+  font-size: $small-font-size;
+  display: block;
   text-decoration: none;
   &:hover {
     text-decoration: underline;
