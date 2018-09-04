@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [3.0.1][] - 2018-09-04
+
 ### Changed
 - Vendor name and contract number have been consolidated into a single column for easier scanning (#2112).
 - Schedule selector search UI has been relocated and improved (#2085).
@@ -482,7 +484,8 @@ contract vehicles, not just schedules (#2067).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v3.0.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/18F/calc/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/18F/calc/compare/v2.10.0...v3.0.0
 [2.10.0]: https://github.com/18F/calc/compare/v2.9.1...v2.10.0
 [2.9.1]: https://github.com/18F/calc/compare/v2.9.0...v2.9.1
