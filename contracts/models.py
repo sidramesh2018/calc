@@ -351,7 +351,7 @@ class Contract(models.Model):
         on_delete=models.CASCADE,
     )
 
-    # use a manager that filters by current contracts with a valid current_price
+    # Ojects should be current contracts with a valid current_price
     objects = CurrentContractManager()
 
     @staticmethod
@@ -582,8 +582,6 @@ class ScheduleMetadata(models.Model):
 
     @property
     def full_name(self):
-        if self.sin:
-            return f'{self.sin} - {self.name}'
         return self.name
 
     @property

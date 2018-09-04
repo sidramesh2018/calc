@@ -9,7 +9,7 @@ import * as LaborCategoryColumn from './labor-category-column';
 import * as EducationColumn from './education-column';
 import * as ExperienceColumn from './experience-column';
 import * as PriceColumn from './price-column';
-import * as ContractNumberColumn from './contract-number-column';
+import * as VendorColumn from './vendor';
 
 const COLUMNS = [
   ExcludedColumn,
@@ -17,11 +17,7 @@ const COLUMNS = [
   PriceColumn,
   EducationColumn,
   ExperienceColumn,
-  ContractNumberColumn,
-  createSortableColumn({
-    key: 'vendor_name',
-    title: 'Vendor',
-  }),
+  VendorColumn,
   createSortableColumn({
     key: 'schedule',
     title: 'Contract vehicle',
