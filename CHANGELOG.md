@@ -7,6 +7,15 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+- Vendor name and contract number have been consolidated into a single column for easier scanning (#2112).
+- Schedule selector search UI has been relocated and improved (#2085).
+- Data administrators can now access the admin panel from the user menu rather than the main navigation (#2105).
+- Search type UI has been simplified to a single checkbox (#2108).
+
+### Added
+- API documentation is now available in the CALC footer (#2065).
+
 ## [3.0.0][] - 2018-08-20
 
 ### Changed
