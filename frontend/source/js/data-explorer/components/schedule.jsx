@@ -2,47 +2,69 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { filterActive } from '../util';
-import { makeOptions } from './util';
 import { setSchedule as setScheduleAction } from '../actions';
 import { scheduleLabels } from '../schedule-metadata';
 
-export function Schedule({ idPrefix, schedule, setSchedule }) {
-  const id = `${idPrefix}schedule`;
+export function Schedule({ selectedSchedule, setSchedule }) {
   const handleChange = (e) => { setSchedule(e.target.value); };
+  const defaultMsg = `In all ${Object.keys(scheduleLabels).length} of these contract vehicles:`;
+  // In most instances, we display legacy schedules as "Legacy Schedule," i.e., "Legacy MOBIS."
+  // Here, however, we want to display the "Legacy" modifier in parenthesis after the name.
+  // Since the legacy modifier only is found in schedule.full_name, we have to regex.
+  const legacyPrefix = "Legacy ";
+  const makeInput = (value, label) => {
+    const id = value.replace(/ /g, '-').toLowerCase() || 'all-schedules';
+    const makeLabel = (title) => {
+      let scheduleLabel = title;
+      let labelSuffix;
+      if (title.includes(legacyPrefix)) {
+        scheduleLabel = title.replace(legacyPrefix, '');
+        labelSuffix = "(Legacy)";
+      }
+      return { scheduleLabel, labelSuffix };
+    };
+    const { scheduleLabel, labelSuffix } = makeLabel(label);
+    return (
+      <li>
+        <input
+          type="radio"
+          id={id}
+          name={id}
+          value={value}
+          onChange={handleChange}
+          checked={selectedSchedule === value}
+        />
+        <label htmlFor={id}>
+          {scheduleLabel}
+          <span className="label__suffix">
+            {labelSuffix}
+          </span>
+        </label>
+      </li>
+    );
+  };
+
+  const makeChoices = labels => [
+    { key: '', value: '', label: defaultMsg },
+  ].concat(Object.keys(labels).map(
+    value => ({ value, label: labels[value] }),
+  )).map(({ value, label }) => (
+    makeInput(value, label)
+  ));
 
   return (
-    <div className="filter filter-schedule">
-      <label htmlFor={id}>
-Contract vehicle:
-      </label>
-      <a href="/about#schedules" className="filter-more-info">
-        What&apos;s this?
-      </a>
-      <select
-        id={id}
-        name="schedule"
-        value={schedule}
-        onChange={handleChange}
-        className={filterActive(schedule !== '')}
-      >
-        {makeOptions(scheduleLabels)}
-      </select>
-    </div>
+    <ul className="filter--schedule">
+      {makeChoices(scheduleLabels, defaultMsg)}
+    </ul>
   );
 }
 
 Schedule.propTypes = {
-  schedule: PropTypes.string.isRequired,
+  selectedSchedule: PropTypes.string.isRequired,
   setSchedule: PropTypes.func.isRequired,
-  idPrefix: PropTypes.string,
-};
-
-Schedule.defaultProps = {
-  idPrefix: '',
 };
 
 export default connect(
-  state => ({ schedule: state.schedule }),
+  state => ({ selectedSchedule: state.schedule }),
   { setSchedule: setScheduleAction },
 )(Schedule);
