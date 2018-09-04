@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
@@ -32,7 +33,7 @@ export const createDataCellConnector = key => (Component) => {
 };
 
 
-export function GenericDataCell({ className, value }) {
+export function GenericDataCell({ className, value, result }) {
   return (
     <td className={className}>
       {value}
@@ -43,8 +44,10 @@ export function GenericDataCell({ className, value }) {
 GenericDataCell.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.any,
+  result: PropTypes.object,
 };
 
 GenericDataCell.defaultProps = {
   value: null,
+  result: {},
 };
