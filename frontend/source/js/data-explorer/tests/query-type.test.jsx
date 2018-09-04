@@ -14,13 +14,11 @@ const setup = makeSetup(QueryType, defaultProps);
 describe('<QueryType>', () => {
   it('renders correctly', () => {
     const { wrapper } = setup();
-    expect(wrapper.find('#zzz_match_all').prop('value')).toBe('match_all');
     expect(wrapper.find('#zzz_match_exact').prop('value')).toBe('match_exact');
   });
 
   it('matching queryType is checked', () => {
     const { wrapper } = setup();
-    expect(wrapper.find('#zzz_match_all').prop('checked')).toBe(false);
     expect(wrapper.find('#zzz_match_exact').prop('checked')).toBe(true);
   });
 

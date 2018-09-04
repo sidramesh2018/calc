@@ -99,7 +99,7 @@ export class Experience extends React.Component {
           />
           <div className="experience_range">
             <label htmlFor={minId} className="usa-sr-only">
-Minimum Years
+              Minimum Years
             </label>
             <select
               id={minId}
@@ -112,7 +112,7 @@ Minimum Years
             </select>
             {' - '}
             <label htmlFor={maxId} className="usa-sr-only">
-Maximum Years
+              Maximum Years
             </label>
             <select
               id={maxId}

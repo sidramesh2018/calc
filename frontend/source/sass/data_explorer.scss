@@ -527,22 +527,8 @@ a.focus-input {
   }
 }
 
-#query-types {
-  padding: 0 1rem;
-  // radio buttons + labels
-  ul {
-    margin-top: $space-1x;
-  }
-  li {
-    display: inline-block;
-  }
-  label {
-    font-weight: normal;
-    margin: 0 2.5rem 0 0;
-    input {
-      margin-right: .5rem;
-    }
-  }
+#labor_category {
+  margin-bottom: .5rem;
 }
 
 #price-histogram svg {

@@ -118,9 +118,7 @@ class App extends React.Component {
                     </LaborCategory>
                   </div>
                   <div className="twelve columns">
-                    <div id={prefixId('query-types')}>
-                      <QueryType />
-                    </div>
+                    <QueryType />
                   </div>
                 </div>
               </div>
