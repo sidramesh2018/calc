@@ -23,6 +23,7 @@ import QueryType from './query-type';
 import LoadableOptionalFilters from './optional-filters/loadable-optional-filters';
 import LaborCategory from './labor-category';
 import LoadingIndicator from './loading-indicator';
+import SearchCategory from './search-category';
 import TitleTagSynchronizer from './title-tag-synchronizer';
 
 import { autobind } from '../util';
@@ -91,29 +92,22 @@ class App extends React.Component {
         className={classNames(this.getContainerClassNames())}
         onSubmit={this.handleSubmit}
       >
-        <div className="row">
-          <div className="search-header columns nine">
+        <div className="row card">
+          <div className="search-header columns twelve content">
             <h2>
-Search labor categories
+              Search CALC
             </h2>
-            <p>
-              Enter your search terms below, separated by commas.
-              {' '}
-              (For example: Engineer, Consultant)
-            </p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="columns nine">
             <TitleTagSynchronizer />
             <section className="search">
               <div className="container clearfix">
                 <div className="row">
                   <div className="twelve columns">
+                    <SearchCategory />
                     <LaborCategory api={this.props.api}>
-                      <button className="submit usa-button-primary">
-                        Search
-                      </button>
+                      <button
+                        className="submit usa-button-primary icon-search"
+                        aria-label="Search CALC"
+                      />
                       {' '}
                       <input
                         onClick={this.handleResetClick}
@@ -124,13 +118,15 @@ Search labor categories
                     </LaborCategory>
                   </div>
                   <div className="twelve columns">
-                    <div id={prefixId('query-types')}>
-                      <QueryType />
-                    </div>
+                    <QueryType />
                   </div>
                 </div>
               </div>
             </section>
+          </div>
+        </div>
+        <div className="row card">
+          <div className="columns nine">
 
             <div className="graph-block">
               {/* for converting the histogram into an img --> */}
