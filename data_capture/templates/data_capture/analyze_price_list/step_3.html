@@ -13,14 +13,14 @@
     <table class="price-list-table analysis">
         <thead>
           <tr class="umbrella-header">
-            <th colspan="4">Uploaded price list data</th>
+            <th class="table-gap" colspan="4">Uploaded price list data</th>
             <th colspan="4">CALC analysis</th>
           </tr>
           <tr>
             <th>Proposed service<br /><span>(# of CALC results)</span></th>
             <th>Min.<br />edu.</th>
             <th>Min.<br />exper.</th>
-            <th>Proposed<br />price</th>
+            <th class="table-gap">Proposed<br />price</th>
             <th>Average<br />price</th>
             <th>+/- avg.</th>
             <th>% +/- avg.</th>
@@ -33,7 +33,7 @@
             <td><a href={{ row.analysis.url }} target="_blank">{{ row.labor_category }}<span> ({{ row.analysis.count }})</span></a></td>
             <td>{{ row.education_level }}</td>
             <td>{{ row.min_years_experience }}</td>
-            <td class="number">${{ row.price|floatformat:2 }}</td>
+            <td class="table-gap number">${{ row.price|floatformat:2 }}</td>
             <td class="number">${{ row.analysis.avg|floatformat:2 }}</td>
             <td>
              {% if row.analysis.preposition == 'above' %}

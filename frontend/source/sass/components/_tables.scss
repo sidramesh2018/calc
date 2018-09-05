@@ -59,6 +59,7 @@ table {
         &:first-child,
         &:last-child {
           padding-bottom: $space-half;
+          padding-left: 0;
         }
       }
       th {
@@ -104,9 +105,6 @@ table {
             position: relative;
           }
         }
-      }
-      span {
-        font-weight: $font-weight-normal;
       }
     }
   }
@@ -155,6 +153,10 @@ table {
   }
 }
 
+.table-gap {
+  border-right: 8px solid white;
+}
+
 td.sorted {
   background: $color-gray-lightest;
 }
@@ -165,6 +167,9 @@ td.sorted {
     border-bottom: 3px solid white;
     &:first-of-type {
       font-weight: $font-weight-bold;
+    }
+    span {
+      font-weight: $font-weight-normal;
     }
   }
   td.table-error-severe {
