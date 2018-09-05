@@ -4,19 +4,11 @@ import { connect } from 'react-redux';
 
 import { setQueryType as setQueryTypeAction } from '../actions';
 import {
-  QUERY_TYPE_MATCH_ALL,
-  QUERY_TYPE_MATCH_PHRASE,
   QUERY_TYPE_MATCH_EXACT,
   QUERY_TYPE_LABELS,
 } from '../constants';
 
 const INPUT_INFOS = {
-  [QUERY_TYPE_MATCH_ALL]: {
-    idSuffix: 'match_all',
-  },
-  [QUERY_TYPE_MATCH_PHRASE]: {
-    idSuffix: 'match_phrase',
-  },
   [QUERY_TYPE_MATCH_EXACT]: {
     idSuffix: 'match_exact',
   },
@@ -31,11 +23,11 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
       <li>
         <input
           id={id}
-          type="radio"
+          type="checkbox"
           name="query_type"
-          value={type}
-          checked={type === queryType}
-          onChange={() => { setQueryType(type); }}
+          value={queryType}
+          checked={queryType === QUERY_TYPE_MATCH_EXACT}
+          onChange={() => { setQueryType(queryType); }}
         />
         <label htmlFor={id}>
           {QUERY_TYPE_LABELS[type]}
@@ -46,8 +38,6 @@ export function QueryType({ queryType, setQueryType, idPrefix }) {
 
   return (
     <ul role="group" aria-label="Labor category query type">
-      {input(QUERY_TYPE_MATCH_ALL)}
-      {input(QUERY_TYPE_MATCH_PHRASE)}
       {input(QUERY_TYPE_MATCH_EXACT)}
     </ul>
   );

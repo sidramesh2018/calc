@@ -29,7 +29,7 @@ const YEAR_LI_INFO = {
   },
 };
 
-const TOOLTIP = 'All five years of pricing are available in the export.';
+const TOOLTIP = 'Show rates for the initial year of the contract, or for subsequent years (+1 or +2).';
 
 export function ContractYear({ idPrefix, contractYear, setContractYear }) {
   const listItem = (year) => {

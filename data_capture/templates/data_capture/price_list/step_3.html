@@ -23,7 +23,7 @@
   {% include 'data_capture/price_list/upload_form.html' %}
 {% endblock %}
 {% block card_footer %}
-  <form method="post">
+  <form method="post" class="form--contract_details">
     {% csrf_token %}
     <button type="submit" class="usa-button usa-button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel this upload</button>
   </form>

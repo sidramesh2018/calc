@@ -7,41 +7,11 @@ exports[`<QueryType> matches snapshot 1`] = `
 >
   <li>
     <input
-      checked={false}
-      id="zzz_match_all"
-      name="query_type"
-      onChange={[Function]}
-      type="radio"
-      value="match_all"
-    />
-    <label
-      htmlFor="zzz_match_all"
-    >
-      Contains words
-    </label>
-  </li>
-  <li>
-    <input
-      checked={false}
-      id="zzz_match_phrase"
-      name="query_type"
-      onChange={[Function]}
-      type="radio"
-      value="match_phrase"
-    />
-    <label
-      htmlFor="zzz_match_phrase"
-    >
-      Contains phrase
-    </label>
-  </li>
-  <li>
-    <input
       checked={true}
       id="zzz_match_exact"
       name="query_type"
       onChange={[Function]}
-      type="radio"
+      type="checkbox"
       value="match_exact"
     />
     <label

@@ -23,7 +23,7 @@ exports.getLastFolderName = (file) => {
   return lastFolderName;
 };
 
-exports.webpackify = ({ isWatching, isProd }) => webpackStream({
+exports.webpackify = ({ isWatching, isProd }, cb, taskNum) => webpackStream({
   mode: isProd ? 'production' : 'development',
   watch: isWatching,
   watchOptions: USE_POLLING ? {
@@ -65,4 +65,11 @@ exports.webpackify = ({ isWatching, isProd }) => webpackStream({
     chunkFilename: '[name].bundle.js',
     publicPath: '/static/frontend/built/js/',
   },
-}, webpack);
+}, webpack, () => {
+  // Only execute this callback the first time, so that gulp knows
+  // we're done.
+  if (taskNum === 1) {
+    cb();
+  }
+  taskNum++; // Increment the task counter
+});

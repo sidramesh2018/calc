@@ -148,7 +148,6 @@ describe('deserializers', () => {
     it('deserializes various values', () => {
       const { query_type } = deserializers;
       expect(query_type('whatever')).toBe(DEFAULT_QUERY_TYPE);
-      expect(query_type('match_phrase')).toBe('match_phrase');
       expect(query_type('match_exact')).toBe('match_exact');
     });
   });

@@ -96,32 +96,16 @@ GET_CONTRACTS_QUERYARGS = [
         "schedule",
         str,
         """
-        Filter by GSA schedule. One of the following will
-        return results:
-
-        * Environmental
-        * AIMS
-        * Logistics
-        * Language Services
-        * PES
-        * MOBIS
-        * Consolidated
-        * IT Schedule 70
+        Filter by GSA schedule. See [/api/schedules/](/api/schedules/)
+        for a list of valid values.
         """,
     ),
     queryarg(
         "sin",
         str,
         """
-        Filter by SIN number. Examples include:
-
-        * 899 - Environmental
-        * 541 - AIMS
-        * 87405 - Logistics
-        * 73802 - Language Services
-        * 871 - PES
-        * 874 - MOBIS
-        * 132 - IT Schedule 70
+        Filter by SIN number. See [/api/schedules/](/api/schedules/)
+        for a list of example values.
 
         Note that due to the current state of data, not all
         results may be returned.  For more details, see
@@ -315,21 +299,6 @@ def quantize(num, precision=2):
     return Decimal(num).quantize(Decimal(10) ** -precision)
 
 
-class ScheduleMetadataList(generics.ListAPIView):
-    """
-    Returns an array of objects representing metadata about
-    Schedules offered by CALC. Each object contains the following keys:
-    * `schedule` is the identifier for the schedule as it appears in
-      other CALC API endpoints, such as [/api/rates/](/api/rates/).
-    * `full_name` is the full name of the schedule as it should appear
-      to end users.
-    * `sin` is the SIN number of the schedule, if one exists.
-    """
-
-    queryset = ScheduleMetadata.objects.all()
-    serializer_class = ScheduleMetadataSerializer
-
-
 class GetRates(APIView):
     """
     Get detailed information about all labor rates that match a search query.
@@ -356,7 +325,8 @@ class GetRates(APIView):
         * `hourly_rate_year1`, `current_price`, `next_year_price`,
             and `second_year_price` contain pricing information for
             the labor rate.
-        * `schedule` is the schedule the labor rate is under.
+        * `schedule` is the schedule the labor rate is under. See
+            [/api/schedules/](/api/schedules/) for a list of valid values.
         * `sin` describes the special item numbers (SINs) the labor
             rate is under. See
             [#1033](https://github.com/18F/calc/issues/1033) for
@@ -447,6 +417,22 @@ class GetRates(APIView):
 
     def get_queryset(self, request, wage_field):
         return get_contracts_queryset(request, wage_field)
+
+
+class ScheduleMetadataList(generics.ListAPIView):
+    """
+    Returns an array of objects representing metadata about
+    Schedules offered by CALC. Each object contains the following keys:
+
+    * `schedule` is the identifier for the schedule as it appears in
+      other CALC API endpoints, such as [/api/rates/](/api/rates/).
+    * `full_name` is the full name of the schedule as it should appear
+      to end users.
+    * `sin` is the SIN number of the schedule, if one exists.
+    """
+
+    queryset = ScheduleMetadata.objects.all()
+    serializer_class = ScheduleMetadataSerializer
 
 
 class GetRatesCSV(APIView):

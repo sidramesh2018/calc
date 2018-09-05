@@ -19,3 +19,4 @@ require('./date');
 require('./smooth-scroll');
 require('./modal-dialogs');
 require('./edit-details-form-enhance');
+require('./form-validation');

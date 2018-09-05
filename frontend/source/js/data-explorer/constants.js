@@ -71,15 +71,12 @@ export const SORT_KEYS = [
 
 export const QUERY_TYPE_MATCH_ALL = 'match_all';
 
-export const QUERY_TYPE_MATCH_PHRASE = 'match_phrase';
-
 export const QUERY_TYPE_MATCH_EXACT = 'match_exact';
 
 export const DEFAULT_QUERY_TYPE = QUERY_TYPE_MATCH_ALL;
 
 export const QUERY_TYPE_LABELS = {
   [QUERY_TYPE_MATCH_ALL]: 'Contains words',
-  [QUERY_TYPE_MATCH_PHRASE]: 'Contains phrase',
   [QUERY_TYPE_MATCH_EXACT]: 'Exact match',
 };
 

@@ -137,9 +137,11 @@ gulp.task('clean', () => {
 });
 
 // boolean flag to indicate to webpack that it should set up its watching
+let taskNum = 1; // eslint-disable-line prefer-const
 let isWatching = false;
-gulp.task('set-watching', () => {
+gulp.task('set-watching', (done) => {
   isWatching = true;
+  done();
 });
 
 // compile SASS sources
@@ -161,11 +163,11 @@ gulp.task('sass', () => gulp.src(path.join(dirs.src.style, paths.sass))
 
 gulp.task('js:vendor', gulp.series(vendoredBundles));
 
-gulp.task('js:webpack', () => gulp.src(
+gulp.task('js:webpack', done => gulp.src(
   webpackUtil.scriptSources({ bundles, rootDir: dirs.src.scripts })
 )
   .pipe(named(webpackUtil.getLastFolderName))
-  .pipe(webpackUtil.webpackify({ isWatching, isProd }))
+  .pipe(webpackUtil.webpackify({ isWatching, isProd }, done, taskNum))
   .pipe(gulp.dest(`${BUILT_FRONTEND_DIR}/js/`)));
 
 // Compile JavaScript sources
@@ -177,22 +179,22 @@ gulp.task('js', gulp.parallel('js:vendor', 'js:webpack'));
 gulp.task('build', gulp.series('copy-uswds-assets', 'sass', 'js', 'sphinx'));
 
 // watch files for changes
-gulp.task('watch', gulp.parallel('set-watching', 'copy-uswds-assets', 'sass', 'js', 'sphinx'), () => {
+gulp.task('watch', gulp.series('set-watching', gulp.parallel('copy-uswds-assets', 'sass', 'js', 'sphinx'), () => {
   gulp.watch([
     path.join(dirs.src.sphinx, paths.sphinx),
-  ], ['sphinx']);
-  gulp.watch(path.join(dirs.src.style, paths.sass), ['sass']);
+  ], gulp.series('sphinx'));
+  gulp.watch(path.join(dirs.src.style, paths.sass), gulp.series('sass'));
 
   // Note: wepback bundles set up their own watch handling
   // so we don't want to re-trigger them here, ref #437
-  gulp.watch(path.join(dirs.src.scripts, 'vendor', paths.js), ['js:vendor']);
+  gulp.watch(path.join(dirs.src.scripts, 'vendor', paths.js), gulp.series('js:vendor'));
 
   const calcURL = `http://localhost:${process.env.DOCKER_EXPOSED_PORT}`;
 
   gutil.log("-----------------------------------------");
   gutil.log(`Visit your CALC at: ${calcURL}`);
   gutil.log("-----------------------------------------");
-});
+}));
 
 // default task
 // running `gulp` will default to watching and dist'ing files

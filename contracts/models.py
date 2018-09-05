@@ -357,7 +357,7 @@ class Contract(models.Model):
         on_delete=models.CASCADE,
     )
 
-    # use a manager that filters by current contracts with a valid current_price
+    # Ojects should be current contracts with a valid current_price
     objects = CurrentContractManager()
 
     @staticmethod
@@ -402,9 +402,14 @@ class Contract(models.Model):
         return val
 
     def get_readable_business_size(self):
-        if 's' in self.business_size.lower():
+        """
+        There appears to be a mismatch between how we store business size
+        in the DB and how we collect it in form submissions that makes startswith
+        a safer check than equivalency
+        """
+        if self.business_size.lower().startswith('s'):
             return 'small business'
-        else:
+        else:  # We expect it should be 'o' but are not locking it down.
             return 'other than small business'
 
     @staticmethod
@@ -583,8 +588,6 @@ class ScheduleMetadata(models.Model):
 
     @property
     def full_name(self):
-        if self.sin:
-            return f'{self.sin} - {self.name}'
         return self.name
 
     @property
