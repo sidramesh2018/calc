@@ -51,6 +51,16 @@ table {
   &.price-list-table,
   &#result_list {
     thead {
+      .umbrella-header th {
+        border-bottom: none;
+        border-top: none;
+        color: $color-gray;
+        font-size: $small-font-size;
+        &:first-child,
+        &:last-child {
+          padding-bottom: $space-half;
+        }
+      }
       th {
         color: $color-gray-dark;
         position: relative;
@@ -99,11 +109,6 @@ table {
         font-weight: $font-weight-normal;
       }
     }
-  }
-
-  .umbrella-header {
-    border-bottom: none;
-    border-top: none;
   }
 
   &.hoverable {
