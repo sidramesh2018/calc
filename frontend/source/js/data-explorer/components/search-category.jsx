@@ -36,6 +36,20 @@ export class SearchCategory extends React.Component {
   // has been selected.
   render() {
     const { selectedSchedule } = this.props;
+    const buttonText = () => {
+      return(
+        <div>
+          <strong>
+            Search labor categories
+          </strong>
+          <span>
+            in 
+            {' '}
+            { scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
+          </span>
+        </div>
+      )
+    };
     return (
       <div className="html-dropdown">
         <button
@@ -46,14 +60,7 @@ export class SearchCategory extends React.Component {
           onKeyDown={handleEnterOrSpace(this.toggleDropdown)}
           aria-expanded={this.state.expanded}
         >
-          <strong>
-            Search labor categories
-          </strong>
-          <span>
-            in 
-            {' '}
-            { scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
-          </span>
+          { buttonText }
         </button>
         {/* setting a key event on this div makes it impossible to select
           * an option with the keyboard.
