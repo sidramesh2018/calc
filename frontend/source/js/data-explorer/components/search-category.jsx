@@ -16,7 +16,7 @@ export class SearchCategory extends React.Component {
     this.state = {
       expanded: false,
     };
-    autobind(this, ['toggleDropdown', 'closeMenuOnClick', 'createScheduleHtml', 'createButtonText',]);
+    autobind(this, ['toggleDropdown', 'closeMenuOnClick']);
   }
 
   toggleDropdown() {
@@ -31,32 +31,11 @@ export class SearchCategory extends React.Component {
     });
   }
 
-  createScheduleHtml() {
-    return (
-      <div>
-        <strong>
-            Search labor categories
-          </strong>
-          <span>
-            in
-            {' '}
-            //{ scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
-          </span>
-      </div>
-    );
-  }
-
-  createButtonText() {
-    const { selectedSchedule, searchByVendor, searchByContract} = this.props;
-    return(
-      { this.createScheduleHtml }
-    )
-  }
-
   // TODO: Set up another Redux store to track what choice has been selected
   // Will need to track which schedule has been chosen, or if vendor/contract
   // has been selected.
   render() {
+    const { selectedSchedule } = this.props;
     return (
       <div className="html-dropdown">
         <button
@@ -67,7 +46,14 @@ export class SearchCategory extends React.Component {
           onKeyDown={handleEnterOrSpace(this.toggleDropdown)}
           aria-expanded={this.state.expanded}
         >
-          { this.createButtonText() }
+          <strong>
+            Search labor categories
+          </strong>
+          <span>
+            in 
+            {' '}
+            { scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
+          </span>
         </button>
         {/* setting a key event on this div makes it impossible to select
           * an option with the keyboard.
@@ -87,17 +73,11 @@ export class SearchCategory extends React.Component {
 }
 
 SearchCategory.propTypes = {
-  searchCategory: PropTypes.string,
   selectedSchedule: PropTypes.string,
-  searchByVendor: PropTypes.boolean,
-  searchByContract: PropTypes.boolean,
 };
 
 SearchCategory.defaultProps = {
-  searchCategory: 'schedule',
   selectedSchedule: '',
-  searchByVendor: false,
-  searchByContract: false,
 };
 
 export default connect(
