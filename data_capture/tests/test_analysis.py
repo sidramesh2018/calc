@@ -93,6 +93,7 @@ class DescribeTests(BaseDescribeTestCase):
             'url': '/?q=Engineer+of+Doom+ZZ&min_experience=5'
                    '&max_experience=9&education=BA'
         })
+
     def test_it_does_not_explode_when_stddev_is_zero(self):
         result = self.describe(
             labor_category='Engineer of Doom ZZ',
