@@ -25,7 +25,7 @@ export function Schedule({ selectedSchedule, setSchedule }) {
     };
     const { scheduleLabel, labelSuffix } = makeLabel(label);
     return (
-      <li>
+      <li key={id}>
         <input
           type="radio"
           id={id}
@@ -60,11 +60,11 @@ export function Schedule({ selectedSchedule, setSchedule }) {
 }
 
 Schedule.propTypes = {
-  selectedSchedule: PropTypes.string.isRequired,
+  selectedSchedule: PropTypes.string,
   setSchedule: PropTypes.func.isRequired,
 };
 
 export default connect(
-  state => ({ selectedSchedule: state.schedule || '' }),
+  state => ({ selectedSchedule: state.schedule }),
   { setSchedule: setScheduleAction },
 )(Schedule);
