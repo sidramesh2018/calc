@@ -344,6 +344,7 @@ SECURITY_HEADERS_ON_ERROR_ONLY = 'SECURITY_HEADERS_ON_ERROR_ONLY' in os.environ
 
 DATA_CAPTURE_SCHEDULES = (
     'data_capture.schedules.s70.Schedule70PriceList',
+    'data_capture.schedules.03FAC.Schedule03FACPriceList',
 )  # type: Tuple[str, ...]
 
 if DEBUG and not HIDE_DEBUG_UI:
