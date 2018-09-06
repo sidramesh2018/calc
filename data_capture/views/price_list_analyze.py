@@ -1,5 +1,5 @@
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 from .common import (add_generic_form_error,
                      get_nested_item, get_deserialized_gleaned_data)
@@ -84,6 +84,10 @@ def analyze_step_2(request, step):
                 session_pl['filename'] = form.cleaned_data['file'].name
                 request.session.modified = True
 
+            if gleaned_data.invalid_rows:
+
+                return ajaxform.redirect(request, 'data_capture:analyze_step_2_errors')
+
             return ajaxform.redirect(request, 'data_capture:analyze_step_3')
         else:
             add_generic_form_error(request, form)
@@ -99,6 +103,41 @@ def analyze_step_2(request, step):
     )
 
 
+@require_http_methods(["GET"])
+def analyze_step_2_errors(request):
+    step = steps.get_step_renderer(2)
+
+    gleaned_data = get_deserialized_gleaned_data(
+        request,
+        'data_capture:analyze_price_list'
+    )
+
+    if gleaned_data is None:
+        return redirect('data_capture:analyze_step_2')
+
+    step_1_post_data = get_nested_item(request.session, (
+        'data_capture:analyze_price_list',
+        'step_1_POST'
+    ))
+
+    step_1_form = AnalyzeStep1Form(step_1_post_data)
+    if not step_1_form.is_valid():
+        raise AssertionError('invalid step 1 data in session')
+
+    form_kwargs = dict(
+        schedule=step_1_form.cleaned_data['schedule'],
+    )
+
+    form = forms.PriceListUploadForm(**form_kwargs)
+
+    return render(request,
+                  'data_capture/analyze_price_list/step_2_errors.html',
+                  step.context({
+                      'form': form,
+                      'gleaned_data': gleaned_data,
+                  }, request))
+
+
 @steps.step(label='Analysis')
 @require_http_methods(["GET"])
 def analyze_step_3(request, step):
@@ -106,8 +145,6 @@ def analyze_step_3(request, step):
         request,
         'data_capture:analyze_price_list'
     )
-    if gleaned_data is None:
-        return redirect('data_capture:analyze_step_2')
 
     analyzed_rows = analyze_gleaned_data(gleaned_data)
 
