@@ -65,6 +65,6 @@ Schedule.propTypes = {
 };
 
 export default connect(
-  state => ({ selectedSchedule: state.schedule  || ''}),
+  state => ({ selectedSchedule: state.schedule || '' }),
   { setSchedule: setScheduleAction },
 )(Schedule);
