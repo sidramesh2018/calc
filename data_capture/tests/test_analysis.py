@@ -81,8 +81,10 @@ class DescribeTests(BaseDescribeTestCase):
             'avg': 90.0,
             'avg_exp': 5.0,
             'count': 1,
+            'dist_from_avg': 1.0,
+            'dist_from_avg_percent': 1.1111111111111112,
             'most_common_edu_levels': ['BA'],
-            'preposition': 'way below',
+            'preposition': 'below',
             'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
             'labor_category': 'Engineer of Doom ZZ',
             'severe': True,
@@ -91,7 +93,6 @@ class DescribeTests(BaseDescribeTestCase):
             'url': '/?q=Engineer+of+Doom+ZZ&min_experience=5'
                    '&max_experience=9&education=BA'
         })
-
     def test_it_does_not_explode_when_stddev_is_zero(self):
         result = self.describe(
             labor_category='Engineer of Doom ZZ',
@@ -106,9 +107,12 @@ class DescribeTests(BaseDescribeTestCase):
             'avg': 90.0,
             'avg_exp': 5.0,
             'count': 1,
+            'dist_from_avg': 0.0,
+            'dist_from_avg_percent': 0.0,
             'most_common_edu_levels': ['BA'],
             'comparable_search_criteria': {'edu': 'BA', 'exp': '5-9 years'},
             'labor_category': 'Engineer of Doom ZZ',
+            'preposition': 'above',
             'severe': False,
             'stddev': 1,
             'stddevs': 0,
