@@ -64,6 +64,10 @@ Schedule.propTypes = {
   setSchedule: PropTypes.func.isRequired,
 };
 
+Schedule.defaultProps = {
+  selectedSchedule: '',
+};
+
 export default connect(
   state => ({ selectedSchedule: state.schedule }),
   { setSchedule: setScheduleAction },

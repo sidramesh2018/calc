@@ -8,7 +8,7 @@ exports[`<Schedule> matches snapshot 1`] = `
     key="all-schedules"
   >
     <input
-      checked={false}
+      checked={true}
       id="all-schedules"
       name="all-schedules"
       onChange={[Function]}
