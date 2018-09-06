@@ -7,6 +7,30 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [3.0.1][] - 2018-09-04
+
+### Changed
+- Vendor name and contract number have been consolidated into a single column for easier scanning (#2112).
+- Schedule selector search UI has been relocated and improved (#2085).
+- Data administrators can now access the admin panel from the user menu rather than the main navigation (#2105).
+- Search type UI has been simplified to a single checkbox (#2108).
+
+### Added
+- API documentation is now available in the CALC footer (#2065).
+
+## [3.0.0][] - 2018-08-20
+
+### Changed
+- Changes to the options available for search. `match_phrase` has been removed as an
+option due to observed limited utility and bugginess in the implementation. Any API
+calls to `query_type` relying on `match_phrase` will return `match_words` results instead. The
+`match_words` and `match_exact` options have also been refactored to remove outstanding bugs. (#2061)
+- Updated UI to reflect search API changes (#2090).
+- Fixed an issue with front end files not being built properly (#2088).
+- Labelling across the site now reflects the potential availability of multiple
+contract vehicles, not just schedules (#2067).
+- Contract year buttons now have an explanatory tooltip ((#2056).
+
 ## [2.10.0][] - 2018-07-23
 
 ### Added
@@ -460,7 +484,9 @@ to [Semantic Versioning](http://semver.org/).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v2.10.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/18F/calc/compare/v3.0.0...v3.0.1
+[3.0.0]: https://github.com/18F/calc/compare/v2.10.0...v3.0.0
 [2.10.0]: https://github.com/18F/calc/compare/v2.9.1...v2.10.0
 [2.9.1]: https://github.com/18F/calc/compare/v2.9.0...v2.9.1
 [2.9.0]: https://github.com/18F/calc/compare/v2.8.6...v2.9.0

@@ -2,6 +2,7 @@
 // components and then included here.
 
 @import 'base/variables';
+@import 'components/forms';
 @import 'components/tables';
 @import 'components/experienceslider';
 
@@ -10,9 +11,7 @@ body {
 }
 
 // temp styles to mimic .card without indenting the table
-section.search,
-section.search + .graph-block,
-.search-header.columns.nine {
+.graph-block {
   margin-right: 0;
   margin-left: $space-8x;
 }
@@ -24,6 +23,7 @@ section.search + .graph-block,
   }
   h2 {
     margin-top: $space-8x;
+    margin-bottom: $space-4x;
   }
 }
 
@@ -37,19 +37,13 @@ section.search .container {
 }
 
 @media only screen and (max-width: $medium-large-screen) {
-  section.search,
-  section.search + .graph-block,
-  .search-header.columns.nine {
+.graph-block {
     margin-left: $space-3x;
   }
 }
 
 .help-text.columns.nine {
   padding-top: $space-8x;
-}
-
-#labor_category {
-  width: 65%;
 }
 
 // to fake selection of home link
@@ -139,10 +133,6 @@ span.dollars {
 .filter-more-info {
   float: right;
   font-size: 70%;
-}
-
-.graph-block {
-  margin-left: 0;
 }
 
 .filter-title {
@@ -432,19 +422,15 @@ th.column-labor_category {        width: 23%; }
 th.column-education_level {       width: 10%; }
 th.column-min_years_experience {  width: 10%; }
 th.column-wage {                  width:  8%; }
-th.column-idv_piid {              width: 12%; }
 th.column-vendor_name {           width: 25%; }
-th.column-schedule {              min-width: 145px;} /* temp fix until we combine vendor/contract # */
 
 th.column-education_level {
   color-white-space: nowrap;
 }
 
-td.column-idv_piid {
-  color-white-space: nowrap;
-}
-
-td.column-idv_piid a {
+td.column-vendor_name a {
+  font-size: $small-font-size;
+  display: block;
   text-decoration: none;
   &:hover {
     text-decoration: underline;
@@ -456,7 +442,7 @@ td.column-min_years_experience {
     color: $color-gray-dark;
     display: none;
     font-style: italic;
-  }
+    line-height: 12px;}
 }
 
 tr:hover td.column-min_years_experience .years {
@@ -539,24 +525,6 @@ a.focus-input {
 
 #labor_category {
   margin-bottom: .5rem;
-}
-
-#query-types {
-  padding: 0 1rem;
-  // radio buttons + labels
-  ul {
-    margin-top: $space-1x;
-  }
-  li {
-    display: inline-block;
-  }
-  label {
-    font-weight: normal;
-    margin: 0 2.5rem 0 0;
-    input {
-      margin-right: .5rem;
-    }
-  }
 }
 
 #price-histogram svg {

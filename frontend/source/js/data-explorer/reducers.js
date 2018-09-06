@@ -7,6 +7,8 @@ import {
   EMPTY_RATES_DATA,
   DEFAULT_SORT,
   DEFAULT_QUERY_TYPE,
+  QUERY_TYPE_MATCH_ALL,
+  QUERY_TYPE_MATCH_EXACT,
   MAX_QUERY_LENGTH,
 } from './constants';
 
@@ -157,7 +159,12 @@ function sort(state = DEFAULT_SORT, action) {
 
 function queryType(state = DEFAULT_QUERY_TYPE, action) {
   if (action.type === SET_QUERY_TYPE) {
-    return action.queryType;
+    // since the match_exact checkbox toggles these,
+    // set the state equal to the opposite of what is currently set.
+    if (action.queryType === QUERY_TYPE_MATCH_ALL) {
+      return QUERY_TYPE_MATCH_EXACT;
+    } 
+    return QUERY_TYPE_MATCH_ALL;
   }
   return state;
 }
