@@ -1,10 +1,11 @@
 {% extends 'data_capture/step.html' %}
 
-{% block body_class %}secondary-step card--wide card--no-header{% endblock %}
+{% block body_class %}secondary-step card--wide{% endblock %}
+
+{% block main_class %}card--collapse-header{% endblock %}
 
 {% block step_heading %}
-  <h2>Upload price list</h2>
-  <p>Choose the price list you'd like to analyze.</p>
+  <h2>Review errors</h2>
 {% endblock %}
 {% block step_body %}
   {% if gleaned_data.invalid_rows %}
@@ -55,7 +56,7 @@
       {{ form.file }}
 
       <div class="form-button-row clearfix">
-        <a href="{% url 'data_capture:analyze_step_1' %}" class="button usa-button-secondary button-previous">Previous</a>
+        <a href="{% url 'data_capture:analyze_step_1' %}" class="usa-button usa-button-secondary button-previous">Previous</a>
 
         <button type="submit" class="usa-button usa-button-primary">
           Upload revised price list
