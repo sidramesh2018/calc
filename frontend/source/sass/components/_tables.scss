@@ -51,6 +51,17 @@ table {
   &.price-list-table,
   &#result_list {
     thead {
+      .umbrella-header th {
+        border-bottom: none;
+        border-top: none;
+        color: $color-gray;
+        font-size: $small-font-size;
+        &:first-child,
+        &:last-child {
+          padding-bottom: $space-half;
+          padding-left: 0;
+        }
+      }
       th {
         color: $color-gray-dark;
         position: relative;
@@ -142,6 +153,10 @@ table {
   }
 }
 
+.table-gap {
+  border-right: 8px solid white;
+}
+
 td.sorted {
   background: $color-gray-lightest;
 }
@@ -152,6 +167,9 @@ td.sorted {
     border-bottom: 3px solid white;
     &:first-of-type {
       font-weight: $font-weight-bold;
+    }
+    span {
+      font-weight: $font-weight-normal;
     }
   }
   td.table-error-severe {
