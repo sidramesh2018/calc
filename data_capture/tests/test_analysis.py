@@ -2,6 +2,7 @@ from unittest import TestCase
 from django.test import TestCase as DjangoTestCase, override_settings
 from django.db import connection
 
+from calc.tests.common import BaseLoginTestCase
 from contracts.mommy_recipes import get_contract_recipe
 from contracts.models import Contract
 from ..models import SubmittedPriceListRow
@@ -21,6 +22,7 @@ from ..analysis.vocabulary import (
     broaden_query,
 )
 from ..analysis.export import AnalysisExport, COMPARABLES_NOT_FOUND
+from ..management.commands.initgroups import ANALYZE_PRICES_PERMISSION
 
 
 @override_settings(PRICE_LIST_ANALYSIS_FINDERS=[
@@ -353,3 +355,28 @@ class GetBestPermutationsTests(TestCase):
              ('administrative',),
              ('junior',)]
         )
+
+
+class AnalyzeViewTests(BaseLoginTestCase):
+    def test_index_nav_logged_out(self):
+        response = self.client.get("/")
+        self.assertContains(response, 'About CALC')
+        self.assertNotContains(response, 'Analyze Prices')
+        response = self.client.get("/data-capture/analyze/1")
+        self.assertEqual(response.status_code, 302)
+
+    def test_index_nav_logged_in_with_analyze_perms(self):
+        super().login(permissions=[ANALYZE_PRICES_PERMISSION])
+        response = self.client.get("/")
+        self.assertContains(response, 'About CALC')
+        self.assertContains(response, 'Analyze prices')
+        response = self.client.get("/data-capture/analyze/1")
+        self.assertEqual(response.status_code, 200)
+
+    def test_index_nav_logged_in_without_analyze_perms(self):
+        super().login(permissions=[])
+        response = self.client.get("/")
+        self.assertContains(response, 'About CALC')
+        self.assertNotContains(response, 'Analyze prices')
+        response = self.client.get("/data-capture/analyze/1")
+        self.assertEqual(response.status_code, 403)
