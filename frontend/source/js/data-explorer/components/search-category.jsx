@@ -3,6 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Schedule from './schedule';
+import {
+  SEARCH_TYPE_SCHEDULE,
+  SEARCH_TYPE_VENDOR,
+  SEARCH_TYPE_CONTRACT,
+  DEFAULT_SEARCH_TYPE
+} from '../constants';
 import { scheduleLabels } from '../schedule-metadata';
 
 import {
@@ -10,13 +16,14 @@ import {
   handleEnterOrSpace,
 } from '../util';
 
+
 export class SearchCategory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       expanded: false,
     };
-    autobind(this, ['toggleDropdown', 'closeMenuOnClick', 'createScheduleHtml', 'createButtonText',]);
+    autobind(this, ['toggleDropdown', 'closeMenuOnClick', 'createButtonText',]);
   }
 
   toggleDropdown() {
@@ -31,31 +38,33 @@ export class SearchCategory extends React.Component {
     });
   }
 
-  createScheduleHtml() {
-    return (
-      <div>
-        <strong>
-            Search labor categories
-          </strong>
-          <span>
-            in
-            {' '}
-            //{ scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
-          </span>
-      </div>
-    );
-  }
-
   createButtonText() {
-    const { selectedSchedule, searchByVendor, searchByContract} = this.props;
-    return(
-      { this.createScheduleHtml }
-    )
+    const {
+      selectedSchedule,
+      searchType,
+      searchTypeSchedule,
+      searchTypeVendor,
+      searchTypeContract
+    } = this.props;
+
+    let searchSummary;
+    if (searchType === searchTypeSchedule) {
+      searchSummary = (
+        <div>
+          <strong>
+              Search labor categories
+            </strong>
+            <span>
+              in
+              {' '}
+              { scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
+            </span>
+        </div>
+      );
+    }
+    return searchSummary;
   }
 
-  // TODO: Set up another Redux store to track what choice has been selected
-  // Will need to track which schedule has been chosen, or if vendor/contract
-  // has been selected.
   render() {
     return (
       <div className="html-dropdown">
@@ -87,19 +96,24 @@ export class SearchCategory extends React.Component {
 }
 
 SearchCategory.propTypes = {
-  searchCategory: PropTypes.string,
   selectedSchedule: PropTypes.string,
-  searchByVendor: PropTypes.boolean,
-  searchByContract: PropTypes.boolean,
+  searchType: PropTypes.string.isRequired,
+  searchTypeSchedule: PropTypes.string.isRequired,
+  searchTypeVendor: PropTypes.string.isRequired,
+  searchTypeContract: PropTypes.string.isRequired,
 };
 
 SearchCategory.defaultProps = {
-  searchCategory: 'schedule',
   selectedSchedule: '',
-  searchByVendor: false,
-  searchByContract: false,
+  searchType: DEFAULT_SEARCH_TYPE,
+  searchTypeSchedule: SEARCH_TYPE_SCHEDULE,
+  searchTypeVendor: SEARCH_TYPE_VENDOR,
+  searchTypeContract: SEARCH_TYPE_CONTRACT,
 };
 
 export default connect(
-  state => ({ selectedSchedule: state.schedule })
+  state => ({
+    selectedSchedule: state.schedule,
+    searchType: state.searchType
+  })
 )(SearchCategory);
