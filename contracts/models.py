@@ -136,6 +136,10 @@ class CurrentContractManager(models.Manager):
             for phrase in phrases:
                 filter_by = {query_by + '__iexact': phrase}
                 matches = matches | qs.filter(**filter_by)
+        elif query_by != '_normalized_labor_category':
+            for phrase in phrases:
+                filter_by = {query_by + '__icontains': phrase}
+                matches = matches | qs.filter(**filter_by)
         else:
             # Match any: Break phrases down into individual words
             # So "business manager" finds results with "business" AND "manager"
