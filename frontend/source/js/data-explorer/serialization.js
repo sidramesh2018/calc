@@ -84,6 +84,7 @@ export const serializers = {
   'proposed-price': coercedString,
   sort: ({ key, descending }) => (descending ? '-' : '') + key,
   query_type: coercedString,
+  query_by: coercedString,
 };
 
 export const deserializers = {
@@ -104,6 +105,7 @@ export const deserializers = {
   'proposed-price': parsePrice,
   sort: parseSort,
   query_type: stringInSet(QUERY_TYPE_LABELS, DEFAULT_QUERY_TYPE),
+  query_by: stringInSet({contract: 'contract', vendor: 'vendor'}),
 };
 
 export const allFields = Object.keys(serializers);
