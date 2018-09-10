@@ -82,8 +82,8 @@ export const QUERY_TYPE_LABELS = {
 
 export const MAX_QUERY_LENGTH = 255;
 
-export const SEARCH_TYPE_SCHEDULE = 'schedule';
-export const SEARCH_TYPE_VENDOR = 'vendor';
-export const SEARCH_TYPE_CONTRACT = 'contract';
+export const QUERY_BY_SCHEDULE = 'schedule';
+export const QUERY_BY_VENDOR = 'vendor';
+export const QUERY_BY_CONTRACT = 'contract';
 
-export const DEFAULT_SEARCH_TYPE = SEARCH_TYPE_SCHEDULE;
+export const DEFAULT_QUERY_BY = QUERY_BY_SCHEDULE;

@@ -10,7 +10,7 @@ import {
   QUERY_TYPE_MATCH_ALL,
   QUERY_TYPE_MATCH_EXACT,
   MAX_QUERY_LENGTH,
-  DEFAULT_SEARCH_TYPE,
+  DEFAULT_QUERY_BY,
 } from './constants';
 
 import {
@@ -31,7 +31,7 @@ import {
   SET_SITE,
   SET_BUSINESS_SIZE,
   SET_QUERY,
-  SET_SEARCH_TYPE,
+  SET_QUERY_BY,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -171,8 +171,8 @@ function queryType(state = DEFAULT_QUERY_TYPE, action) {
   return state;
 }
 
-function searchType(state = DEFAULT_SEARCH_TYPE, action) {
-  if (action.type === SET_SEARCH_TYPE) {
+function searchType(state = DEFAULT_QUERY_BY, action) {
+  if (action.type === SET_QUERY_BY) {
     return action.searchType;
   }
   return state;
@@ -192,7 +192,7 @@ const combinedReducer = combineReducers({
   'proposed-price': proposedPrice,
   sort,
   query_type: queryType,
-  search_type: searchType,
+  query_by: searchType,
 });
 
 export default (state, action) => {
