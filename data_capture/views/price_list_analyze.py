@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import redirect, render
 
@@ -5,6 +6,7 @@ from .common import (add_generic_form_error,
                      get_nested_item, get_deserialized_gleaned_data)
 from .. import forms
 from ..decorators import handle_cancel
+from ..management.commands.initgroups import ANALYZE_PRICES_PERMISSION
 from frontend import ajaxform
 from frontend.steps import Steps
 from ..schedules import registry
@@ -26,6 +28,8 @@ class AnalyzeStep1Form(forms.Step1Form):
 
 
 @steps.step(label='Select a schedule')
+@login_required
+@permission_required(ANALYZE_PRICES_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 def analyze_step_1(request, step):
     if request.method == 'GET':
@@ -50,6 +54,8 @@ def analyze_step_1(request, step):
 
 
 @steps.step(label='Upload a price list to analyze')
+@login_required
+@permission_required(ANALYZE_PRICES_PERMISSION, raise_exception=True)
 @require_http_methods(["GET", "POST"])
 @handle_cancel
 def analyze_step_2(request, step):
@@ -139,6 +145,8 @@ def analyze_step_2_errors(request):
 
 
 @steps.step(label='Analysis')
+@login_required
+@permission_required(ANALYZE_PRICES_PERMISSION, raise_exception=True)
 @require_http_methods(["GET"])
 def analyze_step_3(request, step):
     gleaned_data = get_deserialized_gleaned_data(
@@ -155,6 +163,8 @@ def analyze_step_3(request, step):
 
 
 @require_http_methods(["GET"])
+@login_required
+@permission_required(ANALYZE_PRICES_PERMISSION, raise_exception=True)
 def export_analysis(request):
     gleaned_data = get_deserialized_gleaned_data(
         request,
