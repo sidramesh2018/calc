@@ -171,9 +171,11 @@ function queryType(state = DEFAULT_QUERY_TYPE, action) {
   return state;
 }
 
-function searchType(state = DEFAULT_QUERY_BY, action) {
+function queryBy(state = DEFAULT_QUERY_BY, action) {
   if (action.type === SET_QUERY_BY) {
-    return action.searchType;
+    // default is wrong
+    debugger;
+    return action.queryBy || '';
   }
   return state;
 }
@@ -192,7 +194,7 @@ const combinedReducer = combineReducers({
   'proposed-price': proposedPrice,
   sort,
   query_type: queryType,
-  query_by: searchType,
+  query_by: queryBy,
 });
 
 export default (state, action) => {

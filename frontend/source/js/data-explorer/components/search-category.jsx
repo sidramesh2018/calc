@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { setQueryBy as setQueryByAction } from '../actions';
 import Schedule from './schedule';
+import Vendor from './vendor-search';
 import {
-  SEARCH_TYPE_SCHEDULE,
-  SEARCH_TYPE_VENDOR,
-  SEARCH_TYPE_CONTRACT,
-  DEFAULT_SEARCH_TYPE
+  QUERY_BY_SCHEDULE,
+  QUERY_BY_VENDOR,
+  QUERY_BY_CONTRACT,
+  DEFAULT_QUERY_BY
 } from '../constants';
 import { scheduleLabels } from '../schedule-metadata';
 
@@ -23,7 +25,7 @@ export class SearchCategory extends React.Component {
     this.state = {
       expanded: false,
     };
-    autobind(this, ['toggleDropdown', 'closeMenuOnClick', 'createButtonText',]);
+    autobind(this, ['toggleDropdown', 'closeMenuOnClick', 'createButtonText', ]);
   }
 
   toggleDropdown() {
@@ -41,14 +43,14 @@ export class SearchCategory extends React.Component {
   createButtonText() {
     const {
       selectedSchedule,
-      searchType,
-      searchTypeSchedule,
-      searchTypeVendor,
-      searchTypeContract
+      queryBy,
+      queryBySchedule,
+      queryByVendor,
+      queryByContract
     } = this.props;
-
     let searchSummary;
-    if (searchType === searchTypeSchedule) {
+    if (queryBy === queryBySchedule) {
+      let allSchedsLabel = `${Object.keys(scheduleLabels).length} contract vehicles`;
       searchSummary = (
         <div>
           <strong>
@@ -57,9 +59,17 @@ export class SearchCategory extends React.Component {
             <span>
               in
               {' '}
-              { scheduleLabels[selectedSchedule] || `${Object.keys(scheduleLabels).length} contract vehicles` }
+              { scheduleLabels[selectedSchedule] || allSchedsLabel }
             </span>
         </div>
+      );
+    } else if (queryBy == queryByVendor) {
+      searchSummary = (
+        <strong>Search by vendor name</strong>
+      );
+    } else if (queryBy == queryByContract) {
+      searchSummary = (
+        <strong>Search by contract number</strong>
       );
     }
     return searchSummary;
@@ -89,6 +99,8 @@ export class SearchCategory extends React.Component {
           role="menu"
         >
           <Schedule />
+          <hr />
+          <Vendor />
         </div>
       </div>
     );
@@ -97,23 +109,21 @@ export class SearchCategory extends React.Component {
 
 SearchCategory.propTypes = {
   selectedSchedule: PropTypes.string,
-  searchType: PropTypes.string.isRequired,
-  searchTypeSchedule: PropTypes.string.isRequired,
-  searchTypeVendor: PropTypes.string.isRequired,
-  searchTypeContract: PropTypes.string.isRequired,
+  queryBySchedule: PropTypes.string.isRequired,
+  queryByVendor: PropTypes.string.isRequired,
+  queryByContract: PropTypes.string.isRequired,
 };
 
 SearchCategory.defaultProps = {
   selectedSchedule: '',
-  searchType: DEFAULT_SEARCH_TYPE,
-  searchTypeSchedule: SEARCH_TYPE_SCHEDULE,
-  searchTypeVendor: SEARCH_TYPE_VENDOR,
-  searchTypeContract: SEARCH_TYPE_CONTRACT,
+  queryBySchedule: QUERY_BY_SCHEDULE,
+  queryByVendor: QUERY_BY_VENDOR,
+  queryByContract: QUERY_BY_CONTRACT,
 };
 
 export default connect(
   state => ({
     selectedSchedule: state.schedule,
-    searchType: state.searchType
+    queryBy: state.query_by,
   })
 )(SearchCategory);

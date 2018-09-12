@@ -3,14 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setSchedule as setScheduleAction } from '../actions';
-import { setSearchType as setSearchTypeAction } from '../actions';
-import { SEARCH_TYPE_SCHEDULE } from '../constants';
+import { setQueryBy as setQueryByAction } from '../actions';
+import { QUERY_BY_SCHEDULE } from '../constants';
 import { scheduleLabels } from '../schedule-metadata';
 
-export function Schedule({ selectedSchedule, setSchedule }) {
+export function Schedule({ selectedSchedule, setSchedule, setQueryBy }) {
   const handleChange = (e) => {
     setSchedule(e.target.value);
-    setSearchType(SEARCH_TYPE_SCHEDULE);
+    setQueryBy(QUERY_BY_SCHEDULE);
   };
   const defaultMsg = `In all ${Object.keys(scheduleLabels).length} of these contract vehicles:`;
   // In most instances, we display legacy schedules as "Legacy Schedule," i.e., "Legacy MOBIS."
@@ -67,13 +67,13 @@ export function Schedule({ selectedSchedule, setSchedule }) {
 Schedule.propTypes = {
   selectedSchedule: PropTypes.string.isRequired,
   setSchedule: PropTypes.func.isRequired,
-  setSearchType: PropTypes.func.isRequired,
+  setQueryBy: PropTypes.func.isRequired,
 };
 
 export default connect(
   state => ({ selectedSchedule: state.schedule }),
   {
     setSchedule: setScheduleAction,
-    setSearchType: setSearchTypeAction,
+    setQueryBy: setQueryByAction,
   },
 )(Schedule);
