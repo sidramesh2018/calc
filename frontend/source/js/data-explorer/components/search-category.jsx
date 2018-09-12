@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { setQueryBy as setQueryByAction } from '../actions';
 import Schedule from './schedule';
 import Vendor from './vendor-search';
+import ContractNum from './contract-search';
 import {
   QUERY_BY_SCHEDULE,
   QUERY_BY_VENDOR,
@@ -101,6 +102,7 @@ export class SearchCategory extends React.Component {
           <Schedule />
           <hr />
           <Vendor />
+          <ContractNum />
         </div>
       </div>
     );
