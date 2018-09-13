@@ -74,11 +74,11 @@ const stringInSet = (choices, defaultVal = '') => (val) => {
 };
 
 const stringInArray = (choices, defaultVal = '') => (val) => {
-  for (let i=0; i<choices.length; i++) {
-    if (choices[i] == val) {
+  for (let i = 0; i < choices.length; i++) {
+    if (choices[i] === val) {
       return val;
     }
-  };
+  }
   return defaultVal;
 };
 

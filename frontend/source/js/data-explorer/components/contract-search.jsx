@@ -2,16 +2,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setSchedule as setScheduleAction } from '../actions';
-import { setQueryBy as setQueryByAction } from '../actions';
-import { QUERY_BY_CONTRACT} from '../constants';
+import {
+  setSchedule as setScheduleAction,
+  setQueryBy as setQueryByAction
+} from '../actions';
+import { QUERY_BY_CONTRACT } from '../constants';
 
 export function ContractNum({ setSchedule, setQueryBy, queryBy }) {
   const handleClick = (e) => {
     // unset selectedSchedule if it has been previously set
     setSchedule('');
     setQueryBy(e.target.value);
-  }
+  };
 
   return (
     <button
@@ -30,6 +32,8 @@ export function ContractNum({ setSchedule, setQueryBy, queryBy }) {
 
 ContractNum.propTypes = {
   setQueryBy: PropTypes.func.isRequired,
+  setSchedule: PropTypes.func.isRequired,
+  queryBy: PropTypes.string.isRequired,
 };
 
 export default connect(

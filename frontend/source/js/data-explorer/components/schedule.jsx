@@ -2,12 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setSchedule as setScheduleAction } from '../actions';
-import { setQueryBy as setQueryByAction } from '../actions';
+import {
+  setSchedule as setScheduleAction,
+  setQueryBy as setQueryByAction
+} from '../actions';
 import { QUERY_BY_SCHEDULE } from '../constants';
 import { scheduleLabels } from '../schedule-metadata';
 
-export function Schedule({ selectedSchedule, setSchedule, setQueryBy, queryBy }) {
+export function Schedule({
+  selectedSchedule, setSchedule, setQueryBy, queryBy 
+}) {
   const handleChange = (e) => {
     setSchedule(e.target.value);
     setQueryBy(QUERY_BY_SCHEDULE);
@@ -68,6 +72,7 @@ Schedule.propTypes = {
   selectedSchedule: PropTypes.string.isRequired,
   setSchedule: PropTypes.func.isRequired,
   setQueryBy: PropTypes.func.isRequired,
+  queryBy: PropTypes.string.isRequired,
 };
 
 export default connect(

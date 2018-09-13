@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setSchedule as setScheduleAction } from '../actions';
-import { setQueryBy as setQueryByAction } from '../actions';
+import {
+  setSchedule as setScheduleAction,
+  setQueryBy as setQueryByAction
+} from '../actions';
 import { QUERY_BY_VENDOR } from '../constants';
 
 export function Vendor({ setSchedule, setQueryBy, queryBy }) {
@@ -11,7 +13,7 @@ export function Vendor({ setSchedule, setQueryBy, queryBy }) {
     // unset selectedSchedule if it has been previously set
     setSchedule('');
     setQueryBy(e.target.value);
-  }
+  };
 
   return (
     <button
@@ -30,6 +32,8 @@ export function Vendor({ setSchedule, setQueryBy, queryBy }) {
 
 Vendor.propTypes = {
   setQueryBy: PropTypes.func.isRequired,
+  setSchedule: PropTypes.func.isRequired,
+  queryBy: PropTypes.string.isRequired,
 };
 
 export default connect(

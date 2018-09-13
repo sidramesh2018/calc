@@ -5,7 +5,7 @@ import makeSetup from './testSetup';
 
 const defaultProps = {
   selectedSchedule: '',
-  queryBy: QUERY_BY_SCHEDULE,
+  queryBy: 'stuff and things',
 };
 
 const setup = makeSetup(SearchCategory, defaultProps, { wrapperOnly: true });

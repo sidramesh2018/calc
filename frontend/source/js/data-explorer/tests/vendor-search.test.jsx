@@ -1,10 +1,7 @@
 import toJson from 'enzyme-to-json';
 
 import { Vendor } from '../components/vendor-search';
-
 import makeSetup from './testSetup';
-import React from 'react';
-
 import { QUERY_BY_VENDOR } from '../constants';
 
 const defaultProps = {
@@ -39,6 +36,4 @@ describe('<Vendor>', () => {
     const { wrapper } = setup();
     expect(toJson(wrapper)).toMatchSnapshot();
   });
-
-
 });

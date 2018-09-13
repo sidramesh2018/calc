@@ -38,6 +38,4 @@ describe('<ContractNum>', () => {
     const { wrapper } = setup();
     expect(toJson(wrapper)).toMatchSnapshot();
   });
-
-
 });

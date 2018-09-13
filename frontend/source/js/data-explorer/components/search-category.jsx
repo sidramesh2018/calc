@@ -2,15 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setQueryBy as setQueryByAction } from '../actions';
 import Schedule from './schedule';
 import Vendor from './vendor-search';
 import ContractNum from './contract-search';
 import {
   QUERY_BY_SCHEDULE,
   QUERY_BY_VENDOR,
-  QUERY_BY_CONTRACT,
-  DEFAULT_QUERY_BY
+  QUERY_BY_CONTRACT
 } from '../constants';
 import { scheduleLabels } from '../schedule-metadata';
 
@@ -26,7 +24,7 @@ export class SearchCategory extends React.Component {
     this.state = {
       expanded: false,
     };
-    autobind(this, ['toggleDropdown', 'closeMenuOnClick', 'createButtonText', ]);
+    autobind(this, ['toggleDropdown', 'closeMenuOnClick', 'createButtonText']);
   }
 
   toggleDropdown() {
@@ -42,27 +40,21 @@ export class SearchCategory extends React.Component {
   }
 
   createButtonText() {
-    const {
-      selectedSchedule,
-      queryBy,
-      queryBySchedule,
-      queryByVendor,
-      queryByContract
-    } = this.props;
+    const { selectedSchedule, queryBy } = this.props;
     let searchSummary;
-    if (queryBy === queryBySchedule) {
+    if (queryBy === QUERY_BY_SCHEDULE) {
       let extraContext;
-      let allSchedsLabel = `${Object.keys(scheduleLabels).length} contract vehicles`;
+      const allSchedsLabel = `${Object.keys(scheduleLabels).length} contract vehicles`;
 
       if (!this.state.expanded) {
-        extraContext =(
+        extraContext = (
           <span>
             in
             {' '}
             { scheduleLabels[selectedSchedule] || allSchedsLabel }
           </span>
         );
-      };
+      }
 
       searchSummary = (
         <div>
@@ -72,11 +64,11 @@ export class SearchCategory extends React.Component {
           { extraContext }
         </div>
       );
-    } else if (queryBy == queryByVendor) {
+    } else if (queryBy === QUERY_BY_VENDOR) {
       searchSummary = (
         <strong>Search by vendor name</strong>
       );
-    } else if (queryBy == queryByContract) {
+    } else if (queryBy === QUERY_BY_CONTRACT) {
       searchSummary = (
         <strong>Search by contract number</strong>
       );
@@ -85,11 +77,13 @@ export class SearchCategory extends React.Component {
   }
 
   showHideScheduleHeader() {
+    let header = '';
     if (this.props.queryBy !== QUERY_BY_SCHEDULE) {
-      return (
+      header = (
         <h3>Search labor categories</h3>
-      )
+      );
     }
+    return header;
   }
 
   render() {
@@ -127,16 +121,11 @@ export class SearchCategory extends React.Component {
 
 SearchCategory.propTypes = {
   selectedSchedule: PropTypes.string,
-  queryBySchedule: PropTypes.string.isRequired,
-  queryByVendor: PropTypes.string.isRequired,
-  queryByContract: PropTypes.string.isRequired,
+  queryBy: PropTypes.string.isRequired,
 };
 
 SearchCategory.defaultProps = {
   selectedSchedule: '',
-  queryBySchedule: QUERY_BY_SCHEDULE,
-  queryByVendor: QUERY_BY_VENDOR,
-  queryByContract: QUERY_BY_CONTRACT,
 };
 
 export default connect(

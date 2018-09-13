@@ -94,5 +94,5 @@ export function setQuery(query) {
 }
 
 export function setQueryBy(queryBy) {
-  return { type: SET_QUERY_BY, queryBy }
+  return { type: SET_QUERY_BY, queryBy };
 }
