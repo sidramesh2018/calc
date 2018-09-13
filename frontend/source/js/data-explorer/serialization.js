@@ -116,7 +116,7 @@ export const deserializers = {
   'proposed-price': parsePrice,
   sort: parseSort,
   query_type: stringInSet(QUERY_TYPE_LABELS, DEFAULT_QUERY_TYPE),
-  query_by: stringInArray([QUERY_BY_VENDOR, QUERY_BY_CONTRACT])
+  query_by: stringInArray([QUERY_BY_VENDOR, QUERY_BY_CONTRACT]),
 };
 
 export const allFields = Object.keys(serializers);

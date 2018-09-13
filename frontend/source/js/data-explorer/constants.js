@@ -86,9 +86,4 @@ export const QUERY_BY_SCHEDULE = '';
 export const QUERY_BY_VENDOR = 'vendor_name';
 export const QUERY_BY_CONTRACT = 'idv_piid';
 
-export const QUERY_BY_LABELS = {
-  [QUERY_BY_VENDOR]: QUERY_BY_VENDOR,
-  [QUERY_BY_CONTRACT]: QUERY_BY_CONTRACT,
-};
-
 export const DEFAULT_QUERY_BY = QUERY_BY_SCHEDULE;
