@@ -7,7 +7,7 @@ import { setQueryBy as setQueryByAction } from '../actions';
 import { QUERY_BY_SCHEDULE } from '../constants';
 import { scheduleLabels } from '../schedule-metadata';
 
-export function Schedule({ selectedSchedule, setSchedule, setQueryBy }) {
+export function Schedule({ selectedSchedule, setSchedule, setQueryBy, queryBy }) {
   const handleChange = (e) => {
     setSchedule(e.target.value);
     setQueryBy(QUERY_BY_SCHEDULE);
@@ -37,7 +37,7 @@ export function Schedule({ selectedSchedule, setSchedule, setQueryBy }) {
           name={id}
           value={value}
           onChange={handleChange}
-          checked={selectedSchedule === value}
+          checked={selectedSchedule === value && queryBy === QUERY_BY_SCHEDULE}
         />
         <label htmlFor={id}>
           {scheduleLabel}
@@ -71,7 +71,10 @@ Schedule.propTypes = {
 };
 
 export default connect(
-  state => ({ selectedSchedule: state.schedule }),
+  state => ({
+    selectedSchedule: state.schedule,
+    queryBy: state.query_by,
+  }),
   {
     setSchedule: setScheduleAction,
     setQueryBy: setQueryByAction,

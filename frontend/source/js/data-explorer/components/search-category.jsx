@@ -107,10 +107,10 @@ export class SearchCategory extends React.Component {
           aria-hidden={!this.state.expanded}
           role="menu"
         >
-          // TODO: "all schedules" no longer works as a selector when contract or vendor are selected?
+          {/* TODO: "all schedules" no longer works as a selector when contract or vendor are selected? */}
           <Schedule />
           <h3>Search vendors and contracts</h3>
-          // TODO: Add checkmarks to these as background images on buttons when selected
+          {/* TODO: Add checkmarks to these as background images on buttons when selected */}
           <Vendor />
           <ContractNum />
         </div>
