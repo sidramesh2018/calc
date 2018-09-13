@@ -11,18 +11,7 @@ exports[`<SearchCategory> matches snapshot 1`] = `
     onClick={[Function]}
     onKeyDown={[Function]}
     type="button"
-  >
-    <div>
-      <strong>
-        Search labor categories
-      </strong>
-      <span>
-        in
-         
-        9 contract vehicles
-      </span>
-    </div>
-  </button>
+  />
   <div
     aria-hidden={true}
     className="html-dropdown__choices"
@@ -30,6 +19,9 @@ exports[`<SearchCategory> matches snapshot 1`] = `
     onClick={[Function]}
     role="menu"
   >
+    <h3>
+      Search labor categories
+    </h3>
     <Connect(Schedule) />
     <h3>
       Search vendors and contracts
