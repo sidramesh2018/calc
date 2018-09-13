@@ -173,8 +173,6 @@ function queryType(state = DEFAULT_QUERY_TYPE, action) {
 
 function queryBy(state = DEFAULT_QUERY_BY, action) {
   if (action.type === SET_QUERY_BY) {
-    // default is wrong
-    debugger;
     return action.queryBy || '';
   }
   return state;

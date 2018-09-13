@@ -18,6 +18,8 @@ import {
   QUERY_TYPE_LABELS,
   SORT_KEYS,
   MAX_QUERY_LENGTH,
+  QUERY_BY_VENDOR,
+  QUERY_BY_CONTRACT,
 } from './constants';
 
 import {
@@ -71,6 +73,15 @@ const stringInSet = (choices, defaultVal = '') => (val) => {
   return defaultVal;
 };
 
+const stringInArray = (choices, defaultVal = '') => (val) => {
+  for (let i=0; i<choices.length; i++) {
+    if (choices[i] == val) {
+      return val;
+    }
+  };
+  return defaultVal;
+};
+
 export const serializers = {
   exclude: list => list.map(coercedString).join(','),
   education: list => list.map(coercedString).join(','),
@@ -105,7 +116,7 @@ export const deserializers = {
   'proposed-price': parsePrice,
   sort: parseSort,
   query_type: stringInSet(QUERY_TYPE_LABELS, DEFAULT_QUERY_TYPE),
-  query_by: stringInSet({contract: 'contract', vendor: 'vendor'}),
+  query_by: stringInArray([QUERY_BY_VENDOR, QUERY_BY_CONTRACT])
 };
 
 export const allFields = Object.keys(serializers);
