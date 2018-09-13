@@ -343,6 +343,18 @@ input[type].form__inline,
     color: $color-gray-dark;
     -webkit-font-smoothing: auto;
     line-height: $space-3x;
+    &.query-by__selected {
+      padding: $space-half $space-2x; // to offset span
+      span {
+        background-image: url(../../images/icon-checkmark-floating.svg);
+        background-repeat: no-repeat;
+        width: 14px;
+        height: 14px;
+        display: inline-block;
+        margin-left: 3px; // margin matches WDS radio ::before class, which is used elsewhere for dropdown choices
+        margin-right: .75em;
+      }
+    }
   }
 
   li {
@@ -372,6 +384,7 @@ input[type].form__inline,
   label::before {
     box-shadow: none;
     background-color: transparent;
+    border-radius: 0; // otherwise background image is cut off
   }
 
   [type=radio]:checked + label::before {

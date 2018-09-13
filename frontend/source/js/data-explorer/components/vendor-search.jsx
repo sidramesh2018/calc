@@ -6,7 +6,7 @@ import { setSchedule as setScheduleAction } from '../actions';
 import { setQueryBy as setQueryByAction } from '../actions';
 import { QUERY_BY_VENDOR} from '../constants';
 
-export function Vendor({ setSchedule, setQueryBy }) {
+export function Vendor({ setSchedule, setQueryBy, queryBy }) {
   const handleClick = (e) => {
     // unset selectedSchedule if it has been previously set
     setSchedule('');
@@ -18,9 +18,11 @@ export function Vendor({ setSchedule, setQueryBy }) {
       type="button"
       id={QUERY_BY_VENDOR}
       name={QUERY_BY_VENDOR}
+      className={queryBy === QUERY_BY_VENDOR ? 'query-by__selected' : ''}
       value={QUERY_BY_VENDOR}
       onClick={handleClick}
     >
+      <span />
       Find a vendor by name
     </button>
   );
