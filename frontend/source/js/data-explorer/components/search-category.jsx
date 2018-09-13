@@ -84,6 +84,14 @@ export class SearchCategory extends React.Component {
     return searchSummary;
   }
 
+  showHideScheduleHeader() {
+    if (this.props.queryBy !== QUERY_BY_SCHEDULE) {
+      return (
+        <h3>Search labor categories</h3>
+      )
+    }
+  }
+
   render() {
     return (
       <div className="html-dropdown">
@@ -98,8 +106,7 @@ export class SearchCategory extends React.Component {
           { this.createButtonText() }
         </button>
         {/* setting a key event on this div makes it impossible to select
-          * an option with the keyboard.
-          * TODO: fix this after contract/vendor name are added and the HTML is in final form. */}
+          * an option with the keyboard. It's just a nicety, so should be OK. */}
         <div /* eslint-disable-line max-len, jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus */
           className="html-dropdown__choices"
           id="data-explorer__search-category"
@@ -107,10 +114,9 @@ export class SearchCategory extends React.Component {
           aria-hidden={!this.state.expanded}
           role="menu"
         >
-          {/* TODO: "all schedules" no longer works as a selector when contract or vendor are selected? */}
+          { this.showHideScheduleHeader() }
           <Schedule />
           <h3>Search vendors and contracts</h3>
-          {/* TODO: Add checkmarks to these as background images on buttons when selected */}
           <Vendor />
           <ContractNum />
         </div>
