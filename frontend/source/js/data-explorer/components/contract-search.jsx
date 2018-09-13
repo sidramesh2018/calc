@@ -21,7 +21,7 @@ export function ContractNum({ setSchedule, setQueryBy }) {
       value={QUERY_BY_CONTRACT}
       onClick={handleClick}
     >
-      Search by contract number
+      Find a contract by number
     </button>
   );
 }

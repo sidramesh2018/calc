@@ -259,6 +259,8 @@ input[type].form__inline,
   background: $color-gray-lightest;
   border-radius: $border-radius;
   button {
+    width: auto;
+    min-width: 100%;
     background-position: right 1.4rem top 1.6rem;
     background-repeat: no-repeat;
     background-size: 1em;
@@ -267,6 +269,7 @@ input[type].form__inline,
     color: $color-base;
     margin-right: 0;
     padding-right: $space-6x;
+    text-align: left;
     &:hover {
       background-color: $color-gray-lighter;
       color: $color-base;
@@ -282,6 +285,11 @@ input[type].form__inline,
   }
   li {
     margin-bottom: 0; // WDS override
+  }
+
+  hr {
+    color: $color-gray-dark;
+    padding: $space-half $space-2x;
   }
 }
 
@@ -311,10 +319,32 @@ input[type].form__inline,
   background: $color-gray-lightest;
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
+
+  h3 {
+    border-top: 1px solid $color-gray;
+    font-size: $base-font-size;
+    color: $color-base;
+    margin: $space-1x $space-1x $space-half 1.2rem; // same as html-dropdown__trigger text
+    padding-top: $space-1x;
+  }
+
   label {
     margin-bottom: $space-1x;
     margin-top: $space-1x;
   }
+
+  // search by vendor and contract are buttons
+  button {
+    display: block;
+    font-weight: normal;
+    text-align: left;
+    padding: $space-half $space-1x $space-half 4.4rem; // same as the input + padding + ::before on li labels
+    font-size: $base-font-size;
+    color: $color-gray-dark;
+    -webkit-font-smoothing: auto;
+    line-height: $space-3x;
+  }
+
   li {
     padding: $space-half $space-2x;
     &:hover {
@@ -324,9 +354,11 @@ input[type].form__inline,
       margin-bottom: 0; // default style override
     }
   }
+
   .filter--schedule li:first-child {
     color: $color-black;
   }
+
   &[aria-hidden=true] {
     display: none;
   }

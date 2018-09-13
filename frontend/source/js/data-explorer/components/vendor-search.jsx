@@ -21,7 +21,7 @@ export function Vendor({ setSchedule, setQueryBy }) {
       value={QUERY_BY_VENDOR}
       onClick={handleClick}
     >
-      Search by vendor name
+      Find a vendor by name
     </button>
   );
 }

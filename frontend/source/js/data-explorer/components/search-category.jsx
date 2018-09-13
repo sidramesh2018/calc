@@ -55,13 +55,13 @@ export class SearchCategory extends React.Component {
       searchSummary = (
         <div>
           <strong>
-              Search labor categories
-            </strong>
-            <span>
-              in
-              {' '}
-              { scheduleLabels[selectedSchedule] || allSchedsLabel }
-            </span>
+            Search labor categories
+          </strong>
+          <span>
+            in
+            {' '}
+            { scheduleLabels[selectedSchedule] || allSchedsLabel }
+          </span>
         </div>
       );
     } else if (queryBy == queryByVendor) {
@@ -100,7 +100,7 @@ export class SearchCategory extends React.Component {
           role="menu"
         >
           <Schedule />
-          <hr />
+          <h3>Search vendors and contracts</h3>
           <Vendor />
           <ContractNum />
         </div>
