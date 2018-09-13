@@ -76,16 +76,6 @@ export class SearchCategory extends React.Component {
     return searchSummary;
   }
 
-  showHideScheduleHeader() {
-    let header = '';
-    if (this.props.queryBy !== QUERY_BY_SCHEDULE) {
-      header = (
-        <h3>Search labor categories</h3>
-      );
-    }
-    return header;
-  }
-
   render() {
     return (
       <div className="html-dropdown">
@@ -108,9 +98,10 @@ export class SearchCategory extends React.Component {
           aria-hidden={!this.state.expanded}
           role="menu"
         >
-          { this.showHideScheduleHeader() }
+          <p><small>Select a type of search to perform:</small></p>
+          <h3>Labor categories</h3>
           <Schedule />
-          <h3>Search vendors and contracts</h3>
+          <h3>Vendors and contracts</h3>
           <Vendor />
           <ContractNum />
         </div>
