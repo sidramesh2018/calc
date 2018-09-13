@@ -51,17 +51,25 @@ export class SearchCategory extends React.Component {
     } = this.props;
     let searchSummary;
     if (queryBy === queryBySchedule) {
+      let extraContext;
       let allSchedsLabel = `${Object.keys(scheduleLabels).length} contract vehicles`;
-      searchSummary = (
-        <div>
-          <strong>
-            Search labor categories
-          </strong>
+
+      if (!this.state.expanded) {
+        extraContext =(
           <span>
             in
             {' '}
             { scheduleLabels[selectedSchedule] || allSchedsLabel }
           </span>
+        );
+      };
+
+      searchSummary = (
+        <div>
+          <strong>
+            Search labor categories
+          </strong>
+          { extraContext }
         </div>
       );
     } else if (queryBy == queryByVendor) {
@@ -99,8 +107,10 @@ export class SearchCategory extends React.Component {
           aria-hidden={!this.state.expanded}
           role="menu"
         >
+          // TODO: "all schedules" no longer works as a selector when contract or vendor are selected?
           <Schedule />
           <h3>Search vendors and contracts</h3>
+          // TODO: Add checkmarks to these as background images on buttons when selected
           <Vendor />
           <ContractNum />
         </div>
