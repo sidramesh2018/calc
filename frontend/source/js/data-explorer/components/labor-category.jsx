@@ -90,7 +90,7 @@ LaborCategory.propTypes = {
   idPrefix: PropTypes.string,
   query: PropTypes.string.isRequired,
   queryType: PropTypes.string.isRequired,
-  queryBy: PropTypes.string.isRequired,
+  queryBy: PropTypes.string,
   setQuery: PropTypes.func.isRequired,
   api: PropTypes.object.isRequired,
   children: PropTypes.any,
