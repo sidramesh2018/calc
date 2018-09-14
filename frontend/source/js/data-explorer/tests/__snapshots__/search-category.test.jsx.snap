@@ -19,12 +19,17 @@ exports[`<SearchCategory> matches snapshot 1`] = `
     onClick={[Function]}
     role="menu"
   >
+    <p>
+      <small>
+        Select a type of search to perform:
+      </small>
+    </p>
     <h3>
-      Search labor categories
+      Labor categories
     </h3>
     <Connect(Schedule) />
     <h3>
-      Search vendors and contracts
+      Vendors and contracts
     </h3>
     <Connect(Vendor) />
     <Connect(ContractNum) />

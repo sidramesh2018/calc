@@ -259,14 +259,6 @@ input[type].form__inline,
   background: $color-gray-lightest;
   border-radius: $border-radius;
 
-  p {
-    display: block;
-    border-top: 1px solid $color-gray;
-    margin: $space-1x $space-1x $space-half 1.2rem; // same as html-dropdown__trigger text
-    padding-top: $space-1x;
-    padding-bottom: $space-2x;
-  }
-
   button {
     width: auto;
     min-width: 100%;
@@ -324,11 +316,23 @@ input[type].form__inline,
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
 
+  *:last-child {
+    padding-bottom: $space-1x;
+  }
+
   h3 {
     font-size: $base-font-size;
     color: $color-base;
     margin: $space-1x $space-1x $space-half 1.2rem; // same as html-dropdown__trigger text
+    padding-top: $space-3x;
+  }
+
+  p {
+    display: block;
+    border-top: 1px solid $color-gray;
+    margin: $space-1x $space-1x $space-half 1.2rem; // same as html-dropdown__trigger text
     padding-top: $space-1x;
+    padding-bottom: 0;
   }
 
   label {
@@ -348,6 +352,7 @@ input[type].form__inline,
     line-height: $space-3x;
     &.query-by__selected {
       padding: $space-half $space-2x; // to offset span
+      color: $color-black;
       span {
         background-image: url(../../images/icon-checkmark-floating.svg);
         background-repeat: no-repeat;
@@ -371,9 +376,6 @@ input[type].form__inline,
   }
 
   .filter--schedule {
-    li:first-child {
-      color: $color-black;
-    }
     + h3 {
       border-top: 1px solid $color-gray;
     }
@@ -395,9 +397,12 @@ input[type].form__inline,
     border-radius: 0; // otherwise background image is cut off
   }
 
-  [type=radio]:checked + label::before {
-    background-image: url('../../images/icon-checkmark-floating.svg');
-    background-repeat: no-repeat;
+  [type=radio]:checked + label {
+    color: $color-black;
+    &::before {
+      background-image: url('../../images/icon-checkmark-floating.svg');
+      background-repeat: no-repeat;
+    }
   }
 }
 

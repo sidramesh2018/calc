@@ -66,11 +66,11 @@ export class SearchCategory extends React.Component {
       );
     } else if (queryBy === QUERY_BY_VENDOR) {
       searchSummary = (
-        <strong>Search by vendor name</strong>
+        <strong>Search for a vendor</strong>
       );
     } else if (queryBy === QUERY_BY_CONTRACT) {
       searchSummary = (
-        <strong>Search by contract number</strong>
+        <strong>Search for a contract</strong>
       );
     }
     return searchSummary;
