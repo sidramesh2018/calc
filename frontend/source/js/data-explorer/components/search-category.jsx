@@ -95,14 +95,14 @@ export class SearchCategory extends React.Component {
           aria-hidden={!this.state.expanded}
           role="menu"
         >
-        <h3>
-          Search vendors and contracts
-        </h3>
-        <Vendor />
-        <ContractNum />
           <h3>
-            Search labor categories
+            Search vendors and contracts
           </h3>
+          <Vendor />
+          <ContractNum />
+            <h3>
+              Search labor categories
+            </h3>
           <Schedule />
         </div>
       </div>
