@@ -3,18 +3,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as autocomplete from '../autocomplete';
-import { setQuery } from '../actions';
+import {
+  setQuery,
+  setQueryBy
+} from '../actions';
 
 import {
   QUERY_BY_CONTRACT,
-  QUERY_BY_VENDOR,
-  MAX_QUERY_LENGTH
+  QUERY_BY_VENDOR
 } from '../constants';
 
 import {
   autobind,
   handleEnter,
 } from '../util';
+
+import { MAX_QUERY_LENGTH } from '../constants';
 
 export class LaborCategory extends React.Component {
   constructor(props) {
@@ -55,9 +59,9 @@ export class LaborCategory extends React.Component {
 
   render() {
     const id = `${this.props.idPrefix}labor_category`;
-    let placeholder = "Type a labor category";
+    let placeholder =  "Type a labor category";
 
-    if (this.props.queryBy === QUERY_BY_CONTRACT) {
+    if (this.props.queryBy == QUERY_BY_CONTRACT) {
       placeholder = "Type a contract number";
     } else if (this.props.queryBy === QUERY_BY_VENDOR) {
       placeholder = "Type a vendor name";
@@ -73,7 +77,7 @@ export class LaborCategory extends React.Component {
           name="q"
           placeholder={placeholder}
           type="text"
-          className="form__inline"
+          class="form__inline"
           ref={(el) => { this.inputEl = el; }}
           value={this.state.value}
           onChange={this.handleChange}
@@ -90,7 +94,6 @@ LaborCategory.propTypes = {
   idPrefix: PropTypes.string,
   query: PropTypes.string.isRequired,
   queryType: PropTypes.string.isRequired,
-  queryBy: PropTypes.string.isRequired,
   setQuery: PropTypes.func.isRequired,
   api: PropTypes.object.isRequired,
   children: PropTypes.any,

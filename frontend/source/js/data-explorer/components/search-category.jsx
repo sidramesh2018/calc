@@ -66,11 +66,15 @@ export class SearchCategory extends React.Component {
       );
     } else if (queryBy === QUERY_BY_VENDOR) {
       searchSummary = (
-        <strong>Search for a vendor</strong>
+        <strong>
+          Search for a vendor
+        </strong>
       );
     } else if (queryBy === QUERY_BY_CONTRACT) {
       searchSummary = (
-        <strong>Search for a contract</strong>
+        <strong>
+          Search for a contract
+        </strong>
       );
     }
     return searchSummary;
@@ -98,10 +102,18 @@ export class SearchCategory extends React.Component {
           aria-hidden={!this.state.expanded}
           role="menu"
         >
-          <p><small>Select a type of search to perform:</small></p>
-          <h3>Labor categories</h3>
+          <p>
+            <small>
+              Select a type of search to perform:
+            </small>
+          </p>
+          <h3>
+            Labor categories
+          </h3>
           <Schedule />
-          <h3>Vendors and contracts</h3>
+          <h3>
+            Vendors and contracts
+          </h3>
           <Vendor />
           <ContractNum />
         </div>
