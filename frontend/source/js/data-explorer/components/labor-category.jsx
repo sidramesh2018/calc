@@ -3,12 +3,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as autocomplete from '../autocomplete';
-import { setQuery } from '../actions';
+import {
+  setQuery,
+  setQueryBy
+} from '../actions';
+
+import {
+  QUERY_BY_CONTRACT,
+  QUERY_BY_VENDOR
+} from '../constants';
 
 import {
   autobind,
   handleEnter,
-  filterActive,
 } from '../util';
 
 import { MAX_QUERY_LENGTH } from '../constants';
@@ -52,19 +59,23 @@ export class LaborCategory extends React.Component {
 
   render() {
     const id = `${this.props.idPrefix}labor_category`;
-    const className = filterActive(this.props.query !== '',
-      'form__inline');
+    let placeholder =  "Type a labor category";
+
+    if (this.props.queryBy == QUERY_BY_CONTRACT) {
+      placeholder = "Type a contract number";
+    } else if (this.props.queryBy === QUERY_BY_VENDOR) {
+      placeholder = "Type a vendor name";
+    }
 
     return (
       <div className="search-group">
         <label htmlFor={id} className="usa-sr-only">
-          Type a labor category
+          { placeholder }
         </label>
         <input
           id={id}
           name="q"
-          placeholder="Type a labor category"
-          className={className}
+          placeholder={placeholder}
           type="text"
           ref={(el) => { this.inputEl = el; }}
           value={this.state.value}
@@ -96,6 +107,7 @@ export default connect(
   state => ({
     query: state.q,
     queryType: state.query_type,
+    queryBy: state.query_by,
   }),
   { setQuery },
 )(LaborCategory);
