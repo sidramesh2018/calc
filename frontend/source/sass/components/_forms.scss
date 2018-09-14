@@ -316,22 +316,23 @@ input[type].form__inline,
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
 
-  *:last-child {
-    padding-bottom: $space-1x;
-  }
-
   h3 {
     font-size: $base-font-size;
     color: $color-base;
-    margin: $space-1x $space-1x $space-half 1.2rem; // same as html-dropdown__trigger text
-    padding-top: $space-3x;
+    margin: $space-1x 1.2rem $space-half 1.2rem; // same as html-dropdown__trigger text
+    padding-top: $space-1x;
+    &:first-of-type {
+      border-top: 1px solid $color-gray-light;
+      margin-top: 0;
+      padding-top: $space-3x;
+    }
   }
 
   p {
     display: block;
-    border-top: 1px solid $color-gray;
-    margin: $space-1x $space-1x $space-half 1.2rem; // same as html-dropdown__trigger text
-    padding-top: $space-1x;
+    border-top: 1px solid $color-gray-light;
+    margin: $space-1x 1.2rem $space-half 1.2rem; // same as html-dropdown__trigger text
+    padding-top: $space-3x;
     padding-bottom: 0;
   }
 
@@ -370,14 +371,11 @@ input[type].form__inline,
     &:hover {
       background-color: $color-gray-lighter;
     }
+    &:last-of-type {
+      padding-bottom: $space-2x;
+    }
     label {
       margin-bottom: 0; // default style override
-    }
-  }
-
-  .filter--schedule {
-    + h3 {
-      border-top: 1px solid $color-gray;
     }
   }
 
