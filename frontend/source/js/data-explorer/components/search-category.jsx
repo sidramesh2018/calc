@@ -43,25 +43,18 @@ export class SearchCategory extends React.Component {
     const { selectedSchedule, queryBy } = this.props;
     let searchSummary;
     if (queryBy === QUERY_BY_SCHEDULE) {
-      let extraContext;
       const allSchedsLabel = `${Object.keys(scheduleLabels).length} contract vehicles`;
-
-      if (!this.state.expanded) {
-        extraContext = (
-          <span>
-            in
-            {' '}
-            { scheduleLabels[selectedSchedule] || allSchedsLabel }
-          </span>
-        );
-      }
 
       searchSummary = (
         <div>
           <strong>
             Search labor categories
           </strong>
-          { extraContext }
+          <span>
+            in
+            {' '}
+            { scheduleLabels[selectedSchedule] || allSchedsLabel }
+          </span>
         </div>
       );
     } else if (queryBy === QUERY_BY_VENDOR) {
