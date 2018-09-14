@@ -77,6 +77,7 @@ export class LaborCategory extends React.Component {
           name="q"
           placeholder={placeholder}
           type="text"
+          className="form__inline"
           ref={(el) => { this.inputEl = el; }}
           value={this.state.value}
           onChange={this.handleChange}
