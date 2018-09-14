@@ -20,12 +20,12 @@ exports[`<SearchCategory> matches snapshot 1`] = `
     role="menu"
   >
   <h3>
-    Search for vendors and contracts
+    Search vendors and contracts
   </h3>
   <Connect(Vendor) />
   <Connect(ContractNum) />
     <h3>
-      Search for labor categories
+      Search labor categories
     </h3>
     <Connect(Schedule) />
   </div>

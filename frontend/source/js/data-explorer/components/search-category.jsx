@@ -96,12 +96,12 @@ export class SearchCategory extends React.Component {
           role="menu"
         >
         <h3>
-          Search for vendors and contracts
+          Search vendors and contracts
         </h3>
         <Vendor />
         <ContractNum />
           <h3>
-            Search for labor categories
+            Search labor categories
           </h3>
           <Schedule />
         </div>
