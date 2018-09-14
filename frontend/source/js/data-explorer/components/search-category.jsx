@@ -100,9 +100,9 @@ export class SearchCategory extends React.Component {
           </h3>
           <Vendor />
           <ContractNum />
-            <h3>
-              Search labor categories
-            </h3>
+          <h3>
+            Search labor categories
+          </h3>
           <Schedule />
         </div>
       </div>
