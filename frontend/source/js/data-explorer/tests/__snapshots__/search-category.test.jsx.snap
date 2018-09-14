@@ -19,15 +19,15 @@ exports[`<SearchCategory> matches snapshot 1`] = `
     onClick={[Function]}
     role="menu"
   >
+  <h3>
+    Search for vendors and contracts
+  </h3>
+  <Connect(Vendor) />
+  <Connect(ContractNum) />
     <h3>
       Search for labor categories
     </h3>
     <Connect(Schedule) />
-    <h3>
-      Search for vendors and contracts
-    </h3>
-    <Connect(Vendor) />
-    <Connect(ContractNum) />
   </div>
 </div>
 `;
