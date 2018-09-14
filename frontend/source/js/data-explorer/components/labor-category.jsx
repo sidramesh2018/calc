@@ -6,6 +6,7 @@ import * as autocomplete from '../autocomplete';
 import { setQuery } from '../actions';
 
 import {
+  QUERY_BY_SCHEDULE,
   QUERY_BY_CONTRACT,
   QUERY_BY_VENDOR,
   MAX_QUERY_LENGTH
@@ -99,6 +100,7 @@ LaborCategory.propTypes = {
 LaborCategory.defaultProps = {
   idPrefix: '',
   children: null,
+  queryBy: QUERY_BY_SCHEDULE,
 };
 
 export default connect(
