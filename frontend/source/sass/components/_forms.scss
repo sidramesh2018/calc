@@ -316,10 +316,6 @@ input[type].form__inline,
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
 
-  *:last-child {
-    padding-bottom: $space-1x;
-  }
-
   h3 {
     font-size: $base-font-size;
     color: $color-base;

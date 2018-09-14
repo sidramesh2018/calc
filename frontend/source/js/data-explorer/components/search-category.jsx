@@ -95,20 +95,15 @@ export class SearchCategory extends React.Component {
           aria-hidden={!this.state.expanded}
           role="menu"
         >
-          <p>
-            <small>
-              Select a type of search to perform:
-            </small>
-          </p>
+        <h3>
+          Search for vendors and contracts
+        </h3>
+        <Vendor />
+        <ContractNum />
           <h3>
-            Labor categories
+            Search for labor categories
           </h3>
           <Schedule />
-          <h3>
-            Vendors and contracts
-          </h3>
-          <Vendor />
-          <ContractNum />
         </div>
       </div>
     );

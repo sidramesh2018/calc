@@ -18,7 +18,7 @@ exports[`<Schedule> matches snapshot 1`] = `
     <label
       htmlFor="all-schedules"
     >
-      In all 9 of these contract vehicles
+      In all 9 contract vehicles
       <span
         className="label__suffix"
       />
