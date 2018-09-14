@@ -324,14 +324,14 @@ input[type].form__inline,
     font-size: $base-font-size;
     color: $color-base;
     margin: $space-1x $space-1x $space-half 1.2rem; // same as html-dropdown__trigger text
-    padding-top: $space-3x;
+    padding-top: $space-1x;
   }
 
   p {
     display: block;
-    border-top: 1px solid $color-gray;
-    margin: $space-1x $space-1x $space-half 1.2rem; // same as html-dropdown__trigger text
-    padding-top: $space-1x;
+    border-top: 1px solid $color-gray-light;
+    margin: $space-1x 1.2rem $space-half 1.2rem; // same as html-dropdown__trigger text
+    padding-top: $space-3x;
     padding-bottom: 0;
   }
 
@@ -372,12 +372,6 @@ input[type].form__inline,
     }
     label {
       margin-bottom: 0; // default style override
-    }
-  }
-
-  .filter--schedule {
-    + h3 {
-      border-top: 1px solid $color-gray;
     }
   }
 
