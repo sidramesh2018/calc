@@ -2,12 +2,14 @@ import toJson from 'enzyme-to-json';
 
 import { Schedule } from '../components/schedule';
 import makeSetup from './testSetup';
+import { QUERY_BY_SCHEDULE } from '../constants';
 import { scheduleLabels } from '../schedule-metadata';
 
 const defaultProps = {
-  schedule: '',
-  idPrefix: 'zzz_',
+  selectedSchedule: '',
+  queryBy: QUERY_BY_SCHEDULE,
   setSchedule: jest.fn(),
+  setQueryBy: jest.fn(),
 };
 
 const setup = makeSetup(Schedule, defaultProps);

@@ -171,7 +171,8 @@ GET_CONTRACTS_QUERYARGS = [
 
 
 def get_contracts_queryset(request_params, wage_field):
-    """ Filters and returns contracts based on query params
+    """
+    Filters and returns contracts based on query params
 
     Args:
         request_params (dict): the request query parameters, corresponding
@@ -186,20 +187,22 @@ def get_contracts_queryset(request_params, wage_field):
     query = request_params.get('q', None)
     # Ideally we'd go ahead and return a plain queryset here if there is
     # no query to avoid doing extra work, but before we can do that
-    # we'll have to ensure other fields can't do anything in the absence
-    # of a query or Very Strange Things happen.
-
-    # Exclude records w/o rates for the selected contract period.
-    # Additional price filtering is already in the CurrentContractManager
-    contracts = Contract.objects.exclude(**{wage_field + '__isnull': True})
+    # we'll have to ensure filtering fields can't do anything in the absence
+    # of a query or else Very Strange Things happen.
 
     # Since our query can be multi-phrase, leave the original queryset alone.
     # Instead, start with an empty queryset, then find matching subsets
     # in the original and chain them together.
     if query:
         query_type = request_params.get('query_type', 'match_all')
-        # We're doing most of the lifting in the manager here.
-        contracts = Contract.objects.multi_phrase_search(query, query_type)
+        query_by = request_params.get('query_by', None)
+        contracts = Contract.objects.multi_phrase_search(query, query_by, query_type)
+    else:  # no query, so start with full query set
+        contracts = Contract.objects.all()
+
+    # Exclude records w/o rates for the selected contract period.
+    # Additional price filtering is already in the CurrentContractManager
+    contracts = contracts.exclude(**{wage_field + '__isnull': True})
 
     exclude = request_params.getlist('exclude')
     if exclude:
@@ -533,9 +536,10 @@ class GetAutocomplete(APIView):
     def get(self, request, format=None):
         q = request.query_params.get('q', False)
         query_type = request.query_params.get('query_type', 'match_all')
+        query_by = request.query_params.get('query_by', None)
 
         if q:
-            data = Contract.objects.multi_phrase_search(q, query_type)
+            data = Contract.objects.multi_phrase_search(q, query_by, query_type)
 
             data = data.values('_normalized_labor_category').annotate(
                 count=Count('_normalized_labor_category')).order_by('-count')

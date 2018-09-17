@@ -81,3 +81,9 @@ export const QUERY_TYPE_LABELS = {
 };
 
 export const MAX_QUERY_LENGTH = 255;
+
+export const QUERY_BY_SCHEDULE = '';
+export const QUERY_BY_VENDOR = 'vendor_name';
+export const QUERY_BY_CONTRACT = 'idv_piid';
+
+export const DEFAULT_QUERY_BY = QUERY_BY_SCHEDULE;
