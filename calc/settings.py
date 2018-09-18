@@ -411,10 +411,6 @@ DEBUG_TOOLBAR_PANELS = [
     'data_capture.panels.ScheduledJobsPanel',
 ]
 
-PRICE_LIST_ANALYSIS_FINDERS = [
-    'data_capture.analysis.finders.GteEduAndExpFinder',
-]
-
 if DEBUG:
     INSTALLED_APPS += (
         'django.contrib.admindocs',
