@@ -254,6 +254,10 @@ input[type].form__inline,
   }
 }
 
+label[for=query_type_match_exact] {
+  max-width: 13rem;
+}
+
 .html-dropdown {
   display: inline-block;
   background: $color-gray-lightest;
