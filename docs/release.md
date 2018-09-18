@@ -112,8 +112,7 @@ Hooray, you're done!
 [changelog]: https://github.com/18F/calc/blob/develop/CHANGELOG.md
 [commitlist]: https://github.com/18F/calc/commits/develop
 [unreleased]: https://github.com/18F/calc/blob/develop/CHANGELOG.md#unreleased
-[pr]: https://github.com/18F/calc/compare/staging...v0.0.4-rc
-[pr2]: https://github.com/18F/calc/compare/master...staging
+[pr]: https://github.com/18F/calc/compare/master...v0.0.4-rc
 [production]: https://calc.gsa.gov
 [CircleCI]: https://circleci.com/gh/18F/calc
 [releases]: https://github.com/18F/calc/releases
