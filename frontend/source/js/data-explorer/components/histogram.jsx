@@ -389,8 +389,8 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('class', 'contrast-stroke')
       .attr('x1', d => d.x)
       .attr('x2', d => (d.x + step - barGap))
-      .attr('y1', d => (d.y + 2))
-      .attr('y2', d => (d.y + 2));
+      .attr('y1', d => (d.y))
+      .attr('y2', d => (d.y));
 
   const ticks = bins.map(d => d.min)
     .concat([data.maximum]);
