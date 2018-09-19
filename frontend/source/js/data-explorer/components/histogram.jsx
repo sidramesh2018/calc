@@ -76,6 +76,11 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
   stroke: #c5d6de;
 }
 
+.contrast-stroke {
+  stroke: #61701c;
+  stroke-width: 2px;
+}
+
 .tick line {
   stroke: none;
 }
@@ -289,6 +294,11 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     .attr('y', bottom)
     .attr('width', step)
     .attr('height', 0);
+  enter.append('line')
+    .attr('x1', left)
+    .attr('x2', (d, i) => left + (i * step))
+    .attr('y1', bottom)
+    .attr('y2', bottom);
 
   const title = templatize('{count} results from {min} to {max}');
   bars.select('title')
@@ -366,6 +376,20 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('y', d => d.y)
       .attr('height', d => d.height)
       .attr('width', d => d.width - 2);
+
+  t.selectAll('.bar')
+    .each((d) => {
+      d.x = x(d.min);
+      d.width = x(d.max) - d.x;
+      d.height = heightScale(d.count);
+      d.y = bottom - d.height;
+    })
+    .select('line')
+      .attr('class', 'contrast-stroke')
+      .attr('x1', d => d.x)
+      .attr('x2', d => (d.x + step - 2))
+      .attr('y1', d => (d.y + 2))
+      .attr('y2', d => (d.y + 2));
 
   const ticks = bins.map(d => d.min)
     .concat([data.maximum]);
