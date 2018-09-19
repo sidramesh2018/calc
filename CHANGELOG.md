@@ -9,7 +9,7 @@ to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Users can now search by vendor name or contract number in addition to labor category (#2069).
-- The data upload tool now accepts Schedule 726 uploads (#2140).
+- The data upload tool now accepts Schedule 736 uploads (#2140).
 
 ## [3.0.1][] - 2018-09-04
 
