@@ -373,10 +373,10 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       d.y = bottom - d.height;
     })
     .select('rect')
-      .attr('x', d => d.x)
-      .attr('y', d => d.y)
-      .attr('height', d => d.height)
-      .attr('width', d => d.width - barGap);
+      .attr('x', d => d.x) /* eslint-disable-line indent */
+      .attr('y', d => d.y) /* eslint-disable-line indent */
+      .attr('height', d => d.height) /* eslint-disable-line indent */
+      .attr('width', d => d.width - barGap); /* eslint-disable-line indent */
 
   t.selectAll('.bar')
     .each((d) => {
@@ -386,11 +386,11 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       d.y = bottom - d.height;
     })
     .select('line')
-      .attr('class', 'contrast-stroke')
-      .attr('x1', d => d.x)
-      .attr('x2', d => (d.x + step - barGap))
-      .attr('y1', d => (d.y))
-      .attr('y2', d => (d.y));
+      .attr('class', 'contrast-stroke') /* eslint-disable-line indent */
+      .attr('x1', d => d.x) /* eslint-disable-line indent */
+      .attr('x2', d => (d.x + step - barGap)) /* eslint-disable-line indent */
+      .attr('y1', d => (d.y)) /* eslint-disable-line indent */
+      .attr('y2', d => (d.y)); /* eslint-disable-line indent */
 
   const ticks = bins.map(d => d.min)
     .concat([data.maximum]);
