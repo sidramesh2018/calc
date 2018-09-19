@@ -126,6 +126,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   const left = pad[3];
   const right = width - pad[1];
   const bottom = height - pad[2];
+  const barGap = 2;
   const svg = d3.select(rootEl)
     .attr('viewBox', [0, 0, width, height].join(' '))
     .attr('preserveAspectRatio', 'xMinYMid meet');
@@ -375,7 +376,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('x', d => d.x)
       .attr('y', d => d.y)
       .attr('height', d => d.height)
-      .attr('width', d => d.width - 2);
+      .attr('width', d => d.width - barGap);
 
   t.selectAll('.bar')
     .each((d) => {
@@ -387,7 +388,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     .select('line')
       .attr('class', 'contrast-stroke')
       .attr('x1', d => d.x)
-      .attr('x2', d => (d.x + step - 2))
+      .attr('x2', d => (d.x + step - barGap))
       .attr('y1', d => (d.y + 2))
       .attr('y2', d => (d.y + 2));
 
