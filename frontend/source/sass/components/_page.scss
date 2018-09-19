@@ -97,6 +97,17 @@ footer {
     border-bottom-color: $color-gray-light;
     margin-bottom: $space-10x;
   }
+
+  /* the zindex here is necessary to allow the dropdown of search types
+   /* to flow over the SVG graph in the card just below it. */
+  &.dominant {
+    position: relative;
+    z-index: 1;
+  }
+  &.secondary {
+    position: relative;
+    // no z-index necessary; setting position does the trick
+  }
   // When the first thing in the card's content is a heading, it needs no top margin
   .content > h1:first-child {
     margin-top: 0;
