@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [3.1.0][] - 2018-09-19
+
 ### Added
 - Users can now search by vendor name or contract number in addition to labor category (#2069).
 - The data upload tool now accepts Schedule 736 uploads (#2140).
@@ -488,7 +490,8 @@ contract vehicles, not just schedules (#2067).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v3.0.1...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/18F/calc/compare/v3.0.1...v3.1.0
 [3.0.1]: https://github.com/18F/calc/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/18F/calc/compare/v2.10.0...v3.0.0
 [2.10.0]: https://github.com/18F/calc/compare/v2.9.1...v2.10.0
