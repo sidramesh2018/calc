@@ -428,10 +428,11 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     .scale(d3.scaleLinear()
       .domain(yd)
       .range([bottom, top]))
-    .tickValues(yd);
+    .tickValues(yd)
+    .tickSizeOuter(0.5);
   ya.tickFormat(formatCommas);
   yAxis.call(ya)
-    .attr('transform', `translate(${[left - 2, 0]})`);
+    .attr('transform', `translate(${[left - 5, -1]})`);
 
   yAxis.append('text')
     .attr('class', 'chart-label')
