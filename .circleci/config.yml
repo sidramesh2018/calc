@@ -127,6 +127,7 @@ jobs:
           command: |
             yarn gulp build
             yarn test
+            no_output_timeout: 15m
 
       - run:
           name: CodeClimate before-build
