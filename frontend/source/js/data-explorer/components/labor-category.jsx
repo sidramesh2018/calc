@@ -6,12 +6,16 @@ import * as autocomplete from '../autocomplete';
 import { setQuery } from '../actions';
 
 import {
+  QUERY_BY_SCHEDULE,
+  QUERY_BY_CONTRACT,
+  QUERY_BY_VENDOR,
+  MAX_QUERY_LENGTH
+} from '../constants';
+
+import {
   autobind,
   handleEnter,
-  filterActive,
 } from '../util';
-
-import { MAX_QUERY_LENGTH } from '../constants';
 
 export class LaborCategory extends React.Component {
   constructor(props) {
@@ -52,21 +56,31 @@ export class LaborCategory extends React.Component {
 
   render() {
     const id = `${this.props.idPrefix}labor_category`;
-    const className = filterActive(this.props.query !== '',
-                                   'form__inline');
+    let placeholder = "Type a labor category";
+
+    if (this.props.queryBy === QUERY_BY_CONTRACT) {
+      placeholder = "Type a contract number";
+    } else if (this.props.queryBy === QUERY_BY_VENDOR) {
+      placeholder = "Type a vendor name";
+    }
 
     return (
-      <div>
+      <div className="search-group">
+        <label htmlFor={id} className="usa-sr-only">
+          { placeholder }
+        </label>
         <input
-          id={id} name="q" placeholder="Type a labor category"
-          className={className} type="text"
+          id={id}
+          name="q"
+          placeholder={placeholder}
+          type="text"
+          className="form__inline"
           ref={(el) => { this.inputEl = el; }}
           value={this.state.value}
           onChange={this.handleChange}
           onKeyDown={handleEnter(this.handleEnter)}
           maxLength={MAX_QUERY_LENGTH}
         />
-        <label htmlFor={id} className="sr-only">Type a labor category</label>
         {this.props.children}
       </div>
     );
@@ -77,6 +91,7 @@ LaborCategory.propTypes = {
   idPrefix: PropTypes.string,
   query: PropTypes.string.isRequired,
   queryType: PropTypes.string.isRequired,
+  queryBy: PropTypes.string,
   setQuery: PropTypes.func.isRequired,
   api: PropTypes.object.isRequired,
   children: PropTypes.any,
@@ -85,12 +100,14 @@ LaborCategory.propTypes = {
 LaborCategory.defaultProps = {
   idPrefix: '',
   children: null,
+  queryBy: QUERY_BY_SCHEDULE,
 };
 
 export default connect(
   state => ({
     query: state.q,
     queryType: state.query_type,
+    queryBy: state.query_by,
   }),
   { setQuery },
 )(LaborCategory);

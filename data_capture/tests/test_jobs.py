@@ -40,3 +40,37 @@ class ProcessBulkUploadTests(TestCase):
         jobs.process_bulk_upload_and_send_email(src.id)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].recipients(), ['foo@example.org'])
+
+    def test_contract_creation_batching_yields_leftovers(self):
+        rows = [['']] * 3
+        generator = jobs._create_contract_batches(
+            None,
+            batch_size=2,
+            rows=rows
+        )
+
+        contracts, bad_rows = next(generator)
+        self.assertEqual(contracts, [])
+        self.assertEqual(len(bad_rows), 2)
+
+        contracts, bad_rows = next(generator)
+        self.assertEqual(contracts, [])
+        self.assertEqual(len(bad_rows), 1)
+
+        with self.assertRaises(StopIteration):
+            next(generator)
+
+    def test_contract_creation_batching_does_not_yield_empty_leftovers(self):
+        rows = [['']] * 2
+        generator = jobs._create_contract_batches(
+            None,
+            batch_size=2,
+            rows=rows
+        )
+
+        contracts, bad_rows = next(generator)
+        self.assertEqual(contracts, [])
+        self.assertEqual(len(bad_rows), 2)
+
+        with self.assertRaises(StopIteration):
+            next(generator)

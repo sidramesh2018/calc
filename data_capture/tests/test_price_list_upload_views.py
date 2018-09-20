@@ -59,7 +59,6 @@ class PriceListStepTestCase(StepTestCase):
 
     def setUp(self):
         super().setUp()
-        registry._init()
 
     def login(self, **kwargs):
         perms = kwargs.get('permissions', [])
@@ -118,8 +117,6 @@ class Step1Tests(PriceListStepTestCase, HandleCancelMixin):
             'data_capture.schedules.s70.Schedule70PriceList'],
     )
     def test_valid_post_with_diff_schedule_removes_gleaned_data(self):
-        # re-init registry to take overridden settings into account
-        registry._init()
         self.login()
 
         # first, post with Fake Schedule selected
@@ -172,8 +169,11 @@ class Step1Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertEqual(res.status_code, 200)
         self.assertContains(res, 'A price list with this contract number has '
                                  'already been submitted.')
-        self.assertContains(res, 'We found an existing price list for '
-                                 'contract number gs-boop.')
+        self.assertContains(res, 'We found an <a href=')
+        self.assertContains(
+            res,
+            'existing price list</a> for contract number gs-boop.'
+        )
 
     def test_duplicate_contract_post_message_contract_num_is_escaped(self):
         mommy.make(SubmittedPriceList,
@@ -183,8 +183,11 @@ class Step1Tests(PriceListStepTestCase, HandleCancelMixin):
             'schedule': FAKE_SCHEDULE,
             'contract_number': '<boop>'})
         self.assertEqual(res.status_code, 200)
-        self.assertContains(res, 'We found an existing price list for '
-                                 'contract number &lt;boop&gt;.')
+        self.assertContains(res, 'We found an <a href=')
+        self.assertContains(
+            res,
+            'existing price list</a> for contract number &lt;boop&gt;.'
+        )
 
 
 class Step2Tests(PriceListStepTestCase, HandleCancelMixin):
@@ -447,9 +450,9 @@ class Step3Tests(PriceListStepTestCase, HandleCancelMixin):
         self.assertRegexpMatches(json_data['form_html'],
                                  r'This field is required')
         self.assertHasMessage(
-           res,
-           'error',
-           'Oops! Please correct the following error.'
+            res,
+            'error',
+            'Oops! Please correct the following error.'
         )
 
 

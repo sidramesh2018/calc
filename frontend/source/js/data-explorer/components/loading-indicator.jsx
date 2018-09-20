@@ -9,7 +9,11 @@ export function LoadingIndicator({ error, inProgress }) {
   if (error) {
     ariaStatus = '';
     if (error !== 'abort') {
-      errorMessage = <div className="error-message">{error}</div>;
+      errorMessage = (
+        <div className="error-message">
+          {error}
+        </div>
+      );
       ariaStatus = `An error occurred when loading results: ${error}`;
     }
   }
@@ -19,7 +23,7 @@ export function LoadingIndicator({ error, inProgress }) {
       {/* Note that in order for this aria-live region to work
         * across most screen readers, it needs to be in the DOM
         * on page load! */}
-      <div className="sr-only" role="status" aria-live="polite">
+      <div className="usa-sr-only" role="status" aria-live="polite">
         {ariaStatus}
       </div>
       {/* CSS for the following element was originally designed with
@@ -27,7 +31,9 @@ export function LoadingIndicator({ error, inProgress }) {
         * from screen readers and using the preceding element to
         * convey status information to visually impaired users. */}
       <div className="loading-indicator" aria-hidden="true">
-        <p className="message">Loading results...</p>
+        <p className="message">
+Loading results...
+        </p>
         {errorMessage}
       </div>
     </div>

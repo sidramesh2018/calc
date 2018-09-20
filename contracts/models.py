@@ -1,13 +1,14 @@
-import re
-
+import bleach
+import csv
 from datetime import datetime
 from decimal import Decimal
 
 from django.db import models, connection
 from django.contrib.auth.models import User
-from django.db.models.expressions import Value
 from django.contrib.postgres.search import SearchVectorField, SearchVector
+from django.utils.html import strip_tags
 
+from calc.utils import markdown_to_sanitized_html
 
 EDUCATION_CHOICES = (
     ('HS', 'High School'),
@@ -22,56 +23,52 @@ MAX_ESCALATION_RATE = 99
 NUM_CONTRACT_YEARS = 5
 
 
-def convert_to_tsquery(query):
-    """
-    Converts multi-word phrases into AND boolean queries for postgresql.
+def clean_search(query):
+    '''
+    Takes a query input, sanitizes it, and finds synoymns.
+
+    If there are multiple search terms (comma-delimited)
+    it will parse the string into an array of strings.
+
+    We're using the CSV module rather than a simple split()
+    so quoted sub-strings (like "engineer, junior") will be kept together,
+    allowing for commas in sub-strings.
+
+    Note that after normalization, all terms will be lower-case and
+    abbreviated synonyms are changed to the long version.
 
     Examples:
 
-        >>> convert_to_tsquery('interpretation')
-        'interpretation:*'
+        >>> clean_search('Lone Ranger')
+        ['lone ranger']
 
-        >>> convert_to_tsquery('interpretation services')
-        'interpretation:* & services:*'
+        >>> clean_search('jane,jim,Jacky,joe')
+        ['jane', 'jim', 'jacky', 'joe']
 
-        >>> convert_to_tsquery('123')
-        '123:*'
-    """
+        >>> clean_search('carrot, beet  , Sunchoke')
+        ['carrot', 'beet', 'sunchoke']
 
-    # remove all non-alphanumeric or whitespace chars
-    pattern = re.compile('[^a-zA-Z0-9\s]')
-    query = pattern.sub('', query)
-    query_parts = query.split()
-    # remove empty strings and add :* to use prefix matching on each chunk
-    query_parts = ["%s:*" % s for s in query_parts if s]
-    tsquery = ' & '.join(query_parts)
+        >>> clean_search('turkey, "Hog, wild", cow')
+        ['turkey', 'hog, wild', 'cow']
 
-    return tsquery
+        >>> clean_search("an <script>EVIL()</script> example")
+        ['an evil() example']
 
-
-def convert_to_tsquery_union(queries):
+        >>> clean_search('sr. frog, sme, disco chicken')
+        ['senior frog', 'subject matter expert', 'disco chicken']
     '''
-    Converts a list of multi-word phrases into OR boolean queries for
-    postgresql.
-
-    Examples:
-
-        >>> convert_to_tsquery_union(['foo', 'bar'])
-        'foo:* | bar:*'
-
-        >>> convert_to_tsquery_union(['foo', 'bar baz'])
-        'foo:* | bar:* & baz:*'
-
-    Also, unrecognizable/garbage phrases will be removed:
-
-        >>> convert_to_tsquery_union(['foo', '$@#%#@!', 'bar'])
-        'foo:* | bar:*'
-    '''
-
-    queries = [convert_to_tsquery(query) for query in queries]
-    # remove empty strings
-    queries = filter(None, queries)
-    return " | ".join(queries)
+    # First, let's clean the query and not allow any tags in there.
+    stripped = strip_tags(query)
+    clean_query = bleach.clean(stripped, tags=[], strip=True)
+    # Then extract the terms to a list
+    if ',' in clean_query:
+        reader = csv.reader([clean_query], skipinitialspace=True)
+        terms = [qq.strip() for qq in list(reader)[0] if qq.strip()]
+    else:
+        terms = [clean_query]
+    # Finally, normalize and look for synonyms
+    terms = [Contract.normalize_labor_category(t) for t in terms]
+    return terms
 
 
 class CurrentContractManager(models.Manager):
@@ -84,11 +81,12 @@ class CurrentContractManager(models.Manager):
         call Contract.save().
         '''
 
+        pks = []
         updates = []
         num_updates = 0
-        for contract in self.all().only('id', 'labor_category',
-                                        '_normalized_labor_category'):
+        for contract in self.only('id', 'labor_category', '_normalized_labor_category'):
             if contract.update_normalized_labor_category():
+                pks.append(contract.id)
                 updates.append(contract.id)
                 updates.append(contract._normalized_labor_category)
                 num_updates += 1
@@ -98,30 +96,77 @@ class CurrentContractManager(models.Manager):
                 values = []
                 for i in range(num_updates):
                     values.append(r'(%s, %s)')
-                values = ", ".join(values)
+                values_str = ", ".join(values)
                 sql = (  # nosec
                     "UPDATE contracts_contract "
                     "  SET _normalized_labor_category = v.nlc"
-                    "  FROM (VALUES" + values + ") AS v (id, nlc)"
+                    "  FROM (VALUES" + values_str + ") AS v (id, nlc)"
                     "  WHERE contracts_contract.id = v.id"
                 )
                 cursor.execute(sql, updates)
+            self.filter(pk__in=pks).update_search_index()
         return num_updates
 
     def bulk_create(self, contracts, *args, **kwargs):
         for contract in contracts:
             contract.update_normalized_labor_category()
-        return super().bulk_create(contracts, *args, **kwargs)
+        contracts = super().bulk_create(contracts, *args, **kwargs)
+        self.filter(pk__in=[c.pk for c in contracts]).update_search_index()
+        return contracts
 
-    def multi_phrase_search(self, *args, **kwargs):
-        return self.get_queryset().multi_phrase_search(*args, **kwargs)
+    def multi_phrase_search(self, query, query_by=None, *args, **kwargs):
+        """
+        Given a query as string, runs it through clean_search to get a list of search terms,
+        then returns a matching queryset of Contract objects for each of those terms.
+
+        Optional arguments:
+            'match_exact' only returns exact matches.
+            'match_any' matches any word, so "business manager" will also match "dev manager"
+            'query_by' specifies fields other than labor_category you may wish to search for.
+        """
+        matches = Contract.objects.none()
+        qs = self.get_queryset()
+        phrases = clean_search(query)
+        if not query_by:
+            query_by = '_normalized_labor_category'
+        if 'match_exact' in args:
+            # This will match each phrase they enter exactly.
+            # We use an or operator here to build up the total queryset from
+            # each exactly matched item they found.
+            for phrase in phrases:
+                filter_by = {query_by + '__iexact': phrase}
+                matches = matches | qs.filter(**filter_by)
+        elif query_by != '_normalized_labor_category':
+            for phrase in phrases:
+                filter_by = {query_by + '__icontains': phrase}
+                matches = matches | qs.filter(**filter_by)
+        else:
+            # Match any: Break phrases down into individual words
+            # So "business manager" finds results with "business" AND "manager"
+            # anywhere in the labor category.
+            # Note this is relatively hard on the DB, producing one query per word,
+            # but given our number of users, small queries and indexing, we should be OK.
+
+            for phrase in phrases:
+                # If the phrase is quoted, we want to use it as
+                if phrase.startswith("'") or phrase.startswith('"'):
+                    filter_by = {query_by + '__icontains': phrase}
+                    matches = matches | qs.filter(**filter_by)
+                else:
+                    # Break out the individual words. Here, we only want results with AND matching.
+                    # So 'business analyst' will only return phrases matching both words.
+                    words = phrase.split(' ')
+                    # We need a starter queryset for the intersection
+                    wmatches = qs.filter(_normalized_labor_category__icontains=words[0])
+                    for w in words:
+                        filter_by = {query_by + '__icontains': w}
+                        wmatches = wmatches & qs.filter(**filter_by)
+                    # Now add the word matches onto the overall matches as an OR
+                    matches = matches | wmatches
+        return matches
 
     def search(self, *args, **kwargs):
         return self.get_queryset().search(*args, **kwargs)
-
-    def update_search_index(self):
-        return self.update(
-            search_index=SearchVector('_normalized_labor_category'))
 
     def get_queryset(self):
         return ContractsQuerySet(self.model, using=self._db)\
@@ -129,25 +174,7 @@ class CurrentContractManager(models.Manager):
             .exclude(current_price__isnull=True)
 
 
-class MultiPhraseSearchQuery(Value):
-    def as_sql(self, compiler, connection):
-        queries = self.value
-
-        if isinstance(queries, str):
-            queries = [queries]
-        queries = [
-            Contract.normalize_labor_category(q)
-            for q in queries
-        ]
-        tsquery = convert_to_tsquery_union(queries)
-
-        return f"to_tsquery('pg_catalog.english', %s)", [tsquery]
-
-
 class ContractsQuerySet(models.QuerySet):
-
-    def multi_phrase_search(self, queries):
-        return self.search(MultiPhraseSearchQuery(queries))
 
     def search(self, query):
         return self.filter(search_index=query)
@@ -215,7 +242,6 @@ class CashField(models.DecimalField):
     '''
     Custom field class for storing cash amounts in U.S. dollars and cents.
     '''
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.decimal_places != 2:
@@ -257,13 +283,35 @@ class CashField(models.DecimalField):
 
 
 class Contract(models.Model):
+    '''
+    The name of this model, "Contract", is a bit of a misnomer: in
+    reality it reflects an individual labor category of a
+    contract.
 
-    idv_piid = models.CharField(max_length=128)  # index this field
-    piid = models.CharField(max_length=128)  # index this field
+    This model stores denormalized data about labor category
+    pricing in federal contracts. It is denormalized because
+    rather than having a separate model containing
+    general metadata about an individual contract (such as
+    a vendor name) and storing a foreign key in this model
+    that points to it, we store all such information
+    directly in this model. This means that such information
+    is duplicated across all model instances that correspond
+    to different labor categories in the same contract.
+    '''
+
+    # This field stores the contract number, but has an
+    # unusual name, which we think comes from:
+    #
+    #   IDV - "Indefinite Delivery Vehicle"
+    #   PIID - "Procurement Instrument Identification"
+
+    idv_piid = models.CharField(
+        max_length=128, db_index=True,
+        verbose_name="contract number")  # index this field
     contract_start = models.DateField(null=True, blank=True)
     contract_end = models.DateField(null=True, blank=True)
     contract_year = models.IntegerField(null=True, blank=True)
-    vendor_name = models.CharField(max_length=128)
+    vendor_name = models.CharField(max_length=128, db_index=True)
     labor_category = models.TextField(db_index=True)
     education_level = models.CharField(
         db_index=True, choices=EDUCATION_CHOICES, max_length=5, null=True,
@@ -290,6 +338,16 @@ class Contract(models.Model):
         db_index=True, max_length=128, null=True, blank=True)
     business_size = models.CharField(
         db_index=True, max_length=128, null=True, blank=True)
+
+    # SIN stands for "Special Item Number" and is is a categorization method
+    # that groups similar products, services, and solutions together.
+    #
+    # Unfortunately, this field isn't very useful because a labor category
+    # can actually apply to multiple SIN numbers, and in practice this
+    # field contains difficult-to-parse values like "874-1,2" and
+    # "874-1 thru 7". For more details, see:
+    #
+    #   https://github.com/18F/calc/issues/1033
     sin = models.TextField(null=True, blank=True)
 
     _normalized_labor_category = models.TextField(db_index=True, blank=True)
@@ -303,27 +361,27 @@ class Contract(models.Model):
         on_delete=models.CASCADE,
     )
 
-    # use a manager that filters by current contracts with a valid
-    # current_price
+    # Ojects should be current contracts with a valid current_price
     objects = CurrentContractManager()
-
-    def get_readable_business_size(self):
-        if 's' in self.business_size.lower():
-            return 'small business'
-        else:
-            return 'other than small business'
 
     @staticmethod
     def normalize_labor_category(val):
         '''
-        Normalize the given labor category by applying various synonyms
-        and such to it.
+        Utility to normalize the given labor category by applying various
+        synonyms and such to it. This allows, for example, searches for
+        "senior engineer" to include labor categories like
+        "sr. engineer".
 
         Note that this would ideally be done by modifying postgres'
         dictionary configuration, but at the time of this writing,
         that is untenable. For more details, see:
 
             https://github.com/18F/calc/issues/1375
+
+        TO-DO: move this out so it's not cluttering up the model.
+        This will require sorting out the
+        `test_bulk_update_normalized_labor_categories_works` test
+        that calls it, and probably simplifying the bulk_upload method.
         '''
 
         # Note also that any logic changes to this code should
@@ -347,12 +405,37 @@ class Contract(models.Model):
 
         return val
 
+    def get_readable_business_size(self):
+        """
+        There appears to be a mismatch between how we store business size
+        in the DB and how we collect it in form submissions that makes startswith
+        a safer check than equivalency
+        """
+        if self.business_size.lower().startswith('s'):
+            return 'small business'
+        else:  # We expect it should be 'o' but are not locking it down.
+            return 'other than small business'
+
     @staticmethod
-    def get_education_code(text):
+    def get_education_code(text, raise_exception=False):
+        '''
+        Given a human-readable education level, return its
+        education code, e.g.:
+
+            >>> Contract.get_education_code('High School')
+            'HS'
+
+        Return None if no education code matches the given
+        text, unless raise_exception is True, in which
+        case a ValueError is raised.
+        '''
+
         for pair in EDUCATION_CHOICES:
             if text.strip() in pair[1]:
                 return pair[0]
 
+        if raise_exception:
+            raise ValueError(text)
         return None
 
     @staticmethod
@@ -403,8 +486,8 @@ class Contract(models.Model):
             # if there is an escalation rate, increase the
             # previous year's value by the escalation rate
             if escalation_rate > 0:
-                escalation_factor = Decimal(1 + escalation_rate/100)
-                prev_rate = self.get_hourly_rate(i-1)
+                escalation_factor = Decimal(1 + escalation_rate / 100)
+                prev_rate = self.get_hourly_rate(i - 1)
                 next_rate = escalation_factor * prev_rate
 
             self.set_hourly_rate(i, next_rate)
@@ -462,3 +545,58 @@ class Contract(models.Model):
     def save(self, *args, **kwargs):
         self.update_normalized_labor_category()
         super().save(*args, **kwargs)
+
+
+class ScheduleMetadata(models.Model):
+    '''
+    This model represents metadata about a schedule, containing details
+    such as the schedule's SIN number and description.
+    '''
+
+    class Meta:
+        ordering = ['sin', 'name']
+
+    # This column corresponds to the "schedule" column of the Contract model
+    # and can essentially be viewed as an optional foreign key.
+    schedule = models.CharField(
+        help_text=(
+            'Text that appears in the "schedule" column of Contract data '
+            'to identify a labor rate as being in this schedule (e.g. "MOBIS").'
+        ),
+        unique=True,
+        db_index=True,
+        max_length=128
+    )
+
+    sin = models.CharField(
+        help_text=(
+            'The SIN number for the schedule (e.g. "874").'
+        ),
+        blank=True,
+        max_length=128
+    )
+
+    name = models.CharField(
+        help_text=(
+            'The name of the schedule as it should appear to CALC users '
+            '(e.g. "Legacy MOBIS").'
+        ),
+        max_length=128
+    )
+
+    description = models.TextField(
+        help_text=(
+            'A description of the schedule, formatted as Markdown.'
+        ),
+    )
+
+    @property
+    def full_name(self):
+        return self.name
+
+    @property
+    def description_html(self):
+        return markdown_to_sanitized_html(self.description)
+
+    def __str__(self):
+        return self.full_name

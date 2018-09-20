@@ -5,12 +5,10 @@ from django.test import override_settings
 from django.http import HttpResponse
 from django.core.management import call_command
 
-from hourglass.urls import urlpatterns
-from hourglass.tests.common import BaseLoginTestCase
+from calc.urls import urlpatterns
+from calc.tests.common import BaseLoginTestCase
 from data_capture.tests.common import FAKE_SCHEDULE, FAKE_SCHEDULE_EXAMPLE_PATH
-from data_capture.schedules import registry
 from data_capture.models import SubmittedPriceList
-from frontend import safe_mode
 from .browsers import BrowserTestCase
 
 
@@ -26,7 +24,14 @@ def autologin(request):
     if user is None:
         raise Exception('Unable to authenticate')
     django.contrib.auth.login(request, user)
-    request.session[safe_mode.SESSION_KEY] = True
+
+    # We used to enable safe mode to reduce the chance of JS race conditions
+    # getting in the way, but its overlay sometimes gets in the way of
+    # clicking on elements, so we're just disabling it for now.
+    #
+    # from frontend import safe_mode
+    # request.session[safe_mode.SESSION_KEY] = True
+
     return HttpResponse('{} is now logged in'.format(
         user.email
     ))
@@ -51,7 +56,6 @@ class DataCaptureTests(BrowserTestCase):
         return self.get_title().split(' / ')[-1]
 
     def test_data_capture(self):
-        registry._init()
         call_command('initgroups', stdout=io.StringIO())
         t = BaseLoginTestCase()
         user = t.create_user(
@@ -63,6 +67,7 @@ class DataCaptureTests(BrowserTestCase):
         self.load('/autologin')
         self.load('/data-capture/step/1')
 
+        # This first form has no ID, and that appears to be OK
         form = self.get_form('form')
         form.set_text('contract_number', 'GS-123-4567')
         form.submit()
@@ -72,7 +77,7 @@ class DataCaptureTests(BrowserTestCase):
             'Step 2 of 5: Enter vendor details'
         )
 
-        form = self.get_form('form')
+        form = self.get_form('#vendor-contract-form')
         form.set_text('vendor_name', 'Battaglia Sausage Peddlers, Inc.')
         form.set_radio('is_small_business', 0)
         form.set_radio('contractor_site', 2)

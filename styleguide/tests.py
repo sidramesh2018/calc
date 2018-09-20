@@ -1,7 +1,7 @@
 from django.test import TestCase, SimpleTestCase
 from django.template import engines
 
-from styleguide import email_examples
+from styleguide import email_examples, fullpage_example
 from styleguide.templatetags.styleguide import (
     template_tag_library,
     github_url_for_path,
@@ -16,6 +16,10 @@ class StyleguideTests(TestCase):
     def test_styleguide_returns_200(self):
         response = self.client.get('/styleguide/')
         self.assertEqual(response.status_code, 200)
+
+    def test_styleguide_docs_returns_200(self):
+        response = self.client.get('/styleguide/docs/')
+        self.assertContains(response, 'Style Guide Documentation')
 
     def test_styleguide_ajaxform_returns_200(self):
         response = self.client.get('/styleguide/ajaxform')
@@ -36,6 +40,23 @@ class StyleguideTests(TestCase):
 
             plaintext_response = self.client.get(example.plaintext_url)
             self.assertEqual(plaintext_response.status_code, 200)
+
+
+class FullpageExampleTests(TestCase):
+    def test_returns_200_if_name_is_valid(self):
+        response = self.client.get(
+            '/styleguide/fullpage-example/card-skinny')
+        self.assertEqual(response.status_code, 200)
+
+    def test_returns_404_if_name_is_invalid(self):
+        response = self.client.get('/styleguide/fullpage-example/lololol')
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_snippet_works(self):
+        self.assertEqual(fullpage_example._get_snippet(
+            'foo\n{# BEGIN SNIPPET #}\nblarg\n{# END SNIPPET #}\nbar'
+        ), 'blarg\n')
+        self.assertEqual(fullpage_example._get_snippet('flarg'), None)
 
 
 class TemplateTagsTests(SimpleTestCase):
@@ -68,3 +89,7 @@ class TemplateTagsTests(SimpleTestCase):
             self.render_string('{% template_url "styleguide.html" %}'),
             f'{GITHUB_TREE_URL}/styleguide/templates/styleguide.html'
         )
+
+    def test_fullpage_example_raises_error_if_name_is_invalid(self):
+        with self.assertRaisesRegexp(FileNotFoundError, r'blahh\.html'):
+            self.render_string('{% fullpage_example "blahh" %}')

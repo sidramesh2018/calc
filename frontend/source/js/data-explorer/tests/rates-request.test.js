@@ -88,7 +88,7 @@ describe('StoreRatesAutoRequester middleware', () => {
 
     expect(mockApi.get.calledOnce).toBeTruthy();
     expect(mockApi.get.calledWith({
-      uri: 'rates/',
+      uri: '/rates',
       data: {
         histogram: HISTOGRAM_BINS,
         exclude: '4,8,16',
@@ -106,6 +106,7 @@ describe('StoreRatesAutoRequester middleware', () => {
     })).toBeTruthy();
 
     expect(mockStore.dispatch.calledWith(
-      { type: START_RATES_REQUEST })).toBeTruthy();
+      { type: START_RATES_REQUEST }
+    )).toBeTruthy();
   });
 });

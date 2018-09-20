@@ -1,10 +1,17 @@
+/* eslint-disable camelcase */
+
 import {
   serializers, deserializers,
   getSerializedFields, getChangedSerializedFields,
 } from '../serialization';
 import {
-  DEFAULT_SORT, DEFAULT_CONTRACT_YEAR, DEFAULT_QUERY_TYPE,
-  MAX_QUERY_LENGTH, MIN_EXPERIENCE, MAX_EXPERIENCE,
+  DEFAULT_SORT,
+  DEFAULT_CONTRACT_YEAR,
+  DEFAULT_QUERY_TYPE,
+  DEFAULT_QUERY_BY,
+  MAX_QUERY_LENGTH,
+  MIN_EXPERIENCE,
+  MAX_EXPERIENCE,
 } from '../constants';
 
 
@@ -146,8 +153,15 @@ describe('deserializers', () => {
     it('deserializes various values', () => {
       const { query_type } = deserializers;
       expect(query_type('whatever')).toBe(DEFAULT_QUERY_TYPE);
-      expect(query_type('match_phrase')).toBe('match_phrase');
       expect(query_type('match_exact')).toBe('match_exact');
+    });
+  });
+
+  describe('query_by', () => {
+    it('deserializes various values', () => {
+      const { query_by } = deserializers;
+      expect(query_by('whatever')).toBe(DEFAULT_QUERY_BY);
+      expect(query_by('vendor_name')).toBe('vendor_name');
     });
   });
 });

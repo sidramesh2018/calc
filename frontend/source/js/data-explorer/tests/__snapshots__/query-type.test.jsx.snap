@@ -1,47 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<QueryType> matches snapshot 1`] = `
-<div
+<ul
   aria-label="Labor category query type"
   role="group"
 >
-  <span>
-    <input
-      checked={false}
-      id="zzz_match_all"
-      name="query_type"
-      onChange={[Function]}
-      type="radio"
-      value="match_all"
-    />
-    <label
-      htmlFor="zzz_match_all"
-    >
-      Contains words
-    </label>
-  </span>
-  <span>
-    <input
-      checked={false}
-      id="zzz_match_phrase"
-      name="query_type"
-      onChange={[Function]}
-      type="radio"
-      value="match_phrase"
-    />
-    <label
-      htmlFor="zzz_match_phrase"
-    >
-      Contains phrase
-    </label>
-  </span>
-  <span>
+  <li>
     <input
       checked={true}
       id="zzz_match_exact"
       name="query_type"
       onChange={[Function]}
-      type="radio"
+      type="checkbox"
       value="match_exact"
     />
     <label
@@ -49,6 +19,6 @@ exports[`<QueryType> matches snapshot 1`] = `
     >
       Exact match
     </label>
-  </span>
-</div>
+  </li>
+</ul>
 `;

@@ -1,6 +1,8 @@
 {% load staticfiles %}
 <div class="base-header row">
-  <a class="logo-container columns eight" href="{% url 'index' %}"><img class="logo" src="{% static 'frontend/images/calc_logo_white.svg' %}" alt="CALC: Contract Awarded Labor Category Tool"></a>
+  <div class="logo-container columns eight">
+    <a href="{% url 'index' %}"><img class="logo" src="{% static 'frontend/images/calc_logo_white.svg' %}" alt="CALC: Contract Awarded Labor Category Tool"></a>
+  </div>
   <div class="columns four">
     {% if user.is_authenticated %}
       <div id="usermenu">
@@ -12,6 +14,9 @@
           </a>
         </p>
         <ul>
+          {% if user.is_staff %}
+          <li><a href="{% url 'admin:index' %}">Admin</a></li>
+          {% endif %}
           <li><a href="{% url 'user_account:index' %}">Your activity</a></li>
           <li><a href="{% url 'logout' %}">Log out</a></li>
         </ul>

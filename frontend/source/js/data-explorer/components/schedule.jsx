@@ -2,43 +2,86 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { filterActive } from '../util';
-import { makeOptions } from './util';
-import { setSchedule as setScheduleAction } from '../actions';
-import { SCHEDULE_LABELS } from '../constants';
+import {
+  setSchedule as setScheduleAction,
+  setQueryBy as setQueryByAction
+} from '../actions';
+import { QUERY_BY_SCHEDULE } from '../constants';
+import { scheduleLabels } from '../schedule-metadata';
 
-export function Schedule({ idPrefix, schedule, setSchedule }) {
-  const id = `${idPrefix}schedule`;
-  const handleChange = (e) => { setSchedule(e.target.value); };
+export function Schedule({
+  selectedSchedule, setSchedule, setQueryBy, queryBy
+}) {
+  const handleChange = (e) => {
+    setSchedule(e.target.value);
+    setQueryBy(QUERY_BY_SCHEDULE);
+  };
+  const defaultMsg = `In all ${Object.keys(scheduleLabels).length} contract vehicles`;
+  // In most instances, we display legacy schedules as "Legacy Schedule," i.e., "Legacy MOBIS."
+  // Here, however, we want to display the "Legacy" modifier in parenthesis after the name.
+  // Since the legacy modifier only is found in schedule.full_name, we have to regex.
+  const legacyPrefix = "Legacy ";
+  const makeInput = (value, label) => {
+    const id = value.replace(/ /g, '-').toLowerCase() || 'all-schedules';
+    const makeLabel = (title) => {
+      let scheduleLabel = title;
+      let labelSuffix;
+      if (title.includes(legacyPrefix)) {
+        scheduleLabel = title.replace(legacyPrefix, '');
+        labelSuffix = "(Legacy)";
+      }
+      return { scheduleLabel, labelSuffix };
+    };
+    const { scheduleLabel, labelSuffix } = makeLabel(label);
+    return (
+      <li key={id}>
+        <input
+          type="radio"
+          id={id}
+          name={id}
+          value={value}
+          onChange={handleChange}
+          checked={selectedSchedule === value && queryBy === QUERY_BY_SCHEDULE}
+        />
+        <label htmlFor={id}>
+          {scheduleLabel}
+          <span className="label__suffix">
+            {labelSuffix}
+          </span>
+        </label>
+      </li>
+    );
+  };
+
+  const makeChoices = labels => [
+    { key: '', value: '', label: defaultMsg },
+  ].concat(Object.keys(labels).map(
+    value => ({ value, label: labels[value] }),
+  )).map(({ value, label }) => (
+    makeInput(value, label)
+  ));
 
   return (
-    <div className="filter filter-schedule">
-      <label htmlFor={id}>SIN / Schedule:</label>
-      <a href="/about#schedules" className="filter-more-info">
-        What&apos;s this?
-      </a>
-      <select
-        id={id} name="schedule" value={schedule}
-        onChange={handleChange}
-        className={filterActive(schedule !== '')}
-      >
-        {makeOptions(SCHEDULE_LABELS)}
-      </select>
-    </div>
+    <ul className="filter--schedule">
+      {makeChoices(scheduleLabels, defaultMsg)}
+    </ul>
   );
 }
 
 Schedule.propTypes = {
-  schedule: PropTypes.string.isRequired,
+  selectedSchedule: PropTypes.string.isRequired,
   setSchedule: PropTypes.func.isRequired,
-  idPrefix: PropTypes.string,
-};
-
-Schedule.defaultProps = {
-  idPrefix: '',
+  setQueryBy: PropTypes.func.isRequired,
+  queryBy: PropTypes.string.isRequired,
 };
 
 export default connect(
-  state => ({ schedule: state.schedule }),
-  { setSchedule: setScheduleAction },
+  state => ({
+    selectedSchedule: state.schedule,
+    queryBy: state.query_by,
+  }),
+  {
+    setSchedule: setScheduleAction,
+    setQueryBy: setQueryByAction,
+  },
 )(Schedule);

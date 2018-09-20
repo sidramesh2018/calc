@@ -1,14 +1,54 @@
+// Original styles for the data explorer tool. These could be abstracted into
+// components and then included here.
+
 @import 'base/variables';
+@import 'components/forms';
 @import 'components/tables';
 @import 'components/experienceslider';
 
 body {
-  background-color: $color-gray-lightest; //override to steps.scss
+  background-color: $color-gray-lighter; //override to steps.scss
+}
+
+// temp styles to mimic .card without indenting the table
+.graph-block {
+  margin-right: 0;
+  margin-left: $space-8x;
+}
+
+.search-header {
+  p {
+  margin-bottom: 0;
+  margin-top: 0;
+  }
+  h2 {
+    margin-top: $space-8x;
+    margin-bottom: $space-4x;
+  }
+}
+
+section.search .container {
+  padding: 0;
+}
+
+#search.container,
+.results .container {
+  padding: 0;
+}
+
+@media only screen and (max-width: $medium-large-screen) {
+.graph-block {
+    margin-left: $space-3x;
+  }
+}
+
+.help-text.columns.nine {
+  padding-top: $space-8x;
 }
 
 // to fake selection of home link
 nav li:first-child {
-  border-bottom: $space-1x solid $color-primary-alt;
+  border-bottom: $space-1x solid $color-green-bright;
   a {
     font-weight: $font-weight-bold;
     display: block;
@@ -40,8 +80,8 @@ nav li:first-child {
   position: relative;
   padding: .25em .5em;
   &.selected {
-    color: $color-white;
-    background: $color-primary-alt;
+    color: $color-base;
+    background: $color-gray-lighter;
   }
   .count {
     position: absolute;
@@ -95,10 +135,6 @@ span.dollars {
   font-size: 70%;
 }
 
-.graph-block {
-  margin-left: 0;
-}
-
 .filter-title {
   padding-bottom: 0;
   margin: 1em 0 1.5em 0;
@@ -107,6 +143,7 @@ span.dollars {
 .filter-block {
   background: $color-gray-lightest;
   border-radius: $border-radius;
+  margin-right: $space-1x;
   margin-bottom: 0;
   padding: 1rem 2rem;
 
@@ -119,6 +156,7 @@ span.dollars {
 @media (min-width: 550px) {
   .filter-container {
     float: right;
+    margin-top: 1rem;
     margin-bottom: 1em;
   }
 }
@@ -185,6 +223,9 @@ dl.dropdown {
     line-height: 24px;
     overflow: hidden;
     padding: 6px 10px;
+    &:focus {
+      outline: #2d4d59 dotted 2px;
+    }
   }
   span.value {
     display:none;
@@ -311,17 +352,13 @@ input[type="checkbox"]:checked ~ label {
 .avg-price-highlight,
 h5.sd-highlight,
 h5.proposed-price-highlight {
-  color: $color-primary;
+  color: $color-blue-dark;
   font-weight: 400;
   font-size: 2.4rem;
 }
 
 .slider {
   margin: 5px 0 5px 0;
-}
-
-section.search {
-  padding: .5rem 0 3rem 0;
 }
 
 .results {
@@ -376,7 +413,7 @@ label[for=schedule] {
 
 .table-container {
   width: 100%;
-  overflow: scroll;
+  overflow-x: scroll;
   clear: both;
 }
 
@@ -385,37 +422,42 @@ th.column-labor_category {        width: 23%; }
 th.column-education_level {       width: 10%; }
 th.column-min_years_experience {  width: 10%; }
 th.column-wage {                  width:  8%; }
-th.column-idv_piid {              width: 12%; }
 th.column-vendor_name {           width: 25%; }
-th.column-schedule {              width: 10%; }
 
 th.column-education_level {
   color-white-space: nowrap;
 }
 
-td.column-idv_piid {
-  color-white-space: nowrap;
+td.column-vendor_name a {
+  font-size: $small-font-size;
+  display: block;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-td.column-min_years_experience .years {
-  display: none;
-  font-style: italic;
-  color: $color-gray;
+td.column-min_years_experience {
+  .years {
+    color: $color-gray-dark;
+    display: none;
+    font-style: italic;
+    line-height: 12px;}
 }
 
 tr:hover td.column-min_years_experience .years {
-  display: inline;
+  display: block;
 }
 
 .document-icon {
-  fill: $color-primary;
+  fill: $color-blue;
   height: 12px;
   margin-left: 3px;
   width: 12px;
 }
 
 .column-idv_piid:hover .document-icon {
-  fill: $color-primary-darker;
+  fill: $color-blue-dark;
 }
 
 a.focus-input {
@@ -459,7 +501,7 @@ a.focus-input {
 }
 
 .contract-year-selected {
-  background-color: $color-primary;
+  background-color: $color-blue-dark;
   color: $color-white;
 }
 
@@ -483,18 +525,6 @@ a.focus-input {
 
 #labor_category {
   margin-bottom: .5rem;
-}
-
-#query-types {
-  padding: 0 1rem;
-  label {
-    display: inline-block;
-    font-weight: normal;
-    margin: 0 1rem 0 0;
-    input {
-      margin-right: .5rem;
-    }
-  }
 }
 
 #price-histogram svg {
@@ -551,7 +581,7 @@ label.radio {
 }
 
 label.checkbox :checked + span {
-  background-color: $color-primary;
+  background-color: $color-blue-dark;
   box-shadow: 0 0 0 0 $color-white;
   position: relative;
   &:after {
@@ -565,9 +595,8 @@ label.checkbox :checked + span {
 }
 
 label.radio :checked + span {
-  background-color: $color-primary;
+  background-color: $color-blue-dark;
   color: $color-white;
-  position: relative;
 }
 
 .contract-list-item input[type="checkbox"],
@@ -599,6 +628,11 @@ label.radio :checked + span {
 .checkbox-focus {
   background-color: $color-white;
   padding: 1px 8px;
+}
+
+input[type=radio]:focus+.checkbox-focus,
+input[type=checkbox]:focus+.checkbox-focus {
+  outline: #2d4d59 dotted 2px;
 }
 
 .contract-list-item {

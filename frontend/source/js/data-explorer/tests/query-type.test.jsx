@@ -14,25 +14,21 @@ const setup = makeSetup(QueryType, defaultProps);
 describe('<QueryType>', () => {
   it('renders correctly', () => {
     const { wrapper } = setup();
-    expect(wrapper.find('#zzz_match_all').prop('value')).toBe('match_all');
     expect(wrapper.find('#zzz_match_exact').prop('value')).toBe('match_exact');
-    expect(wrapper.find('#zzz_match_phrase').prop('value')).toBe('match_phrase');
   });
 
   it('matching queryType is checked', () => {
     const { wrapper } = setup();
-    expect(wrapper.find('#zzz_match_all').prop('checked')).toBe(false);
-    expect(wrapper.find('#zzz_match_phrase').prop('checked')).toBe(false);
     expect(wrapper.find('#zzz_match_exact').prop('checked')).toBe(true);
   });
 
   it('calls setQueryType fn onChange', () => {
     const { props, mounted } = setup();
     expect(props.setQueryType.mock.calls.length).toBe(0);
-    mounted.find('#zzz_match_phrase')
+    mounted.find('#zzz_match_exact')
       .simulate('change', { target: { checked: true } });
     expect(props.setQueryType.mock.calls.length).toBe(1);
-    expect(props.setQueryType.mock.calls[0][0]).toBe('match_phrase');
+    expect(props.setQueryType.mock.calls[0][0]).toBe('match_exact');
   });
 
   it('matches snapshot', () => {

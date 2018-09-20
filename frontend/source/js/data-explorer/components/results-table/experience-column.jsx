@@ -4,11 +4,11 @@ import createSortableColumn from './sortable-column';
 
 const column = createSortableColumn({
   key: 'min_years_experience',
-  title: 'Experience',
+  title: 'Exper.',
   description: 'Minimum years of experience',
 });
 
-export const HeaderCell = column.HeaderCell;
+export const { HeaderCell } = column;
 
 export const DataCell = column.connectDataCell(
   ({ className, value }) => {
@@ -20,7 +20,9 @@ export const DataCell = column.connectDataCell(
 
     return (
       <td className={className}>
-        {value} {years}
+        {value} 
+        {' '}
+        {years}
       </td>
     );
   },
