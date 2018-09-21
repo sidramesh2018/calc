@@ -66,7 +66,6 @@ class PriceListStepTestCase(StepTestCase):
         return super().login(**kwargs)
 
 
-<<<<<<< HEAD
 class TutorialTests(TestCase):
     def test_get_is_ok(self):
         res = self.client.get('/data-capture/tutorial')
@@ -74,9 +73,6 @@ class TutorialTests(TestCase):
 
 
 class Step1Tests(PriceListStepTestCase):
-=======
-class Step1Tests(PriceListStepTestCase, HandleCancelMixin):
->>>>>>> develop
     url = '/data-capture/step/1'
 
     valid_form = {
