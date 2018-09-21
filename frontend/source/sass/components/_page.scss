@@ -69,7 +69,6 @@ footer {
   }
 }
 
-<<<<<<< HEAD
 .card .content:first-child {
   h1, h2, h3 {
     &:first-child {
@@ -91,12 +90,6 @@ footer {
 
 /* Also a "body class." Used in conjunction with the above. */
 .card--no-header {
-=======
-/* Applied to "main" element on some steps of data capture to create the appearance
- * of a unified card (despite being composed of two separate "card" DOM elements).
- * Used in conjunction with the standard card classes above. */
-.card--collapse-header {
->>>>>>> develop
   .card:first-child {
     border-bottom: none;
     padding-bottom: 0;
