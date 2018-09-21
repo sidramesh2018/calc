@@ -2,12 +2,14 @@ import toJson from 'enzyme-to-json';
 
 import { Schedule } from '../components/schedule';
 import makeSetup from './testSetup';
-import { SCHEDULE_LABELS } from '../constants';
+import { QUERY_BY_SCHEDULE } from '../constants';
+import { scheduleLabels } from '../schedule-metadata';
 
 const defaultProps = {
-  schedule: '',
-  idPrefix: 'zzz_',
+  selectedSchedule: '',
+  queryBy: QUERY_BY_SCHEDULE,
   setSchedule: jest.fn(),
+  setQueryBy: jest.fn(),
 };
 
 const setup = makeSetup(Schedule, defaultProps);
@@ -15,16 +17,14 @@ const setup = makeSetup(Schedule, defaultProps);
 describe('<Schedule>', () => {
   it('renders correctly', () => {
     const { wrapper } = setup();
-    const select = wrapper.find('select#zzz_schedule');
+    const select = wrapper.find('.filter--schedule');
     expect(select.exists()).toBeTruthy();
-    const options = wrapper.find('option');
+    const options = wrapper.find('li');
     // should have options for all schedules + 1 for "(all)"
-    expect(options.length).toBe(Object.keys(SCHEDULE_LABELS).length + 1);
-    Object.keys(SCHEDULE_LABELS).forEach((sched) => {
-      const title = SCHEDULE_LABELS[sched];
-      const opt = wrapper.find(`option[value="${sched}"]`);
+    expect(options.length).toBe(Object.keys(scheduleLabels).length + 1);
+    Object.keys(scheduleLabels).forEach((sched) => {
+      const opt = wrapper.find(`input[value="${sched}"]`);
       expect(opt.exists()).toBeTruthy();
-      expect(opt.text()).toBe(title);
     });
   });
 
@@ -37,18 +37,10 @@ describe('<Schedule>', () => {
     const { props, mounted } = setup();
     expect(props.setSchedule.mock.calls.length).toBe(0);
 
-    mounted.find('select#zzz_schedule')
+    mounted.find('#mobis')
       .simulate('change', { target: { value: 'MOBIS' } });
 
     expect(props.setSchedule.mock.calls.length).toBe(1);
     expect(props.setSchedule.mock.calls[0][0]).toBe('MOBIS');
-  });
-
-  it('has filter_active class when levels are selected', () => {
-    let { wrapper } = setup({ schedule: '' });
-    expect(wrapper.find('select.filter_active').exists()).toBeFalsy();
-
-    ({ wrapper } = setup({ schedule: 'PES' }));
-    expect(wrapper.find('select.filter_active').exists()).toBeTruthy();
   });
 });

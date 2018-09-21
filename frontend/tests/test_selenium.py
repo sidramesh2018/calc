@@ -1,21 +1,10 @@
-""" Note about tests:
-
-They time out and cause failures intermittently.
-See https://travis-ci.org/18F/calc/builds/77211412.
-
-The original author of the tests and I could not solve this problem. I've
-watched the timeouts happen on specific tests by increasing nose's verbosity,
-and I have seen them on these tests:
-test_schedule_column_is_open_by_default
-test_contract_link
-
-8/25/15 [TS]
-"""
-
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 from contracts.mommy_recipes import get_contract_recipe
 from model_mommy.recipe import seq
@@ -24,76 +13,47 @@ from itertools import cycle
 import re
 import time
 import os
-import socket
+import atexit
 from datetime import datetime
 
 from . import axe
 from .utils import build_static_assets
 
 
-WD_HUB_URL = os.environ.get('WD_HUB_URL')
-WD_TESTING_URL = os.environ.get('WD_TESTING_URL')
-WD_TESTING_BROWSER = os.environ.get('WD_TESTING_BROWSER',
-                                    'phantomjs')
-WD_SOCKET_TIMEOUT = int(os.environ.get('WD_SOCKET_TIMEOUT', '5'))
-PHANTOMJS_TIMEOUT = int(os.environ.get('PHANTOMJS_TIMEOUT', '3'))
-WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS = 10
+WD_CHROME_ARGS = filter(None, os.environ.get('WD_CHROME_ARGS', '').split())
+
+_driver = None
 
 
-def _get_webdriver(name):
-    name = name.lower()
-    if name == 'chrome':
-        return webdriver.Chrome()
-    elif name == 'firefox':
-        return webdriver.Firefox()
-    elif name == 'phantomjs':
-        driver = webdriver.PhantomJS()
-        driver.command_executor.set_timeout(PHANTOMJS_TIMEOUT)
-        return driver
-    raise Exception('No such webdriver: "%s"' % name)
+def get_driver():
+    global _driver
+
+    if _driver is None:
+        options = ChromeOptions()
+        for arg in WD_CHROME_ARGS:
+            options.add_argument(arg)
+        _driver = webdriver.Chrome(chrome_options=options)
+
+    return _driver
+
+
+@atexit.register
+def teardown_driver():
+    global _driver
+
+    if _driver is not None:
+        _driver.quit()
+        _driver = None
 
 
 class SeleniumTestCase(StaticLiveServerTestCase):
-    connect = None
-    driver = None
-    screenshot_filename = 'selenium_tests/screenshot.png'
+    screenshot_filename = 'selenium_tests_screenshot.png'
     window_size = (1000, 1000)
 
     @classmethod
-    def get_driver(cls):
-        if not WD_TESTING_URL:
-            return _get_webdriver(WD_TESTING_BROWSER)
-
-        if not WD_HUB_URL:
-            raise Exception('WD_HUB_URL must be defined!')
-
-        desired_cap = webdriver.DesiredCapabilities.CHROME
-        # these are the standard Selenium capabilities
-
-        if 'WD_TESTING_PLATFORM' in os.environ:
-            desired_cap['platform'] = os.environ['WD_TESTING_PLATFORM']
-        desired_cap['browserName'] = WD_TESTING_BROWSER
-        if 'WD_TESTING_BROWSER_VERSION' in os.environ:
-            desired_cap['version'] = os.environ['WD_TESTING_BROWSER_VERSION']
-
-        desired_cap['name'] = 'CALC'
-        print('capabilities:', desired_cap)
-
-        driver = webdriver.Remote(
-            desired_capabilities=desired_cap,
-            command_executor=WD_HUB_URL
-        )
-
-        # XXX should this be higher?
-        driver.implicitly_wait(20)
-        return driver
-
-    @classmethod
     def setUpClass(cls):
-        cls._old_socket_timeout = socket.getdefaulttimeout()
-        socket.setdefaulttimeout(WD_SOCKET_TIMEOUT)
         build_static_assets()
-        cls.driver = cls.get_driver()
+        cls.driver = get_driver()
         cls.longMessage = True
         cls.maxDiff = None
         super().setUpClass()
@@ -101,10 +61,6 @@ class SeleniumTestCase(StaticLiveServerTestCase):
     @classmethod
     def tearDownClass(cls):
         cls.take_screenshot()
-        cls.driver.quit()
-        if cls.connect:
-            cls.connect.shutdown_connect()
-        socket.setdefaulttimeout(cls._old_socket_timeout)
         super().tearDownClass()
 
     @classmethod
@@ -123,8 +79,6 @@ class SeleniumTestCase(StaticLiveServerTestCase):
 
     def setUp(self):
         self.base_url = self.live_server_url
-        if WD_TESTING_URL:
-            self.base_url = WD_TESTING_URL
         self.driver.set_window_size(*self.window_size)
         super().setUp()
 
@@ -132,17 +86,7 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         url = self.base_url + uri
         print('loading URL: %s' % url)
 
-        attempts = 0
-
-        while True:
-            try:
-                self.driver.get(url)
-                break
-            except socket.timeout:
-                if attempts >= WEBDRIVER_TIMEOUT_LOAD_ATTEMPTS:
-                    raise
-                print("Socket timeout, trying again.")
-                attempts += 1
+        self.driver.get(url)
 
         # self.driver.execute_script('$("body").addClass("selenium")')
         return self.driver
@@ -162,7 +106,9 @@ class DataExplorerTests(SeleniumTestCase):
         return self.driver
 
     def get_form(self):
-        return self.driver.find_element_by_id('search')
+        wait = WebDriverWait(self.driver, 10)
+        element = wait.until(EC.element_to_be_clickable((By.ID, 'search')))
+        return element
 
     def submit_form(self):
         form = self.get_form()
@@ -239,12 +185,9 @@ class DataExplorerTests(SeleniumTestCase):
         self.load('/styleguide/')
         axe.run_and_validate(self.driver)
 
-    def test_schedule_column_is_open_by_default(self):
-        get_contract_recipe().make(_quantity=5)
-        driver = self.load()
-        col_header = find_column_header(driver, 'schedule')
-
-        self.assertFalse(has_class(col_header, 'collapsed'))
+    def test_styleguide_docs_accessibility(self):
+        self.load('/styleguide/docs/')
+        axe.run_and_validate(self.driver)
 
     def test_schedule_column_is_last(self):
         get_contract_recipe().make(_quantity=5)
@@ -340,20 +283,6 @@ class DataExplorerTests(SeleniumTestCase):
             self.assertTrue('Engineer' in cell.text,
                             'found cell without "Engineer": "%s"' % cell.text)
 
-    def test_query_type_matches_phrase(self):
-        get_contract_recipe().make(_quantity=3, labor_category=cycle(
-            ['Systems Engineer I', 'Software Engineer II', 'Consultant II']))
-        driver = self.load()
-        self.wait_for(self.data_is_loaded)
-        self.search_for_query_type('software engineer', 'match_phrase')
-        self.submit_form_and_wait()
-        cells = driver.find_elements_by_css_selector(
-            'table.results tbody .column-labor_category')
-        self.assertEqual(
-            len(cells), 1, 'wrong cell count: %d (expected 1)' % len(cells))
-        self.assertEqual(cells[0].text, 'Software Engineer II',
-                         'bad cell text: "%s"' % cells[0].text)
-
     def test_query_type_matches_exact(self):
         get_contract_recipe().make(_quantity=3, labor_category=cycle(
             ['Software Engineer I', 'Software Engineer',
@@ -404,7 +333,10 @@ class DataExplorerTests(SeleniumTestCase):
             field_type = field.get_attribute('type')
             if field_type in ('checkbox', 'radio'):
                 for _field in fields:
-                    if _field.get_attribute('value') == value:
+                    # the exact match toggle changes value based on querytype,
+                    # but always possesses the name "match_exact"
+                    if _field.get_attribute('value') == value or \
+                            _field.get_attribute('name').find(value):
                         self.get_label_for_input(_field, form).click()
             else:
                 field.send_keys(str(value))

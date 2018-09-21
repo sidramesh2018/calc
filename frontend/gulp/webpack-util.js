@@ -1,15 +1,17 @@
 const path = require('path');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { ReactLoadablePlugin } = require('react-loadable/webpack');
+
 
 const USE_POLLING = 'USE_POLLING' in process.env;
 
-exports.scriptSources = ({ bundles, rootDir }) =>
-  Object.keys(bundles).map((name) => {
-    const options = bundles[name];
-    const dirName = options.dirName || name;
-    return path.join(rootDir, dirName, 'index.js');
-  });
+exports.scriptSources = ({ bundles, rootDir }) => Object.keys(bundles).map((name) => {
+  const options = bundles[name];
+  const dirName = options.dirName || name;
+  return path.join(rootDir, dirName, 'index.js');
+});
 
 exports.getLastFolderName = (file) => {
   // All of our bundle entry files are of the form  "/some/path/index.js".
@@ -21,7 +23,7 @@ exports.getLastFolderName = (file) => {
   return lastFolderName;
 };
 
-exports.webpackify = ({ isWatching, isProd }) => webpackStream({
+exports.webpackify = ({ isWatching, isProd }, cb, taskNum) => webpackStream({
   mode: isProd ? 'production' : 'development',
   watch: isWatching,
   watchOptions: USE_POLLING ? {
@@ -36,6 +38,16 @@ exports.webpackify = ({ isWatching, isProd }) => webpackStream({
     __filename: true,
   },
   devtool: isProd ? 'source-map' : 'eval-source-map',
+  plugins: [
+    new ReactLoadablePlugin({
+      filename: './frontend/static/frontend/built/js/react-loadable.json',
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'disabled',
+      generateStatsFile: true,
+      statsFilename: './frontend/static/frontend/built/js/stats.json',
+    }),
+  ],
   module: {
     rules: [
       {
@@ -49,4 +61,15 @@ exports.webpackify = ({ isWatching, isProd }) => webpackStream({
       },
     ],
   },
-}, webpack);
+  output: {
+    chunkFilename: '[name].bundle.js',
+    publicPath: '/static/frontend/built/js/',
+  },
+}, webpack, () => {
+  // Only execute this callback the first time, so that gulp knows
+  // we're done.
+  if (taskNum === 1) {
+    cb();
+  }
+  taskNum++; // Increment the task counter
+});

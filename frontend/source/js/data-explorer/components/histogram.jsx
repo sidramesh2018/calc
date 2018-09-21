@@ -35,75 +35,87 @@ const INLINE_STYLES = `/* styles here for download graph compatibility */
 }
 
 .bars .bar rect {
-  fill: #0071bc;
+  fill: #cddc86;
 }
 
 .range-fill {
-  fill: #eeeeee;
+  fill: #f0f6fa;
 }
 
 .range-rule {
-  stroke: #5b616b;
+  stroke: #7da1b0;
   fill: none;
   stroke-dasharray: 5,5;
   stroke-width: 1;
 }
 
 .label-rule {
-  stroke: #5b616b;
+  stroke: #7da1b0;
 }
 
 .stddev-text {
-  fill: #5b616b;
+  fill: #021014;
 }
 
 .axis .chart-label {
-  fill: #5b616b;
+  fill: #436a79;
   font-style: italic;
 }
 
-.axis line,
-.axis path {
-  fill: none;
-  stroke-width: 1;
-  stroke: #000;
-  shape-rendering: crispEdges;
+.axis text {
+  fill: #436a79;
+  font-size: 13px;
 }
 
-.axis text {
-  font-size: 13px;
+.axis.x path {
+  stroke: none;
+}
+
+.axis.y path {
+  stroke-width: 2;
+  stroke: #c5d6de;
+}
+
+.contrast-stroke {
+  stroke: #61701c;
+  stroke-width: 2px;
+}
+
+.tick line {
+  stroke: none;
 }
 
 .stddev-text-label {
   font-size: 12px;
-  fill: #5b616b;
+  fill: #436a79;
 }
 
-.avg .value, .pp .value,
-.axis .tick.primary text {
+.avg .value,
+.pp .value {
   font-weight: bold;
-  -webkit-font-smoothing: antialiased;
 }
 
-.average, .proposed {
-  fill: #fff;
+.average {
+  fill: #021014;
 }
 
-rect {
-  fill: #999;
-  stroke: #fff;
-  stroke-width: 1;
-  shape-rendering: crispEdges;
+.proposed {
+  fill: #436a79;
 }
 
 .avg-label-box, .pp-label-box {
-  fill: #212121;
+  fill: #fff;
   stroke: none;
 }
 
-.avg line, .pp line {
+.avg line {
   stroke-width: 1;
-  stroke: #212121;
+  stroke: #021014;
+}
+
+.pp line {
+  stroke-width: 1;
+  stroke: #436a79;
 }`;
 
 function updateHistogram(rootEl, data, proposedPrice, showTransition) {
@@ -114,6 +126,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   const left = pad[3];
   const right = width - pad[1];
   const bottom = height - pad[2];
+  const barGap = 2;
   const svg = d3.select(rootEl)
     .attr('viewBox', [0, 0, width, height].join(' '))
     .attr('preserveAspectRatio', 'xMinYMid meet');
@@ -122,18 +135,18 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
   const extent = [data.minimum, data.maximum];
   const bins = data.wage_histogram;
   const x = d3.scaleLinear()
-      .domain(extent)
-      .range([left, right]);
+    .domain(extent)
+    .range([left, right]);
   const countExtent = d3.extent(bins, d => d.count);
   const heightScale = d3.scaleLinear()
-      .domain([0].concat(countExtent))
-      .range([0, 1, bottom - top]);
+    .domain([0].concat(countExtent))
+    .range([0, 1, bottom - top]);
 
   let stdDevMin = data.average - data.first_standard_deviation;
   let stdDevMax = data.average + data.first_standard_deviation;
 
-  if (isNaN(stdDevMin)) stdDevMin = 0;
-  if (isNaN(stdDevMax)) stdDevMax = 0;
+  if (isNaN(stdDevMin)) stdDevMin = 0; /* eslint-disable-line no-restricted-globals */
+  if (isNaN(stdDevMax)) stdDevMax = 0; /* eslint-disable-line no-restricted-globals */
 
   let stdDev = svg.select('.stddev');
   if (stdDev.empty()) {
@@ -153,8 +166,8 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       ])
       .enter()
       .append('g')
-        .attr('transform', 'translate(0,0)')
-        .attr('class', d => `chart-label ${d.type}`);
+      .attr('transform', 'translate(0,0)')
+      .attr('class', d => `chart-label ${d.type}`);
     stdDevLabels.append('line')
       .attr('class', 'label-rule')
       .attr('y1', -5)
@@ -226,7 +239,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
 
   pp.select('line')
     .attr('y1', ppOffset)
-    .attr('y2', (bottom - top) + 8);
+    .attr('y2', (bottom - top));
   pp.select('.value')
     .text(`$${proposedPriceStr} proposed`);
 
@@ -244,11 +257,11 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       .attr('class', 'avg');
 
     avg.append('rect')
-      .attr('y', avgOffset - 25)
+      .attr('y', avgOffset - 23)
       .attr('x', -55)
       .attr('class', 'avg-label-box')
       .attr('width', 116)
-      .attr('height', 26)
+      .attr('height', 23)
       .attr('rx', 4)
       .attr('ry', 4);
 
@@ -263,7 +276,7 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
 
   avg.select('line')
     .attr('y1', avgOffset)
-    .attr('y2', (bottom - top) + 8);
+    .attr('y2', (bottom - top));
   avg.select('.value')
     .text(`${formatDollars(data.average)} average`);
 
@@ -282,6 +295,11 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     .attr('y', bottom)
     .attr('width', step)
     .attr('height', 0);
+  enter.append('line')
+    .attr('x1', left)
+    .attr('x2', (d, i) => left + (i * step))
+    .attr('y1', bottom)
+    .attr('y2', bottom);
 
   const title = templatize('{count} results from {min} to {max}');
   bars.select('title')
@@ -349,16 +367,30 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
 
   t.selectAll('.bar')
     .each((d) => {
-      d.x = x(d.min); // eslint-disable-line no-param-reassign
-      d.width = x(d.max) - d.x; // eslint-disable-line no-param-reassign
-      d.height = heightScale(d.count); // eslint-disable-line no-param-reassign
-      d.y = bottom - d.height; // eslint-disable-line no-param-reassign
+      d.x = x(d.min);
+      d.width = x(d.max) - d.x;
+      d.height = heightScale(d.count);
+      d.y = bottom - d.height;
     })
     .select('rect')
-      .attr('x', d => d.x)
-      .attr('y', d => d.y)
-      .attr('height', d => d.height)
-      .attr('width', d => d.width);
+      .attr('x', d => d.x) /* eslint-disable-line indent */
+      .attr('y', d => d.y) /* eslint-disable-line indent */
+      .attr('height', d => d.height) /* eslint-disable-line indent */
+      .attr('width', d => d.width - barGap); /* eslint-disable-line indent */
+
+  t.selectAll('.bar')
+    .each((d) => {
+      d.x = x(d.min);
+      d.width = x(d.max) - d.x;
+      d.height = heightScale(d.count);
+      d.y = bottom - d.height;
+    })
+    .select('line')
+      .attr('class', 'contrast-stroke') /* eslint-disable-line indent */
+      .attr('x1', d => d.x) /* eslint-disable-line indent */
+      .attr('x2', d => (d.x + step - barGap)) /* eslint-disable-line indent */
+      .attr('y1', d => (d.y)) /* eslint-disable-line indent */
+      .attr('y2', d => (d.y)); /* eslint-disable-line indent */
 
   const ticks = bins.map(d => d.min)
     .concat([data.maximum]);
@@ -373,14 +405,14 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
       return formatPrice(d);
     });
   xAxis.call(xa)
-    .attr('transform', `translate(${[0, bottom + 2]})`)
+    .attr('transform', `translate(${[0, bottom - 2]})`)
     .selectAll('.tick')
-      .classed('primary', (d, i) => i === 0 || i === bins.length)
-      .select('text')
-        .classed('min', (d, i) => i === 0)
-        .classed('max', (d, i) => i === bins.length)
-        .style('text-anchor', 'end')
-        .attr('transform', 'rotate(-35)');
+    .classed('primary', (d, i) => i === 0 || i === bins.length)
+    .select('text')
+    .classed('min', (d, i) => i === 0)
+    .classed('max', (d, i) => i === bins.length)
+    .style('text-anchor', 'end')
+    .attr('transform', 'rotate(-35)');
 
   // remove existing labels
   svg.selectAll('text.chart-label').remove();
@@ -396,10 +428,11 @@ function updateHistogram(rootEl, data, proposedPrice, showTransition) {
     .scale(d3.scaleLinear()
       .domain(yd)
       .range([bottom, top]))
-    .tickValues(yd);
+    .tickValues(yd)
+    .tickSizeOuter(0.5);
   ya.tickFormat(formatCommas);
   yAxis.call(ya)
-    .attr('transform', `translate(${[left - 2, 0]})`);
+    .attr('transform', `translate(${[left - 5, -1]})`);
 
   yAxis.append('text')
     .attr('class', 'chart-label')
@@ -432,12 +465,16 @@ class Histogram extends React.Component {
         className="graph histogram has-data"
         ref={(svg) => { this.svgEl = svg; }}
       >
-        <title>Price histogram</title>
+        <title>
+Price histogram
+        </title>
         <desc>
           A histogram showing the distribution of labor category prices.
           Each bar represents a range within that distribution.
         </desc>
-        <style>{INLINE_STYLES}</style>
+        <style>
+          {INLINE_STYLES}
+        </style>
       </svg>
     );
   }

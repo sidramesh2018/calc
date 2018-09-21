@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group
 from django.db import transaction
 
-from hourglass.utils import get_permissions_from_ns_codenames
+from calc.utils import get_permissions_from_ns_codenames
 
 BULK_UPLOAD_PERMISSION = 'contracts.add_bulkuploadcontractsource'
 PRICE_LIST_UPLOAD_PERMISSION = 'data_capture.add_submittedpricelist'
@@ -17,6 +17,9 @@ ROLES['Data Administrators'] = set([
     'auth.add_user',
     'auth.change_user',
     BULK_UPLOAD_PERMISSION,
+    'contracts.add_schedulemetadata',
+    'contracts.change_schedulemetadata',
+    'contracts.delete_schedulemetadata',
     'data_capture.change_submittedpricelist',
     'data_capture.change_submittedpricelistrow',
     'data_capture.change_unreviewedpricelist',

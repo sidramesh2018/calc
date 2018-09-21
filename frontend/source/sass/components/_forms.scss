@@ -50,8 +50,7 @@ label input[type="radio"] {
   }
 }
 
-/* A <ul> holds a Django-rendered list of radio buttons. */
-
+// Hack to style Django radio buttons, which occur in a <ul>.
 form ul {
   list-style-type: none;
 }
@@ -73,11 +72,10 @@ fieldset + div + fieldset {
 }
 
 
-/* Django's default form rendering uses a <ul class="errorlist">
-   for errors, and <span class="helptext"> for help text. */
+// Django's default form rendering uses a <ul class="errorlist">
+// for errors, and <span class="helptext"> for help text.
 fieldset.fieldset-error {
-  border-left: 3px solid $color-secondary-dark;
-  background-color: #fef5f5;
+  border-left: 3px solid $color-red-dark;
   margin: 3rem 0 0 -10px;
   padding: 10px;
   ul {
@@ -91,7 +89,7 @@ fieldset.fieldset-error {
   input[type],
   select,
   textarea {
-    border: 3px solid $color-secondary-dark;
+    border: 3px solid $color-red-dark;
     padding: 1rem 0.45em; // WDS override
   }
 }
@@ -101,9 +99,10 @@ form > .fieldset-error {
 }
 
 .errorlist {
-  color: $color-secondary-dark;
+  color: $color-red-dark;
   font-weight: 700;
   list-style-type: none;
+  margin-top: 0;
   margin-bottom: 0.5rem;
   padding-left: 0; // ul override
   text-align: left;
@@ -113,6 +112,25 @@ form > .fieldset-error {
     margin-bottom: 0;
   }
 }
+
+// Applied by form-validation.js as an enhancement for html5 validation styles
+.form--invalid:not(.usa-input-inline) {
+  border: 3px solid $color-red-dark;
+}
+
+.fieldset__form--invalid {
+  border-left: 3px solid $color-red-dark;
+  margin: 3rem 0 0 -10px;
+  padding: 10px;
+}
+
+p.form--invalid__message {
+  margin: 0;
+  padding: 0;
+  font-weight: $font-weight-bold;
+  color: $color-red-dark;
+}
+
 
 .helptext {
   color: $color-gray;
@@ -130,13 +148,6 @@ form > .fieldset-error {
     .usa-form-group:last-child {
       margin-right: 0;
     }
-  }
-  p {
-    display: inline-block;
-    padding: 0px 40px;
-    vertical-align: bottom;
-    margin-bottom: 15px;
-    font-weight: bold;
   }
 }
 
@@ -168,6 +179,33 @@ dl.contract-details {
     &.contract-details__start-date:after {
       font-weight: normal;
       content: ' to ';
+    }
+  }
+}
+
+.search-group {
+  display: flex;
+  padding: 0;
+  margin-top: $space-1x;
+  margin-bottom: 7px;
+   input {
+    border: 0;
+    &[type].form__inline,
+    &[type].form__inline~button:first-of-type,
+    &[type].form__inline~.usa-button {
+      margin: 0;
+    }
+    &[type].form__inline {
+      flex-grow: 6;
+      max-width: 100%; // WDS override
+      border-radius: $border-radius;
+      border-top: 1px solid $color-gray;
+      border-right: none;
+      border-left: 1px solid $color-gray;
+      border-bottom: 1px solid $color-gray;
+    }
+    button {
+      flex-grow: 1;
     }
   }
 }
@@ -205,7 +243,8 @@ input[type].form__inline,
       margin-left: 1rem;
     }
   }
-  // only square the corners of the first button -- relevant on homepage search
+  // only square the corners of the first button to make it butt up against the
+  // input -- relevant on homepage search
   ~ .usa-button:first-of-type,
   ~ button:first-of-type,
   ~ input[type=button]:first-of-type,
@@ -213,6 +252,165 @@ input[type].form__inline,
   input.select-across ~ button[type=submit] {
     border-radius: 0 $border-radius $border-radius 0;
   }
+}
+
+label[for=query_type_match_exact] {
+  max-width: 13rem;
+}
+
+.html-dropdown {
+  display: inline-block;
+  background: $color-gray-lightest;
+  border-radius: $border-radius;
+
+  button {
+    width: auto;
+    min-width: 100%;
+    background-position: right 1.4rem top 1.6rem;
+    background-repeat: no-repeat;
+    background-size: 1em;
+    border-radius: $border-radius;
+    background-color: transparent;
+    color: $color-base;
+    margin-right: 0;
+    padding-right: $space-6x;
+    text-align: left;
+    &:hover {
+      background-color: $color-gray-lighter;
+      color: $color-base;
+    }
+    &[aria-expanded=false] {
+      background-image: url(../../images/arrow-down-gray.svg);
+    }
+    &[aria-expanded=true] {
+      background-image: url(../../images/arrow-up-gray.svg);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+  li {
+    margin-bottom: 0; // WDS override
+  }
+}
+
+.search .html-dropdown {
+  position: absolute; // to force it to pop over the data explorer search
+
+  // allot for data explorer search dropdown
+  + .search-group {
+    margin-top: 5.6rem;
+  }
+}
+
+
+.html-dropdown__trigger {
+  padding: $space-3x/2 3.5rem $space-3x/2 $space-3x/2;
+  font-size: $base-font-size;
+  span {
+    margin-left: $space-half;
+    font-weight: normal;
+  }
+}
+
+.html-dropdown__choices {
+  z-index: 9999;
+  padding: 0; // ul override
+  color: $color-gray-dark;
+  background: $color-gray-lightest;
+  border-bottom-left-radius: $border-radius;
+  border-bottom-right-radius: $border-radius;
+
+  h3 {
+    font-size: $base-font-size;
+    color: $color-base;
+    margin: $space-1x 1.2rem $space-half 1.2rem; // same as html-dropdown__trigger text
+    padding-top: $space-1x;
+    &:first-of-type {
+      border-top: 1px solid $color-gray-light;
+      margin-top: 0;
+      padding-top: $space-3x;
+    }
+  }
+
+  p {
+    display: block;
+    border-top: 1px solid $color-gray-light;
+    margin: $space-1x 1.2rem $space-half 1.2rem; // same as html-dropdown__trigger text
+    padding-top: $space-3x;
+    padding-bottom: 0;
+  }
+
+  label {
+    margin-bottom: $space-1x;
+    margin-top: $space-1x;
+  }
+
+  // search by vendor and contract are buttons
+  button {
+    display: block;
+    font-weight: normal;
+    text-align: left;
+    padding: $space-half $space-1x $space-half 4.4rem; // same as the input + padding + ::before on li labels
+    font-size: $base-font-size;
+    color: $color-gray-dark;
+    -webkit-font-smoothing: auto;
+    line-height: $space-3x;
+    &.query-by__selected {
+      padding: $space-half $space-2x; // to offset span
+      color: $color-black;
+      span {
+        background-image: url(../../images/icon-checkmark-floating.svg);
+        background-repeat: no-repeat;
+        width: 14px;
+        height: 14px;
+        display: inline-block;
+        margin-left: 3px; // margin matches WDS radio ::before class, which is used elsewhere for dropdown choices
+        margin-right: .75em;
+      }
+    }
+  }
+
+  li {
+    padding: $space-half $space-2x;
+    &:hover {
+      background-color: $color-gray-lighter;
+    }
+    &:last-of-type {
+      padding-bottom: $space-2x;
+    }
+    label {
+      margin-bottom: 0; // default style override
+    }
+  }
+
+  &[aria-hidden=true] {
+    display: none;
+  }
+
+  ul {
+    margin: 0; // override standard margins
+  }
+
+  // override the WDS standard radio buttons
+  [type=radio]:checked + label::before,
+  label::before {
+    box-shadow: none;
+    background-color: transparent;
+    border-radius: 0; // otherwise background image is cut off
+  }
+
+  [type=radio]:checked + label {
+    color: $color-black;
+    &::before {
+      background-image: url('../../images/icon-checkmark-floating.svg');
+      background-repeat: no-repeat;
+    }
+  }
+}
+
+.label__suffix {
+  font-size: $small-font-size;
+  padding-left: $space-half;
 }
 
 // WDS override for date groupings

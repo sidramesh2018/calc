@@ -1,3 +1,5 @@
+// @ts-check
+/* eslint-disable no-unused-vars */
 /* global $, window, document */
 
 import ReactDOM from 'react-dom';
@@ -7,7 +9,7 @@ import { Provider } from 'react-redux';
 
 import App from './components/app';
 
-import ga from '../common/ga';
+import { trackVirtualPageview, trackException } from '../common/ga';
 
 import { invalidateRates } from './actions';
 
@@ -18,6 +20,8 @@ import StoreHistorySynchronizer from './history';
 import StoreRatesAutoRequester from './rates-request';
 
 import API from './api';
+
+import { populateScheduleLabels } from './schedule-metadata';
 
 const api = new API();
 const historySynchronizer = new StoreHistorySynchronizer(window);
@@ -30,7 +34,7 @@ const middlewares = [
 if (process.env.NODE_ENV !== 'production') {
   // We only want to include logging middleware code in non-production
   // JS bundles, so we're going to conditionally require it here.
-  const createLogger = require('redux-logger');  // eslint-disable-line global-require
+  const createLogger = require('redux-logger'); // eslint-disable-line global-require
 
   middlewares.push(createLogger());
 }
@@ -45,16 +49,13 @@ $.fn.tooltipster('setDefaults', {
   speed: 200,
 });
 
-historySynchronizer.initialize(store, () => {
-  ga('set', 'page', window.location.pathname +
-                    window.location.search);
-  ga('send', 'pageview');
-});
+function startApp() {
+  historySynchronizer.initialize(store, () => {
+    trackVirtualPageview();
+  });
 
-store.dispatch(invalidateRates());
+  store.dispatch(invalidateRates());
 
-// Load the React app once the document is ready
-$(() => {
   ReactDOM.render(
     React.createElement(
       Provider,
@@ -63,4 +64,14 @@ $(() => {
     ),
     $('[data-embed-jsx-app-here]')[0],
   );
+}
+
+$(() => {
+  api.getSchedules((err, schedules) => {
+    if (err) {
+      trackException(err, true);
+    }
+    populateScheduleLabels(schedules || []);
+    startApp();
+  });
 });

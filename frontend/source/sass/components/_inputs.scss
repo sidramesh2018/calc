@@ -1,11 +1,22 @@
+// Styling for input boxes of various kinds
+
 @import '../base/variables';
 
 legend {
   font-size: $base-font-size;
 }
 
-input[type="radio"] + label {
+input[type="radio"] + label,
+input[type="checkbox"] + label {
   margin-top: 0;
+  &:before {
+    margin-right: 1rem;
+  }
+}
+
+input[type="radio"]:focus + label::before,
+input[type="checkbox"]:focus + label::before {
+  @include focus-color($bg-color: "light-color");
 }
 
 label {
@@ -43,4 +54,12 @@ select {
 
 input[name="escalation_rate"] {
   width: 9rem;
+}
+
+.icon-search {
+  background-image: url(../../images/icon-search.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 2.4rem;
+  width: 8rem;
 }

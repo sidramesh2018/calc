@@ -4,6 +4,7 @@
 *.swp
 *.swo
 *.DS_Store
+.mypy_cache
 .coverage
 coverage.xml
 htmlcov
@@ -13,7 +14,7 @@ venv
 ghostdriver.log
 *.log
 node_modules
-selenium_tests/screenshot.png
+selenium_tests_screenshot.png
 .cache
 .env
 .Python

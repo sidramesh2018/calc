@@ -1,17 +1,15 @@
 /* global jQuery, document, window */
 
-import 'document-register-element';
-
 import * as supports from './feature-detection';
 
-import ga from '../common/ga';
+import { trackVirtualPageview } from '../common/ga';
 
 import dispatchBubbly from './custom-event';
 
 const $ = jQuery;
 
-const MISC_ERROR = 'Sorry, we’re having trouble. ' +
-                   'Please try again later or refresh your browser.';
+const MISC_ERROR = 'Sorry, we’re having trouble. '
+                   + 'Please try again later or refresh your browser.';
 
 class Delegate {
   constructor(window) {
@@ -77,8 +75,8 @@ exports.MISC_ERROR = MISC_ERROR;
 
 class AjaxForm extends window.HTMLFormElement {
   attachedCallback() {
-    this.isDegraded = !supports.formData() ||
-                      supports.isForciblyDegraded(this);
+    this.isDegraded = !supports.formData()
+                      || supports.isForciblyDegraded(this);
     if (!this.isDegraded) {
       $(this).on('submit', this._onUpgradedSubmit.bind(this));
     }
@@ -127,11 +125,7 @@ class AjaxForm extends window.HTMLFormElement {
     // baseline (non-Ajax) version of this form would have resulted in
     // the user being sent to the page defined by the `action` attribute
     // of the form we're now loading. So we'll simulate that in GA.
-    const action = $(newForm).attr('action');
-    if (action) {
-      ga('set', 'page', action);
-    }
-    ga('send', 'pageview');
+    trackVirtualPageview($(newForm).attr('action'));
 
     // Replace the form and bind it.
     $(this).replaceWith(newForm);

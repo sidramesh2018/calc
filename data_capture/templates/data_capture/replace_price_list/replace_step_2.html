@@ -20,7 +20,7 @@
 
   <div class="row">
     <div class="twelve columns form-button-row clearfix">
-      <form method="post" action="{% url 'data_capture:replace_step_2' id=price_list.pk %}">
+      <form method="post" action="{% url 'data_capture:replace_step_2' id=price_list.pk %}" class="form--contract_details">
         {% csrf_token %}
         {% if gleaned_data.valid_rows %}
           <div class="submit-group">
@@ -37,6 +37,6 @@
 {% block card_footer %}
   <form method="post">
     {% csrf_token %}
-    <button type="submit" class="usa-button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
+    <button type="submit" class="usa-button usa-button-link" name="cancel" data-a11y-dialog-show="cancel-dialog" formnovalidate>Cancel</button>
   </form>
 {% endblock card_footer %}

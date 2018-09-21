@@ -1,86 +1,222 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Schedule> matches snapshot 1`] = `
-<div
-  className="filter filter-schedule"
+<ul
+  className="filter--schedule"
 >
-  <label
-    htmlFor="zzz_schedule"
+  <li
+    key="all-schedules"
   >
-    SIN / Schedule:
-  </label>
-  <a
-    className="filter-more-info"
-    href="/about#schedules"
-  >
-    What's this?
-  </a>
-  <select
-    className=""
-    id="zzz_schedule"
-    name="schedule"
-    onChange={[Function]}
-    value=""
-  >
-    <option
+    <input
+      checked={true}
+      id="all-schedules"
+      name="all-schedules"
+      onChange={[Function]}
+      type="radio"
       value=""
+    />
+    <label
+      htmlFor="all-schedules"
     >
-      (all)
-    </option>
-    <option
-      key="Environmental"
+      In all 9 contract vehicles
+      <span
+        className="label__suffix"
+      />
+    </label>
+  </li>
+  <li
+    key="environmental"
+  >
+    <input
+      checked={false}
+      id="environmental"
+      name="environmental"
+      onChange={[Function]}
+      type="radio"
       value="Environmental"
+    />
+    <label
+      htmlFor="environmental"
     >
-      899 - Legacy Environmental
-    </option>
-    <option
-      key="Logistics"
+      899 - Environmental
+      <span
+        className="label__suffix"
+      >
+        (Legacy)
+      </span>
+    </label>
+  </li>
+  <li
+    key="logistics"
+  >
+    <input
+      checked={false}
+      id="logistics"
+      name="logistics"
+      onChange={[Function]}
+      type="radio"
       value="Logistics"
+    />
+    <label
+      htmlFor="logistics"
     >
-      87405 - Legacy Logistics
-    </option>
-    <option
-      key="MOBIS"
+      87405 - Logistics
+      <span
+        className="label__suffix"
+      >
+        (Legacy)
+      </span>
+    </label>
+  </li>
+  <li
+    key="mobis"
+  >
+    <input
+      checked={false}
+      id="mobis"
+      name="mobis"
+      onChange={[Function]}
+      type="radio"
       value="MOBIS"
+    />
+    <label
+      htmlFor="mobis"
     >
-      874 - Legacy MOBIS
-    </option>
-    <option
-      key="PES"
+      874 - MOBIS
+      <span
+        className="label__suffix"
+      >
+        (Legacy)
+      </span>
+    </label>
+  </li>
+  <li
+    key="pes"
+  >
+    <input
+      checked={false}
+      id="pes"
+      name="pes"
+      onChange={[Function]}
+      type="radio"
       value="PES"
+    />
+    <label
+      htmlFor="pes"
     >
-      871 - Legacy PES
-    </option>
-    <option
-      key="Language Services"
+      871 - PES
+      <span
+        className="label__suffix"
+      >
+        (Legacy)
+      </span>
+    </label>
+  </li>
+  <li
+    key="language-services"
+  >
+    <input
+      checked={false}
+      id="language-services"
+      name="language-services"
+      onChange={[Function]}
+      type="radio"
       value="Language Services"
+    />
+    <label
+      htmlFor="language-services"
     >
-      73802 - Legacy Language
-    </option>
-    <option
-      key="AIMS"
+      73802 - Language
+      <span
+        className="label__suffix"
+      >
+        (Legacy)
+      </span>
+    </label>
+  </li>
+  <li
+    key="aims"
+  >
+    <input
+      checked={false}
+      id="aims"
+      name="aims"
+      onChange={[Function]}
+      type="radio"
       value="AIMS"
+    />
+    <label
+      htmlFor="aims"
     >
-      541 - Legacy AIMS
-    </option>
-    <option
-      key="FABS"
+      541 - AIMS
+      <span
+        className="label__suffix"
+      >
+        (Legacy)
+      </span>
+    </label>
+  </li>
+  <li
+    key="fabs"
+  >
+    <input
+      checked={false}
+      id="fabs"
+      name="fabs"
+      onChange={[Function]}
+      type="radio"
       value="FABS"
+    />
+    <label
+      htmlFor="fabs"
     >
-      520 - Legacy FABS
-    </option>
-    <option
-      key="IT Schedule 70"
+      520 - FABS
+      <span
+        className="label__suffix"
+      >
+        (Legacy)
+      </span>
+    </label>
+  </li>
+  <li
+    key="it-schedule-70"
+  >
+    <input
+      checked={false}
+      id="it-schedule-70"
+      name="it-schedule-70"
+      onChange={[Function]}
+      type="radio"
       value="IT Schedule 70"
+    />
+    <label
+      htmlFor="it-schedule-70"
     >
       132 - IT 70
-    </option>
-    <option
-      key="Consolidated"
+      <span
+        className="label__suffix"
+      />
+    </label>
+  </li>
+  <li
+    key="consolidated"
+  >
+    <input
+      checked={false}
+      id="consolidated"
+      name="consolidated"
+      onChange={[Function]}
+      type="radio"
       value="Consolidated"
+    />
+    <label
+      htmlFor="consolidated"
     >
       Consolidated
-    </option>
-  </select>
-</div>
+      <span
+        className="label__suffix"
+      />
+    </label>
+  </li>
+</ul>
 `;

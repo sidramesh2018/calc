@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* global $ QUnit document window */
 
 import {
@@ -6,8 +7,6 @@ import {
   activateManualScrollRestoration,
   getOrCreateVisitId,
 } from '../data-capture/smooth-scroll';
-
-const IS_PHANTOM = /PhantomJS/.test(window.navigator.userAgent);
 
 QUnit.module('smooth-scroll');
 
@@ -65,8 +64,8 @@ class FakeWindow {
   }
 
   getScrollTop() {
-    if (this.document.body.scrollTop !==
-        this.document.documentElement.scrollTop) {
+    if (this.document.body.scrollTop
+        !== this.document.documentElement.scrollTop) {
       // These need to be the same because some browsers use
       // the <body>'s scrollTop to control scrolling, while others use
       // the <html>'s scrollTop.
@@ -113,7 +112,7 @@ test('amsr scrolls to last scrollTop on DOMContentLoaded', (assert) => {
     sessionStorage: { visit_201_scrollTop: '20' },
   }));
   assert.equal(win.getScrollTop(), 0);
-  win.listeners.DOMContentLoaded();   // eslint-disable-line new-cap
+  win.listeners.DOMContentLoaded();
   assert.equal(win.getScrollTop(), 20);
 });
 
@@ -146,9 +145,8 @@ test('amsr does not set scrollTop if last value was corrupt', (assert) => {
 
 test('activate() works', (assert) => {
   const iframe = document.createElement('iframe');
-  const getScrollTop = () =>
-    $('body', iframe.contentDocument).scrollTop() ||
-    $('html', iframe.contentDocument).scrollTop();
+  const getScrollTop = () => $('body', iframe.contentDocument).scrollTop()
+    || $('html', iframe.contentDocument).scrollTop();
 
   $(iframe).appendTo('body').css({
     height: '50px',
@@ -169,22 +167,22 @@ test('activate() works', (assert) => {
   const done = assert.async();
   const steps = (function* runSteps() {
     assert.equal(iframe.contentWindow.location.hash, '');
-    if (!IS_PHANTOM) { assert.equal(getScrollTop(), 0); }
+    assert.equal(getScrollTop(), 0);
 
     yield $('a', iframe.contentDocument).click();
 
     assert.equal(iframe.contentWindow.location.hash, '#foo');
-    if (!IS_PHANTOM) { assert.ok(getScrollTop() !== 0); }
+    assert.ok(getScrollTop() !== 0);
 
     yield iframe.contentWindow.history.back();
 
     assert.equal(iframe.contentWindow.location.hash, '');
-    if (!IS_PHANTOM) { assert.equal(getScrollTop(), 0); }
+    assert.equal(getScrollTop(), 0);
 
     yield iframe.contentWindow.history.forward();
 
     assert.equal(iframe.contentWindow.location.hash, '#foo');
-    if (!IS_PHANTOM) { assert.ok(getScrollTop() !== 0); }
+    assert.ok(getScrollTop() !== 0);
 
     $(iframe).remove();
     done();

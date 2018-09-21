@@ -7,7 +7,7 @@ from django.db import connection
 from django.test import TestCase, SimpleTestCase
 from contracts.mommy_recipes import get_contract_recipe
 
-from ..models import Contract, convert_to_tsquery, CashField
+from ..models import Contract, CashField
 
 
 _normalize = Contract.normalize_labor_category
@@ -82,10 +82,21 @@ class ContractTestCase(TestCase):
         self.assertEqual(c1._normalized_labor_category, 'lol foo')
         self.assertEqual(c2._normalized_labor_category, 'lol bar')
 
+        results = Contract.objects.multi_phrase_search('lol foo')
+        self.assertEqual([r.labor_category for r in results], ['foo'])
+
     def test_update_normalized_labor_category_returns_bool(self):
         c = get_contract_recipe().prepare(labor_category='jr person')
         self.assertTrue(c.update_normalized_labor_category())
         self.assertFalse(c.update_normalized_labor_category())
+
+    def test_bulk_create_updates_search_index(self):
+        c1 = get_contract_recipe().prepare(labor_category='jr person')
+        c2 = get_contract_recipe().prepare(labor_category='engineer')
+        Contract.objects.bulk_create([c1, c2])
+
+        results = Contract.objects.multi_phrase_search('person').all()
+        self.assertEqual([r.labor_category for r in results], ['jr person'])
 
     def test_bulk_create_updates_normalized_labor_category(self):
         c = get_contract_recipe().prepare(labor_category='jr person')
@@ -109,16 +120,12 @@ class ContractTestCase(TestCase):
         self.assertEqual(c.get_education_code('Bachelors'), 'BA')
         self.assertIsNone(c.get_education_code('Nursing'), None)
 
+        with self.assertRaises(ValueError):
+            c.get_education_code('Nursing', raise_exception=True)
+
     def test_normalize_rate(self):
         c = get_contract_recipe().make()
         self.assertEqual(c.normalize_rate('$1,000.00,'), 1000.0)
-
-    def test_convert_to_tsquery(self):
-        self.assertEqual(convert_to_tsquery(
-            'staff  consultant'), 'staff:* & consultant:*')
-        self.assertEqual(convert_to_tsquery(
-            'senior typist (st)'), 'senior:* & typist:* & st:*')
-        self.assertEqual(convert_to_tsquery('@$(#)%&**#'), '')
 
     def test_get_hourly_rate(self):
         c = self.make_contract_with_rates()
@@ -350,7 +357,7 @@ class BaseContractSearchTestCase(TestCase):
 
 class ContractSearchTestCase(BaseContractSearchTestCase):
     CATEGORIES = [
-        'Sign Language Interpreter',
+        'Sign Language Interpretation',
         'Foreign Language Staff Interpreter (Spanish sign language)',
         'Aircraft Servicer',
         'Service Order Dispatcher',
@@ -363,17 +370,16 @@ class ContractSearchTestCase(BaseContractSearchTestCase):
     def test_multi_phrase_search_works_with_single_word_phrase(self):
         results = Contract.objects.multi_phrase_search('interpretation')
         self.assertCategoriesEqual(results, [
-            u'Sign Language Interpreter',
-            u'Foreign Language Staff Interpreter (Spanish sign language)',
+            u'Sign Language Interpretation',
             u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
             u'Interpretation Services Class 1: Spanish',
             u'Interpretation Services Class 2: French, German, Italian'
         ])
 
     def test_multi_phrase_search_works_with_multi_word_phrase(self):
-        results = Contract.objects.multi_phrase_search([
+        results = Contract.objects.multi_phrase_search(
             'interpretation services'
-        ])
+        )
         self.assertCategoriesEqual(results, [
             u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
             u'Interpretation Services Class 1: Spanish',
@@ -381,10 +387,9 @@ class ContractSearchTestCase(BaseContractSearchTestCase):
         ])
 
     def test_multi_phrase_search_works_with_multiple_phrases(self):
-        results = Contract.objects.multi_phrase_search([
-            'interpretation services',
-            'disposal'
-        ])
+        results = Contract.objects.multi_phrase_search(
+            'interpretation services, disposal'
+        )
         self.assertCategoriesEqual(results, [
             u'Disposal Services',
             u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
@@ -402,7 +407,7 @@ class ContractSearchTestCase(BaseContractSearchTestCase):
             '''
         )
         self.assertCategoriesEqual(results, [
-            u'Sign Language Interpreter',
+            u'Sign Language Interpretation',
             u'Foreign Language Staff Interpreter (Spanish sign language)',
             u'Interpretation Services Class 4: Afrikan,Akan,Albanian',
             u'Interpretation Services Class 1: Spanish',

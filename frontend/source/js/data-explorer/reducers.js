@@ -7,7 +7,10 @@ import {
   EMPTY_RATES_DATA,
   DEFAULT_SORT,
   DEFAULT_QUERY_TYPE,
+  QUERY_TYPE_MATCH_ALL,
+  QUERY_TYPE_MATCH_EXACT,
   MAX_QUERY_LENGTH,
+  DEFAULT_QUERY_BY,
 } from './constants';
 
 import {
@@ -28,6 +31,7 @@ import {
   SET_SITE,
   SET_BUSINESS_SIZE,
   SET_QUERY,
+  SET_QUERY_BY,
 } from './actions';
 
 function exclude(state = [], action) {
@@ -157,7 +161,19 @@ function sort(state = DEFAULT_SORT, action) {
 
 function queryType(state = DEFAULT_QUERY_TYPE, action) {
   if (action.type === SET_QUERY_TYPE) {
-    return action.queryType;
+    // since the match_exact checkbox toggles these,
+    // set the state equal to the opposite of what is currently set.
+    if (action.queryType === QUERY_TYPE_MATCH_ALL) {
+      return QUERY_TYPE_MATCH_EXACT;
+    }
+    return QUERY_TYPE_MATCH_ALL;
+  }
+  return state;
+}
+
+function queryBy(state = DEFAULT_QUERY_BY, action) {
+  if (action.type === SET_QUERY_BY) {
+    return action.queryBy || '';
   }
   return state;
 }
@@ -176,6 +192,7 @@ const combinedReducer = combineReducers({
   'proposed-price': proposedPrice,
   sort,
   query_type: queryType,
+  query_by: queryBy,
 });
 
 export default (state, action) => {
