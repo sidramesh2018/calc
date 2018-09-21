@@ -215,10 +215,10 @@ class GetMostCommonEduLevelsTests(DjangoTestCase):
         self.contract.make(education_level='BA')
         self.contract.make(education_level='AA')
         self.contract.make(education_level='AA')
-        self.assertEqual(
-            get_most_common_edu_levels(Contract.objects.all()),
-            ['BA', 'AA']
-        )
+        common_levels = get_most_common_edu_levels(Contract.objects.all())
+        self.assertEqual(len(common_levels), 2)
+        assert 'BA' in common_levels
+        assert 'AA' in common_levels
 
 
 class BroadenQueryTests(BaseDbTestCase):
