@@ -160,3 +160,16 @@ footer {
     flex: 1 100%;
   }
 }
+
+.tutorial .arrow {
+  background-image: url('../../images/arrow-triangle.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 20px;
+  width: 20px;
+  margin: 12px auto;
+}
+
+.tutorial p.img-wrapper {
+  text-align: center;
+}

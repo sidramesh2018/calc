@@ -1,30 +1,9 @@
 {% extends "data_capture/base.html" %}
 {% load staticfiles %}
 
-{% block body_class %}content--skinny{% endblock %}
+{% block body_class %}content--skinny tutorial{% endblock %}
 
 {% block body %}
-
-<style>
-.tutorial .arrow {
-  background-image: url({% static 'frontend/images/arrow-triangle.svg' %});
-  background-repeat: no-repeat;
-  background-size: contain;
-  height: 20px;
-  width: 20px;
-  margin: 12px auto;
-}
-
-.tutorial p.img-wrapper {
-  text-align: center;
-}
-
-h3:not(:first-child) {
-  /* TODO: We should use our SASS variables for this. */
-  padding-top: 48px;
-}
-</style>
-
 <div class="container">
   <div class="row">
     <div class="card">
@@ -35,7 +14,7 @@ h3:not(:first-child) {
         </p>
 
         <div class="form-button-row align-center submit-group">
-          <a href="{% url 'data_capture:step_1' %}" class="button button-primary">
+          <a href="{% url 'data_capture:step_1' %}" class="usa-button usa-button-primary">
             {% if user.is_authenticated %}
               Add price lists
             {% else %}
@@ -84,7 +63,7 @@ h3:not(:first-child) {
           <h3>You're done! It's that easy.</h3>
           <p>You should receive an e-mail when your price list has been approved. If you have any questions or suggestions, please reach out to us at <a href="mailto:calc@gsa.gov">calc@gsa.gov</a>.</p>
           <div class="form-button-row align-center submit-group">
-            <a href="{% url 'data_capture:step_1' %}" class="button button-primary">
+            <a href="{% url 'data_capture:step_1' %}" class="usa-button usa-button-primary">
               {% if user.is_authenticated %}
                 Try it
               {% else %}
