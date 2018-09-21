@@ -199,7 +199,8 @@ def get_contracts_queryset(request_params, wage_field):
     if query:
         query_type = request_params.get('query_type', 'match_all')
         # We're doing most of the lifting in the manager here.
-        contracts = Contract.objects.multi_phrase_search(query, query_type)
+        contracts = Contract.objects.all().multi_phrase_search(query,
+                                                               query_type)
 
     exclude = request_params.getlist('exclude')
     if exclude:
@@ -535,7 +536,7 @@ class GetAutocomplete(APIView):
         query_type = request.query_params.get('query_type', 'match_all')
 
         if q:
-            data = Contract.objects.multi_phrase_search(q, query_type)
+            data = Contract.objects.all().multi_phrase_search(q, query_type)
 
             data = data.values('_normalized_labor_category').annotate(
                 count=Count('_normalized_labor_category')).order_by('-count')

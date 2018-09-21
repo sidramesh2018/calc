@@ -122,47 +122,6 @@ class CurrentContractManager(models.Manager):
             .filter(current_price__gt=0)\
             .exclude(current_price__isnull=True)
 
-    def multi_phrase_search(self, query, *args, **kwargs):
-        """
-        Given a query as string, runs it through clean_search to get a list of search terms,
-        then returns a matching subset of Contract objects for each of those terms.
-
-        Optional arguments:
-            'match_exact' only returns exact matches.
-            'match_any" matches any word, so "business manager" will also match "dev manager"
-        """
-        matches = Contract.objects.none()
-        qs = self.get_queryset()
-        phrases = clean_search(query)
-        if 'match_exact' in args:
-            # This will match each phrase they enter exactly.
-            # We use an or operator here to build up the total queryset from
-            # each exactly matched item they found.
-            for phrase in phrases:
-                matches = matches | qs.filter(_normalized_labor_category__iexact=phrase)
-        else:
-            # Match any: Break phrases down into individual words
-            # So "business manager" finds results with "business" AND "manager"
-            # anywhere in the labor category.
-            # Note this is relatively hard on the DB, producing one query per word,
-            # but given our number of users, small queries and indexing, we should be OK.
-
-            for phrase in phrases:
-                # If the phrase is quoted, we want to use it as
-                if phrase.startswith("'") or phrase.startswith('"'):
-                    matches = matches | qs.filter(_normalized_labor_category__icontains=phrase)
-                else:
-                    # Break out the individual words. Here, we only want results with AND matching.
-                    # So 'business analyst' will only return phrases matching both words.
-                    words = phrase.split(' ')
-                    # We need a starter queryset for the intersection
-                    wmatches = qs.filter(_normalized_labor_category__icontains=words[0])
-                    for w in words:
-                        wmatches = wmatches & qs.filter(_normalized_labor_category__icontains=w)
-                    # Now add the word matches onto the overall matches as an OR
-                    matches = matches | wmatches
-        return matches
-
 
 class ContractsQuerySet(models.QuerySet):
 
