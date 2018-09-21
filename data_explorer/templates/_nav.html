@@ -1,8 +1,6 @@
   <nav class="row">
     <ul>
       <li><a href="{% url 'index' %}">Explore data</a></li>
-      {% if user.is_staff %}
-      {% endif %}
       {% if perms.data_capture.add_submittedpricelist %}
       {# I would prefer to use ANALYZE_PRICES_PERMISSION here, but the magic of django.contrib.auth doesn't seem to allow that, so this will need to be manually changed if ANALYZE_PRICES_PERMISSION ever diverges from data_capture.add_submittedpricelist #}
       <li{% if current_selected_tab == 'analyze_price_data'%} class="selected"{% endif %}><a href="{% url 'data_capture:analyze_step_1' %}">Analyze prices</a></li>
