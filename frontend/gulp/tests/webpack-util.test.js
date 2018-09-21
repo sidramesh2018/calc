@@ -59,6 +59,7 @@ describe('webpackify', () => {
   it('performs dead code removal in production', () => webpackify('examples/node_env.js', {
     isProd: true,
   }).then((file) => {
+    jest.setTimeout(30000);
     const sandbox = execInVm(file);
     expect(sandbox.myNodeEnv).toEqual('production');
     expect(sandbox.log).toEqual('I AM PRODUCTION');

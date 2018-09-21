@@ -2,12 +2,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setSchedule as setScheduleAction } from '../actions';
+import {
+  setSchedule as setScheduleAction,
+  setQueryBy as setQueryByAction
+} from '../actions';
+import { QUERY_BY_SCHEDULE } from '../constants';
 import { scheduleLabels } from '../schedule-metadata';
 
-export function Schedule({ selectedSchedule, setSchedule }) {
-  const handleChange = (e) => { setSchedule(e.target.value); };
-  const defaultMsg = `In all ${Object.keys(scheduleLabels).length} of these contract vehicles:`;
+export function Schedule({
+  selectedSchedule, setSchedule, setQueryBy, queryBy
+}) {
+  const handleChange = (e) => {
+    setSchedule(e.target.value);
+    setQueryBy(QUERY_BY_SCHEDULE);
+  };
+  const defaultMsg = `In all ${Object.keys(scheduleLabels).length} contract vehicles`;
   // In most instances, we display legacy schedules as "Legacy Schedule," i.e., "Legacy MOBIS."
   // Here, however, we want to display the "Legacy" modifier in parenthesis after the name.
   // Since the legacy modifier only is found in schedule.full_name, we have to regex.
@@ -32,7 +41,7 @@ export function Schedule({ selectedSchedule, setSchedule }) {
           name={id}
           value={value}
           onChange={handleChange}
-          checked={selectedSchedule === value}
+          checked={selectedSchedule === value && queryBy === QUERY_BY_SCHEDULE}
         />
         <label htmlFor={id}>
           {scheduleLabel}
@@ -62,6 +71,8 @@ export function Schedule({ selectedSchedule, setSchedule }) {
 Schedule.propTypes = {
   selectedSchedule: PropTypes.string,
   setSchedule: PropTypes.func.isRequired,
+  setQueryBy: PropTypes.func.isRequired,
+  queryBy: PropTypes.string.isRequired,
 };
 
 Schedule.defaultProps = {
@@ -69,6 +80,12 @@ Schedule.defaultProps = {
 };
 
 export default connect(
-  state => ({ selectedSchedule: state.schedule }),
-  { setSchedule: setScheduleAction },
+  state => ({
+    selectedSchedule: state.schedule,
+    queryBy: state.query_by,
+  }),
+  {
+    setSchedule: setScheduleAction,
+    setQueryBy: setQueryByAction,
+  },
 )(Schedule);
