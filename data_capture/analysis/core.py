@@ -127,7 +127,6 @@ def describe(cursor, vocab, labor_category, min_years_experience,
 
     result = {
         'severe': False,
-        'description': ''
     }
 
     fc = find_comparable_contracts(
@@ -181,10 +180,6 @@ def describe(cursor, vocab, labor_category, min_years_experience,
             'exp': fc.finder.get_exp_comparable_search_criteria(),
             'edu': fc.finder.get_edu_comparable_search_criteria(),
         }
-        result['description'] = render_to_string(
-            'data_capture/analyze_contract.html',
-            result
-        )
 
     return result
 

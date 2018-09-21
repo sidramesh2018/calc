@@ -78,7 +78,6 @@ class BaseDescribeTestCase(BaseDbTestCase):
 class DescribeTests(BaseDescribeTestCase):
     def test_it_works_when_proposed_price_is_way_low(self):
         result = self.describe(**self.ROW_WITH_COMPARABLES)
-        del result['description']
         self.assertEqual(result, {
             'avg': 90.0,
             'avg_exp': 5.0,
@@ -105,7 +104,6 @@ class DescribeTests(BaseDescribeTestCase):
             min_comparables=1,
             price=90
         )
-        del result['description']
         self.assertEqual(result, {
             'avg': 90.0,
             'avg_exp': 5.0,
@@ -127,7 +125,6 @@ class DescribeTests(BaseDescribeTestCase):
         result = self.describe(**self.ROW_WITHOUT_COMPARABLES)
         self.assertEqual(result, {
             'severe': False,
-            'description': ''
         })
 
 
