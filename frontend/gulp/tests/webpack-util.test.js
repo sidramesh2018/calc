@@ -33,7 +33,7 @@ describe('getLastFolderName()', () => {
 
 function webpackify(filename, options = {}) {
   return new Promise((resolve) => {
-    jest.setTimeout(30000);
+    jest.setTimeout(100000);
     const src = gulp.src(path.join(__dirname, filename))
       .pipe(webpackUtil.webpackify(Object.assign({
         isWatching: false,
