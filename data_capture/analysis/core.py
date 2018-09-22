@@ -1,5 +1,6 @@
 import math
 from collections import namedtuple
+from typing import Any, Dict  # noqa: F401
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -8,7 +9,6 @@ from django.utils import timezone
 from django.db import connection, transaction
 from django.db.models import Avg, StdDev, Count
 from django.contrib.auth.models import User
-from django.template.loader import render_to_string
 
 from contracts.models import Contract
 from ..models import SubmittedPriceList
@@ -127,7 +127,7 @@ def describe(cursor, vocab, labor_category, min_years_experience,
 
     result = {
         'severe': False,
-    }
+    }  # type: Dict[str, Any]
 
     fc = find_comparable_contracts(
         cursor,
