@@ -12,6 +12,9 @@ CALC is a tool to help contracting personnel estimate their per-hour labor costs
 To get started working on CALC, you'll probably want to start with
 the [Docker setup guide](docs/docker.md).
 
+The [CALC wiki](https://github.com/18F/calc/wiki) provides some context around
+project history, how to orient yourself with the codebase, and how to do security reviews.
+
 You may also find the following documents useful:
 
 * [Change log](CHANGELOG.md)
