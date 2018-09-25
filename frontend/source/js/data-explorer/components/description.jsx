@@ -100,16 +100,15 @@ years
   // a different animation.
 
   return (
-    <p className="">
-      {`Showing ${formatCommas(shownResults)} of `}
-      <span className="total">
-        {formatCommas(totalResults)}
+    <h3>
+      {`Hourly rate data `}
+      <span className="plaintext">
+        {'for '}
       </span>
-      {results}
       <span className={filtersClasses.join(' ')}>
         {filters}
       </span>
-    </p>
+    </h3>
   );
 }
 
