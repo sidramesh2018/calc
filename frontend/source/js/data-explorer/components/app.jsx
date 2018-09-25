@@ -146,7 +146,6 @@ class App extends React.Component {
 Hourly rate data
               </h4>
 
-              <ProposedPrice />
               <LoadingIndicator />
 
               <div className="graph">
@@ -157,21 +156,17 @@ Hourly rate data
 
               <Highlights />
 
-              <div className="download-buttons row">
-                <div className="four columns">
-                  <a
-                    className="usa-button usa-button-primary"
-                    id={prefixId('download-histogram') /* Selenium needs it. */}
-                    href=""
-                    onClick={this.handleDownloadClick}
-                  >
-                    ⬇ Download graph
-                  </a>
-                </div>
-
-                <div>
-                  <ExportData />
-                </div>
+              <div className="">
+                <a
+                  className="usa-button usa-button-primary"
+                  id={prefixId('download-histogram') /* Selenium needs it. */}
+                  href=""
+                  onClick={this.handleDownloadClick}
+                >
+                  ⬇ Download graph
+                </a>
+                <ExportData />
+                <ProposedPrice />
                 <p className="help-text">
                   The rates shown here are fully burdened, applicable
                   {' '}
