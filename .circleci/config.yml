@@ -136,7 +136,7 @@ jobs:
           name: Build front end and run front end tests
           command: |
             yarn gulp build
-            yarn test
+            yarn test --runInBand
 
       - run:
           name: CodeClimate before-build
