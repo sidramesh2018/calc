@@ -318,7 +318,6 @@ input[type="checkbox"]:checked ~ label {
   padding: 0.4em 1.8em;
   margin-left: 3rem;
   float: right;
-  display: none;
   flex-grow: 1;
 }
 
@@ -326,7 +325,7 @@ input[type="checkbox"]:checked ~ label {
   float: right;
   input {
     margin: 0;
-    width: 155px;
+    max-width: 80px;
     display: inline-block;
   }
   .go {

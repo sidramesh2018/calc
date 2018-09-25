@@ -166,7 +166,6 @@ Hourly rate data
                   ⬇ Download graph
                 </a>
                 <ExportData />
-                <ProposedPrice />
                 <p className="help-text">
                   The rates shown here are fully burdened, applicable
                   {' '}

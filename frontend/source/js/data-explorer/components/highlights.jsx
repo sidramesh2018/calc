@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import {
   formatPrice,
 } from '../util';
+import ProposedPrice from './proposed-price';
 
 export function Highlights({
   stdDeviation,
@@ -55,10 +56,7 @@ Std deviation +1
         <h5 className="proposed-price-title">
 Proposed price
         </h5>
-        <h5 className="proposed-price-highlight">
-          $
-          {formatPrice(proposedPrice)}
-        </h5>
+        <ProposedPrice />
       </div>
     </div>
   );
