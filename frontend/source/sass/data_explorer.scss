@@ -45,10 +45,6 @@ section.search .container {
   }
 }
 
-.help-text.columns.nine {
-  padding-top: $space-8x;
-}
-
 // to fake selection of home link
 nav li:first-child {
   border-bottom: $space-1x solid $color-green-bright;
@@ -155,6 +151,11 @@ span.dollars {
   }
 }
 
+.filter-container .help-text {
+  padding-right: $space-2x;
+  padding-top: $space-1x;
+  font-size: $medium-font-size;
+}
 
 @media (min-width: 550px) {
   .filter-container {
