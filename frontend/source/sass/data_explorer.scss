@@ -14,7 +14,9 @@ body {
 .graph-block {
   margin-right: 0;
   margin-left: $space-8x;
-  h4 {
+  p {
+    color: $color-gray;
+    font-weight: $font-weight-normal;
     margin-top: $space-2x;
   }
 }
@@ -531,11 +533,11 @@ a.focus-input {
 }
 
 #description {
-  color: $color-gray-dark;
   font-weight: normal;
-  font-size: 2rem;
   overflow: hidden;
   p {
+    color: $color-base;
+    font-size: $h4-font-size;
     margin-bottom: 0;
     margin-top: 0;
   }

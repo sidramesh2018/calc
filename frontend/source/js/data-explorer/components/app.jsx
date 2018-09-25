@@ -142,9 +142,9 @@ class App extends React.Component {
                 <Description />
               </div>
 
-              <h4>
+              <p>
 Hourly rate data
-              </h4>
+              </p>
 
               <LoadingIndicator />
 
