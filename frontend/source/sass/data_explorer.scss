@@ -340,10 +340,11 @@ input[type="checkbox"]:checked ~ label {
 .standard-deviation-block,
 .proposed-price-block {
   h5 {
+    font-size: $medium-font-size;
     margin-top: 0;
     margin-bottom: 0;
     font-weight: 300;
-    line-height: 3.12rem; // to standardize the height of larger and smaller h5s used
+    line-height: 2.5rem; // to standardize the height of larger and smaller h5s used
   }
 }
 
@@ -351,16 +352,19 @@ input[type="checkbox"]:checked ~ label {
     border-right: 2px solid $color-white;
     border-left: 2px solid $color-white;
   h5 {
-    font-size: 2.4rem;
+    font-size: $base-font-size;
+    font-weight: $font-weight-bold;
   }
 }
 
-.avg-price-highlight,
+h5.avg-price-highlight,
 h5.sd-highlight,
 h5.proposed-price-highlight {
-  color: $color-blue-dark;
-  font-weight: 400;
-  font-size: 2.4rem;
+  font-size: 2.2rem;
+}
+
+h5.avg-price-highlight {
+  font-weight: $font-weight-bold;
 }
 
 .slider {
