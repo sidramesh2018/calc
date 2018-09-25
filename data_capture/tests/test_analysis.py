@@ -335,6 +335,40 @@ class GetBestPermutationsTests(TestCase):
              ('junior', 'engineer')]
         )
 
+    def test_restricts_number_of_lexemes(self):
+        vocab = Vocabulary.from_list([
+            'engineer',
+            'engineer zz',
+            'administrative assistant zz',
+            'administrative assistant zz',
+            'senior engineer',
+            'project manager',
+        ])
+        words = [
+            'engineer',
+            'zz',
+            'senior',
+            'project',
+            'manager'
+        ]
+
+        result = get_best_permutations(vocab, words, min_length=3)
+        """
+        Without the restriction on the number of lexemes, the result here
+        should be:
+        [('engineer', 'zz'), ('engineer', 'senior'), ('project',
+        'manager'), ('engineer',), ('senior',), ('project',), ('manager',)]
+        """
+
+        self.assertEqual(
+            result,
+            [('engineer', 'zz'),
+             ('engineer', 'senior'),
+             ('engineer',),
+             ('senior',),
+             ('project',)]
+        )
+
     def test_it_works(self):
         vocab = Vocabulary.from_list([
             'junior engineer',

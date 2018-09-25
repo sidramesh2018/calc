@@ -23,6 +23,12 @@ DEFAULT_MIN_NDOC = 4
 ANALYSIS_STOP_WORDS = []
 
 
+# Cap on number of lexemes that get_best_permutations will process.
+# This is a crude attempt to stop the CPU/RAM consumption of the function from
+# getting too large.
+MAX_LEXEMES_FOR_PERMUTATIONS = 4
+
+
 # http://stackoverflow.com/a/28777781
 def write_roman(num):
     roman: OrderedDict[int, str] = OrderedDict()
@@ -93,8 +99,10 @@ def get_best_permutations(vocab, lexemes, min_count=1, min_length=4,
                 return False
         return True
 
+    # Impose a mex length on the number of lexemes:
+    safer_lexemes = lexemes[:MAX_LEXEMES_FOR_PERMUTATIONS]
     # Remove the first element, as it's the empty set.
-    permutations = list(powerset(lexemes))[1:]
+    permutations = list(powerset(safer_lexemes))[1:]
 
     permutations = list(filter(
         lambda x: len(' '.join(x)) >= min_length,
