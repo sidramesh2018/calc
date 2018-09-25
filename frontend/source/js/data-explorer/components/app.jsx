@@ -172,6 +172,15 @@ Hourly rate data
                 <div>
                   <ExportData />
                 </div>
+                <p className="help-text">
+                  The rates shown here are fully burdened, applicable
+                  {' '}
+                  worldwide, and representative of the current fiscal
+                  {' '}
+                  year. This data represents rates awarded at the master
+                  {' '}
+                  contract level.
+                </p>
               </div>
             </div>
           </div>
@@ -183,15 +192,6 @@ Optional filters
               </h5>
               <LoadableOptionalFilters />
             </div>
-            <p className="help-text">
-              The rates shown here are fully burdened, applicable
-              {' '}
-              worldwide, and representative of the current fiscal
-              {' '}
-              year. This data represents rates awarded at the master
-              {' '}
-              contract level.
-            </p>
           </div>
         </div>
         <section className="results">
