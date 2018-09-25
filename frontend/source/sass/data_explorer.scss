@@ -39,6 +39,13 @@ section.search .container {
   padding: 0;
 }
 
+#search .card {
+  padding-bottom: $space-6x;
+  }
+  .secondary {
+  padding-top: $space-6x;
+}
+
 @media only screen and (max-width: $medium-large-screen) {
 .graph-block {
     margin-left: $space-3x;
