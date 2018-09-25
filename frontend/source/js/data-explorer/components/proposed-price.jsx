@@ -81,7 +81,7 @@ Proposed price
           type="text"
           name="proposed-price"
           className="form__inline"
-          placeholder="Proposed price"
+          placeholder="$"
           value={this.state.typed}
           onChange={this.handleChange}
         />

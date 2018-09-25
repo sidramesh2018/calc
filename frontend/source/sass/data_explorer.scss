@@ -315,16 +315,15 @@ input[type="checkbox"]:checked ~ label {
 .proposed-price-block {
   background: $color-gray-lightest;
   border-radius: $border-radius;
-  padding: 0.4em 1.8em;
-  margin-left: 3rem;
-  float: right;
-  flex-grow: 1;
+  padding: .4em .8em .8em .8em;
+  margin-left: 1em;
+  margin-right: 3em;
 }
 
 .proposed-price {
-  float: right;
-  input {
-    margin: 0;
+  input[type].form__inline,
+  button[type].button-primary {
+    margin: .2rem 0 0 0;
     max-width: 80px;
     display: inline-block;
   }
@@ -343,7 +342,7 @@ input[type="checkbox"]:checked ~ label {
     font-size: $medium-font-size;
     margin-top: 0;
     margin-bottom: 0;
-    font-weight: 300;
+    font-weight: $font-weight-normal;
     line-height: 2.5rem; // to standardize the height of larger and smaller h5s used
   }
 }
@@ -365,6 +364,11 @@ h5.proposed-price-highlight {
 
 h5.avg-price-highlight {
   font-weight: $font-weight-bold;
+}
+
+h5.proposed-price-title {
+  font-weight: $font-weight-bold;
+  text-align: left;
 }
 
 .slider {
