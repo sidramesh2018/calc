@@ -20,7 +20,7 @@ export function Highlights({
   // out as it was set/unset. We might want to do the same thing here.
 
   return (
-    <div className="highlights-container row">
+    <div className="highlights-container">
       <div className="price-block">
         <div className="row">
           <div className="standard-deviation-block">
@@ -34,7 +34,7 @@ Std deviation -1
           </div>
           <div className="avg-price-block">
             <h5 className="avg-price-title">
-Average
+Average price
             </h5>
             <h5 className="avg-price-highlight">
               $

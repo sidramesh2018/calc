@@ -308,8 +308,15 @@ input[type="checkbox"]:checked ~ label {
 .standard-deviation-block {
   display: inline-block;
   margin: 0 auto;
-  padding: .4em;
   text-align: center;
+}
+
+.avg-price-block {
+  padding: $space-2x .6em;
+}
+
+.standard-deviation-block {
+  padding: $space-2x .4em;
 }
 
 .proposed-price-block {
@@ -340,17 +347,17 @@ input[type="checkbox"]:checked ~ label {
 .proposed-price-block {
   h5 {
     font-size: $medium-font-size;
-    margin-top: 0;
-    margin-bottom: 0;
     font-weight: $font-weight-normal;
     line-height: 2.5rem; // to standardize the height of larger and smaller h5s used
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 
 .avg-price-block {
-    border-right: 2px solid $color-white;
-    border-left: 2px solid $color-white;
   h5 {
+    border-right: 3px solid $color-white;
+    border-left: 3px solid $color-white;
     font-size: $base-font-size;
     font-weight: $font-weight-bold;
   }
