@@ -282,7 +282,6 @@ input[type="checkbox"]:checked ~ label {
 
 .price-block {
   background: $color-gray-lightest;
-  border: 1px solid $color-gray-lighter;
   border-radius: $border-radius;
   flex-grow: 9;
   .row {
@@ -309,7 +308,6 @@ input[type="checkbox"]:checked ~ label {
 
 .proposed-price-block {
   background: $color-gray-lightest;
-  border: 1px solid $color-gray-lighter;
   border-radius: $border-radius;
   padding: 0.4em 1.8em;
   margin-left: 3rem;
@@ -345,8 +343,8 @@ input[type="checkbox"]:checked ~ label {
 }
 
 .avg-price-block {
-    border-right: 1px solid $color-gray-lighter;
-    border-left: 1px solid $color-gray-lighter;
+    border-right: 2px solid $color-white;
+    border-left: 2px solid $color-white;
   h5 {
     font-size: 2.4rem;
   }
