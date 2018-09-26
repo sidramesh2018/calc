@@ -15,7 +15,7 @@ exports[`<ProposedPrice> matches snapshot 1`] = `
     id="zzz_proposed-price"
     name="proposed-price"
     onChange={[Function]}
-    placeholder="Proposed price"
+    placeholder="$"
     type="text"
     value={120.49}
   />
