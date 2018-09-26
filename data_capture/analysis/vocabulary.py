@@ -26,7 +26,7 @@ ANALYSIS_STOP_WORDS = []
 # Cap on number of lexemes that get_best_permutations will process.
 # This is a crude attempt to stop the CPU/RAM consumption of the function from
 # getting too large.
-MAX_LEXEMES_FOR_PERMUTATIONS = 4
+MAX_LEXEMES_FOR_PERMUTATIONS = 8
 
 
 # http://stackoverflow.com/a/28777781

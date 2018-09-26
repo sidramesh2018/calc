@@ -343,30 +343,51 @@ class GetBestPermutationsTests(TestCase):
             'administrative assistant zz',
             'senior engineer',
             'project manager',
+            'senior specialist',
+            'senior generalist',
+            'knight',
+            'senior knight'
         ])
         words = [
             'engineer',
             'zz',
             'senior',
             'project',
-            'manager'
+            'manager',
+            'assistant',
+            'specialist',
+            'generalist',
+            'knight'
         ]
 
-        result = get_best_permutations(vocab, words, min_length=3)
+        result = get_best_permutations(vocab, words, min_length=3,
+                                       max_permutations=20)
         """
         Without the restriction on the number of lexemes, the result here
         should be:
-        [('engineer', 'zz'), ('engineer', 'senior'), ('project',
-        'manager'), ('engineer',), ('senior',), ('project',), ('manager',)]
+        [('zz', 'assistant'), ('engineer', 'zz'), ('engineer', 'senior'),
+        ('senior', 'specialist'), ('senior', 'generalist'), ('senior',
+        'knight'), ('project', 'manager'), ('senior',), ('engineer',),
+        ('assistant',), ('knight',), ('project',), ('manager',),
+        ('specialist',), ('generalist',)]
         """
 
         self.assertEqual(
-            result,
-            [('engineer', 'zz'),
-             ('engineer', 'senior'),
-             ('engineer',),
-             ('senior',),
-             ('project',)]
+            result, [
+                ('zz', 'assistant'),
+                ('engineer', 'zz'),
+                ('engineer', 'senior'),
+                ('senior', 'specialist'),
+                ('senior', 'generalist'),
+                ('project', 'manager'),
+                ('senior',),
+                ('engineer',),
+                ('assistant',),
+                ('project',),
+                ('manager',),
+                ('specialist',),
+                ('generalist',)
+            ]
         )
 
     def test_it_works(self):
