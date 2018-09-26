@@ -112,7 +112,7 @@ years
          { laborCategories }
         </strong>
       </h4>
-      <h5>
+      <p>
         { resultsLabel }
         <span className="total">
           {formatCommas(totalResults)}
@@ -122,7 +122,7 @@ years
         <span className={filtersClasses.join(' ')}>
           {filters}
         </span>
-      </h5>
+      </p>
     </div>
   );
 }
