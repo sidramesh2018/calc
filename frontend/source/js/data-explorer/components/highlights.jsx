@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import {
   formatPrice,
 } from '../util';
-import ProposedPrice from './proposed-price';
 
 export function Highlights({
   stdDeviation,
@@ -14,13 +13,11 @@ export function Highlights({
 }) {
   const stdDevMinus = avgPrice - stdDeviation;
   const stdDevPlus = avgPrice + stdDeviation;
-  const proposedPriceStyle = proposedPrice ? { display: 'block' } : null;
 
   // TODO: The original implementation faded the proposed price in and
   // out as it was set/unset. We might want to do the same thing here.
 
   return (
-    <div className="highlights-container">
       <div className="price-block">
         <div className="row">
           <div className="standard-deviation-block">
@@ -52,13 +49,6 @@ Std deviation +1
           </div>
         </div>
       </div>
-      <div className="proposed-price-block" style={proposedPriceStyle}>
-        <h5 className="proposed-price-title">
-Proposed price
-        </h5>
-        <ProposedPrice />
-      </div>
-    </div>
   );
 }
 

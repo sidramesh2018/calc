@@ -148,7 +148,10 @@ class App extends React.Component {
                 </div>
               </div>
 
-              <Highlights />
+              <div className="highlights-container">
+                <Highlights />
+                <ProposedPrice />
+              </div>
 
               <div className="">
                 <a
