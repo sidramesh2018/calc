@@ -42,7 +42,7 @@ section.search .container {
 }
 
 #search .card {
-  padding-bottom: $space-6x;
+  padding-bottom: $space-4x;
   }
   .secondary {
     border-bottom: none;
@@ -542,7 +542,6 @@ a.focus-input {
   p {
     color: $color-base;
     font-size: $base-font-size;
-    margin-bottom: $space-2x;
     margin-top: 0;
   }
 
@@ -565,7 +564,7 @@ a.focus-input {
 /* graph container */
 .graph {
   position: relative;
-  margin: 1rem 0;
+  margin-top: 2rem;
 }
 
 svg.graph {
