@@ -69,6 +69,25 @@ footer {
   }
 }
 
+.card .content:first-child {
+  h1, h2, h3 {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  // The first header on a card has too much space.
+}
+
+.card .content:first-child h2:first-child {
+  // The first header on a card has too much space.
+  margin-top: 0;
+}
+
+.card .content:first-child h3:first-child {
+  // The first header on a card has too much space.
+  margin-top: 0;
+}
+
 /* Applied to "main" element on some steps of data capture to create the appearance
  * of a unified card (despite being composed of two separate "card" DOM elements).
  * Used in conjunction with the standard card classes above. */
@@ -96,6 +115,17 @@ footer {
   &:last-child {
     border-bottom-color: $color-gray-light;
     margin-bottom: $space-10x;
+  }
+
+  /* the zindex here is necessary to allow the dropdown of search types
+   /* to flow over the SVG graph in the card just below it. */
+  &.dominant {
+    position: relative;
+    z-index: 1;
+  }
+  &.secondary {
+    position: relative;
+    // no z-index necessary; setting position does the trick
   }
   // When the first thing in the card's content is a heading, it needs no top margin
   .content > h1:first-child {
@@ -129,4 +159,17 @@ footer {
   h1, p {
     flex: 1 100%;
   }
+}
+
+.tutorial .arrow {
+  background-image: url('../../images/arrow-triangle.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 20px;
+  width: 20px;
+  margin: 12px auto;
+}
+
+.tutorial p.img-wrapper {
+  text-align: center;
 }

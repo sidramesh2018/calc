@@ -92,7 +92,7 @@ class App extends React.Component {
         className={classNames(this.getContainerClassNames())}
         onSubmit={this.handleSubmit}
       >
-        <div className="row card">
+        <div className="row card dominant">
           <div className="search-header columns twelve content">
             <h2>
               Search CALC
@@ -125,7 +125,7 @@ class App extends React.Component {
             </section>
           </div>
         </div>
-        <div className="row card">
+        <div className="row card secondary">
           <div className="columns nine">
 
             <div className="graph-block">
