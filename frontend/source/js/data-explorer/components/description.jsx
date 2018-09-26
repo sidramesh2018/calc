@@ -29,6 +29,7 @@ export function Description({
 }) {
   let results = ' results ';
   let laborCategories = [];
+  let resultsLabel = { `Showing ${formatCommas(shownResults)} of `};
   const filtersClasses = ['filters'];
   const filters = [];
 
@@ -96,9 +97,9 @@ years
     filtersClasses.push('hidden');
   }
 
-  // TODO: The original version of this faded-in (but never out)
-  // whenever it changed. We might want to do that too, or choose
-  // a different animation.
+  if (shownResults === totalResults) {
+    resultsLabel = '';
+  }
 
   return (
     <div id={prefixId('description')}>
@@ -112,7 +113,7 @@ years
         </strong>
       </h4>
       <h5>
-        { `Showing ${formatCommas(shownResults)} of `}
+        { resultsLabel }
         <span className="total">
           {formatCommas(totalResults)}
         </span>
