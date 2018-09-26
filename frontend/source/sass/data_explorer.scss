@@ -13,7 +13,7 @@ body {
 // temp styles to mimic .card without indenting the table
 .graph-block {
   margin-right: 0;
-  margin-left: $space-8x;
+  margin-left: 84px; // Hacky number to approximate card margin value
   p {
     color: $color-gray;
     font-weight: $font-weight-normal;
@@ -152,7 +152,7 @@ h5.filter-title {
 .filter-block {
   background: $color-gray-lightest;
   border-radius: $border-radius;
-  margin-right: $space-1x;
+  margin-right: $space-2x;
   margin-bottom: 0;
   padding: 2rem;
 
@@ -498,6 +498,10 @@ a.focus-input {
   }
 }
 
+.filter.contract-year {
+  padding-top: 2.5rem; // Hacky number to vertically align with highlights block
+}
+
 .contract-year-block {
   background-color: $color-white;
   border: 1px solid $color-gray-lighter;
@@ -561,7 +565,7 @@ a.focus-input {
 /* graph container */
 .graph {
   position: relative;
-  margin-top: 2rem;
+  margin-top: .8rem;
 }
 
 svg.graph {
