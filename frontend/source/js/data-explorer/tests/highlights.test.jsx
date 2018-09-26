@@ -6,7 +6,6 @@ import makeSetup from './testSetup';
 const defaultProps = {
   stdDeviation: 1.1,
   avgPrice: 2.1,
-  proposedPrice: 5,
 };
 
 const setup = makeSetup(Highlights, defaultProps);

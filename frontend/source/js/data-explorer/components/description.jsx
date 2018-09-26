@@ -28,7 +28,7 @@ export function Description({
   laborCategory,
 }) {
   let results = ' results ';
-  let laborCategories = [];
+  const laborCategories = [];
   const filtersClasses = ['filters'];
   const filters = [];
 
@@ -97,7 +97,7 @@ years
   }
 
   return (
-    <div id='description'>
+    <div id="description">
       <h4>
         Hourly rate data
         <span>
