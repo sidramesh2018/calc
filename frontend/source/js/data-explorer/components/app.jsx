@@ -138,13 +138,7 @@ class App extends React.Component {
                 height="280"
               />
 
-              <div id={prefixId('description')}>
-                <Description />
-              </div>
-
-              <p>
-Hourly rate data
-              </p>
+              <Description />
 
               <LoadingIndicator />
 

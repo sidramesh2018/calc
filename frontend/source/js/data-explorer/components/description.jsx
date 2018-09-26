@@ -28,11 +28,12 @@ export function Description({
   laborCategory,
 }) {
   let results = ' results ';
+  let laborCategories = [];
   const filtersClasses = ['filters'];
   const filters = [];
 
   if (laborCategory) {
-    filters.push(
+    laborCategories.push(
       <DescriptionFilter key="lab">
         {stripTrailingComma(laborCategory)}
       </DescriptionFilter>,
@@ -100,16 +101,28 @@ years
   // a different animation.
 
   return (
-    <p className="">
-      {`Showing ${formatCommas(shownResults)} of `}
-      <span className="total">
-        {formatCommas(totalResults)}
-      </span>
-      {results}
-      <span className={filtersClasses.join(' ')}>
-        {filters}
-      </span>
-    </p>
+    <div id={prefixId('description')}>
+      <h4>
+        <strong>
+          { `Hourly rate data `}
+        </strong>
+        { `for ` }
+        <strong>
+         { laborCategories }
+        </strong>
+      </h4>
+      <h5>
+        { `Showing ${formatCommas(shownResults)} of `}
+        <span className="total">
+          {formatCommas(totalResults)}
+        </span>
+        {results}
+
+        <span className={filtersClasses.join(' ')}>
+          {filters}
+        </span>
+      </h5>
+    </div>
   );
 }
 
