@@ -29,8 +29,6 @@ export function Description({
 }) {
   let results = ' results ';
   let laborCategories = [];
-  let resultsLabel = `Showing ${formatCommas(shownResults)} of `;
-  let foundLaborCategoriesJoiner = '';
   const filtersClasses = ['filters'];
   const filters = [];
 
@@ -40,7 +38,6 @@ export function Description({
         {stripTrailingComma(laborCategory)}
       </DescriptionFilter>,
     );
-    foundLaborCategoriesJoiner = ' for ';
   }
 
   if (education.length) {
@@ -99,23 +96,19 @@ years
     filtersClasses.push('hidden');
   }
 
-  if (shownResults === totalResults) {
-    resultsLabel = '';
-  }
-
   return (
     <div id='description'>
       <h4>
         <strong>
           Hourly rate data
         </strong>
-        { foundLaborCategoriesJoiner }
+        { laborCategories.length ? ' for ' : '' }
         <strong>
          { laborCategories }
         </strong>
       </h4>
       <p>
-        { resultsLabel }
+        { shownResults === totalResults ? '' : `Showing ${formatCommas(shownResults)} of ` }
         <span className="total">
           {formatCommas(totalResults)}
         </span>
