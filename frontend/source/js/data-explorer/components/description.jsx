@@ -101,7 +101,7 @@ years
       <h4>
         Hourly rate data
         <span>
-          { foundLaborCategoriesJoiner }
+          { laborCategories.length ? ' for ' : '' }
         </span>
         { laborCategories }
       </h4>
