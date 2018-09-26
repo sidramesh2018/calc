@@ -106,13 +106,11 @@ years
   return (
     <div id='description'>
       <h4>
-        <strong>
-          Hourly rate data
-        </strong>
-        { foundLaborCategoriesJoiner }
-        <strong>
-         { laborCategories }
-        </strong>
+        Hourly rate data
+        <span>
+          { foundLaborCategoriesJoiner }
+        </span>
+        { laborCategories }
       </h4>
       <p>
         { resultsLabel }
