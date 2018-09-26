@@ -534,11 +534,15 @@ a.focus-input {
 
 #description {
   font-weight: normal;
+  padding-right: $space-3x;
   overflow: hidden;
+  h4 {
+    margin-top: 0;
+  }
   p {
     color: $color-base;
-    font-size: $h4-font-size;
-    margin-bottom: 0;
+    font-size: $base-font-size;
+    margin-bottom: $space-2x;
     margin-top: 0;
   }
 
