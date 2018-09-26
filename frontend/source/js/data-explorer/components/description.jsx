@@ -29,7 +29,8 @@ export function Description({
 }) {
   let results = ' results ';
   let laborCategories = [];
-  let resultsLabel = { `Showing ${formatCommas(shownResults)} of `};
+  let resultsLabel = `Showing ${formatCommas(shownResults)} of `;
+  let foundLaborCategoriesJoiner = '';
   const filtersClasses = ['filters'];
   const filters = [];
 
@@ -39,6 +40,7 @@ export function Description({
         {stripTrailingComma(laborCategory)}
       </DescriptionFilter>,
     );
+    foundLaborCategoriesJoiner = ' for ';
   }
 
   if (education.length) {
@@ -102,12 +104,12 @@ years
   }
 
   return (
-    <div id={prefixId('description')}>
+    <div id='description'>
       <h4>
         <strong>
-          { `Hourly rate data `}
+          Hourly rate data
         </strong>
-        { `for ` }
+        { foundLaborCategoriesJoiner }
         <strong>
          { laborCategories }
         </strong>
