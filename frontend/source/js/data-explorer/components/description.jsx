@@ -99,13 +99,11 @@ years
   return (
     <div id='description'>
       <h4>
-        <strong>
-          Hourly rate data
-        </strong>
-        { laborCategories.length ? ' for ' : '' }
-        <strong>
-         { laborCategories }
-        </strong>
+        Hourly rate data
+        <span>
+          { foundLaborCategoriesJoiner }
+        </span>
+        { laborCategories }
       </h4>
       <p>
         { shownResults === totalResults ? '' : `Showing ${formatCommas(shownResults)} of ` }

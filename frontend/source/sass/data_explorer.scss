@@ -688,3 +688,15 @@ input[type=checkbox]:focus+.checkbox-focus {
 .contract-year legend {
   float: left;
 }
+
+#description {
+  h4 {
+    font-size: $h3-font-size;
+  }
+  p {
+    color: $color-gray-dark;
+  }
+  span {
+    font-weight: $font-weight-normal;
+  }
+}
