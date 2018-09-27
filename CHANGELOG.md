@@ -7,6 +7,14 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [3.2.1][] - 2018-09-27
+
+### Added
+- Add deployment step of NLTK resources to support price list analysis feature. (#2192)
+
+### Changed
+- Fixed a bug in lists of labor categories that are too long for proper visual display. (#2191)
+
 ## [3.2.0][] - 2018-09-27
 
 ### Added
@@ -509,7 +517,8 @@ contract vehicles, not just schedules (#2067).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v3.2.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v3.2.1...HEAD
+[3.2.1]: https://github.com/18F/calc/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/18F/calc/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/18F/calc/compare/v3.0.1...v3.1.0
 [3.0.1]: https://github.com/18F/calc/compare/v3.0.0...v3.0.1
