@@ -317,6 +317,7 @@ label[for=query_type_match_exact] {
   padding: 0; // ul override
   color: $color-gray-dark;
   background: $color-gray-lightest;
+  border-bottom: 3px solid $color-gray-light;
   border-bottom-left-radius: $border-radius;
   border-bottom-right-radius: $border-radius;
 
