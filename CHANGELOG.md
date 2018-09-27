@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [3.2.0][] - 2018-09-27
+
 ### Added
 - Schedule 70 contracting officers with login credentials can now have CALC
   analyze price lists and provide summary stats about them. (#997)
@@ -507,7 +509,8 @@ contract vehicles, not just schedules (#2067).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v3.1.0...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v3.2.0...HEAD
+[3.2.0]: https://github.com/18F/calc/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/18F/calc/compare/v3.0.1...v3.1.0
 [3.0.1]: https://github.com/18F/calc/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/18F/calc/compare/v2.10.0...v3.0.0
