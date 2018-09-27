@@ -27,6 +27,11 @@
     }
   }
 
+  .usa-button + .usa-button {
+    display: inline-block;
+    margin-left: $space-2x;
+  }
+
   .download-group {
     float: left;
     text-align: left;
