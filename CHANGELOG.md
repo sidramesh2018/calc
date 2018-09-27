@@ -7,6 +7,12 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Added
+- Add deployment step of NLTK resources to support price list analysis feature. (#2192)
+
+### Changed
+- Fixed a bug in lists of labor categories that are too long for proper visual display. (#2191)
+
 ## [3.2.0][] - 2018-09-27
 
 ### Added
