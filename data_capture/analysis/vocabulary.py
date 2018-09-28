@@ -3,7 +3,11 @@ from functools import cmp_to_key
 from collections import OrderedDict
 
 try:
+    import os
+    print(os.path.abspath(os.curdir))
     import nltk
+    nltk.data.path.append('nltk_data')
+    nltk.data.path.append('../nltk_data')
 except ImportError:
     nltk = None
 
