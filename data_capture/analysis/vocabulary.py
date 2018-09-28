@@ -4,6 +4,8 @@ from collections import OrderedDict
 
 try:
     import nltk
+    nltk.data.path.append('nltk_data')
+    nltk.data.path.append('../nltk_data')
 except ImportError:
     nltk = None
 
