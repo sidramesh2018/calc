@@ -57,7 +57,7 @@
                 {{ row.analysis.dist_from_avg_percent|floatformat:2 }}%
               </span>
             </td>
-            <td headers="our-data plus-minus-std-dev" {% if row.analysis.severe %}class="table-error-severe"{% endif %}>
+            <td headers="our-data plus-minus-std-dev">
              {% if row.analysis.preposition == 'above' %}
                 +
               {% elif row.analysis.preposition == 'below' %}
