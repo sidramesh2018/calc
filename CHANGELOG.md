@@ -7,6 +7,11 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+- Add NLTK's Averaged Perceptron Tagger `.pickle` file to repository instead of
+  downloading it on every build, and make changes to build files and to price
+  analysis reflecting those changes. (#2194)
+
 ## [3.2.1][] - 2018-09-27
 
 ### Added
