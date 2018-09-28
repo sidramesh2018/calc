@@ -7,6 +7,8 @@ to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [3.2.2][] - 2018-09-28
+
 ### Changed
 - Add NLTK's Averaged Perceptron Tagger `.pickle` file to repository instead of
   downloading it on every build, and make changes to build files and to price
@@ -522,7 +524,8 @@ contract vehicles, not just schedules (#2067).
 - refining header wording
 - replace drop down for education with multi select
 
-[unreleased]: https://github.com/18F/calc/compare/v3.2.1...HEAD
+[unreleased]: https://github.com/18F/calc/compare/v3.2.2...HEAD
+[3.2.2]: https://github.com/18F/calc/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/18F/calc/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/18F/calc/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/18F/calc/compare/v3.0.1...v3.1.0
