@@ -160,14 +160,9 @@ Most CALC traffic came from domains controlled by an organization not accessible
 
 Data Capture refers to the part of CALC built in 2016 and expanded in 2018. It provides a means for contracting officers to upload price lists into CALC.
 
-Data Capture is sometimes described as “CALC 2.0”.
-
 ### How Data Capture works
 
-GSA acquisition professionals can add price lists directly to CALC after their schedule has been added to data-capture and they've been granted upload access by a CALC admin.
-
-***add (or link to) Ronne's upload tutorial***
-https://calc.gsa.gov/data-capture/tutorial
+GSA acquisition professionals can add price lists directly to CALC after their schedule has been added to data-capture and they've been granted upload access by a CALC admin.You can see an overview of this process here (must be logged in): https://calc.gsa.gov/data-capture/tutorial
 
 ## Minor epiphanies along the way
 
