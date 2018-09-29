@@ -11,6 +11,7 @@ if [ $CF_INSTANCE_INDEX = "0" ]; then
 
     echo "----- Initializing Groups -----"
     python manage.py initgroups
+
 fi
 echo "------ Starting APP ------"
 gunicorn calc.wsgi:application

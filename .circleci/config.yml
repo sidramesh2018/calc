@@ -96,12 +96,10 @@ jobs:
           command: |
             npm install -g gulp@next
 
-      - restore_cache:
-          key: v1-node-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: Install node dependencies
           command: |
-            yarn --pure-lockfile
+            yarn --frozen-lockfile
       - save_cache:
           name: Save node deps cache
           key: v1-node-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}

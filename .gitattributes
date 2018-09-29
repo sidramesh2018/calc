@@ -9,3 +9,4 @@
 *.csv binary
 *.xls binary
 *.xlsx binary
+*.pickle binary
